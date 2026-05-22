@@ -5,6 +5,9 @@
 Open `index.html` in any modern browser. No npm, no build step, no internet required.
 
 ---
+run it now
+
+https://simon-mufara.github.io/Omics-Lab/
 
 ## Domains & Workflows
 
