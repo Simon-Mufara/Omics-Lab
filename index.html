@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmicsLab Simulator — Interactive Omics Training Platform</title>
+  <meta name="description" content="A professional interactive training simulator covering Genomics, Transcriptomics, Epigenomics, Metagenomics, Metabolomics, Proteomics, Virology and Multi-omics workflows with real drag-and-drop lab bench interactions.">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/equipment.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+     LANDING SCREEN
+     ══════════════════════════════════════════════════════════ -->
+<section id="screen-landing">
+
+  <!-- Nav -->
+  <nav class="landing-nav">
+    <div class="logo-mark">
+      <div class="logo-icon">🧬</div>
+      <div class="logo-text">Omics<span>Lab</span></div>
+    </div>
+    <div class="nav-pills">
+      <button class="nav-pill active" onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">Workflows</button>
+      <button class="nav-pill" onclick="document.getElementById('disease-explorer-section').scrollIntoView({behavior:'smooth'})">Diseases</button>
+      <button class="nav-pill" onclick="document.getElementById('tool-explorer-section').scrollIntoView({behavior:'smooth'})">Tools</button>
+      <button class="nav-pill" onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">Features</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-dot"></div>
+      Interactive Omics Training Platform
+    </div>
+    <h1>Learn Omics Workflows by <span class="accent">Doing</span> Them</h1>
+    <p class="hero-sub">
+      Drag reagents, set parameters, and watch every wet-lab decision
+      propagate through the bioinformatics pipeline in real time.
+      Eight omics domains. Fourteen workflows. Scientifically accurate.
+    </p>
+    <div class="hero-cta">
+      <button class="btn-hero btn-hero-primary"
+              onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">
+        Start a Workflow →
+      </button>
+      <button class="btn-hero btn-hero-secondary"
+              onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">
+        How it works
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-strip">
+    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Workflows</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Omics Domains</div></div>
+    <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Protocol Steps</div></div>
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Live QC Metrics</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Learning Loops</div></div>
+  </div>
+
+  <!-- Domain grid -->
+  <div class="domain-section" id="domain-section">
+    <div class="section-label">Choose your experiment</div>
+    <h2 class="section-title">Select an Omics Domain</h2>
+    <p class="section-desc">
+      Each domain contains realistic protocols with interactive reagent selection,
+      instrument parameter tuning, and a live quality control dashboard.
+    </p>
+    <div class="domain-grid" id="domain-grid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Disease Explorer -->
+  <div class="disease-explorer-section" id="disease-explorer-section">
+    <div class="section-label">What are we investigating?</div>
+    <h2 class="section-title">Disease Explorer</h2>
+    <p class="section-desc">
+      Every workflow in OmicsLab targets real diseases. Explore which conditions each omics approach investigates,
+      the biomarkers being hunted, and the clinical insights that result.
+    </p>
+    <div class="disease-filter-tabs" id="disease-filter-tabs">
+      <!-- Populated by app.js -->
+    </div>
+    <div class="disease-cards-grid" id="disease-cards-grid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Tool Explorer -->
+  <div class="tool-explorer-section" id="tool-explorer-section">
+    <div class="section-label">The bioinformatics toolkit</div>
+    <h2 class="section-title">Tool Explorer</h2>
+    <p class="section-desc">
+      Real bioinformatics tools used in every step — from quality control to variant calling to pathway analysis.
+      Learn what each tool does, what it takes as input, and when to use it.
+    </p>
+    <div class="tool-category-grid" id="tool-category-grid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div class="features-section" id="features-section">
+    <div class="section-label">Platform capabilities</div>
+    <h2 class="section-title">Built for Serious Learning</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤏</div>
+        <div class="feature-title">Real Drag-and-Drop</div>
+        <div class="feature-desc">Drag reagent vials from the shelf onto lab equipment. Touch-compatible for tablets.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📉</div>
+        <div class="feature-title">Error Propagation</div>
+        <div class="feature-desc">Early mistakes amplify downstream. Low RIN at extraction → high duplication at sequencing → bad alignment. Just like real life.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Live QC Dashboard</div>
+        <div class="feature-desc">Eight quality metrics update after every decision. Watch sample integrity, library complexity, and contamination change in real time.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <div class="feature-title">Educational Tooltips</div>
+        <div class="feature-desc">Every step has an expert-level explanation of the underlying biology and the consequences of each choice.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔬</div>
+        <div class="feature-title">Scientifically Accurate</div>
+        <div class="feature-desc">Protocols match published best practices: ENCODE ChIP-seq guidelines, 10x Genomics loading nomograms, ARTIC v4.1, and GATK Best Practices.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <div class="feature-title">Graded Results</div>
+        <div class="feature-desc">Receive a full QC report with pipeline cascade analysis, per-metric PASS/FAIL assessment, and a mistake log to learn from.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌍</div>
+        <div class="feature-title">Designed for Africa</div>
+        <div class="feature-desc">Built to support genomics training in resource-limited settings where hands-on lab access is scarce. No installation required.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-title">Zero Dependencies</div>
+        <div class="feature-desc">Pure HTML, CSS, and JavaScript. No npm, no build step. Works offline, from any device, on any network.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-logo">OmicsLab Simulator</div>
+    <div style="color:var(--text-muted);font-size:0.82rem">
+      Built by <a href="https://github.com/Simon-Mufara" style="color:var(--success);text-decoration:none">Simon Mufara</a>
+      · Computational Biologist & Bioinformatician · UCT
+    </div>
+    <div class="footer-links">
+      <a href="mailto:simon.mufara1@gmail.com">Contact</a>
+      <a href="https://linkedin.com/in/simon-mufara" target="_blank">LinkedIn</a>
+      <a href="https://github.com/Simon-Mufara" target="_blank">GitHub</a>
+    </div>
+  </footer>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     LAB WORKSPACE
+     ══════════════════════════════════════════════════════════ -->
+<section id="screen-lab">
+
+  <!-- Topbar -->
+  <div class="lab-topbar">
+    <div class="topbar-left">
+      <button class="btn-icon" title="Exit lab" onclick="OmicsLab.App.goHome()">←</button>
+      <div class="wf-breadcrumb">
+        <span class="wf-domain-label" id="topbar-domain">Domain</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="wf-name" id="topbar-wf-name">Workflow</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="step-progress">
+        <div class="step-dots" id="step-dots"></div>
+        <span id="step-counter" style="font-size:0.78rem;color:var(--text-muted)">Step 1 of ?</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="timer-chip">⏱ <span id="timer-val">0:00</span></div>
+      <div class="score-chip">Score: <span class="score-num ok" id="score-num">100</span></div>
+    </div>
+  </div>
+
+  <!-- 3-column body -->
+  <div class="lab-body">
+
+    <!-- LEFT: Protocol panel -->
+    <aside class="protocol-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-label">Protocol Steps</div>
+      </div>
+      <div class="protocol-steps" id="protocol-steps">
+        <!-- Populated by ProtocolPanel.render() -->
+      </div>
+      <div class="sidebar-quality" id="sidebar-quality" style="padding:0.75rem 1.1rem 1rem;border-top:1px solid var(--border-dim)">
+        <!-- Populated by QC.renderSidebar() -->
+      </div>
+    </aside>
+
+    <!-- CENTER: Bench -->
+    <main class="bench-center">
+      <!-- Current step header -->
+      <div class="step-instruction">
+        <div class="step-phase-tag" id="step-phase-tag">Phase</div>
+        <div class="step-title" id="step-title">Step Title</div>
+        <div class="step-desc text-muted" id="step-desc">Step description.</div>
+      </div>
+
+      <!-- Interactive workspace -->
+      <div class="bench-workspace" id="bench-workspace">
+        <!-- Populated by Renderer.renderStep() -->
+      </div>
+    </main>
+
+    <!-- RIGHT: QC panel -->
+    <aside class="qc-sidebar">
+      <div class="qc-section">
+        <div class="qc-label">Quality Control</div>
+        <div id="qc-gauges">
+          <!-- Populated by QC.render() -->
+        </div>
+      </div>
+
+      <div class="qc-section">
+        <div class="qc-label">Pipeline Progress</div>
+        <div class="pipeline-track" id="pipeline-track">
+          <!-- Populated by QC.renderPipeline() -->
+        </div>
+      </div>
+
+      <div class="qc-section qc-section-scrollable">
+        <div class="qc-label">Disease Context</div>
+        <div id="disease-context-panel">
+          <!-- Populated by QC.renderDiseaseContext() -->
+        </div>
+      </div>
+
+      <div class="qc-section qc-section-scrollable">
+        <div class="qc-label">Tool at This Step</div>
+        <div id="tool-flow-panel">
+          <!-- Populated by QC.renderToolFlow() -->
+        </div>
+      </div>
+
+      <div class="qc-section qc-section-scrollable">
+        <div class="qc-label">Mistake Log</div>
+        <div class="mistake-list" id="mistake-log">
+          <div class="no-mistakes">✓ No mistakes yet</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     RESULTS SCREEN
+     ══════════════════════════════════════════════════════════ -->
+<section id="screen-results">
+  <div class="results-container" id="results-content">
+    <!-- Populated by App.showResults() -->
+  </div>
+</section>
+
+<!-- Scripts — load order matters (namespace → data → engine → bench → app) -->
+<script src="js/workflows.js"></script>
+<script src="js/diseases.js"></script>
+<script src="js/equipment.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/bench.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

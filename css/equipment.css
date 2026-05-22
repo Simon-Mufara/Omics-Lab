@@ -1,0 +1,409 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Lab Equipment Visual Styles & Animations
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Shared equipment container ── */
+.equip-visual {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 240px;
+  overflow: hidden;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+.equip-visual::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--info), var(--success));
+}
+.equip-icon-large { font-size: 2.5rem; }
+.equip-name-label {
+  font-size: 0.78rem; font-weight: 700; text-align: center;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;
+}
+.equip-sub {
+  font-size: 0.72rem; color: var(--text-dim); text-align: center; line-height: 1.5;
+}
+
+/* ── Keyframes ── */
+@keyframes spin-fast  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes spin-slow  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes wave-move  { 0%,100%{transform:translateX(-20px)} 50%{transform:translateX(20px)} }
+@keyframes blink-cur  { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes type-bar   { from{width:0} to{width:100%} }
+@keyframes gem-drop   { 0%,100%{transform:translateY(-4px)} 50%{transform:translateY(4px)} }
+@keyframes bead-pel   { 0%{transform:translateX(0)} 100%{transform:translateX(8px)} }
+@keyframes bubble-up  { 0%{transform:translateY(0);opacity:0.8} 100%{transform:translateY(-20px);opacity:0} }
+@keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 rgba(63,185,80,0.4)} 50%{box-shadow:0 0 12px 3px rgba(63,185,80,0.2)} }
+@keyframes base-slide { from{transform:translateX(0)} to{transform:translateX(-100%)} }
+@keyframes peak-grow  { from{height:0} to{height:var(--h, 50%)} }
+@keyframes sonic-ring { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(2.5);opacity:0} }
+@keyframes tc-active  { 0%,100%{background:rgba(88,166,255,0.2)} 50%{background:rgba(88,166,255,0.5)} }
+@keyframes ba-charge  { from{width:0%} to{width:100%} }
+
+.spin-fast { animation: spin-fast 1.2s linear infinite; }
+.spin-slow { animation: spin-slow 3s linear infinite; }
+
+/* ══ CENTRIFUGE ══════════════════════════════════════════════ */
+.centrifuge-body {
+  width: 160px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+.centrifuge-lid { height: 12px; background: var(--surface-4); border-radius: 6px 6px 0 0; margin-bottom: 0.5rem; position: relative; }
+.lid-hinge { width: 30px; height: 6px; background: var(--border); border-radius: 3px; position: absolute; left: 50%; top: 3px; transform: translateX(-50%); }
+.centrifuge-chamber { height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); border-radius: 6px; margin-bottom: 0.5rem; }
+.rotor-outer { width: 70px; height: 70px; border-radius: 50%; background: var(--surface-4); display: flex; align-items: center; justify-content: center; }
+.rotor { width: 60px; height: 60px; position: relative; display: flex; align-items: center; justify-content: center; }
+.rotor-spoke {
+  position: absolute; width: 4px; height: 28px;
+  background: linear-gradient(to bottom, #58a6ff, var(--surface-3));
+  border-radius: 2px; transform-origin: center bottom;
+}
+.rotor-spoke.s1 { transform: rotate(0deg) translateY(-14px); }
+.rotor-spoke.s2 { transform: rotate(90deg) translateY(-14px); }
+.rotor-spoke.s3 { transform: rotate(180deg) translateY(-14px); }
+.rotor-spoke.s4 { transform: rotate(270deg) translateY(-14px); }
+.rotor-center { width: 10px; height: 10px; border-radius: 50%; background: var(--info); z-index:2; }
+.centrifuge-panel { padding: 0.4rem; text-align: center; }
+.panel-display { font-family: var(--font-mono); font-size: 0.7rem; color: var(--success); }
+.panel-time    { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); }
+.panel-dot { width:6px; height:6px; border-radius:50%; background:var(--success); margin: 0.3rem auto 0; animation: pulse-glow 1.5s infinite; }
+.panel-dot.running { background: var(--success); }
+
+/* ══ SAMPLE PREP RACK ════════════════════════════════════════ */
+.sp-rack { display: flex; gap: 0.5rem; align-items: flex-end; }
+.sp-tube {
+  width: 18px; height: 50px;
+  border: 2px solid var(--border); border-top: none;
+  border-radius: 0 0 9px 9px; position: relative; overflow: hidden;
+}
+.sp-tube::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60%; border-radius:0 0 7px 7px; }
+.t-blue::after { background: rgba(88,166,255,0.5); }
+.t-red::after  { background: rgba(229,83,75,0.5); }
+.t-clear::after{ background: rgba(200,200,255,0.2); }
+.t-yellow::after{ background: rgba(240,165,0,0.5); }
+
+/* ══ THERMOCYCLER ════════════════════════════════════════════ */
+.tc-body { width: 200px; }
+.tc-lid-area { background: var(--surface-4); border-radius: 8px 8px 0 0; padding: 0.4rem; margin-bottom: 2px; }
+.tc-heated-lid { font-size: 0.62rem; color: var(--danger); text-align: center; font-weight: 600; }
+.tc-block-area { background: var(--surface-3); padding: 0.5rem; }
+.tc-block { display: grid; grid-template-columns: repeat(8,1fr); gap: 2px; }
+.tc-well {
+  width: 100%; padding-bottom: 100%;
+  border-radius: 50%; background: var(--surface-4);
+  border: 1px solid var(--border);
+}
+.tc-well.w-0 { background: rgba(229,83,75,0.4); animation: tc-active 1.5s infinite; }
+.tc-well.w-1 { background: rgba(240,165,0,0.3); }
+.tc-well.w-2 { background: rgba(63,185,80,0.3); }
+.tc-well.w-3 { background: rgba(88,166,255,0.2); }
+.tc-display { background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 0 0 8px 8px; }
+.tc-step-row { display: flex; gap: 2px; margin-bottom: 0.3rem; }
+.tc-step {
+  flex: 1; text-align: center; font-size: 0.58rem; font-weight: 700;
+  background: var(--surface-4); padding: 0.25rem; border-radius: 4px;
+  color: var(--text-muted);
+}
+.tc-step span { display: block; font-size: 0.52rem; color: var(--text-dim); font-weight: 400; }
+.tc-step.tc-active { background: rgba(229,83,75,0.2); color: var(--danger); }
+.tc-cycles { font-size: 0.62rem; color: var(--success); text-align: center; font-family: var(--font-mono); }
+
+/* ══ BIOANALYZER ═════════════════════════════════════════════ */
+.ba-chip { background: var(--surface-3); border-radius: 8px; padding: 0.75rem; width: 180px; }
+.ba-chip-label { font-size: 0.62rem; color: var(--text-muted); text-align: center; margin-bottom: 0.5rem; }
+.ba-wells-row { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.ba-well {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--surface-4); border: 1px solid var(--border);
+  animation: pulse-glow 2s infinite;
+}
+.ba-trace { width: 180px; background: rgba(0,0,0,0.3); border-radius: 6px; padding: 0.5rem; }
+.ba-trace-label { font-size: 0.6rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+.ba-electro { height: 50px; position: relative; border-bottom: 1px solid var(--border); }
+.ba-peak { position: absolute; bottom: 0; width: 8px; border-radius: 3px 3px 0 0; }
+.ba-peak.marker { left: 8%; height: 60%; background: var(--text-muted); }
+.ba-peak.s18    { left: 40%; height: 70%; background: var(--info); }
+.ba-peak.s28    { left: 60%; height: 90%; background: var(--success); }
+.ba-peak.s28.tall { height: 95%; }
+.ba-baseline { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--border); }
+.rin-display { font-size: 0.68rem; font-family: var(--font-mono); text-align: center; margin-top: 0.3rem; color: var(--text-muted); }
+.rin-val { color: var(--success); font-weight: 700; }
+
+/* ══ 10x CHROMIUM ════════════════════════════════════════════ */
+.chromium-body { width: 200px; }
+.chromium-slot {
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem;
+}
+.chip-card { background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); border-radius: 6px; padding: 0.5rem; }
+.chip-label { font-size: 0.6rem; color: var(--info); font-weight: 600; text-align: center; margin-bottom: 0.4rem; }
+.chip-lanes { display: flex; gap: 3px; }
+.chip-lane { flex: 1; height: 28px; background: rgba(0,0,0,0.3); border-radius: 2px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 2px; }
+.gem-drop {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #79c0ff, #1a9b8e);
+  animation: gem-drop 1s ease-in-out infinite;
+}
+.chromium-stats { background: var(--surface-3); border-radius: 6px; padding: 0.5rem; }
+.cs-row { display: flex; justify-content: space-between; font-size: 0.65rem; padding: 0.2rem 0; border-bottom: 1px solid var(--border-dim); }
+.cs-row:last-child { border-bottom: none; }
+.cs-val { color: var(--info); font-weight: 700; font-family: var(--font-mono); }
+
+/* ══ SEQUENCER ═══════════════════════════════════════════════ */
+.seq-body { width: 220px; }
+.seq-flow-cell-slot { background: var(--surface-3); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem; margin-bottom: 0.5rem; }
+.flow-cell { background: rgba(0,0,0,0.4); border-radius: 6px; padding: 0.5rem; }
+.fc-label { font-size: 0.58rem; color: var(--text-muted); text-align: center; margin-bottom: 0.4rem; }
+.fc-lanes { display: flex; flex-direction: column; gap: 3px; }
+.fc-lane { height: 12px; background: rgba(0,0,0,0.3); border-radius: 2px; overflow: hidden; position: relative; }
+.base-stream { display: flex; gap: 2px; position: absolute; animation: base-slide 3s linear infinite; white-space: nowrap; }
+.base-call { font-size: 8px; font-weight: 700; width: 10px; text-align: center; }
+.base-call.b-A { color: var(--success); }
+.base-call.b-T { color: var(--danger); }
+.base-call.b-G { color: #e3b341; }
+.base-call.b-C { color: var(--info); }
+.seq-display { background: var(--surface-3); border-radius: 6px; padding: 0.5rem; }
+.sq-metric { display: flex; justify-content: space-between; font-size: 0.65rem; padding: 0.2rem 0; border-bottom: 1px solid var(--border-dim); }
+.sq-metric:last-child { border-bottom: none; }
+.sq-val { font-weight: 700; font-family: var(--font-mono); color: var(--text-muted); }
+.sq-val.sq-green { color: var(--success); }
+
+/* ══ MASS SPEC ═══════════════════════════════════════════════ */
+.ms-body { width: 220px; background: var(--surface-3); border-radius: 10px; padding: 0.75rem; }
+.ms-source { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.ms-spray { font-size: 0.65rem; color: var(--text-muted); }
+.ms-analyzer { display: flex; gap: 0.25rem; margin-bottom: 0.5rem; }
+.ms-quad {
+  flex: 1; text-align: center; font-size: 0.58rem; font-weight: 700;
+  background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.2);
+  padding: 0.3rem; border-radius: 4px; color: var(--info);
+}
+.ms-spectrum { background: rgba(0,0,0,0.3); border-radius: 6px; padding: 0.5rem; height: 60px; position: relative; }
+.spec-trace { position: absolute; bottom: 8px; left: 8px; right: 8px; height: calc(100% - 20px); }
+.spec-peak {
+  position: absolute; bottom: 0; width: 4px;
+  background: linear-gradient(to top, var(--info), rgba(88,166,255,0.3));
+  border-radius: 2px 2px 0 0;
+  animation: peak-grow 1s ease-out;
+}
+.spec-axis { position: absolute; bottom: 2px; right: 4px; font-size: 0.55rem; color: var(--text-dim); }
+
+/* ══ HPLC ════════════════════════════════════════════════════ */
+.hplc-body { width: 200px; }
+.hplc-pump { font-size: 0.65rem; color: var(--text-muted); text-align: center; background: var(--surface-3); border-radius: 4px; padding: 0.3rem; margin-bottom: 0.4rem; }
+.hplc-column-area { display: flex; justify-content: center; margin-bottom: 0.4rem; }
+.hplc-col { width: 30px; background: var(--surface-3); border-radius: 4px; padding: 0.4rem; text-align: center; }
+.hplc-col-label { font-size: 0.55rem; color: var(--info); font-weight: 600; writing-mode: horizontal-tb; }
+.hplc-packing { width: 20px; height: 40px; background: repeating-linear-gradient(180deg, rgba(240,165,0,0.3) 0px, rgba(240,165,0,0.1) 3px, rgba(0,0,0,0.2) 3px, rgba(0,0,0,0.2) 6px); margin: 0.3rem auto; border-radius: 2px; }
+.hplc-chromatogram { background: rgba(0,0,0,0.3); border-radius: 6px; padding: 0.5rem; height: 55px; position: relative; }
+.chrom-trace { position: absolute; bottom: 8px; left: 4px; right: 4px; height: calc(100% - 12px); }
+.chrom-peak { position: absolute; bottom: 0; width: 6px; background: linear-gradient(to top, var(--success), rgba(63,185,80,0.2)); border-radius: 3px 3px 0 0; }
+.chrom-axis { position: absolute; bottom: 2px; right: 4px; font-size: 0.55rem; color: var(--text-dim); }
+
+/* ══ qPCR ════════════════════════════════════════════════════ */
+.qpcr-body { width: 180px; }
+.qpcr-plate {
+  display: grid; grid-template-columns: repeat(8,1fr); gap: 2px;
+  background: var(--surface-3); border-radius: 6px; padding: 0.4rem; margin-bottom: 0.5rem;
+}
+.qpcr-well { padding-bottom: 100%; border-radius: 50%; background: var(--surface-4); }
+.qpcr-well.positive { background: rgba(63,185,80,0.5); animation: pulse-glow 2s infinite; }
+.qpcr-well.negative { background: rgba(88,166,255,0.1); }
+.qpcr-ct { font-family: var(--font-mono); font-size: 0.75rem; text-align: center; color: var(--text-muted); }
+.ct-val { color: var(--warning); font-weight: 700; }
+
+/* ══ MAGNET RACK ═════════════════════════════════════════════ */
+.magnet-rack { width: 180px; }
+.magnet-bar { font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem; }
+.mag-tube-row { display: flex; gap: 0.4rem; justify-content: center; }
+.mag-tube { width: 18px; height: 55px; border: 2px solid var(--border); border-top: none; border-radius: 0 0 9px 9px; position: relative; overflow: hidden; background: rgba(88,166,255,0.05); }
+.bead-pellet { position: absolute; bottom: 0; right: 0; width: 6px; height: 20px; background: rgba(229,83,75,0.7); border-radius: 0 0 3px 0; animation: bead-pel 0.8s ease-out; }
+
+/* ══ SONICATOR ═══════════════════════════════════════════════ */
+.sonicator-body { width: 180px; }
+.sonic-bath { height: 60px; background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 0.4rem; gap: 0.4rem; }
+.sonic-wave { position: absolute; width: 120%; height: 120%; border-radius: 50%; border: 2px solid rgba(88,166,255,0.3); animation: sonic-ring 1.5s ease-out infinite; }
+.sonic-wave.sw2 { animation-delay: 0.5s; }
+.sonic-wave.sw3 { animation-delay: 1s; }
+.sonic-tube { width: 14px; height: 40px; border: 2px solid var(--border); border-top: none; border-radius: 0 0 7px 7px; background: rgba(88,166,255,0.1); z-index: 1; }
+.sonic-display { font-size: 0.65rem; font-weight: 700; color: var(--info); text-align: center; }
+.sonic-params { font-size: 0.6rem; color: var(--text-muted); text-align: center; }
+
+/* ══ HEMOCYTOMETER ═══════════════════════════════════════════ */
+.hemo-grid {
+  display: grid; grid-template-columns: repeat(5,1fr); gap: 1px;
+  background: rgba(88,166,255,0.15); border: 1px solid rgba(88,166,255,0.3);
+  width: 160px; padding: 2px; border-radius: 4px;
+}
+.hemo-sq { aspect-ratio: 1; background: var(--surface-2); position: relative; display: flex; align-items: center; justify-content: center; }
+.cell-dot { width: 8px; height: 8px; border-radius: 50%; }
+.cell-dot.live { background: rgba(63,185,80,0.8); }
+.cell-dot.dead { background: rgba(229,83,75,0.6); }
+.hemo-count { display: flex; gap: 1rem; font-size: 0.65rem; }
+.hemo-live { color: var(--success); font-weight: 600; }
+.hemo-dead { color: var(--danger); font-weight: 600; }
+.viability-bar-wrap { width: 160px; height: 8px; background: var(--surface-3); border-radius: 4px; overflow: hidden; }
+.viability-bar-fill { height: 100%; background: linear-gradient(to right, var(--danger), var(--warning), var(--success)); border-radius: 4px; transition: width 1s ease; }
+
+/* ══ BEAD BEATER ═════════════════════════════════════════════ */
+.bead-beater { display: flex; align-items: center; gap: 1rem; }
+.bb-tube { width: 40px; height: 80px; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--surface-3); position: relative; }
+.bb-beads { display: flex; flex-wrap: wrap; gap: 2px; padding: 4px; }
+.bead { width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #aaa, #444); }
+.bb-motor { font-size: 1.5rem; }
+
+/* ══ IP TUBE (ChIP) ══════════════════════════════════════════ */
+.ip-tube-vis { display: flex; justify-content: center; }
+.ip-tube-body { width: 50px; height: 100px; border: 2px solid var(--border); border-top: none; border-radius: 0 0 25px 25px; position: relative; overflow: hidden; background: rgba(0,0,0,0.3); }
+.ip-chromatin { position: absolute; bottom: 0; left: 0; right: 0; height: 60%; background: rgba(88,166,255,0.2); }
+.ip-antibody { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 0.7rem; animation: gem-drop 2s ease-in-out infinite; }
+.ip-bead { width: 10px; height: 10px; border-radius: 50%; background: rgba(229,83,75,0.7); position: absolute; }
+.ip-bead.b1 { left: 5px; bottom: 65%; }
+.ip-bead.b2 { left: 20px; bottom: 70%; }
+.ip-bead.b3 { left: 35px; bottom: 60%; }
+
+/* ══ TN5 REACTION ════════════════════════════════════════════ */
+.tn5-visual { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.dna-helix-wrap { display: flex; align-items: center; gap: 0.5rem; }
+.dna-strand { display: flex; gap: 3px; }
+.dna-base { width: 8px; height: 8px; border-radius: 2px; background: rgba(88,166,255,0.5); }
+.dna-base.b2 { background: rgba(63,185,80,0.5); }
+.tn5-enzyme { font-size: 1.2rem; animation: pulse-glow 1.5s infinite; }
+.tn5-adapter-insert { display: flex; align-items: center; gap: 0.3rem; font-size: 0.62rem; }
+.adapter-arm { padding: 0.2rem 0.4rem; background: rgba(240,165,0,0.15); border: 1px solid rgba(240,165,0,0.3); border-radius: 4px; color: #e3b341; }
+.insert-dna { width: 40px; height: 4px; background: linear-gradient(to right, rgba(88,166,255,0.5), rgba(63,185,80,0.5)); border-radius: 2px; }
+
+/* ══ COMPUTER / TERMINAL ═════════════════════════════════════ */
+.computer-eq { background: transparent; border: none; padding: 0; }
+.terminal { width: 100%; max-width: 500px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+.terminal-bar { display: flex; align-items: center; gap: 0.4rem; background: var(--surface-4); padding: 0.5rem 0.75rem; }
+.tb-dot { width: 10px; height: 10px; border-radius: 50%; }
+.tb-dot.red { background: #e5534b; }
+.tb-dot.yellow { background: #e3b341; }
+.tb-dot.green { background: #3fb950; }
+.tb-title { font-size: 0.72rem; color: var(--text-muted); margin-left: 0.4rem; font-family: var(--font-mono); }
+.terminal-body { background: #0d1117; padding: 0.75rem; font-family: var(--font-mono); font-size: 0.72rem; min-height: 90px; }
+.term-line { margin-bottom: 0.3rem; color: var(--text); }
+.term-line.dim { color: var(--text-muted); }
+.term-line.typing { color: var(--success); }
+.term-line.blink::after { content: '|'; animation: blink-cur 1s infinite; }
+.prompt { color: var(--success); margin-right: 0.4rem; }
+
+/* ══ ICE BUCKET / CELL STAINING ═════════════════════════════ */
+.ice-bucket-vis { font-size: 2.5rem; position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+.cell-suspension { position: absolute; inset: 10px; }
+.cell-d { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: rgba(63,185,80,0.6); border: 1px solid rgba(63,185,80,0.8); }
+.ab-d  { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: rgba(240,165,0,0.8); animation: gem-drop 1.5s infinite; }
+
+/* ══ Covaris ═════════════════════════════════════════════════ */
+.covaris-body { width: 180px; }
+.covaris-water-bath { height: 55px; background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.water-wave { position: absolute; width: 160%; height: 16px; background: rgba(88,166,255,0.1); border-radius: 50%; animation: wave-move 2s ease-in-out infinite; }
+.water-wave.w2 { animation-delay: 1s; opacity: 0.5; }
+.covaris-tube-in-bath { width: 12px; height: 35px; border: 2px solid var(--border); border-radius: 0 0 6px 6px; background: rgba(88,166,255,0.1); z-index: 1; }
+.covaris-display { background: var(--surface-3); border-radius: 4px; padding: 0.4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem; font-size: 0.6rem; margin-top: 0.4rem; }
+.cd-label { color: var(--text-muted); }
+.cd-val { color: var(--success); font-weight: 700; font-family: var(--font-mono); }
+
+/* ══ Disease Panel (QC sidebar addition) ═════════════════════ */
+.disease-panel { padding: 0.75rem 1.1rem; border-top: 1px solid var(--border-dim); }
+.disease-header { display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.6rem; }
+.disease-icon { font-size: 1rem; }
+.disease-panel-name { font-size: 0.78rem; font-weight: 700; }
+.disease-bio-list { list-style: none; display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.6rem; }
+.disease-bio-list li { font-size: 0.68rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 0.3rem; line-height: 1.4; }
+.disease-bio-list li::before { content: '▸'; color: var(--success); flex-shrink: 0; }
+
+/* ══ Tool Flow (pipeline steps) ══════════════════════════════ */
+.tool-flow { display: flex; flex-direction: column; gap: 0.25rem; }
+.tool-flow-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+.tool-flow-item.tf-active {
+  background: rgba(26,155,142,0.1);
+  border-color: rgba(26,155,142,0.25);
+  color: var(--text);
+}
+.tool-flow-item.tf-done { color: var(--success); }
+.tool-flow-item.tf-pending { color: var(--text-dim); }
+.tf-name { font-weight: 600; flex: 1; }
+.tf-stage { font-size: 0.62rem; color: var(--text-dim); }
+.tf-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--surface-4); flex-shrink: 0; }
+.tool-flow-item.tf-active .tf-dot { background: var(--success); animation: pulse-glow 1.5s infinite; }
+.tool-flow-item.tf-done .tf-dot { background: var(--success); }
+
+/* ══ Analysis Outputs (results) ══════════════════════════════ */
+.output-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px,1fr)); gap: 0.6rem; }
+.output-card {
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.75rem;
+  text-align: center; font-size: 0.72rem;
+}
+.output-card-icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+.output-card-name { font-weight: 700; margin-bottom: 0.15rem; }
+.output-card-desc { color: var(--text-muted); font-size: 0.65rem; line-height: 1.4; }
+
+/* ══ Disease Explorer (landing) ══════════════════════════════ */
+.disease-browser { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+.disease-filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 2rem; justify-content: center; }
+.d-tab {
+  padding: 0.35rem 0.85rem; border-radius: 20px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text-muted); font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.d-tab:hover, .d-tab.active { border-color: var(--success); color: var(--success); background: rgba(63,185,80,0.06); }
+.disease-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 0.85rem; }
+.disease-card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 1.1rem;
+  cursor: pointer; transition: all 0.2s;
+  border-left: 3px solid var(--disease-color, var(--border));
+}
+.disease-card:hover { border-color: var(--disease-color, var(--success)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.dc-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+.dc-icon { font-size: 1.2rem; }
+.dc-name { font-size: 0.88rem; font-weight: 700; }
+.dc-cat { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.dc-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 0.6rem; }
+.dc-workflows { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.dc-wf-tag { font-size: 0.62rem; padding: 0.15rem 0.5rem; border-radius: 20px; background: var(--surface-3); color: var(--text-muted); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+.dc-wf-tag:hover { background: rgba(63,185,80,0.1); border-color: var(--success); color: var(--success); }
+
+/* ══ Tool Explorer (landing) ═════════════════════════════════ */
+.tool-explorer { padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; }
+.tool-category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 1rem; }
+.tool-cat-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.25rem; }
+.tool-cat-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-dim); display: flex; align-items: center; gap: 0.4rem; }
+.tool-items { display: flex; flex-direction: column; gap: 0.5rem; }
+.tool-item { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.5rem; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; }
+.tool-item:hover { background: var(--surface-3); }
+.ti-name { font-size: 0.82rem; font-weight: 700; margin-bottom: 0.1rem; }
+.ti-io { font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono); margin-bottom: 0.15rem; }
+.ti-io span { background: var(--surface-4); padding: 0.05rem 0.3rem; border-radius: 3px; }
+.ti-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
+.ti-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; margin-top: 4px; }
+
+/* ══ Responsive adjustments ══════════════════════════════════ */
+@media (max-width: 768px) {
+  .equip-visual { padding: 0.75rem; }
+  .tc-body, .seq-body, .ms-body { width: 160px; }
+}
