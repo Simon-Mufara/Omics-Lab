@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>OmicsLab Simulator — Interactive Omics Training Platform</title>
-  <meta name="description" content="A professional interactive training simulator covering Genomics, Transcriptomics, Epigenomics, Metagenomics, Metabolomics, Proteomics, Virology and Multi-omics workflows with real drag-and-drop lab bench interactions.">
+  <meta name="description" content="Interactive omics training platform — 14 workflows, 8 domains, 20 real instruments. Learn genomics, transcriptomics, proteomics and more by doing.">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3fb950">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="OmicsLab">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="OmicsLab Simulator">
+  <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, 20 real instruments, scientifically accurate.">
+  <meta property="og:type" content="website">
+
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/equipment.css">
 </head>
@@ -21,12 +34,20 @@
       <div class="logo-icon">🧬</div>
       <div class="logo-text">Omics<span>Lab</span></div>
     </div>
-    <div class="nav-pills">
-      <button class="nav-pill active" onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">Workflows</button>
-      <button class="nav-pill" onclick="document.getElementById('disease-explorer-section').scrollIntoView({behavior:'smooth'})">Diseases</button>
-      <button class="nav-pill" onclick="document.getElementById('equipment-gallery-section').scrollIntoView({behavior:'smooth'})">Equipment</button>
-      <button class="nav-pill" onclick="document.getElementById('tool-explorer-section').scrollIntoView({behavior:'smooth'})">Tools</button>
-      <button class="nav-pill" onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">Features</button>
+    <div class="nav-pills" id="nav-pills-desktop">
+      <button class="nav-pill active" onclick="OmicsLab.App.scrollTo('domain-section')">Workflows</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section')">Diseases</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section')">Equipment</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section')">Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section')">Features</button>
+    </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
+    <div class="mobile-nav-dropdown" id="mobile-nav-dropdown">
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('domain-section');OmicsLab.App.toggleMobileNav()">Workflows</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">Diseases</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">Equipment</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section');OmicsLab.App.toggleMobileNav()">Features</button>
     </div>
   </nav>
 
@@ -97,9 +118,17 @@
     <div class="section-label">Real-world instruments</div>
     <h2 class="section-title">Equipment Gallery</h2>
     <p class="section-desc">
-      Explore the actual instruments used in modern omics labs — from pocket-sized nanopore sequencers to room-sized mass spectrometers.
-      Learn what each machine does, what it costs, and how it fits into your workflow.
+      Explore the actual instruments used in modern omics labs — real photos, specs, and cost estimates.
+      From pocket-sized nanopore sequencers to room-sized mass spectrometers.
     </p>
+    <div class="equip-search-wrap">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+      </svg>
+      <input class="equip-search" id="equip-search" type="search"
+             placeholder="Search instruments, manufacturers…"
+             oninput="OmicsLab.App._searchEquipment(this.value)">
+    </div>
     <div class="equip-filter-tabs" id="equip-filter-tabs">
       <!-- Populated by app.js -->
     </div>
@@ -187,7 +216,7 @@
 <!-- ══════════════════════════════════════════════════════════
      LAB WORKSPACE
      ══════════════════════════════════════════════════════════ -->
-<section id="screen-lab">
+<section id="screen-lab" class="screen-lab-active">
 
   <!-- Topbar -->
   <div class="lab-topbar">
@@ -244,6 +273,19 @@
       </div>
     </main>
 
+    <!-- MOBILE: bottom tab bar (hidden on desktop) -->
+    <div class="mobile-tab-bar" id="mobile-tab-bar">
+      <button class="mtb-tab" id="mtb-protocol" onclick="OmicsLab.Mobile.showPanel('protocol')">
+        <span class="mtb-icon">📋</span><span>Protocol</span>
+      </button>
+      <button class="mtb-tab active" id="mtb-bench" onclick="OmicsLab.Mobile.showPanel('bench')">
+        <span class="mtb-icon">🔬</span><span>Bench</span>
+      </button>
+      <button class="mtb-tab" id="mtb-qc" onclick="OmicsLab.Mobile.showPanel('qc')">
+        <span class="mtb-icon">📊</span><span>QC</span>
+      </button>
+    </div>
+
     <!-- RIGHT: QC panel -->
     <aside class="qc-sidebar">
       <div class="qc-section">
@@ -292,6 +334,16 @@
     <!-- Populated by App.showResults() -->
   </div>
 </section>
+
+<!-- Equipment detail modal -->
+<div class="equip-modal-overlay" id="equip-modal-overlay" onclick="OmicsLab.App._closeEquipmentModal(event)">
+  <div class="equip-modal" id="equip-modal" role="dialog" aria-modal="true">
+    <!-- Populated by app.js -->
+  </div>
+</div>
+
+<!-- Back to top -->
+<button class="back-to-top" id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- Scripts — load order matters (namespace → data → engine → bench → app) -->
 <script src="js/workflows.js"></script>

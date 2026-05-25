@@ -178,6 +178,9 @@ OmicsLab.App = (function() {
         <button class="btn-result-primary" style="background:var(--info)" onclick="OmicsLab.App.goHome()">
           🧬 Choose Different Workflow
         </button>
+        <button class="btn-share" onclick="OmicsLab.App.shareResults('${wf.name}', ${score})">
+          &#8679; Share Results
+        </button>
       </div>
     `;
 
@@ -328,13 +331,27 @@ OmicsLab.App = (function() {
       `<button class="df-tab ${i===0?'active':''}" onclick="OmicsLab.App._filterEquipment('${cat}',this)">${cat}</button>`
     ).join('');
 
-    function renderCards(filter) {
-      const filtered = filter === 'All' ? items : items.filter(e => e.category === filter);
+    function renderCards(filterOrItems) {
+      const filtered = Array.isArray(filterOrItems)
+        ? filterOrItems
+        : (filterOrItems === 'All' ? items : items.filter(e => e.category === filterOrItems));
+
+      if (filtered.length === 0) {
+        gridEl.innerHTML = `<div class="equip-no-results"><span>🔭</span>No instruments found.</div>`;
+        return;
+      }
 
       gridEl.innerHTML = filtered.map(eq => {
-        const visual = OmicsLab.Equipment
+        const cssAnim = OmicsLab.Equipment
           ? OmicsLab.Equipment.render(eq.equipType, eq.equipParams || {})
           : `<div class="equip-visual"><div class="equip-icon-large">🔬</div></div>`;
+        const preview = eq.imageUrl
+          ? `<div class="egc-photo-wrap">
+               <img class="egc-photo" src="${eq.imageUrl}" alt="${eq.name}" loading="lazy"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+               <div class="egc-photo-fallback">${cssAnim}</div>
+             </div>`
+          : cssAnim;
 
         const specsRows = Object.entries(eq.specs || {}).map(([k,v]) =>
           `<tr><td class="eg-spec-key">${k}</td><td class="eg-spec-val">${v}</td></tr>`
@@ -342,7 +359,7 @@ OmicsLab.App = (function() {
 
         const wfTags = (eq.workflows || []).map(wfId => {
           const wf = OmicsLab.Workflows && OmicsLab.Workflows[wfId];
-          return wf ? `<span class="eg-wf-tag" onclick="OmicsLab.App.startWorkflow('${wfId}')" title="Launch ${wf.name}">${wf.icon} ${wf.name}</span>` : '';
+          return wf ? `<span class="eg-wf-tag" onclick="event.stopPropagation();OmicsLab.App.startWorkflow('${wfId}')" title="Launch ${wf.name}">${wf.icon} ${wf.name}</span>` : '';
         }).join('');
 
         const catColor = {
@@ -355,8 +372,8 @@ OmicsLab.App = (function() {
           'Mass Spectrometers':   '#e3b341',
         }[eq.category] || '#8b949e';
 
-        return `<div class="equip-gallery-card" style="--eg-color:${catColor}">
-          <div class="egc-preview">${visual}</div>
+        return `<div class="equip-gallery-card" style="--eg-color:${catColor}" onclick="OmicsLab.App._openEquipmentModal('${eq.id}')">
+          <div class="egc-preview">${preview}</div>
           <div class="egc-body">
             <div class="egc-maker">${eq.manufacturer}</div>
             <div class="egc-name">${eq.name}</div>
@@ -367,9 +384,7 @@ OmicsLab.App = (function() {
             ${wfTags ? `<div class="egc-section-label">Use in OmicsLab</div><div class="egc-wf-tags">${wfTags}</div>` : ''}
             <div class="egc-section-label">Cost estimate</div>
             <div class="egc-cost">${eq.cost}</div>
-            <div class="egc-section-label">When to use</div>
-            <div class="egc-when">${eq.whenToUse}</div>
-            ${eq.alternatives && eq.alternatives.length ? `<div class="egc-alts">Alternatives: ${eq.alternatives.join(' · ')}</div>` : ''}
+            <button class="egc-details-btn" onclick="event.stopPropagation();OmicsLab.App._openEquipmentModal('${eq.id}')">View Full Specs →</button>
           </div>
         </div>`;
       }).join('');
@@ -380,12 +395,146 @@ OmicsLab.App = (function() {
   }
 
   function _filterEquipment(cat, btn) {
-    /* Handle both disease and equipment filter tabs */
-    const section = btn.closest('.equip-filter-tabs, .disease-filter-tabs');
+    const section = btn.closest('.equip-filter-tabs');
     if (section) section.querySelectorAll('.df-tab').forEach(t => t.classList.remove('active'));
-    else document.querySelectorAll('.df-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     if (OmicsLab.App._renderEquipmentCards) OmicsLab.App._renderEquipmentCards(cat);
+  }
+
+  /* ─── Smooth scroll helper ─── */
+  function scrollTo(sectionId) {
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  /* ─── Hamburger nav ─── */
+  function toggleMobileNav() {
+    const dd = document.getElementById('mobile-nav-dropdown');
+    if (dd) dd.classList.toggle('open');
+  }
+
+  /* ─── Equipment modal ─── */
+  function _openEquipmentModal(equipId) {
+    const eq = (OmicsLab.EQUIPMENT_GALLERY || []).find(e => e.id === equipId);
+    if (!eq) return;
+
+    const catColor = {
+      'Short-Read Sequencers':'#58a6ff',
+      'Long-Read Sequencers': '#3fb950',
+      'QC Instruments':       '#d2a8ff',
+      'Sample Preparation':   '#ffa657',
+      'PCR Instruments':      '#f78166',
+      'Single-Cell Platforms':'#79c0ff',
+      'Mass Spectrometers':   '#e3b341',
+    }[eq.category] || '#8b949e';
+
+    const cssAnim = OmicsLab.Equipment
+      ? OmicsLab.Equipment.render(eq.equipType, eq.equipParams || {})
+      : '<div class="equip-icon-large">🔬</div>';
+
+    const photoHtml = eq.imageUrl
+      ? `<img class="emd-photo" src="${eq.imageUrl}" alt="${eq.name}"
+             onerror="this.style.display='none';document.getElementById('emd-anim-fallback').style.display='flex'">
+         <div class="emd-anim-preview" id="emd-anim-fallback" style="display:none">${cssAnim}</div>`
+      : `<div class="emd-anim-preview">${cssAnim}</div>`;
+
+    const specsHtml = Object.entries(eq.specs || {}).map(([k, v]) =>
+      `<div class="emd-spec"><div class="emd-spec-key">${k}</div><div class="emd-spec-val">${v}</div></div>`
+    ).join('');
+
+    const wfTagsHtml = (eq.workflows || []).map(wfId => {
+      const wf = OmicsLab.Workflows && OmicsLab.Workflows[wfId];
+      return wf ? `<span class="emd-wf-tag eg-wf-tag" onclick="OmicsLab.App.startWorkflow('${wfId}');OmicsLab.App._closeEquipmentModal()">${wf.icon} ${wf.name}</span>` : '';
+    }).join('');
+
+    const firstWf = (eq.workflows || []).find(id => OmicsLab.Workflows && OmicsLab.Workflows[id]);
+    const launchBtn = firstWf
+      ? `<button class="emd-launch-btn" onclick="OmicsLab.App.startWorkflow('${firstWf}');OmicsLab.App._closeEquipmentModal()">
+           Launch ${OmicsLab.Workflows[firstWf].icon} ${OmicsLab.Workflows[firstWf].name} →
+         </button>`
+      : '';
+
+    const modal = document.getElementById('equip-modal');
+    if (!modal) return;
+    modal.style.setProperty('--eg-color', catColor);
+    modal.innerHTML = `
+      <div class="emd-header">
+        ${photoHtml}
+        <div class="emd-photo-gradient"></div>
+        <button class="emd-close" onclick="OmicsLab.App._closeEquipmentModal()">✕</button>
+      </div>
+      <div class="emd-body">
+        <div class="emd-maker">${eq.manufacturer}</div>
+        <div class="emd-name">${eq.name}</div>
+        <div class="emd-tagline">${eq.tagline}</div>
+        <div class="emd-desc">${eq.desc}</div>
+        ${specsHtml ? `<div class="emd-section">Key Specifications</div><div class="emd-specs">${specsHtml}</div>` : ''}
+        <div class="emd-section">Cost Estimate</div>
+        <div class="emd-cost">${eq.cost}</div>
+        <div class="emd-section">When to Use</div>
+        <div class="emd-when">${eq.whenToUse}</div>
+        ${eq.alternatives && eq.alternatives.length ? `<div class="emd-section">Alternatives</div><div class="emd-alts">${eq.alternatives.join(' · ')}</div>` : ''}
+        ${wfTagsHtml ? `<div class="emd-section">Use in OmicsLab</div><div class="emd-wf-tags">${wfTagsHtml}</div>` : ''}
+      </div>
+      ${launchBtn ? `<div class="emd-footer">${launchBtn}</div>` : ''}
+    `;
+
+    const overlay = document.getElementById('equip-modal-overlay');
+    if (overlay) {
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function _closeEquipmentModal(event) {
+    if (event && event.target !== document.getElementById('equip-modal-overlay')) return;
+    const overlay = document.getElementById('equip-modal-overlay');
+    if (overlay) overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ─── Equipment search ─── */
+  function _searchEquipment(query) {
+    if (!OmicsLab.EQUIPMENT_GALLERY) return;
+    const q = query.toLowerCase().trim();
+
+    /* Reset category tabs to 'All' */
+    const filterEl = document.getElementById('equip-filter-tabs');
+    if (filterEl) filterEl.querySelectorAll('.df-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+
+    if (!q) {
+      if (OmicsLab.App._renderEquipmentCards) OmicsLab.App._renderEquipmentCards('All');
+      return;
+    }
+
+    const filtered = OmicsLab.EQUIPMENT_GALLERY.filter(eq =>
+      eq.name.toLowerCase().includes(q) ||
+      eq.manufacturer.toLowerCase().includes(q) ||
+      eq.category.toLowerCase().includes(q) ||
+      eq.tagline.toLowerCase().includes(q) ||
+      (eq.desc || '').toLowerCase().includes(q)
+    );
+
+    const gridEl = document.getElementById('equip-gallery-grid');
+    if (!gridEl) return;
+    if (filtered.length === 0) {
+      gridEl.innerHTML = `<div class="equip-no-results"><span>🔭</span>No instruments match "<em>${query}</em>"</div>`;
+      return;
+    }
+    if (OmicsLab.App._renderEquipmentCards) OmicsLab.App._renderEquipmentCards(filtered);
+  }
+
+  /* ─── Share results ─── */
+  function shareResults(wfName, score) {
+    const text = `I just completed the ${wfName} workflow on OmicsLab Simulator and scored ${score}/100!`;
+    const url  = 'https://simon-mufara.github.io/Omics-Lab/';
+    if (navigator.share) {
+      navigator.share({ title: 'OmicsLab Results', text, url }).catch(() => {});
+    } else {
+      navigator.clipboard
+        ? navigator.clipboard.writeText(`${text} ${url}`).then(() => alert('Link copied to clipboard!'))
+        : window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    }
   }
 
   /* Tool Explorer on landing page */
@@ -442,10 +591,52 @@ OmicsLab.App = (function() {
   function init() {
     buildLanding();
     showScreen('screen-landing');
+
+    window.addEventListener('scroll', () => {
+      const btn = document.getElementById('back-to-top');
+      if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/Omics-Lab/sw.js').catch(() => {});
+    }
   }
 
-  return { init, startWorkflow, goHome, showResults, showScreen, _filterDiseases, _filterEquipment, _renderDiseaseCards: null, _renderEquipmentCards: null };
+  return {
+    init, startWorkflow, goHome, showResults, showScreen,
+    _filterDiseases, _filterEquipment,
+    scrollTo, toggleMobileNav,
+    _openEquipmentModal, _closeEquipmentModal,
+    _searchEquipment, shareResults,
+    _renderDiseaseCards: null, _renderEquipmentCards: null,
+  };
 })();
 
 /* ─── Boot on DOM ready ─── */
 document.addEventListener('DOMContentLoaded', () => OmicsLab.App.init());
+
+/* ─── Mobile panel switcher (lab workspace) ─── */
+OmicsLab.Mobile = (function() {
+  function showPanel(panel) {
+    const panelEls = {
+      protocol: document.querySelector('.protocol-sidebar'),
+      bench:    document.querySelector('.bench-center'),
+      qc:       document.querySelector('.qc-sidebar'),
+    };
+    const tabEls = {
+      protocol: document.getElementById('mtb-protocol'),
+      bench:    document.getElementById('mtb-bench'),
+      qc:       document.getElementById('mtb-qc'),
+    };
+    Object.keys(panelEls).forEach(key => {
+      const el = panelEls[key];
+      if (!el) return;
+      el.classList.toggle('mobile-panel-active', key === panel);
+      el.classList.toggle('mobile-panel-hidden', key !== panel);
+    });
+    Object.keys(tabEls).forEach(key => {
+      if (tabEls[key]) tabEls[key].classList.toggle('active', key === panel);
+    });
+  }
+  return { showPanel };
+})();

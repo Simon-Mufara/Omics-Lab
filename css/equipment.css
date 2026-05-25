@@ -735,6 +735,23 @@
   padding-top: 0.4rem;
   border-top: 1px solid var(--border-dim);
 }
+.egc-details-btn {
+  display: block;
+  width: 100%;
+  margin-top: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(63,185,80,0.08);
+  border: 1px solid rgba(63,185,80,0.25);
+  border-radius: 6px;
+  color: var(--success);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+.egc-details-btn:hover { background: rgba(63,185,80,0.18); border-color: var(--success); }
+.equip-gallery-card { cursor: pointer; }
 
 /* ══ Responsive adjustments ══════════════════════════════════ */
 @media (max-width: 768px) {
