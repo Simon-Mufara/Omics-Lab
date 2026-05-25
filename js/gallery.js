@@ -1,0 +1,322 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Real-World Equipment Gallery
+   20 instruments used in modern omics labs
+   ═══════════════════════════════════════════════════════════════ */
+window.OmicsLab = window.OmicsLab || {};
+
+OmicsLab.EQUIPMENT_GALLERY = [
+
+  /* ── SHORT-READ SEQUENCERS ─────────────────────────────────── */
+  {
+    id: 'novaseq-x',
+    name: 'Illumina NovaSeq X Plus',
+    manufacturer: 'Illumina',
+    category: 'Short-Read Sequencers',
+    equipType: 'sequencer',
+    equipParams: { platform: 'NovaSeq X Plus', readLen: '2×150 bp PE' },
+    tagline: 'Population-scale short-read sequencing',
+    desc: 'The highest-throughput short-read platform. Patterned XLEPE flow cells with ExAmp chemistry deliver 10 billion reads per run. The backbone of large-scale biobanks, clinical oncology pipelines, and multi-omics consortia.',
+    specs: { 'Max Output': '16 Tb / run', 'Read Length': '2×150 bp PE', 'Run Time': '27–48 hours', 'Q30': '> 85%' },
+    workflows: ['wgs','wes','rna-seq','chip-seq','atac-seq','scrna-seq'],
+    cost: '~$1M instrument · ~$400–800 / sample',
+    alternatives: ['MGI DNBSEQ-T7', 'Element AVITI', 'Ultima Genomics UG 100'],
+    whenToUse: 'Large-scale projects (≥50 samples), biobanks, clinical WGS. When you need >1 Tb of data per run.'
+  },
+  {
+    id: 'miseq',
+    name: 'Illumina MiSeq',
+    manufacturer: 'Illumina',
+    category: 'Short-Read Sequencers',
+    equipType: 'sequencer',
+    equipParams: { platform: 'MiSeq', readLen: '2×300 bp PE' },
+    tagline: 'Benchtop sequencer with longest Illumina reads',
+    desc: 'Paired 2×300 bp reads overlap to form 550 bp merged amplicons — ideal for 16S rRNA V3-V4, small targeted panels, and R&D runs before scaling. A mainstay in microbiology and clinical diagnostic labs.',
+    specs: { 'Max Output': '15 Gb / run', 'Read Length': 'Up to 2×300 bp', 'Run Time': '4–55 hours', 'Throughput': '25M reads / run' },
+    workflows: ['16s-amplicon','viral-wgs','wes'],
+    cost: '~$100K instrument · ~$100 / sample',
+    alternatives: ['Illumina NextSeq 550 (higher throughput)', 'Oxford Nanopore MinION'],
+    whenToUse: 'Amplicon sequencing (16S, ITS, ARTIC viral), small targeted panels, pilot runs before committing to NovaSeq.'
+  },
+  {
+    id: 'iseq100',
+    name: 'Illumina iSeq 100',
+    manufacturer: 'Illumina',
+    category: 'Short-Read Sequencers',
+    equipType: 'sequencer',
+    equipParams: { platform: 'iSeq 100', readLen: '2×150 bp PE' },
+    tagline: 'Desktop sequencer for low-resource and field settings',
+    desc: 'A compact, affordable all-in-one cartridge sequencer. Small footprint, low capital cost, and full compatibility with the Illumina library ecosystem. Ideal for resource-limited settings in Africa and field applications.',
+    specs: { 'Max Output': '1.2 Gb / run', 'Read Length': '2×150 bp', 'Run Time': '9–17.5 hours', 'Throughput': '4M reads / run' },
+    workflows: ['viral-wgs','16s-amplicon','wes'],
+    cost: '~$20K instrument · ~$150 / sample',
+    alternatives: ['Illumina MiSeq', 'Oxford Nanopore MinION'],
+    whenToUse: 'Low-throughput targeted sequencing, validating protocols, low-resource settings where cost and portability matter.'
+  },
+
+  /* ── LONG-READ SEQUENCERS ──────────────────────────────────── */
+  {
+    id: 'minion',
+    name: 'Oxford Nanopore MinION',
+    manufacturer: 'Oxford Nanopore Technologies',
+    category: 'Long-Read Sequencers',
+    equipType: 'nanopore',
+    equipParams: {},
+    tagline: 'USB-sized real-time portable sequencer',
+    desc: 'A pocket-sized device that connects via USB. Nanopores in a synthetic membrane detect ionic current changes as DNA/RNA threads through in real time. Produces reads of any length — N50 >50 kb, ultra-long >1 Mb. Output is streamed live and can be analysed during the run.',
+    specs: { 'Max Output': '50 Gb / run', 'Read Length': 'N50 >50 kb (ultra-long: >1 Mb)', 'Accuracy': '>99% (R10.4.1 HAC)', 'Real-time': 'Yes — live base-calling' },
+    workflows: ['viral-wgs','wgs','shotgun-meta'],
+    cost: '~$1,000 starter pack · ~$800 / flow cell',
+    alternatives: ['Oxford Nanopore Flongle (cheaper, lower output)', 'PacBio Revio (higher accuracy)'],
+    whenToUse: 'Portable field sequencing, structural variant detection, long amplicons (full-length 16S), real-time pathogen surveillance.'
+  },
+  {
+    id: 'pacbio-revio',
+    name: 'PacBio Revio',
+    manufacturer: 'Pacific Biosciences',
+    category: 'Long-Read Sequencers',
+    equipType: 'pacbio',
+    equipParams: {},
+    tagline: 'High-accuracy long-read sequencing with HiFi CCS',
+    desc: 'HiFi sequencing using SMRT technology — each DNA molecule is read multiple times in a circle to produce highly accurate CCS reads (>99.9%). Runs 4 SMRT Cells simultaneously for 360 Gb HiFi per run. The first long-read platform to match short-read accuracy at 10–25 kb.',
+    specs: { 'Max Output': '360 Gb HiFi / 4-day run', 'Read Length': '10–25 kb average', 'Accuracy': '>99.9% HiFi (CCS)', 'SMRT Cells': '4 per run' },
+    workflows: ['wgs','rna-seq'],
+    cost: '~$530K instrument · ~$800 / SMRT Cell',
+    alternatives: ['Oxford Nanopore PromethION (higher raw output)', 'Illumina NovaSeq X (short-read)'],
+    whenToUse: 'Phased diploid genomes, repeat-region expansions (Fragile X, Huntington), full-length isoform sequencing.'
+  },
+
+  /* ── QC INSTRUMENTS ───────────────────────────────────────── */
+  {
+    id: 'bioanalyzer',
+    name: 'Agilent Bioanalyzer 2100',
+    manufacturer: 'Agilent Technologies',
+    category: 'QC Instruments',
+    equipType: 'bioanalyzer',
+    equipParams: { rin: '8.7' },
+    tagline: 'The RIN score standard for RNA integrity QC',
+    desc: 'Chip-based capillary electrophoresis system that runs 12 samples in 30 minutes. The RIN (RNA Integrity Number) it produces — scored 1–10 — is the industry standard for determining if RNA is suitable for RNA-seq. Also checks library fragment size distribution before sequencing.',
+    specs: { 'Samples / Run': '12 per chip', 'Run Time': '~30 minutes', 'RIN Score': '1–10 (>7 for RNA-seq)', 'Size Range': '25 bp – 12,000 nt' },
+    workflows: ['rna-seq','scrna-seq','wgs','chip-seq'],
+    cost: '~$20K instrument · ~$2 / sample (chip reagents)',
+    alternatives: ['Agilent TapeStation 4150 (faster, automated)', 'FEMTO Pulse (high mol. weight)'],
+    whenToUse: 'RNA integrity check before library prep, library size QC. A RIN <7 will produce poor RNA-seq data.'
+  },
+  {
+    id: 'tapestation',
+    name: 'Agilent TapeStation 4150',
+    manufacturer: 'Agilent Technologies',
+    category: 'QC Instruments',
+    equipType: 'bioanalyzer',
+    equipParams: { rin: '9.1' },
+    tagline: 'Automated high-throughput RNA and library QC',
+    desc: 'Automated electrophoresis using ScreenTape cassettes. Analyses 1–96 samples fully automatically at ~1 minute/sample — no manual chip loading. Supports RNA (RINe), DNA, cfDNA, and genomic DNA tapes. Core lab workhorse when >20 samples/day need QC.',
+    specs: { 'Samples / Run': '1–96 automated', 'Time / Sample': '~1 minute', 'RINe Score': '1–10', 'ScreenTapes': 'RNA, DNA, cfDNA, gDNA' },
+    workflows: ['rna-seq','scrna-seq','wgs','wes'],
+    cost: '~$30K instrument · ~$5 / sample (tape)',
+    alternatives: ['Agilent Bioanalyzer 2100 (cheaper per sample)', 'FEMTO Pulse (ultra-sensitive)'],
+    whenToUse: 'High-throughput core lab RNA QC (>20 samples/day), automated unattended library size checks.'
+  },
+  {
+    id: 'nanodrop',
+    name: 'Thermo Fisher NanoDrop One',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'QC Instruments',
+    equipType: 'nanodrop',
+    equipParams: {},
+    tagline: 'Micro-volume UV-Vis spectrophotometer — no cuvette needed',
+    desc: 'A UV-Vis spectrophotometer that uses surface tension to hold a 1 µL sample between two pedestals. Measures 260/280 and 260/230 ratios to assess purity. Indispensable for checking DNA/RNA quality after extraction. Takes 10 seconds per sample — but overestimates concentration in impure samples.',
+    specs: { 'Sample Volume': '0.5–2 µL', 'Measurement Time': '~10 seconds', 'dsDNA Range': '2–37,500 ng/µL', '260/280 Target': '1.8–2.0 (DNA), ~2.1 (RNA)' },
+    workflows: ['wgs','wes','rna-seq','chip-seq','atac-seq'],
+    cost: '~$6,000',
+    alternatives: ['DeNovix DS-11 (touchscreen + fluorometry)', 'Implen NanoPhotometer P-Class'],
+    whenToUse: 'Quick DNA/RNA purity check post-extraction. For accurate concentration (library prep), always follow with a Qubit measurement.'
+  },
+  {
+    id: 'qubit',
+    name: 'Thermo Fisher Qubit 4 Fluorometer',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'QC Instruments',
+    equipType: 'qubit',
+    equipParams: {},
+    tagline: 'Fluorometric quantification — ignores contaminants',
+    desc: 'Uses dye-based chemistry (dsDNA HS, RNA HS, Protein) that fluoresces only when bound to the specific target molecule — contaminants are invisible. Far more accurate than NanoDrop when samples have phenol carryover or protein contamination. Essential before loading libraries onto any sequencer.',
+    specs: { 'Sample Volume': '1–20 µL', 'dsDNA HS Range': '0.01–120 ng', 'dsDNA BR Range': '2–1,000 ng', 'Assays': 'dsDNA, ssDNA, RNA, Protein, miRNA, cfDNA' },
+    workflows: ['wgs','wes','rna-seq','chip-seq','atac-seq','scrna-seq'],
+    cost: '~$1,500 · ~$1 / sample (reagents)',
+    alternatives: ['DeNovix QFX Fluorometer', 'Promega QuantiFluor'],
+    whenToUse: 'Accurate quantification before library dilution/pooling. Always Qubit after NanoDrop — use NanoDrop for purity ratios, Qubit for loading concentration.'
+  },
+
+  /* ── SAMPLE PREPARATION ────────────────────────────────────── */
+  {
+    id: 'covaris-s220',
+    name: 'Covaris S220 Focused Ultrasonicator',
+    manufacturer: 'Covaris',
+    category: 'Sample Preparation',
+    equipType: 'covaris',
+    equipParams: { target: '350–400 bp' },
+    tagline: 'Acoustic shearing for uniform DNA fragmentation',
+    desc: 'Adaptive Focused Acoustics (AFA) uses acoustic energy focused through a water bath — no probe contamination. Produces very tight size distributions (CV <5%) critical for WGS and WES library prep. Also used to shear high-molecular-weight chromatin for ChIP-seq. Industry gold standard for mechanical shearing.',
+    specs: { 'Fragment Targets': '100 bp – 5 kb (tunable)', 'Sample Volume': '50–130 µL (microTUBE)', 'Temperature': '4–37°C (controlled)', 'Size CV': '< 5%' },
+    workflows: ['wgs','wes','chip-seq'],
+    cost: '~$25,000',
+    alternatives: ['Diagenode Bioruptor Plus (bath sonicator)', 'Enzymatic fragmentation (NEBNext Ultra)'],
+    whenToUse: 'WGS/WES library prep when DNA is high molecular weight (genomic DNA, FFPE). Target 350–400 bp for NovaSeq PE150.'
+  },
+  {
+    id: 'centrifuge-5430r',
+    name: 'Eppendorf 5430R Centrifuge',
+    manufacturer: 'Eppendorf',
+    category: 'Sample Preparation',
+    equipType: 'centrifuge',
+    equipParams: { speed: '20,913 × g', time: '10 min' },
+    tagline: 'Refrigerated high-speed microcentrifuge — lab workhorse',
+    desc: 'A workhorse refrigerated microcentrifuge reaching 20,913 × g at temperatures down to -10°C. Interchangeable rotors support 1.5/2 mL tubes, PCR strips, and plates. Present in every molecular biology lab. Used at every pelleting step in nucleic acid extraction, protein precipitation, and cell biology.',
+    specs: { 'Max RCF': '20,913 × g (13,300 rpm)', 'Temperature': '-10°C to +40°C', 'Capacity': '48 × 1.5 mL tubes', 'Acceleration': '9 configurable levels' },
+    workflows: ['wgs','wes','rna-seq','chip-seq','atac-seq','proteomics','lc-ms'],
+    cost: '~$5,000–$8,000',
+    alternatives: ['Beckman Coulter Microfuge 20R', 'Thermo Scientific Sorvall Pico'],
+    whenToUse: 'Any pelleting or phase-separation step during nucleic acid extraction, protein precipitation, bead cleanup.'
+  },
+  {
+    id: 'bioruptor',
+    name: 'Diagenode Bioruptor Plus',
+    manufacturer: 'Diagenode',
+    category: 'Sample Preparation',
+    equipType: 'sonicator',
+    equipParams: {},
+    tagline: 'Contamination-free ultrasonic bath for chromatin shearing',
+    desc: 'An ultrasonic bath sonicator — samples sit in water without a probe tip, eliminating contamination risk. Critical for ChIP-seq where probe contamination would destroy the antibody-chromatin complex. Standard ChIP protocol: 30 cycles of 30s ON / 30s OFF at 4°C yields 200–500 bp chromatin fragments.',
+    specs: { 'Format': 'Water bath (no probe tip)', 'Tube Volume': '0.1–1.5 mL per tube', 'Protocol': '30 cycles · 30s ON / 30s OFF', 'Temperature': '4°C (water-cooled)' },
+    workflows: ['chip-seq','atac-seq'],
+    cost: '~$5,000–$8,000',
+    alternatives: ['Covaris S220 (more uniform shearing)', 'Bioruptor Pico (small volumes)'],
+    whenToUse: 'ChIP-seq chromatin shearing to 200–500 bp. The water bath format protects the antibody-bound complex from heat and contamination.'
+  },
+  {
+    id: 'gentlemacs',
+    name: 'Miltenyi GentleMACS Octo Dissociator',
+    manufacturer: 'Miltenyi Biotec',
+    category: 'Sample Preparation',
+    equipType: 'tube-spin',
+    equipParams: {},
+    tagline: 'Automated tissue dissociation for single-cell workflows',
+    desc: 'A rotating/vibrating tube dissociator combining mechanical force and enzymatic digestion to generate single-cell suspensions from solid tissues. The Octo model processes 8 samples simultaneously. Critical for scRNA-seq workflows — poor dissociation (dead cells, clumps) ruins 10x Chromium runs.',
+    specs: { 'Capacity': '8 samples simultaneously', 'Tubes': 'C-Tubes (gentleMACS)', 'Programs': '35+ optimised tissue protocols', 'Compatible kits': 'Tumor Dissociation Kit, MACS Brain' },
+    workflows: ['scrna-seq','cite-seq','atac-seq'],
+    cost: '~$10,000–$15,000',
+    alternatives: ['Manual mincing + collagenase (cheaper)', 'Miltenyi gentleMACS Dissociator (4 samples)'],
+    whenToUse: 'Converting solid tissue (tumour, brain, liver, lung) to single-cell suspension before scRNA-seq, FACS sorting, or 10x Chromium loading.'
+  },
+
+  /* ── PCR INSTRUMENTS ──────────────────────────────────────── */
+  {
+    id: 'cfx96',
+    name: 'Bio-Rad CFX96 Touch Real-Time PCR',
+    manufacturer: 'Bio-Rad',
+    category: 'PCR Instruments',
+    equipType: 'qpcr',
+    equipParams: { ct: '22.4' },
+    tagline: '96-well qPCR for gene expression and viral detection',
+    desc: 'A 96-well real-time PCR system with 4 fluorescence channels (SYBR/FAM/HEX/ROX). Used for gene expression analysis (reference gene normalisation), library quantification before sequencing (KAPA Library Quantification Kit), and viral load measurement (SARS-CoV-2 Ct values). Gradient block enables primer optimisation at 8 temperatures simultaneously.',
+    specs: { 'Format': '96-well plate', 'Channels': '4 fluorescence channels', 'Gradient': 'Yes (30–100°C range)', 'Software': 'CFX Maestro cloud' },
+    workflows: ['viral-wgs','rna-seq','wgs'],
+    cost: '~$25,000',
+    alternatives: ['Applied Biosystems QuantStudio 7 Pro', 'Roche LightCycler 96'],
+    whenToUse: 'Gene expression analysis, viral load qPCR (COVID-19 N/E genes, HIV RNA), library quantification before loading sequencer flow cells.'
+  },
+  {
+    id: 'quantstudio7',
+    name: 'Applied Biosystems QuantStudio 7 Pro',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'PCR Instruments',
+    equipType: 'qpcr',
+    equipParams: { ct: '19.7' },
+    tagline: '384-well high-throughput qPCR for clinical surveillance',
+    desc: 'A 384-well, 6-channel real-time PCR system with cloud connectivity. Supports TaqMan probe arrays, SYBR chemistry, and multiplexing up to 6 targets per well. Used by public health labs for high-throughput SARS-CoV-2, Influenza, Mpox, and HIV surveillance. 384-well format quadruples throughput vs 96-well at the same reagent cost.',
+    specs: { 'Format': '384-well plate', 'Channels': '6 fluorescence channels', 'Volume': '5–20 µL per well', 'Connectivity': 'Cloud-based DA Software' },
+    workflows: ['viral-wgs','rna-seq'],
+    cost: '~$45,000',
+    alternatives: ['Bio-Rad CFX384 Touch', 'Roche LightCycler 480 II'],
+    whenToUse: 'Public health surveillance at scale (>200 samples/day), high-throughput TaqMan gene expression panels, clinical diagnostics.'
+  },
+
+  /* ── SINGLE-CELL PLATFORMS ─────────────────────────────────── */
+  {
+    id: 'chromium-x',
+    name: '10x Genomics Chromium X',
+    manufacturer: '10x Genomics',
+    category: 'Single-Cell Platforms',
+    equipType: 'chromium',
+    equipParams: { cells: '10,000' },
+    tagline: 'Microfluidic barcoding for scRNA-seq, ATAC, CITE, and Visium',
+    desc: 'The gold standard for single-cell partitioning. GEM-X technology co-encapsulates cells with barcoded beads in droplets (GEMs) for massively parallel single-cell barcoding. One instrument — four applications: scRNA-seq (3\' or 5\'), scATAC-seq, CITE-seq (RNA + surface proteins), and spatial Visium. Chip X handles 16 samples simultaneously.',
+    specs: { 'Cell Capture': '100–80,000 cells per lane', 'Samples / Chip': 'Up to 16 (Chip X)', 'Library Types': 'GEX, ATAC, VDJ, CITE-seq, Visium', 'Run Time': '~35 min bead loading' },
+    workflows: ['scrna-seq','atac-seq','cite-seq'],
+    cost: '~$75,000 instrument · ~$2,000 / sample (reagents)',
+    alternatives: ['Parse Biosciences (combinatorial barcoding, no instrument)', 'BD Rhapsody (plate-based)'],
+    whenToUse: 'Single-cell transcriptomics, epigenomics, or multi-modal profiling. Requires fresh single-cell suspension with >70% viability.'
+  },
+  {
+    id: 'facs-aria',
+    name: 'BD FACSAria Fusion Cell Sorter',
+    manufacturer: 'BD Biosciences',
+    category: 'Single-Cell Platforms',
+    equipType: 'facs',
+    equipParams: {},
+    tagline: 'High-speed fluorescence-activated cell sorting',
+    desc: 'Cells flow through a laser interrogation point in single file — fluorescence signals trigger electrostatic deflection to sort specific populations into collection tubes or plates at up to 70,000 events/second. Essential for enriching rare cell populations (circulating tumour cells, HSCs, antigen-specific T cells) before scRNA-seq or ATAC-seq.',
+    specs: { 'Sort Speed': 'Up to 70,000 events / second', 'Lasers': '4–6 (405, 488, 561, 640 nm)', 'Channels': 'Up to 18 detection parameters', 'Sort Targets': 'Tubes (1.5–50 mL) or 96/384-well plates' },
+    workflows: ['scrna-seq','cite-seq','atac-seq','chip-seq'],
+    cost: '~$400,000–$500,000',
+    alternatives: ['Sony MA900 (semi-automated)', 'Miltenyi MACSQuant Tyto (microfluidic cartridge)'],
+    whenToUse: 'Sorting rare populations (<1%), immune cell subset purification, index sorting single cells into 96-well plates for Smart-seq2.'
+  },
+
+  /* ── MASS SPECTROMETERS ─────────────────────────────────────── */
+  {
+    id: 'orbitrap-exploris',
+    name: 'Thermo Fisher Orbitrap Exploris 480',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'Mass Spectrometers',
+    equipType: 'mass-spec',
+    equipParams: { mode: 'DDA / DIA · HCD fragmentation' },
+    tagline: 'High-resolution Orbitrap for deep proteome and metabolome profiling',
+    desc: 'A benchtop Orbitrap mass spectrometer with 480,000 mass resolution. Supports DDA (data-dependent acquisition) and DIA (data-independent acquisition) for comprehensive proteome coverage (>10,000 proteins per run). The optional FAIMS Pro interface adds ion mobility to reduce spectral complexity for phosphoproteomics.',
+    specs: { 'Resolution': '480,000 FWHM at m/z 200', 'Scan Rate': '40 Hz', 'Mass Range': '50–8,000 m/z', 'Acquisition': 'DDA and DIA modes' },
+    workflows: ['proteomics','lc-ms'],
+    cost: '~$800,000–$1,000,000',
+    alternatives: ['Bruker timsTOF Pro 2 (TIMS-PASEF)', 'Sciex ZenoTOF 7600'],
+    whenToUse: 'Deep proteome coverage, clinical proteomics, PTM analysis (phospho, ubiquitin, acetylation), untargeted metabolomics.'
+  },
+  {
+    id: 'timstof-pro',
+    name: 'Bruker timsTOF Pro 2',
+    manufacturer: 'Bruker',
+    category: 'Mass Spectrometers',
+    equipType: 'mass-spec',
+    equipParams: { mode: 'PASEF · Trapped Ion Mobility (TIMS)' },
+    tagline: 'PASEF acquisition for ultra-sensitive phosphoproteomics',
+    desc: 'Combines trapped ion mobility spectrometry (TIMS) with PASEF (Parallel Accumulation–Serial Fragmentation) to achieve near 100% sampling efficiency. Extraordinary sensitivity — identifies >5,000 proteins from 1 ng of peptide input, enabling single-cell proteomics. The ion mobility dimension resolves co-eluting isobaric peptides.',
+    specs: { 'Ion Mobility': 'TIMS (trapped ion mobility)', 'Acquisition': 'PASEF (>100 Hz effective)', 'Sensitivity': '>5,000 proteins from 1 ng input', 'Resolution': '>50,000' },
+    workflows: ['proteomics','lc-ms'],
+    cost: '~$700,000',
+    alternatives: ['Thermo Orbitrap Exploris 480', 'Waters Synapt XS (ion mobility)'],
+    whenToUse: 'Phosphoproteomics, single-cell proteomics, ultra-low input samples (needle biopsies, FFPE cores), large-scale clinical cohorts.'
+  },
+  {
+    id: 'acquity-uplc',
+    name: 'Waters ACQUITY UPLC M-Class',
+    manufacturer: 'Waters Corporation',
+    category: 'Mass Spectrometers',
+    equipType: 'hplc',
+    equipParams: { column: 'BEH130 C18 75 µm × 25 cm' },
+    tagline: 'Nano-flow LC separation for proteomics and metabolomics',
+    desc: 'Ultra-high-pressure (15,000 psi) nanoflow HPLC used upstream of mass spectrometers. Separates tryptic peptides by reversed-phase chromatography at 250–300 nL/min. The 75 µm × 25 cm BEH130 C18 column with a 90-minute gradient is the industry standard for deep proteome coverage before ESI-MS acquisition.',
+    specs: { 'Flow Rate': '100 nL – 40 µL / min', 'Max Pressure': '15,000 psi (UPLC)', 'Column': '75 µm × 25 cm C18 (typical)', 'Gradient': 'Up to 1,000 min (programmable)' },
+    workflows: ['proteomics','lc-ms'],
+    cost: '~$150,000–$200,000',
+    alternatives: ['Thermo EASY-nLC 1200', 'Dionex UltiMate 3000 RSLCnano'],
+    whenToUse: 'Any shotgun proteomics or metabolomics run requiring LC peptide/metabolite separation before ESI-MS. Usually bundled with the mass spectrometer.'
+  }
+];

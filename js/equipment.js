@@ -472,6 +472,119 @@ OmicsLab.Equipment = {
         <div class="equip-name-label">HPC Cluster / Analysis Server</div>
       </div>`,
 
+    /* ── Oxford Nanopore MinION ── */
+    'nanopore': (p) => `
+      <div class="equip-visual nanopore-eq">
+        <div class="nanopore-body">
+          <div class="nanopore-fc-slot">
+            <div class="nanopore-fc">
+              <div class="nanopore-fc-label">Flow Cell R10.4.1</div>
+              <div class="nanopore-pore-grid">
+                ${Array.from({length:16},(_,i)=>`<div class="npore" style="animation-delay:${(i*0.18).toFixed(2)}s"></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="nanopore-stats">
+            <div class="np-stat"><span>Bases called</span><span class="np-val np-live">● LIVE</span></div>
+            <div class="np-stat"><span>Read N50</span><span class="np-val">>50 kb</span></div>
+            <div class="np-stat"><span>Accuracy</span><span class="np-val np-good">>99%</span></div>
+          </div>
+          <div class="nanopore-usb">USB-C</div>
+        </div>
+        <div class="equip-name-label">Oxford Nanopore MinION</div>
+      </div>`,
+
+    /* ── PacBio SMRT / Revio ── */
+    'pacbio': (p) => `
+      <div class="equip-visual pacbio-eq">
+        <div class="pacbio-body">
+          <div class="smrt-cell-wrap">
+            <div class="smrt-cell-label">SMRT Cell</div>
+            <div class="smrt-grid">
+              ${Array.from({length:25},(_,i)=>`<div class="zmw-well" style="animation-delay:${(i*0.09).toFixed(2)}s"></div>`).join('')}
+            </div>
+          </div>
+          <div class="pacbio-readout">
+            <div class="pb-row"><span>Mode</span><span class="pb-val">HiFi CCS</span></div>
+            <div class="pb-row"><span>Accuracy</span><span class="pb-val pb-good">>99.9%</span></div>
+            <div class="pb-row"><span>Read len</span><span class="pb-val">15–25 kb</span></div>
+          </div>
+        </div>
+        <div class="equip-name-label">PacBio Revio (SMRT)</div>
+      </div>`,
+
+    /* ── NanoDrop spectrophotometer ── */
+    'nanodrop': (p) => `
+      <div class="equip-visual nanodrop-eq">
+        <div class="nanodrop-body">
+          <div class="nd-arm">
+            <div class="nd-arm-top">
+              <div class="nd-fiber-upper"></div>
+            </div>
+            <div class="nd-sample-point">
+              <div class="nd-drop"></div>
+              <div class="nd-uv-beam"></div>
+            </div>
+            <div class="nd-pedestal"></div>
+          </div>
+          <div class="nd-display">
+            <div class="nd-metric"><span class="nd-label">260/280</span><span class="nd-value nd-ok">1.98</span></div>
+            <div class="nd-metric"><span class="nd-label">260/230</span><span class="nd-value nd-ok">2.12</span></div>
+            <div class="nd-metric"><span class="nd-label">ng/µL</span><span class="nd-value">482.3</span></div>
+          </div>
+        </div>
+        <div class="equip-name-label">NanoDrop One Spectrophotometer</div>
+        <div class="equip-sub">1 µL · No cuvette · 10 seconds</div>
+      </div>`,
+
+    /* ── Qubit Fluorometer ── */
+    'qubit': (p) => `
+      <div class="equip-visual qubit-eq">
+        <div class="qubit-body">
+          <div class="qubit-screen">
+            <div class="qs-label">dsDNA HS Assay</div>
+            <div class="qs-value"><span class="qs-num">23.4</span> <span class="qs-unit">ng/µL</span></div>
+            <div class="qs-bar-wrap"><div class="qs-bar"></div></div>
+          </div>
+          <div class="qubit-tube-area">
+            <div class="qt-laser-dot"></div>
+            <div class="qt-tube">
+              <div class="qt-sample"></div>
+              <div class="qt-glow"></div>
+            </div>
+          </div>
+        </div>
+        <div class="equip-name-label">Qubit 4 Fluorometer</div>
+        <div class="equip-sub">Fluorometric · Ignores contaminants</div>
+      </div>`,
+
+    /* ── FACS Cell Sorter ── */
+    'facs': (p) => `
+      <div class="equip-visual facs-eq">
+        <div class="facs-body">
+          <div class="facs-flow-path">
+            <div class="facs-sheath">Sheath fluid</div>
+            <div class="facs-stream">
+              ${Array.from({length:8},(_,i)=>`<div class="facs-drop" style="animation-delay:${(i*0.25).toFixed(2)}s"></div>`).join('')}
+            </div>
+            <div class="facs-laser-block">
+              <div class="facs-laser-beam"></div>
+              <div class="facs-scatter-signal"></div>
+            </div>
+            <div class="facs-deflect">
+              <div class="facs-plate neg">−</div>
+              <div class="facs-plate pos">+</div>
+            </div>
+          </div>
+          <div class="facs-collect">
+            <div class="facs-tube t-neg"><div class="facs-tube-label">Waste</div></div>
+            <div class="facs-tube t-pos"><div class="facs-tube-label">Sort</div></div>
+          </div>
+        </div>
+        <div class="equip-name-label">BD FACSAria Fusion Cell Sorter</div>
+        <div class="equip-sub">Up to 70,000 events/sec · 6 lasers</div>
+      </div>`,
+
     /* ── Generic fallback ── */
     'generic': (p) => `
       <div class="equip-visual">

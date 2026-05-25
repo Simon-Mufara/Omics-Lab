@@ -24,6 +24,7 @@
     <div class="nav-pills">
       <button class="nav-pill active" onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">Workflows</button>
       <button class="nav-pill" onclick="document.getElementById('disease-explorer-section').scrollIntoView({behavior:'smooth'})">Diseases</button>
+      <button class="nav-pill" onclick="document.getElementById('equipment-gallery-section').scrollIntoView({behavior:'smooth'})">Equipment</button>
       <button class="nav-pill" onclick="document.getElementById('tool-explorer-section').scrollIntoView({behavior:'smooth'})">Tools</button>
       <button class="nav-pill" onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">Features</button>
     </div>
@@ -39,7 +40,7 @@
     <p class="hero-sub">
       Drag reagents, set parameters, and watch every wet-lab decision
       propagate through the bioinformatics pipeline in real time.
-      Eight omics domains. Fourteen workflows. Scientifically accurate.
+      Eight omics domains. Fourteen workflows. Twenty real instruments. Scientifically accurate.
     </p>
     <div class="hero-cta">
       <button class="btn-hero btn-hero-primary"
@@ -57,9 +58,9 @@
   <div class="stats-strip">
     <div class="stat"><div class="stat-num">14</div><div class="stat-label">Workflows</div></div>
     <div class="stat"><div class="stat-num">8</div><div class="stat-label">Omics Domains</div></div>
+    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Real Instruments</div></div>
     <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Protocol Steps</div></div>
     <div class="stat"><div class="stat-num">8</div><div class="stat-label">Live QC Metrics</div></div>
-    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Learning Loops</div></div>
   </div>
 
   <!-- Domain grid -->
@@ -87,6 +88,22 @@
       <!-- Populated by app.js -->
     </div>
     <div class="disease-cards-grid" id="disease-cards-grid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Equipment Gallery -->
+  <div class="equipment-gallery-section" id="equipment-gallery-section">
+    <div class="section-label">Real-world instruments</div>
+    <h2 class="section-title">Equipment Gallery</h2>
+    <p class="section-desc">
+      Explore the actual instruments used in modern omics labs — from pocket-sized nanopore sequencers to room-sized mass spectrometers.
+      Learn what each machine does, what it costs, and how it fits into your workflow.
+    </p>
+    <div class="equip-filter-tabs" id="equip-filter-tabs">
+      <!-- Populated by app.js -->
+    </div>
+    <div class="equip-gallery-grid" id="equip-gallery-grid">
       <!-- Populated by app.js -->
     </div>
   </div>
@@ -279,6 +296,7 @@
 <!-- Scripts — load order matters (namespace → data → engine → bench → app) -->
 <script src="js/workflows.js"></script>
 <script src="js/diseases.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/equipment.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/bench.js"></script>
