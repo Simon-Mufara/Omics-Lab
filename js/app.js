@@ -195,8 +195,13 @@ OmicsLab.App = (function() {
     const cards = dids.map(did => {
       const d = OmicsLab.DISEASES[did];
       if (!d) return '';
-      const bms = d.biomarkers ? d.biomarkers.map(b => `<li>${b}</li>`).join('') : '';
-      const tools = d.tools ? d.tools.join(' · ') : '';
+      const bms     = d.biomarkers ? d.biomarkers.map(b => `<li>${b}</li>`).join('') : '';
+      const tools   = d.tools ? d.tools.map(t => `<span class="rdc-tool-tag">${t}</span>`).join('') : '';
+      const samples = d.sampleTypes ? d.sampleTypes.map(s => `<span class="rdc-tool-tag">🧪 ${s}</span>`).join('') : '';
+      const statsHtml = d.stats ? `<div class="rdc-stats-row">
+        <span class="rdc-stat">🌐 ${d.stats.global}</span>
+        ${d.stats.africa ? `<span class="rdc-stat rdc-stat-africa">🌍 ${d.stats.africa}</span>` : ''}
+      </div>` : '';
       return `<div class="res-disease-card" style="--dc:${d.color}">
         <div class="rdc-head">
           <span class="rdc-icon">${d.icon}</span>
@@ -205,11 +210,14 @@ OmicsLab.App = (function() {
             <div class="rdc-cat">${d.category}</div>
           </div>
         </div>
+        ${statsHtml}
         <div class="rdc-desc">${d.description}</div>
+        ${d.clinicalImpact ? `<div class="rdc-section-label" style="color:var(--warning)">Clinical Impact of Omics</div><div class="rdc-findings rdc-impact">${d.clinicalImpact}</div>` : ''}
         <div class="rdc-section-label">Key Biomarkers Detected</div>
         <ul class="rdc-bm-list">${bms}</ul>
         <div class="rdc-section-label">Expected Findings</div>
         <div class="rdc-findings">${d.findings}</div>
+        ${samples ? `<div class="rdc-section-label">Sample Types</div><div class="rdc-tools">${samples}</div>` : ''}
         ${tools ? `<div class="rdc-section-label">Analysis Tools</div><div class="rdc-tools">${tools}</div>` : ''}
         ${d.africanContext ? `<div class="rdc-african"><span>🌍</span> ${d.africanContext}</div>` : ''}
       </div>`;
@@ -231,6 +239,7 @@ OmicsLab.App = (function() {
     _buildDiseaseExplorer();
     _buildEquipmentGallery();
     _buildToolExplorer();
+    _buildRepositoryExplorer();
   }
 
   function _buildWorkflowGrid() {
@@ -280,12 +289,14 @@ OmicsLab.App = (function() {
     function renderCards(filter) {
       const filtered = filter === 'All' ? diseases : diseases.filter(([,d]) => d.category === filter);
       cardsEl.innerHTML = filtered.map(([did, d]) => {
-        const wfTags = (d.workflows||[]).map(wfId => {
-          const wf = OmicsLab.Workflows[wfId];
-          return wf ? `<span class="dc-wf-tag" onclick="OmicsLab.App.startWorkflow('${wfId}')" title="Launch ${wf.name}">${wf.icon} ${wf.name}</span>` : '';
-        }).join('');
-        const bms = (d.biomarkers||[]).slice(0,4).map(b => `<div class="dc-bm-tag">🎯 ${b}</div>`).join('');
-        return `<div class="disease-card" style="--disease-color:${d.color}">
+        const bms = (d.biomarkers||[]).slice(0,3).map(b => `<div class="dc-bm-tag">🎯 ${b}</div>`).join('');
+        const statsHtml = d.stats ? `<div class="dc-stats-row">
+          <span class="dc-stat-chip">🌐 ${d.stats.global}</span>
+          ${d.stats.africa ? `<span class="dc-stat-chip dc-stat-africa">🌍 ${d.stats.africa}</span>` : ''}
+        </div>` : '';
+        const bmCount  = (d.biomarkers||[]).length;
+        const wfCount  = (d.workflows||[]).length;
+        return `<div class="disease-card" style="--disease-color:${d.color}" onclick="OmicsLab.App._openDiseaseModal('${did}')">
           <div class="disease-card-head">
             <div class="dc-icon-wrap">${d.icon}</div>
             <div>
@@ -293,20 +304,20 @@ OmicsLab.App = (function() {
               <div class="dc-cat-badge">${d.category}</div>
             </div>
           </div>
+          ${statsHtml}
           <div class="dc-description">${d.description}</div>
           <div class="dc-biomarkers">${bms}</div>
-          <div class="dc-findings-preview">${d.findings.substring(0,160)}…</div>
-          ${d.africanContext ? `<div class="dc-african-tag">🌍 ${d.africanContext.substring(0,100)}…</div>` : ''}
-          <div class="dc-wf-section">
-            <div class="dc-wf-label">Study with:</div>
-            <div class="dc-wf-tags">${wfTags}</div>
+          ${d.africanContext ? `<div class="dc-african-tag">🌍 ${d.africanContext.substring(0,110)}…</div>` : ''}
+          <div class="dc-card-footer">
+            <span class="dc-meta-pill">🎯 ${bmCount} biomarker${bmCount!==1?'s':''}</span>
+            <span class="dc-meta-pill">🔬 ${wfCount} workflow${wfCount!==1?'s':''}</span>
+            <span class="dc-detail-btn">Details →</span>
           </div>
         </div>`;
       }).join('');
     }
 
     renderCards('All');
-    /* Store renderCards reference for filter buttons */
     OmicsLab.App._renderDiseaseCards = renderCards;
   }
 
@@ -315,6 +326,87 @@ OmicsLab.App = (function() {
     if (section) section.querySelectorAll('.df-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
     if (OmicsLab.App._renderDiseaseCards) OmicsLab.App._renderDiseaseCards(cat);
+  }
+
+  function _openDiseaseModal(did) {
+    const d = OmicsLab.DISEASES[did];
+    if (!d) return;
+
+    const bms = (d.biomarkers||[]).map(b => `<li>${b}</li>`).join('');
+    const tools = (d.tools||[]).map(t => `<span class="dm-tag">${t}</span>`).join('');
+    const dbs   = (d.databases||[]).map(t => `<span class="dm-tag dm-tag-db">${t}</span>`).join('');
+    const samples = (d.sampleTypes||[]).map(s => `<span class="dm-tag dm-tag-sample">🧪 ${s}</span>`).join('');
+    const wfTags = (d.workflows||[]).map(wfId => {
+      const wf = OmicsLab.Workflows[wfId];
+      return wf ? `<button class="dc-wf-tag dm-wf-btn" onclick="OmicsLab.App._closeDiseaseModal();OmicsLab.App.startWorkflow('${wfId}')">${wf.icon} ${wf.name}</button>` : '';
+    }).join('');
+
+    const statsHtml = d.stats ? `<div class="dm-stats-row">
+      <div class="dm-stat"><div class="dm-stat-val">${d.stats.global}</div><div class="dm-stat-lbl">Global Burden</div></div>
+      ${d.stats.africa ? `<div class="dm-stat"><div class="dm-stat-val">${d.stats.africa}</div><div class="dm-stat-lbl">Africa</div></div>` : ''}
+      ${d.stats.daly ? `<div class="dm-stat"><div class="dm-stat-val">${d.stats.daly}</div><div class="dm-stat-lbl">DALYs</div></div>` : ''}
+    </div>` : '';
+
+    const html = `
+    <div class="dm-header" style="--dm-color:${d.color}">
+      <div class="dm-title-row">
+        <span class="dm-icon">${d.icon}</span>
+        <div>
+          <div class="dm-name">${d.name}</div>
+          <div class="dm-cat">${d.category}</div>
+        </div>
+        <button class="dm-close" onclick="OmicsLab.App._closeDiseaseModal()" aria-label="Close">✕</button>
+      </div>
+      ${statsHtml}
+    </div>
+    <div class="dm-body">
+      <div class="dm-section">
+        <div class="dm-section-label">Overview</div>
+        <p class="dm-text">${d.description}</p>
+      </div>
+      ${d.clinicalImpact ? `<div class="dm-section dm-section-impact">
+        <div class="dm-section-label">Clinical Impact of Omics</div>
+        <p class="dm-text">${d.clinicalImpact}</p>
+      </div>` : ''}
+      <div class="dm-section">
+        <div class="dm-section-label">Key Biomarkers (${(d.biomarkers||[]).length})</div>
+        <ul class="dm-bm-list">${bms}</ul>
+      </div>
+      <div class="dm-section">
+        <div class="dm-section-label">Expected Findings</div>
+        <p class="dm-text">${d.findings}</p>
+      </div>
+      ${samples ? `<div class="dm-section"><div class="dm-section-label">Sample Types</div><div class="dm-tags-row">${samples}</div></div>` : ''}
+      ${tools ? `<div class="dm-section"><div class="dm-section-label">Analysis Tools</div><div class="dm-tags-row">${tools}</div></div>` : ''}
+      ${dbs ? `<div class="dm-section"><div class="dm-section-label">Key Databases</div><div class="dm-tags-row">${dbs}</div></div>` : ''}
+      ${d.africanContext ? `<div class="dm-section dm-section-africa">
+        <div class="dm-section-label">🌍 African Context</div>
+        <p class="dm-text">${d.africanContext}</p>
+      </div>` : ''}
+      ${wfTags ? `<div class="dm-section">
+        <div class="dm-section-label">Study With These Workflows</div>
+        <div class="dm-tags-row dm-wf-row">${wfTags}</div>
+      </div>` : ''}
+    </div>`;
+
+    let overlay = document.getElementById('disease-modal-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'disease-modal-overlay';
+      overlay.className = 'dm-overlay';
+      overlay.innerHTML = `<div class="dm-panel" id="disease-modal-panel"></div>`;
+      overlay.addEventListener('click', e => { if (e.target === overlay) OmicsLab.App._closeDiseaseModal(); });
+      document.body.appendChild(overlay);
+    }
+    document.getElementById('disease-modal-panel').innerHTML = html;
+    overlay.classList.add('dm-open');
+    document.body.classList.add('modal-open');
+  }
+
+  function _closeDiseaseModal() {
+    const overlay = document.getElementById('disease-modal-overlay');
+    if (overlay) overlay.classList.remove('dm-open');
+    document.body.classList.remove('modal-open');
   }
 
   /* Equipment Gallery on landing page */
@@ -587,6 +679,53 @@ OmicsLab.App = (function() {
     }).join('');
   }
 
+  /* ─── Repository Explorer ─── */
+  function _buildRepositoryExplorer() {
+    if (!OmicsLab.REPOSITORIES) return;
+    const filterEl = document.getElementById('repo-filter-tabs');
+    const cardsEl  = document.getElementById('repo-cards-grid');
+    if (!filterEl || !cardsEl) return;
+
+    const repos = Object.entries(OmicsLab.REPOSITORIES);
+    const cats  = ['All', ...new Set(repos.map(([,r]) => r.category))];
+
+    filterEl.innerHTML = cats.map((cat, i) =>
+      `<button class="df-tab ${i===0?'active':''}" onclick="OmicsLab.App._filterRepos('${cat}',this)">${cat}</button>`
+    ).join('');
+
+    function renderRepos(filter) {
+      const filtered = filter === 'All' ? repos : repos.filter(([,r]) => r.category === filter);
+      cardsEl.innerHTML = filtered.map(([rid, r]) => {
+        const africaBadge = r.africanRelevance
+          ? `<div class="dc-african-tag repo-africa-note">🌍 ${r.africanRelevance}</div>` : '';
+        return `<div class="repo-card">
+          <div class="repo-card-head">
+            <span class="repo-icon">${r.icon}</span>
+            <div>
+              <div class="repo-name">${r.name}</div>
+              <div class="repo-cat-badge">${r.category}</div>
+            </div>
+          </div>
+          <div class="repo-scope-chip">📋 ${r.scope}</div>
+          <div class="repo-desc">${r.desc}</div>
+          <div class="repo-access"><strong>Access:</strong> ${r.access}</div>
+          ${africaBadge}
+          <a class="repo-link-btn" href="${r.url}" target="_blank" rel="noopener">Visit →</a>
+        </div>`;
+      }).join('');
+    }
+
+    renderRepos('All');
+    OmicsLab.App._renderRepoCards = renderRepos;
+  }
+
+  function _filterRepos(cat, btn) {
+    const section = btn.closest('.repo-filter-tabs');
+    if (section) section.querySelectorAll('.df-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (OmicsLab.App._renderRepoCards) OmicsLab.App._renderRepoCards(cat);
+  }
+
   /* ─── Init ─── */
   function init() {
     buildLanding();
@@ -607,13 +746,23 @@ OmicsLab.App = (function() {
     _filterDiseases, _filterEquipment,
     scrollTo, toggleMobileNav,
     _openEquipmentModal, _closeEquipmentModal,
+    _openDiseaseModal, _closeDiseaseModal,
+    _filterRepos,
     _searchEquipment, shareResults,
-    _renderDiseaseCards: null, _renderEquipmentCards: null,
+    _renderDiseaseCards: null, _renderEquipmentCards: null, _renderRepoCards: null,
   };
 })();
 
 /* ─── Boot on DOM ready ─── */
-document.addEventListener('DOMContentLoaded', () => OmicsLab.App.init());
+document.addEventListener('DOMContentLoaded', () => {
+  OmicsLab.App.init();
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      OmicsLab.App._closeDiseaseModal();
+      OmicsLab.App._closeEquipmentModal();
+    }
+  });
+});
 
 /* ─── Mobile panel switcher (lab workspace) ─── */
 OmicsLab.Mobile = (function() {

@@ -402,6 +402,74 @@
 .ti-desc { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; }
 .ti-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); flex-shrink: 0; margin-top: 4px; }
 
+/* ══ Equipment run timer & completion ════════════════════════ */
+
+/* Progress bar that fills across the bottom of the visual */
+.equip-progress-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--info), var(--success));
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  z-index: 4;
+}
+
+/* Spin-down keyframe — decelerates to a stop */
+@keyframes spin-down {
+  0%   { transform: rotate(0deg); animation-timing-function: ease-out; }
+  100% { transform: rotate(1080deg); }
+}
+
+/* When equipment run is complete */
+.equip-complete .spin-fast {
+  animation: spin-down 2s ease-out 1 forwards;
+}
+.equip-complete .spin-slow {
+  animation: spin-down 3s ease-out 1 forwards;
+}
+.equip-complete .sonic-wave,
+.equip-complete .water-wave {
+  animation-play-state: paused;
+}
+.equip-complete .panel-dot {
+  background: var(--info);
+  animation: none;
+  box-shadow: 0 0 6px var(--info);
+}
+.equip-complete .panel-time {
+  color: var(--success);
+}
+.equip-complete .tc-cycles {
+  color: var(--success);
+}
+.equip-complete .equip-visual::before {
+  background: linear-gradient(90deg, var(--success), var(--success));
+}
+
+/* "✓ Run complete" badge that appears on completion */
+.equip-done-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--success);
+  background: rgba(63,185,80,0.1);
+  border: 1px solid rgba(63,185,80,0.3);
+  border-radius: 20px;
+  padding: 0.15rem 0.6rem;
+  letter-spacing: 0.3px;
+  animation: pulse-glow 2s infinite;
+}
+
+/* Sim time chip shown in equipment header */
+.equip-simtime {
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  background: var(--surface-3);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  font-family: var(--font-mono);
+  margin-top: 0.15rem;
+}
+
 /* ══ NEW RENDERERS ═══════════════════════════════════════════ */
 
 /* ── Nanopore MinION ── */

@@ -1112,6 +1112,7 @@ input[type=range]::-webkit-slider-thumb {
   padding: 1.25rem;
   display: flex; flex-direction: column; gap: 0.75rem;
   transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
 }
 .disease-card:hover {
   transform: translateY(-2px);
@@ -1133,7 +1134,6 @@ input[type=range]::-webkit-slider-thumb {
   background: var(--surface-3); border: 1px solid var(--border);
   padding: 2px 7px; border-radius: 4px;
 }
-.dc-findings-preview { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; font-style: italic; }
 .dc-african-tag {
   font-size: 0.72rem; color: var(--success);
   background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2);
@@ -1151,6 +1151,192 @@ input[type=range]::-webkit-slider-thumb {
   border-color: var(--info); color: var(--info);
   background: rgba(88,166,255,0.1);
 }
+
+/* Stats row on disease card */
+.dc-stats-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.dc-stat-chip {
+  font-size: 0.65rem; color: var(--text-muted);
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 7px; line-height: 1.5;
+}
+.dc-stat-chip.dc-stat-africa {
+  color: var(--success);
+  background: rgba(63,185,80,0.08);
+  border-color: rgba(63,185,80,0.25);
+}
+
+/* Card footer with meta pills + Details button */
+.dc-card-footer {
+  display: flex; gap: 0.4rem; align-items: center;
+  margin-top: auto; padding-top: 0.5rem;
+  border-top: 1px solid var(--border-dim);
+  flex-wrap: wrap;
+}
+.dc-meta-pill {
+  font-size: 0.65rem; color: var(--text-muted);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 2px 8px;
+}
+.dc-detail-btn {
+  margin-left: auto; font-size: 0.72rem;
+  color: var(--info); font-weight: 600;
+  transition: color 0.15s;
+}
+.disease-card:hover .dc-detail-btn { color: var(--accent); }
+
+/* ── Disease Detail Modal ──────────────────────────────────── */
+.dm-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.dm-overlay.dm-open { opacity: 1; pointer-events: all; }
+
+.dm-panel {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: min(700px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  transform: translateY(12px) scale(0.98);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.dm-overlay.dm-open .dm-panel {
+  transform: translateY(0) scale(1);
+}
+
+/* Modal header */
+.dm-header {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--dm-color, var(--info)) 18%, var(--surface-1)), var(--surface-1));
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 1.5rem 1rem;
+  position: sticky; top: 0; z-index: 2;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.dm-title-row { display: flex; gap: 0.85rem; align-items: flex-start; }
+.dm-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; }
+.dm-name { font-size: 1.15rem; font-weight: 700; color: var(--dm-color, var(--text)); }
+.dm-cat  { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+.dm-close {
+  margin-left: auto; flex-shrink: 0;
+  background: var(--surface-3); border: 1px solid var(--border);
+  color: var(--text-muted); border-radius: 50%;
+  width: 28px; height: 28px; font-size: 0.85rem;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.dm-close:hover { background: var(--surface-4); color: var(--text); }
+
+/* Stats row in modal */
+.dm-stats-row {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-top: 0.85rem;
+}
+.dm-stat {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 0.4rem 0.75rem;
+}
+.dm-stat-val { font-size: 0.72rem; font-weight: 700; color: var(--text); line-height: 1.4; }
+.dm-stat-lbl { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px; }
+
+/* Modal body */
+.dm-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.dm-section { display: flex; flex-direction: column; gap: 0.4rem; }
+.dm-section-label {
+  font-size: 0.68rem; font-weight: 700; color: var(--info);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.dm-section-impact .dm-section-label { color: var(--warning); }
+.dm-section-africa .dm-section-label { color: var(--success); }
+.dm-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.65; margin: 0; }
+.dm-bm-list {
+  padding-left: 1.25rem; margin: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.15rem;
+}
+.dm-bm-list li { font-size: 0.75rem; color: var(--text-muted); line-height: 1.7; }
+.dm-tags-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.dm-tag {
+  font-size: 0.7rem; color: var(--text-muted);
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 9px;
+}
+.dm-tag-db { color: var(--info); background: rgba(88,166,255,0.07); border-color: rgba(88,166,255,0.2); }
+.dm-tag-sample { color: var(--text-muted); border-style: dashed; }
+.dm-wf-row { gap: 0.5rem; }
+.dm-wf-btn {
+  font-size: 0.76rem; background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 4px 12px; cursor: pointer; transition: all 0.15s;
+  color: var(--text-muted);
+}
+.dm-wf-btn:hover { border-color: var(--info); color: var(--info); background: rgba(88,166,255,0.1); }
+
+/* Prevent body scroll while modal open */
+body.modal-open { overflow: hidden; }
+
+/* ═══════════════════════════════════════════════════════════════
+   REPOSITORY EXPLORER (landing)
+   ═══════════════════════════════════════════════════════════════ */
+.repo-explorer-section {
+  padding: 4rem 2rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.repo-filter-tabs {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.repo-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.1rem;
+}
+.repo-card {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  display: flex; flex-direction: column; gap: 0.65rem;
+  transition: transform 0.18s, box-shadow 0.18s;
+}
+.repo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+}
+.repo-card-head { display: flex; gap: 0.7rem; align-items: flex-start; }
+.repo-icon { font-size: 1.5rem; line-height: 1; }
+.repo-name { font-size: 0.88rem; font-weight: 700; color: var(--text); line-height: 1.3; }
+.repo-cat-badge {
+  font-size: 0.62rem; color: var(--info);
+  background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.2);
+  padding: 2px 7px; border-radius: 4px; display: inline-block; margin-top: 3px;
+}
+.repo-scope-chip {
+  font-size: 0.68rem; color: var(--text-muted);
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 8px; line-height: 1.5;
+}
+.repo-desc { font-size: 0.76rem; color: var(--text-muted); line-height: 1.6; }
+.repo-access { font-size: 0.72rem; color: var(--text-muted); }
+.repo-africa-note {
+  font-size: 0.7rem;
+}
+.repo-link-btn {
+  display: inline-block; margin-top: auto;
+  font-size: 0.74rem; font-weight: 600;
+  color: var(--info); text-decoration: none;
+  padding: 0.3rem 0;
+  border-top: 1px solid var(--border-dim);
+  transition: color 0.15s;
+}
+.repo-link-btn:hover { color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════════
    TOOL EXPLORER (landing)
@@ -1220,11 +1406,28 @@ input[type=range]::-webkit-slider-thumb {
 .rdc-section-label { font-size: 0.7rem; font-weight: 700; color: var(--info); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.25rem; }
 .rdc-bm-list { padding-left: 1.2rem; font-size: 0.74rem; color: var(--text-muted); line-height: 1.8; margin: 0; }
 .rdc-findings { font-size: 0.74rem; color: var(--text-muted); line-height: 1.5; }
-.rdc-tools { font-size: 0.72rem; color: var(--text-muted); }
+.rdc-impact { color: rgba(210,168,80,0.9); }
+.rdc-tools { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.rdc-tool-tag {
+  font-size: 0.68rem; color: var(--text-muted);
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1px 7px;
+}
 .rdc-african {
   font-size: 0.72rem; color: var(--success);
   background: rgba(63,185,80,0.08); border-radius: 4px;
   padding: 0.3rem 0.5rem; line-height: 1.4;
+}
+.rdc-stats-row { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.rdc-stat {
+  font-size: 0.65rem; color: var(--text-muted);
+  background: var(--surface-3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 7px;
+}
+.rdc-stat.rdc-stat-africa {
+  color: var(--success);
+  background: rgba(63,185,80,0.07);
+  border-color: rgba(63,185,80,0.25);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1558,6 +1761,13 @@ input[type=range]::-webkit-slider-thumb {
   .disease-cards-grid { grid-template-columns: 1fr; }
   .disease-card { padding: 1rem; }
 
+  /* Disease modal on mobile */
+  .dm-panel { max-height: 92vh; border-radius: var(--radius-md) var(--radius-md) 0 0; }
+  .dm-overlay { align-items: flex-end; padding: 0; }
+  .dm-body { padding: 1rem; }
+  .dm-header { padding: 1rem; }
+  .dm-bm-list { grid-template-columns: 1fr; }
+
   /* Filter tabs */
   .disease-filter-tabs, .equip-filter-tabs {
     overflow-x: auto;
@@ -1575,6 +1785,11 @@ input[type=range]::-webkit-slider-thumb {
 
   /* Tool grid */
   .tool-category-grid { grid-template-columns: 1fr; }
+
+  /* Repository grid */
+  .repo-cards-grid { grid-template-columns: 1fr; }
+  .repo-filter-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.4rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .repo-filter-tabs::-webkit-scrollbar { display: none; }
 
   /* Features */
   .feature-grid { grid-template-columns: 1fr 1fr; }

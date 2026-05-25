@@ -422,6 +422,7 @@ OmicsLab.Renderer = (function() {
 
     bench.classList.add('animate-in');
     setTimeout(() => bench.classList.remove('animate-in'), 400);
+    setTimeout(() => startEquipTimer(bench), 80);
   }
 
   function eduNote(text) {
@@ -433,6 +434,63 @@ OmicsLab.Renderer = (function() {
     if (!OmicsLab.Equipment) return '';
     const type = OmicsLab.Equipment.resolveType(step.id, step.phase);
     return OmicsLab.Equipment.render(type, {});
+  }
+
+  /* Drives the equipment progress bar and fires a completion state */
+  function startEquipTimer(bench) {
+    const equipEl = bench.querySelector('.equip-visual');
+    if (!equipEl) return;
+    const simMs = parseInt(equipEl.dataset.simDuration) || 0;
+    if (!simMs) return;
+
+    // Inject real-world sim-time chip next to the name label
+    const label = equipEl.querySelector('.equip-name-label');
+    if (label && !equipEl.querySelector('.equip-simtime')) {
+      const chip = document.createElement('div');
+      chip.className = 'equip-simtime';
+      const realLabels = {
+        3500:'real: ~10 min · 12,000 × g · 4°C',
+        3000:'real: ~10–30 min',
+        4000:'real: ~30–90 min',
+        4500:'real: ~18 min – 2 h',
+        5000:'real: ~24–48 h',
+        2000:'real: ~2–5 min',
+        2500:'real: ~5–30 min',
+      };
+      chip.textContent = realLabels[simMs] || `sim: ${(simMs/1000).toFixed(1)}s`;
+      label.after(chip);
+    }
+
+    // Inject and animate progress bar
+    const bar = document.createElement('div');
+    bar.className = 'equip-progress-bar';
+    equipEl.appendChild(bar);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      bar.style.transition = `width ${simMs}ms linear`;
+      bar.style.width = '100%';
+    }));
+
+    // On completion: stop animations, show done badge
+    setTimeout(() => {
+      equipEl.classList.add('equip-complete');
+
+      const dot = equipEl.querySelector('.panel-dot');
+      if (dot) { dot.classList.remove('running'); dot.classList.add('done'); }
+
+      const cycles = equipEl.querySelector('.tc-cycles');
+      if (cycles) cycles.textContent = cycles.textContent.replace('Running', '✓ Complete');
+
+      const typing = equipEl.querySelector('.term-line.typing');
+      if (typing) typing.innerHTML = 'Processing reads ██████████ 100% <span style="color:var(--success)">✓ done</span>';
+
+      const nameLabel = equipEl.querySelector('.equip-name-label');
+      if (nameLabel && !equipEl.querySelector('.equip-done-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'equip-done-badge';
+        badge.textContent = '✓ Run complete';
+        nameLabel.after(badge);
+      }
+    }, simMs);
   }
 
   function showFeedback(impact, title, body) {

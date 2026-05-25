@@ -6,10 +6,39 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Equipment = {
 
+  /* Sim duration per equipment type (ms) — real duration shown as label */
+  _simDurations: {
+    'sample-prep':  0,       // static — no timer needed
+    'centrifuge':   3500,    // real: 10 min · 12,000 × g · 4°C
+    'covaris':      3000,    // real: 10 min · 175 W AFA
+    'thermocycler': 4000,    // real: 30–90 min · 30–35 cycles
+    'bioanalyzer':  3500,    // real: 30 min electrophoresis
+    'tn5-reaction': 3000,    // real: 30 min · 37°C
+    'chromium':     4500,    // real: 18 min GEM generation
+    'sequencer':    5000,    // real: 24–48 h SBS
+    'mass-spec':    4500,    // real: 30–90 min per sample
+    'hplc':         4000,    // real: 90 min LC gradient
+    'qpcr':         4500,    // real: 90 min · 40 cycles
+    'magnet':       2000,    // real: 2–5 min
+    'sonicator':    3000,    // real: 30 min · 30s on/off
+    'hemocytometer':2500,    // real: 5 min
+    'bead-beat':    2500,    // real: 45 s · 6,500 rpm
+    'ip-tube':      3000,    // real: overnight · 4°C
+    'ice-bucket':   2500,    // real: 30 min on ice
+    'wash-station': 2000,    // real: 5 min
+    'bench-prep':   2000,    // real: 10 min
+    'tube-spin':    3000,    // real: 30 min dissociation
+    'computer':     3500,    // real: minutes–hours on HPC
+    'generic':      2500,
+  },
+
   /* Returns HTML for a given equipment type */
   render(type, params) {
-    const fn = this._renderers[type];
-    return fn ? fn(params || {}) : this._renderers.generic(params || {});
+    const fn  = this._renderers[type];
+    const html = fn ? fn(params || {}) : this._renderers.generic(params || {});
+    const ms   = this._simDurations[type];
+    if (!ms) return html;
+    return html.replace('class="equip-visual', `class="equip-visual" data-sim-duration="${ms}"`);
   },
 
   /* Maps step ids / equipment keys → equipment type */

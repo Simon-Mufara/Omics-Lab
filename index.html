@@ -39,6 +39,7 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section')">Diseases</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section')">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section')">Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section')">Repositories</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section')">Features</button>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
@@ -47,6 +48,7 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">Diseases</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">Repositories</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section');OmicsLab.App.toggleMobileNav()">Features</button>
     </div>
   </nav>
@@ -146,6 +148,22 @@
       Learn what each tool does, what it takes as input, and when to use it.
     </p>
     <div class="tool-category-grid" id="tool-category-grid">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Repository Explorer -->
+  <div class="repo-explorer-section" id="repo-explorer-section">
+    <div class="section-label">Where the data lives</div>
+    <h2 class="section-title">Data Repositories</h2>
+    <p class="section-desc">
+      Every omics study deposits its raw data in a public repository. Learn the major archives —
+      from genomic sequencing data to cancer variant databases — and which ones matter most for African research.
+    </p>
+    <div class="repo-filter-tabs" id="repo-filter-tabs">
+      <!-- Populated by app.js -->
+    </div>
+    <div class="repo-cards-grid" id="repo-cards-grid">
       <!-- Populated by app.js -->
     </div>
   </div>
