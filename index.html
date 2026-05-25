@@ -55,39 +55,134 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-eyebrow">
-      <div class="eyebrow-dot"></div>
-      Interactive Omics Training Platform
+    <!-- Floating DNA strands -->
+    <div class="hero-dna" aria-hidden="true">
+      <div class="dna-strand strand-a"></div>
+      <div class="dna-strand strand-b"></div>
+      <div class="dna-rung r1"></div><div class="dna-rung r2"></div>
+      <div class="dna-rung r3"></div><div class="dna-rung r4"></div>
+      <div class="dna-rung r5"></div><div class="dna-rung r6"></div>
     </div>
-    <h1>Learn Omics Workflows by <span class="accent">Doing</span> Them</h1>
-    <p class="hero-sub">
-      Drag reagents, set parameters, and watch every wet-lab decision
-      propagate through the bioinformatics pipeline in real time.
-      Eight omics domains. Fourteen workflows. Twenty real instruments. Scientifically accurate.
-    </p>
-    <div class="hero-cta">
-      <button class="btn-hero btn-hero-primary"
-              onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">
-        Start a Workflow →
-      </button>
-      <button class="btn-hero btn-hero-secondary"
-              onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">
-        How it works
-      </button>
+
+    <!-- Left: text content -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-dot"></div>
+        Interactive Omics Training Platform
+      </div>
+      <h1>Learn Omics<br>Workflows by<br><span class="accent">Doing</span> Them</h1>
+      <p class="hero-sub">
+        Drag reagents, set parameters, watch every wet-lab decision
+        cascade through the bioinformatics pipeline in real time.
+        22 diseases · 14 workflows · 20 real instruments.
+      </p>
+      <div class="hero-cta">
+        <button class="btn-hero btn-hero-primary"
+                onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">
+          Start a Workflow →
+        </button>
+        <button class="btn-hero btn-hero-secondary"
+                onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">
+          How it works
+        </button>
+      </div>
+      <div class="hero-trust">
+        <span class="trust-chip">✓ No install</span>
+        <span class="trust-chip">✓ Works offline</span>
+        <span class="trust-chip">✓ Free forever</span>
+        <span class="trust-chip trust-africa">🌍 Designed for Africa</span>
+      </div>
+    </div>
+
+    <!-- Right: live sim preview card -->
+    <div class="hero-right">
+      <div class="sim-preview-card">
+        <div class="spc-topbar">
+          <span class="spc-dot r"></span><span class="spc-dot y"></span><span class="spc-dot g"></span>
+          <span class="spc-title" id="spc-title">WGS — Step 3 of 12</span>
+          <span class="spc-score">Score: <b id="spc-score">94</b></span>
+        </div>
+        <div class="spc-body">
+          <div class="spc-phase" id="spc-phase">🧬 DNA Extraction</div>
+          <div class="spc-metrics">
+            <div class="spc-metric">
+              <span class="spc-mlabel">Sample Integrity</span>
+              <div class="spc-bar-track"><div class="spc-bar-fill green" id="spc-bar1" style="width:85%"></div></div>
+              <span class="spc-mval green" id="spc-v1">8.5 RIN</span>
+            </div>
+            <div class="spc-metric">
+              <span class="spc-mlabel">Library Complexity</span>
+              <div class="spc-bar-track"><div class="spc-bar-fill blue" id="spc-bar2" style="width:78%"></div></div>
+              <span class="spc-mval blue" id="spc-v2">78%</span>
+            </div>
+            <div class="spc-metric">
+              <span class="spc-mlabel">Q30 Score</span>
+              <div class="spc-bar-track"><div class="spc-bar-fill green" id="spc-bar3" style="width:91%"></div></div>
+              <span class="spc-mval green" id="spc-v3">91%</span>
+            </div>
+            <div class="spc-metric">
+              <span class="spc-mlabel">Contamination</span>
+              <div class="spc-bar-track"><div class="spc-bar-fill orange" id="spc-bar4" style="width:4%"></div></div>
+              <span class="spc-mval green" id="spc-v4">4%</span>
+            </div>
+          </div>
+          <div class="spc-terminal" id="spc-terminal">
+            <span class="spc-prompt">$</span>
+            <span class="spc-cmd" id="spc-cmd">bwa-mem2 mem -t 16 ref.fa sample.fastq</span>
+            <span class="spc-cursor">▋</span>
+          </div>
+          <div class="spc-pipeline">
+            <span class="spc-pipe-node done">Extract</span>
+            <span class="spc-pipe-arrow">→</span>
+            <span class="spc-pipe-node done">QC</span>
+            <span class="spc-pipe-arrow">→</span>
+            <span class="spc-pipe-node active">Align</span>
+            <span class="spc-pipe-arrow">→</span>
+            <span class="spc-pipe-node">Variant</span>
+            <span class="spc-pipe-arrow">→</span>
+            <span class="spc-pipe-node">Annotate</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Stats -->
   <div class="stats-strip">
-    <div class="stat"><div class="stat-num">14</div><div class="stat-label">Workflows</div></div>
-    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Omics Domains</div></div>
-    <div class="stat"><div class="stat-num">20</div><div class="stat-label">Real Instruments</div></div>
-    <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Protocol Steps</div></div>
-    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Live QC Metrics</div></div>
+    <div class="stat">
+      <div class="stat-icon">🧬</div>
+      <div class="stat-num">14</div>
+      <div class="stat-label">Workflows</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🔬</div>
+      <div class="stat-num">8</div>
+      <div class="stat-label">Omics Domains</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🏥</div>
+      <div class="stat-num">22</div>
+      <div class="stat-label">Diseases</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">⚗️</div>
+      <div class="stat-num">20</div>
+      <div class="stat-label">Real Instruments</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">🗄️</div>
+      <div class="stat-num">16</div>
+      <div class="stat-label">Repositories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon">📊</div>
+      <div class="stat-num">8</div>
+      <div class="stat-label">Live QC Metrics</div>
+    </div>
   </div>
 
   <!-- Domain grid -->
-  <div class="domain-section" id="domain-section">
+  <div class="domain-section reveal" id="domain-section">
     <div class="section-label">Choose your experiment</div>
     <h2 class="section-title">Select an Omics Domain</h2>
     <p class="section-desc">
@@ -100,7 +195,7 @@
   </div>
 
   <!-- Disease Explorer -->
-  <div class="disease-explorer-section" id="disease-explorer-section">
+  <div class="disease-explorer-section reveal" id="disease-explorer-section">
     <div class="section-label">What are we investigating?</div>
     <h2 class="section-title">Disease Explorer</h2>
     <p class="section-desc">
@@ -116,7 +211,7 @@
   </div>
 
   <!-- Equipment Gallery -->
-  <div class="equipment-gallery-section" id="equipment-gallery-section">
+  <div class="equipment-gallery-section reveal" id="equipment-gallery-section">
     <div class="section-label">Real-world instruments</div>
     <h2 class="section-title">Equipment Gallery</h2>
     <p class="section-desc">
@@ -140,7 +235,7 @@
   </div>
 
   <!-- Tool Explorer -->
-  <div class="tool-explorer-section" id="tool-explorer-section">
+  <div class="tool-explorer-section reveal" id="tool-explorer-section">
     <div class="section-label">The bioinformatics toolkit</div>
     <h2 class="section-title">Tool Explorer</h2>
     <p class="section-desc">
@@ -153,7 +248,7 @@
   </div>
 
   <!-- Repository Explorer -->
-  <div class="repo-explorer-section" id="repo-explorer-section">
+  <div class="repo-explorer-section reveal" id="repo-explorer-section">
     <div class="section-label">Where the data lives</div>
     <h2 class="section-title">Data Repositories</h2>
     <p class="section-desc">
@@ -169,7 +264,7 @@
   </div>
 
   <!-- Features -->
-  <div class="features-section" id="features-section">
+  <div class="features-section reveal" id="features-section">
     <div class="section-label">Platform capabilities</div>
     <h2 class="section-title">Built for Serious Learning</h2>
     <div class="feature-grid">

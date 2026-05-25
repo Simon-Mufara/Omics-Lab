@@ -730,6 +730,7 @@ OmicsLab.App = (function() {
   function init() {
     buildLanding();
     showScreen('screen-landing');
+    setTimeout(_initScrollReveal, 50);
 
     window.addEventListener('scroll', () => {
       const btn = document.getElementById('back-to-top');
@@ -762,7 +763,111 @@ document.addEventListener('DOMContentLoaded', () => {
       OmicsLab.App._closeEquipmentModal();
     }
   });
+  _startHeroPreviewCycle();
+  _initScrollReveal();
 });
+
+function _initScrollReveal() {
+  const io = new IntersectionObserver(
+    entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
+    { threshold: 0.12 }
+  );
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}
+
+function _startHeroPreviewCycle() {
+  const STATES = [
+    {
+      title: 'WGS — Step 3 of 12',
+      phase: '🧬 DNA Extraction',
+      score: 94,
+      metrics: [
+        { label: 'Sample Integrity',    w: '85%', val: '8.5 RIN', cls: 'green' },
+        { label: 'Library Complexity',  w: '78%', val: '78%',     cls: 'blue'  },
+        { label: 'Q30 Score',           w: '91%', val: '91%',     cls: 'green' },
+        { label: 'Contamination',       w:  '4%', val:  '4%',     cls: 'green' },
+      ],
+      cmd: 'bwa-mem2 mem -t 16 ref.fa sample.fastq',
+      nodes: ['Extract','QC','Align','Variant','Annotate'],
+      activeIdx: 2,
+    },
+    {
+      title: 'RNA-seq — Step 5 of 10',
+      phase: '🔬 Library Preparation',
+      score: 88,
+      metrics: [
+        { label: 'RNA Integrity (RIN)', w: '79%', val: '7.9',     cls: 'blue'  },
+        { label: 'Read Duplication',    w: '22%', val: '22%',     cls: 'orange'},
+        { label: 'Mapping Rate',        w: '96%', val: '96%',     cls: 'green' },
+        { label: 'Splice Junctions',    w: '88%', val: '88k',     cls: 'green' },
+      ],
+      cmd: 'STAR --runThreadN 8 --genomeDir hg38/ --readFilesIn R1.fq R2.fq',
+      nodes: ['Extract','QC','Lib Prep','Sequence','Align'],
+      activeIdx: 3,
+    },
+    {
+      title: 'Metagenomic — Step 7 of 14',
+      phase: '🦠 Taxonomic Classification',
+      score: 91,
+      metrics: [
+        { label: 'Host Depletion',      w: '98%', val: '98%',     cls: 'green' },
+        { label: 'Species Richness',    w: '73%', val: '312 sp',  cls: 'blue'  },
+        { label: 'Shannon Diversity',   w: '82%', val: '3.4 H',   cls: 'green' },
+        { label: 'Unknown Reads',       w: '18%', val: '18%',     cls: 'orange'},
+      ],
+      cmd: 'kraken2 --db k2_standard --paired R1.fq R2.fq --output out.txt',
+      nodes: ['Extract','Filter','Assemble','Classify','Report'],
+      activeIdx: 3,
+    },
+    {
+      title: 'Proteomics — Step 4 of 9',
+      phase: '⚗️ Protein Digestion',
+      score: 96,
+      metrics: [
+        { label: 'Peptide IDs',         w: '93%', val: '4,821',   cls: 'green' },
+        { label: 'Protein Coverage',    w: '68%', val: '68%',     cls: 'blue'  },
+        { label: 'FDR',                 w:  '1%', val:  '1%',     cls: 'green' },
+        { label: 'Missed Cleavage',     w:  '8%', val:   '8%',    cls: 'green' },
+      ],
+      cmd: 'maxquant MQ_params.xml && python msfragger.py sample.raw',
+      nodes: ['Extract','Digest','LC-MS/MS','Search','Quant'],
+      activeIdx: 2,
+    },
+  ];
+
+  let idx = 0;
+
+  function applyState(s) {
+    const $  = id => document.getElementById(id);
+    if (!$('spc-title')) return;
+    $('spc-title').textContent = s.title;
+    $('spc-phase').textContent = s.phase;
+    $('spc-score').textContent = s.score;
+    $('spc-cmd').textContent   = s.cmd;
+
+    const bars = [$('spc-bar1'), $('spc-bar2'), $('spc-bar3'), $('spc-bar4')];
+    const vals = [$('spc-v1'),   $('spc-v2'),   $('spc-v3'),   $('spc-v4')];
+    s.metrics.forEach((m, i) => {
+      if (bars[i]) { bars[i].style.width = m.w; bars[i].className = `spc-bar-fill ${m.cls}`; }
+      if (vals[i]) { vals[i].textContent = m.val; vals[i].className = `spc-mval ${m.cls}`; }
+    });
+
+    const pipe = document.querySelector('.spc-pipeline');
+    if (pipe) {
+      pipe.innerHTML = s.nodes.map((n, i) => {
+        const cls = i < s.activeIdx ? 'done' : i === s.activeIdx ? 'active' : '';
+        const arrow = i < s.nodes.length - 1 ? '<span class="spc-pipe-arrow">→</span>' : '';
+        return `<span class="spc-pipe-node ${cls}">${n}</span>${arrow}`;
+      }).join('');
+    }
+  }
+
+  applyState(STATES[0]);
+  setInterval(() => {
+    idx = (idx + 1) % STATES.length;
+    applyState(STATES[idx]);
+  }, 4000);
+}
 
 /* ─── Mobile panel switcher (lab workspace) ─── */
 OmicsLab.Mobile = (function() {

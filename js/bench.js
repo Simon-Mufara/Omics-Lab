@@ -231,6 +231,7 @@ OmicsLab.DragDrop = (function() {
       if (!r) return '';
       return `<div class="reagent-item" draggable="true"
                    data-rid="${id}"
+                   data-cat="${r.cat}"
                    id="reagent-${id}">
         <div class="reagent-emoji">${r.emoji}</div>
         <div class="reagent-name">${r.label}</div>
