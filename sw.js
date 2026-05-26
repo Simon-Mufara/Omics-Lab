@@ -1,10 +1,11 @@
 /* OmicsLab Service Worker — offline-first app shell */
-const CACHE = 'omicslab-v2';
+const CACHE = 'omicslab-v3';
 const SHELL = [
   '/Omics-Lab/',
   '/Omics-Lab/index.html',
   '/Omics-Lab/css/app.css',
   '/Omics-Lab/css/equipment.css',
+  '/Omics-Lab/js/icons.js',
   '/Omics-Lab/js/workflows.js',
   '/Omics-Lab/js/diseases.js',
   '/Omics-Lab/js/gallery.js',
