@@ -821,6 +821,90 @@
 .egc-details-btn:hover { background: rgba(63,185,80,0.18); border-color: var(--success); }
 .equip-gallery-card { cursor: pointer; }
 
+/* ══ LIQUID-HANDLING ROBOT ═══════════════════════════════════ */
+.robot-eq { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.robot-body { width: 220px; }
+.robot-arm-track {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+  height: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.robot-arm {
+  position: absolute;
+  top: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.robot-head {
+  background: rgba(88,166,255,0.15);
+  border: 1px solid rgba(88,166,255,0.4);
+  border-radius: 4px;
+  padding: 2px 4px;
+  color: var(--accent);
+}
+.robot-pipette-array { display: flex; gap: 3px; }
+.rp-tip {
+  width: 3px;
+  height: 14px;
+  background: rgba(88,166,255,0.5);
+  border-radius: 0 0 2px 2px;
+  animation: tip-dispense 1.2s ease-in-out infinite;
+}
+@keyframes tip-dispense {
+  0%,100% { height: 14px; background: rgba(88,166,255,0.5); }
+  50%      { height: 18px; background: rgba(63,185,80,0.7); }
+}
+@keyframes slide-lr {
+  0%,100% { left: 10px; }
+  50%      { left: 140px; }
+}
+.slide-lr { animation: slide-lr 2.5s ease-in-out infinite; }
+.robot-deck {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  padding: 0.4rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.robot-plate {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+}
+.rplate-well {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+}
+.rplate-well.filled { background: rgba(63,185,80,0.5); border-color: rgba(63,185,80,0.6); }
+.robot-reagent-block { display: flex; gap: 3px; }
+.rrb-tube {
+  width: 8px;
+  height: 28px;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--border);
+  background: linear-gradient(to bottom, rgba(88,166,255,0.3), rgba(88,166,255,0.1));
+}
+.robot-display {
+  margin-top: 0.35rem;
+  background: var(--surface-3);
+  border-radius: 4px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.62rem;
+}
+.rd-row { display: flex; justify-content: space-between; gap: 0.5rem; }
+.rd-val { color: var(--success); font-weight: 700; font-family: var(--font-mono); }
+
 /* ══ Responsive adjustments ══════════════════════════════════ */
 @media (max-width: 768px) {
   .equip-visual { padding: 0.75rem; }

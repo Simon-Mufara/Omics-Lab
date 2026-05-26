@@ -29,6 +29,7 @@ OmicsLab.Equipment = {
     'bench-prep':   2000,    // real: 10 min
     'tube-spin':    3000,    // real: 30 min dissociation
     'computer':     3500,    // real: minutes–hours on HPC
+    'robot':        3500,    // real: 1–2 h automated extraction
     'generic':      2500,
   },
 
@@ -88,7 +89,7 @@ OmicsLab.Equipment = {
     /* ── Sample preparation bench ── */
     'sample-prep': (p) => `
       <div class="equip-visual">
-        <div class="equip-icon-large">🧊</div>
+        <div class="equip-icon-large">${OmicsLab.Icons.svg('snowflake',40)}</div>
         <div class="equip-name-label">Sample Preparation Bench</div>
         <div class="sp-rack">
           <div class="sp-tube t-blue"></div>
@@ -201,7 +202,7 @@ OmicsLab.Equipment = {
             <div class="dna-strand ds1">
               ${Array.from({length:8},()=>`<div class="dna-base"></div>`).join('')}
             </div>
-            <div class="tn5-enzyme">✂️</div>
+            <div class="tn5-enzyme">${OmicsLab.Icons.svg('scissors',22)}</div>
             <div class="dna-strand ds2">
               ${Array.from({length:8},()=>`<div class="dna-base b2"></div>`).join('')}
             </div>
@@ -339,7 +340,7 @@ OmicsLab.Equipment = {
     'magnet': (p) => `
       <div class="equip-visual magnet-eq">
         <div class="magnet-rack">
-          <div class="magnet-bar">🧲</div>
+          <div class="magnet-bar">${OmicsLab.Icons.svg('zap',28)}</div>
           <div class="mag-tube-row">
             ${Array.from({length:6},(_,i)=>`
               <div class="mag-tube-wrap">
@@ -399,7 +400,7 @@ OmicsLab.Equipment = {
               ${Array.from({length:12},()=>`<div class="bead"></div>`).join('')}
             </div>
           </div>
-          <div class="bb-motor spin-fast" style="animation-duration:0.3s">⚙️</div>
+          <div class="bb-motor spin-fast" style="animation-duration:0.3s">${OmicsLab.Icons.svg('cpu',24)}</div>
         </div>
         <div class="equip-name-label">PowerLyzer Bead Beater</div>
         <div class="equip-sub">6,500 rpm · 45s · 4°C · Breaks gram-positive cell walls</div>
@@ -411,7 +412,7 @@ OmicsLab.Equipment = {
         <div class="ip-tube-vis">
           <div class="ip-tube-body">
             <div class="ip-chromatin"></div>
-            <div class="ip-antibody ab-float">🔑 Ab</div>
+            <div class="ip-antibody ab-float">${OmicsLab.Icons.svg('key',14)} Ab</div>
             <div class="ip-beads-vis">
               <div class="ip-bead b1"></div>
               <div class="ip-bead b2"></div>
@@ -427,7 +428,7 @@ OmicsLab.Equipment = {
     'ice-bucket': (p) => `
       <div class="equip-visual ice-eq">
         <div class="ice-bucket-vis">
-          ❄️
+          ${OmicsLab.Icons.svg('snowflake',36)}
           <div class="cell-suspension">
             <div class="cell-dots">
               ${Array.from({length:8},()=>`<div class="cell-d" style="left:${Math.random()*80}%;top:${Math.random()*80}%"></div>`).join('')}
@@ -458,9 +459,9 @@ OmicsLab.Equipment = {
     'bench-prep': (p) => `
       <div class="equip-visual bench-eq">
         <div class="bench-items">
-          <div class="bench-item">⚖️ Balance</div>
-          <div class="bench-item">🧪 Standards</div>
-          <div class="bench-item">🔬 Sample</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('scale',16)} Balance</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('flask',16)} Standards</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('microscope',16)} Sample</div>
         </div>
         <div class="equip-name-label">Analytical Balance + Preparation Bench</div>
       </div>`,
@@ -614,10 +615,41 @@ OmicsLab.Equipment = {
         <div class="equip-sub">Up to 70,000 events/sec · 6 lasers</div>
       </div>`,
 
+    /* ── Liquid-handling robot / automation workstation ── */
+    'robot': (p) => `
+      <div class="equip-visual robot-eq">
+        <div class="robot-body">
+          <div class="robot-arm-track">
+            <div class="robot-arm slide-lr">
+              <div class="robot-head">${OmicsLab.Icons.svg('cpu', 20)}</div>
+              <div class="robot-pipette-array">
+                ${Array.from({length:8},(_,i)=>`<div class="rp-tip" style="animation-delay:${(i*0.12).toFixed(2)}s"></div>`).join('')}
+              </div>
+            </div>
+          </div>
+          <div class="robot-deck">
+            <div class="robot-plate">
+              ${Array.from({length:24},(_,i)=>`<div class="rplate-well ${i<8?'filled':''}"></div>`).join('')}
+            </div>
+            <div class="robot-reagent-block">
+              <div class="rrb-tube"></div>
+              <div class="rrb-tube"></div>
+              <div class="rrb-tube"></div>
+            </div>
+          </div>
+          <div class="robot-display">
+            <div class="rd-row"><span>Protocol</span><span class="rd-val">${p.protocol || 'RNA Extraction'}</span></div>
+            <div class="rd-row"><span>Samples</span><span class="rd-val">${p.samples || '96'}</span></div>
+          </div>
+        </div>
+        <div class="equip-name-label">${p.name || 'Liquid Handling Robot'}</div>
+        <div class="equip-sub">Automated · 96-well · Walk-away processing</div>
+      </div>`,
+
     /* ── Generic fallback ── */
     'generic': (p) => `
       <div class="equip-visual">
-        <div class="equip-icon-large">${p.icon || '🔬'}</div>
+        <div class="equip-icon-large">${p.icon || OmicsLab.Icons.svg('microscope', 48)}</div>
         <div class="equip-name-label">${p.name || 'Lab Equipment'}</div>
         <div class="equip-sub">${p.desc || ''}</div>
       </div>`,
