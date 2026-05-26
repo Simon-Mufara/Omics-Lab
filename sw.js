@@ -1,15 +1,17 @@
 /* OmicsLab Service Worker — offline fallback only */
-const CACHE = 'omicslab-v4';
+const CACHE = 'omicslab-v5';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
 
-/* On activate: delete all old caches, claim all clients */
+/* On activate: delete all old caches, claim all clients, then tell pages to reload */
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
       .then(keys => Promise.all(keys.map(k => caches.delete(k))))
       .then(() => self.clients.claim())
+      .then(() => self.clients.matchAll({ type: 'window' }))
+      .then(clients => clients.forEach(c => c.postMessage({ type: 'SW_UPDATED' })))
   );
 });
 

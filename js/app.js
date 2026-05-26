@@ -462,6 +462,7 @@ OmicsLab.App = (function() {
           'PCR Instruments':      '#f78166',
           'Single-Cell Platforms':'#79c0ff',
           'Mass Spectrometers':   '#e3b341',
+          'Automation':           '#79c0ff',
         }[eq.category] || '#8b949e';
 
         return `<div class="equip-gallery-card" style="--eg-color:${catColor}" onclick="OmicsLab.App._openEquipmentModal('${eq.id}')">
@@ -518,6 +519,7 @@ OmicsLab.App = (function() {
       'PCR Instruments':      '#f78166',
       'Single-Cell Platforms':'#79c0ff',
       'Mass Spectrometers':   '#e3b341',
+      'Automation':           '#79c0ff',
     }[eq.category] || '#8b949e';
 
     const cssAnim = OmicsLab.Equipment
@@ -751,6 +753,9 @@ OmicsLab.App = (function() {
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/Omics-Lab/sw.js').catch(() => {});
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data && e.data.type === 'SW_UPDATED') window.location.reload();
+      });
     }
   }
 

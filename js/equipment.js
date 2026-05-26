@@ -76,6 +76,16 @@ OmicsLab.Equipment = {
       'annotation-wes':'computer', 'asv-otu':'computer',
       'feature-detect':'computer', 'prot-quant':'computer',
       'lineage':'computer',        'cite-integration':'computer',
+      /* rt-qpcr steps */
+      'rna-source-qpcr':'sample-prep', 'rna-kit-qpcr':'centrifuge',
+      'cdna-synthesis':'thermocycler', 'qpcr-chem':'qpcr',
+      'pcr-cycles-qpcr':'qpcr',        'anneal-temp':'qpcr',
+      'norm-method':'computer',
+      /* ampli-seq steps */
+      'dna-source-amp':'sample-prep',  'dna-ext-amp':'centrifuge',
+      'amp-lib-prep':'thermocycler',   'target-depth':'sequencer',
+      'variant-caller-amp':'computer',
+      /* misc */
       'istd':'bench-prep',         'antibody':'ip-tube',
       'chipgrade-ab':'ip-tube',    'sonication':'sonicator',
       'ip-stringency':'magnet',    'wash-cycles':'wash-station',
