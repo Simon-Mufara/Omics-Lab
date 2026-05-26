@@ -122,11 +122,11 @@ OmicsLab.QC = (function() {
       const bm = d.biomarkers ? d.biomarkers.slice(0,3).join(' · ') : '';
       return `<div class="dc-mini-card" style="--dc-color:${d.color}">
         <div class="dc-mini-head">
-          <span class="dc-mini-icon">${d.icon}</span>
+          <span class="dc-mini-icon">${OmicsLab.Icons.svg(d.icon,16)}</span>
           <span class="dc-mini-name">${d.name}</span>
           <span class="dc-mini-cat">${d.category}</span>
         </div>
-        ${bm ? `<div class="dc-mini-bm">🎯 ${bm}</div>` : ''}
+        ${bm ? `<div class="dc-mini-bm">${OmicsLab.Icons.svg('target',11)} ${bm}</div>` : ''}
       </div>`;
     }).join('');
   }
@@ -233,7 +233,7 @@ OmicsLab.DragDrop = (function() {
                    data-rid="${id}"
                    data-cat="${r.cat}"
                    id="reagent-${id}">
-        <div class="reagent-emoji">${r.emoji}</div>
+        <div class="reagent-emoji">${OmicsLab.Icons.reagentIcon(r.cat)}</div>
         <div class="reagent-name">${r.label}</div>
         <div class="reagent-cat">${r.cat}</div>
       </div>`;
@@ -248,7 +248,7 @@ OmicsLab.DragDrop = (function() {
     return `<div class="equipment-area">
       <div class="drop-zone" id="main-drop-zone" data-step-id="${step.id}">
         <div class="reaction-overlay" id="reaction-overlay"></div>
-        <div class="equip-icon" id="equip-icon">${step.equipIcon || '🔬'}</div>
+        <div class="equip-icon" id="equip-icon">${OmicsLab.Icons.svg(step.equipIcon || 'flask', 44)}</div>
         <div class="equip-name">${step.equipName || 'Equipment'}</div>
         <div class="equip-hint">${step.dropHint || 'Drag reagent here'}</div>
         <div class="equip-status" id="equip-status">✓ Reagent Added</div>
@@ -271,7 +271,7 @@ OmicsLab.DragDrop = (function() {
         if (r) {
           _ghost = document.createElement('div');
           _ghost.className = 'drag-ghost';
-          _ghost.textContent = `${r.emoji} ${r.label}`;
+          _ghost.innerHTML = `${OmicsLab.Icons.reagentIcon(r.cat, 14)} ${r.label}`;
           document.body.appendChild(_ghost);
           e.dataTransfer.setDragImage(new Image(), 0, 0);
         }
@@ -324,7 +324,7 @@ OmicsLab.DragDrop = (function() {
 
     zone.classList.add('filled', 'animate-drop');
     const icon = document.getElementById('equip-icon');
-    if (icon) icon.textContent = r.emoji;
+    if (icon) icon.innerHTML = OmicsLab.Icons.reagentIcon(r.cat, 44);
 
     const reagentEl = document.getElementById(`reagent-${rid}`);
     if (reagentEl) reagentEl.classList.add('used');
@@ -362,7 +362,7 @@ OmicsLab.DragDrop = (function() {
         const r = OmicsLab.REAGENTS[el.dataset.rid];
         touchGhost = document.createElement('div');
         touchGhost.className = 'drag-ghost';
-        touchGhost.textContent = `${r.emoji} ${r.label}`;
+        touchGhost.innerHTML = `${OmicsLab.Icons.reagentIcon(r.cat, 14)} ${r.label}`;
         document.body.appendChild(touchGhost);
         e.preventDefault();
       }, { passive: false });
@@ -428,7 +428,7 @@ OmicsLab.Renderer = (function() {
 
   function eduNote(text) {
     if (!text) return '';
-    return `<div class="edu-note"><span class="edu-note-icon">💡</span><span>${text}</span></div>`;
+    return `<div class="edu-note"><span class="edu-note-icon">${OmicsLab.Icons.svg('lightbulb', 14)}</span><span>${text}</span></div>`;
   }
 
   function equipVisual(step) {

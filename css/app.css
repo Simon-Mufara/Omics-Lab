@@ -6,6 +6,8 @@
 /* ── Reset & Custom Properties ─────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+.lab-icon { display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
 :root {
   /* Surfaces */
   --bg:          #080c10;

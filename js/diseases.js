@@ -9,7 +9,7 @@ OmicsLab.DISEASES = {
 
   /* ── ONCOLOGY ─────────────────────────────────────────────── */
   'breast-cancer': {
-    name: 'Breast Cancer', category: 'Oncology', icon: '🎗️',
+    name: 'Breast Cancer', category: 'Oncology', icon: 'ribbon',
     color: '#ff7b9c',
     stats: { global: '2.3M new cases/yr · #1 cancer in women', africa: 'High TNBC rate; rising incidence', daly: '17.1M DALYs/yr' },
     sampleTypes: ['FFPE tumour tissue','Fresh-frozen biopsies','Peripheral blood (ctDNA)','Bone marrow aspirate'],
@@ -24,7 +24,7 @@ OmicsLab.DISEASES = {
   },
 
   'lung-cancer': {
-    name: 'Lung Cancer (NSCLC)', category: 'Oncology', icon: '🫁',
+    name: 'Lung Cancer (NSCLC)', category: 'Oncology', icon: 'activity',
     color: '#87ceeb',
     stats: { global: '2.2M new cases/yr · #1 cancer killer', africa: 'Rising with urbanisation & tobacco', daly: '26.9M DALYs/yr' },
     sampleTypes: ['FFPE biopsy (primary/metastasis)','Peripheral blood (ctDNA/CTCs)','Bronchoalveolar lavage','Pleural effusion'],
@@ -39,7 +39,7 @@ OmicsLab.DISEASES = {
   },
 
   'colorectal-cancer': {
-    name: 'Colorectal Cancer (CRC)', category: 'Oncology', icon: '🔴',
+    name: 'Colorectal Cancer (CRC)', category: 'Oncology', icon: 'target',
     color: '#e74c3c',
     stats: { global: '1.9M new cases/yr · #3 most common', africa: 'Rapidly rising with urbanisation', daly: '19.6M DALYs/yr' },
     sampleTypes: ['FFPE tumour','Matched normal blood','Stool (metagenomics)','Plasma (liquid biopsy)'],
@@ -54,7 +54,7 @@ OmicsLab.DISEASES = {
   },
 
   'leukemia': {
-    name: 'Acute Myeloid Leukaemia (AML)', category: 'Oncology', icon: '🩸',
+    name: 'Acute Myeloid Leukaemia (AML)', category: 'Oncology', icon: 'droplet',
     color: '#c0392b',
     stats: { global: '200K new cases/yr · 5-yr survival 30%', africa: 'Data scarce; late-stage diagnosis common', daly: '4.8M DALYs/yr' },
     sampleTypes: ['Bone marrow aspirate','Peripheral blood','Matched remission sample (for somatic calling)'],
@@ -70,7 +70,7 @@ OmicsLab.DISEASES = {
 
   /* ── ONCOLOGY — ADDITIONAL ────────────────────────────────── */
   'cervical-cancer': {
-    name: 'Cervical Cancer', category: 'Oncology', icon: '🔬',
+    name: 'Cervical Cancer', category: 'Oncology', icon: 'shield',
     color: '#fd79a8',
     stats: { global: '604K new cases/yr · 342K deaths/yr', africa: '#1 cancer killer in women in sub-Saharan Africa', daly: '8.5M DALYs/yr' },
     sampleTypes: ['Cervical biopsy (FFPE)','Cervical swab','Peripheral blood','Plasma (ctDNA)'],
@@ -85,7 +85,7 @@ OmicsLab.DISEASES = {
   },
 
   'prostate-cancer': {
-    name: 'Prostate Cancer', category: 'Oncology', icon: '🧬',
+    name: 'Prostate Cancer', category: 'Oncology', icon: 'dna',
     color: '#00b4d8',
     stats: { global: '1.4M new cases/yr · #2 cancer in men', africa: 'Highest incidence rates in men of African ancestry', daly: '9.4M DALYs/yr' },
     sampleTypes: ['FFPE biopsy (12-core)','Liquid biopsy (ctDNA / AR-V7 in CTCs)','Urine (for DNA)','Bone marrow biopsy (metastatic)'],
@@ -101,7 +101,7 @@ OmicsLab.DISEASES = {
 
   /* ── INFECTIOUS DISEASE ───────────────────────────────────── */
   'tuberculosis': {
-    name: 'Tuberculosis (TB)', category: 'Infectious Disease', icon: '🦠',
+    name: 'Tuberculosis (TB)', category: 'Infectious Disease', icon: 'virus',
     color: '#f39c12',
     stats: { global: '10.6M new cases/yr · 1.3M deaths/yr', africa: '23% of global TB cases; SA: 520/100,000', daly: '47.6M DALYs/yr' },
     sampleTypes: ['Sputum (direct WGS)','BALF (bronchoscopy)','Tissue biopsy (extrapulmonary)','Blood (host transcriptomics)'],
@@ -116,7 +116,7 @@ OmicsLab.DISEASES = {
   },
 
   'sars-cov2': {
-    name: 'SARS-CoV-2 / COVID-19', category: 'Infectious Disease', icon: '🦠',
+    name: 'SARS-CoV-2 / COVID-19', category: 'Infectious Disease', icon: 'virus',
     color: '#8e44ad',
     stats: { global: '776M confirmed cases · 7M+ deaths (WHO)', africa: 'Africa CDC sequenced >150K genomes', daly: 'Pandemic-scale; long COVID adds chronic burden' },
     sampleTypes: ['Nasopharyngeal swab','BAL fluid','Serum/plasma','Peripheral blood (host response)','Stool (microbiome)'],
@@ -131,7 +131,7 @@ OmicsLab.DISEASES = {
   },
 
   'hiv': {
-    name: 'HIV-1', category: 'Infectious Disease', icon: '🔴',
+    name: 'HIV-1', category: 'Infectious Disease', icon: 'shield',
     color: '#e74c3c',
     stats: { global: '39M people living with HIV · 1.3M new infections/yr', africa: 'Africa carries 67% of global burden; SA 8.2M PLHIV', daly: '38.7M DALYs/yr' },
     sampleTypes: ['Peripheral blood (PBMC)','Plasma (viral RNA)','Rectal/cervical swabs','CSF (neurological HIV)'],
@@ -146,7 +146,7 @@ OmicsLab.DISEASES = {
   },
 
   'malaria': {
-    name: 'Malaria (P. falciparum)', category: 'Infectious Disease', icon: '🦟',
+    name: 'Malaria (P. falciparum)', category: 'Infectious Disease', icon: 'zap',
     color: '#27ae60',
     stats: { global: '249M cases/yr · 608K deaths/yr (2022)', africa: 'Africa: 94% of global malaria deaths', daly: '66.4M DALYs/yr' },
     sampleTypes: ['Dried blood spot (DBS)','Whole blood','Bone marrow (severe malaria)','Mosquito midgut (vector surveillance)'],
@@ -162,7 +162,7 @@ OmicsLab.DISEASES = {
 
   /* ── INFECTIOUS DISEASE — ADDITIONAL ─────────────────────── */
   'hepatitis-b': {
-    name: 'Hepatitis B (HBV) & HCC', category: 'Infectious Disease', icon: '🦠',
+    name: 'Hepatitis B (HBV) & HCC', category: 'Infectious Disease', icon: 'virus',
     color: '#fdcb6e',
     stats: { global: '296M chronically infected · 820K deaths/yr', africa: 'West/Central Africa: 8–20% HBsAg prevalence (highest globally)', daly: '21.1M DALYs/yr' },
     sampleTypes: ['Serum/plasma (HBV DNA)','Liver biopsy (FFPE)','PBMCs','Tumour tissue (HCC)'],
@@ -177,7 +177,7 @@ OmicsLab.DISEASES = {
   },
 
   'sickle-cell': {
-    name: 'Sickle Cell Disease (SCD)', category: 'Haematology', icon: '🩺',
+    name: 'Sickle Cell Disease (SCD)', category: 'Haematology', icon: 'heart-pulse',
     color: '#e17055',
     stats: { global: '300K births/yr affected · 100M carriers globally', africa: 'Nigeria: 100K SCD births/yr — highest globally; 50% of global burden', daly: '5.0M DALYs/yr' },
     sampleTypes: ['Peripheral blood (EDTA)','Cord blood (neonatal screening)','Bone marrow (stem cell studies)','Reticulocyte-enriched blood'],
@@ -193,7 +193,7 @@ OmicsLab.DISEASES = {
 
   /* ── NEUROLOGICAL ─────────────────────────────────────────── */
   'alzheimers': {
-    name: 'Alzheimer\'s Disease', category: 'Neurological', icon: '🧠',
+    name: 'Alzheimer\'s Disease', category: 'Neurological', icon: 'brain',
     color: '#9b59b6',
     stats: { global: '55M people with dementia · 10M new cases/yr', africa: 'Rapidly growing; APOE ε4 more common yet lower AD risk', daly: '27.1M DALYs/yr' },
     sampleTypes: ['Blood (PBMC for GWAS)','CSF (protein biomarkers)','Post-mortem brain tissue','Induced pluripotent stem cells (iPSC models)'],
@@ -209,7 +209,7 @@ OmicsLab.DISEASES = {
 
   /* ── AUTOIMMUNE & INFLAMMATORY ────────────────────────────── */
   'ibd': {
-    name: 'Inflammatory Bowel Disease (IBD)', category: 'Autoimmune', icon: '🔥',
+    name: 'Inflammatory Bowel Disease (IBD)', category: 'Autoimmune', icon: 'flame',
     color: '#e67e22',
     stats: { global: '6.8M cases globally · incidence rising worldwide', africa: 'Low traditional prevalence but rising sharply with urbanisation', daly: '4.7M DALYs/yr' },
     sampleTypes: ['Colonic biopsy (inflamed and non-inflamed)','Stool (metagenomics)','Peripheral blood (PBMC)','Plasma'],
@@ -225,7 +225,7 @@ OmicsLab.DISEASES = {
 
   /* ── METABOLIC ────────────────────────────────────────────── */
   'diabetes-t2': {
-    name: 'Type 2 Diabetes (T2D)', category: 'Metabolic', icon: '🩸',
+    name: 'Type 2 Diabetes (T2D)', category: 'Metabolic', icon: 'droplet',
     color: '#3498db',
     stats: { global: '537M people with T2D · doubling by 2045', africa: 'Africa fastest-growing region; projected 55M by 2045', daly: '52.3M DALYs/yr' },
     sampleTypes: ['Peripheral blood (GWAS / RNA)','Stool (metagenomics)','Urine / plasma (metabolomics)','Adipose biopsy','Pancreatic islets (functional genomics)'],
@@ -241,7 +241,7 @@ OmicsLab.DISEASES = {
 
   /* ── RARE DISEASE ─────────────────────────────────────────── */
   'rare-mendelian': {
-    name: 'Rare Mendelian Disorders', category: 'Rare Disease', icon: '🧬',
+    name: 'Rare Mendelian Disorders', category: 'Rare Disease', icon: 'dna',
     color: '#1abc9c',
     stats: { global: '>7,000 rare diseases · 300M affected people', africa: 'Underdiagnosed; consanguinity amplifies homozygous burden', daly: 'Substantial lifetime DALYs; most untreated in Africa' },
     sampleTypes: ['Peripheral blood (proband + parents for trio)','Saliva (germline DNA)','Fibroblasts (functional assays)','RNA from accessible tissue'],
@@ -257,7 +257,7 @@ OmicsLab.DISEASES = {
 
   /* ── EPIGENETICS & DEVELOPMENT ────────────────────────────── */
   'cancer-epigenetics': {
-    name: 'Cancer Epigenetics', category: 'Epigenomics', icon: '🔓',
+    name: 'Cancer Epigenetics', category: 'Epigenomics', icon: 'lock-open',
     color: '#d2a8ff',
     stats: { global: 'Relevant to >60% of all cancers', africa: 'African epigenome reference maps nearly absent', daly: 'Embedded across all cancer DALYs' },
     sampleTypes: ['FFPE tumour tissue (ATAC-seq with modifications)','Fresh-frozen tumour','Cell lines','Primary patient-derived organoids'],
@@ -273,7 +273,7 @@ OmicsLab.DISEASES = {
 
   /* ── ENTERIC DISEASE ─────────────────────────────────────── */
   'cholera': {
-    name: 'Cholera (V. cholerae)', category: 'Enteric Disease', icon: '💧',
+    name: 'Cholera (V. cholerae)', category: 'Enteric Disease', icon: 'droplet',
     color: '#0984e3',
     stats: { global: '1.3–4M cases/yr · 21–143K deaths/yr (WHO)', africa: 'DRC, Mozambique, Somalia, Zimbabwe — ongoing outbreaks', daly: '3.6M DALYs/yr' },
     sampleTypes: ['Stool (direct culture + WGS)','Rectal swabs','Environmental water samples','Vibrio isolates'],
@@ -288,7 +288,7 @@ OmicsLab.DISEASES = {
   },
 
   'typhoid': {
-    name: 'Typhoid Fever (S. Typhi)', category: 'Enteric Disease', icon: '🌡️',
+    name: 'Typhoid Fever (S. Typhi)', category: 'Enteric Disease', icon: 'thermometer',
     color: '#fdcb6e',
     stats: { global: '9–11M cases/yr · 128K deaths/yr', africa: 'Sub-Saharan Africa and South Asia highest burden', daly: '11.9M DALYs/yr' },
     sampleTypes: ['Blood culture (gold standard)','Bone marrow aspirate','Stool','S. Typhi isolates (WGS)'],
@@ -303,7 +303,7 @@ OmicsLab.DISEASES = {
   },
 
   'e-coli-diarrhea': {
-    name: 'Diarrhoeagenic E. coli (DEC)', category: 'Enteric Disease', icon: '🔬',
+    name: 'Diarrhoeagenic E. coli (DEC)', category: 'Enteric Disease', icon: 'microscope',
     color: '#00b894',
     stats: { global: '220M diarrhoeal episodes/yr in children (ETEC/EPEC)', africa: 'Leading cause of childhood diarrhoea in Africa; ETEC dominates', daly: 'Cholera + E. coli: ~25% of global diarrhoeal DALYs' },
     sampleTypes: ['Stool (fresh or preserved in Cary-Blair)','Rectal swabs','E. coli isolates','Environmental samples'],
@@ -318,7 +318,7 @@ OmicsLab.DISEASES = {
   },
 
   'cryptosporidiosis': {
-    name: 'Cryptosporidiosis', category: 'Enteric Disease', icon: '🦠',
+    name: 'Cryptosporidiosis', category: 'Enteric Disease', icon: 'virus',
     color: '#6c5ce7',
     stats: { global: '48M cases/yr · 57K child deaths/yr', africa: '#2 cause of moderate-to-severe diarrhoea in African children <2 yrs', daly: '4.2M DALYs/yr' },
     sampleTypes: ['Stool (oocysts)','Intestinal biopsy (immunocompromised)','Environmental water samples','Cryptosporidium isolates / oocysts'],
@@ -333,7 +333,7 @@ OmicsLab.DISEASES = {
   },
 
   'rotavirus': {
-    name: 'Rotavirus Gastroenteritis', category: 'Enteric Disease', icon: '🌀',
+    name: 'Rotavirus Gastroenteritis', category: 'Enteric Disease', icon: 'rotate-cw',
     color: '#e17055',
     stats: { global: '128M cases/yr · 128K child deaths/yr', africa: 'Africa + South Asia: 70% of global rotavirus deaths', daly: '18.3M DALYs/yr' },
     sampleTypes: ['Stool (fresh or -80°C frozen)','Rotavirus isolates / dsRNA','Serum (antibody titres)'],
@@ -654,7 +654,7 @@ OmicsLab.REPOSITORIES = {
   /* ── SEQUENCE ARCHIVES ──────────────────────────────────── */
   'sra': {
     name: 'NCBI Sequence Read Archive (SRA)', category: 'Sequence Archive',
-    icon: '🗄️', url: 'https://www.ncbi.nlm.nih.gov/sra',
+    icon: 'database', url: 'https://www.ncbi.nlm.nih.gov/sra',
     scope: 'All NGS data types',
     desc: 'World\'s largest public repository of next-generation sequencing data. Stores raw FASTQ/SRA files. Free submission and access. >30 petabases of data.',
     access: 'Free · FTP / AWS / GCP · fasterq-dump CLI',
@@ -662,7 +662,7 @@ OmicsLab.REPOSITORIES = {
   },
   'ena': {
     name: 'European Nucleotide Archive (ENA)', category: 'Sequence Archive',
-    icon: '🗄️', url: 'https://www.ebi.ac.uk/ena',
+    icon: 'database', url: 'https://www.ebi.ac.uk/ena',
     scope: 'All sequence types',
     desc: 'EMBL-EBI mirror of SRA. Identical data, often faster access from Europe and Africa. Provides secondary accession numbers. Excellent API.',
     access: 'Free · FTP / Aspera · REST API',
@@ -670,7 +670,7 @@ OmicsLab.REPOSITORIES = {
   },
   'gisaid': {
     name: 'GISAID EpiCoV', category: 'Viral Genomics',
-    icon: '🦠', url: 'https://gisaid.org',
+    icon: 'virus', url: 'https://gisaid.org',
     scope: 'Influenza, SARS-CoV-2, RSV, Ebola',
     desc: 'Global initiative on sharing all influenza data. Now hosts >15M SARS-CoV-2 genomes. Requires registration and data-sharing agreement. Essential for pandemic surveillance.',
     access: 'Free (registration) · Web + API',
@@ -680,7 +680,7 @@ OmicsLab.REPOSITORIES = {
   /* ── CANCER GENOMICS ────────────────────────────────────── */
   'tcga': {
     name: 'TCGA (The Cancer Genome Atlas)', category: 'Cancer Genomics',
-    icon: '🎗️', url: 'https://portal.gdc.cancer.gov',
+    icon: 'ribbon', url: 'https://portal.gdc.cancer.gov',
     scope: '33 cancer types · WGS/WES/RNA-seq/methylation/proteomics',
     desc: 'The foundational cancer multi-omics atlas. >20,000 tumour/normal pairs across 33 cancers. Includes WGS, WES, RNA-seq, miRNA-seq, SNP arrays, RPPA proteomics.',
     access: 'Open (tier 1) + Controlled access (tier 2) · GDC Data Portal',
@@ -688,7 +688,7 @@ OmicsLab.REPOSITORIES = {
   },
   'icgc': {
     name: 'ICGC / PCAWG', category: 'Cancer Genomics',
-    icon: '🧬', url: 'https://dcc.icgc.org',
+    icon: 'dna', url: 'https://dcc.icgc.org',
     scope: 'Pan-cancer WGS · 38 tumour types · 2,658 donors',
     desc: 'International Cancer Genome Consortium. PCAWG (Pan-Cancer Analysis of Whole Genomes) is the definitive WGS cancer resource — structural variants, mutational signatures, driver discovery, non-coding mutations.',
     access: 'Open + Controlled access · ICGC Data Portal + EGA',
@@ -696,7 +696,7 @@ OmicsLab.REPOSITORIES = {
   },
   'cosmic': {
     name: 'COSMIC (Catalogue of Somatic Mutations in Cancer)', category: 'Variant Database',
-    icon: '☄️', url: 'https://cancer.sanger.ac.uk/cosmic',
+    icon: 'zap', url: 'https://cancer.sanger.ac.uk/cosmic',
     scope: 'Somatic mutations · Cancer census genes · Mutational signatures',
     desc: 'The definitive somatic mutation database. Cancer Gene Census (>700 genes), mutational signatures (SBS/DBS/ID), fusion genes, drug resistance mutations. Updated quarterly by Sanger Institute.',
     access: 'Free (academic) · Web + VCF downloads',
@@ -706,7 +706,7 @@ OmicsLab.REPOSITORIES = {
   /* ── INFECTIOUS DISEASE ─────────────────────────────────── */
   'patric': {
     name: 'BV-BRC (formerly PATRIC)', category: 'Pathogen Genomics',
-    icon: '🦠', url: 'https://www.bv-brc.org',
+    icon: 'server', url: 'https://www.bv-brc.org',
     scope: 'All bacterial and viral pathogens',
     desc: 'NIAID-funded comprehensive bacterial bioinformatics resource. >800,000 genomes, integrated annotation, comparative genomics, AMR prediction, phylogenetics tools — all in one platform.',
     access: 'Free · Web + CLI workspace',
@@ -714,7 +714,7 @@ OmicsLab.REPOSITORIES = {
   },
   'enterobase': {
     name: 'EnteroBase', category: 'Enteric Pathogen Genomics',
-    icon: '🔬', url: 'https://enterobase.warwick.ac.uk',
+    icon: 'server', url: 'https://enterobase.warwick.ac.uk',
     scope: 'Salmonella, E. coli/Shigella, Clostridioides difficile, Yersinia, Helicobacter',
     desc: 'Community resource for enteric pathogen genomics. Automated MLST/cgMLST typing, phylogenetic trees, and metadata integration for >500,000 E. coli and >350,000 Salmonella genomes.',
     access: 'Free (registration) · Web + API',
@@ -722,7 +722,7 @@ OmicsLab.REPOSITORIES = {
   },
   'malariagen': {
     name: 'MalariaGEN', category: 'Parasite Genomics',
-    icon: '🦟', url: 'https://www.malariagen.net',
+    icon: 'globe', url: 'https://www.malariagen.net',
     scope: 'P. falciparum · P. vivax · Anopheles mosquito',
     desc: 'Global network for malaria genomic epidemiology. Pf7 release: 20,000+ P. falciparum genomes from 40 countries. Drug resistance surveillance, transmission network analysis, population genomics.',
     access: 'Free · MalariaGEN data portal',
@@ -730,7 +730,7 @@ OmicsLab.REPOSITORIES = {
   },
   'cryptodb': {
     name: 'CryptoDB (VEuPathDB)', category: 'Parasite Genomics',
-    icon: '🦠', url: 'https://cryptodb.org',
+    icon: 'server', url: 'https://cryptodb.org',
     scope: 'Cryptosporidium species · related coccidians',
     desc: 'Part of the VEuPathDB bioinformatics resource network. Reference genomes, annotated gene models, comparative genomics, expression data, and population genomics tools for Cryptosporidium.',
     access: 'Free · Web + download',
@@ -740,7 +740,7 @@ OmicsLab.REPOSITORIES = {
   /* ── POPULATION & GWAS ──────────────────────────────────── */
   'uk-biobank': {
     name: 'UK Biobank', category: 'Population Genomics',
-    icon: '🧬', url: 'https://www.ukbiobank.ac.uk',
+    icon: 'database', url: 'https://www.ukbiobank.ac.uk',
     scope: '500K participants · WES/WGS + phenome · UK-based',
     desc: 'Half-million participant prospective cohort with genotyping, WES (all 500K), WGS (200K), metabolomics, proteomics, imaging. The most powerful GWAS resource globally for common disease.',
     access: 'Controlled access (application) · Research Analysis Platform (RAP)',
@@ -748,7 +748,7 @@ OmicsLab.REPOSITORIES = {
   },
   'h3africa': {
     name: 'H3Africa Consortium', category: 'African Genomics',
-    icon: '🌍', url: 'https://h3africa.org',
+    icon: 'map-pin', url: 'https://h3africa.org',
     scope: 'African-specific WGS/GWAS · 25+ studies · 50,000+ participants',
     desc: 'NIH-funded Human Heredity and Health in Africa initiative. The largest coordinated African genomics programme. Studies span T2D, hypertension, TB, HIV, stroke, kidney disease, and rare disease across 30+ countries.',
     access: 'Controlled access · H3ABioNet data portal',
@@ -756,7 +756,7 @@ OmicsLab.REPOSITORIES = {
   },
   'awi-gen': {
     name: 'AWI-Gen (Africa Wits-INDEPTH)', category: 'African Genomics',
-    icon: '🌍', url: 'https://awigen.org',
+    icon: 'map-pin', url: 'https://awigen.org',
     scope: 'T2D · CVD · BMI · GWAS · 10,000 Africans across 6 sites',
     desc: 'Africa Wits-INDEPTH partnership for Genomic studies. Multi-country African GWAS for cardio-metabolic disease. Identified novel African-specific loci for T2D, BMI, and blood pressure not found in European cohorts.',
     access: 'Controlled access (application)',
@@ -764,7 +764,7 @@ OmicsLab.REPOSITORIES = {
   },
   'apcdr': {
     name: 'APCDR (African Partnership for Chronic Disease Research)', category: 'African Genomics',
-    icon: '🌍', url: 'https://apcdr.org',
+    icon: 'map-pin', url: 'https://apcdr.org',
     scope: 'Cardiometabolic · Infectious disease · African-ancestry populations',
     desc: 'Cross-institutional African genomics partnership integrating GWAS, WGS, and multi-omics for chronic and infectious disease in African-ancestry populations across Africa and the diaspora.',
     access: 'Controlled access',
@@ -774,7 +774,7 @@ OmicsLab.REPOSITORIES = {
   /* ── MICROBIOME ─────────────────────────────────────────── */
   'hmp': {
     name: 'Human Microbiome Project (HMP/iHMP)', category: 'Microbiome',
-    icon: '🦠', url: 'https://hmpdacc.org',
+    icon: 'git-branch', url: 'https://hmpdacc.org',
     scope: '16S rRNA · WGS metagenomics · metabolomics · multi-body sites',
     desc: 'NIH Common Fund initiative defining the normal human microbiome across 300 participants (HMP1) and disease states — IBD, pregnancy, T2D (iHMP/HMP2). Reference baseline for all microbiome studies.',
     access: 'Open · HMPDACC portal + SRA',
@@ -782,7 +782,7 @@ OmicsLab.REPOSITORIES = {
   },
   'curatedmgd': {
     name: 'curatedMetagenomicData', category: 'Microbiome',
-    icon: '🔬', url: 'https://bioconductor.org/packages/curatedMetagenomicData',
+    icon: 'layers', url: 'https://bioconductor.org/packages/curatedMetagenomicData',
     scope: '>20,000 uniformly processed metagenomes · 100+ studies',
     desc: 'Bioconductor resource of uniformly processed shotgun metagenomics datasets. Consistent preprocessing (MetaPhlAn4 + HUMAnN3) enables cross-study comparisons. Covers IBD, T2D, colorectal cancer, and more.',
     access: 'Free · R/Bioconductor package',
@@ -792,7 +792,7 @@ OmicsLab.REPOSITORIES = {
   /* ── VARIANT & CLINICAL ─────────────────────────────────── */
   'clinvar': {
     name: 'ClinVar', category: 'Clinical Variants',
-    icon: '🏥', url: 'https://www.ncbi.nlm.nih.gov/clinvar',
+    icon: 'check-circle', url: 'https://www.ncbi.nlm.nih.gov/clinvar',
     scope: 'Germline + somatic pathogenic variants · Clinical significance',
     desc: 'NCBI curated archive of variant-disease relationships with clinical significance classifications (Pathogenic/Likely Pathogenic/VUS/Benign). Updated weekly. >2M variants.',
     access: 'Free · Web + VCF download + API',
@@ -800,7 +800,7 @@ OmicsLab.REPOSITORIES = {
   },
   'gnomad': {
     name: 'gnomAD v4', category: 'Population Allele Frequencies',
-    icon: '📊', url: 'https://gnomad.broadinstitute.org',
+    icon: 'bar-chart', url: 'https://gnomad.broadinstitute.org',
     scope: '807,162 exomes + 76,215 genomes · Multi-ancestry',
     desc: 'Genome Aggregation Database. The gold standard reference for variant population frequencies used to filter rare disease candidates and assess pathogenicity. v4 includes 807K exomes — the largest allele frequency resource.',
     access: 'Free · Web + BigQuery + VCF download',
@@ -808,7 +808,7 @@ OmicsLab.REPOSITORIES = {
   },
   'africdr': {
     name: 'AfroDB / AWI-Gen Variant Database', category: 'African Variant Resource',
-    icon: '🌍', url: 'https://h3africa.org',
+    icon: 'map-pin', url: 'https://h3africa.org',
     scope: 'African population allele frequencies · H3Africa cohorts',
     desc: 'Emerging African-specific allele frequency databases generated through the H3Africa and AWI-Gen programmes. Critical for correct pathogenicity classification in African patients — variants that appear rare in gnomAD may be common in specific African populations.',
     access: 'Controlled access · H3ABioNet',

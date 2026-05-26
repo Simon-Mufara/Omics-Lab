@@ -132,10 +132,10 @@ OmicsLab.Engine = (function() {
   }
 
   function getGrade(score) {
-    if (score >= 85) return { letter:'A', cls:'grade-A', verdict:'Publication-Quality', emoji:'🏆' };
-    if (score >= 70) return { letter:'B', cls:'grade-B', verdict:'Good Experiment',      emoji:'✅' };
-    if (score >= 55) return { letter:'C', cls:'grade-C', verdict:'Significant Issues',   emoji:'⚠️' };
-    return               { letter:'D', cls:'grade-D', verdict:'Failed — Data Unreliable',emoji:'❌' };
+    if (score >= 85) return { letter:'A', cls:'grade-A', verdict:'Publication-Quality', icon:'award' };
+    if (score >= 70) return { letter:'B', cls:'grade-B', verdict:'Good Experiment',      icon:'check-circle' };
+    if (score >= 55) return { letter:'C', cls:'grade-C', verdict:'Significant Issues',   icon:'alert-triangle' };
+    return               { letter:'D', cls:'grade-D', verdict:'Failed — Data Unreliable',icon:'x-circle' };
   }
 
   return { applyOption, applySlider, applyQualityDeltas, computeScore, reset, qualityColor, getGrade, clamp };

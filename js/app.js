@@ -112,7 +112,7 @@ OmicsLab.App = (function() {
 
       <div class="results-hero">
         <div class="grade-ring ${grade.cls}">${grade.letter}</div>
-        <div class="results-title">${grade.emoji} ${grade.verdict}</div>
+        <div class="results-title">${OmicsLab.Icons.svg(grade.icon, 18)} ${grade.verdict}</div>
         <div class="results-sub">${wf.name} &nbsp;·&nbsp; Score: <strong>${score}/100</strong> &nbsp;·&nbsp; Time: ${timeStr}</div>
       </div>
 
@@ -140,7 +140,7 @@ OmicsLab.App = (function() {
       </div>
 
       <div class="results-card">
-        <div class="results-card-title">🔗 Error Propagation Through Pipeline</div>
+        <div class="results-card-title">OmicsLab.Icons.svg('link',16) Error Propagation Through Pipeline</div>
         <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">Your wet-lab decisions cascade through every analysis stage. Each node shows the effective data quality at that point.</p>
         <div class="cascade">${cascadeHtml}</div>
       </div>
@@ -148,7 +148,7 @@ OmicsLab.App = (function() {
       ${diseaseHtml}
 
       <div class="results-card">
-        <div class="results-card-title">📋 Full QC Report</div>
+        <div class="results-card-title">OmicsLab.Icons.svg('clipboard',16) Full QC Report</div>
         <table class="qc-table">
           <thead><tr><th>Metric</th><th>Value</th><th>Standard</th><th>Status</th></tr></thead>
           <tbody>
@@ -165,7 +165,7 @@ OmicsLab.App = (function() {
       </div>
 
       <div class="results-card">
-        <div class="results-card-title">📝 Mistakes & Suboptimal Choices</div>
+        <div class="results-card-title">OmicsLab.Icons.svg('file-text',16) Mistakes & Suboptimal Choices</div>
         <ul style="padding-left:1.5rem;color:var(--text-muted);font-size:0.85rem;line-height:2">
           ${mistakesHtml}
         </ul>
@@ -173,10 +173,10 @@ OmicsLab.App = (function() {
 
       <div class="results-actions">
         <button class="btn-result-primary" onclick="OmicsLab.App.startWorkflow('${wf.id}')">
-          🔄 Retry This Protocol
+          OmicsLab.Icons.svg('rotate-cw',15) Retry This Protocol
         </button>
         <button class="btn-result-primary" style="background:var(--info)" onclick="OmicsLab.App.goHome()">
-          🧬 Choose Different Workflow
+          OmicsLab.Icons.svg('dna',15) Choose Different Workflow
         </button>
         <button class="btn-share" onclick="OmicsLab.App.shareResults('${wf.name}', ${score})">
           &#8679; Share Results
@@ -197,14 +197,14 @@ OmicsLab.App = (function() {
       if (!d) return '';
       const bms     = d.biomarkers ? d.biomarkers.map(b => `<li>${b}</li>`).join('') : '';
       const tools   = d.tools ? d.tools.map(t => `<span class="rdc-tool-tag">${t}</span>`).join('') : '';
-      const samples = d.sampleTypes ? d.sampleTypes.map(s => `<span class="rdc-tool-tag">🧪 ${s}</span>`).join('') : '';
+      const samples = d.sampleTypes ? d.sampleTypes.map(s => `<span class="rdc-tool-tag">${OmicsLab.Icons.svg('droplet',12)} ${s}</span>`).join('') : '';
       const statsHtml = d.stats ? `<div class="rdc-stats-row">
-        <span class="rdc-stat">🌐 ${d.stats.global}</span>
-        ${d.stats.africa ? `<span class="rdc-stat rdc-stat-africa">🌍 ${d.stats.africa}</span>` : ''}
+        <span class="rdc-stat">${OmicsLab.Icons.svg('globe',12)} ${d.stats.global}</span>
+        ${d.stats.africa ? `<span class="rdc-stat rdc-stat-africa">${OmicsLab.Icons.svg('map-pin',12)} ${d.stats.africa}</span>` : ''}
       </div>` : '';
       return `<div class="res-disease-card" style="--dc:${d.color}">
         <div class="rdc-head">
-          <span class="rdc-icon">${d.icon}</span>
+          <span class="rdc-icon">${OmicsLab.Icons.svg(d.icon,22)}</span>
           <div>
             <div class="rdc-name">${d.name}</div>
             <div class="rdc-cat">${d.category}</div>
@@ -219,12 +219,12 @@ OmicsLab.App = (function() {
         <div class="rdc-findings">${d.findings}</div>
         ${samples ? `<div class="rdc-section-label">Sample Types</div><div class="rdc-tools">${samples}</div>` : ''}
         ${tools ? `<div class="rdc-section-label">Analysis Tools</div><div class="rdc-tools">${tools}</div>` : ''}
-        ${d.africanContext ? `<div class="rdc-african"><span>🌍</span> ${d.africanContext}</div>` : ''}
+        ${d.africanContext ? `<div class="rdc-african">${OmicsLab.Icons.svg('map-pin',13)} ${d.africanContext}</div>` : ''}
       </div>`;
     }).join('');
 
     return `<div class="results-card">
-      <div class="results-card-title">🔬 Diseases Investigated with This Workflow</div>
+      <div class="results-card-title">OmicsLab.Icons.svg('microscope',16) Diseases Investigated with This Workflow</div>
       <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">
         The ${OmicsLab.Workflows[wfId] ? OmicsLab.Workflows[wfId].name : 'workflow'} you just completed
         is used to study these real diseases in clinical and research settings.
@@ -289,16 +289,16 @@ OmicsLab.App = (function() {
     function renderCards(filter) {
       const filtered = filter === 'All' ? diseases : diseases.filter(([,d]) => d.category === filter);
       cardsEl.innerHTML = filtered.map(([did, d]) => {
-        const bms = (d.biomarkers||[]).slice(0,3).map(b => `<div class="dc-bm-tag">🎯 ${b}</div>`).join('');
+        const bms = (d.biomarkers||[]).slice(0,3).map(b => `<div class="dc-bm-tag">${OmicsLab.Icons.svg('target',11)} ${b}</div>`).join('');
         const statsHtml = d.stats ? `<div class="dc-stats-row">
-          <span class="dc-stat-chip">🌐 ${d.stats.global}</span>
-          ${d.stats.africa ? `<span class="dc-stat-chip dc-stat-africa">🌍 ${d.stats.africa}</span>` : ''}
+          <span class="dc-stat-chip">${OmicsLab.Icons.svg('globe',12)} ${d.stats.global}</span>
+          ${d.stats.africa ? `<span class="dc-stat-chip dc-stat-africa">${OmicsLab.Icons.svg('map-pin',12)} ${d.stats.africa}</span>` : ''}
         </div>` : '';
         const bmCount  = (d.biomarkers||[]).length;
         const wfCount  = (d.workflows||[]).length;
         return `<div class="disease-card" style="--disease-color:${d.color}" onclick="OmicsLab.App._openDiseaseModal('${did}')">
           <div class="disease-card-head">
-            <div class="dc-icon-wrap">${d.icon}</div>
+            <div class="dc-icon-wrap">${OmicsLab.Icons.svg(d.icon,26)}</div>
             <div>
               <div class="dc-name">${d.name}</div>
               <div class="dc-cat-badge">${d.category}</div>
@@ -307,10 +307,10 @@ OmicsLab.App = (function() {
           ${statsHtml}
           <div class="dc-description">${d.description}</div>
           <div class="dc-biomarkers">${bms}</div>
-          ${d.africanContext ? `<div class="dc-african-tag">🌍 ${d.africanContext.substring(0,110)}…</div>` : ''}
+          ${d.africanContext ? `<div class="dc-african-tag">${OmicsLab.Icons.svg('map-pin',12)} ${d.africanContext.substring(0,110)}…</div>` : ''}
           <div class="dc-card-footer">
-            <span class="dc-meta-pill">🎯 ${bmCount} biomarker${bmCount!==1?'s':''}</span>
-            <span class="dc-meta-pill">🔬 ${wfCount} workflow${wfCount!==1?'s':''}</span>
+            <span class="dc-meta-pill">${OmicsLab.Icons.svg('target',11)} ${bmCount} biomarker${bmCount!==1?'s':''}</span>
+            <span class="dc-meta-pill">${OmicsLab.Icons.svg('flask',11)} ${wfCount} workflow${wfCount!==1?'s':''}</span>
             <span class="dc-detail-btn">Details →</span>
           </div>
         </div>`;
@@ -335,10 +335,10 @@ OmicsLab.App = (function() {
     const bms = (d.biomarkers||[]).map(b => `<li>${b}</li>`).join('');
     const tools = (d.tools||[]).map(t => `<span class="dm-tag">${t}</span>`).join('');
     const dbs   = (d.databases||[]).map(t => `<span class="dm-tag dm-tag-db">${t}</span>`).join('');
-    const samples = (d.sampleTypes||[]).map(s => `<span class="dm-tag dm-tag-sample">🧪 ${s}</span>`).join('');
+    const samples = (d.sampleTypes||[]).map(s => `<span class="dm-tag dm-tag-sample">${OmicsLab.Icons.svg('droplet',12)} ${s}</span>`).join('');
     const wfTags = (d.workflows||[]).map(wfId => {
       const wf = OmicsLab.Workflows[wfId];
-      return wf ? `<button class="dc-wf-tag dm-wf-btn" onclick="OmicsLab.App._closeDiseaseModal();OmicsLab.App.startWorkflow('${wfId}')">${wf.icon} ${wf.name}</button>` : '';
+      return wf ? `<button class="dc-wf-tag dm-wf-btn" onclick="OmicsLab.App._closeDiseaseModal();OmicsLab.App.startWorkflow('${wfId}')">${OmicsLab.Icons.svg(wf.icon,14)} ${wf.name}</button>` : '';
     }).join('');
 
     const statsHtml = d.stats ? `<div class="dm-stats-row">
@@ -380,7 +380,7 @@ OmicsLab.App = (function() {
       ${tools ? `<div class="dm-section"><div class="dm-section-label">Analysis Tools</div><div class="dm-tags-row">${tools}</div></div>` : ''}
       ${dbs ? `<div class="dm-section"><div class="dm-section-label">Key Databases</div><div class="dm-tags-row">${dbs}</div></div>` : ''}
       ${d.africanContext ? `<div class="dm-section dm-section-africa">
-        <div class="dm-section-label">🌍 African Context</div>
+        <div class="dm-section-label">${OmicsLab.Icons.svg('map-pin',14)} African Context</div>
         <p class="dm-text">${d.africanContext}</p>
       </div>` : ''}
       ${wfTags ? `<div class="dm-section">
@@ -429,14 +429,14 @@ OmicsLab.App = (function() {
         : (filterOrItems === 'All' ? items : items.filter(e => e.category === filterOrItems));
 
       if (filtered.length === 0) {
-        gridEl.innerHTML = `<div class="equip-no-results"><span>🔭</span>No instruments found.</div>`;
+        gridEl.innerHTML = `<div class="equip-no-results">${OmicsLab.Icons.svg('search',32)}<span>No instruments found.</span></div>`;
         return;
       }
 
       gridEl.innerHTML = filtered.map(eq => {
         const cssAnim = OmicsLab.Equipment
           ? OmicsLab.Equipment.render(eq.equipType, eq.equipParams || {})
-          : `<div class="equip-visual"><div class="equip-icon-large">🔬</div></div>`;
+          : `<div class="equip-visual"><div class="equip-icon-large">${OmicsLab.Icons.svg('microscope',48)}</div></div>`;
         const preview = eq.imageUrl
           ? `<div class="egc-photo-wrap">
                <img class="egc-photo" src="${eq.imageUrl}" alt="${eq.name}" loading="lazy"
@@ -451,7 +451,7 @@ OmicsLab.App = (function() {
 
         const wfTags = (eq.workflows || []).map(wfId => {
           const wf = OmicsLab.Workflows && OmicsLab.Workflows[wfId];
-          return wf ? `<span class="eg-wf-tag" onclick="event.stopPropagation();OmicsLab.App.startWorkflow('${wfId}')" title="Launch ${wf.name}">${wf.icon} ${wf.name}</span>` : '';
+          return wf ? `<span class="eg-wf-tag" onclick="event.stopPropagation();OmicsLab.App.startWorkflow('${wfId}')" title="Launch ${wf.name}">${OmicsLab.Icons.svg(wf.icon,12)} ${wf.name}</span>` : '';
         }).join('');
 
         const catColor = {
@@ -522,7 +522,7 @@ OmicsLab.App = (function() {
 
     const cssAnim = OmicsLab.Equipment
       ? OmicsLab.Equipment.render(eq.equipType, eq.equipParams || {})
-      : '<div class="equip-icon-large">🔬</div>';
+      : '<div class="equip-icon-large">' + OmicsLab.Icons.svg('microscope',48) + '</div>';
 
     const photoHtml = eq.imageUrl
       ? `<img class="emd-photo" src="${eq.imageUrl}" alt="${eq.name}"
@@ -536,13 +536,13 @@ OmicsLab.App = (function() {
 
     const wfTagsHtml = (eq.workflows || []).map(wfId => {
       const wf = OmicsLab.Workflows && OmicsLab.Workflows[wfId];
-      return wf ? `<span class="emd-wf-tag eg-wf-tag" onclick="OmicsLab.App.startWorkflow('${wfId}');OmicsLab.App._closeEquipmentModal()">${wf.icon} ${wf.name}</span>` : '';
+      return wf ? `<span class="emd-wf-tag eg-wf-tag" onclick="OmicsLab.App.startWorkflow('${wfId}');OmicsLab.App._closeEquipmentModal()">${OmicsLab.Icons.svg(wf.icon,12)} ${wf.name}</span>` : '';
     }).join('');
 
     const firstWf = (eq.workflows || []).find(id => OmicsLab.Workflows && OmicsLab.Workflows[id]);
     const launchBtn = firstWf
       ? `<button class="emd-launch-btn" onclick="OmicsLab.App.startWorkflow('${firstWf}');OmicsLab.App._closeEquipmentModal()">
-           Launch ${OmicsLab.Workflows[firstWf].icon} ${OmicsLab.Workflows[firstWf].name} →
+           Launch ${OmicsLab.Icons.svg(OmicsLab.Workflows[firstWf].icon,14)} ${OmicsLab.Workflows[firstWf].name} →
          </button>`
       : '';
 
@@ -610,7 +610,7 @@ OmicsLab.App = (function() {
     const gridEl = document.getElementById('equip-gallery-grid');
     if (!gridEl) return;
     if (filtered.length === 0) {
-      gridEl.innerHTML = `<div class="equip-no-results"><span>🔭</span>No instruments match "<em>${query}</em>"</div>`;
+      gridEl.innerHTML = `<div class="equip-no-results">${OmicsLab.Icons.svg('search',32)}<span>No instruments match "<em>${query}</em>"</span></div>`;
       return;
     }
     if (OmicsLab.App._renderEquipmentCards) OmicsLab.App._renderEquipmentCards(filtered);
@@ -643,21 +643,33 @@ OmicsLab.App = (function() {
     });
 
     const catIcons = {
-      'Alignment':'🎯', 'Variant Calling':'🔍', 'Quality Control':'✅',
-      'Trimming & QC':'✂️', 'Single-Cell':'🔬', 'Single-Cell Analysis':'🧫',
-      'Batch Correction':'🔄', 'Differential Expression':'📊',
-      'Functional Enrichment':'🌿', 'Peak Calling':'⛰️',
-      'Peak Calling & Motif':'🔣', 'Visualisation':'👁️',
-      'Taxonomic Classification':'🌳', 'Functional Profiling':'🔬',
-      '16S Analysis':'🧫', 'ASV Inference':'🔬',
-      'Metabolomics':'⚗️', 'Metabolomics Statistics':'📈',
-      'Proteomics':'🧬', 'Proteomics Statistics':'📊',
-      'Viral Lineage':'🦠', 'Viral QC & Lineage':'🧬',
-      'Variant Annotation':'🏷️',
+      'Alignment':             'target',
+      'Variant Calling':       'search',
+      'Quality Control':       'check-circle',
+      'Trimming & QC':         'scissors',
+      'Single-Cell':           'hexagon',
+      'Single-Cell Analysis':  'hexagon',
+      'Batch Correction':      'rotate-cw',
+      'Differential Expression':'bar-chart',
+      'Functional Enrichment': 'git-branch',
+      'Peak Calling':          'mountain',
+      'Peak Calling & Motif':  'mountain',
+      'Visualisation':         'eye',
+      'Taxonomic Classification':'git-branch',
+      'Functional Profiling':  'activity',
+      '16S Analysis':          'rotate-cw',
+      'ASV Inference':         'rotate-cw',
+      'Metabolomics':          'flask',
+      'Metabolomics Statistics':'trending-up',
+      'Proteomics':            'layers',
+      'Proteomics Statistics': 'bar-chart',
+      'Viral Lineage':         'virus',
+      'Viral QC & Lineage':    'virus',
+      'Variant Annotation':    'tag',
     };
 
     grid.innerHTML = Object.entries(cats).map(([cat, toolList]) => {
-      const icon = catIcons[cat] || '🔬';
+      const iconName = catIcons[cat] || 'flask';
       const toolItems = toolList.map(([tid, t]) =>
         `<div class="tool-item">
           <div class="ti-name">${t.name}</div>
@@ -697,7 +709,7 @@ OmicsLab.App = (function() {
       const filtered = filter === 'All' ? repos : repos.filter(([,r]) => r.category === filter);
       cardsEl.innerHTML = filtered.map(([rid, r]) => {
         const africaBadge = r.africanRelevance
-          ? `<div class="dc-african-tag repo-africa-note">🌍 ${r.africanRelevance}</div>` : '';
+          ? `<div class="dc-african-tag repo-africa-note">${OmicsLab.Icons.svg('map-pin',12)} ${r.africanRelevance}</div>` : '';
         return `<div class="repo-card">
           <div class="repo-card-head">
             <span class="repo-icon">${r.icon}</span>
@@ -706,7 +718,7 @@ OmicsLab.App = (function() {
               <div class="repo-cat-badge">${r.category}</div>
             </div>
           </div>
-          <div class="repo-scope-chip">📋 ${r.scope}</div>
+          <div class="repo-scope-chip">${OmicsLab.Icons.svg('clipboard',12)} ${r.scope}</div>
           <div class="repo-desc">${r.desc}</div>
           <div class="repo-access"><strong>Access:</strong> ${r.access}</div>
           ${africaBadge}
@@ -779,7 +791,7 @@ function _startHeroPreviewCycle() {
   const STATES = [
     {
       title: 'WGS — Step 3 of 12',
-      phase: '🧬 DNA Extraction',
+      phase: OmicsLab.Icons.svg('dna',14) + ' DNA Extraction',
       score: 94,
       metrics: [
         { label: 'Sample Integrity',    w: '85%', val: '8.5 RIN', cls: 'green' },
@@ -793,7 +805,7 @@ function _startHeroPreviewCycle() {
     },
     {
       title: 'RNA-seq — Step 5 of 10',
-      phase: '🔬 Library Preparation',
+      phase: OmicsLab.Icons.svg('flask',14) + ' Library Preparation',
       score: 88,
       metrics: [
         { label: 'RNA Integrity (RIN)', w: '79%', val: '7.9',     cls: 'blue'  },
@@ -807,7 +819,7 @@ function _startHeroPreviewCycle() {
     },
     {
       title: 'Metagenomic — Step 7 of 14',
-      phase: '🦠 Taxonomic Classification',
+      phase: OmicsLab.Icons.svg('git-branch',14) + ' Taxonomic Classification',
       score: 91,
       metrics: [
         { label: 'Host Depletion',      w: '98%', val: '98%',     cls: 'green' },
@@ -821,7 +833,7 @@ function _startHeroPreviewCycle() {
     },
     {
       title: 'Proteomics — Step 4 of 9',
-      phase: '⚗️ Protein Digestion',
+      phase: OmicsLab.Icons.svg('flask',14) + ' Protein Digestion',
       score: 96,
       metrics: [
         { label: 'Peptide IDs',         w: '93%', val: '4,821',   cls: 'green' },
@@ -841,7 +853,7 @@ function _startHeroPreviewCycle() {
     const $  = id => document.getElementById(id);
     if (!$('spc-title')) return;
     $('spc-title').textContent = s.title;
-    $('spc-phase').textContent = s.phase;
+    $('spc-phase').innerHTML = s.phase;
     $('spc-score').textContent = s.score;
     $('spc-cmd').textContent   = s.cmd;
 
