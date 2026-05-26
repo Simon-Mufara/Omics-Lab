@@ -251,7 +251,7 @@ OmicsLab.App = (function() {
         if (!wf) return '';
         const diffBadge = { beginner:'badge-green', intermediate:'badge-blue', advanced:'badge-orange' }[wf.difficulty] || 'badge-blue';
         return `<div class="workflow-item" onclick="OmicsLab.App.startWorkflow('${wfId}')">
-          <span class="workflow-item-icon">${wf.icon}</span>
+          <span class="workflow-item-icon">${OmicsLab.Icons.svg(wf.icon,14)}</span>
           <span class="workflow-item-name">${wf.name}</span>
           <span class="domain-badge ${diffBadge}" style="font-size:0.6rem">${wf.difficulty}</span>
           <span class="workflow-item-steps">${wf.steps.length} steps</span>
@@ -261,7 +261,7 @@ OmicsLab.App = (function() {
 
       return `<div class="domain-card" style="--domain-color:${domain.color};--domain-rgb:${domain.rgb}">
         <div class="domain-header">
-          <div class="domain-icon" style="--domain-color:${domain.color}">${domain.icon}</div>
+          <div class="domain-icon" style="--domain-color:${domain.color};color:${domain.colorHex}">${OmicsLab.Icons.svg(domain.icon,24)}</div>
           <span class="domain-badge ${domain.badge}">${domain.label}</span>
         </div>
         <div class="domain-name">${domain.label}</div>
@@ -350,7 +350,7 @@ OmicsLab.App = (function() {
     const html = `
     <div class="dm-header" style="--dm-color:${d.color}">
       <div class="dm-title-row">
-        <span class="dm-icon">${d.icon}</span>
+        <span class="dm-icon">${OmicsLab.Icons.svg(d.icon,32)}</span>
         <div>
           <div class="dm-name">${d.name}</div>
           <div class="dm-cat">${d.category}</div>
@@ -682,7 +682,7 @@ OmicsLab.App = (function() {
 
       return `<div class="tool-cat-card">
         <div class="tcc-header">
-          <span class="tcc-icon">${icon}</span>
+          <span class="tcc-icon">${OmicsLab.Icons.svg(iconName,18)}</span>
           <span class="tcc-name">${cat}</span>
           <span class="tcc-count">${toolList.length} tool${toolList.length>1?'s':''}</span>
         </div>
@@ -712,7 +712,7 @@ OmicsLab.App = (function() {
           ? `<div class="dc-african-tag repo-africa-note">${OmicsLab.Icons.svg('map-pin',12)} ${r.africanRelevance}</div>` : '';
         return `<div class="repo-card">
           <div class="repo-card-head">
-            <span class="repo-icon">${r.icon}</span>
+            <span class="repo-icon">${OmicsLab.Icons.svg(r.icon,22)}</span>
             <div>
               <div class="repo-name">${r.name}</div>
               <div class="repo-cat-badge">${r.category}</div>
