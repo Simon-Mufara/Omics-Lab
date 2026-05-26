@@ -73,6 +73,22 @@ OmicsLab.REAGENTS = {
   'wrong-chip':    { label: '10x Visium (wrong)', emoji: '⚠️',  cat: 'Chip' },
   'cite-ab-panel': { label: 'TotalSeq-B Ab Panel',emoji: '🏷️',  cat: 'Antibody' },
   'cite-no-ab':    { label: 'No Ab Panel',        emoji: '❌', cat: 'Antibody' },
+
+  /* ── Thermo Fisher Scientific ── */
+  'superscript-iv':{ label: 'SuperScript IV VILO',  cat: 'Enzyme' },
+  'purelink-rna':  { label: 'PureLink RNA Mini Kit', cat: 'Extraction' },
+  'magmax-rna':    { label: 'MagMAX mirVana RNA',    cat: 'Extraction' },
+  'taqman-mm':     { label: 'TaqMan Adv. Master Mix',cat: 'PCR' },
+  'sybr-adv':      { label: 'PowerUp SYBR Green',   cat: 'PCR' },
+  'ion-amp-lib':   { label: 'Ion AmpliSeq Lib+ Kit', cat: 'Library Prep' },
+
+  /* ── QIAGEN ── */
+  'qiaseq-fx':     { label: 'QIAseq FX DNA Lib Kit', cat: 'Library Prep' },
+  'qiaseq-stranded':{ label: 'QIAseq Stranded RNA',  cat: 'Library Prep' },
+  'qiamp-viral':   { label: 'QIAamp Viral RNA Kit',  cat: 'Extraction' },
+  'qiamp-ffdna':   { label: 'QIAamp DNA FFPE Kit',   cat: 'Extraction' },
+  'mirneasy':      { label: 'miRNeasy Mini Kit',      cat: 'Extraction' },
+  'hotstar-taq':   { label: 'HotStarTaq Plus MM',    cat: 'PCR' },
 };
 
 /* ── Quality function presets (resolved by engine) ── */
@@ -819,14 +835,147 @@ OmicsLab.Workflows['cite-seq'] = {
   ]
 };
 
+/* ────────────────────────────────────────────────────────────
+   15. RT-qPCR Gene Expression  (Thermo Fisher / QIAGEN)
+   ──────────────────────────────────────────────────────────── */
+OmicsLab.Workflows['rt-qpcr'] = {
+  id:'rt-qpcr', domain:'transcriptomics', domainLabel:'Transcriptomics',
+  name:'RT-qPCR Gene Expression', difficulty:'beginner', icon:'activity',
+  color:'var(--transcripto)', colorHex:'#3fb950',
+  desc:'Quantify specific gene expression by reverse-transcribing RNA to cDNA and amplifying with gene-specific primers on a QuantStudio or RotorGene Q. The gold standard for validating RNA-seq hits in clinical and research settings.',
+  pipeline:['RNA Extraction','RNA QC','cDNA Synthesis','Primer Design','qPCR Run','ΔΔCt Analysis','Normalisation'],
+  steps:[
+    dragStep('rna-source-qpcr','Sample Input','Select Sample Type',
+      'Drag your starting material to the homogenisation tube.',
+      'RNA quality determines qPCR sensitivity. Fresh frozen tissue (RIN ≥ 8) gives the most reproducible Ct values. FFPE introduces crosslinks that fragment RNA — minimum RIN 2.5 is acceptable when using a dedicated FFPE extraction kit. Blood must be processed within 4 hours or stabilised in PAXgene tubes. Cell culture should be lysed directly in guanidinium-based buffer to inactivate RNases immediately.',
+      0,'snowflake','Sample Tube','Drop sample here',
+      ['fresh-tissue','cultured-cells','blood-edta','ffpe'],
+      { 'fresh-tissue':  { impact:'good', score:0,   quality:{} },
+        'cultured-cells':{ impact:'good', score:0,   quality:{} },
+        'blood-edta':    { impact:'good', score:-2,  quality:{ sampleIntegrity:-5 } },
+        'ffpe':          { impact:'warn', score:-15, quality:{ sampleIntegrity:-30, purity:-10 } } }),
+
+    dragStep('rna-kit-qpcr','RNA Extraction','Select Extraction Kit',
+      'Choose the RNA extraction kit and drag it to the column.',
+      'RNeasy Mini (QIAGEN) and PureLink RNA Mini (Thermo Fisher) use silica-column chemistry — both give high purity (A260/280 ≥ 1.9). TRIzol with column cleanup adds a phase-separation step that co-removes lipids and carbohydrates. MagMAX mirVana (Thermo Fisher) is the automated choice for the KingFisher instrument. miRNeasy (QIAGEN) isolates total RNA including small RNAs — ideal when profiling miRNAs alongside mRNAs.',
+      0,'flask','Silica Column','Drag extraction kit here',
+      ['rneasy','purelink-rna','trizol-col','magmax-rna','mirneasy'],
+      { 'rneasy':      { impact:'good', score:0,  quality:{} },
+        'purelink-rna':{ impact:'good', score:0,  quality:{} },
+        'trizol-col':  { impact:'good', score:-2, quality:{ purity:-5 } },
+        'magmax-rna':  { impact:'good', score:0,  quality:{} },
+        'mirneasy':    { impact:'good', score:0,  quality:{} } }),
+
+    dragStep('cdna-synthesis','cDNA Synthesis','Select Reverse Transcriptase',
+      'Drag the reverse transcriptase master mix to the RNA sample.',
+      'SuperScript IV VILO (Thermo Fisher) is an engineered MMLV RT active at 50–55°C — heat reduces secondary structure in GC-rich templates and gives 2× more cDNA than SuperScript III. Random hexamers prime all RNA species (mRNA + rRNA + ncRNA), increasing total cDNA but reducing specificity. Using TRIzol directly as a cDNA synthesis reaction destroys the reverse transcriptase — phenol must be completely removed first.',
+      2,'flask','RT Reaction Tube','Drop RT reagent here',
+      ['superscript-iv','random-hex','trizol'],
+      { 'superscript-iv':{ impact:'good', score:0,   quality:{} },
+        'random-hex':    { impact:'warn', score:-8,  quality:{ purity:-15, libraryComplexity:-10 } },
+        'trizol':        { impact:'bad',  score:-30, quality:{ yield:-50, sampleIntegrity:-40 } } }),
+
+    dragStep('qpcr-chem','qPCR','Select qPCR Chemistry',
+      'Choose the detection chemistry and drag it to the 96-well plate on the QuantStudio.',
+      'TaqMan probes (5′ nuclease assay) use a dual-labelled hydrolysis probe — highly specific, multiplexable up to 4 targets per well, no melt-curve analysis required. Designed for Tm 68–70°C with a 60°C universal annealing step. PowerUp SYBR Green (Thermo Fisher) intercalates into all dsDNA — cheaper, no probe design, but detects primer-dimers and non-specific products (always run a melt curve). HotStarTaq Plus (QIAGEN) is a conventional PCR enzyme optimised for standard PCR, not real-time detection — lacks the buffer optimisation and reference dye for QuantStudio or RotorGene Q.',
+      3,'cpu','qPCR 96-well Plate','Drop chemistry here',
+      ['taqman-mm','sybr-adv','hotstar-taq','kapa-hifi'],
+      { 'taqman-mm':  { impact:'good', score:0,   quality:{} },
+        'sybr-adv':   { impact:'good', score:-3,  quality:{ purity:-5 } },
+        'hotstar-taq':{ impact:'bad',  score:-25, quality:{ libraryComplexity:-40, yield:-20 } },
+        'kapa-hifi':  { impact:'warn', score:-15, quality:{ libraryComplexity:-20 } } }),
+
+    { id:'pcr-cycles-qpcr', phase:'qPCR Run', title:'Number of qPCR Cycles',
+      desc:'Set the number of amplification cycles on the QuantStudio 7 Pro or RotorGene Q.',
+      edu:'Standard qPCR runs 40 cycles with a 3-step protocol: denaturation 95°C (15 s) / annealing+extension 60°C (60 s). Moderately expressed genes give Ct 18–28. Reference genes (ACTB, GAPDH) typically Ct 15–22. If your target Ct exceeds 35 at 40 cycles, increase RNA input rather than adding cycles — beyond 45 cycles you enter the plateau and amplify non-specific products. TaqMan assays use a FAM/MGB probe read during the extension step.',
+      pipelineStage:3, type:'slider', min:30, max:50, optimal:40, unit:'cycles', label:'qPCR cycles',
+      quality_fn:(v)=>{ if(v<35){return{yield:-20};} if(v>45){return{purity:-15,duplication:10};} return{}; },
+      score_fn:(v)=>{ if(v<35||v>46){return-18;} if(v>42){return-8;} return 0; } },
+
+    { id:'anneal-temp', phase:'qPCR Run', title:'Primer Annealing Temperature',
+      desc:'Set the annealing temperature for qPCR primers. Most TaqMan assays run at 60°C.',
+      edu:'Primer Tm directly controls specificity vs efficiency. Too low (< Tm − 5°C): non-specific amplification, multiple peaks on melt curve. Too high (> Tm + 5°C): reduced efficiency — Ct shifts right by 1–3 per degree. Universal annealing at 60°C covers most TaqMan assays (probe Tm 68–70°C). For SYBR Green, validate every new primer pair with a dissociation curve — a single sharp peak at Tm confirms a clean product.',
+      pipelineStage:3, type:'slider', min:50, max:70, optimal:60, unit:'°C', label:'Annealing temperature',
+      quality_fn:(v)=>{ if(v<55){return{purity:-20,duplication:15};} if(v>65){return{yield:-18};} return{}; },
+      score_fn:(v)=>{ const d=Math.abs(v-60); return d>7?-20:d>4?-8:0; } },
+
+    choiceStep('norm-method','Data Analysis','Reference Gene Normalisation Strategy',
+      'Choose the normalisation method for ΔΔCt calculation.',
+      'ΔΔCt requires a stably expressed reference gene. ACTB and GAPDH are widely used but are not universally stable — GAPDH is upregulated by insulin and hypoxia. GeNorm analysis recommends averaging ≥ 2 reference genes to reduce variability. TBP and HPRT1 are among the most stable in immune-cell panels. Using raw Ct values without normalisation cannot distinguish biological from technical variation (pipetting differences, RNA input, reverse transcription efficiency).',
+      6,
+      [{ label:'Two reference genes (GeNorm)', desc:'Most robust — averages variability between housekeeping genes. MIQE guideline compliant.', impact:'good', score:0, quality:{} },
+       { label:'Single gene (ACTB or GAPDH)', desc:'Widely accepted but can introduce bias in metabolic or stress conditions.', impact:'good', score:-5, quality:{ purity:-8 } },
+       { label:'No normalisation (raw Ct)', desc:'Cannot separate biological signal from technical noise — violates MIQE guidelines.', impact:'bad', score:-28, quality:{ purity:-40, libraryComplexity:-20 } },
+       { label:'Absolute quantification (standard curve)', desc:'Valid for viral load or copy-number quantification with known standards.', impact:'good', score:-2, quality:{} }])
+  ]
+};
+
+/* ────────────────────────────────────────────────────────────
+   16. Ion AmpliSeq Targeted Panel  (Thermo Fisher / QIAGEN)
+   ──────────────────────────────────────────────────────────── */
+OmicsLab.Workflows['ampli-seq'] = {
+  id:'ampli-seq', domain:'genomics', domainLabel:'Genomics',
+  name:'Ion AmpliSeq Targeted Panel', difficulty:'intermediate', icon:'target',
+  color:'var(--genomics)', colorHex:'#58a6ff',
+  desc:'Sequence targeted panels of cancer hotspot genes, pharmacogenomics loci, or pathogen-typing amplicons from FFPE or liquid biopsy samples using Ion Torrent semiconductor sequencing on the Ion GeneStudio S5.',
+  pipeline:['DNA Extraction','Quantification (Qubit)','AmpliSeq Library Prep','ISP Templating','Ion Torrent Sequencing','Coverage QC','Variant Calling','Annotation'],
+  steps:[
+    dragStep('dna-source-amp','Sample Input','Select DNA Source',
+      'Drag your starting DNA material to the input tube.',
+      'Ion AmpliSeq requires only 1–10 ng DNA — designed specifically for FFPE and low-input samples. FFPE introduces C→T deamination artefacts at low allele frequencies (< 2%) — use the Ion AmpliSeq FFPE Repair Mix before library prep. For liquid biopsy (ctDNA), ultra-low input panels require a minimum of 5 ng; allele frequencies as low as 0.1–1% can be detected at deep coverage (≥ 5,000×). Blood (EDTA) gives the cleanest DNA for germline panels.',
+      0,'snowflake','Input Tube','Drop DNA source here',
+      ['blood-edta','ffpe','fresh-tissue','cultured-cells'],
+      { 'blood-edta':    { impact:'good', score:0,   quality:{} },
+        'fresh-tissue':  { impact:'good', score:0,   quality:{} },
+        'cultured-cells':{ impact:'good', score:0,   quality:{} },
+        'ffpe':          { impact:'good', score:-5,  quality:{ sampleIntegrity:-10 } } }),
+
+    dragStep('dna-ext-amp','DNA Extraction','Select Extraction Method',
+      'Drag the extraction kit to the sample tube.',
+      'DNeasy Blood & Tissue (QIAGEN) is standard for most inputs — 200 µL blood or 25 mg tissue, yielding 5–15 µg of high-molecular-weight DNA. QIAamp DNA FFPE Tissue Kit adds a deparaffinisation step and extended 90°C incubation to reverse formaldehyde crosslinks — critical for FFPE blocks where standard kits yield degraded, amplification-resistant DNA. Phenol-chloroform gives high yield but requires multiple hazardous reagents and generates inconsistent purity.',
+      0,'flask','Extraction Column','Drop extraction kit here',
+      ['dneasy','qiamp-ffdna','phenol-ci','boiling'],
+      { 'dneasy':     { impact:'good', score:0,   quality:{} },
+        'qiamp-ffdna':{ impact:'good', score:0,   quality:{ sampleIntegrity:5 } },
+        'phenol-ci':  { impact:'warn', score:-12, quality:{ purity:-20, yield:-10 } },
+        'boiling':    { impact:'bad',  score:-40, quality:{ sampleIntegrity:-70, yield:-50 } } }),
+
+    dragStep('amp-lib-prep','Library Preparation','Select Library Preparation Kit',
+      'Drag the library prep kit to the PCR amplification tube.',
+      'Ion AmpliSeq Library Kit Plus (Thermo Fisher) uses pre-designed multiplexed primer pools — a single PCR reaction amplifies all targets simultaneously from as little as 1 ng DNA. QIAseq Targeted DNA Panels (QIAGEN) add unique molecular indices (UMIs) per amplicon for error correction — essential for detecting variants at < 1% VAF in liquid biopsy. TruSeq and Nextera XT are Illumina-specific kits: their adapters are incompatible with Ion Torrent ISP templating and will produce zero usable reads.',
+      2,'package','Library Prep Tube','Drop kit here',
+      ['ion-amp-lib','qiaseq-fx','truseq','nextera-xt'],
+      { 'ion-amp-lib':{ impact:'good', score:0,   quality:{} },
+        'qiaseq-fx':  { impact:'good', score:-3,  quality:{} },
+        'truseq':     { impact:'bad',  score:-40, quality:{ libraryComplexity:-80, yield:-60 } },
+        'nextera-xt': { impact:'bad',  score:-35, quality:{ libraryComplexity:-70 } } }),
+
+    { id:'target-depth', phase:'Sequencing', title:'Mean Target Coverage Depth',
+      desc:'Set the mean coverage depth across all targeted amplicons on the Ion GeneStudio S5.',
+      edu:'Somatic variant calling in oncology panels requires ≥ 500× mean coverage to detect variants at 5% VAF with 95% confidence (Poisson statistics). Germline variant calling (pharmacogenomics, hereditary cancer) is reliable at 100–200×. Coverage uniformity matters as much as mean depth — amplicons with < 20× produce no calls regardless of panel mean. The Ion GeneStudio S5 Prime chip (Ion 550) yields 660 Mb output, supporting a 50-gene panel at 1,000× from 16 samples per run.',
+      pipelineStage:5, type:'slider', min:50, max:2000, optimal:500, unit:'×', label:'Mean target coverage',
+      quality_fn:(v)=>{ if(v<100){return{sampleIntegrity:-40,libraryComplexity:-30};} if(v<300){return{sampleIntegrity:-15};} return{}; },
+      score_fn:(v)=>{ if(v<100){return-30;} if(v<300){return-15;} return 0; } },
+
+    choiceStep('variant-caller-amp','Bioinformatics','Variant Calling Pipeline',
+      'Select the variant calling algorithm for somatic or germline mutation detection.',
+      'Torrent Variant Caller (TVC) is Ion-optimised — it models the homopolymer deletion artefacts inherent to semiconductor sequencing (e.g. repeated A/T runs produce systematic length errors). GATK HaplotypeCaller is built for Illumina error profiles and will over-report false indels in homopolymer regions on Ion data. VarScan2 is platform-agnostic and performs well on paired tumour/normal data. Annotation with ClinVar, OncoKB, or COSMIC is mandatory before clinical reporting.',
+      6,
+      [{ label:'Torrent Variant Caller (TVC)', desc:'Ion-optimised. Handles homopolymer errors. Required for Ion GeneStudio data.', impact:'good', score:0, quality:{} },
+       { label:'VarScan2 (somatic)', desc:'Platform-agnostic. Best for paired tumour/normal panels.', impact:'good', score:-5, quality:{ purity:-5 } },
+       { label:'GATK HaplotypeCaller', desc:'Illumina-optimised — over-reports indels in Ion homopolymer regions.', impact:'warn', score:-15, quality:{ purity:-25 } },
+       { label:'No variant calling (coverage QC only)', desc:'Provides depth metrics but zero clinical utility — defeats the purpose of targeted sequencing.', impact:'bad', score:-35, quality:{ libraryComplexity:-60 } }])
+  ]
+};
+
 /* ── Domain registry (used by landing page) ── */
 OmicsLab.DOMAINS = [
   { id:'genomics',       label:'Genomics',        icon:'dna',        color:'var(--genomics)',    colorHex:'#58a6ff', rgb:'88,166,255', badge:'badge-blue',
     desc:'Map the complete DNA sequence of an organism or characterise variants linked to disease.',
-    workflows:['wgs','wes'] },
+    workflows:['wgs','wes','ampli-seq'] },
   { id:'transcriptomics',label:'Transcriptomics', icon:'activity',   color:'var(--transcripto)', colorHex:'#3fb950', rgb:'63,185,80',  badge:'badge-green',
     desc:'Quantify gene expression at population (bulk) or single-cell resolution.',
-    workflows:['rna-seq','scrna-seq'] },
+    workflows:['rna-seq','scrna-seq','rt-qpcr'] },
   { id:'epigenomics',    label:'Epigenomics',     icon:'lock-open',  color:'var(--epigenomics)', colorHex:'#d2a8ff', rgb:'210,168,255',badge:'badge-blue',
     desc:'Profile chromatin accessibility, histone modifications, and DNA methylation.',
     workflows:['atac-seq','chip-seq'] },

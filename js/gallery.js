@@ -324,5 +324,99 @@ OmicsLab.EQUIPMENT_GALLERY = [
     cost: '~$150,000–$200,000',
     alternatives: ['Thermo EASY-nLC 1200', 'Dionex UltiMate 3000 RSLCnano'],
     whenToUse: 'Any shotgun proteomics or metabolomics run requiring LC peptide/metabolite separation before ESI-MS. Usually bundled with the mass spectrometer.'
+  },
+
+  /* ── THERMO FISHER SCIENTIFIC ──────────────────────────────── */
+  {
+    id: 'ion-genestudio-s5',
+    name: 'Ion GeneStudio S5 Prime',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'Sequencers',
+    equipType: 'sequencer',
+    equipParams: { output: '660 Mb', reads: '80 M' },
+    tagline: 'Semiconductor sequencing for targeted panels and amplicons',
+    desc: 'Ion Torrent semiconductor sequencer using the Ion 550 chip (660 Mb, 80 M reads per run). Measures the pH change caused by hydrogen ions released during nucleotide incorporation — no fluorescence, no optics, no SBS chemistry. Designed for targeted amplicon panels (Ion AmpliSeq), clinical oncology (Oncomine), and pathogen typing. Typical run time 4.4 hours. FFPE and ctDNA are standard inputs at 1–10 ng DNA. Homopolymer indels are the characteristic error mode; the Torrent Variant Caller (TVC) corrects for this.',
+    specs: { 'Chip': 'Ion 550 (660 Mb) / Ion 540 (15 Gb)', 'Read Length': '200 or 400 bp', 'Throughput': '80 M reads (Ion 550)', 'Run Time': '~4.4 hours' },
+    workflows: ['ampli-seq','wgs'],
+    cost: '~$65,000',
+    alternatives: ['Illumina MiSeq (SBS, higher accuracy)', 'QIAGEN GeneReader (desktop NGS)'],
+    whenToUse: 'Targeted gene panels (oncology, pharmacogenomics, pathogen ID), FFPE or liquid biopsy samples where 1–10 ng input is limiting and fast TAT matters.'
+  },
+  {
+    id: 'quantstudio-12k',
+    name: 'QuantStudio 12K Flex',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'PCR Instruments',
+    equipType: 'qpcr',
+    equipParams: { ct: '18.2' },
+    tagline: 'High-throughput TaqMan array cards for 12,288 reactions per run',
+    desc: 'The QuantStudio 12K Flex runs TaqMan OpenArray plates — 3,072 through-holes pre-loaded with TaqMan assays in a 33 nL format. A single card profiles 754 gene-expression targets across 16 samples simultaneously. Used for pathway-level expression panels, miRNA profiling, and copy-number variation. OpenArray format reduces reagent cost to < $0.01 per reaction. Also accepts standard 96- and 384-well plates for conventional qPCR.',
+    specs: { 'Format': 'OpenArray (3,072 nano-reactions) + 96/384-well', 'Volume': '33 nL (OpenArray) / 5–20 µL (plates)', 'Targets / Card': '754 genes × 16 samples', 'Channels': '4 dye channels (FAM, VIC, ROX, TAMRA)' },
+    workflows: ['rt-qpcr','rna-seq','viral-wgs'],
+    cost: '~$80,000',
+    alternatives: ['Applied Biosystems QuantStudio 7 Pro', 'Fluidigm BioMark HD'],
+    whenToUse: 'Large-scale gene expression panels (> 100 targets), biomarker validation across cohorts, miRNA pathway screening.'
+  },
+  {
+    id: 'kingfisher-flex',
+    name: 'KingFisher Flex',
+    manufacturer: 'Thermo Fisher Scientific',
+    category: 'Automation',
+    equipType: 'robot',
+    equipParams: {},
+    tagline: 'Magnetic-particle automated nucleic acid extraction',
+    desc: 'Magnetic-rod based automated nucleic acid extractor for up to 96 samples per run. Uses MagMAX kits (MagMAX mirVana, MagMAX DNA Multi-Sample Ultra) with proprietary magnetic rods that transfer particles between reagent troughs without pipetting. Eliminates manual column centrifugation, reduces hands-on time to < 10 minutes. Widely used in clinical labs and public health settings for RNA extraction from NP swabs (SARS-CoV-2, influenza) and blood.',
+    specs: { 'Throughput': '1–96 samples', 'Format': '96-well deepwell plate', 'Protocol Time': '30–45 min', 'Compatible Kits': 'MagMAX DNA/RNA Ultra, mirVana' },
+    workflows: ['rt-qpcr','rna-seq','viral-wgs'],
+    cost: '~$35,000',
+    alternatives: ['QIAGEN QIAcube Connect (spin-column automation)', 'Roche MagNA Pure 96'],
+    whenToUse: 'High-throughput extraction (>20 samples/day), clinical diagnostic labs, biobank processing, public health surveillance.'
+  },
+
+  /* ── QIAGEN ────────────────────────────────────────────────── */
+  {
+    id: 'qiacube-connect',
+    name: 'QIAcube Connect MDx',
+    manufacturer: 'QIAGEN',
+    category: 'Automation',
+    equipType: 'robot',
+    equipParams: {},
+    tagline: 'Automated spin-column extraction for up to 12 samples',
+    desc: 'Benchtop robotic extraction system that automates all QIAGEN spin-column protocols (QIAamp, RNeasy, DNeasy) for up to 12 samples per run. The MDx variant is IVD-registered for diagnostic labs. Pipetting, centrifugation, and wash steps are fully automated — the user only loads pre-filled reagent cartridges and sample tubes. Reduces operator variability and exposure to hazardous reagents. Widely deployed in African public health labs and BSL-2 settings where throughput is moderate but reproducibility critical.',
+    specs: { 'Throughput': 'Up to 12 samples per run', 'Compatible Kits': 'All QIAamp, RNeasy, DNeasy spin-column kits', 'Run Time': '35–65 min depending on protocol', 'Connectivity': 'LIS/LIMS integration, cloud logging' },
+    workflows: ['rt-qpcr','rna-seq','viral-wgs','wgs'],
+    cost: '~$40,000',
+    alternatives: ['Thermo Fisher KingFisher Flex (magnetic-particle, 96-sample)', 'Roche MagNA Pure 24'],
+    whenToUse: 'Diagnostic labs, BSL-2/3 settings, small-to-medium throughput (5–12 samples/run) where spin-column purity is required and full MagMAX automation is not justified.'
+  },
+  {
+    id: 'rotorgene-q',
+    name: 'Rotor-Gene Q MDx',
+    manufacturer: 'QIAGEN',
+    category: 'PCR Instruments',
+    equipType: 'qpcr',
+    equipParams: { ct: '20.8' },
+    tagline: 'Rotary real-time PCR for superior uniformity and HRM analysis',
+    desc: 'The Rotor-Gene Q uses a unique centrifugal, rotating tube carousel (72-sample strip) — all tubes are exposed to the same optical path at the same temperature simultaneously, eliminating the well-to-well temperature non-uniformity seen in block-based instruments (±0.01°C vs ±0.5°C for 96-well blocks). This makes it the gold standard for high-resolution melt (HRM) analysis (mutation scanning, methylation genotyping) and absolute quantification. The MDx version is IVD/CE-marked for clinical and veterinary diagnostics.',
+    specs: { 'Format': '72 × 0.1 mL strips or 36 × 0.2 mL tubes', 'Temperature Uniformity': '< ±0.01°C across all samples', 'Channels': '6 (Green/Yellow/Orange/Red/Crimson/HRM)', 'Run Time': '~ 60 min (40 cycles)' },
+    workflows: ['rt-qpcr','viral-wgs'],
+    cost: '~$18,000',
+    alternatives: ['Bio-Rad CFX96 Touch', 'Applied Biosystems QuantStudio 7 Pro'],
+    whenToUse: 'HRM mutation scanning, methylation profiling, veterinary diagnostics, any assay where temperature uniformity and tight Ct reproducibility (CV < 0.5%) are critical.'
+  },
+  {
+    id: 'qiaxcel-advanced',
+    name: 'QIAxcel Advanced',
+    manufacturer: 'QIAGEN',
+    category: 'QC Instruments',
+    equipType: 'bioanalyzer',
+    equipParams: { rin: '—', size: '15 bp – 5 kb' },
+    tagline: 'Automated capillary electrophoresis for DNA and RNA sizing',
+    desc: 'Capillary electrophoresis system for automated sizing and quantification of DNA (PCR products, library QC) and RNA (RNA integrity, RIN equivalent). Accepts 12 samples per cartridge in 1.5–2 hours, with no gel pouring or staining. The QIAxcel ScreenGel software provides virtual gel images and fragment-size tables. Widely used in African genomics labs as a cost-effective alternative to the Agilent Bioanalyzer for library QC before sequencing.',
+    specs: { 'Size Range': '15 bp – 5 kb (DNA) / 200 – 6,000 nt (RNA)', 'Throughput': '12 samples per cartridge', 'Run Time': '~1.5 hours', 'Sensitivity': '0.1 ng/µL (DNA)' },
+    workflows: ['wgs','rna-seq','rt-qpcr','ampli-seq'],
+    cost: '~$30,000 (instrument) · ~$400 per 12-sample cartridge',
+    alternatives: ['Agilent Bioanalyzer 2100', 'Agilent TapeStation 4200', 'Fragment Analyzer (Agilent)'],
+    whenToUse: 'Library size verification before sequencing, RNA integrity scoring (RIN equivalent), PCR product sizing and quantification, any gel-electrophoresis QC step that needs automation and digital records.'
   }
 ];

@@ -140,7 +140,7 @@ OmicsLab.App = (function() {
       </div>
 
       <div class="results-card">
-        <div class="results-card-title">OmicsLab.Icons.svg('link',16) Error Propagation Through Pipeline</div>
+        <div class="results-card-title">${OmicsLab.Icons.svg('link',16)} Error Propagation Through Pipeline</div>
         <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">Your wet-lab decisions cascade through every analysis stage. Each node shows the effective data quality at that point.</p>
         <div class="cascade">${cascadeHtml}</div>
       </div>
@@ -148,7 +148,7 @@ OmicsLab.App = (function() {
       ${diseaseHtml}
 
       <div class="results-card">
-        <div class="results-card-title">OmicsLab.Icons.svg('clipboard',16) Full QC Report</div>
+        <div class="results-card-title">${OmicsLab.Icons.svg('clipboard',16)} Full QC Report</div>
         <table class="qc-table">
           <thead><tr><th>Metric</th><th>Value</th><th>Standard</th><th>Status</th></tr></thead>
           <tbody>
@@ -165,7 +165,7 @@ OmicsLab.App = (function() {
       </div>
 
       <div class="results-card">
-        <div class="results-card-title">OmicsLab.Icons.svg('file-text',16) Mistakes & Suboptimal Choices</div>
+        <div class="results-card-title">${OmicsLab.Icons.svg('file-text',16)} Mistakes &amp; Suboptimal Choices</div>
         <ul style="padding-left:1.5rem;color:var(--text-muted);font-size:0.85rem;line-height:2">
           ${mistakesHtml}
         </ul>
@@ -173,10 +173,10 @@ OmicsLab.App = (function() {
 
       <div class="results-actions">
         <button class="btn-result-primary" onclick="OmicsLab.App.startWorkflow('${wf.id}')">
-          OmicsLab.Icons.svg('rotate-cw',15) Retry This Protocol
+          ${OmicsLab.Icons.svg('rotate-cw',15)} Retry This Protocol
         </button>
         <button class="btn-result-primary" style="background:var(--info)" onclick="OmicsLab.App.goHome()">
-          OmicsLab.Icons.svg('dna',15) Choose Different Workflow
+          ${OmicsLab.Icons.svg('dna',15)} Choose Different Workflow
         </button>
         <button class="btn-share" onclick="OmicsLab.App.shareResults('${wf.name}', ${score})">
           &#8679; Share Results
@@ -224,7 +224,7 @@ OmicsLab.App = (function() {
     }).join('');
 
     return `<div class="results-card">
-      <div class="results-card-title">OmicsLab.Icons.svg('microscope',16) Diseases Investigated with This Workflow</div>
+      <div class="results-card-title">${OmicsLab.Icons.svg('microscope',16)} Diseases Investigated with This Workflow</div>
       <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">
         The ${OmicsLab.Workflows[wfId] ? OmicsLab.Workflows[wfId].name : 'workflow'} you just completed
         is used to study these real diseases in clinical and research settings.
