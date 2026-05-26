@@ -31,20 +31,15 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  /* Cache-first for app shell; network-first for Wikimedia images */
-  if (e.request.url.includes('wikimedia.org')) {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    );
-    return;
-  }
+  if (e.request.method !== 'GET') return;
+  /* Network-first: always try the network, fall back to cache for offline */
   e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      if (res.ok && e.request.method === 'GET') {
+    fetch(e.request).then(res => {
+      if (res.ok) {
         const clone = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, clone));
       }
       return res;
-    }))
+    }).catch(() => caches.match(e.request))
   );
 });
