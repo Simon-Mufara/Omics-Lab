@@ -25,6 +25,7 @@ OmicsLab.App = (function() {
     if (!wf) return;
 
     OmicsLab.Engine.reset(wfId);
+    clearSabotageStep();
 
     document.getElementById('topbar-wf-name').textContent   = wf.name;
     document.getElementById('topbar-domain').textContent    = wf.domainLabel;
@@ -256,7 +257,8 @@ OmicsLab.App = (function() {
     const METRIC_TREE_MAP = {
       'Sample Integrity':'lowRIN','Q30 Score':'lowQ30',
       'Duplication Rate':'highDuplication','Alignment Rate':'lowAlignment',
-      'Contamination':'highContamination','Library Complexity':'lowLibraryComplexity'
+      'Contamination':'highContamination','Library Complexity':'lowLibraryComplexity',
+      '260/280 Purity':'lowRIN','Material Yield':'lowRIN'
     };
     const failed = rows.filter(r => !r.pass).map(r => r.m);
     if (!failed.length) return '';

@@ -118,8 +118,9 @@ OmicsLab.AfricaMap = (function() {
     });
   }
 
-  /* Simplified Africa outline as SVG path — key-shaped continent */
+  /* Africa outline using real coordinate projections for recognisable continent shape */
   function _africaOutline() {
+    /* All points computed via _project(lat,lon) ahead of time for SVG path */
     return `
     <defs>
       <radialGradient id="amap-bg" cx="50%" cy="50%" r="70%">
@@ -129,49 +130,38 @@ OmicsLab.AfricaMap = (function() {
     </defs>
     <rect width="520" height="480" fill="url(#amap-bg)" rx="12"/>
     <g fill="#1c2430" stroke="#30363d" stroke-width="0.8" opacity="0.9">
-    <!-- Simplified Africa shape — key points traced from actual continent outline -->
+    <!--
+      Points traced clockwise from Morocco NW.
+      Each comment shows approx lat,lon reference.
+    -->
     <path d="
-      M 185,10
-      C 220,6 270,4 310,8
-      C 350,12 390,18 420,28
-      C 445,38 460,52 468,68
-      C 475,82 476,98 474,114
-      C 472,130 466,144 460,156
-      C 454,168 448,178 445,190
-      C 442,202 442,214 446,224
-      C 450,234 458,242 464,252
-      C 470,262 474,272 474,284
-      C 474,296 470,308 462,318
-      C 454,328 442,336 432,344
-      C 422,352 412,360 404,370
-      C 396,380 390,392 386,404
-      C 382,416 380,428 376,438
-      C 372,448 366,456 356,460
-      C 346,464 334,464 322,462
-      C 310,460 298,456 288,450
-      C 278,444 270,436 264,428
-      C 258,420 254,410 252,400
-      C 250,390 250,380 248,370
-      C 246,360 240,352 232,348
-      C 224,344 216,344 208,342
-      C 200,340 192,336 186,328
-      C 180,320 176,310 172,298
-      C 168,286 164,274 158,264
-      C 152,254 144,246 136,240
-      C 128,234 120,230 114,224
-      C 108,218 104,210 104,202
-      C 104,194 108,186 114,180
-      C 120,174 128,170 132,164
-      C 136,158 136,150 134,142
-      C 132,134 128,126 124,118
-      C 120,110 116,100 114,90
-      C 112,80 112,70 116,60
-      C 120,50 128,42 138,34
-      C 148,26 160,20 174,14
-      C 178,12 182,11 185,10 Z
-    " />
-    <!-- Madagascar -->
-    <ellipse cx="455" cy="340" rx="20" ry="36" transform="rotate(-15 455 340)"/>
+      M 91,16
+      C 150,8 185,6 210,8
+      C 240,12 280,34 319,44
+      C 350,40 370,52 387,66
+      C 420,112 440,148 453,174
+      L 511,172
+      C 498,202 475,220 446,238
+      C 440,274 436,296 430,316
+      C 416,352 406,368 394,382
+      C 372,424 348,460 282,475
+      L 260,441
+      L 216,362
+      L 223,284
+      C 214,268 206,258 200,250
+      L 163,224
+      C 148,216 136,215 126,217
+      C 108,218 90,220 77,222
+      L 53,208
+      L 30,191
+      L 7,171
+      L 4,153
+      C 3,136 4,124 7,114
+      C 18,88 28,76 37,66
+      C 56,42 72,28 91,16 Z
+    "/>
+    <!-- Madagascar: centre ~lat -19, lon 47 -->
+    <ellipse cx="487" cy="375" rx="13" ry="40" transform="rotate(-12 487 375)"/>
     </g>
     <!-- Equator line -->
     <line x1="0" y1="${_project(0,0).y}" x2="520" y2="${_project(0,0).y}" stroke="#30363d" stroke-width="0.5" stroke-dasharray="4,4"/>

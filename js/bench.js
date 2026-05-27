@@ -395,7 +395,7 @@ OmicsLab.DragDrop = (function() {
     });
   }
 
-  return { buildShelf, buildDropZone, attachEvents };
+  return { buildShelf, buildDropZone, attachEvents, handleDrop };
 })();
 
 /* ─── Step Renderer ──────────────────────────────────────── */
@@ -424,6 +424,12 @@ OmicsLab.Renderer = (function() {
     bench.classList.add('animate-in');
     setTimeout(() => bench.classList.remove('animate-in'), 400);
     setTimeout(() => startEquipTimer(bench), 80);
+
+    /* Sabotage Mode — auto-inject the worst choice after a short delay */
+    if (OmicsLab.SabotageMode && OmicsLab.App && typeof OmicsLab.App.getSabotageStep === 'function') {
+      const sabIdx = OmicsLab.App.getSabotageStep(wf.steps.length);
+      if (stepIndex === sabIdx) _scheduleSabotage(step);
+    }
   }
 
   function eduNote(text) {
@@ -622,6 +628,67 @@ OmicsLab.Renderer = (function() {
     OmicsLab.Renderer._currentSliderStep = step;
   }
 
+  /* ── Sabotage Mode helpers ── */
+  function _scheduleSabotage(step) {
+    /* Show banner briefly, then auto-trigger the worst choice */
+    setTimeout(() => {
+      const bench = document.getElementById('bench-workspace');
+      if (!bench) return;
+      const banner = document.createElement('div');
+      banner.id = 'sabotage-active-banner';
+      banner.className = 'sabotage-active-banner';
+      banner.textContent = '⚠ SABOTAGE MODE — injecting error into this step…';
+      bench.prepend(banner);
+    }, 300);
+
+    setTimeout(() => {
+      const banner = document.getElementById('sabotage-active-banner');
+      if (banner) banner.remove();
+      if (step.type === 'drag')        _sabotageDropStep(step);
+      else if (step.type === 'choice') _sabotageChoiceStep(step);
+      else if (step.type === 'slider') _sabotageSliderStep(step);
+    }, 1800);
+  }
+
+  function _sabotageDropStep(step) {
+    const optMap = step.optionMap || {};
+    let worstRid = null;
+    for (const [rid, opt] of Object.entries(optMap)) {
+      if (opt.impact === 'bad') { worstRid = rid; break; }
+      if (opt.impact === 'warn' && !worstRid) worstRid = rid;
+    }
+    if (!worstRid) return;
+    const zone = document.getElementById('main-drop-zone');
+    if (!zone || zone.classList.contains('filled')) return;
+    OmicsLab.DragDrop.handleDrop(worstRid, step, zone, (rid, opt, r) => {
+      const title = opt.impact === 'bad' ? '⚠ Sabotage! Worst Reagent Auto-Selected' : '⚠ Sabotage! Suboptimal Reagent Auto-Selected';
+      showFeedback(opt.impact === 'bad' ? 'bad' : 'warn', title,
+        `<strong>Sabotage Mode</strong> forced <strong>${r.label}</strong>. Check your QC metrics for the impact!`);
+      const btn = document.getElementById('btn-advance');
+      if (btn) { btn.disabled = false; btn.textContent = 'Continue →'; btn.onclick = () => renderStep(OmicsLab.State.currentStep + 1); }
+    });
+  }
+
+  function _sabotageChoiceStep(step) {
+    const opts = step.options || [];
+    let worstIdx = -1;
+    opts.forEach((o, i) => { if (o.impact === 'bad'  && worstIdx === -1) worstIdx = i; });
+    if (worstIdx === -1)
+      opts.forEach((o, i) => { if (o.impact === 'warn' && worstIdx === -1) worstIdx = i; });
+    if (worstIdx === -1) return;
+    const btn = document.querySelector(`.choice-btn[data-idx="${worstIdx}"]`);
+    if (btn && !btn.classList.contains('cb-locked')) btn.click();
+  }
+
+  function _sabotageSliderStep(step) {
+    const slider = document.getElementById('main-slider');
+    if (!slider) return;
+    const extremeVal = (Math.abs(step.max - step.optimal) >= Math.abs(step.optimal - step.min)) ? step.max : step.min;
+    slider.value = extremeVal;
+    slider.dispatchEvent(new Event('input'));
+    setTimeout(() => { const btn = document.getElementById('btn-advance'); if (btn) btn.click(); }, 600);
+  }
+
   function _submitSlider() {
     const step   = OmicsLab.Renderer._currentSliderStep;
     const slider = document.getElementById('main-slider');
@@ -671,6 +738,14 @@ OmicsLab.Renderer = (function() {
     .cb-title { font-weight: 700; font-size: 0.88rem; }
     .cb-desc  { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
     @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+
+    .sabotage-active-banner {
+      background: rgba(229,83,75,0.15); border: 1px solid #e5534b;
+      border-radius: 6px; padding: 0.6rem 1rem; margin-bottom: 0.75rem;
+      color: #e5534b; font-weight: 700; font-size: 0.85rem;
+      animation: sabotage-pulse 0.6s ease-in-out infinite alternate;
+    }
+    @keyframes sabotage-pulse { from { opacity: 0.7; } to { opacity: 1; } }
 
     /* Disease context mini-cards */
     .dc-mini-card {
