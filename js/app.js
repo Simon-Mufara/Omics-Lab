@@ -170,12 +170,24 @@ OmicsLab.App = (function() {
         </ul>
       </div>
 
+      ${_buildCostCalculator(wf, score)}
+
+      ${_buildTroubleshootTrigger(rows)}
+
+      ${_buildVariantWalkthrough(wf.id)}
+
       <div class="results-actions">
         <button class="btn-result-primary" onclick="OmicsLab.App.startWorkflow('${wf.id}')">
           ${OmicsLab.Icons.svg('rotate-cw',15)} Retry This Protocol
         </button>
         <button class="btn-result-primary" style="background:var(--info)" onclick="OmicsLab.App.goHome()">
           ${OmicsLab.Icons.svg('dna',15)} Choose Different Workflow
+        </button>
+        <button class="btn-result-primary" style="background:#a371f7" onclick="OmicsLab.Quiz && OmicsLab.Quiz.start('${wf.id}')">
+          ${OmicsLab.Icons.svg('help-circle',15)} Take Quiz
+        </button>
+        <button class="btn-share" onclick="OmicsLab.App.printReport()">
+          &#128196; Download Report
         </button>
         <button class="btn-share" onclick="OmicsLab.App.shareResults('${wf.name}', ${score})">
           &#8679; Share Results
@@ -184,6 +196,209 @@ OmicsLab.App = (function() {
     `;
 
     showScreen('screen-results');
+  }
+
+  /* ─── Cost & Time Calculator ─── */
+  function _buildCostCalculator(wf, score) {
+    const META = {
+      'wgs':        { cost:550, costAf:750, time:'3–5 days', reagents:'DNeasy + TruSeq + NovaSeq run', notes:'NovaSeq flow cell dominates cost' },
+      'wes':        { cost:220, costAf:320, time:'2–4 days', reagents:'SureSelect capture + NovaSeq', notes:'Capture kit is the main cost driver' },
+      'rna-seq':    { cost:150, costAf:210, time:'2–3 days', reagents:'RNeasy + TruSeq Stranded + NextSeq', notes:'Bioanalyzer QC + library prep ~$50' },
+      'scrna-seq':  { cost:1100,costAf:1500,time:'2–3 days', reagents:'10x Chromium Chip + GEX kit + NovaSeq', notes:'Chromium chip + GEX kit ~$700 of total' },
+      'atac-seq':   { cost:300, costAf:420, time:'2–3 days', reagents:'Tn5 transposase + NextSeq', notes:'Cell viability >85% required — poor viability wastes all reagents' },
+      'chip-seq':   { cost:350, costAf:480, time:'3–4 days', reagents:'ChIP-grade Ab + protein A/G beads + NextSeq', notes:'Ab cost highly variable ($100–500); sonication optimisation adds time' },
+      'shotgun-meta':{ cost:250,costAf:380, time:'3–5 days', reagents:'PowerSoil Pro + Nextera XT + NovaSeq', notes:'Host depletion adds $30–50 per sample' },
+      '16s-amplicon':{ cost:55, costAf:75,  time:'1–2 days', reagents:'515F/806R primers + KAPA HiFi + MiSeq', notes:'MiSeq reagent kit amortised across 96+ samples' },
+      'lc-ms':      { cost:380, costAf:520, time:'2–4 days', reagents:'HILIC + C18 columns + Orbitrap run + ISTD mix', notes:'Column maintenance and Orbitrap downtime major cost factors in Africa' },
+      'proteomics': { cost:450, costAf:620, time:'3–5 days', reagents:'SP3 beads + trypsin + Orbitrap Exploris 480 run', notes:'Orbitrap service contract ~$50K/yr — major African lab constraint' },
+      'viral-wgs':  { cost:140, costAf:190, time:'1–3 days', reagents:'ARTIC v4.1 primers + MinION flow cell + library kit', notes:'MinION flow cell ($500–800); R10.4 gives best accuracy for variants' },
+      'cite-seq':   { cost:1600,costAf:2200,time:'3–4 days', reagents:'TotalSeq-B Ab panel + 10x v3.1 + NovaSeq', notes:'Ab panel cost scales with number of markers (10–300+)' },
+      'rt-qpcr':    { cost:35,  costAf:50,  time:'4–8 hours',reagents:'SuperScript IV VILO + SYBR Green + QuantStudio', notes:'Most affordable omics workflow; excellent for resource-limited labs' },
+      'ampli-seq':  { cost:110, costAf:160, time:'1–2 days', reagents:'AmpliSeq panel + Ion Torrent PGM or MiSeq', notes:'Panel design cost (one-off) $1500–5000; per-run cost shown' }
+    };
+    const m = META[wf.id];
+    if (!m) return '';
+    const africaPremium = Math.round((m.costAf - m.cost) / m.cost * 100);
+    const q = OmicsLab.State.quality;
+    const efficiencyPenalty = q.sampleIntegrity < 70 || q.purity < 70 ? '⚠️ Low sample quality may require re-extraction — add ~30–50% to reagent cost.' : '';
+    return `
+      <div class="results-card">
+        <div class="results-card-title">${OmicsLab.Icons.svg('trending-up',16)} Cost &amp; Time Estimate</div>
+        <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">
+          Africa-adjusted estimates based on reagent import costs, equipment maintenance, and infrastructure factors.
+        </p>
+        <div class="calc-grid">
+          <div class="calc-cell">
+            <div class="calc-val">$${m.cost}</div>
+            <div class="calc-label">Global avg. cost/sample</div>
+          </div>
+          <div class="calc-cell">
+            <div class="calc-val calc-africa">$${m.costAf}</div>
+            <div class="calc-label">Africa-adjusted (+${africaPremium}%)</div>
+          </div>
+          <div class="calc-cell">
+            <div class="calc-val">${m.time}</div>
+            <div class="calc-label">Lab turnaround time</div>
+          </div>
+          <div class="calc-cell">
+            <div class="calc-val">${score >= 80 ? '100%' : score >= 60 ? '~80%' : '~50%'}</div>
+            <div class="calc-label">Est. data usability (your score)</div>
+          </div>
+        </div>
+        <div class="calc-reagents"><strong>Key reagents:</strong> ${m.reagents}</div>
+        <div class="calc-note">${m.notes}${efficiencyPenalty ? '<br><span style="color:var(--warning)">' + efficiencyPenalty + '</span>' : ''}</div>
+      </div>`;
+  }
+
+  /* ─── Troubleshoot trigger ─── */
+  function _buildTroubleshootTrigger(rows) {
+    if (!OmicsLab.Troubleshoot) return '';
+    const METRIC_TREE_MAP = {
+      'Sample Integrity':'lowRIN','Q30 Score':'lowQ30',
+      'Duplication Rate':'highDuplication','Alignment Rate':'lowAlignment',
+      'Contamination':'highContamination','Library Complexity':'lowLibraryComplexity'
+    };
+    const failed = rows.filter(r => !r.pass).map(r => r.m);
+    if (!failed.length) return '';
+    const btns = failed.map(m => {
+      const key = METRIC_TREE_MAP[m] || 'lowRIN';
+      return `<button class="ts-trigger-btn" onclick="OmicsLab.Troubleshoot.open('${key}')">Diagnose: ${m}</button>`;
+    }).join('');
+    return `<div class="results-card ts-trigger-card">
+      <div class="results-card-title">${OmicsLab.Icons.svg('alert-triangle',16)} Troubleshooting Assistant</div>
+      <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">Some QC metrics failed. Use the interactive decision tree to find the root cause.</p>
+      <div class="ts-trigger-btns">${btns}</div>
+    </div>`;
+  }
+
+  /* ─── Variant Walkthrough (genomics workflows) ─── */
+  const GENOMICS_WFS = new Set(['wgs','wes','ampli-seq','viral-wgs']);
+  const VARIANTS = [
+    { gene:'BRCA1', chrom:'chr17', pos:43071077, ref:'G', alt:'A', af:'0.00003', cadd:28.4, clinvar:'Pathogenic (8 stars)', acmg:'PVS1_strong, PS1, PM2', verdict:'Pathogenic',
+      exp:'Loss-of-function variant in BRCA1 (breast/ovarian cancer suppressor). gnomAD AF <0.0001 (PM2), known pathogenic in ClinVar (PS1), strong loss-of-function evidence (PVS1). ACMG: Pathogenic.' },
+    { gene:'TP53',  chrom:'chr17', pos:7674220,  ref:'C', alt:'T', af:'0.00001', cadd:34.2, clinvar:'Pathogenic (12 stars)', acmg:'PVS1, PS1, PS3, PM2', verdict:'Pathogenic',
+      exp:'Hotspot missense in TP53 R248W — the most frequently mutated position in human cancer. Functional studies show dominant-negative activity (PS3). ACMG: Pathogenic.' },
+    { gene:'APOE',  chrom:'chr19', pos:44908684, ref:'T', alt:'C', af:'0.138',   cadd:10.1, clinvar:'Benign/risk factor', acmg:'BS1, BP4, BA1', verdict:'Benign',
+      exp:'APOE ε4 risk allele — population frequency 13.8% (BA1: >5% = stand-alone benign). Associated with Alzheimer\'s risk but is a common variant, not a disease-causing mutation. ACMG: Benign.' },
+    { gene:'LMNA',  chrom:'chr1',  pos:156134872,ref:'A', alt:'G', af:'0.000012',cadd:22.6, clinvar:'VUS (conflicting evidence)', acmg:'PM2, PP2, PP3', verdict:'VUS',
+      exp:'Rare missense in LMNA (laminopathy gene). Insufficient evidence to classify — rare (PM2) and in-silico pathogenic (PP3), but no functional data (missing PS3). ACMG: Variant of Uncertain Significance.' },
+    { gene:'CFTR',  chrom:'chr7',  pos:117548628,ref:'CTT', alt:'C', af:'0.021', cadd:32.5, clinvar:'Pathogenic — F508del (cystic fibrosis)', acmg:'PVS1, PS4, PM3, BA1_not met', verdict:'Pathogenic',
+      exp:'F508del — the most common cystic fibrosis variant (66% of CF alleles globally). 3 bp deletion causing ΔF508 — loss of phenylalanine at position 508. ACMG: Pathogenic. Target of CFTR modulators (Trikafta).' }
+  ];
+
+  function _buildVariantWalkthrough(wfId) {
+    if (!GENOMICS_WFS.has(wfId)) return '';
+    const cards = VARIANTS.map((v,i) => `
+      <div class="vw-card" id="vw-card-${i}">
+        <div class="vw-card-head">
+          <span class="vw-gene">${v.gene}</span>
+          <span class="vw-pos">${v.chrom}:${v.pos}</span>
+          <span class="vw-change">${v.ref}→${v.alt}</span>
+        </div>
+        <div class="vw-metrics">
+          <span class="vw-metric">gnomAD AF: <strong>${v.af}</strong></span>
+          <span class="vw-metric">CADD: <strong>${v.cadd}</strong></span>
+          <span class="vw-metric">ClinVar: <strong>${v.clinvar}</strong></span>
+          <span class="vw-metric">ACMG criteria: <strong>${v.acmg}</strong></span>
+        </div>
+        <div class="vw-classify">
+          <span style="font-size:0.78rem;color:var(--text-muted)">Your classification:</span>
+          <button class="vw-btn vw-path"  onclick="OmicsLab.App._classifyVariant(${i},'Pathogenic')">Pathogenic</button>
+          <button class="vw-btn vw-vus"   onclick="OmicsLab.App._classifyVariant(${i},'VUS')">VUS</button>
+          <button class="vw-btn vw-benign"onclick="OmicsLab.App._classifyVariant(${i},'Benign')">Benign</button>
+        </div>
+        <div class="vw-feedback" id="vw-fb-${i}"></div>
+      </div>`).join('');
+
+    return `<div class="results-card">
+      <div class="results-card-title">${OmicsLab.Icons.svg('search',16)} Variant Interpretation Walkthrough</div>
+      <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1.2rem">
+        Classify each simulated VCF variant using ACMG criteria (gnomAD AF, ClinVar, CADD, functional evidence).
+        These are real published variants — apply the criteria and check your reasoning.
+      </p>
+      <div class="vw-grid">${cards}</div>
+    </div>`;
+  }
+
+  function _classifyVariant(idx, choice) {
+    const v = VARIANTS[idx];
+    if (!v) return;
+    const fb = document.getElementById('vw-fb-' + idx);
+    if (!fb) return;
+    const correct = choice === v.verdict;
+    fb.className = 'vw-feedback ' + (correct ? 'vw-fb-correct' : 'vw-fb-wrong');
+    fb.innerHTML = `<strong>${correct ? '✓ Correct!' : '✗ Expected: ' + v.verdict}</strong> — ${v.exp}`;
+    /* Disable buttons on the card */
+    const card = document.getElementById('vw-card-' + idx);
+    if (card) card.querySelectorAll('.vw-btn').forEach(b => b.disabled = true);
+  }
+
+  /* ─── Print / PDF report ─── */
+  function printReport() {
+    const wf = OmicsLab.Workflows[OmicsLab.State.workflow];
+    const score = OmicsLab.Engine.computeScore();
+    const grade = OmicsLab.Engine.getGrade(score);
+    const q = OmicsLab.State.quality;
+    const E = OmicsLab.Engine;
+    const elapsed = OmicsLab.State.elapsed;
+    const timeStr = `${Math.floor(elapsed/60)}m ${elapsed%60}s`;
+
+    const rows = [
+      { m:'Sample Integrity', v:`${(q.sampleIntegrity/10).toFixed(1)}/10 (RIN)`, pass:q.sampleIntegrity>=80 },
+      { m:'260/280 Purity',   v:q.purity>=88?'1.9–2.1':q.purity>=65?'~1.7':'<1.5', pass:q.purity>=80 },
+      { m:'Material Yield',   v:`${q.yield}%`, pass:q.yield>=75 },
+      { m:'Library Complexity',v:`${q.libraryComplexity}%`, pass:q.libraryComplexity>=75 },
+      { m:'Q30 Score',        v:`${q.sequencingQ30}%`, pass:q.sequencingQ30>=75 },
+      { m:'Alignment Rate',   v:`${q.alignmentRate}%`, pass:q.alignmentRate>=75 },
+      { m:'Duplication Rate', v:`${q.duplication}%`,  pass:q.duplication<=15 },
+      { m:'Contamination',    v:`${q.contamination}%`, pass:q.contamination<=10 },
+    ];
+
+    const mistakeRows = OmicsLab.State.mistakes.length
+      ? OmicsLab.State.mistakes.map(m => `<tr><td>${m.step}</td><td>${m.choice}</td><td>${m.impact}</td></tr>`).join('')
+      : '<tr><td colspan="3">No mistakes — perfect execution</td></tr>';
+
+    const reportWin = window.open('', '_blank', 'width=800,height=900');
+    reportWin.document.write(`<!DOCTYPE html><html><head>
+      <title>OmicsLab Lab Report — ${wf ? wf.name : ''}</title>
+      <style>
+        body{font-family:Georgia,serif;max-width:750px;margin:2cm auto;color:#1a1a2e;line-height:1.6}
+        h1{font-size:1.4rem;border-bottom:2px solid #3fb950;padding-bottom:0.5rem}
+        h2{font-size:1.1rem;color:#1a3a5c;margin-top:1.5rem}
+        .grade{display:inline-block;font-size:2.5rem;font-weight:bold;color:${grade.cls==='grade-A'?'#3fb950':grade.cls==='grade-B'?'#58a6ff':grade.cls==='grade-C'?'#d29922':'#e5534b'};margin-right:1rem}
+        table{width:100%;border-collapse:collapse;margin:1rem 0}
+        th{background:#1a3a5c;color:#fff;padding:0.4rem 0.6rem;text-align:left;font-size:0.85rem}
+        td{padding:0.35rem 0.6rem;border-bottom:1px solid #ddd;font-size:0.85rem}
+        .pass{color:#2d6a4f}.fail{color:#c62828}.warn{color:#e65100}
+        .footer{margin-top:2rem;font-size:0.75rem;color:#666;border-top:1px solid #ddd;padding-top:0.5rem}
+        @media print{body{margin:1cm}}
+      </style></head><body>
+      <h1>OmicsLab Simulator — Laboratory Methods Report</h1>
+      <p><strong>Workflow:</strong> ${wf ? wf.name : 'Unknown'} &nbsp; <strong>Domain:</strong> ${wf ? wf.domainLabel : ''} &nbsp; <strong>Difficulty:</strong> ${wf ? wf.difficulty : ''}</p>
+      <p><strong>Date:</strong> ${new Date().toLocaleDateString()} &nbsp; <strong>Time elapsed:</strong> ${timeStr}</p>
+      <h2>Grade &amp; Verdict</h2>
+      <span class="grade">${grade.letter}</span> <strong>${grade.verdict}</strong> &nbsp; Score: ${score}/100
+      <h2>QC Metrics Report</h2>
+      <table><thead><tr><th>Metric</th><th>Value</th><th>Status</th></tr></thead><tbody>
+        ${rows.map(r=>`<tr><td>${r.m}</td><td>${r.v}</td><td class="${r.pass?'pass':'fail'}">${r.pass?'PASS':'FAIL'}</td></tr>`).join('')}
+      </tbody></table>
+      <h2>Pipeline Cascade</h2>
+      <p>${wf ? wf.pipeline.join(' → ') : ''}</p>
+      <h2>Mistakes &amp; Suboptimal Choices</h2>
+      <table><thead><tr><th>Step</th><th>Choice Made</th><th>Impact</th></tr></thead><tbody>
+        ${mistakeRows}
+      </tbody></table>
+      <h2>Materials &amp; Methods (Template)</h2>
+      <p style="font-style:italic">
+        ${wf ? wf.name : 'Workflow'} was performed following standard protocols.
+        ${wf ? wf.desc : ''}
+        Quality control was assessed at each step using laboratory-grade instrumentation.
+        All QC thresholds followed published best practices (ENCODE/GATK/MIQE guidelines where applicable).
+      </p>
+      <div class="footer">Generated by OmicsLab Simulator — simon-mufara.github.io/Omics-Lab/ — For educational purposes only</div>
+    </body></html>`);
+    reportWin.document.close();
+    setTimeout(() => reportWin.print(), 500);
   }
 
   function _buildResultsDiseaseBlock(wfId) {
@@ -240,7 +455,31 @@ OmicsLab.App = (function() {
     _buildToolExplorer();
     _buildRepositoryExplorer();
     if (OmicsLab.QAEngine) OmicsLab.QAEngine.init();
+    if (OmicsLab.AfricaMap) OmicsLab.AfricaMap.init();
+    if (OmicsLab.Sandbox) OmicsLab.Sandbox.init();
   }
+
+  /* ─── Sabotage Mode (Error Injection) ─── */
+  OmicsLab.SabotageMode = false;
+  function toggleSabotage() {
+    OmicsLab.SabotageMode = !OmicsLab.SabotageMode;
+    const btn = document.getElementById('sabotage-toggle-btn');
+    if (btn) {
+      btn.textContent = OmicsLab.SabotageMode ? '🔴 Sabotage ON — Find the hidden error!' : '🔬 Sabotage Mode';
+      btn.classList.toggle('sabotage-active', OmicsLab.SabotageMode);
+    }
+    const hint = document.getElementById('sabotage-hint');
+    if (hint) hint.style.display = OmicsLab.SabotageMode ? 'block' : 'none';
+  }
+  /* Called by bench.js when a step is applied — inject a bad choice at a random step */
+  function getSabotageStep(totalSteps) {
+    if (!OmicsLab.SabotageMode) return -1;
+    if (OmicsLab._sabotageStep === undefined) {
+      OmicsLab._sabotageStep = Math.floor(Math.random() * totalSteps);
+    }
+    return OmicsLab._sabotageStep;
+  }
+  function clearSabotageStep() { OmicsLab._sabotageStep = undefined; }
 
   function _buildWorkflowGrid() {
     const grid = document.getElementById('domain-grid');
@@ -769,6 +1008,8 @@ OmicsLab.App = (function() {
     _openDiseaseModal, _closeDiseaseModal,
     _filterRepos,
     _searchEquipment, shareResults,
+    printReport, _classifyVariant,
+    toggleSabotage, getSabotageStep, clearSabotageStep,
     _renderDiseaseCards: null, _renderEquipmentCards: null, _renderRepoCards: null,
   };
 })();

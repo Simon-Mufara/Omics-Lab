@@ -40,7 +40,10 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section')">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section')">Tools</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section')">Repositories</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section')">Map</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')">Ask</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section')">Sandbox</button>
+      <button class="nav-pill" onclick="OmicsLab.Compare && OmicsLab.Compare.open()">Compare</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section')">Features</button>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
@@ -50,7 +53,10 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">Tools</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">Repositories</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section');OmicsLab.App.toggleMobileNav()">Map</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section');OmicsLab.App.toggleMobileNav()">Ask</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section');OmicsLab.App.toggleMobileNav()">Sandbox</button>
+      <button class="nav-pill" onclick="OmicsLab.Compare&&OmicsLab.Compare.open();OmicsLab.App.toggleMobileNav()">Compare</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section');OmicsLab.App.toggleMobileNav()">Features</button>
     </div>
   </nav>
@@ -265,6 +271,19 @@
     </div>
   </div>
 
+  <!-- Africa Genomics Map -->
+  <div class="africa-map-section reveal" id="africa-map-section">
+    <div class="section-label">Where the science happens</div>
+    <h2 class="section-title">Africa Genomics Lab Map</h2>
+    <p class="section-desc">
+      Explore the genomics centres, H3Africa network nodes, and sequencing hubs across Africa.
+      Click any dot to see the institute, its focus areas, and the programmes it supports.
+    </p>
+    <div id="africa-map-container" class="africa-map-container">
+      <!-- Populated by AfricaMap.init() -->
+    </div>
+  </div>
+
   <!-- Q&A -->
   <div class="qa-section reveal" id="qa-section">
     <div class="section-label">Got a question?</div>
@@ -285,6 +304,52 @@
     <div class="qa-cat-tabs" id="qa-cat-tabs"><!-- Populated by QAEngine.init() --></div>
     <div class="qa-suggestions" id="qa-suggestions"><!-- Populated by QAEngine.init() --></div>
     <div class="qa-results" id="qa-results"><!-- Populated by search --></div>
+  </div>
+
+  <!-- Pipeline Sandbox -->
+  <div class="sandbox-section reveal" id="sandbox-section">
+    <div class="section-label">Build your own pipeline</div>
+    <h2 class="section-title">Pipeline Sandbox</h2>
+    <p class="section-desc">
+      Drag bioinformatics tools from the panel onto the canvas, connect them with arrows,
+      and validate that your pipeline's inputs and outputs are compatible.
+    </p>
+    <div id="sandbox-container" class="sandbox-outer">
+      <!-- Populated by Sandbox.init() -->
+    </div>
+  </div>
+
+  <!-- Sabotage Mode -->
+  <div class="sabotage-section reveal" id="sabotage-section">
+    <div class="section-label">Teaching mode</div>
+    <h2 class="section-title">Error Injection Mode</h2>
+    <p class="section-desc">
+      Enable Sabotage Mode before starting a workflow — one step will secretly receive a wrong input.
+      Can you identify which QC metric flagged the error, and trace it back to the root cause?
+    </p>
+    <div class="sabotage-controls">
+      <button class="btn-sabotage" id="sabotage-toggle-btn" onclick="OmicsLab.App.toggleSabotage()">
+        🔬 Sabotage Mode
+      </button>
+      <p id="sabotage-hint" class="sabotage-hint" style="display:none">
+        <strong>Sabotage is active.</strong> Start any workflow — one random step will inject a suboptimal choice. Watch your QC metrics carefully. After you see the results, check the Mistake Log to find the injected error.
+      </p>
+    </div>
+  </div>
+
+  <!-- Protocol Comparison -->
+  <div class="compare-section reveal" id="compare-section">
+    <div class="section-label">Side-by-side analysis</div>
+    <h2 class="section-title">Compare Workflows</h2>
+    <p class="section-desc">
+      Pick any two workflows and compare them side-by-side — cost, turnaround time, required instruments,
+      sample input, and when each protocol is the right choice.
+    </p>
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn-hero btn-hero-primary" onclick="OmicsLab.Compare && OmicsLab.Compare.open()">
+        Open Comparison Tool →
+      </button>
+    </div>
   </div>
 
   <!-- Features -->
@@ -472,6 +537,47 @@
   </div>
 </section>
 
+<!-- Protocol Comparison Modal -->
+<div class="compare-modal-overlay" id="compare-modal-overlay" onclick="if(event.target===this)OmicsLab.Compare.close()">
+  <div class="compare-modal" role="dialog" aria-modal="true" aria-label="Compare Workflows">
+    <div class="compare-modal-header">
+      <div class="compare-modal-title">Protocol Comparison</div>
+      <button class="compare-modal-close" onclick="OmicsLab.Compare.close()">✕</button>
+    </div>
+    <div class="compare-selectors">
+      <div class="compare-sel-wrap">
+        <label class="compare-sel-label">Workflow A</label>
+        <select class="compare-sel" id="compare-sel-1" onchange="OmicsLab.Compare.selectWf(1,this.value)">
+          <option value="">— Select workflow —</option>
+        </select>
+      </div>
+      <div class="compare-vs">vs</div>
+      <div class="compare-sel-wrap">
+        <label class="compare-sel-label">Workflow B</label>
+        <select class="compare-sel" id="compare-sel-2" onchange="OmicsLab.Compare.selectWf(2,this.value)">
+          <option value="">— Select workflow —</option>
+        </select>
+      </div>
+    </div>
+    <div class="compare-table-box" id="compare-table-box">
+      <p class="cmp-empty">Select two workflows above to see the comparison.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Troubleshooting Modal -->
+<div class="troubleshoot-modal-overlay" id="troubleshoot-modal-overlay" onclick="if(event.target===this)OmicsLab.Troubleshoot.close()">
+  <div class="troubleshoot-modal" role="dialog" aria-modal="true" aria-label="Troubleshooting Assistant">
+    <div class="ts-modal-header">
+      <div class="ts-modal-title">Troubleshooting Decision Tree</div>
+      <button class="ts-modal-close" onclick="OmicsLab.Troubleshoot.close()">✕</button>
+    </div>
+    <div id="troubleshoot-modal-body" class="ts-modal-body">
+      <!-- Populated by Troubleshoot.open() -->
+    </div>
+  </div>
+</div>
+
 <!-- Equipment detail modal -->
 <div class="equip-modal-overlay" id="equip-modal-overlay" onclick="OmicsLab.App._closeEquipmentModal(event)">
   <div class="equip-modal" id="equip-modal" role="dialog" aria-modal="true">
@@ -491,6 +597,11 @@
 <script src="js/equipment.js"></script>
 <script src="js/engine.js"></script>
 <script src="js/bench.js"></script>
+<script src="js/compare.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/africa-map.js"></script>
+<script src="js/troubleshoot.js"></script>
+<script src="js/sandbox.js"></script>
 <script src="js/app.js"></script>
 
 </body>

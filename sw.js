@@ -1,5 +1,5 @@
 /* OmicsLab Service Worker — offline fallback only */
-const CACHE = 'omicslab-v5';
+const CACHE = 'omicslab-v6';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
