@@ -40,6 +40,7 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section')">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section')">Tools</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section')">Repositories</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')">Ask</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section')">Features</button>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
@@ -49,6 +50,7 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">Equipment</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">Tools</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">Repositories</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section');OmicsLab.App.toggleMobileNav()">Ask</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section');OmicsLab.App.toggleMobileNav()">Features</button>
     </div>
   </nav>
@@ -263,6 +265,28 @@
     </div>
   </div>
 
+  <!-- Q&A -->
+  <div class="qa-section reveal" id="qa-section">
+    <div class="section-label">Got a question?</div>
+    <h2 class="section-title">Ask OmicsLab</h2>
+    <p class="section-desc">
+      Search 55+ pre-written answers about workflows, tools, QC metrics, diseases, and African genomics.
+      Works completely offline — no AI API needed.
+    </p>
+    <div class="qa-search-wrap">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="qa-input" id="qa-input" type="search" autocomplete="off"
+             placeholder="e.g. What is RIN score? How does GATK work? What is ATAC-seq?"
+             oninput="OmicsLab.QAEngine.search(this.value)">
+      <button class="qa-clear-btn" id="qa-clear-btn" onclick="OmicsLab.QAEngine.clear()" title="Clear">✕</button>
+    </div>
+    <div class="qa-cat-tabs" id="qa-cat-tabs"><!-- Populated by QAEngine.init() --></div>
+    <div class="qa-suggestions" id="qa-suggestions"><!-- Populated by QAEngine.init() --></div>
+    <div class="qa-results" id="qa-results"><!-- Populated by search --></div>
+  </div>
+
   <!-- Features -->
   <div class="features-section reveal" id="features-section">
     <div class="section-label">Platform capabilities</div>
@@ -460,6 +484,7 @@
 
 <!-- Scripts — load order matters (icons first, then namespace → data → engine → bench → app) -->
 <script src="js/icons.js"></script>
+<script src="js/qa.js"></script>
 <script src="js/workflows.js"></script>
 <script src="js/diseases.js"></script>
 <script src="js/gallery.js"></script>

@@ -239,6 +239,7 @@ OmicsLab.App = (function() {
     _buildEquipmentGallery();
     _buildToolExplorer();
     _buildRepositoryExplorer();
+    if (OmicsLab.QAEngine) OmicsLab.QAEngine.init();
   }
 
   function _buildWorkflowGrid() {

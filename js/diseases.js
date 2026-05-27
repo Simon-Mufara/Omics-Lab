@@ -345,6 +345,357 @@ OmicsLab.DISEASES = {
     tools: ['RotaVLP (genotyping)','ViPR (viral database tools)','Geneious (manual assembly)','BEAST2','iVar','MAFFT','RAxML (phylogeny)'],
     databases: ['NCBI GenBank Rotavirus division','ViPR (Virus Pathogen Resource)','WHO rotavirus strain surveillance reports','RVGE global burden database','ENA'],
     africanContext: 'Despite rotavirus vaccines being introduced in >40 African countries, efficacy is lower than in high-income countries (50–64% vs 90%+) — partly explained by the higher prevalence of P[6] strains not covered by current vaccines, and by concurrent enteric infections affecting intestinal immune responses. The MORDOR and GEMS studies have built the largest African rotavirus genomic surveillance datasets.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     VIRAL SURVEILLANCE PANEL v2 — ARTHROPOD-TRANSMITTED
+     ══════════════════════════════════════════════════════════ */
+  'dengue': {
+    name: 'Dengue Fever (DENV 1–4)', category: 'Arbovirology', icon: 'virus',
+    color: '#ff7b9c',
+    stats: { global: '400M infections/yr · 100 countries endemic', africa: 'Emerging; East Africa most affected', daly: '1.1M DALYs/yr' },
+    sampleTypes: ['Serum (acute phase — day 1–5)','EDTA whole blood','Urine (late acute)'],
+    description: 'Dengue is the most prevalent arboviral disease globally, caused by four antigenically distinct serotypes (DENV 1–4) transmitted by Aedes aegypti and Ae. albopictus mosquitoes. Secondary infection with a different serotype dramatically increases the risk of severe dengue (dengue haemorrhagic fever) through antibody-dependent enhancement (ADE). Clinical spectrum ranges from undifferentiated fever to plasma leakage, haemorrhage, and organ failure.',
+    clinicalImpact: 'Viral WGS defines serotype, genotype, and tracks lineage introductions. RNA-seq of dengue-infected cells maps the interferon antagonism by NS5 and the metabolic reprogramming that drives viraemia. Serotype-specific vaccine efficacy (Dengvaxia) depends on prior seroprevalence — genomic surveillance informs vaccination strategy.',
+    workflows: ['viral-wgs','rna-seq','shotgun-meta'],
+    biomarkers: ['NS1 antigen (acute diagnosis)','Serotype (1–4) by RT-PCR','IgM/IgG seroconversion','Platelet count (thrombocytopaenia)','Haematocrit (haemoconcentration)','Dengue viraemia titre','Genotype cluster (DENV2 Asian-1 vs Cosmopolitan)'],
+    findings: 'WGS enables real-time surveillance of serotype shifts (introduction of new genotypes), correlates phylogeographic spread to travel patterns, and identifies amino acid changes in E protein associated with immune evasion. Outbreak genomics have tracked DENV2 Asian-1 genotype explosive spread across Asia and Latin America.',
+    tools: ['MAFFT','IQ-TREE','NextStrain','iVar','Minimap2','Geneious'],
+    databases: ['NCBI GenBank','ViPR (Virus Pathogen Resource)','WHO APSED dengue reports','DengueMap'],
+    africanContext: 'Dengue is endemic in East Africa (Kenya, Tanzania, Djibouti) with underdiagnosis due to co-circulation of malaria and other febrile illnesses. DENV3 dominated the 2019 Tanzania outbreak; Aedes aegypti vector range is expanding with urbanisation. Africa CDC Arboviral Disease Programme supports integrated surveillance.'
+  },
+
+  'chikungunya': {
+    name: 'Chikungunya (CHIKV)', category: 'Arbovirology', icon: 'virus',
+    color: '#ffa657',
+    stats: { global: 'Epidemic cycles across Asia, Americas, Africa', africa: 'Recurrent outbreaks East Africa, Indian Ocean islands', daly: '150K DALYs/yr (under-estimated)' },
+    sampleTypes: ['Serum (acute phase)','Synovial fluid (arthralgic phase)','EDTA blood'],
+    description: 'Chikungunya virus (CHIKV, family Togaviridae, genus Alphavirus) causes a febrile illness with severe debilitating polyarthralgia that can persist for months to years (post-chikungunya chronic arthritis). The 2004–2007 Indian Ocean epidemic — linked to a single E1 A226V mutation enabling Aedes albopictus transmission — illustrates how a single adaptive mutation can transform epidemic potential. Three genotypes: West African (WA), East/Central/South African (ECSA), and Asian.',
+    clinicalImpact: 'WGS tracks ECSA vs Asian genotype spread, identifies envelope protein mutations (E1, E2) that affect vector competence, and monitors emergence of new lineages. Arthralgia burden quantification guides healthcare planning. No licensed antiviral; vaccine candidates (mRNA and live-attenuated) are in phase 3 trials as of 2025.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR (acute: days 1–6)','IgM seroconversion','E1 A226V mutation (albopictus-adapted)','Viraemia titre','IL-6/IL-1β (chronic arthritis marker)','Joint ultrasound tenosynovitis score'],
+    findings: 'Phylogenomics revealed a single introduction from Africa to La Réunion in 2005, with subsequent global spread of the E1 A226V variant. WGS of patients with chronic arthritis vs acute-only identifies immunogenomic correlates of persistence. NSP1 macrodomain (ADP-ribosylhydrolase) is a therapeutic target.',
+    tools: ['BEAST2','IQ-TREE','NextStrain','MAFFT','iVar','Prism 3D (structure)'],
+    databases: ['NCBI GenBank','ViPR','WHO CHIKV reports'],
+    africanContext: 'The ECSA genotype originated in sub-Saharan Africa and has driven multiple Indian Ocean and Asian epidemics. Kenya, Tanzania, Cameroon, and DRC experience endemic and epidemic CHIKV. Lack of reliable diagnostics and misclassification as malaria leads to chronic arthritis mismanagement in Africa.'
+  },
+
+  'zika': {
+    name: 'Zika Virus (ZIKV)', category: 'Arbovirology', icon: 'virus',
+    color: '#79c0ff',
+    stats: { global: '1M+ cases 2015–2016 Americas epidemic', africa: 'Sporadic; ancestral clade circulates silently', daly: 'Significant due to microcephaly burden' },
+    sampleTypes: ['Serum (acute)','Urine (higher and longer viraemia than serum)','Semen (sexual transmission)','Amniotic fluid (foetal infection)'],
+    description: 'Zika virus (Flaviviridae, genus Flavivirus) gained global attention during the 2015–2016 Brazilian epidemic when it was linked to foetal microcephaly and Guillain-Barré syndrome — the first mosquito-borne virus proven to cause congenital brain malformations. ZIKV is primarily Aedes-transmitted but can also spread sexually and vertically. Two lineages: African (ancestral) and Asian (epidemic). The NS4A/NS4B viral proteins disrupt Akt-mTOR signalling in neural progenitor cells, causing cell cycle arrest.',
+    clinicalImpact: 'Genomic surveillance distinguishes Asian vs African lineage, tracks inter-country spread, and identifies antigenic variation that causes DENV cross-reactive serology problems. Congenital Zika syndrome diagnosis combines neonatal brain imaging with maternal ZIKV RT-PCR/serology. Primate animal model studies use WGS + scRNA-seq of foetal brain organoids to map pathogenesis.',
+    workflows: ['viral-wgs','rna-seq','scrna-seq'],
+    biomarkers: ['RT-PCR serum/urine','PRNT90 (plaque reduction neutralisation — distinguishes ZIKV from DENV)','IgM (cross-reactive with DENV/YFV — difficult)','Brain ultrasound (foetal microcephaly)','Amniotic fluid RT-PCR','Semen ZIKV RNA (up to 6 months)'],
+    findings: 'WGS of Brazilian epidemic strains identified unique mutations in NS1 and NS4A vs ancestral African strains, linked to enhanced neurovirulence. Phylogeographic analyses tracked ZIKV introduction to Brazil from French Polynesia via the 2014 Va\'a canoe sprint world championship in Rio. African lineage circulates enzootically in primates across sub-Saharan Africa with limited human spillover.',
+    tools: ['BEAST2','IQ-TREE','NextStrain','Minimap2','iVar','RAxML'],
+    databases: ['NCBI GenBank','ViPR','ZikaHub','PAHO Zika case counts'],
+    africanContext: 'The African lineage of ZIKV has circulated in sub-Saharan Africa (Uganda — first isolated at Zika Forest in 1947 in Rhesus macaques) for decades. Sporadic human cases occur across West and East Africa. The epidemic Asian lineage has not yet caused large African outbreaks, likely due to prior population immunity from cross-reactive flaviviruses (dengue, YFV vaccination).'
+  },
+
+  'yellow-fever': {
+    name: 'Yellow Fever (YFV)', category: 'Arbovirology', icon: 'virus',
+    color: '#e3b341',
+    stats: { global: '200,000 cases/yr · 30,000 deaths', africa: '90% of cases; unvaccinated populations at risk', daly: 'Major preventable burden' },
+    sampleTypes: ['Serum (acute)','Liver biopsy (fatal cases — midzonal necrosis)','Whole blood'],
+    description: 'Yellow fever virus (Flaviviridae) causes a haemorrhagic fever with a pathognomonic biphasic illness: initial febrile phase, brief remission, then toxic phase with jaundice (hence "yellow"), renal failure, haemorrhage, and case fatality rates of 20–50% in toxic phase. Transmitted by Aedes aegypti (urban cycle) and Haemagogus/Aedes (jungle/sylvatic cycle). A safe, effective live-attenuated vaccine (17D) confers lifelong immunity — yet large outbreaks continue due to vaccination gaps.',
+    clinicalImpact: 'WGS tracks outbreak origins (Angola 2016 — 965 cases, spread to DRC and China via unvaccinated migrant workers), identifies vaccine-escape variants, and monitors lineage turnover. Liver biopsy histopathology (Councilman bodies) is pathognomonic for YFV. RNA-seq of infected hepatocytes maps the NS5 methyltransferase-mediated IFN antagonism that enables hepatotropic replication.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR (acute phase < 7 days)','YFV IgM ELISA','PRNT (definitive serology)','ALT/AST (hepatitis marker)','Bilirubin (jaundice severity)','Prothrombin time (coagulopathy)','Albuminuria (renal involvement)'],
+    findings: 'Phylogenomics of the 2016 Angola-DRC epidemic traced spread from Luanda urban cycle to multiple provinces, with imported cases to China highlighting air-travel amplification risk. WGS identified the E protein genetic determinants of 17D vaccine attenuation and confirmed stability across 40+ years of vaccine production.',
+    tools: ['BEAST2','IQ-TREE','NextStrain','iVar','Minimap2','FastTree'],
+    databases: ['NCBI GenBank','WHO YFV situation reports','Africa CDC arboviral dashboard','YFV Reference Lab Network (WHO)'],
+    africanContext: 'Africa accounts for >90% of global YFV cases. The YF-EPIDEMICS project (Wellcome) provides rapid response genomic sequencing during outbreaks. Major outbreaks: Nigeria 2017–2020 (Africa\'s largest in decades), Angola-DRC 2016. Vaccination campaigns led by Africa CDC and Gavi use genomic data to prioritise geographic targeting.'
+  },
+
+  'west-nile': {
+    name: 'West Nile Virus (WNV)', category: 'Arbovirology', icon: 'virus',
+    color: '#79c0ff',
+    stats: { global: 'Endemic across Africa, Europe, Americas, Asia', africa: 'Ancestral — multiple African lineages', daly: 'Rising neuroinvasive disease burden (>2,000 neuroinvasive/yr in USA)' },
+    sampleTypes: ['Serum (acute)','CSF (neuroinvasive cases)','Urine','Mosquito pool extractions'],
+    description: 'West Nile Virus (Flaviviridae), maintained in a bird-mosquito (Culex spp.) enzootic cycle with humans and horses as dead-end hosts. Most human infections (80%) are asymptomatic; ~20% develop West Nile fever; <1% develop neuroinvasive disease (encephalitis, meningitis, acute flaccid paralysis). Lineage 2 (African origin) caused unexpected outbreaks in Europe (Greece 2010, Hungary). The 1999 USA introduction (Lineage 1) spread coast-to-coast within 4 years.',
+    clinicalImpact: 'WGS of WNV strains from blood donors (asymptomatic viraemia risk — major transfusion safety concern) and neuroinvasive patients identifies neurovirulence determinants. NAT screening of blood donations for WNV is mandatory in USA and Europe. CSF PCR + IgM serology for neuroinvasive diagnosis.',
+    workflows: ['viral-wgs','shotgun-meta'],
+    biomarkers: ['IgM CSF or serum (neuroinvasive)','WNV IgG','RT-PCR (low viraemia — often negative at clinical presentation)','Neutralisation titre (PRNT)','CSF pleocytosis pattern'],
+    findings: 'Phylogeographic analysis traced the 1999 NY strain to Israel (Lineage 1), likely via imported birds or infected mosquitoes on cargo. African Lineage 2 strains show distinct phylogeographic patterns with ongoing diversification. Neurovirulence determinants mapped to NS3 helicase and E protein domain III.',
+    tools: ['BEAST2','IQ-TREE','NextStrain','Whole-genome sequencing + Geneious','Mosquito surveillance trap networks'],
+    databases: ['NCBI GenBank','ArboNET (USA CDC)','WHO WNV reports','European ECDC WNV maps'],
+    africanContext: 'WNV is ancestrally African — the first isolate came from Uganda in 1937. Multiple distinct lineages (1, 2, 7, 8) circulate across Africa. Serological evidence shows widespread human exposure across sub-Saharan Africa. Lack of systematic surveillance means true African disease burden is markedly underestimated.'
+  },
+
+  'oropouche': {
+    name: 'Oropouche Orthobunyavirus (OROV)', category: 'Arbovirology', icon: 'virus',
+    color: '#ffa657',
+    stats: { global: '500,000+ cases (Americas); emerging in Africa', africa: 'Novel Pan-African lineage detected 2024', daly: 'Underestimated — high attack rates in outbreaks' },
+    sampleTypes: ['Serum (acute phase)','EDTA blood','Cerebrospinal fluid (neuroinvasive cases)'],
+    description: 'Oropouche virus (Peribunyaviridae) causes Oropouche fever — an acute febrile illness with headache, myalgia, and rash — transmitted by Culicoides paraensis midges and Culex quinquefasciatus. 2024 marked a major epidemiological shift: a novel reassortant lineage emerged in the Amazon, spread to Cuba and Europe via travel, caused vertical transmission with foetal death/microcephaly, and a Pan-African lineage was simultaneously identified.',
+    clinicalImpact: 'Whole-genome sequencing of the novel 2024 reassortant reveals segment exchange between the M (medium, encoding glycoproteins) and S (small, encoding nucleocapsid and NSs) segments with a bat virus, explaining the increased virulence. The identification of vertical transmission in 2024 dramatically elevated OROV\'s public health priority. RT-PCR and PRNT are required for diagnosis.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR (acute phase)','OROV IgM/IgG','Reassortant segment genotyping (M/S segment)','Foetal ultrasound (vertical transmission)','CSF OROV RNA (neuroinvasive)'],
+    findings: '2024 outbreak genomics showed intercontinental spread from Brazil through 13 countries via travel. Reassortant genome architecture (novel M + L segments from bat reservoir) explained expanded tissue tropism. African isolates form a distinct Pan-African clade, suggesting independent emergence rather than American introduction.',
+    tools: ['BEAST2','IQ-TREE','Geneious','iVar','Snippy','Nextstrain'],
+    databases: ['NCBI GenBank','ProMED','PAHO epidemiological alerts','Africa CDC emerging threat reports'],
+    africanContext: 'A novel Pan-African OROV lineage, genetically distinct from the American lineage, was detected in bat surveillance samples across West and Central Africa in 2024. This suggests OROV or a closely related virus circulates in African wildlife reservoirs. Urgent surveillance is needed to characterise human spillover risk in Africa.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     BLOODBORNE VIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'hepatitis-b': {
+    name: 'Hepatitis B Virus (HBV)', category: 'Viral Hepatitis', icon: 'activity',
+    color: '#ff7b72',
+    stats: { global: '296M chronic infections · 820,000 deaths/yr', africa: 'Highest global prevalence (≥8% HBsAg in West Africa)', daly: '21M DALYs/yr' },
+    sampleTypes: ['Serum','EDTA whole blood','Liver biopsy (fibrosis staging)'],
+    description: 'Hepatitis B virus (Hepadnaviridae) is a partially double-stranded DNA virus that causes acute and chronic liver disease, cirrhosis, and hepatocellular carcinoma (HCC). Chronic HBV affects 296 million people — predominantly acquired perinatally or in early childhood. Africa has the highest burden: West Africa (Senegal, Nigeria, Gambia) has HBsAg prevalence >8%. 10 genotypes (A–J) show distinct geographic distribution; genotype A dominates Southern Africa, E dominates West Africa.',
+    clinicalImpact: 'HBV sequencing identifies genotype (determines response to pegylated interferon), detects drug resistance mutations (YMDD motif mutations for lamivudine resistance, rtA181T for tenofovir), and quantifies viral load for treatment decisions. HCC surveillance by HBV core promoter mutations (T1762A1764) predicts HCC risk. Covalently closed circular DNA (cccDNA) in hepatocyte nuclei is the viral persistence reservoir — not detected by current antivirals.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['HBsAg (surface antigen — chronic infection marker)','HBeAg/anti-HBe (replication phase marker)','HBV DNA viral load (IU/mL)','Genotype A–J','Drug resistance mutations (YMDD, rtA181T, rtN236T)','Core promoter mutations (BCP: T1762A1764)','HBcrAg (hepatitis B core-related antigen — cccDNA proxy)','Anti-HBc total','Liver fibrosis stage (FIB-4 score)'],
+    findings: 'Genomic phylogenomics reveals distinct African HBV clades reflecting ancient African human migration patterns. Genotype E (West African origin) shows lowest response rates to interferon therapy. Intra-host diversity analysis by deep sequencing identifies minor resistance variants before treatment failure. Recombinant HBV strains (genotype A/E) with unusual serological profiles complicate diagnosis in Africa.',
+    tools: ['HBVdb (genotyping)','Geno2Pheno HBV','BEAST2','PhyML','Stanford HBV Drug Resistance Database'],
+    databases: ['HBVdb','NCBI GenBank','WHO HBV situation reports','African Cancer Registry (HCC link)'],
+    africanContext: 'Sub-Saharan Africa has the highest HBV-attributable HCC rates globally. Perinatal transmission remains common despite birth-dose vaccination programs (coverage gap in many African countries). The Africa Hepatitis B Collaborative (AHEPB) leads African HBV genomics. In Africa, Hepatitis B accounts for 60–70% of HCC — the leading cancer in many countries. Tenofovir is WHO-recommended but access in Africa remains a challenge.'
+  },
+
+  'hepatitis-c': {
+    name: 'Hepatitis C Virus (HCV)', category: 'Viral Hepatitis', icon: 'activity',
+    color: '#d2a8ff',
+    stats: { global: '58M chronic infections · 290,000 deaths/yr', africa: 'Egypt historically highest (genotype 4 — medical injection campaigns)', daly: '13M DALYs/yr' },
+    sampleTypes: ['Serum','EDTA whole blood (for genotyping)','Liver biopsy (pre-treatment staging)'],
+    description: 'Hepatitis C virus (Flaviviridae) is a positive-sense single-stranded RNA virus causing chronic liver disease in 58 million people. HCV has no vaccine but is curable with 8–12 week direct-acting antiviral (DAA) regimens (sofosbuvir + daclatasvir, ledipasvir/sofosbuvir). Seven genotypes (1–7) with distinct geographic distributions: genotype 1 (North America, Europe), genotype 4 (Africa, Middle East), genotype 5/6 (Southern Africa, Southeast Asia). The HCV RNA-dependent RNA polymerase (NS5B) has no proofreading, generating enormous quasispecies diversity.',
+    clinicalImpact: 'HCV genotyping directs DAA regimen selection (genotype 1–6) and identifies resistance-associated substitutions (RAS) in NS3/NS5A/NS5B. Viral load monitoring (HCV RNA IU/mL) assesses treatment response (SVR12 — sustained virological response at 12 weeks post-treatment = cure). Deep sequencing detects minor RAS variants below Sanger detection threshold. WHO 2030 elimination target requires ≥80% treatment coverage.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['HCV antibody (anti-HCV — past or current exposure)','HCV RNA (active infection)','Genotype 1–7','NS5A RAS (L31, Y93 — daclatasvir resistance)','NS5B RAS (S282T — sofosbuvir resistance)','SVR12 (cure endpoint)','Liver fibrosis (FIB-4, APRI)','Cryoglobulins (extra-hepatic manifestation)'],
+    findings: 'HCV quasispecies diversity (intra-host sequence heterogeneity) predicts treatment response and immune evasion. Phylogenomics traced Egypt genotype 4 epidemic to parenteral anti-schistosomal therapy campaigns (1950s–1980s). African genotype 7 (identified in Canada in an immigrant from Central Africa) represents a rare ancient lineage from DRC.',
+    tools: ['Geno2Pheno HCV','BLAST','Phylogenetic tools (IQ-TREE, BEAST)','DeepSeq for RAS detection','HCV GLUE (genotyping platform)'],
+    databases: ['NCBI GenBank HCV','HCV Genetic Feature Database (NCBI)','EuroHep','WHO HCV reports'],
+    africanContext: 'Egypt had the highest HCV prevalence globally (10–15%) due to iatrogenic transmission via intravenous antischistosomal campaigns — declining since the 1990s birth cohort following mass DAA treatment campaigns. West Africa (Cameroon, DRC) has unique genotypes 4 and rare genotype 7. Pan-genotypic DAA regimens (sofosbuvir/velpatasvir) cover all African genotypes — but access and affordability remain barriers despite generic manufacturing.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     ENCEPHALITIS VIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'nipah': {
+    name: 'Nipah Virus (NiV)', category: 'Encephalitis Viruses', icon: 'brain',
+    color: '#ff7b72',
+    stats: { global: 'Sporadic high-CFR outbreaks (40–75% CFR) — Bangladesh, India, Malaysia', africa: 'African fruit bats reservoir; spillover risk identified', daly: 'Critical biosafety level 4 priority pathogen' },
+    sampleTypes: ['CSF (neurological cases)','Serum','Respiratory secretions (BSL-4 required)','Throat swab'],
+    description: 'Nipah virus (Paramyxoviridae, genus Henipavirus) is a BSL-4 pathogen causing fatal encephalitis (CFR 40–75%) with human-to-human transmission capacity — making it a priority pandemic-threat pathogen. Reservoir: Pteropus fruit bats (Asia) and African Eidolon helvum bats. Routes of spillover: contaminated date palm sap (Bangladesh), pig-to-human (Malaysia 1998–1999 origin outbreak), and nosocomial. No approved antiviral; monoclonal antibody m102.4 and remdesivir show experimental efficacy.',
+    clinicalImpact: 'Whole-genome sequencing of NiV strains distinguishes Bangladesh (NiV-B) from Malaysia (NiV-M) genotypes — critical for vaccine design as they differ significantly in F and G glycoproteins. MRVP-based sequencing from BSL-4 facilities supports outbreak response genomics. RNA-seq of patient samples defines the cytokine storm profile. Serosurveys using pseudotyped virus neutralisation assays assess bat-to-human exposure rates safely.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['NiV RT-PCR (respiratory/CSF)','NiV IgG/IgM (ELISA, PRNT under BSL-4)','Seroneutralisation (pseudotyped NiV)','MRI brain (encephalitic lesions)','EEG (encephalitis pattern)','CSF pleocytosis','G/F glycoprotein genotype (B vs M)'],
+    findings: 'African Eidolon helvum bats carry Eidolon helvum henipavirus (EhV) — serologically cross-reactive with NiV, suggesting continent-wide bat reservoir risk. Genomic surveillance in African fruit bats (Ghana, Cameroon, Nigeria) has detected Nipah-related paramyxoviruses. The WHO R&D Blueprint prioritises NiV; mRNA vaccine (Moderna mRNA-1215) entered phase 1 clinical trials in 2023.',
+    tools: ['BSL-4-compliant sequencing protocols','BEAST2','IQ-TREE','Pseudotyped virus assay platforms','Bat surveillance GPS tracking'],
+    databases: ['NCBI GenBank','PRE-EMPT (NiV surveillance)','PREDICT project database','WHO NiV situation reports'],
+    africanContext: 'While NiV outbreaks have not occurred in Africa, African fruit bat serosurveys detect neutralising antibodies against NiV-related henipaviruses. Ghana and Nigeria have detected novel henipaviruses in bats (e.g., Kumasi virus, Ghana bat virus). With Africa\'s expanding fruit bat-human interface, NiV spillover risk is considered a priority by Africa CDC\'s Emerging & Re-emerging Disease Unit.'
+  },
+
+  'rabies': {
+    name: 'Rabies Lyssavirus (RABV)', category: 'Encephalitis Viruses', icon: 'brain',
+    color: '#8b949e',
+    stats: { global: '59,000 deaths/yr (99% dog-mediated)', africa: '36% of global deaths — highest burden in Africa & Asia', daly: '3.7M DALYs/yr' },
+    sampleTypes: ['Brain tissue (post-mortem — gold standard)','Nuchal skin biopsy (antemortem)','CSF','Saliva (RT-PCR)','Serum (virus-neutralising antibody titre)'],
+    description: 'Rabies is caused by Rabies lyssavirus (Rhabdoviridae, genus Lyssavirus), one of 16 lyssavirus species that collectively cause rabies encephalitis. Once clinical symptoms appear, rabies is virtually 100% fatal. Dogs are responsible for 99% of human deaths globally. Lyssavirus species 2–16 include bat-associated viruses: European Bat Lyssavirus (EBLV) 1&2, Duvenhage (Africa), Lagos Bat Virus (West Africa), Mokola (Africa), and Australian Bat Lyssavirus.',
+    clinicalImpact: 'WGS of rabies virus strains traces transmission networks (dog bites → human cases → phylogeographic cluster), identifies cross-boundary dog-mediated transmission between countries, and differentiates lyssavirus species (critical because standard post-exposure prophylaxis may be ineffective against some bat lyssaviruses). Mass dog vaccination is the proven strategy to eliminate dog-mediated rabies — genomic data confirms elimination.',
+    workflows: ['viral-wgs'],
+    biomarkers: ['Direct Fluorescent Antibody (DFA) — brain gold standard','RT-PCR (nuchal biopsy, saliva)','RFFIT (rapid fluorescent focus inhibition — VNA titre ≥ 0.5 IU/mL for PEP adequacy)','Lyssavirus species identification (N gene phylogeny)','Negri bodies (histopathology)'],
+    findings: 'Whole N gene or full-genome phylogeny reveals that African dog rabies forms distinct lineages reflecting historical trading routes and dog movement. The African rabies cosmopolitan lineage spread globally with Portuguese colonisation. Bat lyssaviruses (Lagos Bat, Duvenhage, Mokola) circulate in African wildlife with rare human spillover — all fatal. Phylogenomics supports One Health approaches integrating dog vaccination campaigns and human post-exposure prophylaxis access.',
+    tools: ['BEAST2','IQ-TREE','RAxML','DFA-Direct Fluorescent Antibody (diagnostics)','RFFIT (VNA)','Geneious'],
+    databases: ['NCBI GenBank','RABV-GLUE (phylotyping web tool)','WHO rabies situation reports','Global Alliance for Rabies Control (GARC)'],
+    africanContext: 'Africa accounts for 36% of global rabies deaths (estimated 21,000/yr) — concentrated in rural communities with high dog density and limited PEP access. Democratic Republic of Congo, Ethiopia, Nigeria, and Tanzania have the highest burdens. The Zero by 30 initiative (WHO/OIE/FAO/GARC) aims to eliminate dog-mediated human rabies globally by 2030 through coordinated dog vaccination and PEP access. Africa CDC supports national rabies elimination programs.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     RESPIRATORY VIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'influenza': {
+    name: 'Influenza A/B/C Viruses', category: 'Respiratory Viruses', icon: 'activity',
+    color: '#58a6ff',
+    stats: { global: '1B cases/yr · 3–5M severe · 290–650K deaths/yr', africa: 'Significant burden; influenza seasons vary by hemisphere zone', daly: '34.4M DALYs/yr (est.)' },
+    sampleTypes: ['Nasopharyngeal swab (NPS)','Nasal wash','Bronchoalveolar lavage (ICU patients)','EDTA blood (for host genetics)'],
+    description: 'Influenza viruses (Orthomyxoviridae) have segmented RNA genomes enabling rapid reassortment — the mechanism behind pandemic emergence. Influenza A is the most clinically significant: classified by H (haemagglutinin, 18 types) and N (neuraminidase, 11 types). Circulating seasonal strains: H1N1pdm09 (2009 pandemic origin), H3N2. Influenza B (Victoria and Yamagata lineages). Influenza C: mild. Of 22 Influenza A subtypes in birds, H5N1 and H5N2 caused the unprecedented 2024 USA cattle/dairy outbreak with human infections.',
+    clinicalImpact: 'WGS is essential for vaccine strain selection (WHO biannual recommendations), antiviral resistance surveillance (oseltamivir-resistant N1: H275Y mutation), pandemic preparedness, and nosocomial outbreak investigation. GISAID platform coordinates global influenza genomic surveillance. Next-generation influenza vaccines (mRNA, universal) use WGS data to target conserved HA stalk or M2e epitopes.',
+    workflows: ['viral-wgs','rna-seq','shotgun-meta'],
+    biomarkers: ['RT-PCR (rapid Ag test or RT-PCR)','H subtype (H1, H3, H5, H7)','N subtype (N1, N2)','Oseltamivir resistance (N1 H275Y, N2 E119V)','Baloxavir resistance (PA I38T)','HA phylogenetic clade (3C.2a, 1A)','PB2 627K (mammalian adaptation of avian strains)','HA receptor binding domain mutations'],
+    findings: 'The 2009 H1N1 pandemic strain was a triple reassortant (human H3N2 + classic swine H1N1 + Eurasian avian-like swine H1N1), identified within weeks using WGS. GISAID contains >7 million influenza genomes enabling real-time global surveillance. 2024 H5N1 clade 2.3.4.4b cattle outbreak WGS identified PB2 E627K mammalian adaptation mutations in some human cases.',
+    tools: ['NextStrain (flu.nextstrain.org)','BEAST2','FluSurver (GISAID mutation mapper)','Augur (NextStrain pipeline)','IRMA (influenza reference-based mapping)','LABEL (lineage assignment)'],
+    databases: ['GISAID EpiFlu','NCBI Influenza Virus Resource','WHO FluNet','CDC flu surveillance'],
+    africanContext: 'Africa participates in WHO GISRS (Global Influenza Surveillance Response System) through 22 national influenza centres. The Africa Centre for Disease Control supports African Influenza Surveillance. Seasonal influenza in Africa peaks differently by sub-region (bimodal in equatorial regions; austral winter in Southern Africa; boreal winter in Northern Africa). Influenza vaccination coverage in Africa remains the lowest globally (<5% in most countries). The Africa mRNA Technology Transfer Hub (WHO/BioNTech — South Africa) will produce mRNA influenza vaccines for Africa by 2026.'
+  },
+
+  'rsv': {
+    name: 'Respiratory Syncytial Virus (RSV A & B)', category: 'Respiratory Viruses', icon: 'activity',
+    color: '#3fb950',
+    stats: { global: '33M lower respiratory infections in children < 5/yr · 100K deaths', africa: 'Highest infant mortality from RSV globally', daly: '2.6M DALYs/yr' },
+    sampleTypes: ['Nasopharyngeal swab','Nasal wash','BAL (ICU)','Serum (serology)'],
+    description: 'RSV (Pneumoviridae) is the leading cause of bronchiolitis and viral pneumonia in infants and young children globally — the single most important cause of paediatric hospitalisation in the first 2 years of life. Two antigenic groups (A and B) co-circulate with alternating dominance. Major recent advance: RSVpreF vaccine (Pfizer Abrysvo) and RSVpreF3 (GSK Arexvy) approved 2023 for adults ≥60 years and maternal vaccination (protecting infants via transferred antibodies). Nirsevimab (Sanofi/AZ) monoclonal antibody approved for infants.',
+    clinicalImpact: 'WGS defines RSV A and B genotypes (ON1, BA9 dominant since 2012), tracks vaccine-escape G protein mutations, and enables outbreak investigation in neonatal units. RNA-seq of RSV-infected airway epithelium maps the NS1/NS2-mediated IFN suppression causing susceptibility to secondary bacterial pneumonia. Maternal vaccine immunogenicity correlates with neonatal neutralising antibody titres protecting against severe disease in first 6 months of life.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['Rapid RSV antigen test (NPS)','RT-PCR (group A vs B)','G gene genotype (ON1, BA9)','Serum neutralising antibody titre','Nirsevimab binding site mutations (site II of F protein)','Oxygen saturation (severity marker)'],
+    findings: 'WGS revealed that the RSV A ON1 genotype (with a 72-nucleotide duplication in the G gene) emerged around 2010 and has become globally dominant, displacing GA2. Similarly, BA genotype (60-nucleotide G duplication) now dominates RSV B. Post-nirsevimab deployment surveillance must monitor for site II F protein escape mutations.',
+    tools: ['RSV-GLUE (genotyping)','NextStrain RSV','Geneious','IQ-TREE','BEAST2'],
+    databases: ['NCBI GenBank RSV','GISAID (RSV module)','WHO RSV reports','PERCH study database (African RSV burden)'],
+    africanContext: 'Sub-Saharan Africa has the highest RSV-attributable infant mortality globally. The PERCH (Pneumonia Etiology Research for Child Health) study, conducted in 7 African/Asian countries, demonstrated RSV as the second most common pneumonia pathogen (after Streptococcus pneumoniae) in hospitalised African children. RSV surveillance in Africa is led by the SARI (Severe Acute Respiratory Infection) network. Maternal RSV vaccination is prioritised for Africa where healthcare access for sick infants is limited.'
+  },
+
+  'mers-cov': {
+    name: 'MERS-CoV', category: 'Respiratory Viruses', icon: 'activity',
+    color: '#d2a8ff',
+    stats: { global: '2,600 cases since 2012 · 35% CFR', africa: 'Dromedary camels across Africa are reservoir — spillover risk', daly: 'High CFR — disproportionate severe burden' },
+    sampleTypes: ['Lower respiratory (BAL, tracheal aspirate)','NPS/NPA','Serum','Camel nasal swabs (zoonotic surveillance)'],
+    description: 'MERS-CoV (Middle East Respiratory Syndrome Coronavirus) is a betacoronavirus that emerged in Saudi Arabia in 2012, using DPP4 (dipeptidyl peptidase-4) as its cell entry receptor. Dromedary camels are the zoonotic reservoir; human-to-human transmission occurs mainly in hospital settings (37% CFR in secondary cases). The 2015 South Korea nosocomial outbreak (186 cases from a single imported case) demonstrates the healthcare amplification risk. Despite its geographic name, African dromedaries carry MERS-CoV strains.',
+    clinicalImpact: 'WGS defines spike protein sequence for vaccine design (targeting receptor-binding domain), identifies recombinant lineages, and detects hospital-acquired transmission chains (phylogenetic clustering within outbreak). RNA-seq shows MERS-CoV uniquely inhibits STAT1/STAT2 nuclear import (complete IFN evasion), explaining extreme lethality. No approved antiviral; remdesivir shows in vitro efficacy.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR lower respiratory (higher sensitivity than NPS)','MERS-CoV serology (surrogate neutralisation)','Spike RBD sequence','DPP4 receptor binding domain contacts','Camel seroprevalence (anti-MERS IgG)','Bat lineage (ancestral coronavirus identification)'],
+    findings: 'Phylogeographic analysis shows a single zoonotic origin of all human MERS-CoV lineages from African/Middle Eastern camels approximately 20–30 years ago. African camel strains (Ethiopia, Egypt, Nigeria, Kenya) cluster as outgroups to Middle Eastern epidemic strains, confirming Africa as the ancestral reservoir. WHO Joint External Evaluation recommends African countries with dromedary populations develop MERS preparedness plans.',
+    tools: ['BEAST2','IQ-TREE','NextStrain','Geneious','MAFFT'],
+    databases: ['NCBI GenBank MERS','WHO MERS situation reports','PREDICT project (camel surveillance)','GISAID (coronavirus section)'],
+    africanContext: 'African dromedaries from Ethiopia, Nigeria, Egypt, Morocco, Sudan, and Kenya carry MERS-CoV seroprevalence rates of 80–100% — much higher than Saudi camels. Despite high camel-human contact in Africa (camel pastoralists, abattoir workers), documented human MERS cases in Africa are very rare — possibly due to distinct African clades with reduced spillover potential or under-detection. Africa CDC\'s Integrated Disease Surveillance and Response (IDSR) includes MERS preparedness.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     HEMORRHAGIC FEVER VIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'ebola': {
+    name: 'Ebola Virus (EBOV) & Filovirus Family', category: 'Hemorrhagic Fever', icon: 'flame',
+    color: '#e5534b',
+    stats: { global: '35,000+ cases in 2013–2016 West Africa epidemic · ~50% CFR', africa: 'Endemic to sub-Saharan Africa', daly: 'High per-case burden' },
+    sampleTypes: ['Whole blood (BSL-4 required)','Serum (inactivated for serology)','Urine (safer persistence)','Semen (immune-privileged persistence)'],
+    description: 'Ebola virus disease (EVD) is caused by six species in the genus Ebolavirus (Zaire/EBOV, Sudan/SUDV, Bundibugyo/BDBV, Tai Forest/TAFV, Reston/RESTV, Bombali/BOMV). The 2013–2016 West Africa epidemic (Guinea, Sierra Leone, Liberia) — the largest in history (28,000 cases, 11,000 deaths) — transformed the Ebola response. Two licensed vaccines (rVSV-ZEBOV/Ervebo; Ad26.ZEBOV+MVA-BN-Filo) and two monoclonal antibodies (atoltivimab/maftivimab/odesivimab/Inmazeb; ansuvimab/Ebanga) are now approved.',
+    clinicalImpact: 'WGS of EBOV strains during the 2013–2016 epidemic enabled real-time tracking of transmission chains (1,000+ genomes sequenced within 12 months), identified human-to-human adaptation mutations (GP A82V — increased infectivity for human cells), and detected semen-mediated sexual transmission causing late flare-ups. scRNA-seq of EBOV-infected monocytes maps the cytokine storm mechanism. Point-of-care sequencing (Nanopore MinION in mobile BSL-4 labs) was deployed in DRC 2018–2020 outbreak.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR (EBOV NP gene — diagnostic)','Rapid antigen test (OraQuick Ebola — point of care)','IgG (survivor/vaccine response)','GP A82V adaptive mutation','Species identification (Zaire vs Sudan vs Bundibugyo)','Viral load (correlates with CFR)','Fibrin D-dimer (DIC marker)','ALT/AST (hepatitis severity)'],
+    findings: 'The 2021 Guinea re-emergence genomics showed the new outbreak derived from a survivor of the 2014–2016 epidemic — RNA-seq confirmed long-term EBOV persistence in immune-privileged sites (testes, eye, CNS). DRC 2018–2020 outbreak WGS identified early transmission chains enabling targeted ring vaccination. Bombali virus (BOMV), detected in Molossus bats in Sierra Leone and Guinea, is the first ebolavirus found in common domestic bats — ongoing surveillance assesses spillover risk.',
+    tools: ['Minimap2 (Nanopore reads)','Geneious','BEAST2','IQ-TREE','NextStrain Ebola','iVar'],
+    databases: ['NCBI GenBank Filoviridae','GISAID Ebola','WHO Ebola situation reports','Africa CDC Ebola dashboard'],
+    africanContext: 'All Ebola outbreaks have occurred in Africa (except one accidental Reston EBOV exposure in the Philippines). DRC has had the most outbreaks (15+). The H3Africa and Wellcome Sanger Institute led real-time genomic surveillance during the 2018–2020 DRC North Kivu outbreak in a conflict zone — demonstrating feasibility of outbreak genomics under challenging conditions. Africa CDC\'s Regional Integrated Surveillance and Laboratory Network (RISLNET) maintains EBOV response capacity.'
+  },
+
+  'marburg': {
+    name: 'Marburg Virus (MARV)', category: 'Hemorrhagic Fever', icon: 'flame',
+    color: '#ff7b72',
+    stats: { global: 'Rare but highly lethal outbreaks (24–88% CFR)', africa: 'Central and East Africa; bat reservoir in African caves', daly: 'Extreme per-case burden — BSL-4 pathogen' },
+    sampleTypes: ['Blood (BSL-4)','Serum (inactivated)','Urine','Egyptian fruit bat samples (surveillance)'],
+    description: 'Marburg virus (Filoviridae, genus Marburgvirus) causes Marburg virus disease (MVD) with case fatality rates of 24–88%. Natural reservoir: Egyptian fruit bat (Rousettus aegyptiacus) in caves across Africa. Human outbreaks associated with cave exposure (mining, tourism). Notable outbreaks: Angola 2005 (252 cases, 90% CFR — largest ever); Equatorial Guinea 2023; Rwanda 2024. No licensed vaccine or antiviral; rVSVΔG-MARV-GP vaccine in Phase 2 efficacy trials.',
+    clinicalImpact: 'WGS of MARV strains differentiates Ravn virus (RAVV) from Marburg virus species, traces outbreak origins to bat caves, and identifies human adaptation mutations in GP and NP. Real-time genomic surveillance (Rwanda 2024) used Nanopore sequencing to confirm the outbreak and guide contact tracing within 48h. VP35 interferon antagonism makes MARV exquisitely lethal.',
+    workflows: ['viral-wgs'],
+    biomarkers: ['RT-PCR (MARV NP/VP40 gene)','Species (MARV vs RAVV by genome sequencing)','Rapid antigen (in development)','IgG serology (survivors)','Bat seroprevalence (Rousettus aegyptiacus)','Viral load (correlates with CFR)'],
+    findings: 'Phylogenomics of Marburg virus strains from different outbreaks and Rousettus bat populations reveals deep evolutionary divergence, with bat virus diversity far exceeding what has been seen in human outbreaks. Rwanda 2024 genomic analysis rapidly confirmed the strain was Marburg (not Ebola) and revealed it was a novel lineage distinct from previous outbreaks, reshaping the contact tracing and response priorities.',
+    tools: ['Geneious','BEAST2','IQ-TREE','Nanopore MinION (field deployment)','iVar'],
+    databases: ['NCBI GenBank Filoviridae','WHO MARV situation reports','Africa CDC emerging threats','PREDICT bat surveillance database'],
+    africanContext: 'All Marburg outbreaks have occurred in Africa (excluding the original 1967 Frankfurt/Belgrade laboratory exposure). African cave bats serve as the natural reservoir. Uganda, DRC, Kenya, Angola, Equatorial Guinea, and Rwanda have all reported outbreaks. Africa CDC supports MARV rapid response capacity and partners with WHO for ring vaccination trials using the rVSV-MARV vaccine during outbreaks.'
+  },
+
+  'lassa': {
+    name: 'Lassa Fever Virus (LASV)', category: 'Hemorrhagic Fever', icon: 'flame',
+    color: '#ffa657',
+    stats: { global: '100,000–300,000 infections/yr · 5,000 deaths · West Africa endemic', africa: 'Nigeria, Sierra Leone, Guinea, Liberia — meomeric endemic zone', daly: '650,000+ DALYs/yr' },
+    sampleTypes: ['Serum (BSL-3 or 4 depending on viral load)','Urine (high viral shedding)','Throat swab','Mastomys rodent samples'],
+    description: 'Lassa virus (Arenaviridae) is endemic in West Africa with an estimated 100,000–300,000 human infections annually. Reservoir: Mastomys natalensis (multimammate rat) — chronically infected without disease. Human transmission via rodent urine/feces contamination of food. 80% of human infections are mild or asymptomatic; 20% develop severe multisystem haemorrhagic fever. Ribavirin (antiviral) reduces mortality if started within 6 days of onset. No licensed vaccine; multiple candidates in clinical trials (rVSV-LASV, mRNA, ChAd).',
+    clinicalImpact: 'WGS distinguishes the four main LASV lineages (I–IV) correlating with geographic distribution. Lineage II/III (Nigeria) dominate current outbreaks; Lineage IV (Sierra Leone/Guinea) was responsible for the 2014–2015 Sierra Leone epidemic during the Ebola crisis. Viral load >10⁶ copies/mL correlates with severe disease and fatal outcome. Sensorineural hearing loss is the most common sequela — occurs in 30% of survivors.',
+    workflows: ['viral-wgs','rna-seq'],
+    biomarkers: ['RT-PCR (diagnostic — NP or GP targets)','LASV IgG/IgM (serology)','Antigen RDT (in development — WHO-validated)','Lineage (I–IV by phylogeny)','Viral load (IU/mL — prognostic)','SGPT/ALT','Sensorineural hearing loss assessment (audiometry)','Mastomys seroprevalence in community surveillance'],
+    findings: 'LASV genomics reveals ongoing diversification within lineages and evidence of bat-independent rodent population structuring driving lineage geography. The Irrua Specialist Teaching Hospital (Nigeria) has built the largest African Lassa genomic surveillance dataset. Ribavirin treatment response correlates with viral load kinetics captured by serial RT-PCR. Lineage-specific vaccine efficacy is a concern — current vaccines designed against Sierra Leone strains may have reduced efficacy against Nigerian lineages.',
+    tools: ['BEAST2','IQ-TREE','Geneious','iVar','Snippy','Nextstrain Lassa'],
+    databases: ['NCBI GenBank Arenaviridae','ViPR','WHO Lassa fever situation reports','Africa CDC Lassa dashboard'],
+    africanContext: 'Lassa fever is the most important viral haemorrhagic fever in terms of public health burden in West Africa. Nigeria alone reports 1,000–5,000 confirmed cases annually. Sierra Leone and Guinea have the highest seroprevalence (up to 50% in endemic areas). The Kenema Government Hospital (Sierra Leone) and Irrua Specialist Teaching Hospital (Nigeria) are globally important Lassa surveillance and treatment centres. The H3Africa consortium has generated important West African Lassa genomic datasets.'
+  },
+
+  'rift-valley-fever': {
+    name: 'Rift Valley Fever Virus (RVFV)', category: 'Hemorrhagic Fever', icon: 'flame',
+    color: '#e3b341',
+    stats: { global: 'Africa and Arabian Peninsula; epizootics every 5–15 years', africa: 'Kills hundreds of thousands of livestock; human fatalities during epizootics', daly: 'Major One Health — animal + human burden' },
+    sampleTypes: ['Serum','EDTA blood (PCR)','Liver biopsy (post-mortem)','Mosquito pools','Animal blood (One Health surveillance)'],
+    description: 'Rift Valley Fever virus (Phenuiviridae, genus Phlebovirus) is a three-segment RNA virus (L, M, S segments) causing acute febrile illness in humans with occasional ocular, haemorrhagic, and encephalitic complications (1–2% of cases but high lethality). RVFV causes devastating epizootics in livestock (abortion storms, massive neonatal death) across Africa. Transmitted by Aedes and Culex mosquitoes; also by direct contact with infected animal fluids (veterinarians, abattoir workers, farmers at high risk). No licensed human vaccine.',
+    clinicalImpact: 'WGS of RVFV strains during outbreaks tracks spread between animal and human populations (One Health genomics), identifies reassortant strains, and monitors evolution. RNA-seq defines the NSs protein-mediated IFN-β suppression as the major virulence determinant. Veterinary surveillance (animal abortion rates, insect trapping after heavy rainfall) enables early warning before human cases occur.',
+    workflows: ['viral-wgs','rna-seq','shotgun-meta'],
+    biomarkers: ['RT-PCR (acute phase — L segment)','RVFV IgM/IgG ELISA','Rapid antigen (in development)','Lineage A–H by phylogeny','Aedes seroprevalence (entomological surveillance)','Livestock abortion rate (syndromic surveillance)','Liver enzyme elevation (hepatic involvement)'],
+    findings: 'RVFV phylogeographic analysis of the 2006–2007 Kenya, Somalia, Tanzania outbreak traced spread along livestock trading routes and identified multiple introduction events from a Central African source population. Reassortment between RVFV strains generates genetic diversity rapidly. Mathematical models incorporating WGS data and climate drivers (El Niño rainfall — mosquito breeding) improve outbreak prediction.',
+    tools: ['BEAST2','IQ-TREE','Geneious','iVar','Mosquito surveillance platforms','RVF RISK (EMPRES-i FAO)'],
+    databases: ['NCBI GenBank','WHO RVFV situation reports','EMPRES-i (FAO animal disease database)','Africa CDC One Health dashboard'],
+    africanContext: 'RVFV is endemic across sub-Saharan Africa (Kenya, Tanzania, Sudan, Egypt, South Africa, Zimbabwe, Senegal, Mauritania) with major human and livestock epizootics following heavy rainfall (El Niño events — 2006–2007 East Africa; 1997–1998 East Africa; 2000 Arabian Peninsula). The virus poses a significant risk to pastoralist communities and the livestock economy. Africa CDC and FAO coordinate the One Health RVFV response. The veterinary RVF vaccine (Clone 13) is widely used in Africa.'
+  },
+
+  'cchf': {
+    name: 'Crimean-Congo Hemorrhagic Fever (CCHF)', category: 'Hemorrhagic Fever', icon: 'flame',
+    color: '#d2a8ff',
+    stats: { global: 'Endemic across Africa, Middle East, Asia, Europe · 30% CFR', africa: 'Sub-Saharan Africa — major tick-endemic zone', daly: 'High — especially in healthcare workers' },
+    sampleTypes: ['Serum (BSL-3/4)','EDTA blood','Tick pools (Hyalomma spp. surveillance)'],
+    description: 'Crimean-Congo Hemorrhagic Fever virus (CCHFV, Nairoviridae, genus Orthonairovirus) is a tick-borne BSL-4 pathogen transmitted primarily by Hyalomma ticks. Causes severe haemorrhagic fever with a 3-phase illness: incubation → haemorrhagic → convalescence. CFR 10–40% without treatment; ribavirin reduces mortality. Nosocomial transmission via blood/bodily fluids is a major risk for healthcare workers — PPE adherence is critical. CCHFV has the widest geographic range of any tick-borne haemorrhagic fever virus.',
+    clinicalImpact: 'WGS defines CCHFV lineages (I–VII, Asia1–3), tracks Hyalomma tick population movements with livestock, and identifies recombinant strains (L, M, S segment reassortment). Spike (GP) phylogeny correlates with geographic lineage and informs vaccine design. WHO R&D Blueprint-listed; vaccine candidates (Modified Vaccinia Ankara MVA-CCHFV) are in phase 1 trials.',
+    workflows: ['viral-wgs'],
+    biomarkers: ['RT-PCR (acute phase)','CCHFV IgM/IgG (survivors)','Lineage (I–VII)','Tick burden and Hyalomma species identification','Platelet count (thrombocytopaenia)','ALT/AST','Prothrombin time (DIC)'],
+    findings: 'African CCHFV strains form distinct lineages (Africa 1–3) reflecting the diversity of African Hyalomma tick species. The South African lineage (Lineage 2) is associated with ostrich farming — ostriches are highly effective tick hosts amplifying Hyalomma populations. Whole-genome phylogeny reveals extensive African diversity suggesting Africa as an ancestral reservoir with multiple subsequent global spread events.',
+    tools: ['BEAST2','IQ-TREE','Geneious','Snippy','Tick surveillance identification tools'],
+    databases: ['NCBI GenBank Nairoviridae','WHO CCHF situation reports','EMPRES-i FAO','Africa CDC VHF dashboard'],
+    africanContext: 'CCHF is endemic across sub-Saharan Africa (South Africa, Uganda, Tanzania, Mauritania, Senegal, DRC) and North Africa (Egypt). South Africa has the most well-characterised African CCHFV surveillance system. Livestock movement between countries drives tick (and CCHFV lineage) spread. Africa CDC supports national capacity for CCHF diagnosis and nosocomial prevention (healthcare worker training and PPE protocols).'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     ONCOVIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'hpv': {
+    name: 'Human Papillomavirus (HPV)', category: 'Oncoviruses', icon: 'ribbon',
+    color: '#ff7b9c',
+    stats: { global: '#1 sexually transmitted infection · >100 types · 99% of cervical cancers', africa: 'Highest cervical cancer mortality globally', daly: '7.2M DALYs/yr (cervical cancer alone)' },
+    sampleTypes: ['Cervical swab (for HPV genotyping)','Tissue biopsy (CIN, cancer)','Oral swab (head/neck)','Self-collected vaginal swab (for screening programs)'],
+    description: 'HPV is a diverse family of dsDNA viruses (Papillomaviridae) with 200+ types. High-risk genotypes (HPV 16, 18, 31, 33, 45, 52, 58) integrate into host genomes, inactivating tumour suppressors p53 (via E6) and Rb (via E7) — the molecular mechanism of cervical, oropharyngeal, anal, vulvar, and penile cancers. HPV 16 and 18 cause 70% of cervical cancers. Three licensed vaccines (Gardasil 4, Gardasil 9, Cervarix) are highly effective if given before sexual debut. WHO Cervical Cancer Elimination Strategy targets 90% HPV vaccination coverage globally.',
+    clinicalImpact: 'HPV genotyping by PCR (Linear Array, CLART HPVScreen, or NGS) identifies high-risk types for triage of abnormal cytology and post-treatment follow-up. WGS-based HPV genotyping from tumour tissue detects viral integration sites, characterises viral load, and identifies co-infection patterns. RNA-seq of HPV+ vs HPV− tumours reveals distinct immune infiltrate signatures — HPV+ oropharyngeal cancers respond far better to immunotherapy.',
+    workflows: ['viral-wgs','rna-seq','wgs'],
+    biomarkers: ['HPV genotype (high-risk: 16/18/31/33/45/52/58)','Viral load (integrated vs episomal)','E6/E7 oncogene expression (RNA-seq)','p16INK4a overexpression (IHC surrogate for high-risk HPV)','CIN grade (cytology/histology)','Integration site (chr8q24/MYC — poor prognosis)'],
+    findings: 'NGS-based HPV genotyping reveals partial genotype mixtures (multiple high-risk types in a single cervical sample) that linear probes miss. WGS integration site analysis shows HPV integration near oncogenes (MYC, ERBB2) accelerates tumourigenesis. African cohort studies (SANPREDICT, CERVICATE) show unique HPV genotype distributions in sub-Saharan Africa with higher HPV 45 and 52 proportions than in Europe — relevant for vaccine coverage assessment.',
+    tools: ['HPVTyper','CLC Genomics','Geneious','DNAML','BWA for HPV integration site detection','STAR-Fusion (E6/E7 transcripts)'],
+    databases: ['PaVE (Papillomavirus Episteme)','NCBI GenBank','IARC HPV database','WHO HPV classification'],
+    africanContext: 'Sub-Saharan Africa has the highest cervical cancer incidence and mortality globally (>90% of deaths in low-income countries, predominantly Africa). WHO elimination target requires 90% HPV vaccination, 70% cervical screening, and 90% treatment coverage by 2030. African countries have introduced Gardasil 4 and Cervarix nationally; Gardasil 9 adoption is limited by cost. CERVARIX was used in the Kenya national program. HPV self-sampling programs (SWAT — Self-sampling for Women and Their Health) are scaling in South Africa and Kenya to reach unscreened rural women.'
+  },
+
+  'ebv': {
+    name: 'Epstein-Barr Virus (EBV/HHV-4)', category: 'Oncoviruses', icon: 'ribbon',
+    color: '#79c0ff',
+    stats: { global: '95% seroprevalence in adults globally · causal in 6 cancers', africa: 'Higher Burkitt lymphoma incidence (Equatorial Africa)', daly: 'EBV-associated cancers: 200,000 cases/yr' },
+    sampleTypes: ['Peripheral blood (PBMC for EBV load)','Throat wash','Tissue biopsy (lymphoma, NPC)','Saliva'],
+    description: 'Epstein-Barr virus (Gammaherpesviridae) infects >95% of adults globally, establishing life-long latency in memory B cells. EBV causes infectious mononucleosis (primary infection) and is aetiologically linked to six malignancies: Burkitt lymphoma (Africa — "African Burkitt"), Hodgkin lymphoma (EBV-mixed cellularity subtype), nasopharyngeal carcinoma (NPC — Southeast Asia, North Africa), EBV-positive diffuse large B cell lymphoma (post-transplant), primary CNS lymphoma (HIV-associated), and gastric carcinoma (EBV-associated, 10% of all gastric cancers).',
+    clinicalImpact: 'EBV WGS characterises latency gene patterns (EBNA-1, LMP-1, LMP-2 variants) associated with different malignancies, identifies EBV strain diversity contributing to geographic cancer patterns, and enables monitoring of EBV reactivation by viral load in immunocompromised patients. RNA-seq of EBV-infected B cells maps the 9 latency programs (I–III) and viral miRNAs (>40 BART miRNAs) that silence immune recognition. EBV VCA and EBNA antibody patterns distinguish primary infection from reactivation and NPC risk.',
+    workflows: ['viral-wgs','rna-seq','wgs'],
+    biomarkers: ['EBV DNA viral load (PBMC — reactivation marker)','VCA IgA (NPC screening)','EBNA IgG (past infection)','EBV LMP-1 genotype (A vs B strains)','EBER in situ hybridisation (tumour tissue — EBV+ lymphoma diagnosis)','EBV miRNA profiling (serum exosomes for NPC)'],
+    findings: 'African Burkitt lymphoma (equatorial belt — Uganda, Kenya, Tanzania, Nigeria) has the unique combination of EBV + holoendemic malaria + MYC chromosomal translocation t(8;14). WGS of Burkitt lymphoma tumours shows EBV integration and somatic ID3/CCND3 mutations. scRNA-seq of Burkitt tumours maps the germinal centre B cell origin and immune evasion via B7-H1 expression.',
+    tools: ['BWA (EBV WGS)','Geneious','STAR (RNA-seq EBV latency)','IQ-TREE','EBVfamilyDB'],
+    databases: ['NCBI GenBank EBV','EBVdb','TCGA EBV+ tumour datasets','Africa Burkitt Lymphoma Consortium'],
+    africanContext: 'The African Burkitt lymphoma belt (equatorial Africa 0–5° latitude on each side of the equator) has the highest EBV-associated cancer incidence. Denis Burkitt\'s original observations in Uganda in the 1950s established the geographic clustering linked to malaria endemicity. The Lymphoma Africa consortium and H3Africa-associated projects are characterising EBV genomics in sub-Saharan Africa. HIV immunosuppression dramatically increases EBV-associated lymphoma risk — a major complication in high HIV-prevalence African settings.'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     RASH / LESION VIRUSES
+     ══════════════════════════════════════════════════════════ */
+  'mpox': {
+    name: 'Mpox Virus (MPXV)', category: 'Exanthematous Viruses', icon: 'virus',
+    color: '#e3b341',
+    stats: { global: '>95,000 cases across 120 countries in 2022 outbreak', africa: 'Clade I (DRC) causes more severe disease; clade I-b drove 2024 Africa emergency', daly: 'Emerging — rising burden with HIV co-infection' },
+    sampleTypes: ['Lesion swab (pustule/vesicle roof/swab — highest sensitivity)','Lesion crust','Blood (EDTA — low sensitivity)','Respiratory swab (symptomatic cases)'],
+    description: 'Mpox (formerly monkeypox) is caused by Mpox virus (Poxviridae, genus Orthopoxvirus), closely related to smallpox. Two major clades: Clade I (Central African — higher CFR, 1–10%) and Clade II (West African — lower CFR, <1%). Clade II caused the 2022 global outbreak primarily affecting MSM networks. Clade I-b (a novel sub-clade of Clade I) drove the 2024 DRC outbreak and regional spread — declared a PHEIC by WHO in August 2024. Smallpox vaccines (MVA-BN/Jynneos and ACAM2000) confer ~85% cross-protection. Tecovirimat (TPOXX) is the approved antiviral with uncertain clinical efficacy.',
+    clinicalImpact: 'WGS distinguishes Clade I vs Clade II (critical for severity prognosis and response), identifies sub-lineages within the 2022 global outbreak (B.1 lineage rapidly accumulated mutations via APOBEC3 editing — >50 mutations in 2 years vs expected ~1/yr), and tracks sexual network transmission chains. RNA-seq of infected keratinocytes maps E3L-mediated IFN suppression. HIV co-infection significantly worsens outcomes (immunosuppression + impaired smallpox vaccine response).',
+    workflows: ['viral-wgs'],
+    biomarkers: ['PCR (lesion swab — VP35 or OPV-specific primer sets)','Clade identification by WGS','APOBEC3 mutation signature (Clade IIb epidemic hallmark)','Orthopoxvirus IgG (vaccination/exposure history)','HIV status (critical comorbidity)','Lesion distribution (facial/genital pattern)'],
+    findings: '2022 outbreak WGS revealed the fastest-known viral diversification for any DNA virus in an acute outbreak — attributed to APOBEC3 host genome editing during sustained human transmission. Clade I-b phylogenomics suggests a separate emergence from the animal reservoir (not imported from West Africa) in eastern DRC. The 2024 Africa outbreak spread via sexual transmission networks (Clade I-b — previously thought to spread only via direct lesion contact) — changing the epidemiological paradigm.',
+    tools: ['Geneious','BEAST2','IQ-TREE','Nextclade (Mpox module)','NextStrain Mpox','iVar','Minimap2'],
+    databases: ['NCBI GenBank Poxviridae','GISAID (Mpox section)','WHO Mpox situation reports','Africa CDC Mpox dashboard'],
+    africanContext: 'Mpox is endemic in DRC, which has the highest global burden (>50,000 suspected cases/yr, including Clade I). The 2024 Clade I-b outbreak spread from DRC to Burundi, Rwanda, Uganda, and Kenya — the first confirmed Clade I spread beyond Central Africa in decades. Africa CDC declared a continental public health emergency in August 2024. MVA-BN vaccine delivery in DRC and neighboring countries is a public health priority; vaccine availability for Africa remains a challenge despite WHO PHEIC declaration.'
+  },
+
+  'measles': {
+    name: 'Measles Morbillivirus (MeV)', category: 'Exanthematous Viruses', icon: 'virus',
+    color: '#ffa657',
+    stats: { global: '9M cases · 136,000 deaths in 2022 (resurgence)', africa: 'Africa accounts for >70% of measles deaths globally', daly: '10.4M DALYs/yr' },
+    sampleTypes: ['Nasopharyngeal swab (first 3 days of rash — best)','Urine (1–2 weeks of illness)','Oral fluid','Serum (IgM — 3+ days after rash onset)'],
+    description: 'Measles morbillivirus (Paramyxoviridae) is one of the most contagious human pathogens (R0 = 12–18) with 24 genotypes (A–H, labelled 1–24). Measles causes acute febrile respiratory illness (Koplik spots + maculopapular rash) with complications: otitis media, pneumonia, encephalitis, and subacute sclerosing panencephalitis (SSPE — rare fatal late sequel). A highly effective live-attenuated vaccine (MMR) requires 95% coverage for herd immunity. COVID-19 pandemic disrupted immunisation programs, causing the 2022–2024 global resurgence.',
+    clinicalImpact: 'WGS of MeV strains (especially H1 and D genotypes in Africa) tracks importation events, identifies genotype shifts in circulation, and monitors vaccine-genotype mismatch (current vaccines are genotype A — cross-protective against all wild-type strains, but molecular epidemiology confirms this). Immune amnesia post-measles (measles erases 20–73% of pre-existing immune memory antibodies) is documented by proteomics of pre/post-measles serum samples.',
+    workflows: ['viral-wgs'],
+    biomarkers: ['Measles IgM (serum, 3–28 days after rash)','RT-PCR (NP or H gene — NPS/urine)','Genotype (B3, D4, D8, H1 dominant globally)','MMR vaccine-strain vs wild-type (Edmonston vs non-Edmonston phylogeny)','Avidity index IgG (primary vs secondary response)'],
+    findings: 'The 2018–2019 DRC outbreak (>310,000 cases — the largest in 20 years) was driven by genotype B3, with phylogenomics showing multiple co-circulating lineages and importation from multiple countries. Measles immune amnesia demonstrated by VirScan proteomics of survivor serum — 11–73% reduction in antibody diversity 2 months post-measles. WHO/UNICEF call for measles elimination requires genotyping surveillance to certify interruption of endemic transmission.',
+    tools: ['IQ-TREE','BEAST2','Geneious','NextStrain Measles','WHO MeaNS (Measles Nucleotide Surveillance) database'],
+    databases: ['WHO MeaNS','NCBI GenBank','WHO-UNICEF immunisation coverage database','AFRO measles SIAs calendar'],
+    africanContext: 'Africa accounts for >70% of measles deaths globally — concentrated in DRC, Nigeria, Ethiopia, and Angola where vaccination coverage gaps exist (SIA = supplementary immunisation activities). The 2022–2024 post-COVID measles resurgence has been severe in West and Central Africa. DRC has the world\'s largest ongoing measles epidemic. Africa CDC Expanded Programme on Immunisation supports national vaccination campaigns and measles genomic surveillance through the Africa RISLNET.'
   }
 };
 
