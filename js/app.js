@@ -14,9 +14,8 @@ OmicsLab.App = (function() {
     });
     const target = document.getElementById(id);
     if (!target) return;
-    target.style.display = 'block';
+    target.style.display = (id === 'screen-landing') ? 'flex' : (id === 'screen-lab') ? 'flex' : 'block';
     target.classList.add('active');
-    if (id === 'screen-lab') target.style.display = 'flex';
     window.scrollTo(0, 0);
   }
 
@@ -497,7 +496,9 @@ OmicsLab.App = (function() {
   /* ─── Smooth scroll helper ─── */
   function scrollTo(sectionId) {
     const el = document.getElementById(sectionId);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (!el) return;
+    el.classList.add('visible');
+    el.scrollIntoView({ behavior: 'smooth' });
   }
 
   /* ─── Hamburger nav ─── */
@@ -785,11 +786,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function _initScrollReveal() {
-  const io = new IntersectionObserver(
-    entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
-    { threshold: 0.12 }
-  );
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  const revealAll = () => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
+      { threshold: 0 }
+    );
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  } else {
+    revealAll();
+  }
+
+  /* Fallback: guarantee all sections are visible within 2 s regardless of scroll */
+  setTimeout(revealAll, 2000);
 }
 
 function _startHeroPreviewCycle() {
