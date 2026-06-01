@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>OmicsLab Simulator — Interactive Omics Training Platform</title>
-  <meta name="description" content="Interactive omics training platform — 14 workflows, 8 domains, 20 real instruments. Learn genomics, transcriptomics, proteomics and more by doing.">
+  <meta name="description" content="Interactive omics training platform — 14 workflows, pipeline guides, Africa genomics labs, and 20 real instruments. Learn genomics, transcriptomics, proteomics and more by doing.">
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
@@ -15,11 +15,13 @@
 
   <!-- Open Graph -->
   <meta property="og:title" content="OmicsLab Simulator">
-  <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, 20 real instruments, scientifically accurate.">
+  <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, bioinformatics pipeline guides, Africa genomics labs, and 20 real instruments.">
   <meta property="og:type" content="website">
 
   <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/disease-learning.css">
   <link rel="stylesheet" href="css/equipment.css">
+    <link rel="stylesheet" href="css/research-mode.css">
 </head>
 <body>
 
@@ -35,29 +37,99 @@
       <div class="logo-text">Omics<span>Lab</span></div>
     </div>
     <div class="nav-pills" id="nav-pills-desktop">
-      <button class="nav-pill active" onclick="OmicsLab.App.scrollTo('domain-section')">Workflows</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section')">Diseases</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section')">Equipment</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section')">Tools</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section')">Repositories</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section')">Map</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')">Ask</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section')">Sandbox</button>
-      <button class="nav-pill" onclick="OmicsLab.Compare && OmicsLab.Compare.open()">Compare</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section')">Features</button>
+      <button class="nav-pill active" onclick="OmicsLab.App.scrollTo('domain-section')"><span data-i18n="nav.workflows">Workflows</span></button>
+
+      <!-- Learn dropdown — all knowledge/content modules -->
+      <div class="nav-learn-wrap" id="nav-learn-wrap">
+        <button class="nav-learn-btn" id="nav-learn-btn" onclick="OmicsLab.App.toggleLearnMenu()">
+          <span data-i18n="nav.learn">Learn</span> <span class="nav-caret">▼</span>
+        </button>
+        <div class="nav-learn-dropdown" id="nav-learn-dropdown">
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🦠</span><span data-i18n="nav.learn.diseases"> Diseases</span>
+          </button>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">📖</span><span data-i18n="nav.learn.journey"> Learning Journey</span>
+          </button>
+          <div class="nav-learn-divider"></div>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🔬</span><span data-i18n="nav.learn.equipment"> Equipment Gallery</span>
+          </button>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🛠️</span><span data-i18n="nav.learn.tools"> Tool Explorer</span>
+          </button>
+          <div class="nav-learn-divider"></div>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🧬</span><span data-i18n="nav.learn.pipeline"> Pipeline Guide</span>
+          </button>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">⚙️</span><span data-i18n="nav.learn.hpc"> HPC Training</span>
+          </button>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🗄️</span><span data-i18n="nav.learn.repos"> Repositories</span>
+          </button>
+          <div class="nav-learn-divider"></div>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('curriculum-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🎓</span><span data-i18n="nav.learn.curriculum"> Curriculum Tracks</span>
+          </button>
+          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('badges-section');OmicsLab.App.closeLearnMenu()">
+            <span class="nli-icon">🏆</span><span data-i18n="nav.learn.badges"> Badges &amp; Certs</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Standalone core tools -->
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('research-mode-section')"><span data-i18n="nav.research">Research</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repro-hub-section')"><span data-i18n="nav.reprohub">Repro Hub</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-hub-section')"><span data-i18n="nav.africahub">Africa Hub</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('workshop-section')"><span data-i18n="nav.workshop">Workshop</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section')"><span data-i18n="nav.map">Map</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')"><span data-i18n="nav.ask">Ask</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section')"><span data-i18n="nav.sandbox">Sandbox</span></button>
+      <button class="nav-pill" onclick="OmicsLab.Compare && OmicsLab.Compare.open()"><span data-i18n="nav.compare">Compare</span></button>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
     <div class="mobile-nav-dropdown" id="mobile-nav-dropdown">
+      <!-- Lab / Doing -->
+      <div class="mob-nav-group-label">Lab &amp; Doing</div>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('domain-section');OmicsLab.App.toggleMobileNav()">Workflows</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">Diseases</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">Equipment</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">Tools</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">Repositories</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section');OmicsLab.App.toggleMobileNav()">Map</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section');OmicsLab.App.toggleMobileNav()">Ask</button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section');OmicsLab.App.toggleMobileNav()">Sandbox</button>
       <button class="nav-pill" onclick="OmicsLab.Compare&&OmicsLab.Compare.open();OmicsLab.App.toggleMobileNav()">Compare</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('features-section');OmicsLab.App.toggleMobileNav()">Features</button>
+      <!-- Learn -->
+      <div class="mob-nav-group-label">Learn</div>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">🦠 Diseases</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.toggleMobileNav()">📖 Learning Journey</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">🔬 Equipment</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">🛠️ Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.toggleMobileNav()">🧬 Pipeline Guide</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.toggleMobileNav()">⚙️ HPC Training</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">🗄️ Repositories</button>
+      <!-- Research & Tools -->
+      <div class="mob-nav-group-label">Research &amp; Tools</div>
+      <!-- Lab & Doing -->
+      <div class="mob-nav-group-label">Lab &amp; Doing</div>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('domain-section');OmicsLab.App.toggleMobileNav()">Workflows</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section');OmicsLab.App.toggleMobileNav()">Sandbox</button>
+      <button class="nav-pill" onclick="OmicsLab.Compare&&OmicsLab.Compare.open();OmicsLab.App.toggleMobileNav()">Compare</button>
+      <!-- Learn -->
+      <div class="mob-nav-group-label">Learn</div>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">🦠 Diseases</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.toggleMobileNav()">📖 Learning Journey</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">🔬 Equipment</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">🛠️ Tools</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.toggleMobileNav()">🧬 Pipeline Guide</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.toggleMobileNav()">⚙️ HPC Training</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">🗄️ Repositories</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('curriculum-section');OmicsLab.App.toggleMobileNav()">🎓 Curriculum</button>
+      <!-- Research & Tools -->
+      <div class="mob-nav-group-label">Research &amp; Tools</div>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('research-mode-section');OmicsLab.App.toggleMobileNav()">Research</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repro-hub-section');OmicsLab.App.toggleMobileNav()">Repro Hub</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-hub-section');OmicsLab.App.toggleMobileNav()">Africa Hub</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('workshop-section');OmicsLab.App.toggleMobileNav()">Workshop</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('badges-section');OmicsLab.App.toggleMobileNav()">Badges</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section');OmicsLab.App.toggleMobileNav()">Map</button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section');OmicsLab.App.toggleMobileNav()">Ask AI</button>
     </div>
   </nav>
 
@@ -74,12 +146,12 @@
 
     <!-- Left: text content -->
     <div class="hero-left">
-      <div class="hero-eyebrow">
+      <div class="hero-eyebrow" id="hero-eyebrow">
         <div class="eyebrow-dot"></div>
-        Interactive Omics Training Platform
+        <span data-i18n="hero.tagline">Interactive Omics Training Platform</span>
       </div>
-      <h1>Learn Omics<br>Workflows by<br><span class="accent">Doing</span> Them</h1>
-      <p class="hero-sub">
+      <h1 id="hero-title"><span data-i18n="hero.title1">Learn Omics</span><br><span data-i18n="hero.title2">Workflows by</span><br><span class="accent" data-i18n="hero.title3.accent">Doing</span> <span data-i18n="hero.title3.rest">Them</span></h1>
+      <p class="hero-sub" data-i18n="hero.desc">
         Drag reagents, set parameters, watch every wet-lab decision
         cascade through the bioinformatics pipeline in real time.
         22 diseases · 14 workflows · 20 real instruments.
@@ -87,11 +159,11 @@
       <div class="hero-cta">
         <button class="btn-hero btn-hero-primary"
                 onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">
-          Start a Workflow →
+          <span data-i18n="hero.cta.start">Start a Workflow →</span>
         </button>
         <button class="btn-hero btn-hero-secondary"
                 onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">
-          How it works
+          <span data-i18n="hero.cta.howit">How it works</span>
         </button>
       </div>
       <div class="hero-trust">
@@ -202,6 +274,14 @@
     </div>
   </div>
 
+  <!-- Curriculum Learning Paths -->
+  <div class="curriculum-section reveal" id="curriculum-section">
+    <div class="section-label" data-i18n="section.curriculum.label">Your learning journey</div>
+    <h2 class="section-title" data-i18n="section.curriculum.title">Curriculum Learning Paths</h2>
+    <p class="section-desc">Three structured tracks — Wet-Lab Scientist, Bioinformatician, and Public Health Researcher. Follow lessons in order, track your progress, and earn a certificate when you complete a track.</p>
+    <div id="curriculum-content"><!-- Populated by curriculum.js --></div>
+  </div>
+
   <!-- Disease Explorer -->
   <div class="disease-explorer-section reveal" id="disease-explorer-section">
     <div class="section-label">What are we investigating?</div>
@@ -216,6 +296,92 @@
     <div class="disease-cards-grid" id="disease-cards-grid">
       <!-- Populated by app.js -->
     </div>
+  </div>
+
+  <!-- Disease Learning Layer -->
+  <div class="disease-learning-section reveal" id="disease-learning-section">
+    <div class="section-label">Complete learning journey</div>
+    <h2 class="section-title">Disease Learning Layer</h2>
+    <p class="section-desc">
+      Choose a disease and follow it from clinical presentation and symptoms through sample type,
+      sequencing strategy, laboratory workflow, bioinformatics workflow, and interpretation.
+    </p>
+    <div class="disease-learning-picker">
+      <label class="dl-picker-label" for="disease-learning-select">Select a disease</label>
+      <select id="disease-learning-select" class="dl-picker-select"></select>
+    </div>
+    <div id="disease-learning-panel" class="disease-learning-panel">
+      <!-- Populated by DiseaseLearning.renderJourney() -->
+    </div>
+  </div>
+
+  <!-- Research Project Mode -->
+  <div class="research-mode-section reveal" id="research-mode-section">
+    <div class="section-label">Design a study</div>
+    <h2 class="section-title">Research Project Mode</h2>
+    <p class="section-desc">Orchestrate a reproducible project: pick a disease, choose workflows and a partner lab, then run a simulated study that ties wet-lab choices to analysis and interpretation.</p>
+
+    <div class="research-builder" id="research-builder">
+      <div class="rm-row">
+        <label for="rm-disease">Disease</label>
+        <select id="rm-disease" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-workflow">Primary workflow</label>
+        <select id="rm-workflow" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-lab">Host lab</label>
+        <select id="rm-lab" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-samples">Sample count</label>
+        <input id="rm-samples" type="number" min="1" max="200" value="10" />
+      </div>
+      <div class="rm-actions">
+        <button class="btn-result-primary" id="rm-start">Start Project</button>
+        <button class="btn-result-secondary" id="rm-export">Export Project</button>
+      </div>
+    </div>
+
+    <div id="research-summary" class="research-summary"></div>
+  </div>
+
+  <!-- Research Metadata & Reproducibility Hub -->
+  <div class="repro-hub-section reveal" id="repro-hub-section">
+    <div class="section-label">Reproducible omics science</div>
+    <h2 class="section-title">Research Metadata &amp; Reproducibility Hub</h2>
+    <p class="section-desc">
+      Submit studies with full metadata and get instant Reproducibility, Completeness, and FAIR scores.
+      Browse, fork, validate, and reproduce community submissions.
+    </p>
+    <div id="repro-hub-content">
+      <!-- Populated by repro-hub.js -->
+    </div>
+  </div>
+
+  <!-- Africa Science Hub -->
+  <div class="africa-hub-section reveal" id="africa-hub-section">
+    <div class="section-label" data-i18n="section.africahub.label">African genomics science</div>
+    <h2 class="section-title" data-i18n="section.africahub.title">Africa Science Hub</h2>
+    <p class="section-desc">Data governance, population genomics, One Health surveillance, grant alignment, and real training opportunities — everything that makes omics research in Africa distinct and important.</p>
+    <div id="africa-hub-content"><!-- Populated by africa-hub.js --></div>
+  </div>
+
+  <!-- Workshop & Instructor Mode -->
+  <div class="workshop-section reveal" id="workshop-section">
+    <div class="section-label" data-i18n="section.workshop.label">Train your cohort</div>
+    <h2 class="section-title" data-i18n="section.workshop.title">Workshop &amp; Instructor Mode</h2>
+    <p class="section-desc">Create a workshop session, share the code with students, and track completion across all OmicsLab modules. Export attendance and progress reports for grant reporting.</p>
+    <div id="workshop-content"><!-- Populated by workshop.js --></div>
+  </div>
+
+  <!-- Badges & Certificates -->
+  <div class="badges-section reveal" id="badges-section">
+    <div class="section-label" data-i18n="section.badges.label">Your achievements</div>
+    <h2 class="section-title" data-i18n="section.badges.title">Badges &amp; Certificates</h2>
+    <p class="section-desc">Earn badges by completing workflows, learning tracks, and research tasks. Click any earned badge to generate a printable certificate.</p>
+    <div id="badges-content"><!-- Populated by badges.js --></div>
   </div>
 
   <!-- Equipment Gallery -->
@@ -252,6 +418,32 @@
     </p>
     <div class="tool-category-grid" id="tool-category-grid">
       <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- Bioinformatics Pipeline Guide -->
+  <div class="bioinfo-pipeline-section reveal" id="bioinfo-pipeline-section">
+    <div class="section-label">How the analysis actually works</div>
+    <h2 class="section-title">Bioinformatics Pipeline Guide</h2>
+    <p class="section-desc">
+      Follow a complete DNA sequencing workflow from raw FASTQ files to biological interpretation.
+      Each stage shows the tools used, what the output means, and a dry-run example you can copy and adapt.
+    </p>
+    <div id="bioinfo-pipeline-content">
+      <!-- Populated by app.js -->
+    </div>
+  </div>
+
+  <!-- HPC Training Layer -->
+  <div class="hpc-training-section reveal" id="hpc-training-section">
+    <div class="section-label">Running analysis at scale</div>
+    <h2 class="section-title">HPC Training Layer</h2>
+    <p class="section-desc">
+      Learn SLURM job scheduling, resource optimisation, workflow engines, and containerised pipelines —
+      using the same omics steps you already know. Simulate queue delays, memory errors, and runtime trade-offs.
+    </p>
+    <div id="hpc-training-content">
+      <!-- Populated by hpc-training.js -->
     </div>
   </div>
 
@@ -593,6 +785,7 @@
 <script src="js/qa.js"></script>
 <script src="js/workflows.js"></script>
 <script src="js/diseases.js"></script>
+<script src="js/disease-learning.js"></script>
 <script src="js/gallery.js"></script>
 <script src="js/equipment.js"></script>
 <script src="js/engine.js"></script>
@@ -602,6 +795,14 @@
 <script src="js/africa-map.js"></script>
 <script src="js/troubleshoot.js"></script>
 <script src="js/sandbox.js"></script>
+  <script src="js/research-mode.js"></script>
+<script src="js/hpc-training.js"></script>
+<script src="js/repro-hub.js"></script>
+<script src="js/curriculum.js"></script>
+<script src="js/badges.js"></script>
+<script src="js/africa-hub.js"></script>
+<script src="js/workshop.js"></script>
+<script src="js/i18n.js"></script>
 <script src="js/app.js"></script>
 
 </body>

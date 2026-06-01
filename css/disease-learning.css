@@ -1,0 +1,267 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Disease Learning Layer Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.disease-learning-section {
+  padding: 3.5rem 2rem 1rem;
+}
+
+.disease-learning-picker {
+  max-width: 840px;
+  margin: 1.5rem auto 1rem;
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.dl-picker-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.dl-picker-select {
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.9);
+  color: var(--text);
+  outline: none;
+  font-size: 0.95rem;
+}
+
+.dl-picker-select:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.12);
+}
+
+.disease-learning-panel {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dl-journey {
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(22, 27, 34, 0.96), rgba(13, 17, 23, 0.96));
+  border-radius: 20px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.28);
+}
+
+.dl-journey-header,
+.dl-summary-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.dl-kicker {
+  color: var(--success);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.dl-title,
+.dl-summary-title {
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.dl-subtitle {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.dl-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.dl-chip-btn,
+.dl-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(63, 185, 80, 0.34);
+  background: rgba(63, 185, 80, 0.12);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.dl-chip-btn:hover,
+.dl-action-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--success);
+  background: rgba(63, 185, 80, 0.18);
+}
+
+.dl-step-grid,
+.dl-path-grid,
+.dl-resource-grid {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.dl-step-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dl-path-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dl-resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dl-step-card,
+.dl-path-card,
+.dl-interpretation-card,
+.dl-resource-card,
+.dl-africa-note,
+.dl-summary-card {
+  border: 1px solid var(--border-dim);
+  background: rgba(8, 12, 16, 0.5);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.dl-step-label,
+.dl-section-label {
+  color: var(--success);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.55rem;
+  font-weight: 700;
+}
+
+.dl-step-card p,
+.dl-path-card p,
+.dl-interpretation-card p,
+.dl-africa-note p,
+.dl-summary-body div {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.dl-path-grid,
+.dl-resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dl-interpretation-card {
+  line-height: 1.75;
+}
+
+.dl-tag-row,
+.dl-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dl-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text);
+  font-size: 0.76rem;
+}
+
+.dl-tag-tool { border-color: rgba(88, 166, 255, 0.35); }
+.dl-tag-repo { border-color: rgba(63, 185, 80, 0.28); }
+
+.dl-empty {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.dl-summary-card {
+  max-width: 900px;
+}
+
+.dl-summary-body {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.dl-summary-body strong {
+  color: var(--text);
+}
+
+.dl-snippet {
+  border: 1px solid var(--border-dim);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.dl-snippet-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+}
+
+.dl-snippet-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.dl-snippet-workflow {
+  font-size: 0.72rem;
+  color: var(--success);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dl-snippet-text {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .dl-step-grid,
+  .dl-path-grid,
+  .dl-resource-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .disease-learning-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .dl-journey-header,
+  .dl-summary-head {
+    flex-direction: column;
+  }
+
+  .dl-actions {
+    justify-content: flex-start;
+  }
+}

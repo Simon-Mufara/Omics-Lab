@@ -120,6 +120,7 @@ OmicsLab.QC = (function() {
       const d = OmicsLab.DISEASES[did];
       if (!d) return '';
       const bm = d.biomarkers ? d.biomarkers.slice(0,3).join(' · ') : '';
+      const snippet = OmicsLab.DiseaseLearning ? OmicsLab.DiseaseLearning.renderContextSnippet(did) : '';
       return `<div class="dc-mini-card" style="--dc-color:${d.color}">
         <div class="dc-mini-head">
           <span class="dc-mini-icon">${OmicsLab.Icons.svg(d.icon,16)}</span>
@@ -127,6 +128,7 @@ OmicsLab.QC = (function() {
           <span class="dc-mini-cat">${d.category}</span>
         </div>
         ${bm ? `<div class="dc-mini-bm">${OmicsLab.Icons.svg('target',11)} ${bm}</div>` : ''}
+        ${snippet}
       </div>`;
     }).join('');
   }

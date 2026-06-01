@@ -1,0 +1,11 @@
+.research-builder { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:0.8rem; max-width:980px; margin:1rem 0; }
+.rm-row { display:flex; flex-direction:column; gap:0.4rem; }
+.rm-select, .rm-row input { padding:0.5rem 0.6rem; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); }
+.rm-actions { display:flex; gap:0.6rem; align-items:center; margin-top:0.6rem }
+.research-summary { margin-top:1rem; max-width:980px }
+.rm-card { background:var(--surface-2); border:1px solid var(--border); padding:1rem; border-radius:12px; }
+.rm-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem }
+.rm-title { font-weight:800; font-size:1rem }
+.rm-meta { color:var(--text-muted); font-size:0.9rem }
+.rm-body { color:var(--text); font-size:0.95rem; margin-bottom:0.6rem }
+.rm-actions button { margin-right:0.6rem }

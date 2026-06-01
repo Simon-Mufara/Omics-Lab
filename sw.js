@@ -19,15 +19,17 @@ self.addEventListener('activate', e => {
    Never serve stale cache when the network is available. */
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  // Skip cross-origin requests (Google Fonts, CDNs) — let them pass through
+  if (!e.request.url.startsWith(self.location.origin)) return;
   e.respondWith(
     fetch(e.request)
       .then(res => {
-        if (res.ok) {
+        if (res && res.ok) {
           const clone = res.clone();
           caches.open(CACHE).then(c => c.put(e.request, clone));
         }
         return res;
       })
-      .catch(() => caches.match(e.request))
+      .catch(() => caches.match(e.request).then(r => r || Response.error()))
   );
 });

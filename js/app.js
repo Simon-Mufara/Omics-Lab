@@ -439,6 +439,10 @@ OmicsLab.App = (function() {
       </div>`;
     }).join('');
 
+    const learningHtml = OmicsLab.DiseaseLearning
+      ? dids.map(did => OmicsLab.DiseaseLearning.renderJourneySummary(did)).join('')
+      : '';
+
     return `<div class="results-card">
       <div class="results-card-title">${OmicsLab.Icons.svg('microscope',16)} Diseases Investigated with This Workflow</div>
       <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">
@@ -446,6 +450,7 @@ OmicsLab.App = (function() {
         is used to study these real diseases in clinical and research settings.
       </p>
       <div class="res-disease-grid">${cards}</div>
+      ${learningHtml ? `<div style="display:grid;gap:0.9rem;margin-top:1rem">${learningHtml}</div>` : ''}
     </div>`;
   }
 
@@ -455,10 +460,21 @@ OmicsLab.App = (function() {
     _buildDiseaseExplorer();
     _buildEquipmentGallery();
     _buildToolExplorer();
+    _buildBioinformaticsPipeline();
     _buildRepositoryExplorer();
-    if (OmicsLab.QAEngine) OmicsLab.QAEngine.init();
-    if (OmicsLab.AfricaMap) OmicsLab.AfricaMap.init();
-    if (OmicsLab.Sandbox) OmicsLab.Sandbox.init();
+    const _safeInit = (mod) => { try { if (mod && mod.init) mod.init(); } catch(e) { console.error(e); } };
+    _safeInit(OmicsLab.DiseaseLearning);
+    _safeInit(OmicsLab.ResearchMode);
+    _safeInit(OmicsLab.HPCTraining);
+    _safeInit(OmicsLab.ReproHub);
+    _safeInit(OmicsLab.Curriculum);
+    _safeInit(OmicsLab.Badges);
+    _safeInit(OmicsLab.AfricaHub);
+    _safeInit(OmicsLab.Workshop);
+    _safeInit(OmicsLab.I18n);
+    _safeInit(OmicsLab.QAEngine);
+    _safeInit(OmicsLab.AfricaMap);
+    _safeInit(OmicsLab.Sandbox);
   }
 
   /* ─── Sabotage Mode (Error Injection) ─── */
@@ -609,6 +625,10 @@ OmicsLab.App = (function() {
         <div class="dm-section-label">Clinical Impact of Omics</div>
         <p class="dm-text">${d.clinicalImpact}</p>
       </div>` : ''}
+      ${OmicsLab.DiseaseLearning ? `<div class="dm-section dm-section-learning">
+        <div class="dm-section-label">Disease Learning Layer</div>
+        ${OmicsLab.DiseaseLearning.renderJourneySummary(did)}
+      </div>` : ''}
       <div class="dm-section">
         <div class="dm-section-label">Key Biomarkers (${(d.biomarkers||[]).length})</div>
         <ul class="dm-bm-list">${bms}</ul>
@@ -749,6 +769,21 @@ OmicsLab.App = (function() {
     if (dd) dd.classList.toggle('open');
   }
 
+  /* ─── Learn dropdown ─── */
+  function toggleLearnMenu() {
+    const btn = document.getElementById('nav-learn-btn');
+    const menu = document.getElementById('nav-learn-dropdown');
+    if (!btn || !menu) return;
+    const isOpen = menu.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+  }
+  function closeLearnMenu() {
+    const btn  = document.getElementById('nav-learn-btn');
+    const menu = document.getElementById('nav-learn-dropdown');
+    if (btn)  btn.classList.remove('open');
+    if (menu) menu.classList.remove('open');
+  }
+
   /* ─── Equipment modal ─── */
   function _openEquipmentModal(equipId) {
     const eq = (OmicsLab.EQUIPMENT_GALLERY || []).find(e => e.id === equipId);
@@ -874,6 +909,141 @@ OmicsLab.App = (function() {
     }
   }
 
+  const BIOINFO_PIPELINE = {
+    stages: [
+      {
+        step: '1',
+        title: 'FastQC + MultiQC',
+        tools: 'FastQC, MultiQC',
+        meaning: 'Checks base quality, adapter content, GC bias, duplication and overrepresented sequences before you spend sequencing time downstream.',
+        output: 'Per-base Q scores, adapter spikes, GC curves, and duplication summaries.',
+        interpretation: 'If most bases are Q30 and adapter content is low, the raw reads are usable. Sharp adapter peaks or a falling quality tail mean you should trim or resequence.'
+      },
+      {
+        step: '2',
+        title: 'Read trimming',
+        tools: 'fastp or Trimmomatic',
+        meaning: 'Removes adapters, poly-G tails, and low-quality bases so alignment is not polluted by obvious artefacts.',
+        output: 'Cleaner FASTQ files with shorter but higher-confidence reads.',
+        interpretation: 'If trimming removes only a small fraction of reads, the library was good. If a lot of data disappears, sample prep or sequencing quality was poor.'
+      },
+      {
+        step: '3',
+        title: 'Alignment + sorting',
+        tools: 'BWA-MEM2 + SAMtools',
+        meaning: 'Maps each read to the reference genome and converts the data into coordinate-sorted BAM files.',
+        output: 'Aligned BAM/CRAM files plus mapping metrics.',
+        interpretation: 'A high mapping rate usually means the sample matches the reference well. Low mapping often points to contamination, degraded DNA, or the wrong reference build.'
+      },
+      {
+        step: '4',
+        title: 'Duplicate marking + BQSR',
+        tools: 'Picard MarkDuplicates + GATK BQSR',
+        meaning: 'Flags PCR duplicates and recalibrates base qualities so the variant caller can trust the signal it sees.',
+        output: 'Deduplicated BAM and recalibrated quality scores.',
+        interpretation: 'High duplication suggests too little input or over-amplification. BQSR improves confidence by correcting systematic sequencing error patterns.'
+      },
+      {
+        step: '5',
+        title: 'Variant calling + annotation',
+        tools: 'GATK HaplotypeCaller + VEP/ANNOVAR',
+        meaning: 'Calls SNPs and indels, then adds biological meaning such as gene consequence, frequency, and clinical annotation.',
+        output: 'VCF files, annotated TSV tables, and ranked candidate variants.',
+        interpretation: 'A strong variant is supported by depth, balance, mapping quality, and consistent annotation. Interpretation turns raw calls into biological or clinical insight.'
+      }
+    ],
+    dryRunScript: `#!/usr/bin/env bash
+set -euo pipefail
+
+SAMPLE="sample01"
+REF="resources/GRCh38.fa"
+
+echo "[DRY RUN] 1) Quality control"
+fastqc "reads/\${SAMPLE}_R1.fastq.gz" "reads/\${SAMPLE}_R2.fastq.gz" -o qc/
+multiqc qc/ -o qc/multiqc/
+
+echo "[DRY RUN] 2) Trim adapters and low-quality tails"
+fastp \
+  -i "reads/\${SAMPLE}_R1.fastq.gz" \
+  -I "reads/\${SAMPLE}_R2.fastq.gz" \
+  -o "trimmed/\${SAMPLE}_R1.trimmed.fastq.gz" \
+  -O "trimmed/\${SAMPLE}_R2.trimmed.fastq.gz"
+
+echo "[DRY RUN] 3) Align reads and sort BAM"
+bwa-mem2 mem -t 16 "\$REF" \
+  "trimmed/\${SAMPLE}_R1.trimmed.fastq.gz" \
+  "trimmed/\${SAMPLE}_R2.trimmed.fastq.gz" \
+  | samtools sort -o "bam/\${SAMPLE}.sorted.bam"
+samtools index "bam/\${SAMPLE}.sorted.bam"
+
+echo "[DRY RUN] 4) Mark duplicates and recalibrate base qualities"
+picard MarkDuplicates \
+  I="bam/\${SAMPLE}.sorted.bam" \
+  O="bam/\${SAMPLE}.dedup.bam" \
+  M="qc/\${SAMPLE}.dup_metrics.txt"
+gatk BaseRecalibrator \
+  -R "\$REF" \
+  -I "bam/\${SAMPLE}.dedup.bam" \
+  --known-sites resources/known_sites.vcf.gz \
+  -O "bam/\${SAMPLE}.recal.table"
+gatk ApplyBQSR \
+  -R "\$REF" \
+  -I "bam/\${SAMPLE}.dedup.bam" \
+  --bqsr-recal-file "bam/\${SAMPLE}.recal.table" \
+  -O "bam/\${SAMPLE}.bqsr.bam"
+
+echo "[DRY RUN] 5) Call and annotate variants"
+gatk HaplotypeCaller \
+  -R "\$REF" \
+  -I "bam/\${SAMPLE}.bqsr.bam" \
+  -O "vcf/\${SAMPLE}.g.vcf.gz" \
+  -ERC GVCF
+vep -i "vcf/\${SAMPLE}.g.vcf.gz" -o "report/\${SAMPLE}.vep.tsv" --tab
+
+echo "[DRY RUN] Finished. The script prints the analysis order without running a full production workflow."
+`,
+    snakefile: `rule all:
+    input:
+        expand("results/{sample}.annotated.vcf.gz", sample=SAMPLES)
+
+rule fastqc:
+    input:
+        r1="reads/{sample}_R1.fastq.gz",
+        r2="reads/{sample}_R2.fastq.gz"
+    output:
+        html="qc/{sample}_fastqc.html"
+    shell:
+        "fastqc {input.r1} {input.r2} -o qc/"
+
+rule trim:
+    input:
+        r1="reads/{sample}_R1.fastq.gz",
+        r2="reads/{sample}_R2.fastq.gz"
+    output:
+        r1="trimmed/{sample}_R1.trimmed.fastq.gz",
+        r2="trimmed/{sample}_R2.trimmed.fastq.gz"
+    shell:
+        "fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2}"
+
+rule align:
+    input:
+        r1="trimmed/{sample}_R1.trimmed.fastq.gz",
+        r2="trimmed/{sample}_R2.trimmed.fastq.gz"
+    output:
+        bam="bam/{sample}.sorted.bam"
+    shell:
+        "bwa-mem2 mem -t 16 resources/GRCh38.fa {input.r1} {input.r2} | samtools sort -o {output.bam}"
+
+rule annotate:
+    input:
+        vcf="vcf/{sample}.vcf.gz"
+    output:
+        ann="results/{sample}.annotated.vcf.gz"
+    shell:
+        "vep -i {input.vcf} -o {output.ann} --vcf"
+`
+  };
+
   /* Tool Explorer on landing page */
   function _buildToolExplorer() {
     if (!OmicsLab.TOOLS) return;
@@ -935,6 +1105,81 @@ OmicsLab.App = (function() {
       </div>`;
     }).join('');
   }
+
+    function _buildBioinformaticsPipeline() {
+      const container = document.getElementById('bioinfo-pipeline-content');
+      if (!container) return;
+
+      const codeHtml = value => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      const stageCards = BIOINFO_PIPELINE.stages.map(stage => `
+        <article class="bp-stage-card">
+          <div class="bp-stage-kicker">Step ${stage.step}</div>
+          <div class="bp-stage-name">${stage.title}</div>
+          <div class="bp-stage-tools">${stage.tools}</div>
+          <div class="bp-stage-text">${stage.meaning}</div>
+          <div class="bp-stage-output"><strong>Output:</strong> ${stage.output}</div>
+          <div class="bp-stage-interpretation"><strong>Interpretation:</strong> ${stage.interpretation}</div>
+        </article>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="bp-grid">
+          <div class="bp-column bp-overview-card">
+            <div class="bp-card-title">Pipeline stages</div>
+            <div class="bp-stage-grid">${stageCards}</div>
+          </div>
+
+          <div class="bp-column bp-meaning-card">
+            <div class="bp-card-title">How to read the outputs</div>
+            <div class="bp-meaning-list">
+              <div class="bp-meaning-item"><span class="bp-meaning-label">FastQC</span><span class="bp-meaning-text">Base qualities should stay high, adapter content should stay low, and GC distribution should look plausible for your sample type.</span></div>
+              <div class="bp-meaning-item"><span class="bp-meaning-label">MultiQC</span><span class="bp-meaning-text">Use it to compare samples; one bad library often stands out immediately as a quality or duplication outlier.</span></div>
+              <div class="bp-meaning-item"><span class="bp-meaning-label">Alignment rate</span><span class="bp-meaning-text">High mapping rate means the reads fit the reference and the wet-lab prep worked; low mapping means contamination, damage, or a wrong reference build.</span></div>
+              <div class="bp-meaning-item"><span class="bp-meaning-label">Duplication rate</span><span class="bp-meaning-text">High duplication is a library problem, not a sequencing success story; it usually means too little input DNA or too many PCR cycles.</span></div>
+              <div class="bp-meaning-item"><span class="bp-meaning-label">VCF / annotated report</span><span class="bp-meaning-text">The final answer is not just a variant list. It is a ranked, explained result with consequence, population frequency, and disease relevance.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-scripts-grid">
+          <article class="bp-script-card">
+            <div class="bp-card-title">Dry-run shell script</div>
+            <p class="bp-card-copy">This version shows the command order and expected file names without hiding what each tool is doing.</p>
+            <pre class="bp-code"><code>${codeHtml(BIOINFO_PIPELINE.dryRunScript)}</code></pre>
+            <div class="bp-actions">
+              <a class="bp-link-btn" href="examples/bioinformatics/dry-run-wgs.sh" download>Download dry-run-wgs.sh</a>
+            </div>
+          </article>
+
+          <article class="bp-script-card">
+            <div class="bp-card-title">Snakemake example</div>
+            <p class="bp-card-copy">This is the same idea expressed as a workflow engine, so dependencies are explicit and reproducible.</p>
+            <pre class="bp-code"><code>${codeHtml(BIOINFO_PIPELINE.snakefile)}</code></pre>
+            <div class="bp-actions">
+              <a class="bp-link-btn" href="examples/bioinformatics/Snakefile" download>Download Snakefile</a>
+            </div>
+          </article>
+        </div>
+
+        <div class="bp-africa-card">
+          <div class="bp-card-title">Africa deployment notes</div>
+          <p class="bp-card-copy">
+            The practical model for African genomics is hybrid: do wet-lab work in-country, keep the data under local governance,
+            and move analysis to regional HPC or cloud only when policy and bandwidth allow.
+            The map below highlights active centres, training hubs, and surveillance labs already doing this work.
+          </p>
+          <div class="bp-tag-row">
+            <span class="bp-tag">H3Africa</span>
+            <span class="bp-tag">H3ABioNet</span>
+            <span class="bp-tag">Africa CDC</span>
+            <span class="bp-tag">APCDR</span>
+            <span class="bp-tag">MalariaGEN</span>
+            <span class="bp-tag">KEMRI</span>
+          </div>
+        </div>
+      `;
+    }
 
   /* ─── Repository Explorer ─── */
   function _buildRepositoryExplorer() {
@@ -1005,7 +1250,7 @@ OmicsLab.App = (function() {
   return {
     init, startWorkflow, goHome, showResults, showScreen,
     _filterDiseases, _filterEquipment,
-    scrollTo, toggleMobileNav,
+    scrollTo, toggleMobileNav, toggleLearnMenu, closeLearnMenu,
     _openEquipmentModal, _closeEquipmentModal,
     _openDiseaseModal, _closeDiseaseModal,
     _filterRepos,
@@ -1023,7 +1268,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       OmicsLab.App._closeDiseaseModal();
       OmicsLab.App._closeEquipmentModal();
+      OmicsLab.App.closeLearnMenu();
     }
+  });
+  document.addEventListener('click', e => {
+    const wrap = document.getElementById('nav-learn-wrap');
+    if (wrap && !wrap.contains(e.target)) OmicsLab.App.closeLearnMenu();
   });
   _startHeroPreviewCycle();
   _initScrollReveal();
@@ -1035,15 +1285,18 @@ function _initScrollReveal() {
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
       entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } }),
-      { threshold: 0 }
+      { threshold: 0, rootMargin: '0px 0px -40px 0px' }
     );
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    // Safe fallback — stagger rather than flash-reveal everything at once
+    setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 30);
+      });
+    }, 4000);
   } else {
     revealAll();
   }
-
-  /* Fallback: guarantee all sections are visible within 2 s regardless of scroll */
-  setTimeout(revealAll, 2000);
 }
 
 function _startHeroPreviewCycle() {
@@ -1134,7 +1387,10 @@ function _startHeroPreviewCycle() {
   }
 
   applyState(STATES[0]);
-  setInterval(() => {
+  if (window._heroInterval) clearInterval(window._heroInterval);
+  window._heroInterval = setInterval(() => {
+    // Only run when the hero preview widget is in the DOM and visible
+    if (!document.getElementById('hero-preview-title')) return;
     idx = (idx + 1) % STATES.length;
     applyState(STATES[idx]);
   }, 4000);
