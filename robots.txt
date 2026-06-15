@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://simon-mufara.github.io/Omics-Lab/sitemap.xml

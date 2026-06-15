@@ -6,6 +6,11 @@
   <title>OmicsLab Simulator — Interactive Omics Training Platform</title>
   <meta name="description" content="Interactive omics training platform — 14 workflows, pipeline guides, Africa genomics labs, and 20 real instruments. Learn genomics, transcriptomics, proteomics and more by doing.">
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080c10'/%3E%3Cpath d='M4 20c8.667-8 17.333 0 24-8' stroke='%233fb950' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M12 29c2.4-2.7 3.4-5.4 3.8-8.1' stroke='%233fb950' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M20 3c-2.4 2.7-3.4 5.4-3.8 8.1' stroke='%233fb950' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Cpath d='M4 12c8.667 8 17.333 0 24 8' stroke='%2358a6ff' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080c10'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23080c10'/%3E%3Ctext x='90' y='120' text-anchor='middle' font-size='100'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E">
+
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#3fb950">
@@ -13,17 +18,39 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="OmicsLab">
 
+  <!-- SEO -->
+  <meta name="keywords" content="omics training, bioinformatics, genomics Africa, RNA-seq, WGS, proteomics, metagenomics, H3Africa, FASTQ, GATK, sequencing simulator, free genomics course">
+  <meta name="author" content="Simon Mufara">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://simon-mufara.github.io/Omics-Lab/">
+
   <!-- Open Graph -->
-  <meta property="og:title" content="OmicsLab Simulator">
-  <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, bioinformatics pipeline guides, Africa genomics labs, and 20 real instruments.">
+  <meta property="og:title" content="OmicsLab Simulator — Africa's Omics Training Platform">
+  <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, bioinformatics pipeline guides, Africa genomics labs, and 20 real instruments. Free, offline, no install.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://simon-mufara.github.io/Omics-Lab/">
+  <meta property="og:image" content="https://simon-mufara.github.io/Omics-Lab/og-image.svg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="OmicsLab Simulator">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OmicsLab Simulator — Africa's Omics Training Platform">
+  <meta name="twitter:description" content="14 interactive omics workflows, Africa genomics labs, 20 real instruments. Free, offline, no install. Built for African researchers.">
+  <meta name="twitter:image" content="https://simon-mufara.github.io/Omics-Lab/og-image.svg">
+  <meta name="twitter:creator" content="@SimonMufara">
 
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/disease-learning.css">
   <link rel="stylesheet" href="css/equipment.css">
-    <link rel="stylesheet" href="css/research-mode.css">
+  <link rel="stylesheet" href="css/research-mode.css">
+  <link rel="stylesheet" href="css/enhancements.css">
+  <link rel="stylesheet" href="css/analysis.css">
 </head>
 <body>
+<a href="#domain-section" class="skip-link">Skip to main content</a>
 
 <!-- ══════════════════════════════════════════════════════════
      LANDING SCREEN
@@ -87,49 +114,36 @@
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')"><span data-i18n="nav.ask">Ask</span></button>
       <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section')"><span data-i18n="nav.sandbox">Sandbox</span></button>
       <button class="nav-pill" onclick="OmicsLab.Compare && OmicsLab.Compare.open()"><span data-i18n="nav.compare">Compare</span></button>
+      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('analysis-section')">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="margin-right:3px"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+        <span>Analysis</span>
+      </button>
+      <button class="nav-search-btn" onclick="OmicsLab.Search && OmicsLab.Search.open()" aria-label="Open search (Ctrl+K)" title="Search (Ctrl+K)">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span data-i18n="nav.search">Search</span>
+        <kbd class="nav-search-kbd">⌘K</kbd>
+      </button>
+      <button class="nav-progress-btn" onclick="OmicsLab.Progress && OmicsLab.Progress.openModal()" aria-label="My Progress" title="Export/import your progress">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M12 8V12L15 15"/></svg>
+        <span data-i18n="nav.progress">My Progress</span>
+      </button>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
     <div class="mobile-nav-dropdown" id="mobile-nav-dropdown">
-      <!-- Lab / Doing -->
-      <div class="mob-nav-group-label">Lab &amp; Doing</div>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('domain-section');OmicsLab.App.toggleMobileNav()">Workflows</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section');OmicsLab.App.toggleMobileNav()">Sandbox</button>
-      <button class="nav-pill" onclick="OmicsLab.Compare&&OmicsLab.Compare.open();OmicsLab.App.toggleMobileNav()">Compare</button>
-      <!-- Learn -->
-      <div class="mob-nav-group-label">Learn</div>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">🦠 Diseases</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.toggleMobileNav()">📖 Learning Journey</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">🔬 Equipment</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">🛠️ Tools</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.toggleMobileNav()">🧬 Pipeline Guide</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.toggleMobileNav()">⚙️ HPC Training</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">🗄️ Repositories</button>
-      <!-- Research & Tools -->
-      <div class="mob-nav-group-label">Research &amp; Tools</div>
-      <!-- Lab & Doing -->
-      <div class="mob-nav-group-label">Lab &amp; Doing</div>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('domain-section');OmicsLab.App.toggleMobileNav()">Workflows</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section');OmicsLab.App.toggleMobileNav()">Sandbox</button>
-      <button class="nav-pill" onclick="OmicsLab.Compare&&OmicsLab.Compare.open();OmicsLab.App.toggleMobileNav()">Compare</button>
-      <!-- Learn -->
-      <div class="mob-nav-group-label">Learn</div>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.toggleMobileNav()">🦠 Diseases</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.toggleMobileNav()">📖 Learning Journey</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.toggleMobileNav()">🔬 Equipment</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.toggleMobileNav()">🛠️ Tools</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.toggleMobileNav()">🧬 Pipeline Guide</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.toggleMobileNav()">⚙️ HPC Training</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.toggleMobileNav()">🗄️ Repositories</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('curriculum-section');OmicsLab.App.toggleMobileNav()">🎓 Curriculum</button>
-      <!-- Research & Tools -->
-      <div class="mob-nav-group-label">Research &amp; Tools</div>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('research-mode-section');OmicsLab.App.toggleMobileNav()">Research</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repro-hub-section');OmicsLab.App.toggleMobileNav()">Repro Hub</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-hub-section');OmicsLab.App.toggleMobileNav()">Africa Hub</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('workshop-section');OmicsLab.App.toggleMobileNav()">Workshop</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('badges-section');OmicsLab.App.toggleMobileNav()">Badges</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section');OmicsLab.App.toggleMobileNav()">Map</button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section');OmicsLab.App.toggleMobileNav()">Ask AI</button>
+      <!-- Pages -->
+      <div class="mob-nav-group-label">Pages</div>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('home');OmicsLab.App.toggleMobileNav()">🏠 Home</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab');OmicsLab.App.toggleMobileNav()">🧪 Lab Simulations</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('learn');OmicsLab.App.toggleMobileNav()">📚 Learn</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('research');OmicsLab.App.toggleMobileNav()">🔭 Research</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('africa');OmicsLab.App.toggleMobileNav()">🌍 Africa Hub</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('analysis');OmicsLab.App.toggleMobileNav()">📊 Analysis Studio</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('ask');OmicsLab.App.toggleMobileNav()">💬 Ask OmicsLab</button>
+      <!-- Tools -->
+      <div class="mob-nav-group-label">Tools</div>
+      <button class="mob-page-btn" onclick="OmicsLab.Progress&&OmicsLab.Progress.openModal();OmicsLab.App.toggleMobileNav()">💾 My Progress</button>
+      <button class="mob-page-btn" onclick="OmicsLab.Search&&OmicsLab.Search.open();OmicsLab.App.toggleMobileNav()">🔍 Search</button>
+      <button class="mob-page-btn" onclick="OmicsLab.App.toggleMobileNav();document.getElementById('changelog-section')&&document.getElementById('changelog-section').scrollIntoView({behavior:'smooth'})">🆕 What's New</button>
     </div>
   </nav>
 
@@ -592,17 +606,90 @@
     </div>
   </div>
 
+  <!-- Analysis Studio -->
+  <div class="analysis-section reveal" id="analysis-section">
+    <div class="section-label">Real bioinformatics in your browser</div>
+    <h2 class="section-title">Analysis Studio</h2>
+    <p class="section-desc">
+      Upload or paste real biological data and get instant analysis results — no server, no install, fully offline.
+      Supports FASTQ quality control, FASTA sequence tools, VCF variant exploration, gene expression matrices, and multiple sequence alignment viewing.
+    </p>
+    <div id="analysis-studio-content"><!-- Populated by analysis.js --></div>
+  </div>
+
+  <!-- Changelog / What's New -->
+  <div class="changelog-section reveal" id="changelog-section">
+    <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
+    <h2 class="section-title" data-i18n="sec.changelog.title">What's New in OmicsLab</h2>
+    <p class="section-desc" data-i18n="sec.changelog.desc">See the latest features, improvements, and content added to the platform. OmicsLab is always evolving.</p>
+    <div id="changelog-content"><!-- Populated by changelog.js --></div>
+  </div>
+
   <!-- Footer -->
   <footer class="landing-footer">
     <div class="footer-logo">OmicsLab Simulator</div>
-    <div style="color:var(--text-muted);font-size:0.82rem">
-      Built by <a href="https://github.com/Simon-Mufara" style="color:var(--success);text-decoration:none">Simon Mufara</a>
-      · Computational Biologist & Bioinformatician · UCT
+
+    <div class="footer-mission">
+      Built to democratise world-class omics training across Africa —
+      <strong>free forever</strong>, works offline, in <strong>5 languages</strong>,
+      on any device. Every student who learns here is a step toward a healthier continent.
     </div>
+
+    <!-- Language switcher strip -->
+    <div class="footer-lang-strip">
+      <span style="font-size:0.75rem;margin-right:0.25rem">🌍 Language:</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('en')">🇬🇧 English</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('fr')">🇫🇷 Français</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('sw')">🇰🇪 Kiswahili</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('pt')">🇲🇿 Português</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('ar')">🇪🇬 العربية</span>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="footer-stats-row">
+      <div class="footer-stat-item"><strong>14</strong> Workflows</div>
+      <div class="footer-stat-item"><strong>40+</strong> Diseases</div>
+      <div class="footer-stat-item"><strong>50+</strong> Tools</div>
+      <div class="footer-stat-item"><strong>20+</strong> Instruments</div>
+      <div class="footer-stat-item"><strong>5</strong> Languages</div>
+      <div class="footer-stat-item"><strong>54</strong> African Countries</div>
+    </div>
+
+    <div style="color:var(--text-muted);font-size:0.82rem;text-align:center">
+      Built by <a href="https://github.com/Simon-Mufara" style="color:var(--success);text-decoration:none" target="_blank" rel="noopener">Simon Mufara</a>
+      &nbsp;·&nbsp; Computational Biologist &amp; Bioinformatician &nbsp;·&nbsp; UCT
+    </div>
+
     <div class="footer-links">
-      <a href="mailto:simon.mufara1@gmail.com">Contact</a>
-      <a href="https://linkedin.com/in/simon-mufara" target="_blank">LinkedIn</a>
-      <a href="https://github.com/Simon-Mufara" target="_blank">GitHub</a>
+      <a href="mailto:simon.mufara1@gmail.com" aria-label="Send email to Simon Mufara">Contact</a>
+      <a href="https://linkedin.com/in/simon-mufara" target="_blank" rel="noopener" aria-label="Simon Mufara on LinkedIn">LinkedIn</a>
+      <a href="https://github.com/Simon-Mufara/Omics-Lab" target="_blank" rel="noopener" aria-label="OmicsLab on GitHub">GitHub</a>
+      <a href="#changelog-section" onclick="document.getElementById('changelog-section').scrollIntoView({behavior:'smooth'});return false">What's New</a>
+    </div>
+
+    <!-- Feedback box -->
+    <div class="footer-feedback">
+      <div class="footer-feedback-title">Found an error or want to suggest a feature?</div>
+      <div class="footer-feedback-desc">OmicsLab is built by the community, for the community. Every correction and idea helps thousands of African researchers.</div>
+      <a class="btn-feedback"
+         href="mailto:simon.mufara1@gmail.com?subject=OmicsLab%20Feedback&body=Hi%20Simon%2C%0A%0AI%20found%20an%20issue%20%2F%20want%20to%20suggest%3A%0A%0A"
+         aria-label="Send feedback by email">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Send Feedback
+      </a>
+      &nbsp;
+      <a class="btn-feedback"
+         href="https://github.com/Simon-Mufara/Omics-Lab/issues/new" target="_blank" rel="noopener"
+         aria-label="Open a GitHub issue">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Report on GitHub
+      </a>
+    </div>
+
+    <div style="color:var(--text-muted);font-size:0.72rem;margin-top:1.5rem;text-align:center;opacity:0.6">
+      Affiliated with H3Africa · H3ABioNet · Africa CDC &nbsp;·&nbsp;
+      v4.0 — June 2026 &nbsp;·&nbsp;
+      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit">CC BY 4.0</a>
     </div>
   </footer>
 </section>
@@ -795,7 +882,7 @@
 <script src="js/africa-map.js"></script>
 <script src="js/troubleshoot.js"></script>
 <script src="js/sandbox.js"></script>
-  <script src="js/research-mode.js"></script>
+<script src="js/research-mode.js"></script>
 <script src="js/hpc-training.js"></script>
 <script src="js/repro-hub.js"></script>
 <script src="js/curriculum.js"></script>
@@ -803,7 +890,20 @@
 <script src="js/africa-hub.js"></script>
 <script src="js/workshop.js"></script>
 <script src="js/i18n.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/search.js"></script>
+<script src="js/changelog.js"></script>
+<script src="js/analysis.js"></script>
+<script src="js/router.js"></script>
 <script src="js/app.js"></script>
+<script>
+  /* ── Boot new modules after app.js initialises ── */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (OmicsLab.Changelog) OmicsLab.Changelog.init();
+    if (OmicsLab.Analysis) OmicsLab.Analysis.init();
+    if (OmicsLab.Router)   OmicsLab.Router.init();
+  });
+</script>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-const CACHE = 'omicslab-v6';
+/* v8: added router.js, page routing CSS */
+const CACHE = 'omicslab-v8';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
