@@ -78,6 +78,13 @@ OmicsLab.Router = (function () {
       tagline: 'Simulate a genomic outbreak across Africa — sequence samples, build phylo trees, trace the index case',
       sections: ['outbreak-sim-section'],
     },
+    datasets: {
+      label: 'Datasets',
+      icon: '🗂️',
+      color: '#58a6ff',
+      tagline: 'Browse 20 curated real African omics datasets from NCBI SRA, EBI ENA, and GISAID',
+      sections: ['datasets-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -91,6 +98,7 @@ OmicsLab.Router = (function () {
   const PAGE_TO_GROUP = {
     lab: 'train', learn: 'train',
     research: 'research', africa: 'research',
+    outbreak: 'research', datasets: 'research',
     analysis: 'tools', terminal: 'tools',
     ask: 'ask',
     profile: null, /* user pill is the nav element for profile */
@@ -192,6 +200,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'outbreak' && OmicsLab.Outbreak) {
       OmicsLab.Outbreak.init();
+    }
+    if (page === 'datasets' && OmicsLab.Datasets) {
+      OmicsLab.Datasets.init();
     }
 
     /* Highlight user pill when on profile page */

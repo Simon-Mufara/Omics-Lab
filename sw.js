@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v18: Fix i18n language selector injection (nav-right target) */
-const CACHE = 'omicslab-v18';
+/* v19: Real Dataset Browser — 20 curated African omics datasets */
+const CACHE = 'omicslab-v19';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
