@@ -1,0 +1,543 @@
+/* ═══════════════════════════════════
+   Nexus — Research Communication Hub
+   ═══════════════════════════════════ */
+
+.nx-wrap {
+  height: calc(100vh - 4rem);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nx-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 0px;
+  grid-template-rows: 1fr;
+  height: 100%;
+  overflow: hidden;
+  transition: grid-template-columns 0.2s ease;
+}
+
+.nx-layout.nx-has-thread {
+  grid-template-columns: 220px 1fr 320px;
+}
+
+/* ── Sidebar ── */
+.nx-sidebar {
+  background: #0d1117;
+  border-right: 1px solid #21262d;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.nx-sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.nx-workspace-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #e6edf3;
+  letter-spacing: 0.01em;
+}
+
+.nx-workspace-sub {
+  font-size: 0.7rem;
+  color: #8b949e;
+  margin-top: 0.2rem;
+  padding-left: 1.2rem;
+}
+
+.nx-sidebar-section {
+  padding: 0.75rem 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nx-sidebar-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8b949e;
+  padding: 0 1rem 0.4rem;
+}
+
+.nx-channel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nx-ch-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  color: #8b949e;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  margin: 0 0.25rem;
+  width: calc(100% - 0.5rem);
+  transition: background 0.15s, color 0.15s;
+}
+
+.nx-ch-item:hover {
+  background: #161b22;
+  color: #e6edf3;
+}
+
+.nx-ch-active {
+  background: #1f2a3a;
+  color: #e6edf3;
+}
+
+.nx-ch-icon {
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.nx-ch-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nx-ch-badge {
+  background: #58a6ff;
+  color: #0d1117;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 0 0.3rem;
+  border-radius: 10px;
+  min-width: 1.1rem;
+  text-align: center;
+}
+
+.nx-sidebar-footer {
+  border-top: 1px solid #21262d;
+  padding: 0.75rem 1rem;
+}
+
+.nx-profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nx-profile-info { flex: 1; overflow: hidden; }
+
+.nx-profile-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #e6edf3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nx-profile-status {
+  font-size: 0.65rem;
+  color: #3fb950;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.nx-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3fb950;
+}
+
+/* ── Avatar ── */
+.nx-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #0d1117;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+}
+
+/* ── Main panel ── */
+.nx-main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #161b22;
+}
+
+.nx-channel-header {
+  padding: 0.9rem 1.25rem 0.6rem;
+  border-bottom: 1px solid #21262d;
+  background: #161b22;
+  flex-shrink: 0;
+}
+
+.nx-ch-header-name {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #e6edf3;
+}
+
+.nx-ch-hash {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.nx-ch-header-desc {
+  font-size: 0.73rem;
+  color: #8b949e;
+  margin-top: 0.25rem;
+}
+
+.nx-pinned-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: #e3b341;
+  background: rgba(227, 179, 65, 0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+/* ── Messages list ── */
+.nx-messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem 0.5rem 0;
+  scroll-behavior: smooth;
+}
+
+.nx-empty-ch {
+  text-align: center;
+  color: #8b949e;
+  font-size: 0.8rem;
+  padding: 3rem 1rem;
+}
+
+/* ── Individual message ── */
+.nx-message {
+  display: flex;
+  gap: 0.65rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  position: relative;
+  transition: background 0.1s;
+}
+
+.nx-message:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.nx-message:hover .nx-msg-actions {
+  opacity: 1;
+}
+
+.nx-msg-pinned {
+  border-left: 2px solid #e3b341;
+  background: rgba(227, 179, 65, 0.04);
+}
+
+.nx-msg-body { flex: 1; min-width: 0; }
+
+.nx-msg-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.nx-msg-author {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: #e6edf3;
+}
+
+.nx-msg-role {
+  font-size: 0.68rem;
+  color: #8b949e;
+  background: rgba(139, 148, 158, 0.12);
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+}
+
+.nx-msg-time {
+  font-size: 0.68rem;
+  color: #8b949e;
+  margin-left: auto;
+}
+
+.nx-pinned-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.62rem;
+  color: #e3b341;
+}
+
+.nx-msg-text {
+  font-size: 0.82rem;
+  color: #c9d1d9;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.nx-mention {
+  color: #58a6ff;
+  background: rgba(88, 166, 255, 0.1);
+  padding: 0.05rem 0.2rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.nx-code {
+  font-family: 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  background: #0d1117;
+  color: #f0883e;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  border: 1px solid #21262d;
+}
+
+/* ── Reactions ── */
+.nx-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+.nx-reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: #8b949e;
+  background: rgba(139, 148, 158, 0.1);
+  border: 1px solid rgba(139, 148, 158, 0.2);
+  border-radius: 10px;
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.nx-reaction:hover {
+  background: rgba(88, 166, 255, 0.1);
+  border-color: rgba(88, 166, 255, 0.4);
+  color: #58a6ff;
+}
+
+/* ── Thread button ── */
+.nx-thread-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  color: #58a6ff;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.nx-thread-btn:hover { color: #79c0ff; }
+
+/* ── Message hover actions ── */
+.nx-msg-actions {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.2rem;
+  opacity: 0;
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 0.15rem;
+  transition: opacity 0.15s;
+}
+
+.nx-msg-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #8b949e;
+  border-radius: 4px;
+  transition: background 0.1s, color 0.1s;
+}
+
+.nx-msg-action:hover { background: #21262d; color: #e6edf3; }
+
+/* ── Composer ── */
+.nx-composer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #21262d;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  background: #161b22;
+}
+
+.nx-composer-input {
+  flex: 1;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #e6edf3;
+  font-size: 0.82rem;
+  padding: 0.6rem 0.8rem;
+  resize: none;
+  min-height: 2.4rem;
+  max-height: 8rem;
+  line-height: 1.5;
+  font-family: inherit;
+  transition: border-color 0.15s;
+  overflow-y: auto;
+}
+
+.nx-composer-input:focus {
+  outline: none;
+  border-color: #58a6ff;
+}
+
+.nx-composer-input::placeholder { color: #8b949e; }
+
+.nx-composer-actions { display: flex; align-items: flex-end; }
+
+.nx-send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #238636;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.nx-send-btn:hover { background: #2ea043; }
+
+/* ── Thread panel ── */
+.nx-thread {
+  background: #0d1117;
+  border-left: 1px solid #21262d;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 0;
+  opacity: 0;
+  transition: width 0.2s ease, opacity 0.2s ease;
+}
+
+.nx-thread-open {
+  width: 320px;
+  opacity: 1;
+}
+
+.nx-thread-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #21262d;
+  flex-shrink: 0;
+}
+
+.nx-thread-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #e6edf3;
+}
+
+.nx-thread-close {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0.2rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.nx-thread-close:hover { color: #e6edf3; background: #21262d; }
+
+.nx-thread-parent {
+  border-bottom: 1px solid #21262d;
+  padding: 0.25rem 0;
+  flex-shrink: 0;
+}
+
+.nx-thread-divider {
+  font-size: 0.68rem;
+  color: #8b949e;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nx-thread-replies {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.25rem 0;
+}
+
+.nx-thread-composer {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid #21262d;
+  flex-shrink: 0;
+  align-items: flex-end;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 700px) {
+  .nx-layout { grid-template-columns: 1fr; }
+  .nx-sidebar { display: none; }
+  .nx-thread { display: none; }
+  .nx-wrap { height: calc(100vh - 3.5rem); }
+}

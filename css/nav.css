@@ -105,6 +105,9 @@
 .nav-group:hover .nav-mega-drop,
 .nav-group:focus-within .nav-mega-drop { display: flex; }
 
+/* Tools dropdown is wider — 3 columns */
+.nmd-tools { min-width: 580px; }
+
 /* Dropdown inner layout */
 .nmd-inner { display: flex; gap: 1rem; width: 100%; }
 .nmd-col { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; }
@@ -140,13 +143,16 @@
 .nmd-item:hover { background: rgba(255,255,255,0.06); color: #e6edf3; }
 
 .nmd-icon {
-  font-size: 1.05rem;
   width: 28px; height: 28px;
   border-radius: 7px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   margin-top: 1px;
+  color: #8b949e;
 }
+.nmd-item:hover .nmd-icon { color: #e6edf3; }
+.mob-nav-item-icon { color: #8b949e; }
+.mob-nav-item:hover .mob-nav-item-icon { color: #e6edf3; }
 .nmd-text { display: flex; flex-direction: column; gap: 0.1rem; }
 .nmd-name { font-weight: 600; color: #c9d1d9; font-size: 0.84rem; transition: color 0.1s; }
 .nmd-item:hover .nmd-name { color: #e6edf3; }

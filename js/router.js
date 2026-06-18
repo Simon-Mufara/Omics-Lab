@@ -204,6 +204,20 @@ OmicsLab.Router = (function () {
       tagline: 'Auto-design or validate PCR primer pairs — Wallace Tm, GC%, self-complementarity, dimer checks, SVG alignment diagram, 6 African pathogen gene templates',
       sections: ['primerdesign-section'],
     },
+    nexus: {
+      label: 'Nexus',
+      icon: '💬',
+      color: '#58a6ff',
+      tagline: 'Research communication hub — persistent channels, threaded discussions, @mentions, and pinned resources for African genomics communities',
+      sections: ['nexus-section'],
+    },
+    paperhub: {
+      label: 'PaperHub',
+      icon: '📄',
+      color: '#bc8cff',
+      tagline: 'African genomics research library — browse, search, save, cite, and discuss 10+ landmark papers across WGS, outbreak genomics, and population genetics',
+      sections: ['paperhub-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -219,6 +233,7 @@ OmicsLab.Router = (function () {
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
     analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
+    nexus: 'research', paperhub: 'research',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -373,6 +388,12 @@ OmicsLab.Router = (function () {
     }
     if (page === 'primerdesign' && OmicsLab.PrimerDesign) {
       OmicsLab.PrimerDesign.init();
+    }
+    if (page === 'nexus' && OmicsLab.Nexus) {
+      OmicsLab.Nexus.init();
+    }
+    if (page === 'paperhub' && OmicsLab.PaperHub) {
+      OmicsLab.PaperHub.init();
     }
 
     /* Highlight user pill when on profile page */

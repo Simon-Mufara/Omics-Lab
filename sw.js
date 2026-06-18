@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v37: Primer Design — Wallace Tm, GC%, self-comp, dimer checks, 6 Africa pathogen gene templates */
-const CACHE = 'omicslab-v37';
+/* v38: Nexus (research communication hub) + PaperHub (African genomics research library) */
+const CACHE = 'omicslab-v38';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
