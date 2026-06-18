@@ -68,6 +68,7 @@
   <link rel="stylesheet" href="css/grant.css">
   <link rel="stylesheet" href="css/leaderboard.css">
   <link rel="stylesheet" href="css/debugger.css">
+  <link rel="stylesheet" href="css/alerts.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -241,6 +242,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Grant Generator</span>
                   <span class="nmd-desc">NIH/Wellcome/H3Africa sections · offline</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('alerts')">
+                <span class="nmd-icon" style="background:rgba(249,115,22,0.12)">🚨</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Outbreak Alerts</span>
+                  <span class="nmd-desc">Live disease feed · genomic readiness</span>
                 </span>
               </button>
             </div>
@@ -1050,6 +1058,11 @@
     <!-- Populated by debugger.js on route 'debugger' -->
   </div>
 
+  <!-- African Outbreak Alert Feed -->
+  <div class="reveal" id="alerts-section">
+    <!-- Populated by alerts.js on route 'alerts' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1393,6 +1406,7 @@
 <script src="js/grant.js"></script>
 <script src="js/leaderboard.js"></script>
 <script src="js/debugger.js"></script>
+<script src="js/alerts.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

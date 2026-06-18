@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v27: AI Protocol Debugger — 200+ rule diagnostic engine */
-const CACHE = 'omicslab-v27';
+/* v28: African Outbreak Alert Feed — 12 outbreaks, genomic readiness by country */
+const CACHE = 'omicslab-v28';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

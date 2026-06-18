@@ -134,6 +134,13 @@ OmicsLab.Router = (function () {
       tagline: 'Paste your QC report or describe a failed experiment — 200+ rules return root cause, biology, and corrective actions',
       sections: ['debugger-section'],
     },
+    alerts: {
+      label: 'Outbreak Alerts',
+      icon: '🚨',
+      color: '#f97316',
+      tagline: 'Live African disease outbreak feed with genomic surveillance notes, readiness scores, and direct links to OmicsLab workflows',
+      sections: ['alerts-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -147,7 +154,7 @@ OmicsLab.Router = (function () {
   const PAGE_TO_GROUP = {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
-    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research',
+    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
     analysis: 'tools', terminal: 'tools', debugger: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
@@ -273,6 +280,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'debugger' && OmicsLab.Debugger) {
       OmicsLab.Debugger.init();
+    }
+    if (page === 'alerts' && OmicsLab.Alerts) {
+      OmicsLab.Alerts.init();
     }
 
     /* Highlight user pill when on profile page */
