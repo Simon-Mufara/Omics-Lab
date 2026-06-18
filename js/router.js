@@ -99,6 +99,13 @@ OmicsLab.Router = (function () {
       tagline: '176+ expert answers on omics, tools, African genomics, and careers — fully offline, no API',
       sections: ['mentor-section'],
     },
+    protocols: {
+      label: 'Protocols',
+      icon: '🔬',
+      color: '#f97316',
+      tagline: 'Browse, fork, and remix community-contributed lab protocols from African genomics researchers',
+      sections: ['protocols-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -112,7 +119,7 @@ OmicsLab.Router = (function () {
   const PAGE_TO_GROUP = {
     lab: 'train', learn: 'train', career: 'train',
     research: 'research', africa: 'research',
-    outbreak: 'research', datasets: 'research',
+    outbreak: 'research', datasets: 'research', protocols: 'research',
     analysis: 'tools', terminal: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
@@ -223,6 +230,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'mentor' && OmicsLab.Mentor) {
       OmicsLab.Mentor.init();
+    }
+    if (page === 'protocols' && OmicsLab.Protocols) {
+      OmicsLab.Protocols.init();
     }
 
     /* Highlight user pill when on profile page */

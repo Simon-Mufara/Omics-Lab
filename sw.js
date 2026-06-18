@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v21: Offline AI Mentor — 176+ expert answers, chat UI, fully offline */
-const CACHE = 'omicslab-v21';
+/* v22: Community Protocol Sharing — fork, remix, and create lab protocols */
+const CACHE = 'omicslab-v22';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
