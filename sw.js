@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v29: Phylogenetic Tree Builder — NJ + UPGMA, SVG tree, Newick export */
-const CACHE = 'omicslab-v29';
+/* v30: Peer Review Simulator — 3 virtual reviewers, 40+ evidence quality rules */
+const CACHE = 'omicslab-v30';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

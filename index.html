@@ -70,6 +70,7 @@
   <link rel="stylesheet" href="css/debugger.css">
   <link rel="stylesheet" href="css/alerts.css">
   <link rel="stylesheet" href="css/phylo.css">
+  <link rel="stylesheet" href="css/peerreview.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -250,6 +251,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Outbreak Alerts</span>
                   <span class="nmd-desc">Live disease feed · genomic readiness</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('peerreview')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)">📋</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Peer Review Simulator</span>
+                  <span class="nmd-desc">3 reviewers · 40+ quality indicators</span>
                 </span>
               </button>
             </div>
@@ -1076,6 +1084,11 @@
     <!-- Populated by phylo.js on route 'phylo' -->
   </div>
 
+  <!-- Peer Review Simulator -->
+  <div class="reveal" id="peerreview-section">
+    <!-- Populated by peerreview.js on route 'peerreview' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1335,15 +1348,15 @@
     </div>
     <div class="compare-selectors">
       <div class="compare-sel-wrap">
-        <label class="compare-sel-label">Workflow A</label>
-        <select class="compare-sel" id="compare-sel-1" onchange="OmicsLab.Compare.selectWf(1,this.value)">
+        <label class="compare-sel-label" for="compare-sel-1">Workflow A</label>
+        <select class="compare-sel" id="compare-sel-1" aria-label="Select Workflow A" onchange="OmicsLab.Compare.selectWf(1,this.value)">
           <option value="">— Select workflow —</option>
         </select>
       </div>
       <div class="compare-vs">vs</div>
       <div class="compare-sel-wrap">
-        <label class="compare-sel-label">Workflow B</label>
-        <select class="compare-sel" id="compare-sel-2" onchange="OmicsLab.Compare.selectWf(2,this.value)">
+        <label class="compare-sel-label" for="compare-sel-2">Workflow B</label>
+        <select class="compare-sel" id="compare-sel-2" aria-label="Select Workflow B" onchange="OmicsLab.Compare.selectWf(2,this.value)">
           <option value="">— Select workflow —</option>
         </select>
       </div>
@@ -1421,6 +1434,7 @@
 <script src="js/debugger.js"></script>
 <script src="js/alerts.js"></script>
 <script src="js/phylo.js"></script>
+<script src="js/peerreview.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

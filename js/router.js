@@ -148,6 +148,13 @@ OmicsLab.Router = (function () {
       tagline: 'Build Neighbor-Joining and UPGMA phylogenetic trees from FASTA sequences — SVG tree, distance heatmap, Newick export, all offline',
       sections: ['phylo-section'],
     },
+    peerreview: {
+      label: 'Peer Review Simulator',
+      icon: '📋',
+      color: '#bc8cff',
+      tagline: '3 virtual reviewers — biostatistician, genomics methods specialist, African ethics expert — give rubric-based critiques against 40+ evidence quality indicators',
+      sections: ['peerreview-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -162,7 +169,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', peerreview: 'research',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -293,6 +300,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'phylo' && OmicsLab.Phylo) {
       OmicsLab.Phylo.init();
+    }
+    if (page === 'peerreview' && OmicsLab.PeerReview) {
+      OmicsLab.PeerReview.init();
     }
 
     /* Highlight user pill when on profile page */
