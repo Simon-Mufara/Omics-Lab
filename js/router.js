@@ -120,6 +120,13 @@ OmicsLab.Router = (function () {
       tagline: 'Generate NIH Fogarty, Wellcome Trust, and H3Africa grant sections — Aims, Methods, Budget, Ethics — fully offline',
       sections: ['grant-section'],
     },
+    leaderboard: {
+      label: 'Leaderboard',
+      icon: '🏆',
+      color: '#e3b341',
+      tagline: 'Global rankings, streaks, and a world map of 80+ OmicsLab learners across 30+ countries',
+      sections: ['leaderboard-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -131,7 +138,7 @@ OmicsLab.Router = (function () {
 
   /* Maps each page to its primary nav group for active-state highlighting */
   const PAGE_TO_GROUP = {
-    lab: 'train', learn: 'train', career: 'train',
+    lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research',
     analysis: 'tools', terminal: 'tools',
@@ -253,6 +260,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'grant' && OmicsLab.Grant) {
       OmicsLab.Grant.init();
+    }
+    if (page === 'leaderboard' && OmicsLab.Leaderboard) {
+      OmicsLab.Leaderboard.init();
     }
 
     /* Highlight user pill when on profile page */

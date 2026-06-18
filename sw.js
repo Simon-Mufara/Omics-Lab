@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v25: Grant Text Generator — NIH/Wellcome/H3Africa sections offline */
-const CACHE = 'omicslab-v25';
+/* v26: Leaderboard + Global Cohort Map — 80-learner ranked world view */
+const CACHE = 'omicslab-v26';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
