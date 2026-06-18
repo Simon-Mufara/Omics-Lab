@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v31: Expression Visualiser — volcano plot + heatmap + DE table from DESeq2/edgeR output */
-const CACHE = 'omicslab-v31';
+/* v32: African Genomics Journal Club — 20+ landmark papers with plain summaries */
+const CACHE = 'omicslab-v32';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

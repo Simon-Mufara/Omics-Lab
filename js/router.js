@@ -162,6 +162,13 @@ OmicsLab.Router = (function () {
       tagline: 'Paste DESeq2 or edgeR output — get a volcano plot, top-gene heatmap, and ranked DE table instantly, all offline',
       sections: ['heatmap-section'],
     },
+    journalclub: {
+      label: 'Journal Club',
+      icon: '📰',
+      color: '#3fb950',
+      tagline: '20+ landmark African genomics papers with plain-language summaries, key findings, Africa context, and discussion questions',
+      sections: ['journalclub-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -176,7 +183,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -313,6 +320,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'heatmap' && OmicsLab.Heatmap) {
       OmicsLab.Heatmap.init();
+    }
+    if (page === 'journalclub' && OmicsLab.JournalClub) {
+      OmicsLab.JournalClub.init();
     }
 
     /* Highlight user pill when on profile page */
