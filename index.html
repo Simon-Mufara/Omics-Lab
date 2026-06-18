@@ -82,6 +82,9 @@
   <link rel="stylesheet" href="css/paperhub.css">
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/teams.css">
+  <link rel="stylesheet" href="css/pubmed.css">
+  <link rel="stylesheet" href="css/gene-lookup.css">
+  <link rel="stylesheet" href="css/protein-viewer.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -299,6 +302,13 @@
                   <span class="nmd-desc">African genomics research library · cite</span>
                 </span>
               </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pubmed')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">PubMed Search</span>
+                  <span class="nmd-desc">36M citations · Africa filter · live</span>
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -381,6 +391,20 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Citation Manager</span>
                   <span class="nmd-desc">APA · Vancouver · BibTeX · RIS</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('gene-lookup')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Gene Lookup</span>
+                  <span class="nmd-desc">Ensembl · transcripts · phenotypes · live</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('protein')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Protein Viewer</span>
+                  <span class="nmd-desc">AlphaFold · pLDDT chart · 3D structure</span>
                 </span>
               </button>
             </div>
@@ -1221,6 +1245,21 @@
     <!-- Populated by teams.js on route 'teams' -->
   </div>
 
+  <!-- PubMed Live Search -->
+  <div class="reveal" id="pubmed-section">
+    <!-- Populated by pubmed.js on route 'pubmed' -->
+  </div>
+
+  <!-- Gene Lookup (Ensembl) -->
+  <div class="reveal" id="gene-lookup-section">
+    <!-- Populated by gene-lookup.js on route 'gene-lookup' -->
+  </div>
+
+  <!-- Protein Viewer (AlphaFold) -->
+  <div class="reveal" id="protein-section">
+    <!-- Populated by protein-viewer.js on route 'protein' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1578,6 +1617,9 @@
 <script src="js/paperhub.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/teams.js"></script>
+<script src="js/pubmed.js"></script>
+<script src="js/gene-lookup.js"></script>
+<script src="js/protein-viewer.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

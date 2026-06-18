@@ -91,3 +91,20 @@
 .vi-acmg-legend { display: flex; flex-direction: column; gap: .3rem; margin-bottom: .6rem; }
 .vi-acmg-legend-row { display: flex; align-items: flex-start; gap: .5rem; font-size: .72rem; color: #8b949e; }
 .vi-acmg-disclaimer { font-size: .7rem; color: #6e7681; background: rgba(227,179,65,.06); border: 1px solid rgba(227,179,65,.15); border-radius: 6px; padding: .4rem .65rem; line-height: 1.45; margin-top: .3rem; }
+
+/* ── gnomAD live badge ── */
+.vi-live-badge { display: inline-block; padding: .1rem .4rem; border-radius: 20px; font-size: .66rem; font-weight: 600; margin-left: .4rem; background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.25); color: #58a6ff; vertical-align: middle; }
+.vi-live-ok  { background: rgba(63,185,80,.1); border-color: rgba(63,185,80,.3); color: #3fb950; }
+.vi-live-err { background: rgba(255,107,107,.08); border-color: rgba(255,107,107,.2); color: #ff6b6b; }
+
+/* ── gnomAD population chart ── */
+.vi-af-afr { color: #3fb950 !important; font-weight: 700; }
+.vi-pop-chart { display: flex; flex-direction: column; gap: .28rem; }
+.vi-pop-row { display: grid; grid-template-columns: 36px 1fr 52px; align-items: center; gap: .4rem; font-size: .72rem; }
+.vi-pop-label { color: #8b949e; font-weight: 600; }
+.vi-pop-bar-wrap { background: #21262d; border-radius: 3px; height: 6px; overflow: hidden; }
+.vi-pop-bar { height: 100%; border-radius: 3px; transition: width .4s ease; }
+.vi-pop-val { color: #c9d1d9; text-align: right; font-family: 'JetBrains Mono', monospace; }
+.vi-gnomad-link-row { margin-top: .6rem; }
+.vi-gnomad-link { font-size: .72rem; color: #58a6ff; text-decoration: none; }
+.vi-gnomad-link:hover { text-decoration: underline; }

@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v40: Emoji fixes, auth OAuth UX, Teams Article Analyser tab */
-const CACHE = 'omicslab-v40';
+/* v41: PubMed live search, Gene Lookup (Ensembl), Protein Viewer (AlphaFold), gnomAD live in Variant Interpreter */
+const CACHE = 'omicslab-v41';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

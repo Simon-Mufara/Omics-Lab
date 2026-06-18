@@ -1,0 +1,383 @@
+/* ═══════════════════════════════════════════════════════
+   Gene Lookup — styles
+   ═══════════════════════════════════════════════════════ */
+
+.gl-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.gl-header {
+  margin-bottom: 1.5rem;
+}
+
+.gl-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #e6edf3;
+}
+
+.gl-header-sub {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+/* ── Search ── */
+.gl-search-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.gl-search-input {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #e6edf3;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.gl-search-input:focus {
+  border-color: #58a6ff;
+}
+
+.gl-search-input::placeholder {
+  color: #484f58;
+}
+
+.gl-search-btn {
+  padding: 0.55rem 1.1rem;
+  background: #238636;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.gl-search-btn:hover {
+  background: #2ea043;
+}
+
+/* ── Africa gene chips ── */
+.gl-africa-genes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.gl-africa-label {
+  font-size: 0.75rem;
+  color: #484f58;
+  margin-right: 0.25rem;
+}
+
+.gl-gene-chip {
+  padding: 0.25rem 0.7rem;
+  background: rgba(63, 185, 80, 0.08);
+  border: 1px solid rgba(63, 185, 80, 0.25);
+  border-radius: 20px;
+  color: #3fb950;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+
+.gl-gene-chip:hover {
+  background: rgba(63, 185, 80, 0.18);
+  border-color: #3fb950;
+}
+
+/* ── Gene card ── */
+.gl-gene-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gl-gene-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.gl-gene-symbol {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #e6edf3;
+  letter-spacing: -0.02em;
+}
+
+.gl-gene-name {
+  font-size: 0.82rem;
+  color: #8b949e;
+  margin-top: 0.2rem;
+  max-width: 560px;
+}
+
+.gl-gene-biotype {
+  padding: 0.25rem 0.65rem;
+  background: rgba(88, 166, 255, 0.1);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: 20px;
+  font-size: 0.72rem;
+  color: #58a6ff;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* ── Coordinates grid ── */
+.gl-gene-coords {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.gl-coord-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.gl-coord-label {
+  font-size: 0.68rem;
+  color: #484f58;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gl-coord-value {
+  font-size: 0.82rem;
+  color: #c9d1d9;
+  font-weight: 600;
+}
+
+.gl-coord-value.gl-mono {
+  font-family: 'Cascadia Code', 'Fira Mono', monospace;
+  font-size: 0.75rem;
+}
+
+/* ── External links ── */
+.gl-gene-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.gl-ext-link {
+  padding: 0.28rem 0.65rem;
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  font-size: 0.72rem;
+  color: #8b949e;
+  text-decoration: none;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.gl-ext-link:hover {
+  color: #e6edf3;
+  border-color: #58a6ff;
+  background: rgba(88, 166, 255, 0.07);
+}
+
+.gl-protein-btn {
+  background: rgba(88, 166, 255, 0.08);
+  border-color: rgba(88, 166, 255, 0.3);
+  color: #58a6ff;
+}
+
+/* ── Sections ── */
+.gl-section {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.gl-section:last-child {
+  border-bottom: none;
+}
+
+.gl-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e6edf3;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Transcripts ── */
+.gl-transcript-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.gl-transcript-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.gl-mono {
+  font-family: 'Cascadia Code', 'Fira Mono', monospace;
+  font-size: 0.75rem;
+  color: #c9d1d9;
+}
+
+.gl-biotype-tag {
+  padding: 0.1rem 0.45rem;
+  background: #21262d;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  color: #8b949e;
+}
+
+.gl-tx-len {
+  font-size: 0.72rem;
+  color: #484f58;
+  margin-left: auto;
+}
+
+/* ── Phenotypes ── */
+.gl-phenotype-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.gl-phenotype-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.gl-phen-name {
+  color: #c9d1d9;
+  flex: 1;
+}
+
+.gl-phen-source {
+  font-size: 0.68rem;
+  color: #484f58;
+  flex-shrink: 0;
+}
+
+/* ── Variants table ── */
+.gl-variant-table-wrap {
+  overflow-x: auto;
+}
+
+.gl-variant-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.gl-variant-table th {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  color: #484f58;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #21262d;
+  white-space: nowrap;
+}
+
+.gl-variant-table td {
+  padding: 0.35rem 0.6rem;
+  color: #c9d1d9;
+  border-bottom: 1px solid #161b22;
+}
+
+.gl-snp-link {
+  color: #58a6ff;
+  text-decoration: none;
+  font-family: 'Cascadia Code', 'Fira Mono', monospace;
+}
+
+.gl-snp-link:hover {
+  text-decoration: underline;
+}
+
+/* ── States ── */
+.gl-loading,
+.gl-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  font-size: 0.85rem;
+  color: #484f58;
+}
+
+.gl-error {
+  color: #ff6b6b;
+  font-size: 0.82rem;
+}
+
+.gl-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #30363d;
+  border-top-color: #3fb950;
+  border-radius: 50%;
+  animation: gl-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes gl-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .gl-search-row {
+    flex-direction: column;
+  }
+
+  .gl-gene-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .gl-gene-biotype {
+    margin-left: 0;
+    align-self: flex-start;
+  }
+
+  .gl-gene-coords {
+    grid-template-columns: 1fr 1fr;
+  }
+}

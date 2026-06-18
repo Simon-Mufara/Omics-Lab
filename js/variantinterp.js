@@ -254,7 +254,7 @@ OmicsLab.VariantInterp = (function () {
           </div>
 
           <!-- Population frequency card -->
-          <div class="vi-card">
+          <div class="vi-card" id="vi-pop-freq-card">
             <div class="vi-card-title">Population Frequency</div>
             ${afrAf !== null && afrAf !== undefined ? `
               <div class="vi-af-row">
@@ -308,6 +308,113 @@ OmicsLab.VariantInterp = (function () {
 
         </div>
       </div>`;
+
+    /* Async gnomAD live lookup — only when we have GRCh38 coordinates */
+    if (parsed && parsed.chrom && parsed.pos && parsed.ref && parsed.alt) {
+      _fetchGnomAD(parsed);
+    }
+  }
+
+  /* ─── gnomAD GraphQL live lookup ─── */
+  async function _fetchGnomAD(parsed) {
+    const card = document.getElementById('vi-pop-freq-card');
+    if (!card) return;
+
+    /* Show "fetching live" badge */
+    const titleEl = card.querySelector('.vi-card-title');
+    if (titleEl) titleEl.innerHTML = 'Population Frequency <span class="vi-live-badge">fetching live…</span>';
+
+    const variantId = `${parsed.chrom}-${parsed.pos}-${parsed.ref}-${parsed.alt}`;
+    const query = `{
+      variant(variantId: "${variantId}", dataset: gnomad_r4) {
+        variantId
+        genome {
+          af
+          populations { id ac an af }
+        }
+        exome {
+          af
+          populations { id ac an af }
+        }
+      }
+    }`;
+
+    try {
+      const res = await fetch('https://gnomad.broadinstitute.org/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+      if (!res.ok) throw new Error('gnomAD API ' + res.status);
+      const data = await res.json();
+      const v = data?.data?.variant;
+      if (!v) throw new Error('Not in gnomAD r4');
+
+      /* Prefer genome; fall back to exome */
+      const source = v.genome?.populations?.length ? v.genome : v.exome;
+      const globalAf = source?.af ?? null;
+      const pops = source?.populations || [];
+
+      /* AFR subpopulation */
+      const afr  = pops.find(p => p.id === 'afr') || pops.find(p => p.id?.startsWith('afr'));
+      const afrAf = afr?.af ?? null;
+
+      /* Population bar chart */
+      const POP_ORDER = [
+        { id: 'afr', label: 'AFR', color: '#3fb950' },
+        { id: 'sas', label: 'SAS', color: '#58a6ff' },
+        { id: 'eas', label: 'EAS', color: '#bc8cff' },
+        { id: 'eur', label: 'EUR', color: '#e3b341' },
+        { id: 'amr', label: 'AMR', color: '#f97316' },
+        { id: 'mid', label: 'MID', color: '#ff7b93' },
+        { id: 'asj', label: 'ASJ', color: '#79c0ff' },
+        { id: 'oth', label: 'OTH', color: '#484f58' },
+      ];
+
+      const chartRows = POP_ORDER.map(p => {
+        const pop = pops.find(x => x.id === p.id);
+        if (!pop || !pop.an) return '';
+        const pct = Math.min(pop.af * 2000, 100); /* scale so 0.05 = full bar */
+        return `
+          <div class="vi-pop-row">
+            <span class="vi-pop-label">${p.label}</span>
+            <div class="vi-pop-bar-wrap">
+              <div class="vi-pop-bar" style="width:${pct.toFixed(1)}%;background:${p.color}"></div>
+            </div>
+            <span class="vi-pop-val">${pop.af < 0.0001 && pop.af > 0 ? pop.af.toExponential(1) : pop.af.toPrecision(2)}</span>
+          </div>`;
+      }).join('');
+
+      const ba1Note = afrAf !== null && afrAf > 0.05
+        ? '<div class="vi-af-note af-common">Common in AFR (>5%) — BA1 applies</div>'
+        : afrAf !== null && afrAf <= 0.001
+          ? '<div class="vi-af-note af-rare">Rare in AFR — PM2 supportive</div>'
+          : '';
+
+      card.innerHTML = `
+        <div class="vi-card-title">
+          Population Frequency
+          <span class="vi-live-badge vi-live-ok">gnomAD r4 live</span>
+        </div>
+        ${afrAf !== null ? `
+          <div class="vi-af-row">
+            <span class="vi-af-pop vi-af-afr">AFR (gnomAD r4)</span>
+            <span class="vi-af-val">${afrAf.toPrecision(3)}</span>
+          </div>` : '<div class="vi-af-na">AFR frequency not available</div>'}
+        ${ba1Note}
+        ${globalAf !== null ? `
+          <div class="vi-af-row" style="margin-top:.6rem">
+            <span class="vi-af-pop">Global AF</span>
+            <span class="vi-af-val">${globalAf.toPrecision(3)}</span>
+          </div>` : ''}
+        ${chartRows ? `<div class="vi-pop-chart" style="margin-top:.75rem">${chartRows}</div>` : ''}
+        <div class="vi-gnomad-link-row">
+          <a class="vi-gnomad-link" href="https://gnomad.broadinstitute.org/variant/${variantId}" target="_blank" rel="noopener">View on gnomAD</a>
+        </div>`;
+
+    } catch (err) {
+      if (titleEl) titleEl.innerHTML = 'Population Frequency <span class="vi-live-badge vi-live-err">gnomAD unavailable</span>';
+    }
   }
 
   /* ─── Example load ─── */

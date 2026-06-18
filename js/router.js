@@ -232,6 +232,27 @@ OmicsLab.Router = (function () {
       tagline: 'Your learning journey, badges, curriculum progress, and personalised recommendations',
       sections: ['profile-section'],
     },
+    pubmed: {
+      label: 'PubMed',
+      icon: '📰',
+      color: '#58a6ff',
+      tagline: 'Live PubMed search — 36M citations with Africa-first filter, save to PaperHub, open in Article Analyser',
+      sections: ['pubmed-section'],
+    },
+    'gene-lookup': {
+      label: 'Gene Lookup',
+      icon: '🔍',
+      color: '#3fb950',
+      tagline: 'Ensembl gene annotation — coordinates, transcripts, phenotypes, cross-links to gnomAD, AlphaFold, ClinVar',
+      sections: ['gene-lookup-section'],
+    },
+    protein: {
+      label: 'Protein Viewer',
+      icon: '🧬',
+      color: '#bc8cff',
+      tagline: 'AlphaFold structure predictions — pLDDT confidence chart, 3D viewer, PDB/mmCIF download',
+      sections: ['protein-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -241,6 +262,7 @@ OmicsLab.Router = (function () {
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
     analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
     nexus: 'research', paperhub: 'research', teams: 'research',
+    pubmed: 'research', 'gene-lookup': 'tools', protein: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -404,6 +426,15 @@ OmicsLab.Router = (function () {
     }
     if (page === 'teams' && OmicsLab.Teams) {
       OmicsLab.Teams.init();
+    }
+    if (page === 'pubmed' && OmicsLab.PubMed) {
+      OmicsLab.PubMed.init();
+    }
+    if (page === 'gene-lookup' && OmicsLab.GeneLookup) {
+      OmicsLab.GeneLookup.init();
+    }
+    if (page === 'protein' && OmicsLab.ProteinViewer) {
+      OmicsLab.ProteinViewer.init();
     }
 
     /* Highlight user pill when on profile page */

@@ -1,0 +1,376 @@
+/* ═══════════════════════════════════════════════════════
+   Protein Viewer (AlphaFold) — styles
+   ═══════════════════════════════════════════════════════ */
+
+.pv-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.pv-header {
+  margin-bottom: 1.5rem;
+}
+
+.pv-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #e6edf3;
+}
+
+.pv-header-sub {
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+/* ── Search row ── */
+.pv-search-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pv-search-input {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #e6edf3;
+  font-size: 0.85rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 0;
+}
+
+.pv-gene-input {
+  flex: 0 0 180px;
+}
+
+.pv-search-input:focus {
+  border-color: #58a6ff;
+}
+
+.pv-search-input::placeholder {
+  color: #484f58;
+}
+
+.pv-search-btn {
+  padding: 0.55rem 1.1rem;
+  background: #238636;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.pv-search-btn:hover {
+  background: #2ea043;
+}
+
+/* ── Pre-loaded proteins ── */
+.pv-preloaded {
+  margin-bottom: 1.5rem;
+}
+
+.pv-preloaded-label {
+  font-size: 0.75rem;
+  color: #484f58;
+  margin-bottom: 0.5rem;
+}
+
+.pv-preloaded-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pv-protein-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: inherit;
+}
+
+.pv-protein-chip:hover {
+  background: rgba(88, 166, 255, 0.07);
+  border-color: #58a6ff;
+}
+
+.pv-chip-gene {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #58a6ff;
+}
+
+.pv-chip-acc {
+  font-size: 0.66rem;
+  color: #484f58;
+  font-family: 'Cascadia Code', 'Fira Mono', monospace;
+}
+
+/* ── Protein card ── */
+.pv-protein-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pv-protein-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.25rem 1rem;
+  border-bottom: 1px solid #21262d;
+  gap: 1rem;
+}
+
+.pv-protein-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e6edf3;
+  line-height: 1.4;
+}
+
+.pv-protein-gene {
+  font-size: 0.8rem;
+  color: #8b949e;
+  margin-top: 0.2rem;
+}
+
+.pv-protein-gene strong {
+  color: #3fb950;
+}
+
+.pv-protein-meta {
+  font-size: 0.75rem;
+  color: #484f58;
+  margin-top: 0.3rem;
+}
+
+.pv-protein-meta span + span {
+  margin-left: 0;
+}
+
+.pv-af-link {
+  padding: 0.35rem 0.8rem;
+  background: rgba(88, 166, 255, 0.08);
+  border: 1px solid rgba(88, 166, 255, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #58a6ff;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.pv-af-link:hover {
+  background: rgba(88, 166, 255, 0.16);
+}
+
+.pv-function {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.8rem;
+  color: #8b949e;
+  line-height: 1.65;
+  border-bottom: 1px solid #21262d;
+}
+
+/* ── pLDDT chart ── */
+.pv-chart-wrap {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.pv-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+  font-size: 0.8rem;
+  color: #e6edf3;
+  font-weight: 600;
+}
+
+.pv-avg-score {
+  font-size: 0.75rem;
+  color: #8b949e;
+  font-weight: 400;
+}
+
+.pv-avg-score strong {
+  color: #e6edf3;
+}
+
+.pv-chart-svg {
+  display: block;
+  width: 100%;
+  height: 120px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.pv-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+
+.pv-no-chart {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #484f58;
+}
+
+/* ── 3D viewer ── */
+.pv-3d-section {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #21262d;
+}
+
+.pv-3d-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin-bottom: 0.75rem;
+}
+
+.pv-3d-frame-wrap {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #30363d;
+  background: #0d1117;
+}
+
+.pv-3d-frame {
+  display: block;
+  width: 100%;
+  height: 460px;
+  border: none;
+}
+
+.pv-3d-note {
+  font-size: 0.72rem;
+  color: #484f58;
+  margin-top: 0.5rem;
+}
+
+/* ── Downloads ── */
+.pv-download-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.9rem 1.25rem;
+}
+
+.pv-dl-btn {
+  padding: 0.38rem 0.85rem;
+  background: #238636;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.pv-dl-btn:hover {
+  background: #2ea043;
+}
+
+.pv-dl-btn.pv-dl-secondary {
+  background: #21262d;
+  color: #8b949e;
+  border: 1px solid #30363d;
+}
+
+.pv-dl-btn.pv-dl-secondary:hover {
+  color: #e6edf3;
+  border-color: #58a6ff;
+}
+
+/* ── States ── */
+.pv-loading,
+.pv-empty,
+.pv-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  font-size: 0.85rem;
+  color: #484f58;
+  text-align: center;
+}
+
+.pv-error {
+  flex-direction: row;
+  color: #ff6b6b;
+  font-size: 0.82rem;
+}
+
+.pv-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #30363d;
+  border-top-color: #58a6ff;
+  border-radius: 50%;
+  animation: pv-spin 0.7s linear infinite;
+}
+
+@keyframes pv-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 650px) {
+  .pv-search-row {
+    flex-wrap: wrap;
+  }
+
+  .pv-gene-input {
+    flex: 1 0 120px;
+  }
+
+  .pv-search-btn {
+    width: 100%;
+  }
+
+  .pv-protein-header {
+    flex-direction: column;
+  }
+
+  .pv-3d-frame {
+    height: 320px;
+  }
+
+  .pv-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
