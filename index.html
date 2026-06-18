@@ -62,6 +62,7 @@
   <link rel="stylesheet" href="css/outbreak.css">
   <link rel="stylesheet" href="css/datasets.css">
   <link rel="stylesheet" href="css/career.css">
+  <link rel="stylesheet" href="css/mentor.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -246,8 +247,34 @@
         </div>
       </div>
 
-      <!-- Ask (no dropdown) -->
-      <button class="nav-group-btn" data-group="ask" onclick="OmicsLab.Router.navigate('ask')">Ask</button>
+      <!-- Ask / Mentor (no dropdown) -->
+      <div class="nav-group" id="ng-ask">
+        <button class="nav-group-btn" data-group="ask" aria-haspopup="true">
+          Ask
+          <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-mega-drop" role="menu">
+          <div class="nmd-inner">
+            <div class="nmd-col">
+              <div class="nmd-label">Knowledge</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ask')">
+                <span class="nmd-icon" style="background:rgba(255,107,107,0.1)">💬</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Q&amp;A Browser</span>
+                  <span class="nmd-desc">55+ answers · search by category</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('mentor')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)">🧬</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">AI Mentor</span>
+                  <span class="nmd-desc">176+ answers · chat interface · offline</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </nav>
 
@@ -938,6 +965,11 @@
     <!-- Populated by career.js on route 'career' -->
   </div>
 
+  <!-- Offline AI Mentor -->
+  <div class="reveal" id="mentor-section">
+    <!-- Populated by mentor.js on route 'mentor' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1275,6 +1307,7 @@
 <script src="js/outbreak.js"></script>
 <script src="js/datasets.js"></script>
 <script src="js/career.js"></script>
+<script src="js/mentor.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

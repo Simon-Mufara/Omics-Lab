@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v20: Career Pathfinder — 5-question quiz, personalised genomics career roadmap */
-const CACHE = 'omicslab-v20';
+/* v21: Offline AI Mentor — 176+ expert answers, chat UI, fully offline */
+const CACHE = 'omicslab-v21';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
