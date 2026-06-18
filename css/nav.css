@@ -563,3 +563,111 @@ body { font-family: 'Sora', 'Noto Sans', 'Noto Sans Ethiopic', 'Inter', system-u
 }
 .voice-speak-btn:hover { background: rgba(63,185,80,0.2); border-color: rgba(63,185,80,0.45); }
 .voice-speak-btn svg { pointer-events: none; }
+
+/* ── Mic denied panel ── */
+.vc-mic-denied-panel {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 320px;
+  background: #161b22;
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  border-radius: 12px;
+  padding: 1.25rem;
+  z-index: 8000;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: vc-slide-up 0.2s ease;
+}
+
+@keyframes vc-slide-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.vc-denied-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 107, 107, 0.1);
+  border: 1px solid rgba(255, 107, 107, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.vc-denied-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  margin-bottom: 0.75rem;
+}
+
+.vc-denied-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.vc-denied-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: #c9d1d9;
+  line-height: 1.5;
+}
+
+.vc-denied-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #21262d;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #58a6ff;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.vc-denied-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.vc-denied-retry {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: #238636;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.vc-denied-retry:hover { background: #2ea043; }
+
+.vc-denied-close {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #8b949e;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.vc-denied-close:hover { background: #21262d; color: #c9d1d9; }

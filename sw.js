@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v38: Nexus (research communication hub) + PaperHub (African genomics research library) */
-const CACHE = 'omicslab-v38';
+/* v39: Auth (email+OAuth), Teams (video meetings), mic denial fix, backend API spec */
+const CACHE = 'omicslab-v39';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

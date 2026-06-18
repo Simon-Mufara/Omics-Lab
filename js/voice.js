@@ -249,11 +249,16 @@ OmicsLab.VoiceControl = (function () {
     };
 
     r.onerror = e => {
-      const msg = e.error === 'no-speech' ? 'No speech detected' :
-                  e.error === 'not-allowed' ? 'Microphone access denied' :
-                  'Voice error: ' + e.error;
-      _toast(msg, true);
       _setListening(false);
+      if (e.error === 'no-speech') {
+        _toast('No speech detected — try again', true);
+        return;
+      }
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        _showMicDeniedPanel();
+        return;
+      }
+      _toast('Voice error: ' + e.error, true);
     };
 
     r.onend = () => {
@@ -279,6 +284,43 @@ OmicsLab.VoiceControl = (function () {
     } else {
       _toast('Command not recognised: "' + transcript + '" — say "help" for a list', true);
     }
+  }
+
+  /* ─── Mic denied panel ─── */
+  function _showMicDeniedPanel() {
+    let panel = document.getElementById('vc-mic-denied');
+    if (panel) { panel.style.display = ''; return; }
+
+    panel = document.createElement('div');
+    panel.id = 'vc-mic-denied';
+    panel.className = 'vc-mic-denied-panel';
+
+    const ua = navigator.userAgent;
+    const isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua);
+    const isFF = /Firefox/i.test(ua);
+    const steps = isSafari
+      ? ['Open <strong>Safari → Settings → Websites → Microphone</strong>.', 'Set this site to <strong>Allow</strong>.', 'Reload the page, then click the microphone button again.']
+      : isFF
+      ? ['Click the <strong>microphone icon</strong> in the Firefox address bar.', 'Select <strong>Allow</strong> for this website.', 'Click the microphone button below to try again.']
+      : ['Click the <strong>camera/mic icon</strong> on the right of your address bar.', 'Select <strong>Always allow</strong> for microphone.', 'Click Try again below — no reload needed.'];
+
+    panel.innerHTML = `
+      <div class="vc-denied-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      </div>
+      <div class="vc-denied-title">Microphone access denied</div>
+      <div class="vc-denied-steps">
+        ${steps.map((s, i) => `<div class="vc-denied-step"><span class="vc-denied-num">${i+1}</span><span>${s}</span></div>`).join('')}
+      </div>
+      <div class="vc-denied-btns">
+        <button class="vc-denied-retry" onclick="document.getElementById('vc-mic-denied').style.display='none'; OmicsLab.Voice && OmicsLab.Voice.start()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-5.57"/></svg>
+          Try again
+        </button>
+        <button class="vc-denied-close" onclick="document.getElementById('vc-mic-denied').remove()">Dismiss</button>
+      </div>`;
+
+    document.body.appendChild(panel);
   }
 
   /* ─── Start / stop ─── */

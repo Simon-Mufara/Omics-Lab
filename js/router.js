@@ -211,6 +211,13 @@ OmicsLab.Router = (function () {
       tagline: 'Research communication hub — persistent channels, threaded discussions, @mentions, and pinned resources for African genomics communities',
       sections: ['nexus-section'],
     },
+    teams: {
+      label: 'Teams',
+      icon: '📹',
+      color: '#58a6ff',
+      tagline: 'Research video meetings — join rooms, share screens, raise hands, and collaborate live with the African genomics network',
+      sections: ['teams-section'],
+    },
     paperhub: {
       label: 'PaperHub',
       icon: '📄',
@@ -233,7 +240,7 @@ OmicsLab.Router = (function () {
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
     analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
-    nexus: 'research', paperhub: 'research',
+    nexus: 'research', paperhub: 'research', teams: 'research',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -394,6 +401,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'paperhub' && OmicsLab.PaperHub) {
       OmicsLab.PaperHub.init();
+    }
+    if (page === 'teams' && OmicsLab.Teams) {
+      OmicsLab.Teams.init();
     }
 
     /* Highlight user pill when on profile page */
