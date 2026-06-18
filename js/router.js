@@ -106,6 +106,13 @@ OmicsLab.Router = (function () {
       tagline: 'Browse, fork, and remix community-contributed lab protocols from African genomics researchers',
       sections: ['protocols-section'],
     },
+    collab: {
+      label: 'Collaborate',
+      icon: '🤝',
+      color: '#58a6ff',
+      tagline: 'Real-time WebRTC peer-to-peer lab sessions — work with colleagues live, no server required',
+      sections: ['collab-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -119,7 +126,7 @@ OmicsLab.Router = (function () {
   const PAGE_TO_GROUP = {
     lab: 'train', learn: 'train', career: 'train',
     research: 'research', africa: 'research',
-    outbreak: 'research', datasets: 'research', protocols: 'research',
+    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research',
     analysis: 'tools', terminal: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
@@ -233,6 +240,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'protocols' && OmicsLab.Protocols) {
       OmicsLab.Protocols.init();
+    }
+    if (page === 'collab' && OmicsLab.Collab) {
+      OmicsLab.Collab.init();
     }
 
     /* Highlight user pill when on profile page */

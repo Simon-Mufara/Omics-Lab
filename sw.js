@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v22: Community Protocol Sharing — fork, remix, and create lab protocols */
-const CACHE = 'omicslab-v22';
+/* v23: WebRTC Live Collaboration — peer-to-peer co-lab sessions */
+const CACHE = 'omicslab-v23';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

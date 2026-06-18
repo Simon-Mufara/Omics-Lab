@@ -64,6 +64,7 @@
   <link rel="stylesheet" href="css/career.css">
   <link rel="stylesheet" href="css/mentor.css">
   <link rel="stylesheet" href="css/protocols.css">
+  <link rel="stylesheet" href="css/collab.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -216,6 +217,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Protocol Sharing</span>
                   <span class="nmd-desc">Community protocols · fork &amp; remix</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('collab')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.08)">🤝</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Live Collaboration</span>
+                  <span class="nmd-desc">WebRTC co-lab sessions · no server</span>
                 </span>
               </button>
             </div>
@@ -392,6 +400,21 @@
           <span class="mob-nav-item-text">
             <span class="mob-nav-item-name">Pipeline Terminal</span>
             <span class="mob-nav-item-desc">22 tools simulated · GitHub Codespace</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Collaborate -->
+      <div class="mob-nav-section">
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('collab');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)">🤝</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Live Collaboration</span>
+            <span class="mob-nav-item-desc">WebRTC peer sessions · no server needed</span>
           </span>
         </button>
       </div>
@@ -983,6 +1006,11 @@
     <!-- Populated by protocols.js on route 'protocols' -->
   </div>
 
+  <!-- Live Collaboration -->
+  <div class="reveal" id="collab-section">
+    <!-- Populated by collab.js on route 'collab' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1322,6 +1350,7 @@
 <script src="js/career.js"></script>
 <script src="js/mentor.js"></script>
 <script src="js/protocols.js"></script>
+<script src="js/collab.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>
