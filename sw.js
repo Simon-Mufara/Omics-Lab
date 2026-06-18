@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v28: African Outbreak Alert Feed — 12 outbreaks, genomic readiness by country */
-const CACHE = 'omicslab-v28';
+/* v29: Phylogenetic Tree Builder — NJ + UPGMA, SVG tree, Newick export */
+const CACHE = 'omicslab-v29';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
