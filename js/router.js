@@ -155,6 +155,13 @@ OmicsLab.Router = (function () {
       tagline: '3 virtual reviewers — biostatistician, genomics methods specialist, African ethics expert — give rubric-based critiques against 40+ evidence quality indicators',
       sections: ['peerreview-section'],
     },
+    heatmap: {
+      label: 'Expression Visualiser',
+      icon: '🔥',
+      color: '#e3b341',
+      tagline: 'Paste DESeq2 or edgeR output — get a volcano plot, top-gene heatmap, and ranked DE table instantly, all offline',
+      sections: ['heatmap-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -169,7 +176,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', peerreview: 'research',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -303,6 +310,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'peerreview' && OmicsLab.PeerReview) {
       OmicsLab.PeerReview.init();
+    }
+    if (page === 'heatmap' && OmicsLab.Heatmap) {
+      OmicsLab.Heatmap.init();
     }
 
     /* Highlight user pill when on profile page */

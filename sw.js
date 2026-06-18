@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v30: Peer Review Simulator — 3 virtual reviewers, 40+ evidence quality rules */
-const CACHE = 'omicslab-v30';
+/* v31: Expression Visualiser — volcano plot + heatmap + DE table from DESeq2/edgeR output */
+const CACHE = 'omicslab-v31';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
