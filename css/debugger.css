@@ -1,0 +1,327 @@
+/* ═══════════════════════════════════════════════════════
+   OmicsLab — Protocol Debugger styles (Prompt 11)
+   ═══════════════════════════════════════════════════════ */
+
+.dbg-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  color: #e6edf3;
+}
+
+/* ─── Header ─── */
+.dbg-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+.dbg-badge {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: #ff6b6b;
+  background: rgba(255,107,107,.1);
+  border: 1px solid rgba(255,107,107,.25);
+  border-radius: 4px;
+  padding: .2rem .55rem;
+  margin-bottom: .5rem;
+}
+.dbg-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin: 0 0 .35rem;
+}
+.dbg-subtitle {
+  font-size: .875rem;
+  color: #8b949e;
+  max-width: 620px;
+  line-height: 1.55;
+}
+.dbg-rule-count {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+.dbg-rule-num   { font-size: 2.2rem; font-weight: 800; color: #ff6b6b; line-height: 1; }
+.dbg-rule-label { font-size: .72rem; color: #8b949e; margin-top: .2rem; text-transform: uppercase; letter-spacing: .08em; }
+
+/* ─── Examples ─── */
+.dbg-examples {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.dbg-examples-label { font-size: .75rem; font-weight: 600; color: #8b949e; white-space: nowrap; }
+.dbg-example-btn {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  color: #8b949e;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .3rem .7rem;
+  cursor: pointer;
+  transition: color .18s, border-color .18s, background .18s;
+  font-family: inherit;
+}
+.dbg-example-btn:hover { color: #e6edf3; border-color: #ff6b6b; background: rgba(255,107,107,.06); }
+
+/* ─── Input area ─── */
+.dbg-input-area {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.dbg-input-label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #8b949e;
+  margin-bottom: .6rem;
+}
+.dbg-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  color: #e6edf3;
+  font-size: .84rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  line-height: 1.6;
+  padding: .85rem;
+  resize: vertical;
+  min-height: 160px;
+  transition: border-color .2s;
+}
+.dbg-input:focus { outline: none; border-color: #ff6b6b; }
+.dbg-input-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: .75rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.dbg-char-count { font-size: .72rem; color: #6e7681; }
+.dbg-run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: linear-gradient(135deg, #b91c1c, #ff6b6b);
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 700;
+  padding: .6rem 1.3rem;
+  cursor: pointer;
+  transition: opacity .2s, transform .15s;
+  font-family: inherit;
+}
+.dbg-run-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+/* ─── Category bar ─── */
+.dbg-cat-bar {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.dbg-cat-label { font-size: .72rem; font-weight: 600; color: #6e7681; white-space: nowrap; }
+.dbg-cat-btn {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 20px;
+  color: #6e7681;
+  font-size: .7rem;
+  font-weight: 600;
+  padding: .2rem .6rem;
+  cursor: pointer;
+  transition: all .18s;
+  font-family: inherit;
+}
+.dbg-cat-btn:hover { color: #e6edf3; border-color: #ff6b6b; }
+.dbg-cat-btn.active { background: rgba(255,107,107,.1); border-color: #ff6b6b; color: #ff6b6b; }
+
+/* ─── Summary banner ─── */
+.dbg-summary { margin-bottom: 1rem; }
+.dbg-summary-inner {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.dbg-summary-title { font-size: .9rem; font-weight: 700; color: #e6edf3; }
+.dbg-summary-chips { display: flex; gap: .5rem; flex-wrap: wrap; }
+.dbg-chip {
+  font-size: .72rem;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: .2rem .55rem;
+}
+.dbg-chip-critical { background: rgba(255,107,107,.15); color: #ff6b6b; }
+.dbg-chip-warning  { background: rgba(249,115,22,.15);  color: #f97316; }
+.dbg-chip-info     { background: rgba(88,166,255,.15);  color: #58a6ff; }
+.dbg-summary-alert {
+  width: 100%;
+  font-size: .8rem;
+  color: #ff6b6b;
+  margin-top: .25rem;
+}
+
+/* ─── Result cards ─── */
+.dbg-results { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.dbg-result-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-left: 4px solid var(--dbg-color, #58a6ff);
+  border-radius: 10px;
+  padding: 1.25rem;
+  animation: dbg-slide-in .25s ease;
+}
+@keyframes dbg-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dbg-result-header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+}
+.dbg-sev-badge {
+  font-size: .68rem;
+  font-weight: 700;
+  border-radius: 4px;
+  padding: .18rem .5rem;
+}
+.dbg-sev-critical { background: rgba(255,107,107,.15); color: #ff6b6b; }
+.dbg-sev-warning  { background: rgba(249,115,22,.15);  color: #f97316; }
+.dbg-sev-info     { background: rgba(88,166,255,.15);  color: #58a6ff; }
+.dbg-category {
+  font-size: .7rem;
+  font-weight: 600;
+  color: #8b949e;
+  background: #21262d;
+  border-radius: 4px;
+  padding: .15rem .45rem;
+}
+.dbg-rule-id {
+  font-size: .68rem;
+  color: #484f58;
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: auto;
+}
+.dbg-result-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e6edf3;
+  margin-bottom: 1rem;
+}
+
+/* ─── Sections inside a card ─── */
+.dbg-result-section { margin-bottom: .85rem; }
+.dbg-result-section:last-child { margin-bottom: 0; }
+.dbg-section-label {
+  font-size: .68rem;
+  font-weight: 700;
+  color: #58a6ff;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: .35rem;
+}
+.dbg-section-body {
+  font-size: .83rem;
+  color: #8b949e;
+  line-height: 1.6;
+}
+.dbg-fix-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.dbg-fix-list li {
+  font-size: .83rem;
+  color: #e6edf3;
+  line-height: 1.5;
+}
+.dbg-fix-list li code {
+  background: #21262d;
+  color: #3fb950;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem;
+  padding: .05rem .3rem;
+  border-radius: 3px;
+}
+
+/* ─── No match ─── */
+.dbg-no-match {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2.5rem;
+  text-align: center;
+}
+.dbg-no-match-icon  { font-size: 2.5rem; margin-bottom: .75rem; }
+.dbg-no-match-title { font-size: 1rem; font-weight: 700; color: #e6edf3; margin-bottom: .5rem; }
+.dbg-no-match-desc  { font-size: .84rem; color: #8b949e; max-width: 480px; margin: 0 auto; line-height: 1.55; }
+
+/* ─── How it works / category list ─── */
+.dbg-how {
+  margin-top: 2.5rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.dbg-how-title { font-size: .9rem; font-weight: 700; color: #e6edf3; margin-bottom: 1rem; }
+.dbg-how-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+.dbg-how-cat {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: .35rem .65rem;
+}
+.dbg-how-cat-count {
+  font-size: .8rem;
+  font-weight: 800;
+  color: #ff6b6b;
+  min-width: 18px;
+  text-align: center;
+}
+.dbg-how-cat-name { font-size: .75rem; color: #8b949e; }
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .dbg-header { flex-direction: column; }
+  .dbg-rule-count { align-self: flex-start; }
+}

@@ -125,6 +125,7 @@ OmicsLab.VoiceControl = (function () {
     { phrases: ['collaborate', 'collaboration', 'collab', 'live session', 'webrtc'], action: () => _nav('collab') },
     { phrases: ['grant', 'grant generator', 'grant writing', 'funding', 'application'], action: () => _nav('grant') },
     { phrases: ['leaderboard', 'rankings', 'rank', 'scores', 'competition', 'cohort map'], action: () => _nav('leaderboard') },
+    { phrases: ['debugger', 'debug', 'protocol debugger', 'diagnose', 'qc failure', 'troubleshoot'], action: () => _nav('debugger') },
     { phrases: ['search', 'find', 'look up'],                                     action: (t) => _openSearch(t) },
     { phrases: ['help', 'what can i say', 'commands', 'voice commands'],          action: () => _toggleHelp() },
     { phrases: ['stop listening', 'stop', 'cancel', 'quiet', 'off'],              action: () => stop() },

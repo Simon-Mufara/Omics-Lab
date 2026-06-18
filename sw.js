@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v26: Leaderboard + Global Cohort Map — 80-learner ranked world view */
-const CACHE = 'omicslab-v26';
+/* v27: AI Protocol Debugger — 200+ rule diagnostic engine */
+const CACHE = 'omicslab-v27';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
