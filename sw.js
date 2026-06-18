@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v23: WebRTC Live Collaboration — peer-to-peer co-lab sessions */
-const CACHE = 'omicslab-v23';
+/* v24: Full Voice Control — speech-to-command navigation */
+const CACHE = 'omicslab-v24';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
