@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v33: Citation & Reference Manager — APA/Vancouver/BibTeX/RIS, localStorage library */
-const CACHE = 'omicslab-v33';
+/* v34: Multiplayer Quiz Battle — 65+ questions, BroadcastChannel same-device multiplayer */
+const CACHE = 'omicslab-v34';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

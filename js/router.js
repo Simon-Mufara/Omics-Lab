@@ -176,6 +176,13 @@ OmicsLab.Router = (function () {
       tagline: 'Build your reference library offline — APA, Vancouver, Nature, BibTeX, RIS export — all saved in your browser',
       sections: ['citations-section'],
     },
+    quizbattle: {
+      label: 'Quiz Battle',
+      icon: '⚔️',
+      color: '#ff6b6b',
+      tagline: '65+ questions across 12 omics categories — solo timed practice or same-device multiplayer via BroadcastChannel',
+      sections: ['quizbattle-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -190,7 +197,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -333,6 +340,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'citations' && OmicsLab.Citations) {
       OmicsLab.Citations.init();
+    }
+    if (page === 'quizbattle' && OmicsLab.QuizBattle) {
+      OmicsLab.QuizBattle.init();
     }
 
     /* Highlight user pill when on profile page */
