@@ -197,6 +197,13 @@ OmicsLab.Router = (function () {
       tagline: 'Paste a VCF line or HGVS — ACMG/AMP 2015 criteria, gnomAD African AF, and ClinVar significance for 20+ Africa-relevant disease variants',
       sections: ['variantinterp-section'],
     },
+    primerdesign: {
+      label: 'Primer Design',
+      icon: '🔬',
+      color: '#3fb950',
+      tagline: 'Auto-design or validate PCR primer pairs — Wallace Tm, GC%, self-complementarity, dimer checks, SVG alignment diagram, 6 African pathogen gene templates',
+      sections: ['primerdesign-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -211,7 +218,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -363,6 +370,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'variantinterp' && OmicsLab.VariantInterp) {
       OmicsLab.VariantInterp.init();
+    }
+    if (page === 'primerdesign' && OmicsLab.PrimerDesign) {
+      OmicsLab.PrimerDesign.init();
     }
 
     /* Highlight user pill when on profile page */

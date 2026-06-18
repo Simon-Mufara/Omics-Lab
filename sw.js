@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v36: Variant Interpreter — ACMG/AMP 2015 criteria, gnomAD AFR AF, 20+ Africa-relevant variants */
-const CACHE = 'omicslab-v36';
+/* v37: Primer Design — Wallace Tm, GC%, self-comp, dimer checks, 6 Africa pathogen gene templates */
+const CACHE = 'omicslab-v37';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
