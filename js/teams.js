@@ -95,6 +95,636 @@ OmicsLab.Teams = (function () {
       err.name === 'SecurityError' || (err.message && err.message.toLowerCase().includes('denied')));
   }
 
+  /* ══════════════════════════════════════════════════════════
+     ARTICLE ANALYSER
+     ══════════════════════════════════════════════════════════ */
+
+  const ART_STORE = 'omicslab_article_v1';
+
+  /* Knowledge bases for pattern matching */
+  const _studyTypes = [
+    { label:'Genome-Wide Association Study (GWAS)',      patterns:['gwas','genome-wide association','association study'] },
+    { label:'Whole Genome Sequencing (WGS)',             patterns:['whole genome sequencing','wgs','whole-genome'] },
+    { label:'RNA-sequencing / Transcriptomics',          patterns:['rna-seq','rna sequencing','transcriptom','rnaseq','deseq','edger','star aligner'] },
+    { label:'Metagenomics',                              patterns:['metagenom','16s rrna','amplicon sequencing','kraken','metaphlan','shotgun sequencing'] },
+    { label:'Phylogenetics / Phylogenomics',             patterns:['phylogen','phylogram','maximum likelihood','bayesian phylo','iq-tree','raxml','beast'] },
+    { label:'Variant Calling / Population Genomics',     patterns:['variant call','snp','indel','gatk','haplotypecaller','freebayes','population genomics','vcf'] },
+    { label:'ChIP-seq / Epigenomics',                   patterns:['chip-seq','atac-seq','epigenom','histone','methylation','bisulfite'] },
+    { label:'Single-cell RNA-seq (scRNA-seq)',           patterns:['single-cell','scrna','10x genomics','seurat','scanpy','cell ranger'] },
+    { label:'Proteomics / Mass Spectrometry',            patterns:['proteom','mass spectrometry','maxquant','perseus','tandem mass'] },
+    { label:'Randomised Controlled Trial (RCT)',         patterns:['randomized controlled trial','randomised controlled','rct','placebo-controlled','double-blind','clinical trial'] },
+    { label:'Cohort Study',                              patterns:['cohort study','prospective cohort','retrospective cohort','follow-up study'] },
+    { label:'Systematic Review / Meta-analysis',         patterns:['systematic review','meta-analysis','forest plot','funnel plot','cochrane','prisma'] },
+    { label:'Case-Control Study',                        patterns:['case-control','case control','matched controls','odds ratio'] },
+    { label:'Protein Structure / AlphaFold',             patterns:['alphafold','protein structure','cryo-em','x-ray crystallography','homology modelling','molecular docking'] },
+  ];
+
+  const _tools = [
+    'GATK','BWA','BWA-MEM2','STAR','HISAT2','DESeq2','edgeR','limma','Samtools','Picard',
+    'Trimmomatic','fastp','FastQC','MultiQC','PLINK','ADMIXTURE','STRUCTURE','EIGENSOFT',
+    'IQ-TREE','RAxML','BEAST','PhyML','Bowtie2','minimap2','Kraken2','MetaPhlAn',
+    'MaxQuant','Perseus','Seurat','Scanpy','Monocle','Harmony','MACS2','Homer',
+    'VEP','SnpEff','CADD','gnomAD','ClinVar','dbSNP','Ensembl','UCSC Genome Browser',
+    'AlphaFold','Pymol','Chimera','AutoDock','Rosetta','R','Python','Snakemake','Nextflow',
+    'Docker','Singularity','Galaxy','Bioconductor','Conda','Jupyter'
+  ];
+
+  const _africaCountries = [
+    'Nigeria','Kenya','South Africa','Ethiopia','Ghana','Uganda','Tanzania','Zimbabwe','Zambia',
+    'Cameroon','Senegal','Côte d\'Ivoire','Rwanda','Mozambique','Malawi','Botswana','Namibia',
+    'Egypt','Morocco','Tunisia','Algeria','Sudan','DRC','Congo','Angola','Madagascar',
+    'Mali','Burkina Faso','Niger','Togo','Benin','Guinea','Sierra Leone','Liberia','Gambia',
+    'Eswatini','Lesotho','Gabon','Equatorial Guinea','Djibouti','Eritrea','Somalia','Comoros'
+  ];
+
+  const _africaPopulations = [
+    'Yoruba','Bantu','Nilotic','Khoisan','Berber','Hausa','Igbo','Zulu','Xhosa','Ndebele',
+    'Amhara','Oromo','Somali','Wolof','Akan','Igbo','Fula','Mandinka','Ashanti',
+    'H3Africa','AWI-Gen','AGVP','1000 Genomes Africa','MalariaGEN'
+  ];
+
+  const _africaDiseases = [
+    'malaria','tuberculosis','TB','HIV','AIDS','sickle cell','schistosomiasis','trypanosomiasis',
+    'leishmaniasis','cholera','Ebola','Marburg','COVID','monkeypox','yellow fever','dengue',
+    'lassa fever','meningitis','typhoid','sleeping sickness','river blindness','onchocerciasis'
+  ];
+
+  function _lower(t) { return (t || '').toLowerCase(); }
+
+  function _detectStudyType(text) {
+    const t = _lower(text);
+    const found = [];
+    for (const s of _studyTypes) {
+      if (s.patterns.some(p => t.includes(p))) found.push(s.label);
+    }
+    return found.length ? found : ['Observational/descriptive study'];
+  }
+
+  function _detectTools(text) {
+    const t = _lower(text);
+    return _tools.filter(tool => t.includes(_lower(tool)));
+  }
+
+  function _detectAfrica(text) {
+    const t = _lower(text);
+    return {
+      countries:   _africaCountries.filter(c => t.includes(_lower(c))),
+      populations: _africaPopulations.filter(p => t.includes(_lower(p))),
+      diseases:    _africaDiseases.filter(d => t.includes(d)),
+    };
+  }
+
+  function _extractFindings(text) {
+    const sentences = text.replace(/\n+/g, ' ').split(/[.!?]+/);
+    const markers = ['we found','we identified','we report','our results show','our analysis','we demonstrate',
+                     'was associated','were associated','significantly','revealed that','showed that',
+                     'demonstrated that','concluded that','we observed','our study'];
+    const hits = sentences.filter(s => {
+      const sl = _lower(s);
+      return markers.some(m => sl.includes(m)) && s.trim().length > 40;
+    });
+    return hits.slice(0, 4).map(s => s.trim());
+  }
+
+  function _extractSearchTerms(text, types, tools, africa) {
+    const terms = new Set();
+    types.forEach(t => {
+      const short = t.replace(/\s*\([^)]+\)/,'').trim();
+      terms.add(short);
+    });
+    tools.slice(0,5).forEach(t => terms.add(t));
+    africa.diseases.slice(0,3).forEach(d => terms.add(d));
+    africa.countries.slice(0,3).forEach(c => terms.add(c + ' genomics'));
+    const keywords = ['genomics','bioinformatics','Africa','H3Africa','population genetics'];
+    const t = _lower(text);
+    keywords.forEach(k => { if (t.includes(_lower(k))) terms.add(k); });
+    return [...terms].slice(0, 10);
+  }
+
+  function _buildReproGuide(types, tools, africa) {
+    const steps = [];
+    const t = types[0] || '';
+    const hasWGS    = types.some(x => x.includes('WGS') || x.includes('Variant'));
+    const hasRNA    = types.some(x => x.includes('RNA'));
+    const hasGWAS   = types.some(x => x.includes('GWAS'));
+    const hasMeta   = types.some(x => x.includes('Metagenom'));
+    const hasPhylo  = types.some(x => x.includes('Phylo'));
+    const hasSingle = types.some(x => x.includes('single-cell') || x.includes('scRNA'));
+    const hasClinical = types.some(x => x.includes('RCT') || x.includes('Cohort') || x.includes('Case-Control'));
+
+    steps.push('Obtain ethics clearance from your institutional review board (IRB) for human genomics data');
+
+    if (hasGWAS || hasWGS) {
+      steps.push('Download reference genome (GRCh38/hg38) from NCBI or Ensembl using wget/Aspera');
+      steps.push('Request raw FASTQ data from SRA/ENA using SRA Toolkit: ' + (tools.includes('SRA Toolkit') ? 'SRA Toolkit' : 'prefetch + fasterq-dump'));
+      steps.push('Quality control reads with FastQC + MultiQC; trim adapters with fastp or Trimmomatic');
+      steps.push('Align to reference with ' + (tools.includes('BWA-MEM2') ? 'BWA-MEM2' : tools.includes('BWA') ? 'BWA' : 'BWA-MEM2') + '; sort and mark duplicates with Picard/Samtools');
+      if (hasWGS) steps.push('Call variants using GATK HaplotypeCaller → GenotypeGVCFs → VQSR filtering pipeline');
+      if (hasGWAS) steps.push('Perform quality control in PLINK: filter by MAF > 1%, genotyping rate > 95%, HWE p > 1e-6');
+      if (hasGWAS) steps.push('Run population stratification with ADMIXTURE or PCA (EIGENSOFT/PLINK --pca)');
+      if (hasGWAS) steps.push('Association testing: PLINK logistic/linear regression or SAIGE for mixed models');
+    }
+    if (hasRNA) {
+      steps.push('Quality control: FastQC, MultiQC, remove adapters with fastp (--detect_adapter_for_pe)');
+      steps.push('Align with STAR (splice-aware) or HISAT2; generate count matrix with featureCounts or HTSeq');
+      steps.push('Differential expression: DESeq2 (Bioconductor) with design formula accounting for batch effects');
+      steps.push('Functional enrichment: clusterProfiler (GO terms, KEGG pathways); pathway visualisation with pathview');
+    }
+    if (hasMeta) {
+      steps.push('Taxonomic classification with Kraken2 (k-mer-based) or MetaPhlAn4 (marker genes)');
+      steps.push('Estimate alpha diversity (Shannon index) and beta diversity (Bray-Curtis) using phyloseq in R');
+      steps.push('Functional prediction with HUMAnN3 or PICRUSt2 for pathway analysis');
+    }
+    if (hasPhylo) {
+      steps.push('Generate multiple sequence alignment using MAFFT or MUSCLE');
+      steps.push('Select substitution model using ModelTest-NG; construct ML tree with IQ-TREE2 (--bb 1000 ultrafast bootstrap)');
+      steps.push('Temporal analysis with BEAST2 if time-calibrated tree is needed (requires dated sequences)');
+    }
+    if (hasSingle) {
+      steps.push('Pre-process FASTQ with Cell Ranger (10x data) or STARsolo to generate count matrix');
+      steps.push('Load into Seurat or Scanpy; filter low-quality cells (nFeature, mitochondrial %)');
+      steps.push('Normalise, scale, and cluster; assign cell types using known marker genes or SingleR');
+    }
+    if (hasClinical) {
+      steps.push('Register the study on a clinical trials registry (ClinicalTrials.gov or PACTR for African trials)');
+      steps.push('Obtain IRB approval at each participating site; document consent procedures');
+      steps.push('Randomisation: use sealed envelopes or a web-based randomisation service');
+      steps.push('Define primary and secondary endpoints a priori; calculate sample size using G*Power');
+      steps.push('Statistical analysis plan: pre-register before unblinding; use intention-to-treat analysis');
+    }
+
+    steps.push('Document all software versions (conda list --export or sessionInfo() in R) for reproducibility');
+    steps.push('Archive analysis scripts on GitHub/GitLab; deposit raw data in SRA/ENA/DDBJ or H3Africa repository');
+    steps.push('Report following ARRIVE, STROBE, CONSORT, or MIAME guidelines as appropriate');
+
+    return steps;
+  }
+
+  function _buildResearchOpportunities(types, tools, africa, text) {
+    const ideas = [];
+    const hasAfrica = africa.countries.length > 0 || africa.populations.length > 0;
+    const hasDisease = africa.diseases.length > 0;
+    const t = _lower(text);
+    const disease = africa.diseases[0] || 'the condition studied';
+    const country = africa.countries[0] || 'sub-Saharan Africa';
+
+    if (types.some(x => x.includes('GWAS'))) {
+      ideas.push({
+        title: 'Trans-ethnic replication in diverse African populations',
+        desc: `Replicate the lead GWAS signals across distinct African ethnic groups (Yoruba, Bantu, Nilotic, Khoisan) to assess which associations are pan-African vs population-specific. Use H3Africa cohort data or AWI-Gen.`,
+        tools: ['SAIGE','PLINK2','METAL (meta-analysis)'],
+      });
+    }
+    if (types.some(x => x.includes('WGS') || x.includes('Variant'))) {
+      ideas.push({
+        title: 'African variant database contribution',
+        desc: `Annotate identified variants against the gnomAD African subset and H3Africa Variant Database. Variants absent from reference panels could represent novel Africa-specific risk alleles for ${disease}.`,
+        tools: ['VEP','SnpEff','gnomAD','H3Africa Variant DB'],
+      });
+    }
+    if (hasDisease) {
+      ideas.push({
+        title: `Multi-omics characterisation of ${disease} in ${country}`,
+        desc: `Integrate WGS (host genetics), RNA-seq (transcriptomics), and pathogen WGS to build a complete picture of host-pathogen interaction in ${country}. This supports the development of Africa-specific diagnostic and therapeutic targets.`,
+        tools: ['GATK','DESeq2','STAR','mixOmics'],
+      });
+      ideas.push({
+        title: `Antimicrobial resistance genomics for ${disease} in East/West Africa`,
+        desc: `Conduct whole-genome sequencing of ${disease} isolates from multiple African sites to map resistance mutations. Build a continental resistance surveillance platform using MLST and phylogeography.`,
+        tools: ['Kraken2','ResFinder','MLST','IQ-TREE'],
+      });
+    }
+    if (types.some(x => x.includes('Phylo'))) {
+      ideas.push({
+        title: 'Bayesian time-resolved phylogeographic analysis across Africa',
+        desc: `Extend the phylogenetic analysis with BEAST2 to estimate divergence times and geographic spread patterns across African regions. Incorporate epidemiological metadata (sampling date, location) for phylogeographic inference.`,
+        tools: ['BEAST2','TREEANNOTATOR','FigTree','SPREAD'],
+      });
+    }
+    if (types.some(x => x.includes('RNA'))) {
+      ideas.push({
+        title: 'Single-cell transcriptomics to resolve cell-type-specific expression',
+        desc: `Use scRNA-seq (10x Chromium) to deconvolve the bulk RNA-seq signal into cell-type-specific expression patterns. This could reveal which immune cell types drive the differential expression observed in this study.`,
+        tools: ['Cell Ranger','Seurat','Harmony','SingleR'],
+      });
+    }
+    ideas.push({
+      title: 'Health equity analysis: access to genomic medicine in low-resource settings',
+      desc: `Design a systematic review examining how the findings from this study could be translated into diagnostics or interventions deliverable in sub-Saharan African health systems. Include cost-effectiveness modelling.`,
+      tools: ['R (meta-analysis)','GRADE framework','TreeAge (cost-effectiveness)'],
+    });
+
+    return ideas.slice(0, 5);
+  }
+
+  function _buildThesisOutline(types, tools, africa, findings) {
+    const studyType = types[0] || 'genomic study';
+    const disease = africa.diseases[0] || 'the study condition';
+    const region = africa.countries.length ? africa.countries.slice(0,2).join(' and ') : 'Africa';
+
+    return [
+      {
+        num: 1,
+        title: 'Introduction and Literature Review',
+        content: [
+          `Background on ${disease} in ${region}: burden of disease, current management, knowledge gaps`,
+          `Review of genomic epidemiology methods, with emphasis on ${studyType}`,
+          'State of genomics infrastructure and data availability in African research settings',
+          'Rationale and objectives: how this paper shapes your research questions',
+          'Thesis aims and specific objectives (SMART format)',
+        ],
+      },
+      {
+        num: 2,
+        title: 'Materials and Methods',
+        content: [
+          `Study design, population, inclusion/exclusion criteria (adapted from or contrasted with the source paper)`,
+          tools.length ? `Bioinformatics pipeline: ${tools.slice(0,5).join(', ')} — justify each tool selection` : 'Software and statistical analysis plan',
+          'Ethics: IRB approval, community engagement, data sovereignty considerations',
+          'Sample size calculation and power analysis',
+          'Quality control criteria and reproducibility measures',
+        ],
+      },
+      {
+        num: 3,
+        title: 'Results',
+        content: [
+          'Cohort/sample characteristics: tables and demographic breakdown by region or population',
+          findings.length ? `Key finding replication/extension: ${findings[0]?.slice(0,80)}…` : 'Primary analysis results with effect sizes and confidence intervals',
+          'Secondary analyses: subgroup breakdowns, sensitivity analyses',
+          'Visualisations: Manhattan plots / volcano plots / phylogenetic trees / heatmaps',
+        ],
+      },
+      {
+        num: 4,
+        title: 'Discussion',
+        content: [
+          'Interpretation of findings in the context of the source paper and existing African genomics literature',
+          'Novel contributions specific to your population/region',
+          'Limitations: missing data, sample size, potential confounders, reference panel gaps',
+          'Implications for clinical practice and public health policy in Africa',
+          'Future directions: follow-up studies you propose',
+        ],
+      },
+      {
+        num: 5,
+        title: 'Conclusion and Recommendations',
+        content: [
+          'Summary of key findings and their significance',
+          'Recommendations for health policy, clinical guidelines, or further research',
+          'Contribution to Africa-led genomics knowledge',
+          'Dissemination plan: publications, conferences (H3Africa Congress, ESHG, ASHG), community feedback',
+        ],
+      },
+    ];
+  }
+
+  /* ─── HTML for Article Hub tab ─── */
+  function _renderArticleHubHtml() {
+    const saved = (() => { try { return JSON.parse(localStorage.getItem(ART_STORE) || 'null'); } catch { return null; } })();
+    return `
+      <div class="art-hub">
+        <div class="art-input-panel">
+          <div class="art-panel-header">
+            <div class="art-panel-title">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Research Article Input
+            </div>
+            <div class="art-panel-sub">Paste article text, abstract, or upload a .txt file — get full research analysis instantly</div>
+          </div>
+
+          <div class="art-tabs">
+            <button class="art-input-tab art-input-tab-active" id="art-tab-paste" onclick="OmicsLab.Teams._artTab('paste')">Paste text</button>
+            <button class="art-input-tab" id="art-tab-file"  onclick="OmicsLab.Teams._artTab('file')">Upload file</button>
+          </div>
+
+          <div id="art-paste-panel" class="art-input-section">
+            <textarea class="art-textarea" id="art-text-input"
+              placeholder="Paste the full article text, abstract, or a key excerpt here.&#10;&#10;The analyser will detect the study type, methodology tools, Africa relevance, reproducibility steps, research opportunities, and thesis outline — all offline, no data leaves your device."
+              spellcheck="false">${saved?.text || ''}</textarea>
+          </div>
+
+          <div id="art-file-panel" class="art-input-section" style="display:none">
+            <div class="art-drop-zone" id="art-drop-zone"
+              onclick="document.getElementById('art-file-input').click()"
+              ondragover="event.preventDefault();this.classList.add('art-drop-hover')"
+              ondragleave="this.classList.remove('art-drop-hover')"
+              ondrop="OmicsLab.Teams._artDrop(event)">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="art-drop-label">Click to browse or drag a file here</div>
+              <div class="art-drop-sub">.txt · .md · .csv — max 2 MB · PDF: copy-paste text instead</div>
+              <input type="file" id="art-file-input" accept=".txt,.md,.csv,.text" style="display:none"
+                onchange="OmicsLab.Teams._artFileRead(this.files[0])"/>
+            </div>
+            <div id="art-file-status" class="art-file-status" style="display:none"></div>
+          </div>
+
+          <div class="art-input-footer">
+            <div class="art-char-count"><span id="art-char-count">0</span> characters</div>
+            <div class="art-input-actions">
+              <button class="tm-btn-secondary" onclick="OmicsLab.Teams._artClear()">Clear</button>
+              <button class="tm-btn-primary" onclick="OmicsLab.Teams._artAnalyse()">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Analyse article
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="art-result-panel" id="art-result-panel">
+          ${saved?.result ? saved.result : `
+            <div class="art-empty-state">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <div class="art-empty-title">Article analysis will appear here</div>
+              <div class="art-empty-sub">Paste any research article — abstract, full text, or excerpt — to get study type detection, reproducibility steps, research opportunities, and a thesis outline.</div>
+            </div>`}
+        </div>
+      </div>`;
+  }
+
+  function _bindArticleHub() {
+    const ta = document.getElementById('art-text-input');
+    if (ta) {
+      ta.addEventListener('input', () => {
+        const n = document.getElementById('art-char-count');
+        if (n) n.textContent = ta.value.length.toLocaleString();
+      });
+      const n = document.getElementById('art-char-count');
+      if (n) n.textContent = (ta.value || '').length.toLocaleString();
+    }
+  }
+
+  function _artTab(tab) {
+    document.getElementById('art-paste-panel').style.display = tab === 'paste' ? '' : 'none';
+    document.getElementById('art-file-panel').style.display  = tab === 'file'  ? '' : 'none';
+    document.getElementById('art-tab-paste').classList.toggle('art-input-tab-active', tab === 'paste');
+    document.getElementById('art-tab-file').classList.toggle('art-input-tab-active',  tab === 'file');
+  }
+
+  function _artFileRead(file) {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) { alert('File too large — max 2 MB. For PDF: copy-paste the text instead.'); return; }
+    const status = document.getElementById('art-file-status');
+    if (status) { status.style.display = ''; status.textContent = 'Reading ' + file.name + '…'; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target.result;
+      const ta = document.getElementById('art-text-input');
+      if (ta) ta.value = text;
+      _artTab('paste');
+      const n = document.getElementById('art-char-count');
+      if (n) n.textContent = text.length.toLocaleString();
+    };
+    reader.onerror = () => { if (status) status.textContent = 'Could not read file.'; };
+    reader.readAsText(file);
+  }
+
+  function _artDrop(e) {
+    e.preventDefault();
+    document.getElementById('art-drop-zone')?.classList.remove('art-drop-hover');
+    const file = e.dataTransfer.files[0];
+    if (file) _artFileRead(file);
+  }
+
+  function _artClear() {
+    const ta = document.getElementById('art-text-input');
+    if (ta) ta.value = '';
+    const n = document.getElementById('art-char-count');
+    if (n) n.textContent = '0';
+    document.getElementById('art-result-panel').innerHTML = `
+      <div class="art-empty-state">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <div class="art-empty-title">Article analysis will appear here</div>
+        <div class="art-empty-sub">Paste any research article to get started.</div>
+      </div>`;
+    try { localStorage.removeItem(ART_STORE); } catch {}
+  }
+
+  function _artAnalyse() {
+    const text = document.getElementById('art-text-input')?.value?.trim() || '';
+    if (text.length < 100) {
+      const panel = document.getElementById('art-result-panel');
+      if (panel) panel.innerHTML = `<div class="art-error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Please paste at least a paragraph of article text to analyse.</div>`;
+      return;
+    }
+
+    const panel = document.getElementById('art-result-panel');
+    if (panel) panel.innerHTML = `<div class="art-loading"><div class="art-spinner"></div> Analysing article…</div>`;
+
+    setTimeout(() => {
+      const types    = _detectStudyType(text);
+      const tools    = _detectTools(text);
+      const africa   = _detectAfrica(text);
+      const findings = _extractFindings(text);
+      const terms    = _extractSearchTerms(text, types, tools, africa);
+      const repro    = _buildReproGuide(types, tools, africa);
+      const opps     = _buildResearchOpportunities(types, tools, africa, text);
+      const thesis   = _buildThesisOutline(types, tools, africa, findings);
+
+      const html = _artResultHtml(text, types, tools, africa, findings, terms, repro, opps, thesis);
+      if (panel) panel.innerHTML = html;
+
+      try { localStorage.setItem(ART_STORE, JSON.stringify({ text: text.slice(0, 20000), result: html })); } catch {}
+    }, 300);
+  }
+
+  function _artResultHtml(text, types, tools, africa, findings, terms, repro, opps, thesis) {
+    const hasAfrica = africa.countries.length + africa.populations.length + africa.diseases.length > 0;
+
+    return `
+      <div class="art-result">
+
+        <div class="art-result-toolbar">
+          <div class="art-result-title">Analysis complete</div>
+          <button class="tm-btn-secondary art-download-btn" onclick="OmicsLab.Teams._artDownload()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download report
+          </button>
+        </div>
+
+        <!-- Study type -->
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Study Type Detected
+          </div>
+          <div class="art-tag-row">
+            ${types.map(t => `<span class="art-tag art-tag-green">${t}</span>`).join('')}
+          </div>
+        </div>
+
+        <!-- Key findings -->
+        ${findings.length ? `
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Key Findings Detected
+          </div>
+          <ul class="art-list">
+            ${findings.map(f => `<li class="art-finding">${_escHtml(f)}.</li>`).join('')}
+          </ul>
+        </div>` : ''}
+
+        <!-- Tools -->
+        ${tools.length ? `
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bc8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            Methodology Tools Identified
+          </div>
+          <div class="art-tag-row">
+            ${tools.map(t => `<span class="art-tag art-tag-purple">${t}</span>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- Africa relevance -->
+        ${hasAfrica ? `
+        <div class="art-section art-section-africa">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Africa Relevance
+          </div>
+          ${africa.countries.length ? `<div class="art-africa-row"><span class="art-africa-label">Countries:</span>${africa.countries.map(c => `<span class="art-tag art-tag-orange">${c}</span>`).join('')}</div>` : ''}
+          ${africa.populations.length ? `<div class="art-africa-row"><span class="art-africa-label">Populations:</span>${africa.populations.map(p => `<span class="art-tag art-tag-orange">${p}</span>`).join('')}</div>` : ''}
+          ${africa.diseases.length ? `<div class="art-africa-row"><span class="art-africa-label">Diseases:</span>${africa.diseases.map(d => `<span class="art-tag art-tag-red">${d}</span>`).join('')}</div>` : ''}
+        </div>` : ''}
+
+        <!-- Reproducibility -->
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Reproducibility Checklist
+          </div>
+          <ol class="art-ordered-list">
+            ${repro.map(s => `<li>${s}</li>`).join('')}
+          </ol>
+        </div>
+
+        <!-- Research opportunities -->
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Research Opportunities
+          </div>
+          <div class="art-opps-grid">
+            ${opps.map((o, i) => `
+              <div class="art-opp-card">
+                <div class="art-opp-num">${i + 1}</div>
+                <div class="art-opp-body">
+                  <div class="art-opp-title">${o.title}</div>
+                  <div class="art-opp-desc">${o.desc}</div>
+                  <div class="art-opp-tools">
+                    ${o.tools.map(t => `<span class="art-tag art-tag-sm">${t}</span>`).join('')}
+                  </div>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Thesis outline -->
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#bc8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Thesis / Dissertation Outline
+          </div>
+          <div class="art-thesis">
+            ${thesis.map(ch => `
+              <div class="art-thesis-chapter">
+                <div class="art-thesis-ch-head">
+                  <span class="art-thesis-num">Chapter ${ch.num}</span>
+                  <span class="art-thesis-title">${ch.title}</span>
+                </div>
+                <ul class="art-thesis-points">
+                  ${ch.content.map(p => `<li>${p}</li>`).join('')}
+                </ul>
+              </div>`).join('')}
+          </div>
+        </div>
+
+        <!-- Search terms -->
+        <div class="art-section">
+          <div class="art-section-head">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Suggested Search Terms
+          </div>
+          <div class="art-tag-row art-search-row">
+            ${terms.map(t => `<span class="art-tag art-tag-blue art-search-tag" onclick="OmicsLab.Teams._artSearchCopy('${t.replace(/'/g,'\\\'')}')" title="Click to copy">${t}</span>`).join('')}
+          </div>
+          <div class="art-search-hint">Click any term to copy — paste into PubMed, Google Scholar, or Semantic Scholar</div>
+        </div>
+      </div>`;
+  }
+
+  function _artSearchCopy(term) {
+    navigator.clipboard?.writeText(term).then(() => {
+      const notice = document.createElement('div');
+      notice.className = 'art-copy-toast';
+      notice.textContent = 'Copied: ' + term;
+      document.body.appendChild(notice);
+      setTimeout(() => notice.remove(), 2000);
+    }).catch(() => {});
+  }
+
+  function _artDownload() {
+    const text = document.getElementById('art-text-input')?.value?.trim() || '';
+    if (text.length < 100) return;
+
+    const types    = _detectStudyType(text);
+    const tools    = _detectTools(text);
+    const africa   = _detectAfrica(text);
+    const findings = _extractFindings(text);
+    const terms    = _extractSearchTerms(text, types, tools, africa);
+    const repro    = _buildReproGuide(types, tools, africa);
+    const opps     = _buildResearchOpportunities(types, tools, africa, text);
+    const thesis   = _buildThesisOutline(types, tools, africa, findings);
+
+    const lines = [
+      'OMICSLAB — ARTICLE ANALYSIS REPORT',
+      'Generated: ' + new Date().toLocaleString(),
+      '═'.repeat(60),
+      '',
+      'STUDY TYPE',
+      types.join('\n'),
+      '',
+      findings.length ? 'KEY FINDINGS\n' + findings.map(f => '• ' + f).join('\n') : '',
+      '',
+      tools.length ? 'TOOLS IDENTIFIED\n' + tools.join(', ') : '',
+      '',
+      africa.countries.length ? 'COUNTRIES: ' + africa.countries.join(', ') : '',
+      africa.diseases.length  ? 'DISEASES:  ' + africa.diseases.join(', ')  : '',
+      '',
+      'REPRODUCIBILITY CHECKLIST',
+      repro.map((s, i) => (i+1) + '. ' + s).join('\n'),
+      '',
+      'RESEARCH OPPORTUNITIES',
+      opps.map((o, i) => (i+1) + '. ' + o.title + '\n   ' + o.desc + '\n   Tools: ' + o.tools.join(', ')).join('\n\n'),
+      '',
+      'THESIS OUTLINE',
+      thesis.map(ch => 'Chapter ' + ch.num + ': ' + ch.title + '\n' + ch.content.map(p => '  • ' + p).join('\n')).join('\n\n'),
+      '',
+      'SEARCH TERMS',
+      terms.join(', '),
+      '',
+      '─'.repeat(60),
+      'Generated by OmicsLab — Africa\'s Genomics Training Platform',
+    ].filter(l => l !== undefined).join('\n');
+
+    const blob = new Blob([lines], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'omicslab-article-analysis.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  /* ─── Active tab ─── */
+  let _activeTab = 'rooms';
+
+  function _switchTab(tab) {
+    _activeTab = tab;
+    _renderRooms();
+  }
+
   /* ─── Render rooms list ─── */
   function _renderRooms() {
     const section = document.getElementById('teams-section');
@@ -109,36 +739,50 @@ OmicsLab.Teams = (function () {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             OmicsLab Teams
           </div>
-          <div class="tm-header-sub">Research meetings and collaboration across Africa's genomics network</div>
+          <div class="tm-header-sub">Research meetings, article analysis, and collaboration across Africa's genomics network</div>
           <div class="tm-header-actions">
-            <button class="tm-btn-primary" onclick="OmicsLab.Teams._showCreateRoom()">
+            ${_activeTab === 'rooms' ? `<button class="tm-btn-primary" onclick="OmicsLab.Teams._showCreateRoom()">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               New meeting room
-            </button>
+            </button>` : ''}
           </div>
         </div>
 
-        ${!user ? `<div class="tm-auth-notice">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          Sign in to create rooms, record meetings, and sync your meeting history across devices.
-          <button class="tm-auth-link" onclick="OmicsLab.Auth.openModal('signin')">Sign in</button>
-        </div>` : ''}
-
-        <div class="tm-rooms-grid" id="tm-rooms-grid">
-          ${_rooms.map(r => _roomCardHtml(r)).join('')}
+        <!-- Tab bar -->
+        <div class="tm-tab-bar">
+          <button class="tm-tab ${_activeTab === 'rooms' ? 'tm-tab-active' : ''}" onclick="OmicsLab.Teams._switchTab('rooms')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Meeting Rooms
+          </button>
+          <button class="tm-tab ${_activeTab === 'article' ? 'tm-tab-active' : ''}" onclick="OmicsLab.Teams._switchTab('article')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Article Analyser
+          </button>
         </div>
 
-        <div class="tm-info-strip">
-          <div class="tm-info-item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-            <span>Same-device multi-tab meetings work now. Cross-device calls require the backend signaling server — see <strong>docs/backend-api.md</strong>.</span>
+        ${_activeTab === 'rooms' ? `
+          ${!user ? `<div class="tm-auth-notice">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            Sign in to create rooms, record meetings, and sync your meeting history across devices.
+            <button class="tm-auth-link" onclick="OmicsLab.Auth.openModal('signin')">Sign in</button>
+          </div>` : ''}
+          <div class="tm-rooms-grid" id="tm-rooms-grid">
+            ${_rooms.map(r => _roomCardHtml(r)).join('')}
           </div>
-          <div class="tm-info-item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>All video is processed locally — no video leaves your device without the backend server.</span>
+          <div class="tm-info-strip">
+            <div class="tm-info-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+              <span>Same-device multi-tab meetings work now. Cross-device calls require the WebSocket signaling server.</span>
+            </div>
+            <div class="tm-info-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>All video is processed locally — no data leaves your device without a backend server.</span>
+            </div>
           </div>
-        </div>
+        ` : _renderArticleHubHtml()}
       </div>`;
+
+    if (_activeTab === 'article') _bindArticleHub();
   }
 
   function _roomCardHtml(r) {
@@ -758,5 +1402,5 @@ OmicsLab.Teams = (function () {
     _renderRooms();
   }
 
-  return { init, joinRoom, leaveMeeting, toggleMute, toggleCamera, toggleScreenShare, toggleHand, _chatKey, _sendChat, _cancelJoin, _joinAudioOnly, _showCreateRoom, _createRoom };
+  return { init, joinRoom, leaveMeeting, toggleMute, toggleCamera, toggleScreenShare, toggleHand, _chatKey, _sendChat, _cancelJoin, _joinAudioOnly, _showCreateRoom, _createRoom, _switchTab, _artTab, _artFileRead, _artDrop, _artClear, _artAnalyse, _artSearchCopy, _artDownload };
 })();

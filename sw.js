@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v39: Auth (email+OAuth), Teams (video meetings), mic denial fix, backend API spec */
-const CACHE = 'omicslab-v39';
+/* v40: Emoji fixes, auth OAuth UX, Teams Article Analyser tab */
+const CACHE = 'omicslab-v40';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

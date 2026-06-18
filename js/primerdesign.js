@@ -279,7 +279,11 @@ OmicsLab.PrimerDesign = (function () {
 
       out.innerHTML = `
         <div class="pd-result-header">
-          <div class="pd-result-title" style="color:${verdictColor}">${r.pass ? '✅ Primer pair looks OK' : '❌ Issues detected'}</div>
+          <div class="pd-result-title" style="color:${verdictColor}">
+            ${r.pass
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Primer pair looks OK'
+              : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Issues detected'}
+          </div>
         </div>
         <div class="pd-pair-card">
           <div class="pd-pair-seqs">

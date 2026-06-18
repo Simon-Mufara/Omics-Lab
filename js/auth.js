@@ -366,28 +366,25 @@ OmicsLab.Auth = (function () {
     return `
       <div class="auth-modal" role="dialog">
         <div class="auth-modal-header">
-          <div class="auth-brand">Backend Setup Required</div>
+          <div class="auth-brand">Social Sign-In</div>
           <button class="auth-close" onclick="OmicsLab.Auth.closeModal()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-        <div style="padding:1.5rem">
-          <p style="color:#c9d1d9;font-size:0.85rem;line-height:1.6;margin-bottom:1rem">
-            Social sign-in via <strong id="auth-oauth-provider"></strong> requires a backend server to securely exchange OAuth tokens.<br><br>
-            You can still use <strong>email and password</strong> to sign in offline right now.
-          </p>
-          <div class="auth-setup-box">
-            <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#8b949e;margin-bottom:0.5rem">
-              Backend API needed at
-            </div>
-            <code style="font-size:0.78rem;color:#58a6ff;display:block;word-break:break-all">POST /api/auth/oauth/{provider}</code>
-            <code style="font-size:0.78rem;color:#8b949e;display:block;margin-top:0.25rem">Body: { code, redirectUri } → Returns: { user, token }</code>
+        <div style="padding:1.5rem;text-align:center">
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <p style="color:#8b949e;font-size:0.75rem;margin-top:1rem">
-            See <strong>docs/backend-api.md</strong> in the repository for the full backend specification and setup guide.
+          <div style="font-size:0.95rem;font-weight:700;color:#e6edf3;margin-bottom:0.5rem">Social sign-in coming soon</div>
+          <p style="color:#8b949e;font-size:0.82rem;line-height:1.6;margin-bottom:1.5rem">
+            Sign-in via <strong style="color:#c9d1d9" id="auth-oauth-provider"></strong> is being integrated into OmicsLab.<br>
+            In the meantime, use your email and password — your account and all research data sync across devices.
           </p>
-          <button class="auth-submit-btn" style="margin-top:1.25rem" onclick="OmicsLab.Auth.openModal('signin')">
-            Sign in with email instead
+          <button class="auth-submit-btn" onclick="OmicsLab.Auth.openModal('signin')">
+            Continue with email
+          </button>
+          <button class="auth-link-btn" style="margin-top:0.75rem;display:block;width:100%" onclick="OmicsLab.Auth.openModal('register')">
+            Create a free account
           </button>
         </div>
       </div>`;
