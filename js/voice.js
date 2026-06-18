@@ -123,6 +123,7 @@ OmicsLab.VoiceControl = (function () {
     { phrases: ['career', 'career pathfinder', 'career quiz', 'job'],             action: () => _nav('career') },
     { phrases: ['protocols', 'protocol sharing', 'community protocol'],            action: () => _nav('protocols') },
     { phrases: ['collaborate', 'collaboration', 'collab', 'live session', 'webrtc'], action: () => _nav('collab') },
+    { phrases: ['grant', 'grant generator', 'grant writing', 'funding', 'application'], action: () => _nav('grant') },
     { phrases: ['search', 'find', 'look up'],                                     action: (t) => _openSearch(t) },
     { phrases: ['help', 'what can i say', 'commands', 'voice commands'],          action: () => _toggleHelp() },
     { phrases: ['stop listening', 'stop', 'cancel', 'quiet', 'off'],              action: () => stop() },

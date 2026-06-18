@@ -113,6 +113,13 @@ OmicsLab.Router = (function () {
       tagline: 'Real-time WebRTC peer-to-peer lab sessions — work with colleagues live, no server required',
       sections: ['collab-section'],
     },
+    grant: {
+      label: 'Grant Generator',
+      icon: '📝',
+      color: '#e3b341',
+      tagline: 'Generate NIH Fogarty, Wellcome Trust, and H3Africa grant sections — Aims, Methods, Budget, Ethics — fully offline',
+      sections: ['grant-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -126,7 +133,7 @@ OmicsLab.Router = (function () {
   const PAGE_TO_GROUP = {
     lab: 'train', learn: 'train', career: 'train',
     research: 'research', africa: 'research',
-    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research',
+    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research',
     analysis: 'tools', terminal: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
@@ -243,6 +250,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'collab' && OmicsLab.Collab) {
       OmicsLab.Collab.init();
+    }
+    if (page === 'grant' && OmicsLab.Grant) {
+      OmicsLab.Grant.init();
     }
 
     /* Highlight user pill when on profile page */

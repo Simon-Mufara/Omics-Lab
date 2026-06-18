@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v24: Full Voice Control — speech-to-command navigation */
-const CACHE = 'omicslab-v24';
+/* v25: Grant Text Generator — NIH/Wellcome/H3Africa sections offline */
+const CACHE = 'omicslab-v25';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
