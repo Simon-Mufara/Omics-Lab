@@ -8,15 +8,113 @@ OmicsLab.App = (function() {
 
   /* ─── Screen management ─── */
   function showScreen(id) {
-    ['screen-landing','screen-lab','screen-results'].forEach(s => {
+    ['screen-landing','screen-lab','screen-chooser','screen-results'].forEach(s => {
       const el = document.getElementById(s);
       if (el) { el.style.display = 'none'; el.classList.remove('active'); }
     });
     const target = document.getElementById(id);
     if (!target) return;
-    target.style.display = (id === 'screen-landing') ? 'flex' : (id === 'screen-lab') ? 'flex' : 'block';
+    const flexScreens = ['screen-landing', 'screen-lab', 'screen-chooser'];
+    target.style.display = flexScreens.includes(id) ? 'flex' : 'block';
     target.classList.add('active');
     window.scrollTo(0, 0);
+  }
+
+  /* ─── Open the full-screen domain chooser ─── */
+  function openChooser() {
+    closeWfPicker();
+    showScreen('screen-chooser');
+    _buildWorkflowGrid();
+    /* Entry animation */
+    const chooser = document.getElementById('screen-chooser');
+    if (chooser) {
+      chooser.classList.remove('chooser-entering');
+      void chooser.offsetWidth;
+      chooser.classList.add('chooser-entering');
+      setTimeout(() => chooser.classList.remove('chooser-entering'), 380);
+    }
+    /* Sync nav active state to 'lab' group */
+    document.querySelectorAll('.nav-group-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.group === 'train');
+    });
+  }
+
+  /* ─── Domain tile selected — show workflow picker drawer ─── */
+  function selectDomain(domainId) {
+    const domain = OmicsLab.DOMAINS.find(d => d.id === domainId);
+    if (!domain) return;
+
+    /* Highlight the selected tile, dim others */
+    document.querySelectorAll('.domain-tile').forEach(tile => {
+      const isSelected = tile.dataset.domainId === domainId;
+      tile.classList.toggle('domain-selected', isSelected);
+      tile.classList.toggle('domain-dimmed', !isSelected);
+    });
+
+    /* Populate the picker */
+    const badge = document.getElementById('wf-picker-domain-badge');
+    const cards = document.getElementById('wf-picker-cards');
+    if (!badge || !cards) return;
+
+    badge.textContent = domain.label;
+    badge.style.color       = domain.colorHex;
+    badge.style.borderColor = domain.colorHex + '55';
+    badge.style.background  = domain.colorHex + '14';
+
+    const diffMap = {
+      beginner:     ['diff-b', 'Beginner'],
+      intermediate: ['diff-i', 'Intermediate'],
+      advanced:     ['diff-a', 'Advanced'],
+    };
+
+    cards.innerHTML = domain.workflows.map(wfId => {
+      const wf = OmicsLab.Workflows[wfId];
+      if (!wf) return '';
+      const [dc, dl] = diffMap[wf.difficulty] || ['diff-i', wf.difficulty];
+      const desc = wf.desc || wf.tagline || wf.name;
+      return `
+        <button class="wf-pick-card" role="listitem"
+                onclick="OmicsLab.App.startWorkflow('${wfId}')"
+                style="--domain-color:${domain.colorHex};--domain-rgb:${domain.rgb}">
+          <div class="wpc-header">
+            <span class="wpc-name">${wf.name}</span>
+            <span class="wpc-diff ${dc}">${dl}</span>
+          </div>
+          <div class="wpc-desc">${desc}</div>
+          <div class="wpc-footer">
+            <span class="wpc-steps">${wf.steps.length} steps</span>
+            <span class="wpc-start">Start Protocol →</span>
+          </div>
+        </button>`;
+    }).join('');
+
+    /* Slide the picker up */
+    const picker = document.getElementById('wf-picker');
+    if (picker) {
+      picker.classList.add('wf-picker-open');
+      picker.setAttribute('aria-hidden', 'false');
+    }
+
+    if (OmicsLab.Sound) OmicsLab.Sound.pick();
+  }
+
+  /* ─── Close workflow picker ─── */
+  function closeWfPicker() {
+    const picker = document.getElementById('wf-picker');
+    if (picker) {
+      picker.classList.remove('wf-picker-open');
+      picker.setAttribute('aria-hidden', 'true');
+    }
+    document.querySelectorAll('.domain-tile').forEach(tile => {
+      tile.classList.remove('domain-selected', 'domain-dimmed');
+    });
+  }
+
+  /* ─── Back from chooser → home ─── */
+  function chooserBack() {
+    closeWfPicker();
+    showScreen('screen-landing');
+    if (OmicsLab.Router) OmicsLab.Router.navigate('home');
   }
 
   /* ─── Start a workflow ─── */
@@ -33,12 +131,40 @@ OmicsLab.App = (function() {
     document.getElementById('topbar-domain').style.color    = wf.colorHex;
     document.getElementById('topbar-domain').style.border   = `1px solid ${wf.colorHex}44`;
 
-    showScreen('screen-lab');
-    OmicsLab.QC.render();
-    OmicsLab.QC.renderSidebar();
-    OmicsLab.QC.renderMistakes();
-    OmicsLab.Renderer.renderStep(0);
-    startTimer();
+    /* Close picker first (in case we came from chooser) */
+    closeWfPicker();
+
+    const chooser = document.getElementById('screen-chooser');
+    const fromChooser = chooser && chooser.classList.contains('active');
+
+    const _enterLab = () => {
+      showScreen('screen-lab');
+      const labScreen = document.getElementById('screen-lab');
+      if (labScreen) {
+        labScreen.classList.remove('lab-entering');
+        void labScreen.offsetWidth;
+        labScreen.classList.add('lab-entering');
+        setTimeout(() => labScreen.classList.remove('lab-entering'), 480);
+      }
+      OmicsLab.QC.render();
+      OmicsLab.QC.renderSidebar();
+      OmicsLab.QC.renderMistakes();
+      OmicsLab.QC.renderPipeline(0);
+      OmicsLab.Renderer.renderStep(0);
+      startTimer();
+      if (OmicsLab.Sound) OmicsLab.Sound.step();
+    };
+
+    if (fromChooser) {
+      /* Animate chooser exit, then reveal lab */
+      chooser.classList.add('chooser-exiting');
+      setTimeout(() => {
+        chooser.classList.remove('chooser-exiting');
+        _enterLab();
+      }, 280);
+    } else {
+      _enterLab();
+    }
   }
 
   /* ─── Timer ─── */
@@ -59,15 +185,18 @@ OmicsLab.App = (function() {
     OmicsLab.State.elapsed = Math.floor((Date.now() - OmicsLab.State.timerStart) / 1000);
   }
 
-  /* ─── Go home ─── */
+  /* ─── Go home (from lab bench) ─── */
   function goHome() {
     stopTimer();
+    closeWfPicker();
     showScreen('screen-landing');
+    if (OmicsLab.Router) OmicsLab.Router.navigate('home');
   }
 
   /* ─── Results ─── */
   function showResults() {
     stopTimer();
+    if (OmicsLab.Sound) OmicsLab.Sound.complete();
     const wf    = OmicsLab.Workflows[OmicsLab.State.workflow];
     const score = OmicsLab.Engine.computeScore();
     const grade = OmicsLab.Engine.getGrade(score);
@@ -499,32 +628,136 @@ OmicsLab.App = (function() {
   }
   function clearSabotageStep() { OmicsLab._sabotageStep = undefined; }
 
+  /* ── Domain SVG illustrations (inline, colour-inheriting) ── */
+  const _DOMAIN_ILL = {
+    genomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30 8 Q60 26 70 44 Q80 62 50 74 Q20 86 30 104" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M70 8 Q40 26 30 44 Q20 62 50 74 Q80 86 70 104" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".55"/>
+      <line x1="36" y1="21" x2="64" y2="21" stroke="currentColor" stroke-width="2" opacity=".4"/><circle cx="36" cy="21" r="3" fill="currentColor" opacity=".7"/><circle cx="64" cy="21" r="3" fill="currentColor" opacity=".7"/>
+      <line x1="28" y1="41" x2="72" y2="41" stroke="currentColor" stroke-width="2" opacity=".4"/><circle cx="28" cy="41" r="3" fill="currentColor" opacity=".6"/><circle cx="72" cy="41" r="3" fill="currentColor" opacity=".6"/>
+      <line x1="32" y1="61" x2="68" y2="61" stroke="currentColor" stroke-width="2" opacity=".4"/><circle cx="32" cy="61" r="3" fill="currentColor" opacity=".7"/><circle cx="68" cy="61" r="3" fill="currentColor" opacity=".7"/>
+      <line x1="38" y1="81" x2="62" y2="81" stroke="currentColor" stroke-width="2" opacity=".4"/><circle cx="38" cy="81" r="3" fill="currentColor" opacity=".5"/><circle cx="62" cy="81" r="3" fill="currentColor" opacity=".5"/>
+    </svg>`,
+    transcriptomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 60 Q22 40 38 55 Q54 70 70 48 Q86 26 96 42" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".55"/>
+      <rect x="8"  y="75" width="14" height="42" rx="4" fill="currentColor" opacity=".85"/>
+      <rect x="28" y="58" width="14" height="59" rx="4" fill="currentColor" opacity=".75"/>
+      <rect x="48" y="88" width="14" height="29" rx="4" fill="currentColor" opacity=".65"/>
+      <rect x="68" y="44" width="14" height="73" rx="4" fill="currentColor" opacity=".9"/>
+      <line x1="4" y1="72" x2="96" y2="72" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4,3" opacity=".3"/>
+      <circle cx="15" cy="66" r="4" fill="currentColor" opacity=".5"/>
+      <circle cx="35" cy="48" r="4" fill="currentColor" opacity=".5"/>
+      <circle cx="55" cy="80" r="4" fill="currentColor" opacity=".5"/>
+      <circle cx="75" cy="35" r="4" fill="currentColor" opacity=".5"/>
+    </svg>`,
+    epigenomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="110" x2="20" y2="15" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".3"/>
+      <line x1="44" y1="110" x2="44" y2="15" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity=".3"/>
+      <line x1="20" y1="28" x2="44" y2="28" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+      <line x1="20" y1="50" x2="44" y2="50" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+      <line x1="20" y1="72" x2="44" y2="72" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+      <line x1="20" y1="94" x2="44" y2="94" stroke="currentColor" stroke-width="2.5" opacity=".5"/>
+      <circle cx="72" cy="28" r="13" fill="currentColor" opacity=".88"/>
+      <text x="72" y="33" text-anchor="middle" font-size="9" fill="#080c10" font-weight="800" font-family="monospace">CH₃</text>
+      <circle cx="82" cy="72" r="13" fill="currentColor" opacity=".65"/>
+      <text x="82" y="77" text-anchor="middle" font-size="9" fill="#080c10" font-weight="800" font-family="monospace">CH₃</text>
+      <line x1="44" y1="28" x2="59" y2="28" stroke="currentColor" stroke-width="1.5" opacity=".4" stroke-dasharray="3,2"/>
+      <line x1="44" y1="72" x2="69" y2="72" stroke="currentColor" stroke-width="1.5" opacity=".4" stroke-dasharray="3,2"/>
+    </svg>`,
+    metagenomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="42" cy="58" rx="24" ry="38" stroke="currentColor" stroke-width="3" fill="none" opacity=".9"/>
+      <path d="M66 52 Q80 36 90 52 Q100 68 92 80" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M66 64 Q78 70 82 80" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".4"/>
+      <circle cx="22" cy="108" r="11" stroke="currentColor" stroke-width="2.5" fill="none" opacity=".7"/>
+      <ellipse cx="85" cy="22" rx="11" ry="19" stroke="currentColor" stroke-width="2" fill="none" opacity=".5"/>
+      <path d="M30 48 Q40 40 50 48 Q60 56 50 65 Q40 74 30 65" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".5"/>
+      <circle cx="37" cy="58" r="3" fill="currentColor" opacity=".65"/>
+      <circle cx="47" cy="67" r="3" fill="currentColor" opacity=".65"/>
+      <circle cx="50" cy="50" r="3" fill="currentColor" opacity=".65"/>
+    </svg>`,
+    metabolomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,14 72,27 72,54 50,67 28,54 28,27" stroke="currentColor" stroke-width="2.5" fill="none" opacity=".9"/>
+      <polygon points="50,22 64,31 64,47 50,56 36,47 36,31" stroke="currentColor" stroke-width="1" fill="currentColor" opacity=".1"/>
+      <line x1="50" y1="67" x2="50" y2="93" stroke="currentColor" stroke-width="2" opacity=".6"/>
+      <line x1="50" y1="93" x2="34" y2="107" stroke="currentColor" stroke-width="2" opacity=".55"/>
+      <line x1="50" y1="93" x2="66" y2="107" stroke="currentColor" stroke-width="2" opacity=".55"/>
+      <circle cx="34" cy="110" r="5.5" fill="currentColor" opacity=".75"/>
+      <circle cx="66" cy="110" r="5.5" fill="currentColor" opacity=".75"/>
+      <line x1="72" y1="40" x2="91" y2="32" stroke="currentColor" stroke-width="2" opacity=".55"/>
+      <circle cx="95" cy="30" r="5.5" fill="currentColor" opacity=".7"/>
+      <line x1="28" y1="40" x2="9" y2="32" stroke="currentColor" stroke-width="2" opacity=".45"/>
+      <circle cx="5" cy="30" r="5.5" fill="currentColor" opacity=".55"/>
+    </svg>`,
+    proteomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 28 Q34 16 50 28 Q66 40 82 28 Q82 46 66 58 Q50 70 34 58 Q18 46 18 62 Q18 78 34 88 Q50 98 66 88 Q82 78 82 94" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/>
+      <path d="M12 114 L44 102 L44 108 L62 96 L44 90 L44 96 Z" fill="currentColor" opacity=".45"/>
+      <circle cx="18" cy="28" r="4.5" fill="currentColor" opacity=".65"/>
+      <circle cx="50" cy="28" r="4.5" fill="currentColor" opacity=".65"/>
+      <circle cx="82" cy="28" r="4.5" fill="currentColor" opacity=".65"/>
+      <circle cx="34" cy="58" r="4.5" fill="currentColor" opacity=".6"/>
+      <circle cx="66" cy="58" r="4.5" fill="currentColor" opacity=".6"/>
+      <circle cx="50" cy="70" r="3.5" fill="currentColor" opacity=".5"/>
+    </svg>`,
+    virology: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="62" r="28" stroke="currentColor" stroke-width="2.5" fill="none" opacity=".85"/>
+      <circle cx="50" cy="62" r="18" stroke="currentColor" stroke-width="1" fill="none" opacity=".25"/>
+      <line x1="50" y1="34" x2="50" y2="18"/><circle cx="50" cy="14" r="5" fill="currentColor" opacity=".8"/>
+      <line x1="75" y1="47" x2="88" y2="37"/><circle cx="92" cy="34" r="5" fill="currentColor" opacity=".75"/>
+      <line x1="75" y1="77" x2="88" y2="87"/><circle cx="92" cy="90" r="5" fill="currentColor" opacity=".7"/>
+      <line x1="50" y1="90" x2="50" y2="106"/><circle cx="50" cy="110" r="5" fill="currentColor" opacity=".75"/>
+      <line x1="25" y1="77" x2="12" y2="87"/><circle cx="8" cy="90" r="5" fill="currentColor" opacity=".65"/>
+      <line x1="25" y1="47" x2="12" y2="37"/><circle cx="8" cy="34" r="5" fill="currentColor" opacity=".7"/>
+      <path d="M36 57 Q46 48 58 60 Q70 72 54 76 Q38 80 36 68 Q34 56 36 57" stroke="currentColor" stroke-width="1.5" fill="none" opacity=".45"/>
+      <line x1="50" y1="34" x2="50" y2="18" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <line x1="75" y1="47" x2="88" y2="37" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <line x1="75" y1="77" x2="88" y2="87" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <line x1="50" y1="90" x2="50" y2="106" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <line x1="25" y1="77" x2="12" y2="87" stroke="currentColor" stroke-width="2" opacity=".7"/>
+      <line x1="25" y1="47" x2="12" y2="37" stroke="currentColor" stroke-width="2" opacity=".7"/>
+    </svg>`,
+    multiomics: `<svg viewBox="0 0 100 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="62" r="12" fill="currentColor" opacity=".9"/>
+      <circle cx="50" cy="16" r="9" stroke="currentColor" stroke-width="2" fill="none" opacity=".8"/>
+      <line x1="50" y1="50" x2="50" y2="25" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+      <circle cx="94" cy="44" r="9" stroke="currentColor" stroke-width="2" fill="none" opacity=".7"/>
+      <line x1="61" y1="57" x2="85" y2="49" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+      <circle cx="80" cy="100" r="9" stroke="currentColor" stroke-width="2" fill="none" opacity=".65"/>
+      <line x1="58" y1="71" x2="74" y2="93" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+      <circle cx="20" cy="100" r="9" stroke="currentColor" stroke-width="2" fill="none" opacity=".7"/>
+      <line x1="42" y1="71" x2="26" y2="93" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+      <circle cx="6"  cy="44" r="9" stroke="currentColor" stroke-width="2" fill="none" opacity=".75"/>
+      <line x1="39" y1="57" x2="15" y2="49" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3,2" opacity=".5"/>
+      <circle cx="50" cy="62" r="20" stroke="currentColor" stroke-width="0.5" fill="none" opacity=".18"/>
+      <circle cx="50" cy="62" r="32" stroke="currentColor" stroke-width="0.5" fill="none" opacity=".08"/>
+    </svg>`,
+  };
+
+  /* ── Full-screen chooser domain tiles (click → selectDomain, no inline wf list) ── */
   function _buildWorkflowGrid() {
     const grid = document.getElementById('domain-grid');
     if (!grid) return;
-    grid.innerHTML = OmicsLab.DOMAINS.map(domain => {
-      const wfItems = domain.workflows.map(wfId => {
-        const wf = OmicsLab.Workflows[wfId];
-        if (!wf) return '';
-        const diffBadge = { beginner:'badge-green', intermediate:'badge-blue', advanced:'badge-orange' }[wf.difficulty] || 'badge-blue';
-        return `<div class="workflow-item" onclick="OmicsLab.App.startWorkflow('${wfId}')">
-          <span class="workflow-item-icon">${OmicsLab.Icons.svg(wf.icon,14)}</span>
-          <span class="workflow-item-name">${wf.name}</span>
-          <span class="domain-badge ${diffBadge}" style="font-size:0.6rem">${wf.difficulty}</span>
-          <span class="workflow-item-steps">${wf.steps.length} steps</span>
-          <span class="workflow-arrow">→</span>
-        </div>`;
-      }).join('');
 
-      return `<div class="domain-card" style="--domain-color:${domain.color};--domain-rgb:${domain.rgb}">
-        <div class="domain-header">
-          <div class="domain-icon" style="--domain-color:${domain.color};color:${domain.colorHex}">${OmicsLab.Icons.svg(domain.icon,24)}</div>
-          <span class="domain-badge ${domain.badge}">${domain.label}</span>
-        </div>
-        <div class="domain-name">${domain.label}</div>
-        <div class="domain-desc">${domain.desc}</div>
-        <div class="workflow-list">${wfItems}</div>
-      </div>`;
+    grid.innerHTML = OmicsLab.DOMAINS.map((domain, i) => {
+      const ill      = _DOMAIN_ILL[domain.id] || _DOMAIN_ILL.multiomics;
+      const wfCount  = domain.workflows.length;
+
+      return `
+        <button class="domain-tile" role="button"
+                style="--domain-color:${domain.colorHex};--domain-rgb:${domain.rgb};animation-delay:${i * 0.04}s"
+                data-domain-id="${domain.id}"
+                onclick="OmicsLab.App.selectDomain('${domain.id}')"
+                aria-label="${domain.label}: ${wfCount} protocol${wfCount !== 1 ? 's' : ''}">
+          <div class="dt-illustration" aria-hidden="true">${ill}</div>
+          <div class="dt-content">
+            <div class="dt-icon-box">${OmicsLab.Icons.svg(domain.icon, 22)}</div>
+            <div class="dt-name">${domain.label}</div>
+            <div class="dt-desc">${domain.desc}</div>
+            <div class="dt-tile-footer">
+              <span class="dt-wf-count">${wfCount} protocol${wfCount !== 1 ? 's' : ''}</span>
+              <span class="dt-tile-arrow">→</span>
+            </div>
+          </div>
+        </button>`;
     }).join('');
   }
 
@@ -1249,6 +1482,7 @@ rule annotate:
 
   return {
     init, startWorkflow, goHome, showResults, showScreen,
+    openChooser, selectDomain, closeWfPicker, chooserBack,
     _filterDiseases, _filterEquipment,
     scrollTo, toggleMobileNav, toggleLearnMenu, closeLearnMenu,
     _openEquipmentModal, _closeEquipmentModal,
@@ -1264,6 +1498,7 @@ rule annotate:
 /* ─── Boot on DOM ready ─── */
 document.addEventListener('DOMContentLoaded', () => {
   OmicsLab.App.init();
+  if (OmicsLab.Sound) OmicsLab.Sound.init();
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       OmicsLab.App._closeDiseaseModal();

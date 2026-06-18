@@ -841,7 +841,7 @@ select:focus-visible {
 }
 .home-page-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
 }
@@ -974,6 +974,9 @@ select:focus-visible {
 }
 
 /* ── Responsive router ── */
+@media (max-width: 1100px) {
+  .home-page-grid { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 900px) {
   .home-page-grid { grid-template-columns: repeat(2, 1fr); }
   .prh-tagline { display: none; }

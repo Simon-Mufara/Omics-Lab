@@ -1,0 +1,237 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Testimonials & Partner Logos
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Section wrapper ─────────────────────────────────────────── */
+.tst-section {
+  padding: 4rem 2rem 5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── "Used by X African countries" banner ───────────────────── */
+.tst-used-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  background: linear-gradient(135deg, rgba(63,185,80,0.07) 0%, rgba(88,166,255,0.05) 100%);
+  border: 1px solid rgba(63,185,80,0.18);
+  border-radius: 9999px;
+  padding: 0.7rem 1.6rem;
+  margin: 0 auto 3rem;
+  width: fit-content;
+  max-width: 90vw;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.tst-globe { font-size: 1.15rem; }
+.tst-used-text {
+  font-size: 0.9rem;
+  color: #8b949e;
+  font-weight: 500;
+}
+.tst-used-count {
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #3fb950;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  min-width: 2ch;
+  display: inline-block;
+  text-align: center;
+}
+
+/* ── Partner logos ───────────────────────────────────────────── */
+.tst-partners-wrap {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.tst-partners-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #484f58;
+  margin-bottom: 1.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.tst-partners-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.tst-partner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  opacity: 0.72;
+  transition: opacity 0.2s, transform 0.2s;
+  cursor: default;
+}
+.tst-partner:hover { opacity: 1; transform: translateY(-2px); }
+
+.tst-partner-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 52px;
+  border-radius: 12px;
+  border: 1px solid;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.03);
+  transition: background 0.2s;
+}
+.tst-partner-logo svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.tst-partner:hover .tst-partner-logo { background: rgba(255,255,255,0.06); }
+
+.tst-partner-name {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: 'Inter', system-ui, sans-serif;
+  opacity: 0.8;
+}
+
+/* ── 6-card testimonials grid ───────────────────────────────── */
+.tst-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+/* ── Individual card ────────────────────────────────────────── */
+.tst-card {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 18px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  /* Reveal animation */
+  opacity: 0;
+  animation: tstCardIn 0.5s ease forwards;
+}
+@keyframes tstCardIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Glow accent on hover */
+.tst-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 1px solid var(--tst-color, #3fb950);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.tst-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+.tst-card:hover::before { opacity: 0.4; }
+
+/* Colored top stripe */
+.tst-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--tst-color, #3fb950);
+  border-radius: 18px 18px 0 0;
+  opacity: 0.6;
+}
+
+/* Stars */
+.tst-stars {
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+/* Quote */
+.tst-quote {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #8b949e;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-style: italic;
+  margin: 0;
+  flex: 1;
+}
+
+/* Author row */
+.tst-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #21262d;
+}
+.tst-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-family: 'Sora', system-ui, sans-serif;
+  flex-shrink: 0;
+  letter-spacing: -0.01em;
+}
+.tst-author-info { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.tst-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #c9d1d9;
+  font-family: 'Sora', system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tst-flag { font-size: 0.85rem; }
+.tst-role {
+  font-size: 0.7rem;
+  color: #6e7681;
+  font-family: 'Inter', system-ui, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tst-inst {
+  font-size: 0.67rem;
+  color: var(--tst-color, #3fb950);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.85;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .tst-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .tst-section { padding: 2.5rem 1rem 3rem; }
+  .tst-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .tst-partners-row { gap: 1rem; }
+  .tst-partner-logo { width: 76px; height: 42px; }
+  .tst-used-banner { padding: 0.55rem 1.1rem; }
+  .tst-used-count { font-size: 1.4rem; }
+}

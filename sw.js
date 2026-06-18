@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v8: added router.js, page routing CSS */
-const CACHE = 'omicslab-v8';
+/* v16: 21-locale i18n system, voice TTS module, Noto Sans fonts */
+const CACHE = 'omicslab-v16';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

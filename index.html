@@ -42,12 +42,24 @@
   <meta name="twitter:image" content="https://simon-mufara.github.io/Omics-Lab/og-image.svg">
   <meta name="twitter:creator" content="@SimonMufara">
 
+  <!-- Fonts: preconnect first, then load Sora (display) + Inter (body) + JetBrains Mono (code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans:wght@400;500;700&family=Noto+Sans+Ethiopic:wght@400;700&family=Sora:wght@400;600;700;800&display=swap">
+
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/disease-learning.css">
   <link rel="stylesheet" href="css/equipment.css">
   <link rel="stylesheet" href="css/research-mode.css">
   <link rel="stylesheet" href="css/enhancements.css">
   <link rel="stylesheet" href="css/analysis.css">
+  <link rel="stylesheet" href="css/terminal.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/profile.css">
+  <link rel="stylesheet" href="css/testimonials.css">
+  <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
 <a href="#domain-section" class="skip-link">Skip to main content</a>
@@ -58,233 +70,493 @@
 <section id="screen-landing">
 
   <!-- Nav -->
-  <nav class="landing-nav">
-    <div class="logo-mark">
+  <nav class="landing-nav" id="main-nav">
+
+    <!-- Logo — click goes home -->
+    <div class="logo-mark" role="button" tabindex="0"
+         onclick="OmicsLab.Router&&OmicsLab.Router.navigate('home')"
+         onkeydown="if(event.key==='Enter'||event.key===' ')OmicsLab.Router&&OmicsLab.Router.navigate('home')"
+         aria-label="OmicsLab — go home">
       <div class="logo-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8.5-2-2"/><path d="m11 11-.5-.5"/><path d="m10 14-2-2"/><path d="m7 17-2.5-2.5"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></div>
       <div class="logo-text">Omics<span>Lab</span></div>
     </div>
-    <div class="nav-pills" id="nav-pills-desktop">
-      <button class="nav-pill active" onclick="OmicsLab.App.scrollTo('domain-section')"><span data-i18n="nav.workflows">Workflows</span></button>
 
-      <!-- Learn dropdown — all knowledge/content modules -->
-      <div class="nav-learn-wrap" id="nav-learn-wrap">
-        <button class="nav-learn-btn" id="nav-learn-btn" onclick="OmicsLab.App.toggleLearnMenu()">
-          <span data-i18n="nav.learn">Learn</span> <span class="nav-caret">▼</span>
+    <!-- Desktop primary nav — 4 items -->
+    <nav class="nav-primary" id="nav-primary" aria-label="Primary navigation">
+
+      <!-- Train (Lab + Learn) -->
+      <div class="nav-group" id="ng-train">
+        <button class="nav-group-btn" data-group="train" aria-haspopup="true">
+          Train
+          <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <div class="nav-learn-dropdown" id="nav-learn-dropdown">
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('disease-explorer-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🦠</span><span data-i18n="nav.learn.diseases"> Diseases</span>
-          </button>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('disease-learning-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">📖</span><span data-i18n="nav.learn.journey"> Learning Journey</span>
-          </button>
-          <div class="nav-learn-divider"></div>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('equipment-gallery-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🔬</span><span data-i18n="nav.learn.equipment"> Equipment Gallery</span>
-          </button>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('tool-explorer-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🛠️</span><span data-i18n="nav.learn.tools"> Tool Explorer</span>
-          </button>
-          <div class="nav-learn-divider"></div>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('bioinfo-pipeline-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🧬</span><span data-i18n="nav.learn.pipeline"> Pipeline Guide</span>
-          </button>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('hpc-training-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">⚙️</span><span data-i18n="nav.learn.hpc"> HPC Training</span>
-          </button>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('repo-explorer-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🗄️</span><span data-i18n="nav.learn.repos"> Repositories</span>
-          </button>
-          <div class="nav-learn-divider"></div>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('curriculum-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🎓</span><span data-i18n="nav.learn.curriculum"> Curriculum Tracks</span>
-          </button>
-          <button class="nav-learn-item" onclick="OmicsLab.App.scrollTo('badges-section');OmicsLab.App.closeLearnMenu()">
-            <span class="nli-icon">🏆</span><span data-i18n="nav.learn.badges"> Badges &amp; Certs</span>
-          </button>
+        <div class="nav-mega-drop" role="menu">
+          <div class="nmd-inner">
+            <div class="nmd-col">
+              <div class="nmd-label">Lab Simulations</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('lab')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)">🧪</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Lab Simulations</span>
+                  <span class="nmd-desc">14 wet-lab workflows · live QC</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('lab')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)">🎯</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Sandbox Mode</span>
+                  <span class="nmd-desc">Free-form protocol practice</span>
+                </span>
+              </button>
+            </div>
+            <div class="nmd-col">
+              <div class="nmd-label">Learn</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)">🎓</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Curriculum Tracks</span>
+                  <span class="nmd-desc">Structured paths · certificates</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)">🦠</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Disease Explorer</span>
+                  <span class="nmd-desc">40+ Africa-relevant diseases</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)">🛠️</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Tool Explorer</span>
+                  <span class="nmd-desc">50+ bioinformatics tools</span>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Standalone core tools -->
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('research-mode-section')"><span data-i18n="nav.research">Research</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('repro-hub-section')"><span data-i18n="nav.reprohub">Repro Hub</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-hub-section')"><span data-i18n="nav.africahub">Africa Hub</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('workshop-section')"><span data-i18n="nav.workshop">Workshop</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('africa-map-section')"><span data-i18n="nav.map">Map</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('qa-section')"><span data-i18n="nav.ask">Ask</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('sandbox-section')"><span data-i18n="nav.sandbox">Sandbox</span></button>
-      <button class="nav-pill" onclick="OmicsLab.Compare && OmicsLab.Compare.open()"><span data-i18n="nav.compare">Compare</span></button>
-      <button class="nav-pill" onclick="OmicsLab.App.scrollTo('analysis-section')">
-        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="margin-right:3px"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
-        <span>Analysis</span>
-      </button>
-      <button class="nav-search-btn" onclick="OmicsLab.Search && OmicsLab.Search.open()" aria-label="Open search (Ctrl+K)" title="Search (Ctrl+K)">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <span data-i18n="nav.search">Search</span>
+      <!-- Research (Research + Africa) -->
+      <div class="nav-group" id="ng-research">
+        <button class="nav-group-btn" data-group="research" aria-haspopup="true">
+          Research
+          <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-mega-drop" role="menu">
+          <div class="nmd-inner">
+            <div class="nmd-col">
+              <div class="nmd-label">Research</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)">🔭</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Research Mode</span>
+                  <span class="nmd-desc">Design studies · FAIR scoring</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)">📋</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Repro Hub</span>
+                  <span class="nmd-desc">Reproducibility workflows</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)">🏫</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Workshop</span>
+                  <span class="nmd-desc">Instructor mode · cohort tracking</span>
+                </span>
+              </button>
+            </div>
+            <div class="nmd-col">
+              <div class="nmd-label">Africa</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
+                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)">🌍</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Africa Hub</span>
+                  <span class="nmd-desc">H3Africa · APCDR · governance</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
+                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)">🗺️</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Genomics Map</span>
+                  <span class="nmd-desc">20+ active labs across 54 nations</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools (Analysis + Terminal) -->
+      <div class="nav-group" id="ng-tools">
+        <button class="nav-group-btn" data-group="tools" aria-haspopup="true">
+          Tools
+          <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-mega-drop" role="menu">
+          <div class="nmd-inner">
+            <div class="nmd-col">
+              <div class="nmd-label">Analysis</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('analysis')">
+                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)">📊</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Analysis Studio</span>
+                  <span class="nmd-desc">FASTQ · VCF · expression matrix</span>
+                </span>
+              </button>
+            </div>
+            <div class="nmd-col">
+              <div class="nmd-label">Terminal</div>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('terminal')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)">🖥️</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Pipeline Terminal</span>
+                  <span class="nmd-desc">22 tools simulated · Codespace</span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ask (no dropdown) -->
+      <button class="nav-group-btn" data-group="ask" onclick="OmicsLab.Router.navigate('ask')">Ask</button>
+
+    </nav>
+
+    <!-- Right utilities -->
+    <div class="nav-right" id="nav-right">
+      <button class="nav-search-btn" onclick="OmicsLab.Search&&OmicsLab.Search.open()" aria-label="Search (Ctrl+K)" title="Search">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search
         <kbd class="nav-search-kbd">⌘K</kbd>
       </button>
-      <button class="nav-progress-btn" onclick="OmicsLab.Progress && OmicsLab.Progress.openModal()" aria-label="My Progress" title="Export/import your progress">
-        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M12 8V12L15 15"/></svg>
-        <span data-i18n="nav.progress">My Progress</span>
+      <button class="nav-user-pill" id="nav-user-pill"
+              onclick="OmicsLab.Router&&OmicsLab.Router.navigate('profile')"
+              aria-label="My Profile and Progress">
+        <div class="nav-user-avatar" id="nav-user-avatar">SM</div>
+        <div class="nav-user-info">
+          <div class="nav-user-name" id="nav-user-name">Simon M.</div>
+          <div class="nav-user-role">My Progress</div>
+        </div>
       </button>
     </div>
-    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" onclick="OmicsLab.App.toggleMobileNav()">&#9776;</button>
-    <div class="mobile-nav-dropdown" id="mobile-nav-dropdown">
-      <!-- Pages -->
-      <div class="mob-nav-group-label">Pages</div>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('home');OmicsLab.App.toggleMobileNav()">🏠 Home</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab');OmicsLab.App.toggleMobileNav()">🧪 Lab Simulations</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('learn');OmicsLab.App.toggleMobileNav()">📚 Learn</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('research');OmicsLab.App.toggleMobileNav()">🔭 Research</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('africa');OmicsLab.App.toggleMobileNav()">🌍 Africa Hub</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('analysis');OmicsLab.App.toggleMobileNav()">📊 Analysis Studio</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('ask');OmicsLab.App.toggleMobileNav()">💬 Ask OmicsLab</button>
-      <!-- Tools -->
-      <div class="mob-nav-group-label">Tools</div>
-      <button class="mob-page-btn" onclick="OmicsLab.Progress&&OmicsLab.Progress.openModal();OmicsLab.App.toggleMobileNav()">💾 My Progress</button>
-      <button class="mob-page-btn" onclick="OmicsLab.Search&&OmicsLab.Search.open();OmicsLab.App.toggleMobileNav()">🔍 Search</button>
-      <button class="mob-page-btn" onclick="OmicsLab.App.toggleMobileNav();document.getElementById('changelog-section')&&document.getElementById('changelog-section').scrollIntoView({behavior:'smooth'})">🆕 What's New</button>
-    </div>
+
+    <!-- Mobile hamburger -->
+    <button class="nav-hamburger" id="nav-hamburger"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="mob-overlay"
+            onclick="OmicsLab.Nav&&OmicsLab.Nav.open()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
   </nav>
 
-  <!-- Hero -->
-  <div class="hero">
-    <!-- Floating DNA strands -->
-    <div class="hero-dna" aria-hidden="true">
-      <div class="dna-strand strand-a"></div>
-      <div class="dna-strand strand-b"></div>
-      <div class="dna-rung r1"></div><div class="dna-rung r2"></div>
-      <div class="dna-rung r3"></div><div class="dna-rung r4"></div>
-      <div class="dna-rung r5"></div><div class="dna-rung r6"></div>
+  <!-- Mobile full-screen overlay (lives outside <nav> for correct z-index stacking) -->
+  <div class="mob-overlay" id="mob-overlay" hidden
+       role="dialog" aria-modal="true" aria-label="Navigation menu">
+
+    <div class="mob-overlay-header">
+      <div class="logo-mark" style="pointer-events:none;cursor:default">
+        <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></div>
+        <div class="logo-text">Omics<span>Lab</span></div>
+      </div>
+      <button class="mob-overlay-close" onclick="OmicsLab.Nav&&OmicsLab.Nav.close()" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
 
-    <!-- Left: text content -->
-    <div class="hero-left">
-      <div class="hero-eyebrow" id="hero-eyebrow">
-        <div class="eyebrow-dot"></div>
-        <span data-i18n="hero.tagline">Interactive Omics Training Platform</span>
-      </div>
-      <h1 id="hero-title"><span data-i18n="hero.title1">Learn Omics</span><br><span data-i18n="hero.title2">Workflows by</span><br><span class="accent" data-i18n="hero.title3.accent">Doing</span> <span data-i18n="hero.title3.rest">Them</span></h1>
-      <p class="hero-sub" data-i18n="hero.desc">
-        Drag reagents, set parameters, watch every wet-lab decision
-        cascade through the bioinformatics pipeline in real time.
-        22 diseases · 14 workflows · 20 real instruments.
-      </p>
-      <div class="hero-cta">
-        <button class="btn-hero btn-hero-primary"
-                onclick="document.getElementById('domain-section').scrollIntoView({behavior:'smooth'})">
-          <span data-i18n="hero.cta.start">Start a Workflow →</span>
+    <div class="mob-overlay-body">
+
+      <!-- Train -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Train</div>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('lab');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)">🧪</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Lab Simulations</span>
+            <span class="mob-nav-item-desc">14 interactive wet-lab workflows with live QC</span>
+          </span>
         </button>
-        <button class="btn-hero btn-hero-secondary"
-                onclick="document.getElementById('features-section').scrollIntoView({behavior:'smooth'})">
-          <span data-i18n="hero.cta.howit">How it works</span>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('learn');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)">📚</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Learn</span>
+            <span class="mob-nav-item-desc">Diseases, tools, instruments, curriculum tracks</span>
+          </span>
         </button>
       </div>
-      <div class="hero-trust">
-        <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> No install</span>
-        <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Works offline</span>
-        <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Free forever</span>
-        <span class="trust-chip trust-africa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Designed for Africa</span>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Research -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Research</div>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('research');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)">🔭</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Research Mode</span>
+            <span class="mob-nav-item-desc">Design studies, Repro Hub, workshops</span>
+          </span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('africa');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(249,115,22,0.12)">🌍</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Africa Hub</span>
+            <span class="mob-nav-item-desc">H3Africa, genomics map, 54 nations</span>
+          </span>
+        </button>
       </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Tools -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Tools</div>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('analysis');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)">📊</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Analysis Studio</span>
+            <span class="mob-nav-item-desc">FASTQ QC, VCF explorer, expression matrix</span>
+          </span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('terminal');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)">🖥️</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Pipeline Terminal</span>
+            <span class="mob-nav-item-desc">22 tools simulated · GitHub Codespace</span>
+          </span>
+        </button>
+      </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Ask -->
+      <div class="mob-nav-section">
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('ask');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(255,107,107,0.12)">💬</span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Ask OmicsLab</span>
+            <span class="mob-nav-item-desc">55+ offline answers on workflows and tools</span>
+          </span>
+        </button>
+      </div>
+
     </div>
 
-    <!-- Right: live sim preview card -->
-    <div class="hero-right">
-      <div class="sim-preview-card">
-        <div class="spc-topbar">
-          <span class="spc-dot r"></span><span class="spc-dot y"></span><span class="spc-dot g"></span>
-          <span class="spc-title" id="spc-title">WGS — Step 3 of 12</span>
-          <span class="spc-score">Score: <b id="spc-score">94</b></span>
+    <div class="mob-overlay-footer">
+      <button class="mob-footer-btn" onclick="OmicsLab.Progress&&OmicsLab.Progress.openModal();OmicsLab.Nav&&OmicsLab.Nav.close()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        My Progress
+      </button>
+      <button class="mob-footer-btn" onclick="OmicsLab.Search&&OmicsLab.Search.open();OmicsLab.Nav&&OmicsLab.Nav.close()">
+        <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search
+      </button>
+      <button class="mob-footer-cta-btn" onclick="OmicsLab.Router.navigate('lab');OmicsLab.Nav&&OmicsLab.Nav.close()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Start Training Free
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ══ HERO — Redesigned ══ -->
+  <div class="hero hero-new" id="hero-new">
+    <div class="hero-new-inner">
+
+      <!-- Left: bold mission copy -->
+      <div class="hero-new-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Africa's Omics Training Platform
         </div>
-        <div class="spc-body">
-          <div class="spc-phase" id="spc-phase">🧬 DNA Extraction</div>
-          <div class="spc-metrics">
-            <div class="spc-metric">
-              <span class="spc-mlabel">Sample Integrity</span>
-              <div class="spc-bar-track"><div class="spc-bar-fill green" id="spc-bar1" style="width:85%"></div></div>
-              <span class="spc-mval green" id="spc-v1">8.5 RIN</span>
-            </div>
-            <div class="spc-metric">
-              <span class="spc-mlabel">Library Complexity</span>
-              <div class="spc-bar-track"><div class="spc-bar-fill blue" id="spc-bar2" style="width:78%"></div></div>
-              <span class="spc-mval blue" id="spc-v2">78%</span>
-            </div>
-            <div class="spc-metric">
-              <span class="spc-mlabel">Q30 Score</span>
-              <div class="spc-bar-track"><div class="spc-bar-fill green" id="spc-bar3" style="width:91%"></div></div>
-              <span class="spc-mval green" id="spc-v3">91%</span>
-            </div>
-            <div class="spc-metric">
-              <span class="spc-mlabel">Contamination</span>
-              <div class="spc-bar-track"><div class="spc-bar-fill orange" id="spc-bar4" style="width:4%"></div></div>
-              <span class="spc-mval green" id="spc-v4">4%</span>
-            </div>
-          </div>
-          <div class="spc-terminal" id="spc-terminal">
-            <span class="spc-prompt">$</span>
-            <span class="spc-cmd" id="spc-cmd">bwa-mem2 mem -t 16 ref.fa sample.fastq</span>
-            <span class="spc-cursor">▋</span>
-          </div>
-          <div class="spc-pipeline">
-            <span class="spc-pipe-node done">Extract</span>
-            <span class="spc-pipe-arrow">→</span>
-            <span class="spc-pipe-node done">QC</span>
-            <span class="spc-pipe-arrow">→</span>
-            <span class="spc-pipe-node active">Align</span>
-            <span class="spc-pipe-arrow">→</span>
-            <span class="spc-pipe-node">Variant</span>
-            <span class="spc-pipe-arrow">→</span>
-            <span class="spc-pipe-node">Annotate</span>
-          </div>
+
+        <!-- Personalised greeting (populated by OmicsLab.Profile) -->
+        <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
+
+        <h1 class="hero-title-new">
+          The Training Platform<br>
+          <span class="accent-line">Africa's Genomics<br>Scientists Deserve</span>
+        </h1>
+
+        <p class="hero-sub-new">
+          Simulate real wet-lab protocols, run bioinformatics pipelines,
+          study 22 diseases, and earn certificates — all offline, all free,
+          built from the ground up for African researchers.
+        </p>
+
+        <div class="hero-cta-new">
+          <button class="btn-hero-primary-new" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Start Learning Free
+          </button>
+          <button class="btn-hero-secondary-new" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
+            How it works
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </button>
+        </div>
+
+        <div class="hero-trust-new">
+          <span class="hero-trust-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Zero install
+          </span>
+          <span class="hero-trust-divider"></span>
+          <span class="hero-trust-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Works offline
+          </span>
+          <span class="hero-trust-divider"></span>
+          <span class="hero-trust-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Free forever
+          </span>
+          <span class="hero-trust-divider"></span>
+          <span class="hero-trust-chip">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            54 African countries
+          </span>
         </div>
       </div>
+
+      <!-- Right: live animated RNA-seq pipeline card -->
+      <div class="hero-pipeline-card" aria-label="Live RNA-seq pipeline simulation preview" id="hero-pipeline-card">
+        <div class="hpc-topbar">
+          <span class="hpc-dot hpc-dot-r"></span>
+          <span class="hpc-dot hpc-dot-y"></span>
+          <span class="hpc-dot hpc-dot-g"></span>
+          <span class="hpc-bar-title">omicslab — RNA-seq pipeline</span>
+          <span class="hpc-badge-live">LIVE</span>
+        </div>
+
+        <div class="hpc-body">
+          <div class="hpc-steps" id="hpc-steps">
+            <!-- Populated by JS animation -->
+            <div class="hpc-step done" data-pct="100" data-tool="fastqc -t 4 sample_R1.fastq.gz">
+              <div class="hpc-step-icon">✓</div>
+              <div class="hpc-step-info">
+                <div class="hpc-step-name">FastQC — Quality Control</div>
+                <div class="hpc-step-tool">fastqc -t 4 sample_R1.fastq.gz</div>
+                <div class="hpc-progress-wrap">
+                  <div class="hpc-prog-bar"><div class="hpc-prog-fill" style="width:100%"></div></div>
+                  <span class="hpc-prog-pct">100%</span>
+                </div>
+              </div>
+            </div>
+            <div class="hpc-step done" data-pct="100" data-tool="fastp -i R1.fq.gz -I R2.fq.gz -w 8">
+              <div class="hpc-step-icon">✓</div>
+              <div class="hpc-step-info">
+                <div class="hpc-step-name">fastp — Adapter Trimming</div>
+                <div class="hpc-step-tool">fastp -i R1.fq.gz -I R2.fq.gz -w 8</div>
+                <div class="hpc-progress-wrap">
+                  <div class="hpc-prog-bar"><div class="hpc-prog-fill" style="width:100%"></div></div>
+                  <span class="hpc-prog-pct">100%</span>
+                </div>
+              </div>
+            </div>
+            <div class="hpc-step active" data-pct="67" data-tool="STAR --runMode alignReads --runThreadN 8">
+              <div class="hpc-step-icon">⟳</div>
+              <div class="hpc-step-info">
+                <div class="hpc-step-name">STAR — Spliced Alignment</div>
+                <div class="hpc-step-tool">STAR --runMode alignReads --runThreadN 8</div>
+                <div class="hpc-progress-wrap">
+                  <div class="hpc-prog-bar"><div class="hpc-prog-fill" id="hero-active-fill" style="width:67%"></div></div>
+                  <span class="hpc-prog-pct" id="hero-active-pct">67%</span>
+                </div>
+              </div>
+            </div>
+            <div class="hpc-step pending" data-pct="0" data-tool="featureCounts -a annotation.gtf">
+              <div class="hpc-step-icon">4</div>
+              <div class="hpc-step-info">
+                <div class="hpc-step-name">featureCounts — Read Counting</div>
+                <div class="hpc-step-tool">featureCounts -a annotation.gtf</div>
+                <div class="hpc-progress-wrap">
+                  <div class="hpc-prog-bar"><div class="hpc-prog-fill" style="width:0%"></div></div>
+                  <span class="hpc-prog-pct">—</span>
+                </div>
+              </div>
+            </div>
+            <div class="hpc-step pending" data-pct="0" data-tool="Rscript run_DESeq2.R --contrast treated vs control">
+              <div class="hpc-step-icon">5</div>
+              <div class="hpc-step-info">
+                <div class="hpc-step-name">DESeq2 — Differential Expression</div>
+                <div class="hpc-step-tool">Rscript run_DESeq2.R</div>
+                <div class="hpc-progress-wrap">
+                  <div class="hpc-prog-bar"><div class="hpc-prog-fill" style="width:0%"></div></div>
+                  <span class="hpc-prog-pct">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hpc-terminal-line">
+          <span class="hpc-terminal-prompt">$</span>
+          <span class="hpc-terminal-cmd" id="hero-terminal-cmd">STAR --runMode alignReads --runThreadN 8 --genomeDir /ref/GRCh38</span>
+          <span class="hpc-terminal-cursor"></span>
+        </div>
+
+        <div class="hpc-score-row">
+          <span class="hpc-score-label">Pipeline score</span>
+          <span class="hpc-score-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+            <span id="hero-score">96</span> / 100
+          </span>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Stats -->
-  <div class="stats-strip">
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8.5-2-2"/><path d="m11 11-.5-.5"/><path d="m10 14-2-2"/><path d="m7 17-2.5-2.5"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></div>
-      <div class="stat-num">14</div>
-      <div class="stat-label">Workflows</div>
+  <!-- Stats strip (redesigned) -->
+  <div class="stats-strip stats-strip-new">
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="14">14</span><span class="sn-accent">+</span></div>
+      <div class="stat-new-label">Omics Workflows</div>
     </div>
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0 0-14h-1"/><path d="M9 14l.35-3.69"/><path d="M9.76 9.49L8 4"/><path d="M12 4h4v6"/></svg></div>
-      <div class="stat-num">8</div>
-      <div class="stat-label">Omics Domains</div>
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="22">22</span><span class="sn-accent">+</span></div>
+      <div class="stat-new-label">Diseases Covered</div>
     </div>
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></div>
-      <div class="stat-num">22</div>
-      <div class="stat-label">Diseases</div>
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="50">50</span><span class="sn-accent">+</span></div>
+      <div class="stat-new-label">Bioinformatics Tools</div>
     </div>
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></div>
-      <div class="stat-num">20</div>
-      <div class="stat-label">Real Instruments</div>
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="20">20</span><span class="sn-accent">+</span></div>
+      <div class="stat-new-label">Real Instruments</div>
     </div>
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
-      <div class="stat-num">16</div>
-      <div class="stat-label">Repositories</div>
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="54">54</span></div>
+      <div class="stat-new-label">African Countries</div>
     </div>
-    <div class="stat">
-      <div class="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-      <div class="stat-num">8</div>
-      <div class="stat-label">Live QC Metrics</div>
+    <div class="stat-new">
+      <div class="stat-new-num"><span class="sn-count" data-target="5">5</span></div>
+      <div class="stat-new-label">Languages</div>
     </div>
   </div>
 
-  <!-- Domain grid -->
+  <!-- Domain grid (moved to #screen-chooser — open via "Lab" nav button) -->
   <div class="domain-section reveal" id="domain-section">
-    <div class="section-label">Choose your experiment</div>
-    <h2 class="section-title">Select an Omics Domain</h2>
+    <div class="section-label">Interactive simulations</div>
+    <h2 class="section-title">Launch the Lab</h2>
     <p class="section-desc">
-      Each domain contains realistic protocols with interactive reagent selection,
-      instrument parameter tuning, and a live quality control dashboard.
+      Select from 8 omics domains and 14 scientifically accurate protocols with live QC feedback.
     </p>
-    <div class="domain-grid" id="domain-grid">
-      <!-- Populated by app.js -->
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn-hero-primary-new" onclick="OmicsLab.App.openChooser()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Open Experiment Chooser
+      </button>
     </div>
   </div>
 
@@ -558,6 +830,11 @@
     </div>
   </div>
 
+  <!-- Profile page (rendered by OmicsLab.Profile.openProfile()) -->
+  <div class="reveal" id="profile-section" style="display:none">
+    <div id="profile-page-content" class="profile-page-wrap"></div>
+  </div>
+
   <!-- Features -->
   <div class="features-section reveal" id="features-section">
     <div class="section-label">Platform capabilities</div>
@@ -615,6 +892,11 @@
       Supports FASTQ quality control, FASTA sequence tools, VCF variant exploration, gene expression matrices, and multiple sequence alignment viewing.
     </p>
     <div id="analysis-studio-content"><!-- Populated by analysis.js --></div>
+  </div>
+
+  <!-- Bioinformatics Terminal + Codespace Launcher -->
+  <div class="terminal-studio-section reveal" id="terminal-section">
+    <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
   </div>
 
   <!-- Changelog / What's New -->
@@ -695,6 +977,52 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
+     DOMAIN CHOOSER SCREEN (full-screen lobby, shown on #/lab)
+     ══════════════════════════════════════════════════════════ -->
+<section id="screen-chooser" aria-label="Choose your experiment">
+
+  <!-- Top bar -->
+  <div class="chooser-topbar">
+    <button class="chooser-back-btn" onclick="OmicsLab.App.chooserBack()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back
+    </button>
+    <div class="chooser-title-wrap">
+      <div class="chooser-eyebrow">8 omics domains · 14 protocols · scientifically accurate</div>
+      <h1 class="chooser-title">Choose your experiment</h1>
+    </div>
+    <div class="chooser-topbar-right">
+      <span class="chooser-hint">Select a domain below to begin</span>
+    </div>
+  </div>
+
+  <!-- 8 large domain tiles -->
+  <div class="chooser-grid" id="domain-grid">
+    <!-- Populated by app.js _buildWorkflowGrid() -->
+  </div>
+
+  <!-- Workflow picker drawer (slides up when a domain is selected) -->
+  <div class="wf-picker" id="wf-picker" aria-hidden="true" aria-live="polite">
+    <div class="wf-picker-backdrop" onclick="OmicsLab.App.closeWfPicker()"></div>
+    <div class="wf-picker-panel">
+      <div class="wf-picker-header">
+        <div class="wf-picker-meta">
+          <span class="wf-picker-domain-badge" id="wf-picker-domain-badge"></span>
+          <span class="wf-picker-label">Choose a protocol</span>
+        </div>
+        <button class="wf-picker-close-btn" onclick="OmicsLab.App.closeWfPicker()" aria-label="Close workflow picker">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="wf-picker-cards" id="wf-picker-cards" role="list">
+        <!-- Populated by selectDomain() -->
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
      LAB WORKSPACE
      ══════════════════════════════════════════════════════════ -->
 <section id="screen-lab" class="screen-lab-active">
@@ -720,6 +1048,18 @@
     <div class="topbar-right">
       <div class="timer-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span id="timer-val">0:00</span></div>
       <div class="score-chip">Score: <span class="score-num ok" id="score-num">100</span></div>
+      <button class="sound-toggle-btn" id="sound-toggle-btn" aria-pressed="false"
+              title="Sound off — click to enable"
+              onclick="OmicsLab.Sound && OmicsLab.Sound.toggle()">
+        <span class="sound-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pipeline progress bar (always visible below topbar) -->
+  <div id="lab-pipeline-bar" aria-label="Pipeline progress">
+    <div class="pipeline-track" id="pipeline-track">
+      <!-- Populated by QC.renderPipeline() -->
     </div>
   </div>
 
@@ -773,13 +1113,6 @@
         <div class="qc-label">Quality Control</div>
         <div id="qc-gauges">
           <!-- Populated by QC.render() -->
-        </div>
-      </div>
-
-      <div class="qc-section">
-        <div class="qc-label">Pipeline Progress</div>
-        <div class="pipeline-track" id="pipeline-track">
-          <!-- Populated by QC.renderPipeline() -->
         </div>
       </div>
 
@@ -894,15 +1227,202 @@
 <script src="js/search.js"></script>
 <script src="js/changelog.js"></script>
 <script src="js/analysis.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/tour.js"></script>
+<script src="js/testimonials.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/voice.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
+<style>
+  @keyframes shakeField {
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
+</style>
 <script>
+  /* ── OmicsLab.Nav — mobile overlay + user pill ── */
+  window.OmicsLab = window.OmicsLab || {};
+  OmicsLab.Nav = (function () {
+    var _overlay, _hamburger;
+
+    function _el() {
+      _overlay    = _overlay    || document.getElementById('mob-overlay');
+      _hamburger  = _hamburger  || document.getElementById('nav-hamburger');
+    }
+
+    function open() {
+      _el();
+      if (!_overlay) return;
+      _overlay.removeAttribute('hidden');
+      _overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      if (_hamburger) _hamburger.setAttribute('aria-expanded', 'true');
+      /* trap focus inside overlay */
+      setTimeout(() => {
+        const first = _overlay.querySelector('button, [tabindex="0"]');
+        if (first) first.focus();
+      }, 80);
+    }
+
+    function close() {
+      _el();
+      if (!_overlay) return;
+      _overlay.setAttribute('hidden', '');
+      _overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+      if (_hamburger) _hamburger.setAttribute('aria-expanded', 'false');
+    }
+
+    /* Close on Escape key */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') close();
+    });
+
+    /* Populate user pill from localStorage (graceful fallback) */
+    function _initUserPill() {
+      const avatarEl = document.getElementById('nav-user-avatar');
+      const nameEl   = document.getElementById('nav-user-name');
+      if (!avatarEl || !nameEl) return;
+
+      const stored = JSON.parse(localStorage.getItem('omicslab_user_profile') || '{}');
+      const name   = stored.name || 'Simon Mufara';
+      const initials = name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+
+      avatarEl.textContent = initials;
+      nameEl.textContent   = name.split(' ')[0] + ' ' + (name.split(' ')[1]?.[0] || '') + '.';
+    }
+
+    document.addEventListener('DOMContentLoaded', _initUserPill);
+
+    return { open, close };
+  })();
+
   /* ── Boot new modules after app.js initialises ── */
   document.addEventListener('DOMContentLoaded', function () {
     if (OmicsLab.Changelog) OmicsLab.Changelog.init();
-    if (OmicsLab.Analysis) OmicsLab.Analysis.init();
-    if (OmicsLab.Router)   OmicsLab.Router.init();
+    if (OmicsLab.Analysis)  OmicsLab.Analysis.init();
+    if (OmicsLab.Terminal)  OmicsLab.Terminal.init();
+    if (OmicsLab.Router)    OmicsLab.Router.init();
+    if (OmicsLab.Profile)   OmicsLab.Profile.init();
+    _startHeroPipelineAnimation();
+    _initStatCounters();
   });
+
+  /* ── Stats strip count-up (IntersectionObserver) ── */
+  function _initStatCounters() {
+    if (!('IntersectionObserver' in window)) return;
+    var counters = document.querySelectorAll('.sn-count[data-target]');
+    if (!counters.length) return;
+
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        _countUp(entry.target);
+      });
+    }, { threshold: 0.6 });
+
+    counters.forEach(function(el) { io.observe(el); });
+  }
+
+  function _countUp(el) {
+    var target   = parseInt(el.dataset.target, 10);
+    var duration = 1300; /* ms */
+    var start    = performance.now();
+    el.textContent = '0';
+
+    (function tick(now) {
+      var elapsed  = now - start;
+      var progress = Math.min(elapsed / duration, 1);
+      /* ease-out cubic */
+      var eased    = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(tick);
+    })(start);
+  }
+
+  /* ── Hero pipeline live animation ── */
+  function _startHeroPipelineAnimation() {
+    const steps = document.querySelectorAll('#hpc-steps .hpc-step');
+    if (!steps.length) return;
+
+    const CMDS = [
+      'fastqc -t 4 data/sample_R1.fastq.gz data/sample_R2.fastq.gz',
+      'fastp -i data/sample_R1.fastq.gz -I data/sample_R2.fastq.gz -w 8 -o trimmed_R1.fq -O trimmed_R2.fq',
+      'STAR --runMode alignReads --runThreadN 8 --genomeDir /ref/GRCh38 --readFilesIn trimmed_R1.fq trimmed_R2.fq',
+      'featureCounts -T 8 -a annotation.gtf -o counts.txt Aligned.sortedByCoord.out.bam',
+      'Rscript run_DESeq2.R --contrast KO_vs_WT --padj 0.05 --lfc 1.5'
+    ];
+
+    let activeIdx = 2; /* start at STAR (already in progress) */
+    let pct = 67;
+    const cmdEl  = document.getElementById('hero-terminal-cmd');
+    const fillEl = document.getElementById('hero-active-fill');
+    const pctEl  = document.getElementById('hero-active-pct');
+
+    function tick() {
+      if (!document.getElementById('hero-pipeline-card')) return; /* navigated away */
+      pct += Math.random() < 0.4 ? 2 : 1;
+      if (pct >= 100) {
+        /* complete active step */
+        const step = steps[activeIdx];
+        step.classList.remove('active');
+        step.classList.add('done');
+        step.querySelector('.hpc-step-icon').textContent = '✓';
+        if (fillEl) fillEl.style.width = '100%';
+        if (pctEl)  pctEl.textContent  = '100%';
+
+        activeIdx++;
+        if (activeIdx >= steps.length) {
+          /* full cycle complete — reset all to pending after pause */
+          setTimeout(() => {
+            steps.forEach((s, i) => {
+              s.classList.remove('done','active');
+              s.classList.add('pending');
+              const fill = s.querySelector('.hpc-prog-fill');
+              const p    = s.querySelector('.hpc-prog-pct');
+              const icon = s.querySelector('.hpc-step-icon');
+              if (fill) fill.style.width = '0%';
+              if (p)    p.textContent    = '—';
+              if (icon) icon.textContent = String(i + 1);
+            });
+            activeIdx = 0; pct = 0;
+            steps[0].classList.remove('pending');
+            steps[0].classList.add('active');
+            steps[0].querySelector('.hpc-step-icon').textContent = '⟳';
+            if (cmdEl) cmdEl.textContent = CMDS[0];
+          }, 1800);
+          return;
+        }
+
+        /* activate next */
+        pct = 0;
+        steps[activeIdx].classList.remove('pending');
+        steps[activeIdx].classList.add('active');
+        steps[activeIdx].querySelector('.hpc-step-icon').textContent = '⟳';
+        const nFill = steps[activeIdx].querySelector('.hpc-prog-fill');
+        const nPct  = steps[activeIdx].querySelector('.hpc-prog-pct');
+        if (nFill) nFill.style.width = '0%';
+        if (nPct)  nPct.textContent  = '0%';
+        if (cmdEl) cmdEl.textContent = CMDS[activeIdx] || '';
+      } else {
+        const aFill = steps[activeIdx]?.querySelector('.hpc-prog-fill');
+        const aPct  = steps[activeIdx]?.querySelector('.hpc-prog-pct');
+        if (aFill) aFill.style.width = pct + '%';
+        if (aPct)  aPct.textContent  = pct + '%';
+        if (fillEl) fillEl.style.width = pct + '%';
+        if (pctEl)  pctEl.textContent  = pct + '%';
+      }
+      setTimeout(tick, 120 + Math.random() * 80);
+    }
+
+    setTimeout(tick, 1200);
+  }
 </script>
 
 </body>

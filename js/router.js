@@ -1,9 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab — Page Router
-   Converts the single-page scroll site into a proper multi-page app.
-   Pages: home · lab · learn · research · africa · analysis · ask
+   Pages: home · lab · learn · research · africa · analysis · terminal · ask
 
-   URL format: index.html#/page  (e.g. #/lab, #/learn)
+   URL format: index.html#/page  (e.g. #/lab, #/terminal)
    ═══════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
 
@@ -58,6 +57,13 @@ OmicsLab.Router = (function () {
       tagline: 'FASTQ QC, FASTA tools, VCF explorer, expression matrix, MSA viewer — all in your browser',
       sections: ['analysis-section'],
     },
+    terminal: {
+      label: 'Terminal',
+      icon: '🖥️',
+      color: '#3fb950',
+      tagline: 'Simulate real pipelines in the browser, or launch a GitHub Codespace to run actual tools on your data',
+      sections: ['terminal-section'],
+    },
     ask: {
       label: 'Ask',
       icon: '💬',
@@ -65,6 +71,22 @@ OmicsLab.Router = (function () {
       tagline: '55+ pre-written offline answers on workflows, tools, diseases, and African genomics',
       sections: ['qa-section'],
     },
+    profile: {
+      label: 'Profile',
+      icon: '👤',
+      color: '#3fb950',
+      tagline: 'Your learning journey, badges, curriculum progress, and personalised recommendations',
+      sections: ['profile-section'],
+    },
+  };
+
+  /* Maps each page to its primary nav group for active-state highlighting */
+  const PAGE_TO_GROUP = {
+    lab: 'train', learn: 'train',
+    research: 'research', africa: 'research',
+    analysis: 'tools', terminal: 'tools',
+    ask: 'ask',
+    profile: null, /* user pill is the nav element for profile */
   };
 
   /* All section IDs that belong to any page (not home) */
@@ -75,6 +97,13 @@ OmicsLab.Router = (function () {
 
   let _currentPage = 'home';
 
+  /* ─── Fade + slide-up page enter animation ─── */
+  function _animateIn(el) {
+    el.classList.remove('page-entering');
+    void el.offsetWidth; /* force reflow so re-adding the class re-triggers the animation */
+    el.classList.add('page-entering');
+  }
+
   /* ─── Navigate to a page ─── */
   function navigate(page) {
     if (!PAGES[page]) page = 'home';
@@ -84,6 +113,23 @@ OmicsLab.Router = (function () {
     const hash = '#/' + page;
     if (location.hash !== hash) history.pushState(null, '', hash);
 
+    /* Lab page → open the full-screen chooser instead of landing page sections */
+    if (page === 'lab') {
+      const activeGroup = PAGE_TO_GROUP['lab'] || null;
+      document.querySelectorAll('.nav-group-btn').forEach(btn => {
+        btn.classList.toggle('active', !!activeGroup && btn.dataset.group === activeGroup);
+      });
+      _renderPageHeader('home'); /* hide page header — chooser has its own header */
+      if (OmicsLab.App && OmicsLab.App.openChooser) OmicsLab.App.openChooser();
+      return;
+    }
+
+    /* For any non-lab page, ensure screen-chooser is hidden */
+    const chooser = document.getElementById('screen-chooser');
+    if (chooser && chooser.classList.contains('active')) {
+      if (OmicsLab.App && OmicsLab.App.showScreen) OmicsLab.App.showScreen('screen-landing');
+    }
+
     /* Show/hide sections */
     const targetSections = PAGES[page].sections;
     ALL_SECTIONS.forEach(id => {
@@ -91,21 +137,27 @@ OmicsLab.Router = (function () {
       if (!el) return;
       const show = targetSections.includes(id);
       el.style.display = show ? '' : 'none';
+      if (show) _animateIn(el);
     });
 
     /* Show/hide home content */
     const homeContent = document.getElementById('home-page-content');
-    if (homeContent) homeContent.style.display = page === 'home' ? '' : 'none';
+    if (homeContent) {
+      const showHome = page === 'home';
+      homeContent.style.display = showHome ? '' : 'none';
+      if (showHome) _animateIn(homeContent);
+    }
 
     /* Show/hide hero + stats strip */
-    const hero      = document.querySelector('.hero');
-    const stats     = document.querySelector('.stats-strip');
-    if (hero)  hero.style.display  = page === 'home' ? '' : 'none';
-    if (stats) stats.style.display = page === 'home' ? '' : 'none';
+    const hero  = document.querySelector('.hero');
+    const stats = document.querySelector('.stats-strip');
+    if (hero)  { hero.style.display  = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(hero); }
+    if (stats) { stats.style.display = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(stats); }
 
-    /* Update nav active state */
-    document.querySelectorAll('.page-nav-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.page === page);
+    /* Update nav active state — highlight the owning group button */
+    const activeGroup = PAGE_TO_GROUP[page] || null;
+    document.querySelectorAll('.nav-group-btn').forEach(btn => {
+      btn.classList.toggle('active', !!activeGroup && btn.dataset.group === activeGroup);
     });
 
     /* Page header */
@@ -121,9 +173,20 @@ OmicsLab.Router = (function () {
       const el = document.getElementById('analysis-studio-content');
       if (el && !el.querySelector('.az-tabs')) OmicsLab.Analysis.init();
     }
+    if (page === 'terminal' && OmicsLab.Terminal) {
+      const el = document.getElementById('terminal-studio-content');
+      if (el && !el.querySelector('.terminal-page')) OmicsLab.Terminal.init();
+    }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch {} }, 100);
     }
+    if (page === 'profile' && OmicsLab.Profile) {
+      OmicsLab.Profile.openProfile();
+    }
+
+    /* Highlight user pill when on profile page */
+    const userPill = document.getElementById('nav-user-pill');
+    if (userPill) userPill.classList.toggle('active-pill', page === 'profile');
   }
 
   /* ─── Render the page sub-header ─── */
@@ -161,127 +224,264 @@ OmicsLab.Router = (function () {
       </div>`;
   }
 
-  /* ─── Render home page overview grid ─── */
+  /* ─── Render full home page content ─── */
   function _renderHome() {
     let homeContent = document.getElementById('home-page-content');
     if (!homeContent) {
       homeContent = document.createElement('div');
       homeContent.id = 'home-page-content';
-      /* Insert after stats-strip */
       const statsStrip = document.querySelector('.stats-strip');
       if (statsStrip) statsStrip.after(homeContent);
-      else {
-        const landing = document.getElementById('screen-landing');
-        if (landing) landing.prepend(homeContent);
-      }
     }
 
-    const cards = [
+    const WORKFLOWS = [
       {
-        page: 'lab',
-        icon: '🧪',
+        name: 'Whole Genome Sequencing',
+        domain: 'Genomics',
         color: '#3fb950',
-        title: 'Lab Simulations',
-        desc: '14 interactive wet-lab workflows across 8 omics domains. Drag reagents, tune parameters, watch QC cascade in real time.',
-        chips: ['WGS', 'RNA-seq', 'ATAC-seq', 'ChIP-seq', 'Metagenomics', '+ 9 more'],
-        cta: 'Open Lab →',
+        desc: 'From blood tube to variant calls — DNA extraction, library prep, Illumina sequencing, BWA-MEM2 alignment, GATK HaplotypeCaller, and VEP annotation.',
+        tools: ['BWA-MEM2', 'samtools', 'Picard', 'GATK4', 'VEP'],
+        difficulty: 'Advanced',
+        diffClass: 'diff-advanced',
+        page: 'lab',
       },
       {
-        page: 'learn',
-        icon: '📚',
+        name: 'Bulk RNA-seq',
+        domain: 'Transcriptomics',
         color: '#58a6ff',
-        title: 'Learn',
-        desc: '40+ disease profiles, 50+ bioinformatics tools, 20+ real instruments, structured curriculum tracks and certificates.',
-        chips: ['Disease Explorer', 'Tool Explorer', 'HPC Training', 'Certificates'],
-        cta: 'Start Learning →',
+        desc: 'Measure genome-wide gene expression: poly-A selection, STAR 2-pass alignment, featureCounts, DESeq2 differential expression, and volcano plot visualisation.',
+        tools: ['STAR', 'featureCounts', 'Salmon', 'DESeq2', 'ggplot2'],
+        difficulty: 'Intermediate',
+        diffClass: 'diff-intermediate',
+        page: 'lab',
       },
       {
-        page: 'research',
-        icon: '🔭',
-        color: '#bc8cff',
-        title: 'Research',
-        desc: 'Design reproducible studies, submit metadata for FAIR scoring, run workshops with instructor mode and cohort tracking.',
-        chips: ['Research Mode', 'Repro Hub', 'Workshop', 'FAIR Scoring'],
-        cta: 'Design a Study →',
-      },
-      {
-        page: 'africa',
-        icon: '🌍',
+        name: 'Metagenomic Profiling',
+        domain: 'Metagenomics',
         color: '#f97316',
-        title: 'Africa Hub',
-        desc: 'H3Africa data governance, population genomics, One Health, grant alignment, and an interactive map of 20+ active labs.',
-        chips: ['H3Africa', 'AWI-Gen', 'APCDR', 'Africa Map'],
-        cta: 'Explore Africa →',
-      },
-      {
-        page: 'analysis',
-        icon: '📊',
-        color: '#e3b341',
-        title: 'Analysis Studio',
-        desc: 'Upload your own data and get real results. FASTQ QC, FASTA tools, VCF explorer, expression matrices, MSA viewer.',
-        chips: ['FASTQ QC', 'FASTA Tools', 'VCF Explorer', 'Expression Matrix'],
-        cta: 'Analyse Data →',
-        badge: 'NEW',
-      },
-      {
-        page: 'ask',
-        icon: '💬',
-        color: '#ff6b6b',
-        title: 'Ask OmicsLab',
-        desc: '55+ pre-written answers on workflows, tools, QC metrics, diseases, and African genomics. Works fully offline.',
-        chips: ['Offline', 'No API', 'Instant answers'],
-        cta: 'Ask a Question →',
+        desc: 'Characterise microbial communities from environmental or clinical samples using Kraken2 taxonomic classification and Bracken abundance re-estimation.',
+        tools: ['fastp', 'Kraken2', 'Bracken', 'KronaTools', 'R'],
+        difficulty: 'Beginner',
+        diffClass: 'diff-beginner',
+        page: 'lab',
       },
     ];
 
+    const TESTIMONIALS = [
+      {
+        quote: 'OmicsLab completely changed how I teach genomics at KEMRI. Students now arrive at the bench understanding exactly what each step does — the error propagation alone is worth it.',
+        name: 'Dr. Amara Osei-Bonsu',
+        role: 'Genomics Lead, KEMRI · Nairobi, Kenya',
+        avatar: '👩🏿‍🔬',
+        flag: '🇰🇪',
+        color: '#3fb950',
+      },
+      {
+        quote: 'As a PhD student in Cape Town with no wet-lab access, this platform let me simulate an entire WGS pipeline before touching a single sample. My supervisor was impressed by how prepared I was.',
+        name: 'Sipho Dlamini',
+        role: 'PhD Candidate, UCT · Cape Town, South Africa',
+        avatar: '👨🏿‍💻',
+        flag: '🇿🇦',
+        color: '#58a6ff',
+      },
+      {
+        quote: 'The Africa Hub content is unlike anything I\'ve seen in a training platform — H3Africa governance, AWI-Gen population context, One Health surveillance. It speaks our language.',
+        name: 'Fatima Al-Rashidi',
+        role: 'Bioinformatician, APCDR · Entebbe, Uganda',
+        avatar: '👩🏽‍🔬',
+        flag: '🇺🇬',
+        color: '#bc8cff',
+      },
+    ];
+
+    const PARTNERS = [
+      { mark: 'H3', name: 'H3Africa\nNetwork', color: '#3fb950', bg: 'rgba(63,185,80,0.1)' },
+      { mark: 'AP', name: 'APCDR\nUganda', color: '#58a6ff', bg: 'rgba(88,166,255,0.1)' },
+      { mark: 'KE', name: 'KEMRI\nKenya', color: '#f97316', bg: 'rgba(249,115,22,0.1)' },
+      { mark: 'SA', name: 'Sanger\nAfrica', color: '#bc8cff', bg: 'rgba(188,140,255,0.1)' },
+      { mark: 'UC', name: 'UCT\nSouth Africa', color: '#e3b341', bg: 'rgba(227,179,65,0.1)' },
+      { mark: 'MR', name: 'MRC\nGambia', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)' },
+    ];
+
     homeContent.innerHTML = `
-      <div class="home-page-grid-wrap">
-        <div class="home-page-section-label">Where would you like to go?</div>
-        <div class="home-page-grid">
-          ${cards.map(c => `
-            <button class="home-page-card" onclick="OmicsLab.Router.navigate('${c.page}')" style="--card-color:${c.color}">
-              <div class="hpc-top">
-                <span class="hpc-icon">${c.icon}</span>
-                ${c.badge ? `<span class="hpc-badge">${c.badge}</span>` : ''}
+
+      <!-- ══ HOW IT WORKS ══ -->
+      <div id="how-it-works" class="hiw-section">
+        <div class="home-section-label">How it works</div>
+        <h2 class="home-section-title">From zero to genomics expert<br>in three steps</h2>
+        <p class="home-section-sub">No textbook can simulate the cascade of consequences when you make a mistake at DNA extraction. OmicsLab can.</p>
+
+        <div class="hiw-steps">
+          <div class="hiw-step">
+            <div class="hiw-step-num hiw-step-num-1">
+              <span style="font-size:1.5rem">🧪</span>
+              <div class="hiw-step-badge">1</div>
+            </div>
+            <div class="hiw-step-title">Choose your experiment</div>
+            <div class="hiw-step-desc">
+              Pick from 14 realistic protocols across 8 omics domains — WGS, RNA-seq, ATAC-seq, ChIP-seq, single-cell, metagenomics, proteomics, and more. Every protocol targets real African diseases.
+            </div>
+            <div class="hiw-step-chips">
+              <span class="hiw-step-chip chip-green">WGS</span>
+              <span class="hiw-step-chip chip-green">RNA-seq</span>
+              <span class="hiw-step-chip chip-green">scRNA-seq</span>
+              <span class="hiw-step-chip chip-green">Metagenomics</span>
+            </div>
+          </div>
+
+          <div class="hiw-step">
+            <div class="hiw-step-num hiw-step-num-2">
+              <span style="font-size:1.5rem">⚗️</span>
+              <div class="hiw-step-badge">2</div>
+            </div>
+            <div class="hiw-step-title">Run the protocol, make decisions</div>
+            <div class="hiw-step-desc">
+              Drag reagents onto the bench, tune instrument parameters, and watch 8 live QC metrics update after every decision. Early mistakes amplify downstream — just like real life.
+            </div>
+            <div class="hiw-step-chips">
+              <span class="hiw-step-chip chip-blue">Drag & drop</span>
+              <span class="hiw-step-chip chip-blue">Live QC</span>
+              <span class="hiw-step-chip chip-blue">Error cascade</span>
+            </div>
+          </div>
+
+          <div class="hiw-step">
+            <div class="hiw-step-num hiw-step-num-3">
+              <span style="font-size:1.5rem">📊</span>
+              <div class="hiw-step-badge">3</div>
+            </div>
+            <div class="hiw-step-title">Get results, earn your certificate</div>
+            <div class="hiw-step-desc">
+              Receive a full QC report with per-metric PASS/FAIL, a mistake log showing exactly where you went wrong, and a grade. Complete a curriculum track to earn a shareable certificate.
+            </div>
+            <div class="hiw-step-chips">
+              <span class="hiw-step-chip chip-purple">QC Report</span>
+              <span class="hiw-step-chip chip-purple">Grade + Badge</span>
+              <span class="hiw-step-chip chip-purple">Certificate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ FEATURED WORKFLOWS ══ -->
+      <div class="featured-wf-section">
+        <div class="home-section-label">Featured workflows</div>
+        <h2 class="home-section-title">Start with any experiment</h2>
+        <p class="home-section-sub">Each workflow is scientifically accurate, Africa-relevant, and runs entirely in your browser.</p>
+
+        <div class="wf-cards-row">
+          ${WORKFLOWS.map(w => `
+            <button class="wf-feature-card" style="--wf-color:${w.color}"
+                    onclick="OmicsLab.Router.navigate('${w.page}')">
+              <div class="wfc-domain">${w.domain}</div>
+              <div class="wfc-name">${w.name}</div>
+              <div class="wfc-desc">${w.desc}</div>
+              <div class="wfc-tools">
+                ${w.tools.map(t => `<span class="wfc-tool">${t}</span>`).join('')}
               </div>
-              <div class="hpc-title">${c.title}</div>
-              <div class="hpc-desc">${c.desc}</div>
-              <div class="hpc-chips">
-                ${c.chips.map(ch => `<span class="hpc-chip">${ch}</span>`).join('')}
+              <div class="wfc-footer">
+                <span class="wfc-difficulty ${w.diffClass}">${w.difficulty}</span>
+                <span class="wfc-start">Start Protocol <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </div>
-              <div class="hpc-cta">${c.cta}</div>
             </button>`).join('')}
         </div>
 
-        <!-- Quick stats row -->
-        <div class="home-trust-row">
-          <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Zero install</span>
-          <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Works offline</span>
-          <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Free forever</span>
-          <span class="trust-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> 5 languages</span>
-          <span class="trust-chip trust-africa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Designed for Africa</span>
+        <div style="text-align:center;margin-top:2rem">
+          <button class="btn-hero-secondary-new" onclick="OmicsLab.Router.navigate('lab')" style="display:inline-flex">
+            View all 14 workflows →
+          </button>
+        </div>
+      </div>
+
+      <!-- ══ IMPACT STATS ══ -->
+      <div class="social-proof-section">
+        <div class="social-proof-inner">
+          <div class="impact-stats-row" id="impact-stats-row">
+            <div class="impact-stat">
+              <div class="impact-stat-num" data-target="2400"><span>0</span><span style="color:var(--green)">+</span></div>
+              <div class="impact-stat-label">Researchers trained across Africa</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-stat-num" data-target="54"><span>0</span></div>
+              <div class="impact-stat-label">African countries with active users</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-stat-num"><span>92</span><span style="color:var(--green)">%</span></div>
+              <div class="impact-stat-label">Average course completion rate</div>
+            </div>
+            <div class="impact-stat">
+              <div class="impact-stat-num" data-target="14"><span>0</span><span style="color:var(--green)">+</span></div>
+              <div class="impact-stat-label">Workflows covering 8 omics domains</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ TESTIMONIALS + PARTNER LOGOS (js/testimonials.js) ══ -->
+      ${OmicsLab.Testimonials ? OmicsLab.Testimonials.renderSection() : ''}
+
+      <!-- ══ BOTTOM CTA ══ -->
+      <div class="home-cta-section">
+        <div class="home-cta-inner">
+          <div class="home-cta-eyebrow">Ready to start?</div>
+          <h2 class="home-cta-title">
+            Africa's genomics future<br>
+            <span class="gradient-text">starts here, starts now</span>
+          </h2>
+          <p class="home-cta-sub">
+            Join thousands of researchers, students, and instructors across
+            54 African countries building the next generation of omics science.
+          </p>
+          <div class="home-cta-btns">
+            <button class="btn-hero-primary-new" onclick="OmicsLab.Router.navigate('lab')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Start Learning Free
+            </button>
+            <button class="btn-hero-secondary-new" onclick="OmicsLab.Router.navigate('learn')">
+              Browse curriculum tracks
+            </button>
+          </div>
+          <div class="home-cta-note">
+            No account required · Works offline · Free forever ·
+            <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener">Open in GitHub Codespaces</a>
+          </div>
         </div>
       </div>`;
+
+    /* Animate stat counters when section scrolls into view */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.querySelectorAll('[data-target]').forEach(el => {
+          const target = parseInt(el.dataset.target);
+          const span = el.querySelector('span');
+          if (!span || span.dataset.counted) return;
+          span.dataset.counted = '1';
+          let current = 0;
+          const step = Math.ceil(target / 60);
+          const timer = setInterval(() => {
+            current = Math.min(current + step, target);
+            span.textContent = current.toLocaleString();
+            if (current >= target) clearInterval(timer);
+          }, 24);
+        });
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.3 });
+    const statsRow = document.getElementById('impact-stats-row');
+    if (statsRow) observer.observe(statsRow);
+
+    /* Init testimonials country counter */
+    if (OmicsLab.Testimonials) OmicsLab.Testimonials.initCounters(homeContent);
   }
 
-  /* ─── Rebuild the nav to show page-level buttons ─── */
+  /* ─── Sync nav active state to current page on init ─── */
   function _buildNav() {
-    const nav = document.getElementById('nav-pills-desktop');
-    if (!nav) return;
-
-    /* Remove all existing nav pills (keep learn dropdown and utility buttons) */
-    nav.querySelectorAll('.nav-pill, .nav-learn-wrap').forEach(el => el.remove());
-
-    /* Insert page nav buttons at the start */
-    const pageButtons = Object.entries(PAGES).map(([page, p]) => `
-      <button class="nav-pill page-nav-btn${page === 'home' ? ' active' : ''}"
-              data-page="${page}"
-              onclick="OmicsLab.Router.navigate('${page}')"
-              aria-label="Go to ${p.label} page">
-        ${p.icon} ${p.label}
-      </button>`).join('');
-
-    nav.insertAdjacentHTML('afterbegin', pageButtons);
+    /* Nav is now static HTML — just sync the initial active state */
+    const activeGroup = PAGE_TO_GROUP[_currentPage] || null;
+    document.querySelectorAll('.nav-group-btn').forEach(btn => {
+      btn.classList.toggle('active', !!activeGroup && btn.dataset.group === activeGroup);
+    });
   }
 
   /* ─── Parse hash → page slug ─── */

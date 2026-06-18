@@ -408,6 +408,9 @@ OmicsLab.Renderer = (function() {
     const step = wf.steps[stepIndex];
     if (!step) { OmicsLab.App.showResults(); return; }
 
+    /* Sound: ding on step completion (skip first step — App.startWorkflow already dings) */
+    if (stepIndex > 0 && OmicsLab.Sound) OmicsLab.Sound.step();
+
     OmicsLab.State.currentStep = stepIndex;
     OmicsLab.ProtocolPanel.render(stepIndex);
     OmicsLab.QC.renderPipeline(step.pipelineStage || 0);
@@ -572,6 +575,12 @@ OmicsLab.Renderer = (function() {
 
         OmicsLab.Engine.applyOption(opt, step.id);
         OmicsLab.QC.update();
+
+        /* Sound feedback on choice result */
+        if (OmicsLab.Sound) {
+          if (opt.impact === 'good') OmicsLab.Sound.pick();
+          else OmicsLab.Sound.error();
+        }
 
         const titles = { good:'✓ Excellent', bad:'✗ Poor choice', warn:'⚠ Suboptimal' };
         const bodies = {
