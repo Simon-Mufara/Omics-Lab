@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v16: 21-locale i18n system, voice TTS module, Noto Sans fonts */
-const CACHE = 'omicslab-v16';
+/* v17: Outbreak Simulator — pathogen spread, sequencing, phylo trees */
+const CACHE = 'omicslab-v17';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

@@ -1,0 +1,360 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Outbreak Simulator styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Section wrapper */
+.outbreak-sim-section {
+  padding: 4rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ob-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─── Header ─── */
+.ob-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.ob-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(249,115,22,0.12);
+  border: 1px solid rgba(249,115,22,0.3);
+  color: #f97316;
+  border-radius: 100px;
+  padding: 3px 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.6rem;
+  animation: obBlink 1.5s ease infinite;
+}
+@keyframes obBlink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+.ob-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #e6edf3;
+  margin: 0 0 0.4rem;
+}
+.ob-subtitle {
+  color: #8b949e;
+  font-size: 0.9rem;
+  max-width: 540px;
+  line-height: 1.5;
+}
+
+/* Stats row */
+.ob-stats-row {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.ob-stat {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 0.6rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+}
+.ob-stat-n { font-size: 1.3rem; font-weight: 800; color: #e6edf3; }
+.ob-stat-l { font-size: 0.65rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ─── Pathogen picker ─── */
+.ob-picker-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+.ob-pathogen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.ob-pathogen-card {
+  background: #0d1117;
+  border: 1.5px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ob-pathogen-card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
+.ob-pathogen-card.selected {
+  border-color: #3fb950;
+  box-shadow: 0 0 0 1px #3fb950, 0 4px 16px rgba(63,185,80,0.15);
+}
+.ob-path-emoji { font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+.ob-path-name  { font-size: 0.82rem; font-weight: 700; color: #e6edf3; }
+.ob-path-stat  { font-size: 0.72rem; color: #8b949e; }
+.ob-path-desc  { font-size: 0.7rem; color: #6e7681; line-height: 1.4; margin-top: 4px; }
+
+.ob-selected-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(63,185,80,0.06);
+  border: 1px solid rgba(63,185,80,0.2);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ob-sel-name   { font-size: 0.9rem; font-weight: 700; color: #e6edf3; }
+.ob-sel-genome { font-size: 0.72rem; color: #8b949e; display: block; margin-top: 2px; }
+.ob-start-btn {
+  background: #f97316;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.ob-start-btn:hover { background: #ea6d0e; transform: scale(1.02); }
+
+/* ─── Main canvas ─── */
+.ob-canvas {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.25rem;
+}
+@media (max-width: 900px) { .ob-canvas { grid-template-columns: 1fr; } }
+
+/* Map panel */
+.ob-map-panel, .ob-right-panel { display: flex; flex-direction: column; gap: 0.75rem; }
+.ob-panel-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ob-map-wrap {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+.ob-map-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.ob-continent { pointer-events: none; }
+.ob-city-group { transition: opacity 0.3s; }
+
+/* Pulsing dots */
+@keyframes obPulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(1.4); }
+}
+.ob-dot-pulse { animation: obPulse 1.2s ease infinite; transform-origin: center; }
+
+.ob-map-legend {
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  flex-wrap: wrap;
+}
+.ob-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: #8b949e; }
+.ob-leg-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ob-leg-pulse { animation: obPulse 1.2s ease infinite; }
+
+/* ─── Right panel boxes ─── */
+.ob-timeline-box, .ob-seq-box, .ob-phylo-box, .ob-result-box {
+  background: #0d1117;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+}
+.ob-timeline {
+  max-height: 130px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #30363d transparent;
+}
+.ob-tl-item {
+  font-size: 0.72rem;
+  color: #8b949e;
+  line-height: 1.4;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: color 0.3s;
+}
+.ob-tl-new { color: #e6edf3; font-weight: 600; }
+
+/* Sequence list */
+.ob-seq-box { flex: 1; }
+.ob-seq-badge {
+  background: rgba(255,255,255,0.07);
+  border-radius: 100px;
+  padding: 1px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #8b949e;
+}
+.ob-seq-hint { font-size: 0.76rem; color: #6e7681; text-align: center; padding: 1rem 0; }
+.ob-seq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #30363d transparent;
+}
+.ob-seq-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.72rem;
+}
+.ob-seq-item.done { border-color: rgba(63,185,80,0.25); }
+.ob-seq-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.ob-seq-id  { font-family: 'JetBrains Mono', monospace; color: #58a6ff; font-size: 0.7rem; }
+.ob-seq-loc { color: #8b949e; }
+.ob-seq-bar-wrap { background: rgba(255,255,255,0.07); border-radius: 3px; height: 4px; margin-bottom: 4px; }
+.ob-seq-bar { height: 4px; border-radius: 3px; background: #3fb950; transition: width 0.2s; }
+.ob-seq-status { color: #6e7681; }
+
+/* Phylo tree */
+.ob-phylo-box { overflow: hidden; }
+.ob-phylo-rebuild {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 5px;
+  color: #8b949e;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.ob-phylo-rebuild:hover { color: #e6edf3; border-color: rgba(255,255,255,0.25); }
+.ob-phylo-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: rgba(0,0,0,0.2);
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+.ob-identify-btn {
+  width: 100%;
+  margin-top: 0.75rem;
+  background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.ob-identify-btn:hover { opacity: 0.9; transform: scale(1.01); }
+
+/* ─── Result box ─── */
+.ob-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.ob-result-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #58a6ff;
+}
+.ob-result-card {
+  background: rgba(88,166,255,0.06);
+  border: 1px solid rgba(88,166,255,0.15);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ob-result-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.76rem;
+  align-items: baseline;
+}
+.ob-result-label { color: #8b949e; }
+.ob-result-val   { color: #e6edf3; font-weight: 600; text-align: right; }
+.ob-result-insight {
+  background: rgba(63,185,80,0.06);
+  border: 1px solid rgba(63,185,80,0.15);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 0.76rem;
+  color: #8b949e;
+  line-height: 1.5;
+}
+.ob-result-insight strong { color: #3fb950; }
+
+/* ─── Controls bar ─── */
+.ob-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  flex-wrap: wrap;
+}
+.ob-ctrl-btn {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #c9d1d9;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.ob-ctrl-btn:hover:not(:disabled) { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.2); color: #e6edf3; }
+.ob-ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.ob-ctrl-btn.ob-reset { color: #f85149; border-color: rgba(248,81,73,0.25); }
+.ob-ctrl-btn.ob-reset:hover { background: rgba(248,81,73,0.1); }
+.ob-speed-label { font-size: 0.72rem; color: #8b949e; margin-left: 0.5rem; }
+.ob-speed-slider { accent-color: #3fb950; width: 80px; cursor: pointer; }
+
+@keyframes obBtnPulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(63,185,80,0.4); }
+  50%      { box-shadow: 0 0 0 5px rgba(63,185,80,0); }
+}

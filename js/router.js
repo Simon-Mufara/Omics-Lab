@@ -71,6 +71,13 @@ OmicsLab.Router = (function () {
       tagline: '55+ pre-written offline answers on workflows, tools, diseases, and African genomics',
       sections: ['qa-section'],
     },
+    outbreak: {
+      label: 'Outbreak',
+      icon: '🔴',
+      color: '#f97316',
+      tagline: 'Simulate a genomic outbreak across Africa — sequence samples, build phylo trees, trace the index case',
+      sections: ['outbreak-sim-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -182,6 +189,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'profile' && OmicsLab.Profile) {
       OmicsLab.Profile.openProfile();
+    }
+    if (page === 'outbreak' && OmicsLab.Outbreak) {
+      OmicsLab.Outbreak.init();
     }
 
     /* Highlight user pill when on profile page */

@@ -59,6 +59,7 @@
   <link rel="stylesheet" href="css/profile.css">
   <link rel="stylesheet" href="css/testimonials.css">
   <link rel="stylesheet" href="css/lab.css">
+  <link rel="stylesheet" href="css/outbreak.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -183,6 +184,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Genomics Map</span>
                   <span class="nmd-desc">20+ active labs across 54 nations</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('outbreak')">
+                <span class="nmd-icon" style="background:rgba(249,115,22,0.12)">🔴</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Outbreak Simulator</span>
+                  <span class="nmd-desc">Trace index cases · build phylo trees</span>
                 </span>
               </button>
             </div>
@@ -899,6 +907,11 @@
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
   </div>
 
+  <!-- Outbreak Simulator -->
+  <div class="outbreak-sim-section reveal" id="outbreak-sim-section">
+    <!-- Populated by outbreak.js on route 'outbreak' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1233,6 +1246,7 @@
 <script src="js/testimonials.js"></script>
 <script src="js/sound.js"></script>
 <script src="js/voice.js"></script>
+<script src="js/outbreak.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>
