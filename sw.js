@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v19: Real Dataset Browser — 20 curated African omics datasets */
-const CACHE = 'omicslab-v19';
+/* v20: Career Pathfinder — 5-question quiz, personalised genomics career roadmap */
+const CACHE = 'omicslab-v20';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

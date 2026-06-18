@@ -85,6 +85,13 @@ OmicsLab.Router = (function () {
       tagline: 'Browse 20 curated real African omics datasets from NCBI SRA, EBI ENA, and GISAID',
       sections: ['datasets-section'],
     },
+    career: {
+      label: 'Career',
+      icon: '🧭',
+      color: '#bc8cff',
+      tagline: 'Discover your ideal genomics career path — personalised quiz, skills roadmap, and African employer guide',
+      sections: ['career-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -96,7 +103,7 @@ OmicsLab.Router = (function () {
 
   /* Maps each page to its primary nav group for active-state highlighting */
   const PAGE_TO_GROUP = {
-    lab: 'train', learn: 'train',
+    lab: 'train', learn: 'train', career: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research',
     analysis: 'tools', terminal: 'tools',
@@ -203,6 +210,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'datasets' && OmicsLab.Datasets) {
       OmicsLab.Datasets.init();
+    }
+    if (page === 'career' && OmicsLab.Career) {
+      OmicsLab.Career.init();
     }
 
     /* Highlight user pill when on profile page */
