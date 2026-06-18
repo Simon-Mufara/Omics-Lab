@@ -169,6 +169,13 @@ OmicsLab.Router = (function () {
       tagline: '20+ landmark African genomics papers with plain-language summaries, key findings, Africa context, and discussion questions',
       sections: ['journalclub-section'],
     },
+    citations: {
+      label: 'Citation Manager',
+      icon: '📚',
+      color: '#58a6ff',
+      tagline: 'Build your reference library offline — APA, Vancouver, Nature, BibTeX, RIS export — all saved in your browser',
+      sections: ['citations-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -183,7 +190,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -323,6 +330,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'journalclub' && OmicsLab.JournalClub) {
       OmicsLab.JournalClub.init();
+    }
+    if (page === 'citations' && OmicsLab.Citations) {
+      OmicsLab.Citations.init();
     }
 
     /* Highlight user pill when on profile page */
