@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v41: PubMed live search, Gene Lookup (Ensembl), Protein Viewer (AlphaFold), gnomAD live in Variant Interpreter */
-const CACHE = 'omicslab-v41';
+/* v42: UniProt Search, Open Targets disease-gene, STRING interactions, bioRxiv/medRxiv preprint feed */
+const CACHE = 'omicslab-v42';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

@@ -85,6 +85,10 @@
   <link rel="stylesheet" href="css/pubmed.css">
   <link rel="stylesheet" href="css/gene-lookup.css">
   <link rel="stylesheet" href="css/protein-viewer.css">
+  <link rel="stylesheet" href="css/uniprot.css">
+  <link rel="stylesheet" href="css/open-targets.css">
+  <link rel="stylesheet" href="css/string-net.css">
+  <link rel="stylesheet" href="css/preprints.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -309,6 +313,20 @@
                   <span class="nmd-desc">36M citations · Africa filter · live</span>
                 </span>
               </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('preprints')">
+                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Preprint Feed</span>
+                  <span class="nmd-desc">bioRxiv · medRxiv · Africa filter</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('targets')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Open Targets</span>
+                  <span class="nmd-desc">Disease-gene associations · evidence</span>
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -405,6 +423,20 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Protein Viewer</span>
                   <span class="nmd-desc">AlphaFold · pLDDT chart · 3D structure</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('uniprot')">
+                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">UniProt Search</span>
+                  <span class="nmd-desc">215M proteins · Swiss-Prot · diseases</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('string')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">STRING Network</span>
+                  <span class="nmd-desc">Protein interactions · evidence scores</span>
                 </span>
               </button>
             </div>
@@ -1260,6 +1292,26 @@
     <!-- Populated by protein-viewer.js on route 'protein' -->
   </div>
 
+  <!-- UniProt Search -->
+  <div class="reveal" id="uniprot-section">
+    <!-- Populated by uniprot.js on route 'uniprot' -->
+  </div>
+
+  <!-- Open Targets -->
+  <div class="reveal" id="open-targets-section">
+    <!-- Populated by open-targets.js on route 'targets' -->
+  </div>
+
+  <!-- STRING Protein Interactions -->
+  <div class="reveal" id="string-section">
+    <!-- Populated by string-net.js on route 'string' -->
+  </div>
+
+  <!-- Preprints (bioRxiv/medRxiv) -->
+  <div class="reveal" id="preprints-section">
+    <!-- Populated by preprints.js on route 'preprints' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1620,6 +1672,10 @@
 <script src="js/pubmed.js"></script>
 <script src="js/gene-lookup.js"></script>
 <script src="js/protein-viewer.js"></script>
+<script src="js/uniprot.js"></script>
+<script src="js/open-targets.js"></script>
+<script src="js/string-net.js"></script>
+<script src="js/preprints.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

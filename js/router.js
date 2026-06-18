@@ -253,6 +253,34 @@ OmicsLab.Router = (function () {
       tagline: 'AlphaFold structure predictions — pLDDT confidence chart, 3D viewer, PDB/mmCIF download',
       sections: ['protein-section'],
     },
+    uniprot: {
+      label: 'UniProt',
+      icon: '🔖',
+      color: '#e3b341',
+      tagline: 'Search 215M+ proteins — Swiss-Prot curated function, disease annotations, cross-links',
+      sections: ['uniprot-section'],
+    },
+    targets: {
+      label: 'Open Targets',
+      icon: '🎯',
+      color: '#bc8cff',
+      tagline: 'Disease-gene associations — genetic, drug, pathway and literature evidence scores',
+      sections: ['open-targets-section'],
+    },
+    string: {
+      label: 'STRING Network',
+      icon: '🕸️',
+      color: '#3fb950',
+      tagline: 'Protein-protein interaction network — experimental, co-expression, text-mining scores',
+      sections: ['string-section'],
+    },
+    preprints: {
+      label: 'Preprints',
+      icon: '📑',
+      color: '#58a6ff',
+      tagline: 'bioRxiv & medRxiv preprint feed — Africa-first filter, analyse in Article Analyser',
+      sections: ['preprints-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -263,6 +291,7 @@ OmicsLab.Router = (function () {
     analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
     nexus: 'research', paperhub: 'research', teams: 'research',
     pubmed: 'research', 'gene-lookup': 'tools', protein: 'tools',
+    uniprot: 'tools', targets: 'research', string: 'tools', preprints: 'research',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -435,6 +464,18 @@ OmicsLab.Router = (function () {
     }
     if (page === 'protein' && OmicsLab.ProteinViewer) {
       OmicsLab.ProteinViewer.init();
+    }
+    if (page === 'uniprot' && OmicsLab.UniProt) {
+      OmicsLab.UniProt.init();
+    }
+    if (page === 'targets' && OmicsLab.OpenTargets) {
+      OmicsLab.OpenTargets.init();
+    }
+    if (page === 'string' && OmicsLab.StringNet) {
+      OmicsLab.StringNet.init();
+    }
+    if (page === 'preprints' && OmicsLab.Preprints) {
+      OmicsLab.Preprints.init();
     }
 
     /* Highlight user pill when on profile page */
