@@ -197,8 +197,10 @@ OmicsLab.I18n = (function () {
 
   /* ─── Build and inject the grouped language selector ─── */
   function _buildSelector() {
-    const nav = document.getElementById('nav-pills-desktop');
-    if (!nav || document.getElementById('i18n-toggle')) return;
+    /* Inject into nav-right, before the user pill */
+    const navRight = document.getElementById('nav-right');
+    if (!navRight || document.getElementById('i18n-toggle')) return;
+    const nav = navRight; /* re-use variable name; we insert inside nav-right below */
 
     const curMeta = LANGS.find(l => l.code === _current) || LANGS[0];
     const wrap = document.createElement('div');
@@ -244,7 +246,10 @@ OmicsLab.I18n = (function () {
     document.addEventListener('click', e => {
       if (!wrap.contains(e.target)) wrap.classList.remove('open');
     });
-    nav.after(wrap);
+    /* Insert before the user pill (or append if pill not found) */
+    const userPill = document.getElementById('nav-user-pill');
+    if (userPill) navRight.insertBefore(wrap, userPill);
+    else navRight.appendChild(wrap);
   }
 
   /* ─── Sync the selector UI to current language ─── */
