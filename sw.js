@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v35: Sample Quality Predictor — logistic regression, 9 QC metrics, GATK/ENCODE/H3Africa thresholds */
-const CACHE = 'omicslab-v35';
+/* v36: Variant Interpreter — ACMG/AMP 2015 criteria, gnomAD AFR AF, 20+ Africa-relevant variants */
+const CACHE = 'omicslab-v36';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

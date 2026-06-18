@@ -76,6 +76,7 @@
   <link rel="stylesheet" href="css/citations.css">
   <link rel="stylesheet" href="css/quizbattle.css">
   <link rel="stylesheet" href="css/qualitypredictor.css">
+  <link rel="stylesheet" href="css/variantinterp.css">
   <link rel="stylesheet" href="css/tour.css">
 </head>
 <body>
@@ -344,6 +345,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Quality Predictor</span>
                   <span class="nmd-desc">PASS/FAIL · GATK · ENCODE · H3Africa thresholds</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('variantinterp')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)">🧬</span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Variant Interpreter</span>
+                  <span class="nmd-desc">ACMG/AMP · gnomAD · ClinVar · Africa variants</span>
                 </span>
               </button>
             </div>
@@ -1154,6 +1162,11 @@
     <!-- Populated by qualitypredictor.js on route 'qualitypredictor' -->
   </div>
 
+  <!-- Variant Interpreter -->
+  <div class="reveal" id="variantinterp-section">
+    <!-- Populated by variantinterp.js on route 'variantinterp' -->
+  </div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1505,6 +1518,7 @@
 <script src="js/citations.js"></script>
 <script src="js/quizbattle.js"></script>
 <script src="js/qualitypredictor.js"></script>
+<script src="js/variantinterp.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

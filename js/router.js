@@ -190,6 +190,13 @@ OmicsLab.Router = (function () {
       tagline: 'Enter QC metrics — logistic regression over GATK, ENCODE and H3Africa thresholds returns PASS/FAIL with per-metric root-cause advice',
       sections: ['qualitypredictor-section'],
     },
+    variantinterp: {
+      label: 'Variant Interpreter',
+      icon: '🧬',
+      color: '#bc8cff',
+      tagline: 'Paste a VCF line or HGVS — ACMG/AMP 2015 criteria, gnomAD African AF, and ClinVar significance for 20+ Africa-relevant disease variants',
+      sections: ['variantinterp-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -204,7 +211,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -353,6 +360,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'qualitypredictor' && OmicsLab.QualityPredictor) {
       OmicsLab.QualityPredictor.init();
+    }
+    if (page === 'variantinterp' && OmicsLab.VariantInterp) {
+      OmicsLab.VariantInterp.init();
     }
 
     /* Highlight user pill when on profile page */
