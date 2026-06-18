@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v34: Multiplayer Quiz Battle — 65+ questions, BroadcastChannel same-device multiplayer */
-const CACHE = 'omicslab-v34';
+/* v35: Sample Quality Predictor — logistic regression, 9 QC metrics, GATK/ENCODE/H3Africa thresholds */
+const CACHE = 'omicslab-v35';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

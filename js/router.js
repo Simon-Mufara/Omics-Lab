@@ -183,6 +183,13 @@ OmicsLab.Router = (function () {
       tagline: '65+ questions across 12 omics categories — solo timed practice or same-device multiplayer via BroadcastChannel',
       sections: ['quizbattle-section'],
     },
+    qualitypredictor: {
+      label: 'Quality Predictor',
+      icon: '🔬',
+      color: '#3fb950',
+      tagline: 'Enter QC metrics — logistic regression over GATK, ENCODE and H3Africa thresholds returns PASS/FAIL with per-metric root-cause advice',
+      sections: ['qualitypredictor-section'],
+    },
     profile: {
       label: 'Profile',
       icon: '👤',
@@ -197,7 +204,7 @@ OmicsLab.Router = (function () {
     lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
     research: 'research', africa: 'research',
     outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train',
+    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -343,6 +350,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'quizbattle' && OmicsLab.QuizBattle) {
       OmicsLab.QuizBattle.init();
+    }
+    if (page === 'qualitypredictor' && OmicsLab.QualityPredictor) {
+      OmicsLab.QualityPredictor.init();
     }
 
     /* Highlight user pill when on profile page */
