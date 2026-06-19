@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v46: Knowledge Graph, Settings, Global Notify/Error boundary, KG nav */
-const CACHE = 'omicslab-v46';
+/* v47: Notification centre (bell icon), Offline indicator banner */
+const CACHE = 'omicslab-v47';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

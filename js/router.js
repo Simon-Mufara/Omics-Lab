@@ -1046,6 +1046,8 @@ OmicsLab.Router = (function () {
   /* ─── Init ─── */
   function init() {
     OmicsLab.Error?.init();
+    OmicsLab.Notifications?.init();
+    OmicsLab.OfflineIndicator?.init();
     _buildNav();
     _renderHome();
 
