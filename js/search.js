@@ -9,6 +9,16 @@ OmicsLab.Search = (function () {
 
   let _index = null;
   let _open  = false;
+  const RECENT_KEY = 'omicslab_search_recent';
+
+  function _getRecent() {
+    try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); } catch { return []; }
+  }
+  function _addRecent(title, action) {
+    const list = _getRecent().filter(r => r.title !== title).slice(0, 5);
+    list.unshift({ title, ts: Date.now() });
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(list)); } catch {}
+  }
 
   /* ─── Build the search index from existing data ─── */
   function _buildIndex() {
@@ -160,6 +170,98 @@ OmicsLab.Search = (function () {
       });
     });
 
+    /* All router pages — navigate to route on select */
+    const PAGE_ENTRIES = [
+      { route:'lab',             icon:'🧪', title:'Lab Simulator',          desc:'14 interactive wet-lab protocols — WGS, RNA-seq, metagenomics, ATAC-seq', tags:'lab protocol simulation omics genome sequencing' },
+      { route:'analysis',        icon:'📊', title:'Analysis Suite',          desc:'FASTQ QC, FASTA tools, VCF explorer, expression matrix, MSA viewer', tags:'analysis fastq vcf fasta quality control bioinformatics' },
+      { route:'terminal',        icon:'🖥️', title:'Terminal / Codespaces',   desc:'Browser shell with pipeline simulation + GitHub Codespaces integration', tags:'terminal bash shell pipeline codespace linux' },
+      { route:'outbreak',        icon:'🔴', title:'Outbreak Simulator',       desc:'Genomic outbreak simulation — phylo trees, contact tracing, index case', tags:'outbreak phylogenetics epidemiology genomic surveillance' },
+      { route:'alerts',          icon:'🚨', title:'Outbreak Alerts',          desc:'Live African disease outbreak feed with genomic surveillance notes', tags:'alerts disease surveillance outbreak africa' },
+      { route:'datasets',        icon:'🗂️', title:'African Datasets',         desc:'20 curated African omics datasets from SRA, ENA, GISAID', tags:'datasets africa sra ena genomics download' },
+      { route:'career',          icon:'🧭', title:'Career Path Quiz',          desc:'Personalised genomics career roadmap + African employer guide', tags:'career bioinformatics job genomics africa' },
+      { route:'leaderboard',     icon:'🏆', title:'Leaderboard',              desc:'Global rankings, streaks, world map of 80+ OmicsLab learners', tags:'leaderboard rank score achievement gamification' },
+      { route:'protocols',       icon:'🔬', title:'Protocols',                desc:'Community-contributed lab protocols from African genomics researchers', tags:'protocols method lab africa wetlab' },
+      { route:'collab',          icon:'🤝', title:'Live Collaboration',       desc:'WebRTC peer-to-peer lab sessions with real-time sync', tags:'collaboration webrtc realtime co-work peer' },
+      { route:'grant',           icon:'📝', title:'Grant Generator',           desc:'NIH Fogarty, Wellcome Trust, H3Africa grant sections offline', tags:'grant funding NIH Wellcome H3Africa Africa writing' },
+      { route:'debugger',        icon:'🔬', title:'Protocol Debugger',         desc:'200+ rules — root cause, biology, and corrective actions', tags:'debug protocol error QC fix diagnosis' },
+      { route:'phylo',           icon:'🌿', title:'Phylo Tree Builder',         desc:'Neighbor-Joining and UPGMA trees from FASTA — SVG, Newick export', tags:'phylogenetics tree UPGMA NJ FASTA newick evolution' },
+      { route:'peerreview',      icon:'📋', title:'Peer Review Simulator',      desc:'3 virtual reviewers with ACMG/stats/ethics rubrics', tags:'peer review manuscript paper critique statistics ethics' },
+      { route:'heatmap',         icon:'🔥', title:'Expression Visualiser',      desc:'Volcano plot, heatmap, and ranked DE table from DESeq2/edgeR output', tags:'heatmap volcano deseq2 edger expression rnaseq differential' },
+      { route:'journalclub',     icon:'📰', title:'Journal Club',               desc:'20+ landmark African genomics papers with plain-language summaries', tags:'journal club paper summary africa genomics landmark' },
+      { route:'citations',       icon:'📚', title:'Citation Manager',           desc:'APA, Vancouver, Nature, BibTeX, RIS export — stored offline', tags:'citation reference bib bibtex apa vancouver latex' },
+      { route:'quizbattle',      icon:'⚔️', title:'Quiz Battle',                desc:'65+ questions across 12 omics categories — solo or multiplayer', tags:'quiz battle omics questions categories knowledge test' },
+      { route:'qualitypredictor',icon:'🔬', title:'Quality Predictor',          desc:'Logistic regression over GATK, ENCODE and H3Africa QC thresholds', tags:'quality predictor QC metric WGS sequencing GATK ENCODE' },
+      { route:'variantinterp',   icon:'🧬', title:'Variant Interpreter',        desc:'ACMG/AMP 2015 criteria, gnomAD African AF, ClinVar significance', tags:'variant ACMG ClinVar gnomAD VCF pathogenic benign interpretation' },
+      { route:'primerdesign',    icon:'🔬', title:'Primer Design',               desc:'Wallace Tm, GC%, self-complementarity, dimer checks, 6 Africa pathogen templates', tags:'primer PCR design Tm GC complementarity amplicon' },
+      { route:'nexus',           icon:'💬', title:'Nexus Hub',                   desc:'Research communication — channels, threads, @mentions, pinned resources', tags:'nexus chat channel thread mention community discuss' },
+      { route:'teams',           icon:'📹', title:'Research Teams',              desc:'Video meetings — rooms, screen share, hands, live collaboration', tags:'teams video meeting conference call collaboration' },
+      { route:'paperhub',        icon:'📄', title:'PaperHub',                   desc:'African genomics research library — browse, save, cite, discuss papers', tags:'paper library research Africa genomics literature review' },
+      { route:'pubmed',          icon:'📰', title:'PubMed Search',               desc:'Live 36M citations with Africa-first filter + Article Analyser', tags:'pubmed ncbi literature search abstract citation africa' },
+      { route:'gene-lookup',     icon:'🔍', title:'Gene Lookup',                 desc:'Ensembl annotation, transcripts, phenotypes, AlphaFold, gnomAD', tags:'gene ensembl annotation transcript phenotype lookup search' },
+      { route:'protein',         icon:'🧬', title:'Protein Viewer',              desc:'AlphaFold structure predictions — pLDDT, 3D viewer, PDB download', tags:'protein structure alphafold 3D pdb mmcif plddt' },
+      { route:'uniprot',         icon:'🔖', title:'UniProt Search',              desc:'215M+ proteins — Swiss-Prot function, disease, cross-links', tags:'uniprot protein function disease swissprot trembl annotation' },
+      { route:'targets',         icon:'🎯', title:'Open Targets',               desc:'Disease-gene associations — genetic, drug, pathway, literature scores', tags:'open targets disease gene association drug target' },
+      { route:'string',          icon:'🕸️', title:'STRING Network',              desc:'Protein-protein interaction network — experimental, co-expression', tags:'string PPI protein interaction network co-expression' },
+      { route:'preprints',       icon:'📑', title:'Preprints',                   desc:'bioRxiv & medRxiv — Africa-first filter, Article Analyser', tags:'preprint biorxiv medrxiv africa filter article' },
+      { route:'pathways',        icon:'🔬', title:'Pathways',                    desc:'KEGG disease pathway maps + Reactome browser — Africa diseases', tags:'pathway KEGG reactome disease malaria TB HIV metabolism' },
+      { route:'sra',             icon:'🗄️', title:'SRA Browser',                desc:'NCBI Sequence Read Archive — curated Africa datasets, download', tags:'SRA NCBI sequencing archive Africa download fastq data' },
+      { route:'knowledge-graph', icon:'🕸️', title:'Knowledge Graph',            desc:'Diseases · genes · tools · populations as force-directed graph', tags:'knowledge graph network disease gene tool population africa' },
+      { route:'ai',              icon:'🤖', title:'AI Assistant',               desc:'Claude-powered genomics expert — streaming answers, Africa-focused', tags:'AI claude assistant genomics expert Africa answer help' },
+      { route:'thesis',          icon:'📝', title:'Thesis Coach',               desc:'5-chapter tracker, AI draft, abstract writer, word-count progress', tags:'thesis writing PhD dissertation abstract chapter coach' },
+      { route:'bionlp',          icon:'🔬', title:'BioNLP',                     desc:'Offline biomedical entity recognition — genes, diseases, variants', tags:'NLP biomedical text mining entity recognition variant gene disease' },
+      { route:'codon',           icon:'🧬', title:'Codon Usage',                desc:'RSCU codon usage bias — human, M. tuberculosis, P. falciparum', tags:'codon usage RSCU bias MTB malaria falciparum human expression' },
+      { route:'nanopore',        icon:'🔬', title:'Nanopore QC',                desc:'Oxford Nanopore QC — NanoStat thresholds for field sequencing', tags:'nanopore ONT MinION field sequencing QC N50 quality' },
+      { route:'amr',             icon:'🛡️', title:'AMR Profiler',               desc:'MDR-TB, XDR-TB, CRE, ESBL classification from mutation profiles', tags:'AMR antibiotic resistance MDR XDR TB CRE ESBL mutation' },
+      { route:'kraken',          icon:'🦠', title:'Metagenomics',               desc:'Kraken2-style taxonomy simulation — 6 African field sample profiles', tags:'metagenomics kraken2 taxonomy microbiome classification Africa' },
+      { route:'popstruct',       icon:'📊', title:'Pop Structure',              desc:'ADMIXTURE + PCA for AWI-Gen, 1000G African, and SCD cohorts', tags:'population structure ADMIXTURE PCA Africa AWI ancestry' },
+      { route:'genome-browser',  icon:'🔭', title:'Genome Browser',             desc:'IGV-style browser — HBB, G6PD, APOL1, CYP2D6 loci', tags:'genome browser IGV tracks HBB G6PD APOL1 CYP2D6 variant' },
+      { route:'directory',       icon:'👥', title:'Researcher Directory',       desc:'Africa bioinformatics researchers — search by country, role', tags:'directory researcher Africa bioinformatics register network' },
+      { route:'hackathon',       icon:'⚡', title:'Hackathon',                  desc:'Africa bioinformatics hackathon — challenges, teams, leaderboard', tags:'hackathon challenge team Africa bioinformatics coding' },
+      { route:'mentorship',      icon:'🤝', title:'Mentorship',                 desc:'Peer mentorship network — students with experienced researchers', tags:'mentorship mentor student Africa bioinformatics network' },
+      { route:'h3africa',        icon:'🌍', title:'H3Africa Portal',            desc:'H3Africa projects, datasets, tools, training resources', tags:'H3Africa genome Africa cohort consortium dataset training' },
+      { route:'pathogen-tracker',icon:'🛡️', title:'Pathogen Tracker',          desc:'Africa pathogen genomics — SARS-CoV-2, TB, malaria, mpox, cholera', tags:'pathogen tracker Africa SARS malaria mpox cholera TB surveillance' },
+      { route:'glossary',        icon:'📖', title:'Glossary',                   desc:'200+ terms in English, Swahili, Hausa, Yoruba, Amharic, French', tags:'glossary dictionary terms bioinformatics multilingual Africa' },
+      { route:'offline-data',    icon:'📦', title:'Offline Data Packages',      desc:'H3Africa, malaria, TB, SCD, ancestry reference for low-bandwidth', tags:'offline data package download bandwidth Africa lowres cache' },
+      { route:'labnotebook',     icon:'📓', title:'Lab Notebook',               desc:'Offline structured research entries — experiments, protocols, results', tags:'lab notebook research entries offline structured' },
+      { route:'pipeline-gen',    icon:'⚙️', title:'Pipeline Generator',         desc:'Snakemake and Nextflow DSL2 pipeline boilerplate — WGS, RNA-seq, GWAS', tags:'pipeline snakemake nextflow generator WGS rnaseq GWAS boilerplate' },
+      { route:'metaanalysis',    icon:'📈', title:'Meta-analysis',              desc:'Fixed/random effects with forest plot — Africa GWAS cohorts', tags:'meta analysis forest plot fixed random GWAS Africa effect size' },
+      { route:'api-docs',        icon:'⌨️', title:'Developer API Docs',         desc:'Embed modules, set context, build extensions — public JS API', tags:'API developer docs embed JavaScript extension module SDK' },
+      { route:'certification',   icon:'🎓', title:'Certification',              desc:'Track learning progress, earn badges, downloadable certificate', tags:'certification certificate badge learning progress Africa' },
+      { route:'impact',          icon:'📡', title:'Impact Observatory',         desc:'OmicsLab reach: users, countries, analyses, tool metrics', tags:'impact metrics users countries analytics Africa usage' },
+      { route:'partners',        icon:'🤝', title:'Partners',                   desc:'Organisations and people making OmicsLab possible', tags:'partners sponsors collaborators H3Africa WHO Wellcome KEMRI' },
+      { route:'output-tracker',  icon:'📋', title:'Output Tracker',             desc:'Track publications, datasets, talks, grants — CSV/BibTeX export', tags:'output publication dataset grant talk poster research track' },
+      { route:'settings',        icon:'⚙️', title:'Settings',                   desc:'Appearance, language, API keys, data privacy, about', tags:'settings theme language accent privacy data API keys' },
+    ];
+
+    PAGE_ENTRIES.forEach(e => {
+      _index.push({
+        type: 'page',
+        icon: e.icon,
+        title: e.title,
+        desc: e.desc,
+        tags: e.tags,
+        route: e.route,
+        action: () => OmicsLab.Router?.navigate(e.route),
+        section: 'Pages',
+      });
+    });
+
+    /* Knowledge Graph nodes */
+    try {
+      (OmicsLab.KnowledgeGraph?._nodes || []).forEach(n => {
+        if (!n || !n.label) return;
+        _index.push({
+          type: 'graph-node',
+          icon: n.type === 'disease' ? '🦠' : n.type === 'gene' ? '🧬' : n.type === 'tool' ? '🛠️' : n.type === 'population' ? '👥' : '🌍',
+          title: n.label,
+          desc: (n.desc || '').slice(0, 120),
+          tags: `${n.label} ${n.type} ${n.desc || ''} Africa knowledge graph`,
+          action: () => { OmicsLab.Router?.navigate('knowledge-graph'); setTimeout(() => OmicsLab.KnowledgeGraph?._select(n.id), 400); },
+          section: 'Knowledge Graph',
+        });
+      });
+    } catch {}
+
     return _index;
   }
 
@@ -202,17 +304,20 @@ OmicsLab.Search = (function () {
     if (!box) return;
 
     if (!query || query.trim().length < 2) {
+      const recents = _getRecent();
       box.innerHTML = `
         <div class="search-empty">
           <div class="search-empty-icon">🔍</div>
-          <div>Type to search across workflows, diseases, tools, equipment, and more</div>
+          <div>Search across 60+ pages, diseases, genes, tools, papers, and more</div>
+          ${recents.length ? `
+            <div class="search-group-label" style="margin-top:.85rem">Recent searches</div>
+            <div class="search-hints">
+              ${recents.map(r => `<span class="search-hint-chip search-hint-recent" onclick="document.getElementById('search-input').value='${_esc(r.title)}';OmicsLab.Search._triggerSearch()">${_esc(r.title)}</span>`).join('')}
+            </div>` : ''}
+          <div class="search-group-label" style="margin-top:.85rem">Try searching for…</div>
           <div class="search-hints">
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='malaria';OmicsLab.Search._triggerSearch()">malaria</span>
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='RNA-seq';OmicsLab.Search._triggerSearch()">RNA-seq</span>
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='GATK';OmicsLab.Search._triggerSearch()">GATK</span>
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='H3Africa';OmicsLab.Search._triggerSearch()">H3Africa</span>
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='SLURM';OmicsLab.Search._triggerSearch()">SLURM</span>
-            <span class="search-hint-chip" onclick="document.getElementById('search-input').value='NovaSeq';OmicsLab.Search._triggerSearch()">NovaSeq</span>
+            ${['malaria','RNA-seq','GATK','H3Africa','APOL1','nanopore','ACMG','metagenomics'].map(t =>
+              `<span class="search-hint-chip" onclick="document.getElementById('search-input').value='${t}';OmicsLab.Search._triggerSearch()">${t}</span>`).join('')}
           </div>
         </div>`;
       return;
@@ -272,6 +377,7 @@ OmicsLab.Search = (function () {
   function _pickResult(idx) {
     const entry = _index && _index[idx];
     if (!entry) return;
+    _addRecent(entry.title);
     close();
     setTimeout(() => { try { entry.action(); } catch {} }, 120);
   }

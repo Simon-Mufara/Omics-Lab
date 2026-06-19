@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v49: Print stylesheet + Research Output Tracker wired */
-const CACHE = 'omicslab-v49';
+/* v50: Design tokens, components, skeletons, transitions, onboarding, search overhaul */
+const CACHE = 'omicslab-v50';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

@@ -523,11 +523,36 @@ OmicsLab.Router = (function () {
 
   let _currentPage = 'home';
 
+  /* ─── Nav progress bar ─── */
+  let _npTimer = null;
+  function _npStart() {
+    const bar = document.getElementById('nav-progress');
+    if (!bar) return;
+    clearTimeout(_npTimer);
+    bar.style.width = '0';
+    bar.style.transition = 'none';
+    bar.classList.add('np-active');
+    requestAnimationFrame(() => {
+      bar.style.transition = `width 300ms var(--ease-out)`;
+      bar.style.width = '70%';
+    });
+  }
+  function _npDone() {
+    const bar = document.getElementById('nav-progress');
+    if (!bar) return;
+    bar.style.transition = `width 150ms var(--ease-out), opacity 250ms`;
+    bar.style.width = '100%';
+    _npTimer = setTimeout(() => { bar.classList.remove('np-active'); bar.style.width = '0'; }, 320);
+  }
+
   /* ─── Fade + slide-up page enter animation ─── */
   function _animateIn(el) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                 || document.documentElement.dataset.reduceMotion === 'true';
     el.classList.remove('page-entering');
-    void el.offsetWidth; /* force reflow so re-adding the class re-triggers the animation */
+    void el.offsetWidth;
     el.classList.add('page-entering');
+    if (reduced) { el.style.animation = 'none'; }
   }
 
   /* ─── Navigate to a page ─── */
@@ -536,6 +561,7 @@ OmicsLab.Router = (function () {
       OmicsLab.Error?.render404(page);
       return;
     }
+    _npStart();
     _currentPage = page;
 
     /* Update URL hash without scroll */
@@ -643,12 +669,14 @@ OmicsLab.Router = (function () {
       OmicsLab.Alerts.init();
     }
     if (page === 'phylo' && OmicsLab.Phylo) {
+      OmicsLab.Skeleton?.beforeInit('phylo-section');
       OmicsLab.Phylo.init();
     }
     if (page === 'peerreview' && OmicsLab.PeerReview) {
       OmicsLab.PeerReview.init();
     }
     if (page === 'heatmap' && OmicsLab.Heatmap) {
+      OmicsLab.Skeleton?.beforeInit('heatmap-section');
       OmicsLab.Heatmap.init();
     }
     if (page === 'journalclub' && OmicsLab.JournalClub) {
@@ -737,6 +765,7 @@ OmicsLab.Router = (function () {
     if (page === 'impact' && OmicsLab.Impact) OmicsLab.Impact.init();
     if (page === 'partners' && OmicsLab.Partners) OmicsLab.Partners.init();
     if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) {
+      OmicsLab.Skeleton?.beforeInit('knowledge-graph-section');
       try { OmicsLab.KnowledgeGraph.init(); } catch(e) { OmicsLab.Error?.renderPageError('knowledge-graph-section','KnowledgeGraph',e); }
     }
     if (page === 'settings' && OmicsLab.Settings) {
@@ -745,6 +774,15 @@ OmicsLab.Router = (function () {
     if (page === 'output-tracker' && OmicsLab.OutputTracker) {
       try { OmicsLab.OutputTracker.init(); } catch(e) { OmicsLab.Error?.renderPageError('output-tracker-section','OutputTracker',e); }
     }
+
+    /* Announce navigation to screen readers */
+    const p = PAGES[page];
+    if (p) {
+      const announcer = document.getElementById('a11y-announcer');
+      if (announcer) announcer.textContent = `Navigated to ${p.label}`;
+    }
+
+    _npDone();
 
     /* Highlight user pill when on profile page */
     const userPill = document.getElementById('nav-user-pill');
@@ -1059,6 +1097,7 @@ OmicsLab.Router = (function () {
     OmicsLab.Error?.init();
     OmicsLab.Notifications?.init();
     OmicsLab.OfflineIndicator?.init();
+    OmicsLab.Onboarding?.init();
     _buildNav();
     _renderHome();
 

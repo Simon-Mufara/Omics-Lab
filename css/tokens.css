@@ -1,0 +1,149 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Design Token System (Prompt 1)
+   Single source of truth for all design decisions.
+   Load FIRST in index.html before all other stylesheets.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Colour palette ── */
+  --green:       #3fb950;
+  --green-dim:   #238636;
+  --green-glow:  rgba(63,185,80,0.15);
+  --green-bg:    rgba(63,185,80,0.08);
+  --blue:        #58a6ff;
+  --blue-dim:    rgba(88,166,255,0.12);
+  --blue-bg:     rgba(88,166,255,0.08);
+  --purple:      #bc8cff;
+  --purple-bg:   rgba(188,140,255,0.08);
+  --orange:      #f97316;
+  --orange-bg:   rgba(249,115,22,0.08);
+  --red:         #ff6b6b;
+  --red-bg:      rgba(255,107,107,0.08);
+  --yellow:      #e3b341;
+  --yellow-bg:   rgba(227,179,65,0.08);
+
+  /* ── Accent (user-overridable via Settings) ── */
+  --accent:      #3fb950;
+  --accent-dim:  #238636;
+  --accent-bg:   rgba(63,185,80,0.08);
+
+  /* ── Dark theme surfaces (default) ── */
+  --bg-root:     #010409;
+  --bg-base:     #010409;
+  --bg-canvas:   #0d1117;
+  --bg-surface:  #161b22;
+  --bg-overlay:  #21262d;
+  --bg-inset:    #0d1117;
+
+  /* ── Dark theme text ── */
+  --text-primary:   #e6edf3;
+  --text-secondary: #c9d1d9;
+  --text-muted:     #8b949e;
+  --text-faint:     #484f58;
+  --text-link:      #58a6ff;
+
+  /* ── Dark theme borders ── */
+  --border-default: #21262d;
+  --border-muted:   #30363d;
+  --border-strong:  #484f58;
+
+  /* ── Border radii ── */
+  --radius-xs:   3px;
+  --radius-sm:   5px;
+  --radius-md:   7px;
+  --radius-lg:   10px;
+  --radius-xl:   14px;
+  --radius-2xl:  20px;
+  --radius-pill: 999px;
+
+  /* ── Spacing scale ── */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+
+  /* ── Typography ── */
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+  --font-brand: 'Sora', 'Inter', sans-serif;
+
+  --text-xs:   0.7rem;
+  --text-sm:   0.8rem;
+  --text-base: 0.875rem;
+  --text-md:   1rem;
+  --text-lg:   1.1rem;
+  --text-xl:   1.25rem;
+  --text-2xl:  1.5rem;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm: 0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6);
+
+  /* ── Motion ── */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast:    120ms;
+  --dur-normal:  200ms;
+  --dur-slow:    350ms;
+
+  /* ── Z-index scale ── */
+  --z-base:    1;
+  --z-raised:  10;
+  --z-dropdown:200;
+  --z-sticky:  400;
+  --z-fixed:   500;
+  --z-modal:   1000;
+  --z-toast:   8000;
+  --z-topmost: 9999;
+
+  /* ── Nav ── */
+  --nav-h: 56px;
+}
+
+/* ── Light theme overrides ── */
+[data-theme="light"] {
+  --bg-root:      #ffffff;
+  --bg-base:      #ffffff;
+  --bg-canvas:    #f6f8fa;
+  --bg-surface:   #ffffff;
+  --bg-overlay:   #f1f3f5;
+  --bg-inset:     #f6f8fa;
+
+  --text-primary:   #24292f;
+  --text-secondary: #57606a;
+  --text-muted:     #6e7781;
+  --text-faint:     #a8b1ba;
+  --text-link:      #0969da;
+
+  --border-default: #d0d7de;
+  --border-muted:   #e1e4e8;
+  --border-strong:  #b1bac4;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+[data-reduce-motion="true"] *, [data-reduce-motion="true"] *::before, [data-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* ── Focus ring ── */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
