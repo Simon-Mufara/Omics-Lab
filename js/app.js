@@ -1499,6 +1499,11 @@ rule annotate:
 document.addEventListener('DOMContentLoaded', () => {
   OmicsLab.App.init();
   if (OmicsLab.Sound) OmicsLab.Sound.init();
+  /* Set print date attribute for print.css footer */
+  document.body.dataset.printDate = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  window.addEventListener('beforeprint', () => {
+    document.body.dataset.printDate = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       OmicsLab.App._closeDiseaseModal();

@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v48: Research Output Tracker (publications/datasets/talks/grants) */
-const CACHE = 'omicslab-v48';
+/* v49: Print stylesheet + Research Output Tracker wired */
+const CACHE = 'omicslab-v49';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());
