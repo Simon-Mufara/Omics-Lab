@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v44: Codon/Nanopore/AMR/Kraken/PopStruct/GenomeBrowser, Directory, Hackathon, Mentorship, H3Africa, PathogenTracker, Glossary, OfflineData, LabNotebook, PipelineGen, MetaAnalysis, IDB, APIDocs, Certification, Impact, Partners */
-const CACHE = 'omicslab-v44';
+/* v45: Pathways (KEGG+Reactome), SRA Browser, DisGeNET integration into GeneLookup */
+const CACHE = 'omicslab-v45';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

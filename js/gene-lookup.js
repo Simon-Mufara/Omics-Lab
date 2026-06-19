@@ -53,6 +53,97 @@ OmicsLab.GeneLookup = (function () {
     } catch { return []; }
   }
 
+  /* ─── DisGeNET curated data for Africa-priority genes ─── */
+  const DISGENET_CURATED = {
+    HBB:   [{ dis:'Anemia, Sickle Cell', score:.98, ei:.97, src:'UniProt/ClinVar' },{ dis:'beta-Thalassemia', score:.95, ei:.94, src:'UniProt' },{ dis:'Malaria, resistance', score:.61, ei:.65, src:'GWAS catalog' }],
+    G6PD:  [{ dis:'Glucosephosphate Dehydrogenase Deficiency', score:.97, ei:.96, src:'UniProt' },{ dis:'Malaria, resistance', score:.72, ei:.68, src:'GWAS/literature' },{ dis:'Hemolytic Anemia', score:.88, ei:.85, src:'ClinVar' }],
+    APOL1: [{ dis:'Focal Segmental Glomerulosclerosis', score:.95, ei:.93, src:'ClinVar/GWAS' },{ dis:'Kidney Failure, Chronic', score:.91, ei:.90, src:'H3Africa/GWAS' },{ dis:'Sleeping Sickness Resistance', score:.78, ei:.72, src:'Literature' }],
+    KCNJ11:[{ dis:'Diabetes Mellitus, Type 2', score:.92, ei:.89, src:'GWAS catalog' },{ dis:'Hyperinsulinism', score:.86, ei:.83, src:'ClinVar' }],
+    CYP2D6:[{ dis:'Drug Metabolism Deficiency', score:.89, ei:.88, src:'PharmGKB' },{ dis:'Codeine Toxicity', score:.82, ei:.81, src:'CPIC/PharmGKB' }],
+    TNF:   [{ dis:'Malaria, Cerebral', score:.79, ei:.77, src:'GWAS/Literature' },{ dis:'Rheumatoid Arthritis', score:.93, ei:.91, src:'GWAS catalog' },{ dis:'Tuberculosis susceptibility', score:.75, ei:.72, src:'Literature' }],
+    BRCA1: [{ dis:'Breast Neoplasms', score:.99, ei:.98, src:'ClinVar/OMIM' },{ dis:'Ovarian Neoplasms', score:.97, ei:.96, src:'ClinVar' }],
+    CCR5:  [{ dis:'HIV Infections', score:.94, ei:.93, src:'PharmGKB/ClinVar' },{ dis:'West Nile Fever susceptibility', score:.68, ei:.65, src:'Literature' }],
+    TLR4:  [{ dis:'Sepsis susceptibility', score:.76, ei:.74, src:'GWAS/Literature' },{ dis:'Malaria, severe', score:.71, ei:.68, src:'H3Africa GWAS' }],
+  };
+
+  /* ─── DisGeNET live API ─── */
+  async function _fetchDisGeNET(symbol, ensemblId) {
+    const el = document.getElementById('gl-disgenet-panel');
+    if (!el) return;
+    const apiKey = localStorage.getItem('omicslab_disgenet_key') || '';
+    const curated = DISGENET_CURATED[symbol.toUpperCase()];
+
+    if (!apiKey) {
+      /* No key — show curated if available */
+      if (curated) {
+        el.innerHTML = _renderDisGeNETPanel(symbol, curated, false);
+      } else {
+        el.innerHTML = `<div class="gl-dgn-nokey">
+          <div class="gl-dgn-nokey-title">DisGeNET — Gene-Disease Associations</div>
+          <div class="gl-dgn-nokey-msg">Register free at <a href="https://www.disgenet.com/signin" target="_blank" rel="noopener" class="gl-ext-link">disgenet.com</a> and save your API key in
+            <button class="gl-link-btn" onclick="OmicsLab.Router.navigate('profile')">Settings</button> (key: <code>omicslab_disgenet_key</code>) to see live disease associations for ${_esc(symbol)}.</div>
+          <a class="gl-dgn-search-link" href="https://www.disgenet.com/search?gene=${encodeURIComponent(symbol)}" target="_blank" rel="noopener">Search ${_esc(symbol)} on DisGeNET →</a>
+        </div>`;
+      }
+      return;
+    }
+
+    el.innerHTML = '<div class="gl-loading">Fetching DisGeNET associations…</div>';
+    try {
+      const res = await fetch(`https://www.disgenet.org/api/gda/gene/symbol/${encodeURIComponent(symbol)}?limit=10&format=json`, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+      if (!res.ok) throw new Error('DisGeNET API ' + res.status);
+      const data = await res.json();
+      if (!data?.length) { el.innerHTML = `<div class="gl-section"><div class="gl-section-title">DisGeNET</div><div class="gl-dgn-empty">No disease associations found for ${_esc(symbol)}.</div></div>`; return; }
+      const rows = data.map(d => ({ dis: d.disease_name || d.diseaseName, score: d.score, ei: d.ei, src: d.source }));
+      el.innerHTML = _renderDisGeNETPanel(symbol, rows, true);
+    } catch {
+      /* Fall back to curated */
+      if (curated) {
+        el.innerHTML = _renderDisGeNETPanel(symbol, curated, false);
+      } else {
+        el.innerHTML = `<div class="gl-section"><div class="gl-section-title">DisGeNET</div>
+          <div class="gl-dgn-nokey-msg">API unavailable. <a href="https://www.disgenet.com/search?gene=${encodeURIComponent(symbol)}" target="_blank" rel="noopener" class="gl-ext-link">Search on DisGeNET →</a></div></div>`;
+      }
+    }
+  }
+
+  function _renderDisGeNETPanel(symbol, rows, isLive) {
+    const afr = ['Anemia, Sickle Cell','beta-Thalassemia','Glucosephosphate Dehydrogenase Deficiency','Focal Segmental Glomerulosclerosis','Kidney Failure, Chronic','Malaria','Sleeping Sickness','Tuberculosis','HIV'];
+    return `<div class="gl-section">
+      <div class="gl-section-title">
+        DisGeNET — Disease Associations
+        <span class="gl-dgn-source-badge">${isLive ? 'Live API' : 'Curated'}</span>
+      </div>
+      <table class="gl-dgn-table">
+        <thead><tr><th>Disease</th><th title="DisGeNET score">Score</th><th>Source</th></tr></thead>
+        <tbody>
+          ${rows.map(r => {
+            const isAfr = afr.some(a => (r.dis || '').toLowerCase().includes(a.toLowerCase()));
+            return `<tr class="${isAfr ? 'gl-dgn-afr-row' : ''}">
+              <td>
+                ${isAfr ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="#f97316" aria-hidden="true"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"/></svg>' : ''}
+                <a class="gl-dgn-dis-link" href="https://www.disgenet.com/search?disease=${encodeURIComponent(r.dis || '')}" target="_blank" rel="noopener">${_esc(r.dis || '—')}</a>
+              </td>
+              <td>
+                <div class="gl-dgn-score-row">
+                  <span class="gl-dgn-score-val">${typeof r.score === 'number' ? r.score.toFixed(3) : '—'}</span>
+                  ${typeof r.score === 'number' ? `<div class="gl-dgn-score-bar"><div class="gl-dgn-score-fill" style="width:${Math.round(r.score*100)}%"></div></div>` : ''}
+                </div>
+              </td>
+              <td class="gl-dgn-src">${_esc(r.src || '—')}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      <div class="gl-dgn-footer">
+        <a href="https://www.disgenet.com/search?gene=${encodeURIComponent(symbol)}" target="_blank" rel="noopener" class="gl-ext-link">Full results on DisGeNET →</a>
+        ${!isLive ? '<span class="gl-dgn-curated-note">Curated data shown — add DisGeNET API key in Settings for live results.</span>' : ''}
+      </div>
+    </div>`;
+  }
+
   /* ─── Main lookup ─── */
   async function _doLookup(symbol) {
     if (!symbol || !symbol.trim()) return;
@@ -67,6 +158,8 @@ OmicsLab.GeneLookup = (function () {
       ]);
       _lastGene = { gene, phenotypes, variants };
       _renderGene(gene, phenotypes, variants);
+      /* DisGeNET runs async after main render */
+      _fetchDisGeNET(gene.display_name || symbol, gene.id);
     } catch (err) {
       _renderError(err.message);
     }
@@ -191,6 +284,9 @@ OmicsLab.GeneLookup = (function () {
               </table>
             </div>
           </div>` : ''}
+
+        <!-- DisGeNET panel injected async after Ensembl renders -->
+        <div id="gl-disgenet-panel"></div>
       </div>`;
   }
 
@@ -255,5 +351,5 @@ OmicsLab.GeneLookup = (function () {
     return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  return { init, lookup, _quickLookup, _openAlphaFold };
+  return { init, lookup, _quickLookup, _openAlphaFold, _fetchDisGeNET };
 })();

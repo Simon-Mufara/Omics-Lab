@@ -281,6 +281,20 @@ OmicsLab.Router = (function () {
       tagline: 'bioRxiv & medRxiv preprint feed — Africa-first filter, analyse in Article Analyser',
       sections: ['preprints-section'],
     },
+    pathways: {
+      label: 'Pathways',
+      icon: '🔬',
+      color: '#3fb950',
+      tagline: 'KEGG disease pathway maps + Reactome browser — Africa disease focus, gene overlay, keyword search',
+      sections: ['pathways-section'],
+    },
+    sra: {
+      label: 'SRA Browser',
+      icon: '🗄️',
+      color: '#e3b341',
+      tagline: 'Search NCBI Sequence Read Archive — curated Africa datasets, download instructions, SRA Toolkit guide',
+      sections: ['sra-section'],
+    },
     ai: {
       label: 'AI Assistant',
       icon: '🤖',
@@ -459,6 +473,7 @@ OmicsLab.Router = (function () {
     nexus: 'research', paperhub: 'research', teams: 'research',
     pubmed: 'research', 'gene-lookup': 'tools', protein: 'tools',
     uniprot: 'tools', targets: 'research', string: 'tools', preprints: 'research',
+    pathways: 'tools', sra: 'research',
     ai: 'tools', thesis: 'research', bionlp: 'tools',
     /* Part 3 */
     codon: 'tools', nanopore: 'tools', amr: 'tools', kraken: 'tools', popstruct: 'tools', 'genome-browser': 'tools',
@@ -657,6 +672,8 @@ OmicsLab.Router = (function () {
     if (page === 'preprints' && OmicsLab.Preprints) {
       OmicsLab.Preprints.init();
     }
+    if (page === 'pathways' && OmicsLab.Pathways) OmicsLab.Pathways.init();
+    if (page === 'sra' && OmicsLab.SRABrowser) OmicsLab.SRABrowser.init();
     if (page === 'ai' && OmicsLab.Assistant) {
       OmicsLab.Assistant.init();
     }

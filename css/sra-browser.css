@@ -1,0 +1,80 @@
+/* NCBI SRA Browser */
+.sra-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.sra-header { margin-bottom: 1.1rem; }
+.sra-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
+.sra-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+
+/* Search */
+.sra-search-row { display: flex; gap: .5rem; align-items: center; margin-bottom: .7rem; }
+.sra-search-wrap { flex: 1; position: relative; }
+.sra-search-icon { position: absolute; left: .65rem; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.sra-search-input { width: 100%; box-sizing: border-box; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: .48rem .6rem .48rem 2.1rem; font-size: .85rem; color: #e6edf3; outline: none; }
+.sra-search-input:focus { border-color: #58a6ff; }
+.sra-ncbi-btn { display: inline-flex; align-items: center; padding: .45rem 1rem; background: #21262d; border: 1px solid #30363d; border-radius: 7px; font-size: .78rem; color: #c9d1d9; text-decoration: none; white-space: nowrap; }
+.sra-ncbi-btn:hover { background: #2d333b; }
+
+/* Presets */
+.sra-presets { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.sra-presets-label { font-size: .72rem; color: #8b949e; }
+.sra-preset-btn { background: #21262d; border: 1px solid #30363d; border-radius: 20px; padding: .2rem .65rem; font-size: .72rem; color: #c9d1d9; cursor: pointer; }
+.sra-preset-btn:hover { background: #2d333b; border-color: #58a6ff; color: #58a6ff; }
+
+/* Section label */
+.sra-section-label { display: flex; align-items: center; gap: .35rem; font-size: .72rem; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: .06em; margin: 1.2rem 0 .75rem; }
+
+/* Cards */
+.sra-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: .85rem 1rem; margin-bottom: .6rem; }
+.sra-pinned-card { border-left: 3px solid #e3b341; }
+.sra-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: .4rem; flex-wrap: wrap; gap: .3rem; }
+.sra-acc { font-family: monospace; font-size: .82rem; font-weight: 700; color: #e3b341; }
+.sra-access-badge { display: inline-flex; align-items: center; gap: .2rem; font-size: .65rem; font-weight: 700; padding: .1rem .45rem; border-radius: 20px; }
+.sra-open { background: rgba(63,185,80,.12); color: #3fb950; }
+.sra-ctrl { background: rgba(227,179,65,.12); color: #e3b341; }
+.sra-pinned-badge { font-size: .65rem; font-weight: 700; background: rgba(227,179,65,.1); color: #e3b341; border: 1px solid rgba(227,179,65,.25); border-radius: 20px; padding: .08rem .45rem; }
+.sra-live-badge { font-size: .65rem; font-weight: 700; background: rgba(88,166,255,.1); color: #58a6ff; border: 1px solid rgba(88,166,255,.25); border-radius: 20px; padding: .08rem .45rem; }
+.sra-title { font-size: .88rem; font-weight: 600; color: #e6edf3; margin-bottom: .45rem; line-height: 1.4; }
+.sra-meta-row { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-bottom: .45rem; }
+.sra-meta-item { font-size: .75rem; color: #8b949e; display: flex; align-items: center; gap: .25rem; }
+.sra-countries { display: flex; flex-wrap: wrap; gap: .25rem; margin-bottom: .4rem; }
+.sra-country-chip { background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: .1rem .4rem; font-size: .68rem; color: #c9d1d9; }
+.sra-disease { font-size: .78rem; color: #8b949e; line-height: 1.6; margin-bottom: .35rem; }
+.sra-note { font-size: .72rem; color: #484f58; line-height: 1.5; margin-bottom: .55rem; font-style: italic; }
+.sra-card-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+.sra-action-btn { display: inline-block; padding: .3rem .75rem; background: #21262d; border: 1px solid #30363d; border-radius: 6px; font-size: .75rem; color: #c9d1d9; text-decoration: none; cursor: pointer; }
+.sra-action-btn:hover { background: #2d333b; }
+.sra-action-primary { background: #0d419d; border-color: #1f6feb; color: #e6edf3; }
+.sra-action-primary:hover { background: #1158c7; }
+
+/* Pinned grid */
+.sra-pinned-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: .7rem; }
+@media (max-width: 640px) { .sra-pinned-grid { grid-template-columns: 1fr; } }
+
+/* Loading / status */
+.sra-loading { font-size: .82rem; color: #8b949e; padding: .75rem; }
+.sra-empty { font-size: .82rem; color: #8b949e; padding: .75rem; }
+.sra-err { font-size: .8rem; color: #8b949e; padding: .75rem; line-height: 1.6; }
+.sra-results-label { font-size: .75rem; color: #8b949e; margin-bottom: .5rem; font-weight: 600; }
+.sra-link { color: #58a6ff; text-decoration: none; }
+.sra-link:hover { text-decoration: underline; }
+
+/* Modal */
+.sra-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.sra-modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; max-width: 620px; width: 100%; max-height: 80vh; overflow-y: auto; }
+.sra-modal-hdr { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.1rem .75rem; border-bottom: 1px solid #21262d; }
+.sra-modal-title { font-size: .95rem; font-weight: 700; color: #e6edf3; }
+.sra-modal-close { background: none; border: none; color: #8b949e; cursor: pointer; padding: .2rem; }
+.sra-modal-close:hover { color: #e6edf3; }
+.sra-modal-body { padding: 1rem 1.1rem; }
+.sra-modal-section-title { font-size: .78rem; font-weight: 700; color: #3fb950; margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .04em; }
+.sra-modal-text { font-size: .82rem; color: #8b949e; line-height: 1.7; }
+.sra-modal-note { font-size: .75rem; color: #484f58; background: rgba(88,166,255,.06); border: 1px solid rgba(88,166,255,.12); border-radius: 6px; padding: .6rem .8rem; margin-top: .85rem; line-height: 1.6; }
+.sra-code { background: #0d1117; border: 1px solid #21262d; border-radius: 7px; padding: .75rem .9rem; font-size: .78rem; color: #c9d1d9; overflow-x: auto; white-space: pre; font-family: 'Consolas','SF Mono',monospace; margin: 0; }
+
+/* Toolkit guide */
+.sra-toolkit-info { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1rem 1.1rem; margin-top: 1.2rem; }
+.sra-toolkit-title { font-size: .88rem; font-weight: 700; color: #e6edf3; margin-bottom: .75rem; }
+.sra-toolkit-steps { display: flex; flex-direction: column; gap: .5rem; }
+.sra-step { display: flex; align-items: flex-start; gap: .55rem; font-size: .82rem; color: #8b949e; }
+.sra-step-num { background: #3fb950; color: #0d1117; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: .68rem; font-weight: 800; flex-shrink: 0; margin-top: .1rem; }
+.sra-step code { background: #21262d; border-radius: 4px; padding: .1rem .35rem; font-size: .75rem; color: #c9d1d9; font-family: monospace; }
+.sra-link-btn { background: none; border: none; color: #58a6ff; cursor: pointer; font-size: .82rem; padding: 0; text-decoration: underline; }

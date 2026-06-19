@@ -89,6 +89,8 @@
   <link rel="stylesheet" href="css/open-targets.css">
   <link rel="stylesheet" href="css/string-net.css">
   <link rel="stylesheet" href="css/preprints.css">
+  <link rel="stylesheet" href="css/pathways.css">
+  <link rel="stylesheet" href="css/sra-browser.css">
   <link rel="stylesheet" href="css/assistant.css">
   <link rel="stylesheet" href="css/thesis-coach.css">
   <link rel="stylesheet" href="css/bionlp.css">
@@ -356,6 +358,13 @@
                   <span class="nmd-desc">bioRxiv · medRxiv · Africa filter</span>
                 </span>
               </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('sra')">
+                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">SRA Browser</span>
+                  <span class="nmd-desc">NCBI SRA · Africa datasets · download</span>
+                </span>
+              </button>
               <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('h3africa')">
                 <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
                 <span class="nmd-text">
@@ -550,6 +559,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">STRING Network</span>
                   <span class="nmd-desc">Protein interactions · evidence scores</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathways')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Pathways</span>
+                  <span class="nmd-desc">KEGG · Reactome · Africa diseases</span>
                 </span>
               </button>
               <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ai')">
@@ -1502,6 +1518,16 @@
     <!-- Populated by preprints.js on route 'preprints' -->
   </div>
 
+  <!-- Biological Pathways (KEGG + Reactome) -->
+  <div class="reveal" id="pathways-section">
+    <!-- Populated by pathways.js on route 'pathways' -->
+  </div>
+
+  <!-- NCBI SRA Browser -->
+  <div class="reveal" id="sra-section">
+    <!-- Populated by sra-browser.js on route 'sra' -->
+  </div>
+
   <!-- AI Assistant (Claude API) -->
   <div class="reveal" id="assistant-section">
     <!-- Populated by assistant.js on route 'ai' -->
@@ -1913,6 +1939,8 @@
 <script src="js/open-targets.js"></script>
 <script src="js/string-net.js"></script>
 <script src="js/preprints.js"></script>
+<script src="js/pathways.js"></script>
+<script src="js/sra-browser.js"></script>
 <script src="js/assistant.js"></script>
 <script src="js/thesis-coach.js"></script>
 <script src="js/bionlp.js"></script>
