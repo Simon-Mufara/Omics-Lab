@@ -668,160 +668,103 @@ OmicsLab.Router = (function () {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     /* Re-init modules that need it on first visit */
+    /* _si: safe init — catches errors and shows error card instead of blank page */
+    const _si = (mod, sec, name) => { try { mod?.init(); } catch(e) { OmicsLab.Error?.renderPageError(sec, name, e); } };
+
     if (page === 'analysis' && OmicsLab.Analysis) {
       const el = document.getElementById('analysis-studio-content');
-      if (el && !el.querySelector('.az-tabs')) OmicsLab.Analysis.init();
+      if (el && !el.querySelector('.az-tabs')) try { OmicsLab.Analysis.init(); } catch(e) { OmicsLab.Error?.renderPageError('analysis-studio-content','Analysis',e); }
     }
     if (page === 'terminal' && OmicsLab.Terminal) {
       const el = document.getElementById('terminal-studio-content');
-      if (el && !el.querySelector('.terminal-page')) OmicsLab.Terminal.init();
+      if (el && !el.querySelector('.terminal-page')) try { OmicsLab.Terminal.init(); } catch(e) { OmicsLab.Error?.renderPageError('terminal-studio-content','Terminal',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
-      setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch {} }, 100);
+      setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
     }
     if (page === 'profile' && OmicsLab.Profile) {
       OmicsLab.Profile.openProfile();
       setTimeout(() => OmicsLab.LearningPath?.init(), 300);
     }
-    if (page === 'outbreak' && OmicsLab.Outbreak) {
-      OmicsLab.Outbreak.init();
-    }
-    if (page === 'datasets' && OmicsLab.Datasets) {
-      OmicsLab.Datasets.init();
-    }
-    if (page === 'career' && OmicsLab.Career) {
-      OmicsLab.Career.init();
-    }
-    if (page === 'mentor' && OmicsLab.Mentor) {
-      OmicsLab.Mentor.init();
-    }
-    if (page === 'protocols' && OmicsLab.Protocols) {
-      OmicsLab.Protocols.init();
-    }
-    if (page === 'collab' && OmicsLab.Collab) {
-      OmicsLab.Collab.init();
-    }
-    if (page === 'grant' && OmicsLab.Grant) {
-      OmicsLab.Grant.init();
-    }
-    if (page === 'leaderboard' && OmicsLab.Leaderboard) {
-      OmicsLab.Leaderboard.init();
-    }
-    if (page === 'debugger' && OmicsLab.Debugger) {
-      OmicsLab.Debugger.init();
-    }
-    if (page === 'alerts' && OmicsLab.Alerts) {
-      OmicsLab.Alerts.init();
-    }
+    if (page === 'outbreak' && OmicsLab.Outbreak) _si(OmicsLab.Outbreak, 'outbreak-section', 'Outbreak');
+    if (page === 'datasets' && OmicsLab.Datasets) _si(OmicsLab.Datasets, 'datasets-section', 'Datasets');
+    if (page === 'career' && OmicsLab.Career) _si(OmicsLab.Career, 'career-section', 'Career');
+    if (page === 'mentor' && OmicsLab.Mentor) _si(OmicsLab.Mentor, 'mentor-section', 'Mentor');
+    if (page === 'protocols' && OmicsLab.Protocols) _si(OmicsLab.Protocols, 'protocols-section', 'Protocols');
+    if (page === 'collab' && OmicsLab.Collab) _si(OmicsLab.Collab, 'collab-section', 'Collab');
+    if (page === 'grant' && OmicsLab.Grant) _si(OmicsLab.Grant, 'grant-section', 'Grant');
+    if (page === 'leaderboard' && OmicsLab.Leaderboard) _si(OmicsLab.Leaderboard, 'leaderboard-section', 'Leaderboard');
+    if (page === 'debugger' && OmicsLab.Debugger) _si(OmicsLab.Debugger, 'debugger-section', 'Debugger');
+    if (page === 'alerts' && OmicsLab.Alerts) _si(OmicsLab.Alerts, 'alerts-section', 'Alerts');
     if (page === 'phylo' && OmicsLab.Phylo) {
       OmicsLab.Skeleton?.beforeInit('phylo-section');
-      OmicsLab.Phylo.init();
+      _si(OmicsLab.Phylo, 'phylo-section', 'Phylo');
     }
-    if (page === 'peerreview' && OmicsLab.PeerReview) {
-      OmicsLab.PeerReview.init();
-    }
+    if (page === 'peerreview' && OmicsLab.PeerReview) _si(OmicsLab.PeerReview, 'peerreview-section', 'PeerReview');
     if (page === 'heatmap' && OmicsLab.Heatmap) {
       OmicsLab.Skeleton?.beforeInit('heatmap-section');
-      OmicsLab.Heatmap.init();
+      _si(OmicsLab.Heatmap, 'heatmap-section', 'Heatmap');
     }
-    if (page === 'journalclub' && OmicsLab.JournalClub) {
-      OmicsLab.JournalClub.init();
-    }
-    if (page === 'citations' && OmicsLab.Citations) {
-      OmicsLab.Citations.init();
-    }
-    if (page === 'quizbattle' && OmicsLab.QuizBattle) {
-      OmicsLab.QuizBattle.init();
-    }
-    if (page === 'qualitypredictor' && OmicsLab.QualityPredictor) {
-      OmicsLab.QualityPredictor.init();
-    }
-    if (page === 'variantinterp' && OmicsLab.VariantInterp) {
-      OmicsLab.VariantInterp.init();
-    }
-    if (page === 'primerdesign' && OmicsLab.PrimerDesign) {
-      OmicsLab.PrimerDesign.init();
-    }
+    if (page === 'journalclub' && OmicsLab.JournalClub) _si(OmicsLab.JournalClub, 'journalclub-section', 'JournalClub');
+    if (page === 'citations' && OmicsLab.Citations) _si(OmicsLab.Citations, 'citations-section', 'Citations');
+    if (page === 'quizbattle' && OmicsLab.QuizBattle) _si(OmicsLab.QuizBattle, 'quizbattle-section', 'QuizBattle');
+    if (page === 'qualitypredictor' && OmicsLab.QualityPredictor) _si(OmicsLab.QualityPredictor, 'qualitypredictor-section', 'QualityPredictor');
+    if (page === 'variantinterp' && OmicsLab.VariantInterp) _si(OmicsLab.VariantInterp, 'variantinterp-section', 'VariantInterp');
+    if (page === 'primerdesign' && OmicsLab.PrimerDesign) _si(OmicsLab.PrimerDesign, 'primerdesign-section', 'PrimerDesign');
     if (page === 'nexus' && OmicsLab.Nexus) {
-      OmicsLab.Nexus.init();
+      _si(OmicsLab.Nexus, 'nexus-section', 'Nexus');
       setTimeout(() => OmicsLab.NexusAttachments?.init(), 200);
     }
-    if (page === 'paperhub' && OmicsLab.PaperHub) {
-      OmicsLab.PaperHub.init();
-    }
+    if (page === 'paperhub' && OmicsLab.PaperHub) _si(OmicsLab.PaperHub, 'paperhub-section', 'PaperHub');
     if (page === 'teams' && OmicsLab.Teams) {
-      OmicsLab.Teams.init();
+      _si(OmicsLab.Teams, 'teams-section', 'Teams');
       setTimeout(() => OmicsLab.Calendar?.init(), 200);
       setTimeout(() => OmicsLab.Whiteboard?.init(), 300);
     }
-    if (page === 'pubmed' && OmicsLab.PubMed) {
-      OmicsLab.PubMed.init();
-    }
-    if (page === 'gene-lookup' && OmicsLab.GeneLookup) {
-      OmicsLab.GeneLookup.init();
-    }
-    if (page === 'protein' && OmicsLab.ProteinViewer) {
-      OmicsLab.ProteinViewer.init();
-    }
-    if (page === 'uniprot' && OmicsLab.UniProt) {
-      OmicsLab.UniProt.init();
-    }
-    if (page === 'targets' && OmicsLab.OpenTargets) {
-      OmicsLab.OpenTargets.init();
-    }
-    if (page === 'string' && OmicsLab.StringNet) {
-      OmicsLab.StringNet.init();
-    }
-    if (page === 'preprints' && OmicsLab.Preprints) {
-      OmicsLab.Preprints.init();
-    }
-    if (page === 'pathways' && OmicsLab.Pathways) OmicsLab.Pathways.init();
-    if (page === 'sra' && OmicsLab.SRABrowser) OmicsLab.SRABrowser.init();
-    if (page === 'ai' && OmicsLab.Assistant) {
-      OmicsLab.Assistant.init();
-    }
-    if (page === 'thesis' && OmicsLab.ThesisCoach) {
-      OmicsLab.ThesisCoach.init();
-    }
-    if (page === 'bionlp' && OmicsLab.BioNLP) {
-      OmicsLab.BioNLP.init();
-    }
+    if (page === 'pubmed' && OmicsLab.PubMed) _si(OmicsLab.PubMed, 'pubmed-section', 'PubMed');
+    if (page === 'gene-lookup' && OmicsLab.GeneLookup) _si(OmicsLab.GeneLookup, 'gene-lookup-section', 'GeneLookup');
+    if (page === 'protein' && OmicsLab.ProteinViewer) _si(OmicsLab.ProteinViewer, 'protein-section', 'ProteinViewer');
+    if (page === 'uniprot' && OmicsLab.UniProt) _si(OmicsLab.UniProt, 'uniprot-section', 'UniProt');
+    if (page === 'targets' && OmicsLab.OpenTargets) _si(OmicsLab.OpenTargets, 'targets-section', 'OpenTargets');
+    if (page === 'string' && OmicsLab.StringNet) _si(OmicsLab.StringNet, 'string-section', 'StringNet');
+    if (page === 'preprints' && OmicsLab.Preprints) _si(OmicsLab.Preprints, 'preprints-section', 'Preprints');
+    if (page === 'pathways' && OmicsLab.Pathways) _si(OmicsLab.Pathways, 'pathways-section', 'Pathways');
+    if (page === 'sra' && OmicsLab.SRABrowser) _si(OmicsLab.SRABrowser, 'sra-section', 'SRABrowser');
+    if (page === 'ai' && OmicsLab.Assistant) _si(OmicsLab.Assistant, 'ai-section', 'Assistant');
+    if (page === 'thesis' && OmicsLab.ThesisCoach) _si(OmicsLab.ThesisCoach, 'thesis-section', 'ThesisCoach');
+    if (page === 'bionlp' && OmicsLab.BioNLP) _si(OmicsLab.BioNLP, 'bionlp-section', 'BioNLP');
     /* Part 3 */
-    if (page === 'codon' && OmicsLab.CodonUsage) OmicsLab.CodonUsage.init();
-    if (page === 'nanopore' && OmicsLab.NanoporeQC) OmicsLab.NanoporeQC.init();
-    if (page === 'amr' && OmicsLab.AMR) OmicsLab.AMR.init();
-    if (page === 'kraken' && OmicsLab.Kraken) OmicsLab.Kraken.init();
-    if (page === 'popstruct' && OmicsLab.PopStruct) OmicsLab.PopStruct.init();
-    if (page === 'genome-browser' && OmicsLab.GenomeBrowser) OmicsLab.GenomeBrowser.init();
+    if (page === 'codon' && OmicsLab.CodonUsage) _si(OmicsLab.CodonUsage, 'codon-section', 'CodonUsage');
+    if (page === 'nanopore' && OmicsLab.NanoporeQC) _si(OmicsLab.NanoporeQC, 'nanopore-section', 'NanoporeQC');
+    if (page === 'amr' && OmicsLab.AMR) _si(OmicsLab.AMR, 'amr-section', 'AMR');
+    if (page === 'kraken' && OmicsLab.Kraken) _si(OmicsLab.Kraken, 'kraken-section', 'Kraken');
+    if (page === 'popstruct' && OmicsLab.PopStruct) _si(OmicsLab.PopStruct, 'popstruct-section', 'PopStruct');
+    if (page === 'genome-browser' && OmicsLab.GenomeBrowser) _si(OmicsLab.GenomeBrowser, 'genome-browser-section', 'GenomeBrowser');
     /* Part 4 */
-    if (page === 'directory' && OmicsLab.Directory) OmicsLab.Directory.init();
-    if (page === 'hackathon' && OmicsLab.Hackathon) OmicsLab.Hackathon.init();
-    if (page === 'mentorship' && OmicsLab.Mentorship) OmicsLab.Mentorship.init();
+    if (page === 'directory' && OmicsLab.Directory) _si(OmicsLab.Directory, 'directory-section', 'Directory');
+    if (page === 'hackathon' && OmicsLab.Hackathon) _si(OmicsLab.Hackathon, 'hackathon-section', 'Hackathon');
+    if (page === 'mentorship' && OmicsLab.Mentorship) _si(OmicsLab.Mentorship, 'mentorship-section', 'Mentorship');
     /* Part 5 */
-    if (page === 'h3africa' && OmicsLab.H3Africa) OmicsLab.H3Africa.init();
-    if (page === 'pathogen-tracker' && OmicsLab.PathogenTracker) OmicsLab.PathogenTracker.init();
-    if (page === 'glossary' && OmicsLab.Glossary) OmicsLab.Glossary.init();
-    if (page === 'offline-data' && OmicsLab.OfflineData) OmicsLab.OfflineData.init();
+    if (page === 'h3africa' && OmicsLab.H3Africa) _si(OmicsLab.H3Africa, 'h3africa-section', 'H3Africa');
+    if (page === 'pathogen-tracker' && OmicsLab.PathogenTracker) _si(OmicsLab.PathogenTracker, 'pathogen-tracker-section', 'PathogenTracker');
+    if (page === 'glossary' && OmicsLab.Glossary) _si(OmicsLab.Glossary, 'glossary-section', 'Glossary');
+    if (page === 'offline-data' && OmicsLab.OfflineData) _si(OmicsLab.OfflineData, 'offline-data-section', 'OfflineData');
     /* Part 6 */
-    if (page === 'labnotebook' && OmicsLab.LabNotebook) OmicsLab.LabNotebook.init();
-    if (page === 'pipeline-gen' && OmicsLab.PipelineGen) OmicsLab.PipelineGen.init();
-    if (page === 'metaanalysis' && OmicsLab.MetaAnalysis) OmicsLab.MetaAnalysis.init();
+    if (page === 'labnotebook' && OmicsLab.LabNotebook) _si(OmicsLab.LabNotebook, 'labnotebook-section', 'LabNotebook');
+    if (page === 'pipeline-gen' && OmicsLab.PipelineGen) _si(OmicsLab.PipelineGen, 'pipeline-gen-section', 'PipelineGen');
+    if (page === 'metaanalysis' && OmicsLab.MetaAnalysis) _si(OmicsLab.MetaAnalysis, 'metaanalysis-section', 'MetaAnalysis');
     /* Part 7 */
-    if (page === 'api-docs' && OmicsLab.APIDocs) OmicsLab.APIDocs.init();
+    if (page === 'api-docs' && OmicsLab.APIDocs) _si(OmicsLab.APIDocs, 'api-docs-section', 'APIDocs');
     /* Part 8 */
-    if (page === 'certification' && OmicsLab.Certification) OmicsLab.Certification.init();
-    if (page === 'impact' && OmicsLab.Impact) OmicsLab.Impact.init();
-    if (page === 'partners' && OmicsLab.Partners) OmicsLab.Partners.init();
+    if (page === 'certification' && OmicsLab.Certification) _si(OmicsLab.Certification, 'certification-section', 'Certification');
+    if (page === 'impact' && OmicsLab.Impact) _si(OmicsLab.Impact, 'impact-section', 'Impact');
+    if (page === 'partners' && OmicsLab.Partners) _si(OmicsLab.Partners, 'partners-section', 'Partners');
     if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) {
       OmicsLab.Skeleton?.beforeInit('knowledge-graph-section');
-      try { OmicsLab.KnowledgeGraph.init(); } catch(e) { OmicsLab.Error?.renderPageError('knowledge-graph-section','KnowledgeGraph',e); }
+      _si(OmicsLab.KnowledgeGraph, 'knowledge-graph-section', 'KnowledgeGraph');
     }
-    if (page === 'settings' && OmicsLab.Settings) {
-      try { OmicsLab.Settings.init(); } catch(e) { OmicsLab.Error?.renderPageError('settings-section','Settings',e); }
-    }
-    if (page === 'output-tracker' && OmicsLab.OutputTracker) {
-      try { OmicsLab.OutputTracker.init(); } catch(e) { OmicsLab.Error?.renderPageError('output-tracker-section','OutputTracker',e); }
-    }
+    if (page === 'settings' && OmicsLab.Settings) _si(OmicsLab.Settings, 'settings-section', 'Settings');
+    if (page === 'output-tracker' && OmicsLab.OutputTracker) _si(OmicsLab.OutputTracker, 'output-tracker-section', 'OutputTracker');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
     if (page === 'terms')    OmicsLab.Legal?.render('terms');
     if (page === 'analysis') setTimeout(() => OmicsLab.DataImport?.init(), 400);

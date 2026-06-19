@@ -166,18 +166,8 @@ OmicsLab.VoiceControl = (function () {
 
   /* ─── Toast notification ─── */
   function _toast(msg, isError) {
-    clearTimeout(_toastTimer);
-    let el = document.getElementById('vc-toast');
-    if (!el) {
-      el = document.createElement('div');
-      el.id = 'vc-toast';
-      el.className = 'vc-toast';
-      document.body.appendChild(el);
-    }
-    el.className = 'vc-toast' + (isError ? ' vc-toast-error' : '');
-    el.innerHTML = `<span class="vc-toast-icon">${isError ? '⚠️' : '🎤'}</span><span>${msg}</span>`;
-    el.classList.add('visible');
-    _toastTimer = setTimeout(() => el.classList.remove('visible'), 3200);
+    if (isError) OmicsLab.Notify.error(msg);
+    else OmicsLab.Notify.info(msg);
   }
 
   /* ─── Update mic button state ─── */

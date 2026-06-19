@@ -672,16 +672,7 @@ OmicsLab.Protocols = (function () {
   }
 
   function _toast(msg) {
-    let t = document.getElementById('pr-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'pr-toast';
-      t.className = 'ds-toast'; /* reuse ds-toast styles */
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2400);
+    OmicsLab.Notify.success(msg);
   }
 
   return {

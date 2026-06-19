@@ -94,16 +94,8 @@ OmicsLab.Progress = (function () {
 
   /* ─── Toast notification ─── */
   function _showToast(msg, isWarn = false) {
-    let t = document.getElementById('progress-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'progress-toast';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.className = 'progress-toast' + (isWarn ? ' warn' : '');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3500);
+    if (isWarn) OmicsLab.Notify.warning(msg);
+    else OmicsLab.Notify.success(msg);
   }
 
   /* ─── Render modal ─── */

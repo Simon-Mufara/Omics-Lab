@@ -691,16 +691,7 @@ OmicsLab.Datasets = (function () {
   }
 
   function _toast(msg) {
-    let t = document.getElementById('ds-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'ds-toast';
-      t.className = 'ds-toast';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2600);
+    OmicsLab.Notify.info(msg);
   }
 
   /* ─── Init ─── */

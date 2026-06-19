@@ -95,19 +95,7 @@ OmicsLab.Badges = (function () {
   }
 
   function _showToast(badge) {
-    let toast = document.getElementById('badge-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'badge-toast';
-      toast.className = 'badge-toast';
-      document.body.appendChild(toast);
-    }
-    toast.innerHTML = `<span class="badge-toast-icon">${badge.icon}</span>
-      <div><strong>Badge unlocked!</strong><br>${badge.title}</div>`;
-    toast.style.background = badge.color;
-    toast.classList.add('show');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('show'), 3500);
+    OmicsLab.Notify.success(badge.icon + ' Badge unlocked: ' + badge.title, { duration: 5000 });
   }
 
   function _refreshBadgeDisplay() {

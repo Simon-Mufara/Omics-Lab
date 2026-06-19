@@ -292,13 +292,8 @@ A proportion of any intellectual property generated from this work will be held 
   }
 
   function _toast(msg, isError) {
-    let el = document.getElementById('gr-toast');
-    if (!el) { el = document.createElement('div'); el.id = 'gr-toast'; el.className = 'gr-toast'; document.body.appendChild(el); }
-    el.className = 'gr-toast' + (isError ? ' gr-toast-error' : '');
-    el.innerHTML = (isError ? '⚠️ ' : '✅ ') + msg;
-    el.classList.add('visible');
-    clearTimeout(el._t);
-    el._t = setTimeout(() => el.classList.remove('visible'), 3500);
+    if (isError) OmicsLab.Notify.error(msg);
+    else OmicsLab.Notify.success(msg);
   }
 
   /* ─── Auto-fill from last lab session ─── */

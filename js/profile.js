@@ -554,24 +554,7 @@ OmicsLab.Profile = (function () {
 
   /* ── Toast notification ── */
   function _toast(msg) {
-    let t = document.getElementById('profile-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'profile-toast';
-      t.style.cssText = [
-        'position:fixed','bottom:1.5rem','left:50%','transform:translateX(-50%)',
-        'background:#161b22','border:1px solid #3fb950','border-radius:10px',
-        'padding:0.7rem 1.25rem','font-size:0.85rem','color:#e6edf3',
-        'font-family:Inter,sans-serif','z-index:11000',
-        'box-shadow:0 8px 24px rgba(0,0,0,0.5)','pointer-events:none',
-        'transition:opacity 0.3s',
-      ].join(';');
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3200);
+    OmicsLab.Notify.success(msg);
   }
 
   /* ── HTML escape ── */

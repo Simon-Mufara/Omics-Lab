@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v55: Tabbed mega-menus (Research+Tools), affiliation reframe, nav redesign
+   v56: Global notify system (11 modules), error boundary, 404 handler, _si router
    ═══════════════════════════════════════════════════════════════ */
 
 const STATIC_CACHE  = 'ol-static-v2';  /* js/ css/ images/ */

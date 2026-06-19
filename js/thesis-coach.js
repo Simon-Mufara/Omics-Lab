@@ -409,10 +409,7 @@ Make it suitable for African genomics research. Be specific and avoid vague stat
 
   /* ─── Utils ─── */
   function _toast(msg) {
-    const t = document.createElement('div');
-    t.className = 'tc-toast'; t.textContent = msg;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 1800);
+    OmicsLab.Notify.success(msg);
   }
 
   function _simplemd(text) {

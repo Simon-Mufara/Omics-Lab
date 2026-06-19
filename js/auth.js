@@ -580,17 +580,8 @@ OmicsLab.Auth = (function () {
 
   /* ─── Toast ─── */
   function _showToast(msg, isError) {
-    let t = document.getElementById('auth-toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'auth-toast';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.className = 'auth-toast ' + (isError ? 'auth-toast-error' : 'auth-toast-ok');
-    t.style.opacity = '1';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+    if (isError) OmicsLab.Notify.error(msg);
+    else OmicsLab.Notify.success(msg);
   }
 
   /* ─── Helpers ─── */
