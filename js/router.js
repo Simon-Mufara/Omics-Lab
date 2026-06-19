@@ -483,6 +483,20 @@ OmicsLab.Router = (function () {
       tagline: 'Track your publications, datasets, talks, posters, and grants — CSV and BibTeX export',
       sections: ['output-tracker-section'],
     },
+    privacy: {
+      label: 'Privacy Policy',
+      icon: '🔒',
+      color: '#8b949e',
+      tagline: 'How OmicsLab handles your data — fully local, never shared',
+      sections: ['privacy-section'],
+    },
+    terms: {
+      label: 'Terms of Use',
+      icon: '📄',
+      color: '#8b949e',
+      tagline: 'Terms and conditions for using the OmicsLab platform — free for education and research',
+      sections: ['terms-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -513,6 +527,8 @@ OmicsLab.Router = (function () {
     'output-tracker': 'research',
     settings: null,
     profile: null, /* user pill is the nav element for profile */
+    privacy: null,
+    terms: null,
   };
 
   /* All section IDs that belong to any page (not home) */
@@ -563,6 +579,20 @@ OmicsLab.Router = (function () {
     }
     _npStart();
     _currentPage = page;
+
+    /* Dynamic <title> + <meta description> per route */
+    const _pd = PAGES[page];
+    if (_pd) {
+      document.title = page === 'home'
+        ? 'OmicsLab Simulator — Africa\'s Omics Training Platform'
+        : `${_pd.label} | OmicsLab`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.content = page === 'home'
+          ? 'Interactive omics training for Africa — 14 workflows, bioinformatics pipeline guides, 20 real instruments. Genomics, transcriptomics, proteomics. Free and offline.'
+          : (_pd.tagline || metaDesc.content);
+      }
+    }
 
     /* Update URL hash without scroll */
     const hash = '#/' + page;
@@ -792,6 +822,9 @@ OmicsLab.Router = (function () {
     if (page === 'output-tracker' && OmicsLab.OutputTracker) {
       try { OmicsLab.OutputTracker.init(); } catch(e) { OmicsLab.Error?.renderPageError('output-tracker-section','OutputTracker',e); }
     }
+    if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
+    if (page === 'terms')    OmicsLab.Legal?.render('terms');
+    if (page === 'analysis') setTimeout(() => OmicsLab.DataImport?.init(), 400);
 
     /* Announce navigation to screen readers */
     const p = PAGES[page];

@@ -147,3 +147,53 @@
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
+
+/* ── RTL support for Arabic (ar) ── */
+.lang-rtl,
+:root:lang(ar) {
+  --text-align-start: right;
+  --text-align-end: left;
+}
+
+.lang-rtl .landing-nav,
+.lang-rtl .nav-group-btn,
+.lang-rtl .nav-links-row {
+  flex-direction: row-reverse;
+}
+
+.lang-rtl .prh-left {
+  flex-direction: row-reverse;
+}
+
+.lang-rtl .az-tabs {
+  flex-direction: row-reverse;
+}
+
+.lang-rtl .nx-sidebar {
+  right: auto;
+  left: 0;
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+.lang-rtl .nx-messages-col {
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+.lang-rtl .i18n-toggle-wrap .i18n-dropdown {
+  right: auto;
+  left: 0;
+}
+
+/* Logical property fallbacks — use where physical padding/margin is applied */
+.lang-rtl [style*="padding-left"] { padding-left: unset; }
+.lang-rtl [style*="margin-left"]  { margin-left: unset; }
+
+/* Input text direction */
+.lang-rtl input,
+.lang-rtl textarea,
+.lang-rtl [contenteditable] {
+  direction: rtl;
+  text-align: right;
+}

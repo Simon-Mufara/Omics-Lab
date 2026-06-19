@@ -1574,6 +1574,14 @@
     <!-- Populated by output-tracker.js on route 'output-tracker' -->
   </div>
 
+  <!-- Legal pages -->
+  <div class="reveal" id="privacy-section">
+    <!-- Populated by legal.js on route 'privacy' -->
+  </div>
+  <div class="reveal" id="terms-section">
+    <!-- Populated by legal.js on route 'terms' -->
+  </div>
+
   <!-- AI Assistant (Claude API) -->
   <div class="reveal" id="assistant-section">
     <!-- Populated by assistant.js on route 'ai' -->
@@ -1669,6 +1677,8 @@
       <a href="https://linkedin.com/in/simon-mufara" target="_blank" rel="noopener" aria-label="Simon Mufara on LinkedIn">LinkedIn</a>
       <a href="https://github.com/Simon-Mufara/Omics-Lab" target="_blank" rel="noopener" aria-label="OmicsLab on GitHub">GitHub</a>
       <a href="#changelog-section" onclick="document.getElementById('changelog-section').scrollIntoView({behavior:'smooth'});return false">What's New</a>
+      <a href="#/privacy" onclick="OmicsLab.Router.navigate('privacy')">Privacy</a>
+      <a href="#/terms"   onclick="OmicsLab.Router.navigate('terms')">Terms</a>
     </div>
 
     <!-- Feedback box -->
@@ -2038,6 +2048,9 @@
 <script src="js/nexus-attachments.js"></script>
 <script src="js/whiteboard.js"></script>
 <script src="js/voice-compose.js"></script>
+<script src="js/data-import.js"></script>
+<script src="js/legal.js"></script>
+<script src="js/locales/en.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>

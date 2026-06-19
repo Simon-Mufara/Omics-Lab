@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# OmicsLab — Africa's bioinformatics training platform
+# All pages are public and educational. No login required.
+
 Sitemap: https://simon-mufara.github.io/Omics-Lab/sitemap.xml

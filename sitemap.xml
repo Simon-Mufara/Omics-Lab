@@ -1,9 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://simon-mufara.github.io/Omics-Lab/</loc>
-    <lastmod>2026-06-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+
+  <!-- Core learning -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/lab</loc><changefreq>weekly</changefreq><priority>0.95</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/learn</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/career</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/certification</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/leaderboard</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/quizbattle</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+
+  <!-- Research -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/research</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/africa</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/outbreak</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/alerts</loc><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/datasets</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/protocols</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/grant</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/h3africa</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/pathogen-tracker</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+
+  <!-- Analysis tools -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/analysis</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/terminal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/variantinterp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/qualitypredictor</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/primerdesign</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/phylo</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/heatmap</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/debugger</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/codon</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/nanopore</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/amr</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/kraken</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/genome-browser</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/popstruct</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/knowledge-graph</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Database lookups -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/gene-lookup</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/protein</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/uniprot</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/targets</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/string</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/pathways</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/sra</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/pubmed</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/preprints</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <!-- AI + content -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/ai</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/ask</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/mentor</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/bionlp</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/thesis</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Community -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/nexus</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/teams</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/paperhub</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/journalclub</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/citations</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/directory</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/hackathon</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/mentorship</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/peerreview</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Platform -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/settings</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/profile</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/impact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/partners</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/api-docs</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/glossary</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/offline-data</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
+
+  <!-- Legal -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/privacy</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/terms</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+
 </urlset>

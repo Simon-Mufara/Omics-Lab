@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v53: Nexus attachments, accessibility, whiteboard, voice-compose
+   v54: Data import workers, legal pages, dynamic titles, en.js, RTL CSS
    ═══════════════════════════════════════════════════════════════ */
 
 const STATIC_CACHE  = 'ol-static-v2';  /* js/ css/ images/ */
