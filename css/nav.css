@@ -187,6 +187,8 @@
   white-space: nowrap;
 }
 .nav-right .nav-search-btn:hover { background: rgba(255,255,255,0.08); color: #c9d1d9; border-color: #484f58; }
+.nav-settings-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: none; border: 1px solid transparent; border-radius: 7px; color: #6e7681; cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
+.nav-settings-btn:hover { background: rgba(255,255,255,0.06); color: #c9d1d9; border-color: #30363d; }
 .nav-search-kbd {
   font-size: 0.65rem;
   padding: 0.05rem 0.3rem;

@@ -462,6 +462,20 @@ OmicsLab.Router = (function () {
       tagline: 'OmicsLab partners and open-source foundation — the organisations and people making OmicsLab possible',
       sections: ['partners-section'],
     },
+    'knowledge-graph': {
+      label: 'Knowledge Graph',
+      icon: '🕸️',
+      color: '#bc8cff',
+      tagline: 'Africa Genomics Knowledge Graph — diseases, genes, tools, populations, and countries as an interactive force-directed network',
+      sections: ['knowledge-graph-section'],
+    },
+    settings: {
+      label: 'Settings',
+      icon: '⚙️',
+      color: '#8b949e',
+      tagline: 'Platform preferences — appearance, language, API keys, data privacy, and about',
+      sections: ['settings-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -488,6 +502,8 @@ OmicsLab.Router = (function () {
     /* Part 8 */
     certification: 'train', impact: 'research', partners: 'research',
     ask: 'ask', mentor: 'ask',
+    'knowledge-graph': 'tools',
+    settings: null,
     profile: null, /* user pill is the nav element for profile */
   };
 
@@ -508,7 +524,10 @@ OmicsLab.Router = (function () {
 
   /* ─── Navigate to a page ─── */
   function navigate(page) {
-    if (!PAGES[page]) page = 'home';
+    if (!PAGES[page]) {
+      OmicsLab.Error?.render404(page);
+      return;
+    }
     _currentPage = page;
 
     /* Update URL hash without scroll */
@@ -709,6 +728,12 @@ OmicsLab.Router = (function () {
     if (page === 'certification' && OmicsLab.Certification) OmicsLab.Certification.init();
     if (page === 'impact' && OmicsLab.Impact) OmicsLab.Impact.init();
     if (page === 'partners' && OmicsLab.Partners) OmicsLab.Partners.init();
+    if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) {
+      try { OmicsLab.KnowledgeGraph.init(); } catch(e) { OmicsLab.Error?.renderPageError('knowledge-graph-section','KnowledgeGraph',e); }
+    }
+    if (page === 'settings' && OmicsLab.Settings) {
+      try { OmicsLab.Settings.init(); } catch(e) { OmicsLab.Error?.renderPageError('settings-section','Settings',e); }
+    }
 
     /* Highlight user pill when on profile page */
     const userPill = document.getElementById('nav-user-pill');
@@ -1020,6 +1045,7 @@ OmicsLab.Router = (function () {
 
   /* ─── Init ─── */
   function init() {
+    OmicsLab.Error?.init();
     _buildNav();
     _renderHome();
 

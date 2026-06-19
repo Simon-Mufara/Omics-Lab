@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v45: Pathways (KEGG+Reactome), SRA Browser, DisGeNET integration into GeneLookup */
-const CACHE = 'omicslab-v45';
+/* v46: Knowledge Graph, Settings, Global Notify/Error boundary, KG nav */
+const CACHE = 'omicslab-v46';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

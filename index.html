@@ -121,6 +121,9 @@
   <link rel="stylesheet" href="css/impact.css">
   <link rel="stylesheet" href="css/partners.css">
   <link rel="stylesheet" href="css/tour.css">
+  <!-- Foundation modules -->
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/knowledge-graph.css">
 </head>
 <body>
 <a href="#domain-section" class="skip-link">Skip to main content</a>
@@ -568,6 +571,13 @@
                   <span class="nmd-desc">KEGG · Reactome · Africa diseases</span>
                 </span>
               </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('knowledge-graph')">
+                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Knowledge Graph</span>
+                  <span class="nmd-desc">Diseases · genes · tools · populations</span>
+                </span>
+              </button>
               <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ai')">
                 <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg></span>
                 <span class="nmd-text">
@@ -687,6 +697,9 @@
         <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Search
         <kbd class="nav-search-kbd">⌘K</kbd>
+      </button>
+      <button class="nav-settings-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('settings')" aria-label="Settings" title="Settings">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
       <button class="nav-user-pill" id="nav-user-pill"
               onclick="OmicsLab.Router&&OmicsLab.Router.navigate('profile')"
@@ -1528,6 +1541,16 @@
     <!-- Populated by sra-browser.js on route 'sra' -->
   </div>
 
+  <!-- Africa Genomics Knowledge Graph -->
+  <div class="reveal" id="knowledge-graph-section">
+    <!-- Populated by knowledge-graph.js on route 'knowledge-graph' -->
+  </div>
+
+  <!-- Settings -->
+  <div class="reveal" id="settings-section">
+    <!-- Populated by settings.js on route 'settings' -->
+  </div>
+
   <!-- AI Assistant (Claude API) -->
   <div class="reveal" id="assistant-section">
     <!-- Populated by assistant.js on route 'ai' -->
@@ -1971,6 +1994,11 @@
 <script src="js/certification.js"></script>
 <script src="js/impact.js"></script>
 <script src="js/partners.js"></script>
+<!-- Foundation modules (load before router) -->
+<script src="js/notify.js"></script>
+<script src="js/error.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/knowledge-graph.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>
