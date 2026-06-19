@@ -244,433 +244,274 @@
         </div>
       </div>
 
-      <!-- Research (Research + Africa) -->
+      <!-- Research — tabbed mega-menu -->
       <div class="nav-group" id="ng-research">
         <button class="nav-group-btn" data-group="research" aria-haspopup="true">
           Research
           <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <div class="nav-mega-drop" role="menu">
-          <div class="nmd-inner">
-            <div class="nmd-col">
-              <div class="nmd-label">Research</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Research Mode</span>
-                  <span class="nmd-desc">Design studies · FAIR scoring</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('peerreview')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="14" y2="16"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Peer Review Simulator</span>
-                  <span class="nmd-desc">3 reviewers · 40+ quality indicators</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-5.57"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Reproducibility Hub</span>
-                  <span class="nmd-desc">FAIR workflows · version-locked pipelines</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('grant')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Grant Generator</span>
-                  <span class="nmd-desc">NIH/Wellcome/H3Africa sections · offline</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('collab')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Live Collaboration</span>
-                  <span class="nmd-desc">WebRTC peer sessions · no server</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('protocols')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Protocol Library</span>
-                  <span class="nmd-desc">Community protocols · fork &amp; remix</span>
-                </span>
-              </button>
-            </div>
-            <div class="nmd-col">
-              <div class="nmd-label">Africa</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Africa Hub</span>
-                  <span class="nmd-desc">H3Africa · APCDR · data governance</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Genomics Map</span>
-                  <span class="nmd-desc">Active labs across 54 nations</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('alerts')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.12)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Outbreak Alerts</span>
-                  <span class="nmd-desc">Live disease feed · genomic readiness</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('outbreak')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.12)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Outbreak Simulator</span>
-                  <span class="nmd-desc">Trace index cases · build phylo trees</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('datasets')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Dataset Browser</span>
-                  <span class="nmd-desc">20 real African omics datasets · SRA/ENA</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('nexus')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Nexus</span>
-                  <span class="nmd-desc">Research channels · threads · @mentions</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('teams')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Teams</span>
-                  <span class="nmd-desc">Video meetings · screen share · live calls</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('paperhub')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">PaperHub</span>
-                  <span class="nmd-desc">African genomics research library · cite</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pubmed')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">PubMed Search</span>
-                  <span class="nmd-desc">36M citations · Africa filter · live</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('preprints')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Preprint Feed</span>
-                  <span class="nmd-desc">bioRxiv · medRxiv · Africa filter</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('sra')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">SRA Browser</span>
-                  <span class="nmd-desc">NCBI SRA · Africa datasets · download</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('h3africa')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">H3Africa Portal</span>
-                  <span class="nmd-desc">Projects · datasets · tools · training</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathogen-tracker')">
-                <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Pathogen Tracker</span>
-                  <span class="nmd-desc">SARS-CoV-2 · TB · malaria · mpox surveillance</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('glossary')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Multilingual Glossary</span>
-                  <span class="nmd-desc">200+ terms · Swahili · Hausa · Yoruba · Amharic</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('offline-data')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Offline Data Packages</span>
-                  <span class="nmd-desc">H3Africa · TB · malaria · ancestry refs</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('targets')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Open Targets</span>
-                  <span class="nmd-desc">Disease-gene associations · evidence</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('thesis')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Thesis Coach</span>
-                  <span class="nmd-desc">AI-powered thesis drafting · 5 chapters</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('labnotebook')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Lab Notebook</span>
-                  <span class="nmd-desc">Offline structured research notes</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('output-tracker')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Output Tracker</span>
-                  <span class="nmd-desc">Publications · datasets · talks · grants</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('directory')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Researcher Directory</span>
-                  <span class="nmd-desc">Africa bioinformatics network · register</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('mentorship')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Mentorship Network</span>
-                  <span class="nmd-desc">Connect students with African researchers</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('hackathon')">
-                <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Hackathon</span>
-                  <span class="nmd-desc">Virtual genomics challenges · team up</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('impact')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Impact Observatory</span>
-                  <span class="nmd-desc">OmicsLab's reach across 38 countries</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('partners')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Partners &amp; Foundation</span>
-                  <span class="nmd-desc">H3Africa · Sanger · open-source</span>
-                </span>
-              </button>
-            </div>
+        <div class="nav-mega-drop nmd-tabbed" role="menu">
+          <div class="nmd-tabs" role="tablist">
+            <button class="nmd-tab active" role="tab" aria-selected="true"  onclick="OmicsLab.Nav._tab(this,'res-plan')">Plan &amp; Write</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'res-africa')">Africa</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'res-community')">Community</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'res-lit')">Literature</button>
+          </div>
+
+          <!-- Panel: Plan & Write (default) -->
+          <div class="nmd-tab-panel" data-panel="res-plan">
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Research Mode</span><span class="nmd-desc">Design studies · FAIR scoring</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('peerreview')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="14" y2="16"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Peer Review Simulator</span><span class="nmd-desc">3 reviewers · 40+ quality indicators</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.18-5.57"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Reproducibility Hub</span><span class="nmd-desc">FAIR workflows · version-locked pipelines</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('grant')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Grant Generator</span><span class="nmd-desc">NIH · Wellcome · Africa sections · offline</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('labnotebook')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Lab Notebook</span><span class="nmd-desc">Offline structured research notes</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('output-tracker')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Output Tracker</span><span class="nmd-desc">Publications · datasets · talks · grants</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Africa -->
+          <div class="nmd-tab-panel" data-panel="res-africa" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Africa Hub</span><span class="nmd-desc">Genomics data · disease context · 54 nations</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('africa')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Genomics Map</span><span class="nmd-desc">Active labs across 54 nations</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('alerts')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.12)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Outbreak Alerts</span><span class="nmd-desc">Live disease feed · genomic readiness</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('outbreak')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.12)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Outbreak Simulator</span><span class="nmd-desc">Trace index cases · build phylo trees</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('datasets')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Dataset Browser</span><span class="nmd-desc">20 real African omics datasets · SRA/ENA</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathogen-tracker')">
+              <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pathogen Tracker</span><span class="nmd-desc">SARS-CoV-2 · TB · malaria · mpox surveillance</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Community -->
+          <div class="nmd-tab-panel" data-panel="res-community" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('nexus')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Nexus</span><span class="nmd-desc">Research channels · threads · @mentions</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('teams')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Teams</span><span class="nmd-desc">Video meetings · screen share · live calls</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('collab')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Live Collaboration</span><span class="nmd-desc">WebRTC peer sessions · no server</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('mentorship')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Mentorship Network</span><span class="nmd-desc">Connect students with African researchers</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('hackathon')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Hackathon</span><span class="nmd-desc">Virtual genomics challenges · team up</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('directory')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Researcher Directory</span><span class="nmd-desc">Africa bioinformatics network · register</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Literature -->
+          <div class="nmd-tab-panel" data-panel="res-lit" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pubmed')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">PubMed Search</span><span class="nmd-desc">36M citations · Africa filter · live</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('preprints')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Preprint Feed</span><span class="nmd-desc">bioRxiv · medRxiv · Africa filter</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('paperhub')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">PaperHub</span><span class="nmd-desc">African genomics research library · cite</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('thesis')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Thesis Coach</span><span class="nmd-desc">AI-powered thesis drafting · 5 chapters</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('glossary')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Multilingual Glossary</span><span class="nmd-desc">200+ terms · Swahili · Hausa · Yoruba · Amharic</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('sra')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">SRA Browser</span><span class="nmd-desc">NCBI SRA · Africa datasets · download</span></span>
+            </button>
           </div>
         </div>
       </div>
 
-      <!-- Tools (Analysis + Terminal) -->
+      <!-- Tools — tabbed mega-menu -->
       <div class="nav-group" id="ng-tools">
         <button class="nav-group-btn" data-group="tools" aria-haspopup="true">
           Tools
           <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <div class="nav-mega-drop nmd-tools" role="menu">
-          <div class="nmd-inner">
-            <div class="nmd-col">
-              <div class="nmd-label">Sequence &amp; Genome</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('variantinterp')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8.5-2-2"/><path d="m11 11-.5-.5"/><path d="m10 14-2-2"/><path d="m7 17-2.5-2.5"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Variant Interpreter</span>
-                  <span class="nmd-desc">ACMG/AMP · gnomAD AFR · ClinVar</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('phylo')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Phylo Tree Builder</span>
-                  <span class="nmd-desc">NJ · UPGMA · SVG tree · Newick</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('primerdesign')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Primer Design</span>
-                  <span class="nmd-desc">Wallace Tm · GC% · dimer · Africa genes</span>
-                </span>
-              </button>
-            </div>
-            <div class="nmd-col">
-              <div class="nmd-label">Expression &amp; QC</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('analysis')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Analysis Studio</span>
-                  <span class="nmd-desc">FASTQ · VCF · expression matrix</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('heatmap')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Expression Visualiser</span>
-                  <span class="nmd-desc">Volcano plot · heatmap · DE table</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('qualitypredictor')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Quality Predictor</span>
-                  <span class="nmd-desc">GATK · ENCODE · H3Africa thresholds</span>
-                </span>
-              </button>
-            </div>
-            <div class="nmd-col">
-              <div class="nmd-label">Pipeline &amp; Reference</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('terminal')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Pipeline Terminal</span>
-                  <span class="nmd-desc">22 tools simulated · Codespace</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('debugger')">
-                <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/><path d="M3 16h4M17 16h4M4 20l4-2M16 18l4 2M4 12l4 2M16 14l4-2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Protocol Debugger</span>
-                  <span class="nmd-desc">200+ rules · QC paste → root cause</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('citations')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Citation Manager</span>
-                  <span class="nmd-desc">APA · Vancouver · BibTeX · RIS</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('gene-lookup')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Gene Lookup</span>
-                  <span class="nmd-desc">Ensembl · transcripts · phenotypes · live</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('protein')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Protein Viewer</span>
-                  <span class="nmd-desc">AlphaFold · pLDDT chart · 3D structure</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('uniprot')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">UniProt Search</span>
-                  <span class="nmd-desc">215M proteins · Swiss-Prot · diseases</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('string')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">STRING Network</span>
-                  <span class="nmd-desc">Protein interactions · evidence scores</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathways')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Pathways</span>
-                  <span class="nmd-desc">KEGG · Reactome · Africa diseases</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('knowledge-graph')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Knowledge Graph</span>
-                  <span class="nmd-desc">Diseases · genes · tools · populations</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ai')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">AI Assistant</span>
-                  <span class="nmd-desc">Claude · genomics expert · streaming</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('bionlp')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">BioNLP</span>
-                  <span class="nmd-desc">Entity recognition · genes · variants</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('codon')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Codon Usage</span>
-                  <span class="nmd-desc">RSCU analysis · human · MTB · P. falciparum</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('nanopore')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Nanopore QC</span>
-                  <span class="nmd-desc">ONT metrics · PASS/WARN/FAIL thresholds</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('amr')">
-                <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">AMR Profiler</span>
-                  <span class="nmd-desc">MDR-TB · XDR-TB · CRE · ESBL · HIV</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('kraken')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Metagenomics</span>
-                  <span class="nmd-desc">Kraken2-style taxonomy · 6 African profiles</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('popstruct')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Pop Structure</span>
-                  <span class="nmd-desc">ADMIXTURE bars · PCA scatter · AWI-Gen</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('genome-browser')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Genome Browser</span>
-                  <span class="nmd-desc">IGV-style · HBB · G6PD · APOL1 · CYP2D6</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pipeline-gen')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Pipeline Generator</span>
-                  <span class="nmd-desc">Snakemake · Nextflow · WGS · RNA-seq · GWAS</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('metaanalysis')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Meta-analysis</span>
-                  <span class="nmd-desc">Fixed/random effects · forest plot · GWAS</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('api-docs')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Developer API</span>
-                  <span class="nmd-desc">Embed · extend · build on OmicsLab</span>
-                </span>
-              </button>
-            </div>
+        <div class="nav-mega-drop nmd-tabbed" role="menu">
+          <div class="nmd-tabs" role="tablist">
+            <button class="nmd-tab active" role="tab" aria-selected="true"  onclick="OmicsLab.Nav._tab(this,'tools-genomics')">Genomics</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tools-expr')">Expression</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tools-db')">Databases</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tools-ai')">AI &amp; Pipelines</button>
+          </div>
+
+          <!-- Panel: Genomics (default) -->
+          <div class="nmd-tab-panel" data-panel="tools-genomics">
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('variantinterp')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8.5-2-2"/><path d="m11 11-.5-.5"/><path d="m10 14-2-2"/><path d="m7 17-2.5-2.5"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Variant Interpreter</span><span class="nmd-desc">ACMG/AMP · gnomAD AFR · ClinVar</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('phylo')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Phylo Tree Builder</span><span class="nmd-desc">NJ · UPGMA · SVG tree · Newick</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('primerdesign')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Primer Design</span><span class="nmd-desc">Wallace Tm · GC% · dimer · Africa genes</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('genome-browser')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Genome Browser</span><span class="nmd-desc">IGV-style · HBB · G6PD · APOL1 · CYP2D6</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('nanopore')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Nanopore QC</span><span class="nmd-desc">ONT metrics · PASS/WARN/FAIL thresholds</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('amr')">
+              <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">AMR Profiler</span><span class="nmd-desc">MDR-TB · XDR-TB · CRE · ESBL · HIV</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('kraken')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Metagenomics</span><span class="nmd-desc">Kraken2-style taxonomy · 6 African profiles</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('popstruct')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pop Structure</span><span class="nmd-desc">ADMIXTURE bars · PCA scatter · AWI-Gen</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Expression -->
+          <div class="nmd-tab-panel" data-panel="tools-expr" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('analysis')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Analysis Studio</span><span class="nmd-desc">FASTQ · VCF · expression matrix</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('heatmap')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Expression Visualiser</span><span class="nmd-desc">Volcano plot · heatmap · DE table</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('qualitypredictor')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Quality Predictor</span><span class="nmd-desc">GATK · ENCODE · quality thresholds</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('codon')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Codon Usage</span><span class="nmd-desc">RSCU analysis · human · MTB · P. falciparum</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('metaanalysis')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Meta-analysis</span><span class="nmd-desc">Fixed/random effects · forest plot · GWAS</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pipeline-gen')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pipeline Generator</span><span class="nmd-desc">Snakemake · Nextflow · WGS · RNA-seq · GWAS</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Databases -->
+          <div class="nmd-tab-panel" data-panel="tools-db" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('gene-lookup')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Gene Lookup</span><span class="nmd-desc">Ensembl · transcripts · phenotypes · live</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('protein')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Protein Viewer</span><span class="nmd-desc">AlphaFold · pLDDT chart · 3D structure</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('uniprot')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">UniProt Search</span><span class="nmd-desc">215M proteins · Swiss-Prot · diseases</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('string')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">STRING Network</span><span class="nmd-desc">Protein interactions · evidence scores</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathways')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pathways</span><span class="nmd-desc">KEGG · Reactome · Africa diseases</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('targets')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Open Targets</span><span class="nmd-desc">Disease-gene associations · evidence</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('knowledge-graph')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Knowledge Graph</span><span class="nmd-desc">Diseases · genes · tools · populations</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('citations')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Citation Manager</span><span class="nmd-desc">APA · Vancouver · BibTeX · RIS</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: AI & Pipelines -->
+          <div class="nmd-tab-panel" data-panel="tools-ai" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ai')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">AI Assistant</span><span class="nmd-desc">Claude · genomics expert · streaming</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('bionlp')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">BioNLP</span><span class="nmd-desc">Entity recognition · genes · variants</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('terminal')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pipeline Terminal</span><span class="nmd-desc">22 tools simulated · Codespace</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('debugger')">
+              <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/><path d="M3 16h4M17 16h4M4 20l4-2M16 18l4 2M4 12l4 2M16 14l4-2"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Protocol Debugger</span><span class="nmd-desc">200+ rules · QC paste → root cause</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pipeline-gen')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pipeline Generator</span><span class="nmd-desc">Snakemake · Nextflow · WGS · RNA-seq · GWAS</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('api-docs')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Developer API</span><span class="nmd-desc">Embed · extend · build on OmicsLab</span></span>
+            </button>
           </div>
         </div>
       </div>
@@ -2117,7 +1958,23 @@
 
     document.addEventListener('DOMContentLoaded', _initUserPill);
 
-    return { open, close };
+    function _tab(btn, panelId) {
+      var drop = btn.closest('.nav-mega-drop');
+      if (!drop) return;
+      drop.querySelectorAll('.nmd-tab').forEach(function(t) {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      drop.querySelectorAll('.nmd-tab-panel').forEach(function(p) {
+        p.hidden = true;
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      var panel = drop.querySelector('[data-panel="' + panelId + '"]');
+      if (panel) panel.hidden = false;
+    }
+
+    return { open, close, _tab };
   })();
 
   /* ── Boot new modules after app.js initialises ── */

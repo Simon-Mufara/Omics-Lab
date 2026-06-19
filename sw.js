@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v54: Data import workers, legal pages, dynamic titles, en.js, RTL CSS
+   v55: Tabbed mega-menus (Research+Tools), affiliation reframe, nav redesign
    ═══════════════════════════════════════════════════════════════ */
 
 const STATIC_CACHE  = 'ol-static-v2';  /* js/ css/ images/ */

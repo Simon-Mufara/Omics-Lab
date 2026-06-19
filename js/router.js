@@ -456,10 +456,10 @@ OmicsLab.Router = (function () {
       sections: ['impact-section'],
     },
     partners: {
-      label: 'Partners',
-      icon: '🤝',
+      label: 'About & Inspiration',
+      icon: '🌍',
       color: '#58a6ff',
-      tagline: 'OmicsLab partners and open-source foundation — the organisations and people making OmicsLab possible',
+      tagline: 'About OmicsLab — mission, values, and the open-source community that makes this platform possible',
       sections: ['partners-section'],
     },
     'knowledge-graph': {
@@ -920,25 +920,25 @@ OmicsLab.Router = (function () {
 
     const TESTIMONIALS = [
       {
-        quote: 'OmicsLab completely changed how I teach genomics at KEMRI. Students now arrive at the bench understanding exactly what each step does — the error propagation alone is worth it.',
+        quote: 'OmicsLab completely changed how I teach genomics. Students now arrive at the bench understanding exactly what each step does — the error propagation alone is worth an entire semester.',
         name: 'Dr. Amara Osei-Bonsu',
-        role: 'Genomics Lead, KEMRI · Nairobi, Kenya',
+        role: 'Genomics Training Lecturer · Nairobi, Kenya',
         avatar: '👩🏿‍🔬',
         flag: '🇰🇪',
         color: '#3fb950',
       },
       {
-        quote: 'As a PhD student in Cape Town with no wet-lab access, this platform let me simulate an entire WGS pipeline before touching a single sample. My supervisor was impressed by how prepared I was.',
+        quote: 'As a PhD student with no wet-lab access, this platform let me simulate an entire WGS pipeline before touching a single sample. My supervisor was impressed by how prepared I was.',
         name: 'Sipho Dlamini',
-        role: 'PhD Candidate, UCT · Cape Town, South Africa',
+        role: 'PhD Candidate, Computational Biology · South Africa',
         avatar: '👨🏿‍💻',
         flag: '🇿🇦',
         color: '#58a6ff',
       },
       {
-        quote: 'The Africa Hub content is unlike anything I\'ve seen in a training platform — H3Africa governance, AWI-Gen population context, One Health surveillance. It speaks our language.',
+        quote: 'The Africa Hub content is unlike anything I\'ve seen in a training platform — real population genomics context, One Health surveillance, African disease datasets. It speaks our language.',
         name: 'Fatima Al-Rashidi',
-        role: 'Bioinformatician, APCDR · Entebbe, Uganda',
+        role: 'Bioinformatician & Trainer · Entebbe, Uganda',
         avatar: '👩🏽‍🔬',
         flag: '🇺🇬',
         color: '#bc8cff',
@@ -946,12 +946,12 @@ OmicsLab.Router = (function () {
     ];
 
     const PARTNERS = [
-      { mark: 'H3', name: 'H3Africa\nNetwork', color: '#3fb950', bg: 'rgba(63,185,80,0.1)' },
-      { mark: 'AP', name: 'APCDR\nUganda', color: '#58a6ff', bg: 'rgba(88,166,255,0.1)' },
-      { mark: 'KE', name: 'KEMRI\nKenya', color: '#f97316', bg: 'rgba(249,115,22,0.1)' },
-      { mark: 'SA', name: 'Sanger\nAfrica', color: '#bc8cff', bg: 'rgba(188,140,255,0.1)' },
-      { mark: 'UC', name: 'UCT\nSouth Africa', color: '#e3b341', bg: 'rgba(227,179,65,0.1)' },
-      { mark: 'MR', name: 'MRC\nGambia', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)' },
+      { mark: 'H3', name: 'H3Africa\nInspiration', color: '#3fb950', bg: 'rgba(63,185,80,0.1)' },
+      { mark: 'GE', name: 'MalariaGEN\nOpen Data', color: '#58a6ff', bg: 'rgba(88,166,255,0.1)' },
+      { mark: 'AW', name: 'AWI-Gen\nDataset', color: '#f97316', bg: 'rgba(249,115,22,0.1)' },
+      { mark: 'EN', name: 'Ensembl\nGenome', color: '#bc8cff', bg: 'rgba(188,140,255,0.1)' },
+      { mark: 'SR', name: 'NCBI SRA\nOpen Data', color: '#e3b341', bg: 'rgba(227,179,65,0.1)' },
+      { mark: 'GT', name: 'GATK\nStandards', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)' },
     ];
 
     homeContent.innerHTML = `

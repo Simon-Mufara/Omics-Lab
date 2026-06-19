@@ -160,6 +160,45 @@
 
 .nmd-divider { height: 1px; background: #21262d; margin: 0.4rem 0; }
 
+/* ── Tabbed mega-menus ── */
+.nmd-tabbed {
+  padding: 0;
+  min-width: 340px;
+  flex-direction: column;
+}
+.nmd-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #21262d;
+  padding: 0.5rem 0.75rem 0;
+  overflow-x: auto;
+}
+.nmd-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #8b949e;
+  font-size: 0.76rem;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s;
+  margin-bottom: -1px;
+  border-radius: 5px 5px 0 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.nmd-tab:hover { color: #c9d1d9; }
+.nmd-tab.active { color: #e6edf3; border-bottom-color: #3fb950; }
+.nmd-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  padding: 0.6rem 0.65rem;
+}
+.nmd-tab-panel[hidden] { display: none; }
+
 /* ── Right utilities ── */
 .nav-right {
   grid-column: 3;

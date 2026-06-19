@@ -30,7 +30,7 @@ OmicsLab.Changelog = (function () {
       title: 'Curriculum, Badges, Africa Hub, Workshop & HPC Training',
       highlights: [
         { icon: '🎓', text: '3 structured curriculum tracks: Wet-Lab Scientist, Bioinformatician, Public Health Researcher' },
-        { icon: '🏆', text: '17 badges across 5 categories with printable PDF certificates (H3Africa, H3ABioNet attribution)' },
+        { icon: '🏆', text: '17 badges across 5 categories with printable PDF certificates (community-driven)' },
         { icon: '🌍', text: 'Africa Science Hub: data governance, population genomics (H3Africa, AWI-Gen, APCDR), One Health, grant alignment' },
         { icon: '🏫', text: 'Workshop & Instructor Mode: 6-char session codes, cohort tracking, CSV export for grant reporting' },
         { icon: '⚙️', text: 'HPC Training Layer: SLURM job builder, queue simulator, Snakemake/Nextflow/WDL/Singularity comparison' },

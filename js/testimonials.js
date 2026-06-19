@@ -10,60 +10,60 @@ OmicsLab.Testimonials = (function () {
   /* ── 6 Testimonials ─────────────────────────────────────────── */
   const DATA = [
     {
-      quote: 'OmicsLab completely transformed how I teach genomics at KEMRI. Students arrive at the bench already understanding why each step matters — watching the QC cascade after a bad DNA extraction is worth an entire semester of lectures.',
+      quote: 'OmicsLab completely changed how I teach genomics. Students arrive at the bench already understanding why each step matters — watching the QC cascade after a bad DNA extraction is worth an entire semester of lectures.',
       name:  'Dr. Amara Osei-Bonsu',
-      title: 'Head of Genomics Training',
-      inst:  'KEMRI',
+      title: 'Genomics Training Lecturer',
+      inst:  'East African Research Institute',
       country: 'Kenya',
       flag:  '🇰🇪',
       init:  'AO',
       color: '#3fb950',
     },
     {
-      quote: 'As a PhD student in Cape Town with limited wet-lab access, OmicsLab let me simulate a complete WGS pipeline before touching a single sample. When I finally ran the real protocol, I knew exactly what I was doing.',
+      quote: 'As a PhD student with limited wet-lab access, OmicsLab let me simulate a complete WGS pipeline before touching a single sample. When I finally ran the real protocol, I knew exactly what I was doing.',
       name:  'Sipho Dlamini',
       title: 'PhD Candidate, Computational Biology',
-      inst:  'University of Cape Town',
+      inst:  'South African University',
       country: 'South Africa',
       flag:  '🇿🇦',
       init:  'SD',
       color: '#58a6ff',
     },
     {
-      quote: 'At MRC Gambia we use OmicsLab for onboarding every new bioinformatics trainee. The conceptual grounding it provides in two hours used to take us two full weeks of lectures and readings to achieve.',
+      quote: 'We use OmicsLab for onboarding every new bioinformatics trainee. The conceptual grounding it provides in two hours used to take us two full weeks of lectures and readings to achieve.',
       name:  'Dr. Binta Jallow',
       title: 'Senior Bioinformatician',
-      inst:  'MRC Gambia',
+      inst:  'West African Genomics Centre',
       country: 'The Gambia',
       flag:  '🇬🇲',
       init:  'BJ',
       color: '#f97316',
     },
     {
-      quote: 'The Africa Hub content is unlike anything I have seen in a training platform — H3Africa governance frameworks, AWI-Gen population context, One Health surveillance approaches. It speaks our language and addresses our actual research questions.',
+      quote: 'The Africa Hub content is unlike anything I have seen in a training platform — population genomics context, One Health surveillance approaches, real African disease datasets. It speaks our language.',
       name:  'Dr. Fatima Al-Rashidi',
       title: 'Bioinformatician & Trainer',
-      inst:  'APCDR',
+      inst:  'Uganda Genomics Lab',
       country: 'Uganda',
       flag:  '🇺🇬',
       init:  'FA',
       color: '#bc8cff',
     },
     {
-      quote: 'The Sanger Institute Africa Programme now uses OmicsLab to pre-train researchers before they arrive for in-person workshops. It cuts our orientation time by two full days and dramatically improves participant outcomes across the board.',
+      quote: 'We now use OmicsLab to pre-train researchers before in-person workshops. It cuts orientation time by two full days and dramatically improves participant outcomes.',
       name:  'Dr. Thandiwe Mokoena',
       title: 'Computational Genomics Lead',
-      inst:  'Sanger Institute Africa Programme',
-      country: 'South Africa / UK',
+      inst:  'Southern African Bioinformatics Hub',
+      country: 'South Africa',
       flag:  '🇿🇦',
       init:  'TM',
       color: '#e3b341',
     },
     {
-      quote: 'H3Africa needed a training resource that could scale across our 27 institutions and 30 countries simultaneously. OmicsLab is the first platform that genuinely meets that brief — and it works offline in areas with poor connectivity.',
+      quote: 'We needed a training resource that could scale across institutions and countries simultaneously. OmicsLab is the first platform that genuinely meets that brief — and it works offline in areas with poor connectivity.',
       name:  'Prof. Adaeze Okonkwo',
-      title: 'H3Africa Training Coordinator',
-      inst:  'H3Africa Network',
+      title: 'Genomics Training Coordinator',
+      inst:  'Pan-African Genomics Network',
       country: 'Nigeria',
       flag:  '🇳🇬',
       init:  'AO',
@@ -74,44 +74,45 @@ OmicsLab.Testimonials = (function () {
   /* ── Partner logos (SVG text placeholders) ──────────────────── */
   const PARTNERS = [
     {
-      name: 'H3Africa', sub: 'Network', color: '#3fb950', bg: 'rgba(63,185,80,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="H3Africa Network">
+      name: 'H3Africa', sub: 'Inspiration', color: '#3fb950', bg: 'rgba(63,185,80,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="H3Africa (inspiration)">
         <text x="4" y="28" font-family="Sora,Inter,system-ui" font-weight="800" font-size="22" fill="#3fb950">H3</text>
         <text x="36" y="26" font-family="Inter,system-ui" font-weight="600" font-size="13" fill="#3fb950">Africa</text>
       </svg>`,
     },
     {
-      name: 'KEMRI', sub: 'Kenya', color: '#58a6ff', bg: 'rgba(88,166,255,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="KEMRI Kenya">
-        <text x="4" y="28" font-family="Sora,Inter,system-ui" font-weight="800" font-size="18" fill="#58a6ff">KEMRI</text>
-        <text x="4" y="38" font-family="Inter,system-ui" font-weight="500" font-size="9" fill="#58a6ff" opacity="0.6">KENYA</text>
+      name: 'AWI-Gen', sub: 'Data', color: '#58a6ff', bg: 'rgba(88,166,255,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="AWI-Gen dataset">
+        <text x="4" y="26" font-family="Sora,Inter,system-ui" font-weight="800" font-size="15" fill="#58a6ff">AWI-Gen</text>
+        <text x="4" y="37" font-family="Inter,system-ui" font-weight="500" font-size="9" fill="#58a6ff" opacity="0.6">DATASET</text>
       </svg>`,
     },
     {
-      name: 'MRC Gambia', sub: '', color: '#f97316', bg: 'rgba(249,115,22,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MRC Gambia">
-        <text x="4" y="22" font-family="Sora,Inter,system-ui" font-weight="800" font-size="18" fill="#f97316">MRC</text>
-        <text x="4" y="36" font-family="Inter,system-ui" font-weight="600" font-size="11" fill="#f97316">GAMBIA</text>
+      name: 'MalariaGEN', sub: '', color: '#f97316', bg: 'rgba(249,115,22,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="MalariaGEN data">
+        <text x="4" y="22" font-family="Sora,Inter,system-ui" font-weight="700" font-size="11" fill="#f97316">Malaria</text>
+        <text x="4" y="36" font-family="Inter,system-ui" font-weight="800" font-size="13" fill="#f97316">GEN</text>
       </svg>`,
     },
     {
-      name: 'APCDR', sub: 'Uganda', color: '#bc8cff', bg: 'rgba(188,140,255,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="APCDR Uganda">
-        <text x="4" y="26" font-family="Sora,Inter,system-ui" font-weight="800" font-size="17" fill="#bc8cff">APCDR</text>
-        <text x="4" y="37" font-family="Inter,system-ui" font-weight="500" font-size="9" fill="#bc8cff" opacity="0.6">UGANDA</text>
+      name: 'GATK', sub: 'Standards', color: '#bc8cff', bg: 'rgba(188,140,255,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="GATK standards">
+        <text x="4" y="26" font-family="Sora,Inter,system-ui" font-weight="800" font-size="18" fill="#bc8cff">GATK</text>
+        <text x="4" y="37" font-family="Inter,system-ui" font-weight="500" font-size="9" fill="#bc8cff" opacity="0.6">STANDARDS</text>
       </svg>`,
     },
     {
-      name: 'Sanger Africa', sub: '', color: '#e3b341', bg: 'rgba(227,179,65,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Sanger Institute Africa Programme">
-        <text x="4" y="19" font-family="Sora,Inter,system-ui" font-weight="700" font-size="13" fill="#e3b341">SANGER</text>
-        <text x="4" y="33" font-family="Inter,system-ui" font-weight="600" font-size="11" fill="#e3b341" opacity="0.8">AFRICA</text>
+      name: 'Ensembl', sub: 'Genome', color: '#e3b341', bg: 'rgba(227,179,65,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Ensembl genome database">
+        <text x="4" y="24" font-family="Sora,Inter,system-ui" font-weight="700" font-size="13" fill="#e3b341">ENSEMBL</text>
+        <text x="4" y="36" font-family="Inter,system-ui" font-weight="600" font-size="10" fill="#e3b341" opacity="0.8">GENOME</text>
       </svg>`,
     },
     {
-      name: 'UCT', sub: 'South Africa', color: '#79c0ff', bg: 'rgba(121,192,255,0.08)',
-      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="University of Cape Town">
-        <text x="4" y="28" font-family="Sora,Inter,system-ui" font-weight="800" font-size="24" fill="#79c0ff">UCT</text>
+      name: 'NCBI SRA', sub: 'Open Data', color: '#79c0ff', bg: 'rgba(121,192,255,0.08)',
+      svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="NCBI SRA open data">
+        <text x="4" y="22" font-family="Sora,Inter,system-ui" font-weight="700" font-size="12" fill="#79c0ff">NCBI</text>
+        <text x="4" y="36" font-family="Inter,system-ui" font-weight="800" font-size="13" fill="#79c0ff">SRA</text>
       </svg>`,
     },
   ];
@@ -136,7 +137,7 @@ OmicsLab.Testimonials = (function () {
 
         <!-- Partner logos row -->
         <div class="tst-partners-wrap">
-          <p class="tst-partners-label">Aligned with Africa's leading genomics institutions</p>
+          <p class="tst-partners-label">Inspired by Africa's genomics community &amp; open science</p>
           <div class="tst-partners-row" role="list">
             ${PARTNERS.map(p => `
               <div class="tst-partner" role="listitem" title="${p.name}${p.sub ? ' · ' + p.sub : ''}">

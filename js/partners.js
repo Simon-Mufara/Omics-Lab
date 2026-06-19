@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════
-   OmicsLab — Partners & Open-Source Foundation (Part 8)
-   About the OmicsLab mission, partners, contributors,
+   OmicsLab — About & Inspiration (Part 8)
+   About the OmicsLab mission, contributors,
    and open-source foundation page.
    ═══════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
@@ -8,14 +8,12 @@ window.OmicsLab = window.OmicsLab || {};
 OmicsLab.Partners = (function () {
 
   const PARTNERS = [
-    { name:'H3Africa Consortium', type:'Academic', region:'Pan-African', desc:'Human Heredity and Health in Africa — largest African genomics network, co-developing curricula and datasets.', link:'https://h3africa.org' },
-    { name:'H3ABioNet', type:'Infrastructure', region:'Pan-African', desc:'Pan-African bioinformatics network providing training resources, data infrastructure and collaborative analysis.', link:'https://h3abionet.org' },
-    { name:'Africa CDC', type:'Public Health', region:'Pan-African', desc:'African Union\'s public health agency — genomic surveillance data partnership for the Pathogen Tracker.', link:'https://africacdc.org' },
-    { name:'MalariaGEN', type:'Research', region:'Global', desc:'Malaria Genomic Epidemiology Network — providing malaria genomics datasets, reference materials and expertise.', link:'https://malariagen.net' },
-    { name:'University of Cape Town', type:'Academic', region:'South Africa', desc:'Computational Biology Group — co-development of course content and validation of tools for African researchers.', link:'https://www.uct.ac.za' },
-    { name:'Wellcome Sanger Institute', type:'Research', region:'UK/Global', desc:'Genomic resources, pathogen reference datasets, and African genomics programme expertise.', link:'https://www.sanger.ac.uk' },
-    { name:'KEMRI-Wellcome', type:'Academic', region:'Kenya', desc:'Kenya Medical Research Institute — user community, testing partners, and field deployment support.', link:'https://kemri-wellcome.org' },
-    { name:'WACCBIP, Univ. of Ghana', type:'Academic', region:'Ghana', desc:'West Africa Centre for Cell Biology of Infectious Pathogens — training partner and content validators.', link:'https://waccbip.org' },
+    { name:'H3Africa Consortium', type:'Inspiration', region:'Pan-African', desc:'Human Heredity and Health in Africa — a landmark African genomics initiative that inspires OmicsLab\'s Africa-first data philosophy.', link:'https://h3africa.org' },
+    { name:'H3ABioNet', type:'Inspiration', region:'Pan-African', desc:'Pan-African bioinformatics network whose open training resources inspire OmicsLab\'s community-oriented approach.', link:'https://h3abionet.org' },
+    { name:'Africa CDC', type:'Public Health', region:'Pan-African', desc:'African Union\'s public health agency — a model for data-driven genomic surveillance that shapes the Pathogen Tracker module.', link:'https://africacdc.org' },
+    { name:'MalariaGEN', type:'Open Data', region:'Global', desc:'Malaria Genomic Epidemiology Network — open malaria genomics datasets used as reference material in OmicsLab modules.', link:'https://malariagen.net' },
+    { name:'Wellcome Sanger Institute', type:'Inspiration', region:'UK/Global', desc:'World-class genomic resources and African genomics programmes that inspire OmicsLab\'s pathogen and population modules.', link:'https://www.sanger.ac.uk' },
+    { name:'WACCBIP, Univ. of Ghana', type:'Inspiration', region:'Ghana', desc:'West Africa Centre for Cell Biology of Infectious Pathogens — whose training model inspires OmicsLab\'s disease-focused content.', link:'https://waccbip.org' },
     { name:'Anthropic (Claude API)', type:'Technology', region:'Global', desc:'Large language model provider — powering the AI Assistant, Thesis Coach, and Grant Writing features.', link:'https://anthropic.com' },
   ];
 
@@ -47,9 +45,9 @@ OmicsLab.Partners = (function () {
         <div class="pr-header">
           <div class="pr-header-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Partners &amp; Foundation
+            About &amp; Inspiration
           </div>
-          <div class="pr-header-sub">The organisations and people making OmicsLab possible</div>
+          <div class="pr-header-sub">The mission, values, and organisations that inspire OmicsLab</div>
         </div>
         <!-- Foundation -->
         <div class="pr-foundation-card">
@@ -70,7 +68,7 @@ OmicsLab.Partners = (function () {
           </div>
         </div>
         <!-- Partners grid -->
-        <div class="pr-section-label">Partner Organisations</div>
+        <div class="pr-section-label">Organisations that inspire OmicsLab</div>
         <div class="pr-partners-grid">
           ${PARTNERS.map(p => `<div class="pr-partner-card">
             <div class="pr-partner-hdr">
