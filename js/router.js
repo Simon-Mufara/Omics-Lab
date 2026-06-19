@@ -476,6 +476,13 @@ OmicsLab.Router = (function () {
       tagline: 'Platform preferences — appearance, language, API keys, data privacy, and about',
       sections: ['settings-section'],
     },
+    'output-tracker': {
+      label: 'Output Tracker',
+      icon: '📋',
+      color: '#3fb950',
+      tagline: 'Track your publications, datasets, talks, posters, and grants — CSV and BibTeX export',
+      sections: ['output-tracker-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -503,6 +510,7 @@ OmicsLab.Router = (function () {
     certification: 'train', impact: 'research', partners: 'research',
     ask: 'ask', mentor: 'ask',
     'knowledge-graph': 'tools',
+    'output-tracker': 'research',
     settings: null,
     profile: null, /* user pill is the nav element for profile */
   };
@@ -733,6 +741,9 @@ OmicsLab.Router = (function () {
     }
     if (page === 'settings' && OmicsLab.Settings) {
       try { OmicsLab.Settings.init(); } catch(e) { OmicsLab.Error?.renderPageError('settings-section','Settings',e); }
+    }
+    if (page === 'output-tracker' && OmicsLab.OutputTracker) {
+      try { OmicsLab.OutputTracker.init(); } catch(e) { OmicsLab.Error?.renderPageError('output-tracker-section','OutputTracker',e); }
     }
 
     /* Highlight user pill when on profile page */

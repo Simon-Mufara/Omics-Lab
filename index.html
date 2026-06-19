@@ -124,6 +124,7 @@
   <!-- Foundation modules -->
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/knowledge-graph.css">
+  <link rel="stylesheet" href="css/output-tracker.css">
 </head>
 <body>
 <a href="#domain-section" class="skip-link">Skip to main content</a>
@@ -415,6 +416,13 @@
                 <span class="nmd-text">
                   <span class="nmd-name">Lab Notebook</span>
                   <span class="nmd-desc">Offline structured research notes</span>
+                </span>
+              </button>
+              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('output-tracker')">
+                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
+                <span class="nmd-text">
+                  <span class="nmd-name">Output Tracker</span>
+                  <span class="nmd-desc">Publications · datasets · talks · grants</span>
                 </span>
               </button>
               <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('directory')">
@@ -1551,6 +1559,11 @@
     <!-- Populated by settings.js on route 'settings' -->
   </div>
 
+  <!-- Research Output Tracker -->
+  <div class="reveal" id="output-tracker-section">
+    <!-- Populated by output-tracker.js on route 'output-tracker' -->
+  </div>
+
   <!-- AI Assistant (Claude API) -->
   <div class="reveal" id="assistant-section">
     <!-- Populated by assistant.js on route 'ai' -->
@@ -2001,6 +2014,7 @@
 <script src="js/knowledge-graph.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/offline-indicator.js"></script>
+<script src="js/output-tracker.js"></script>
 <script src="js/router.js"></script>
 <script src="js/app.js"></script>
 <style>
