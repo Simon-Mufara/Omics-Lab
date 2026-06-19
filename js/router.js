@@ -725,12 +725,12 @@ OmicsLab.Router = (function () {
     if (page === 'gene-lookup' && OmicsLab.GeneLookup) _si(OmicsLab.GeneLookup, 'gene-lookup-section', 'GeneLookup');
     if (page === 'protein' && OmicsLab.ProteinViewer) _si(OmicsLab.ProteinViewer, 'protein-section', 'ProteinViewer');
     if (page === 'uniprot' && OmicsLab.UniProt) _si(OmicsLab.UniProt, 'uniprot-section', 'UniProt');
-    if (page === 'targets' && OmicsLab.OpenTargets) _si(OmicsLab.OpenTargets, 'targets-section', 'OpenTargets');
+    if (page === 'targets' && OmicsLab.OpenTargets) _si(OmicsLab.OpenTargets, 'open-targets-section', 'OpenTargets');
     if (page === 'string' && OmicsLab.StringNet) _si(OmicsLab.StringNet, 'string-section', 'StringNet');
     if (page === 'preprints' && OmicsLab.Preprints) _si(OmicsLab.Preprints, 'preprints-section', 'Preprints');
     if (page === 'pathways' && OmicsLab.Pathways) _si(OmicsLab.Pathways, 'pathways-section', 'Pathways');
     if (page === 'sra' && OmicsLab.SRABrowser) _si(OmicsLab.SRABrowser, 'sra-section', 'SRABrowser');
-    if (page === 'ai' && OmicsLab.Assistant) _si(OmicsLab.Assistant, 'ai-section', 'Assistant');
+    if (page === 'ai' && OmicsLab.Assistant) _si(OmicsLab.Assistant, 'assistant-section', 'Assistant');
     if (page === 'thesis' && OmicsLab.ThesisCoach) _si(OmicsLab.ThesisCoach, 'thesis-section', 'ThesisCoach');
     if (page === 'bionlp' && OmicsLab.BioNLP) _si(OmicsLab.BioNLP, 'bionlp-section', 'BioNLP');
     /* Part 3 */

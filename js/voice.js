@@ -104,7 +104,6 @@ OmicsLab.VoiceControl = (function () {
 
   let _recognition = null;
   let _listening = false;
-  let _toastTimer = null;
   let _helpOpen = false;
 
   /* ─── Command map: phrase fragments → action ─── */
@@ -492,32 +491,6 @@ OmicsLab.VoiceControl = (function () {
   0%,100% { box-shadow: 0 0 0 2px rgba(63,185,80,.4); }
   50%      { box-shadow: 0 0 0 5px rgba(63,185,80,.0); }
 }
-
-/* ─── Toast ─── */
-.vc-toast {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: #21262d;
-  border: 1px solid #30363d;
-  border-radius: 8px;
-  color: #e6edf3;
-  font-size: .82rem;
-  padding: .6rem 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  white-space: nowrap;
-  max-width: 90vw;
-  box-shadow: 0 4px 16px rgba(0,0,0,.5);
-  opacity: 0;
-  transition: opacity .22s, transform .22s;
-  pointer-events: none;
-  z-index: 9999;
-}
-.vc-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
-.vc-toast-error { border-color: rgba(255,107,107,.4); color: #ff6b6b; }
 
 /* ─── Transcript bubble ─── */
 .vc-transcript {
