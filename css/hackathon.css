@@ -1,0 +1,54 @@
+/* Hackathon Platform */
+.hk-wrap { max-width: 1000px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.hk-header { margin-bottom: 1.5rem; }
+.hk-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
+.hk-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.hk-section-label { font-size: .72rem; color: #8b949e; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
+.hk-my-teams-section { margin-bottom: 1.5rem; }
+.hk-no-teams { color: #484f58; font-size: .8rem; padding: .5rem 0; }
+.hk-my-team-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: .75rem; margin-bottom: .5rem; }
+.hk-my-team-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: .3rem; }
+.hk-my-team-name { font-size: .88rem; font-weight: 700; color: #e6edf3; }
+.hk-status-badge { font-size: .65rem; font-weight: 600; padding: .15rem .45rem; border-radius: 20px; }
+.hk-status-registered { background: rgba(88,166,255,.1); color: #58a6ff; }
+.hk-status-submitted { background: rgba(63,185,80,.1); color: #3fb950; }
+.hk-my-team-ch { font-size: .72rem; color: #8b949e; }
+.hk-my-team-meta { font-size: .68rem; color: #484f58; margin-top: .15rem; }
+.hk-submit-btn { margin-top: .5rem; padding: .28rem .65rem; background: #238636; color: #fff; border: none; border-radius: 5px; font-size: .72rem; font-weight: 600; cursor: pointer; }
+.hk-submitted-label { margin-top: .5rem; font-size: .72rem; color: #3fb950; }
+.hk-challenges { display: flex; flex-direction: column; gap: 1rem; }
+.hk-challenge-card { background: #161b22; border: 1px solid #21262d; border-left: 3px solid var(--ch-color); border-radius: 8px; padding: 1rem; }
+.hk-ch-hdr { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: .5rem; }
+.hk-ch-theme { font-size: .68rem; color: var(--ch-color); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .15rem; }
+.hk-ch-title { font-size: .95rem; font-weight: 700; color: #e6edf3; line-height: 1.3; }
+.hk-ch-status { font-size: .65rem; font-weight: 700; padding: .2rem .55rem; border-radius: 20px; flex-shrink: 0; }
+.hk-ch-active { background: rgba(63,185,80,.1); color: #3fb950; }
+.hk-ch-upcoming { background: rgba(88,166,255,.1); color: #58a6ff; }
+.hk-ch-desc { font-size: .78rem; color: #8b949e; line-height: 1.6; margin-bottom: .6rem; }
+.hk-ch-meta { display: flex; gap: 1.5rem; font-size: .72rem; color: #8b949e; margin-bottom: .4rem; flex-wrap: wrap; }
+.hk-ch-meta strong { color: #e6edf3; }
+.hk-ch-prizes { font-size: .72rem; color: #e3b341; margin-bottom: .4rem; }
+.hk-ch-datasets { font-size: .7rem; color: #8b949e; margin-bottom: .65rem; }
+.hk-ds-link { color: #58a6ff; text-decoration: none; }
+.hk-ds-link:hover { text-decoration: underline; }
+.hk-join-btn { padding: .38rem .9rem; border: 1px solid; border-radius: 6px; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity .15s; }
+.hk-join-btn:hover { opacity: .85; }
+.hk-upcoming-note { font-size: .72rem; color: #484f58; }
+.hk-leaderboard { background: #161b22; border: 1px solid #21262d; border-radius: 8px; overflow: hidden; }
+.hk-lb-row { display: grid; grid-template-columns: 40px 1fr 120px 60px; align-items: center; padding: .55rem .85rem; border-bottom: 1px solid #21262d; font-size: .82rem; }
+.hk-lb-row:last-child { border-bottom: none; }
+.hk-lb-rank { font-weight: 700; }
+.hk-lb-team { font-weight: 600; color: #e6edf3; }
+.hk-lb-country { color: #8b949e; font-size: .75rem; }
+.hk-lb-score { text-align: right; font-weight: 700; color: #3fb950; }
+/* Modal */
+.hk-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.hk-modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 1.5rem; width: 100%; max-width: 440px; display: flex; flex-direction: column; gap: .6rem; }
+.hk-modal-title { font-size: .92rem; font-weight: 700; color: #e6edf3; }
+.hk-modal-field { display: flex; flex-direction: column; gap: .2rem; }
+.hk-modal-label { font-size: .72rem; color: #8b949e; font-weight: 600; }
+.hk-modal-input { padding: .38rem .65rem; background: #0d1117; border: 1px solid #30363d; border-radius: 5px; color: #e6edf3; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
+.hk-modal-input:focus { border-color: #f97316; }
+.hk-modal-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: .25rem; }
+.hk-modal-cancel { padding: .35rem .8rem; background: #21262d; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; font-size: .8rem; cursor: pointer; font-family: inherit; }
+.hk-modal-save { padding: .35rem .8rem; background: #238636; border: none; border-radius: 6px; color: #fff; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: inherit; }

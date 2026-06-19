@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v43: AI Assistant (Claude API streaming), Thesis Coach, BioNLP entity recogniser */
-const CACHE = 'omicslab-v43';
+/* v44: Codon/Nanopore/AMR/Kraken/PopStruct/GenomeBrowser, Directory, Hackathon, Mentorship, H3Africa, PathogenTracker, Glossary, OfflineData, LabNotebook, PipelineGen, MetaAnalysis, IDB, APIDocs, Certification, Impact, Partners */
+const CACHE = 'omicslab-v44';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

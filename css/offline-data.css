@@ -1,0 +1,28 @@
+/* Offline Data Packages */
+.od-wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.od-header { margin-bottom: 1rem; }
+.od-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
+.od-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.od-info-banner { display: flex; align-items: flex-start; gap: .5rem; background: rgba(88,166,255,.06); border: 1px solid rgba(88,166,255,.18); border-radius: 8px; padding: .7rem 1rem; font-size: .8rem; color: #8b949e; line-height: 1.6; margin-bottom: 1.25rem; }
+.od-package-list { display: flex; flex-direction: column; gap: .9rem; }
+.od-pkg-card { background: #161b22; border: 1px solid #21262d; border-left: 3px solid; border-radius: 9px; padding: 1rem; }
+.od-pkg-hdr { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; margin-bottom: .45rem; flex-wrap: wrap; }
+.od-pkg-name { font-size: .92rem; font-weight: 800; color: #e6edf3; margin-right: .45rem; }
+.od-pkg-tag { font-size: .65rem; font-weight: 700; padding: .1rem .42rem; border: 1px solid; border-radius: 20px; }
+.od-pkg-right { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+.od-pkg-size { font-size: .72rem; color: #8b949e; }
+.od-pkg-status { font-size: .65rem; font-weight: 700; padding: .1rem .4rem; border-radius: 20px; }
+.od-status-available { background: rgba(63,185,80,.1); color: #3fb950; }
+.od-status-controlled { background: rgba(227,179,65,.1); color: #e3b341; }
+.od-status-bundled { background: rgba(88,166,255,.1); color: #58a6ff; }
+.od-pkg-desc { font-size: .8rem; color: #8b949e; line-height: 1.65; margin-bottom: .65rem; }
+.od-pkg-contents { display: flex; flex-direction: column; gap: .2rem; margin-bottom: .6rem; }
+.od-content-item { display: flex; align-items: center; gap: .4rem; font-size: .75rem; color: #8b949e; }
+.od-pkg-formats { display: flex; gap: .3rem; flex-wrap: wrap; margin-bottom: .45rem; }
+.od-fmt { font-size: .65rem; font-family: 'Cascadia Code','Fira Mono',monospace; background: #21262d; color: #8b949e; padding: .1rem .38rem; border-radius: 3px; }
+.od-pkg-usecase { font-size: .72rem; color: #484f58; margin-bottom: .6rem; }
+.od-pkg-actions { display: flex; justify-content: space-between; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.od-dl-note { font-size: .72rem; color: #484f58; }
+.od-access-btn { display: inline-flex; align-items: center; gap: .3rem; padding: .35rem .8rem; background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.3); border-radius: 6px; color: #58a6ff; font-size: .75rem; font-weight: 600; text-decoration: none; }
+.od-access-btn:hover { background: rgba(88,166,255,.2); }
+.od-bundled-label { display: inline-flex; align-items: center; gap: .3rem; font-size: .75rem; color: #3fb950; font-weight: 600; }

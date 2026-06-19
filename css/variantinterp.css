@@ -92,6 +92,12 @@
 .vi-acmg-legend-row { display: flex; align-items: flex-start; gap: .5rem; font-size: .72rem; color: #8b949e; }
 .vi-acmg-disclaimer { font-size: .7rem; color: #6e7681; background: rgba(227,179,65,.06); border: 1px solid rgba(227,179,65,.15); border-radius: 6px; padding: .4rem .65rem; line-height: 1.45; margin-top: .3rem; }
 
+/* ── Ask AI strip ── */
+.vi-ai-strip { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 1rem; margin-top: 1rem; background: rgba(88,166,255,.04); border: 1px solid rgba(88,166,255,.15); border-radius: 8px; flex-wrap: wrap; }
+.vi-ai-strip-label { font-size: .78rem; color: #8b949e; }
+.vi-ai-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .38rem .85rem; background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.3); border-radius: 6px; color: #58a6ff; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.vi-ai-btn:hover { background: rgba(88,166,255,.2); }
+
 /* ── gnomAD live badge ── */
 .vi-live-badge { display: inline-block; padding: .1rem .4rem; border-radius: 20px; font-size: .66rem; font-weight: 600; margin-left: .4rem; background: rgba(88,166,255,.1); border: 1px solid rgba(88,166,255,.25); color: #58a6ff; vertical-align: middle; }
 .vi-live-ok  { background: rgba(63,185,80,.1); border-color: rgba(63,185,80,.3); color: #3fb950; }

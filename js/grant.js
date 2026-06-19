@@ -8,6 +8,45 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Grant = (function () {
 
+  /* ─── African Grants Database ─── */
+  const GRANTS_DB = [
+    { funder:'NIH Fogarty International Center', name:'D43 International Training Grant', type:'Capacity Building', amount:'Up to $750,000/yr', regions:['Sub-Saharan Africa','North Africa'], focus:'Any health research; LMIC PI co-lead required', deadline:'Rolling (PA-23-077)', url:'https://www.fic.nih.gov/Grants' },
+    { funder:'NIH Fogarty International Center', name:'R21 Exploratory Research (Africa focus)', type:'Research', amount:'Up to $275,000 (2yr)', regions:['Sub-Saharan Africa'], focus:'Infectious disease, genomics, NCD', deadline:'Standard NIH dates (Feb/Jun/Oct)', url:'https://www.fic.nih.gov' },
+    { funder:'NIH NIAID', name:'K43 International Career Development Award', type:'Early Career', amount:'Up to $150,000/yr (5yr)', regions:['Sub-Saharan Africa','Southeast Asia'], focus:'Infectious disease; for mid-career African investigators', deadline:'Feb 12 / Jun 12 / Oct 12', url:'https://grants.nih.gov/grants/guide/pa-files/PAR-23-160.html' },
+    { funder:'Wellcome Trust', name:'Discovery Research Award', type:'Research', amount:'Up to £5,000,000 (5yr)', regions:['Africa','Global'], focus:'Basic science, genomics, global health; Africa LMIC lead eligible', deadline:'Rolling (Expression of Interest first)', url:'https://wellcome.org/grant-funding' },
+    { funder:'Wellcome Trust', name:'Collaborative Award', type:'Research', amount:'Up to £3,000,000 (5yr)', regions:['Africa','Global'], focus:'Multi-team; cross-continental consortia', deadline:'Rolling', url:'https://wellcome.org/grant-funding' },
+    { funder:'Wellcome Trust', name:'Early Career Award', type:'Early Career', amount:'Up to £400,000 (5yr)', regions:['Africa','Global'], focus:'Post-PhD to 5yrs post-fellowship; Africa institutions eligible', deadline:'Jan and Jun annually', url:'https://wellcome.org/grant-funding/schemes/early-career-awards' },
+    { funder:'H3Africa Consortium', name:'H3Africa Collaborative Research Grants', type:'Research', amount:'$500,000–$1.5M/yr', regions:['Sub-Saharan Africa'], focus:'Genomics, population health, biobanking; African PI required', deadline:'Through NIH parent announcements', url:'https://h3africa.org' },
+    { funder:'African Academy of Sciences', name:'DELTAS Africa Phase II', type:'Capacity Building', amount:'Up to £2,000,000 (5yr)', regions:['Sub-Saharan Africa'], focus:'Doctoral training and postdoctoral fellowships; consortium model', deadline:'Closed — watch for Phase III', url:'https://www.aasciences.africa/aas/grants-awards' },
+    { funder:'African Academy of Sciences', name:'AAS-GBSA Grand Challenges Africa', type:'Research', amount:'Up to $100,000 (2yr)', regions:['Sub-Saharan Africa'], focus:'Innovative solutions to African health challenges; early-phase R&D', deadline:'Annual (typically April)', url:'https://www.aasciences.africa' },
+    { funder:'MRC UK / Newton Fund', name:'Newton Advanced Fellowship (Africa)', type:'Early Career', amount:'Up to £110,000 (2yr)', regions:['Kenya','South Africa','Nigeria','Ghana','Ethiopia'], focus:'Any biomedical research; African PI hosts UK collaborator', deadline:'Annual (March/April)', url:'https://royalsociety.org/grants/newton-advanced-fellowships/' },
+    { funder:'Bill & Melinda Gates Foundation', name:'Grand Challenges Explorations', type:'Research', amount:'$100,000 seed; up to $1M phase 2', regions:['Sub-Saharan Africa','South Asia'], focus:'Malaria, TB, NTDs, maternal health, nutrition', deadline:'Biannual rounds', url:'https://gcgh.grandchallenges.org' },
+    { funder:'Bill & Melinda Gates Foundation', name:'Global Health Program (direct grants)', type:'Research', amount:'Variable ($1M–$10M+)', regions:['Africa','South Asia'], focus:'Vaccines, diagnostics, sequencing capacity, outbreak response', deadline:'By invitation / LOI', url:'https://www.gatesfoundation.org/about/how-we-work/grant-seekers' },
+    { funder:'EDCTP', name:'Senior Fellowship', type:'Early Career', amount:'Up to €1,200,000 (5yr)', regions:['Sub-Saharan Africa'], focus:'Sub-Saharan African researchers in clinical trials, infectious disease', deadline:'Annual (varies by call)', url:'https://www.edctp.org/funding/calls' },
+    { funder:'EDCTP', name:'Collaborative Research Project', type:'Research', amount:'Up to €6,000,000 (5yr)', regions:['Sub-Saharan Africa','Europe'], focus:'Clinical trials for poverty-related diseases; African-European partnership', deadline:'Annual (varies by call)', url:'https://www.edctp.org/funding/calls' },
+    { funder:'National Research Foundation (NRF)', name:'Scarce Skills Doctoral Scholarship', type:'Early Career', amount:'ZAR 120,000/yr (3yr)', regions:['South Africa'], focus:'Genomics, bioinformatics, public health; SA nationals or residents', deadline:'Annual (August)', url:'https://www.nrf.ac.za' },
+    { funder:'National Research Foundation (NRF)', name:'Incentive Funding for Rated Researchers', type:'Research', amount:'ZAR 200,000–1,200,000/yr', regions:['South Africa'], focus:'Peer-reviewed research; NRF-rated SA researchers only', deadline:'Annual', url:'https://www.nrf.ac.za' },
+    { funder:'USAID Development Innovation Ventures', name:'DIV Stage 1 / Stage 2', type:'Research', amount:'$25,000–$15,000,000', regions:['Sub-Saharan Africa','Asia'], focus:'Innovative development solutions; health, diagnostics, agriculture', deadline:'Rolling', url:'https://www.usaid.gov/div' },
+    { funder:'Chan Zuckerberg Initiative', name:'CZI Science — Collaborative Pairs', type:'Research', amount:'Up to $2,000,000 (3yr)', regions:['Africa','Global'], focus:'Single-cell biology, infectious disease, rare disease; open-access required', deadline:'Annual LOI round', url:'https://chanzuckerberg.com/science/programs' },
+    { funder:'Merck Foundation', name:'Africa Research Summit Grants', type:'Early Career', amount:'Up to $20,000', regions:['Sub-Saharan Africa'], focus:'NCDs, maternal health, endocrinology; early-career African researchers', deadline:'Annual (June)', url:'https://www.merck-africa-asiaresearch.com' },
+    { funder:'WHO/TDR', name:'TDR Research Grants for Climate Sensitive ID', type:'Research', amount:'Up to $50,000 (2yr)', regions:['Sub-Saharan Africa','Asia-Pacific'], focus:'Infectious diseases linked to climate change; LMIC institutions', deadline:'Annual (March)', url:'https://tdr.who.int/funding' },
+    { funder:'Rockefeller Foundation', name:'Health Initiative Grants', type:'Research', amount:'Variable ($500K–$5M)', regions:['Africa','Asia','Americas'], focus:'Health equity, pandemic preparedness, food systems', deadline:'By invitation / LOI', url:'https://www.rockefellerfoundation.org/grants' },
+    { funder:'IDRC Canada', name:'Research in Developing Regions (Health)', type:'Research', amount:'CAD 500,000–2,500,000', regions:['Sub-Saharan Africa','South Asia'], focus:'Health systems, One Health, genomic surveillance; LMIC PI required', deadline:'Periodic calls + rolling', url:'https://www.idrc.ca/en/funding' },
+    { funder:'European Research Council', name:'Global Challenges Research Fund (GCRF)', type:'Research', amount:'Up to £10,000,000', regions:['ODA-eligible countries (most of Africa)'], focus:'Multi-disciplinary; must address ODA country challenges', deadline:'Annual (UK-based but collaborative)', url:'https://www.ukri.org/councils/esrc/guidance-for-applicants/types-of-funding-we-offer/global-challenges-research-fund' },
+    { funder:'Simons Foundation', name:'SFARI / Math+X (Africa program)', type:'Research', amount:'Up to $500,000 (3yr)', regions:['Africa'], focus:'Basic research; computational biology, mathematical modeling', deadline:'Annual', url:'https://www.simonsfoundation.org/grants' },
+    { funder:'Sida (Sweden)', name:'Health Research Partnerships', type:'Research', amount:'SEK 1,000,000–5,000,000', regions:['East Africa','Southern Africa'], focus:'Infectious disease, maternal health, genomic epidemiology', deadline:'Through Swedish universities', url:'https://www.sida.se/en/for-organisations/research' },
+    { funder:'DFG Germany', name:'Research Grants — Africa Partnership', type:'Research', amount:'€150,000–€800,000 (3yr)', regions:['Sub-Saharan Africa'], focus:'Basic and applied research; German-African co-PI model', deadline:'Rolling', url:'https://www.dfg.de/en/research-funding/funding-opportunities' },
+    { funder:'Wellcome / DBT India Alliance', name:'Margdarshi Fellowship (India-Africa)', type:'Early Career', amount:'Up to INR 30,000,000 (5yr)', regions:['India','Africa'], focus:'Biomedical research; India-Africa collaborative focus', deadline:'Annual', url:'https://www.indiaalliance.org' },
+    { funder:'President\'s Malaria Initiative', name:'PMI Applied Research Grants', type:'Research', amount:'Variable (government)', regions:['Malaria-endemic Africa'], focus:'Malaria epidemiology, vector control, diagnostics', deadline:'Through USAID implementing partners', url:'https://www.pmi.gov' },
+    { funder:'Global Fund', name:'Country Concept Notes — Research Component', type:'Infrastructure', amount:'Variable (country-level)', regions:['Sub-Saharan Africa'], focus:'HIV, TB, malaria; requires national health ministry partnership', deadline:'Country allocation cycles', url:'https://www.theglobalfund.org/en/applying-for-funding' },
+    { funder:'World Bank', name:'Africa Centers of Excellence (ACE) Program', type:'Infrastructure', amount:'$8,000,000–$12,000,000 (5yr)', regions:['West Africa','East Africa'], focus:'STEM capacity building; African university consortia', deadline:'Periodic (through national governments)', url:'https://ace.daad.de' },
+    { funder:'African Development Bank', name:'Higher Education, Science & Technology (HEST)', type:'Infrastructure', amount:'Variable', regions:['Africa'], focus:'University infrastructure, research centres, training programs', deadline:'Through national governments', url:'https://www.afdb.org/en/topics-and-sectors/sectors/education' },
+    { funder:'Open Philanthropy', name:'Global Health & Wellbeing Grants', type:'Research', amount:'Variable ($100K–$5M+)', regions:['Sub-Saharan Africa','Global'], focus:'Neglected diseases, global health R&D, biosecurity', deadline:'By invitation / LOI', url:'https://www.openphilanthropy.org/how-to-apply' },
+    { funder:'Horizon Europe / Africa Initiative', name:'EU-Africa Research Partnership Grants', type:'Research', amount:'€1,000,000–€5,000,000', regions:['Africa (ACP countries)'], focus:'Climate, health, digital transformation; EU-Africa consortium', deadline:'Annual work programme calls', url:'https://ec.europa.eu/info/research-and-innovation/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe' },
+    { funder:'Africa CDC', name:'Africa CDC Fellowships & Research Grants', type:'Early Career', amount:'Up to $50,000', regions:['Sub-Saharan Africa'], focus:'Epidemiology, outbreak response, genomic surveillance', deadline:'Annual', url:'https://africacdc.org' },
+    { funder:'PEPFAR / NIH', name:'NIAID International HIV Research (D43/R01)', type:'Research', amount:'$300,000–$1,500,000', regions:['Sub-Saharan Africa'], focus:'HIV prevention, treatment, comorbidities; African-led required', deadline:'Standard NIH dates', url:'https://www.niaid.nih.gov/grants-contracts' },
+  ];
+
   /* ─── Grant section templates ─── */
   const TEMPLATES = {
     aims: (d) => `\
@@ -469,6 +508,7 @@ A proportion of any intellectual property generated from this work will be held 
             <div class="grant-output-actions">
               <button class="grant-out-btn" id="gr-copy-btn" onclick="OmicsLab.Grant._copyOutput()">Copy All</button>
               <button class="grant-out-btn" onclick="OmicsLab.Grant._downloadOutput()">Download .txt</button>
+              <button class="grant-out-btn grant-ai-polish-btn" onclick="OmicsLab.Grant._aiPolish()">AI Polish with Claude</button>
             </div>
           </div>
           <pre class="grant-output" id="gr-output"></pre>
@@ -507,8 +547,79 @@ A proportion of any intellectual property generated from this work will be held 
             </div>
           </div>
         </div>
+
+        <!-- Grants database -->
+        <div class="grant-db-wrap">
+          <div class="grant-db-hdr">
+            <div>
+              <div class="grant-db-title">African Grants Database</div>
+              <div class="grant-db-sub">${GRANTS_DB.length} funding opportunities for African researchers</div>
+            </div>
+            <div class="grant-db-controls">
+              <input class="grant-db-search" id="gr-db-q" placeholder="Search funders, disease, keywords..." oninput="OmicsLab.Grant._filterGrants()">
+              <select class="grant-db-filter" id="gr-db-type" onchange="OmicsLab.Grant._filterGrants()">
+                <option value="">All types</option>
+                <option>Research</option>
+                <option>Capacity Building</option>
+                <option>Early Career</option>
+                <option>Infrastructure</option>
+              </select>
+            </div>
+          </div>
+          <div id="gr-db-list" class="grant-db-list"></div>
+        </div>
       </div>`;
+
+    _renderGrantsList('', '');
   }
 
-  return { init, _generate, _autoFill, _copyOutput, _downloadOutput };
+  function _filterGrants() {
+    const q = (document.getElementById('gr-db-q')?.value || '').toLowerCase();
+    const t = document.getElementById('gr-db-type')?.value || '';
+    _renderGrantsList(q, t);
+  }
+
+  function _renderGrantsList(q, typeFilter) {
+    const list = document.getElementById('gr-db-list');
+    if (!list) return;
+    const matches = GRANTS_DB.filter(g => {
+      const txt = (g.funder + g.name + g.focus + g.type + g.regions.join(' ')).toLowerCase();
+      return (!q || txt.includes(q)) && (!typeFilter || g.type === typeFilter);
+    });
+    if (!matches.length) { list.innerHTML = '<div class="grant-db-empty">No grants match your search.</div>'; return; }
+    const typeColor = { Research:'#58a6ff', 'Capacity Building':'#3fb950', 'Early Career':'#bc8cff', Infrastructure:'#e3b341' };
+    list.innerHTML = matches.map(g => `
+      <div class="grant-db-card">
+        <div class="grant-db-card-hdr">
+          <div>
+            <div class="grant-db-funder">${g.funder}</div>
+            <div class="grant-db-name">${g.name}</div>
+          </div>
+          <span class="grant-db-type-badge" style="color:${typeColor[g.type]||'#8b949e'};border-color:${typeColor[g.type]||'#30363d'}">${g.type}</span>
+        </div>
+        <div class="grant-db-meta">
+          <span class="grant-db-amount">${g.amount}</span>
+          <span class="grant-db-regions">${g.regions.join(' · ')}</span>
+        </div>
+        <div class="grant-db-focus">${g.focus}</div>
+        <div class="grant-db-footer">
+          <span class="grant-db-deadline">Deadline: ${g.deadline}</span>
+          <a class="grant-db-link" href="${g.url}" target="_blank" rel="noopener">Learn more</a>
+        </div>
+      </div>`).join('');
+  }
+
+  function _aiPolish() {
+    const el = document.getElementById('gr-output');
+    if (!el || !el.textContent.trim()) { _toast('Generate grant text first, then AI Polish.', true); return; }
+    const generated = el.textContent.trim().substring(0, 3000);
+    const ctx = `The user has generated the following grant text using OmicsLab Grant Generator. Please polish it for clarity, improve the scientific language, and strengthen the Africa-specific framing. Keep all factual content and structure but improve readability and impact:\n\n---\n${generated}\n---`;
+    if (OmicsLab.Assistant && OmicsLab.Assistant.setContext) {
+      OmicsLab.Assistant.setContext(ctx);
+    }
+    if (OmicsLab.Router) OmicsLab.Router.navigate('ai');
+    _toast('Sending to AI assistant — ask it to polish the text');
+  }
+
+  return { init, _generate, _autoFill, _copyOutput, _downloadOutput, _filterGrants, _aiPolish };
 })();

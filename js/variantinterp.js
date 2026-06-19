@@ -92,6 +92,8 @@ OmicsLab.VariantInterp = (function () {
     default: '#8b949e',
   };
 
+  let _lastResult = null;
+
   /* ─── Parse VCF line ─── */
   function _parseVcf(text) {
     const lines = text.trim().split('\n').filter(l => l && !l.startsWith('#'));
@@ -231,6 +233,8 @@ OmicsLab.VariantInterp = (function () {
       return `<span class="vi-criterion-chip" style="--cc:${chipColor}" title="${cr?.desc || ''}">${c}</span>`;
     }).join('') : '<span class="vi-criterion-chip" style="--cc:#6e7681">None auto-applied</span>';
 
+    _lastResult = { variantLabel, d, acmg, afrAf, parsed };
+
     out.innerHTML = `
       <div class="vi-result">
         <!-- Verdict banner -->
@@ -306,6 +310,14 @@ OmicsLab.VariantInterp = (function () {
             <div class="vi-acmg-disclaimer">Classification is automated and not a clinical report. Confirm with a certified clinical laboratory before any medical decision.</div>
           </div>
 
+        </div>
+
+        <div class="vi-ai-strip">
+          <span class="vi-ai-strip-label">Get an AI explanation with Africa-specific genomics context</span>
+          <button class="vi-ai-btn" onclick="OmicsLab.VariantInterp._askAI()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg>
+            Ask AI about this variant
+          </button>
         </div>
       </div>`;
 
@@ -434,6 +446,32 @@ OmicsLab.VariantInterp = (function () {
     if (ta) { ta.value = ex.text; _interpret(); }
   }
 
+  /* ─── Ask AI ─── */
+  function _askAI() {
+    if (!_lastResult) return;
+    const { variantLabel, d, acmg, afrAf } = _lastResult;
+    const ctx = [
+      'Current Variant Interpreter result:',
+      '',
+      `Variant: ${variantLabel}`,
+      `Gene: ${d.gene || 'unknown'}`,
+      `Consequence: ${(d.consequence || 'unknown').replace(/_/g,' ')}`,
+      d.hgvsc ? `cDNA: ${d.hgvsc}` : '',
+      d.hgvsp && d.hgvsp !== '—' ? `Protein: ${d.hgvsp}` : '',
+      `Disease: ${d.disease || 'not specified'}`,
+      `ACMG Classification: ${acmg.classification}`,
+      `Criteria applied: ${acmg.applied.join(', ') || 'none'}`,
+      `Pathogenic score: ${acmg.pathScore}  |  Benign score: ${acmg.benScore}`,
+      `AFR allele frequency (gnomAD): ${afrAf !== undefined && afrAf !== null ? afrAf : 'not available'}`,
+      `ClinVar: ${d.clinvar || 'not in curated database'}`,
+      d.notes ? `Database notes: ${d.notes}` : '',
+    ].filter(Boolean).join('\n');
+    if (OmicsLab.Assistant && OmicsLab.Assistant.setContext) {
+      OmicsLab.Assistant.setContext(ctx);
+    }
+    if (OmicsLab.Router) OmicsLab.Router.navigate('ai');
+  }
+
   /* ─── Init ─── */
   function init() {
     const section = document.getElementById('variantinterp-section');
@@ -503,5 +541,5 @@ OmicsLab.VariantInterp = (function () {
     }
   }
 
-  return { init, _interpret, _loadExample };
+  return { init, _interpret, _loadExample, _askAI };
 })();
