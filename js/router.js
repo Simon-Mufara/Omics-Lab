@@ -609,6 +609,20 @@ OmicsLab.Router = (function () {
     if (hero)  { hero.style.display  = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(hero); }
     if (stats) { stats.style.display = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(stats); }
 
+    /* Dashboard — shown on home only when history exists */
+    const dash = document.getElementById('home-dashboard');
+    if (dash) {
+      const showDash = page === 'home';
+      if (showDash) OmicsLab.Dashboard?.render(dash);
+      dash.style.display = showDash ? '' : 'none';
+    }
+
+    /* Track page for personalised dashboard */
+    if (page !== 'home') OmicsLab.Dashboard?.trackPage(page);
+
+    /* Sync mobile bottom tab active state */
+    OmicsLab.MobileNav?.syncPage(page);
+
     /* Update nav active state — highlight the owning group button */
     const activeGroup = PAGE_TO_GROUP[page] || null;
     document.querySelectorAll('.nav-group-btn').forEach(btn => {
@@ -1094,10 +1108,12 @@ OmicsLab.Router = (function () {
 
   /* ─── Init ─── */
   function init() {
+    OmicsLab.Theme?.init();
     OmicsLab.Error?.init();
     OmicsLab.Notifications?.init();
     OmicsLab.OfflineIndicator?.init();
     OmicsLab.Onboarding?.init();
+    OmicsLab.MobileNav?.init();
     _buildNav();
     _renderHome();
 

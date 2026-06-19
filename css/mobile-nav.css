@@ -1,0 +1,245 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Mobile Navigation (Prompt 6)
+   ─ Bottom tab bar ≤700px
+   ─ Touch-friendly 48px tap targets
+   ─ Mobile modal slide-up
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Bottom tab bar ─── */
+.mob-tabbar {
+  display: none;
+}
+
+@media (max-width: 700px) {
+
+  /* ── Ensure desktop nav-primary is hidden ── */
+  .nav-primary { display: none !important; }
+  .nav-search-btn .nav-search-kbd { display: none; }
+
+  /* ── Bottom tab bar ── */
+  .mob-tabbar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-fixed, 500);
+    background: var(--bg-surface, #161b22);
+    border-top: 1px solid var(--border-default, #21262d);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .mob-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 4px;
+    min-height: 48px;
+    min-width: 48px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-faint, #484f58);
+    transition: color .15s;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .mob-tab.active {
+    color: var(--green, #3fb950);
+  }
+
+  .mob-tab svg { flex-shrink: 0; }
+
+  .mob-tab-label {
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    line-height: 1;
+  }
+
+  .mob-tab-badge {
+    position: absolute;
+    top: 8px;
+    right: 50%;
+    transform: translateX(6px);
+    width: 7px; height: 7px;
+    background: var(--red, #ff6b6b);
+    border-radius: 50%;
+    border: 1.5px solid var(--bg-surface, #161b22);
+  }
+
+  .mob-tab-wrap {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+
+  /* ── Add padding to page so content doesn't hide behind tab bar ── */
+  #screen-landing {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* ── Modal slide-up ── */
+  .mob-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: var(--z-modal, 1000);
+    display: flex;
+    align-items: flex-end;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+
+  .mob-modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mob-modal-sheet {
+    width: 100%;
+    background: var(--bg-surface, #161b22);
+    border-radius: 14px 14px 0 0;
+    border-top: 1px solid var(--border-default, #21262d);
+    padding: 0 0 env(safe-area-inset-bottom, 16px);
+    transform: translateY(100%);
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+    max-height: 88vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mob-modal-overlay.open .mob-modal-sheet {
+    transform: translateY(0);
+  }
+
+  .mob-modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border-default, #21262d);
+    border-radius: 2px;
+    margin: 10px auto 6px;
+  }
+
+  .mob-modal-title {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--text-primary, #e6edf3);
+    padding: .5rem 1rem .75rem;
+  }
+
+  /* ── Tool panel: Input/Results tab layout ── */
+  .tool-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border-default, #21262d);
+    background: var(--bg-canvas, #0d1117);
+    padding: 0 1rem;
+  }
+
+  .tool-tab-btn {
+    flex: 1;
+    max-width: 160px;
+    padding: .55rem 0;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--text-muted, #8b949e);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color .12s, border-color .12s;
+  }
+
+  .tool-tab-btn.active {
+    color: var(--green, #3fb950);
+    border-bottom-color: var(--green, #3fb950);
+  }
+
+  .tool-tab-panel { display: none; }
+  .tool-tab-panel.active { display: block; }
+
+  /* ── Touch-friendly minimum tap targets ── */
+  button:not([class*="btn-"]):not(.mob-tab):not(.tool-tab-btn) {
+    min-height: 36px;
+  }
+
+  .btn, [class*="btn-"] {
+    min-height: 40px;
+  }
+
+  /* ── Nexus sidebar: full-width drawer on mobile ── */
+  .nx-layout {
+    grid-template-columns: 1fr !important;
+  }
+
+  .nx-sidebar {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    z-index: 800 !important;
+    transform: translateX(-100%);
+    transition: transform .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  .nx-sidebar.mob-open {
+    transform: translateX(0);
+  }
+
+  /* ── Teams: full-screen on mobile ── */
+  .teams-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .teams-sidebar {
+    display: none !important;
+  }
+
+  /* ── Analysis: single-column ── */
+  .az-cols,
+  .analysis-split {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── Dashboard: single column ── */
+  .db-cols {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ── PaperHub: full-width cards ── */
+  .ph-grid { grid-template-columns: 1fr !important; }
+
+  /* ── Knowledge graph: full-width canvas ── */
+  .kg-body { grid-template-columns: 1fr !important; }
+  .kg-detail { display: none; }
+  .kg-detail.mob-visible { display: block !important; }
+
+  /* ── Output tracker: simplify row ── */
+  .ot-item-meta { flex-direction: column !important; gap: .2rem !important; }
+
+  /* ── Nav: hide search label ── */
+  .nav-search-btn span:not(svg) { display: none; }
+
+  /* ── Hero: reduce padding ── */
+  .hero-new-inner { padding: 1.25rem 1rem !important; }
+
+  /* ── Page route header: compact ── */
+  .page-route-header { padding: .4rem .75rem !important; }
+  .prh-tagline { display: none !important; }
+
+}
+
+/* ── Tablet: 701–900px — keep desktop nav, tweak grid ── */
+@media (min-width: 701px) and (max-width: 900px) {
+  .db-cols { grid-template-columns: repeat(2, 1fr); }
+  .kg-body { grid-template-columns: 1fr 200px; }
+}
