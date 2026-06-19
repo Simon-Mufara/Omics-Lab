@@ -102,8 +102,6 @@
 .tc-spinner { width: 16px; height: 16px; border: 2px solid #30363d; border-top-color: #bc8cff; border-radius: 50%; animation: tc-spin .7s linear infinite; flex-shrink: 0; }
 @keyframes tc-spin { to { transform: rotate(360deg); } }
 
-.tc-toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); background: #238636; color: #fff; padding: .4rem 1rem; border-radius: 20px; font-size: .78rem; font-weight: 600; z-index: 9999; }
-
 .tc-empty { padding: 2rem; text-align: center; color: #484f58; font-size: .85rem; }
 
 @media (max-width: 680px) {

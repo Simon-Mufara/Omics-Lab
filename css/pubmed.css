@@ -373,27 +373,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* ── Toast ── */
-.pm-toast {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #238636;
-  color: #fff;
-  padding: 0.5rem 1.25rem;
-  border-radius: 20px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  z-index: 9999;
-  animation: pm-fade-in 0.2s ease;
-}
-
-@keyframes pm-fade-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
 /* ── Responsive ── */
 @media (max-width: 600px) {
   .pm-search-row {

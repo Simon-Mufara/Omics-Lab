@@ -30,7 +30,6 @@ OmicsLab.PWA = (function () {
         </button>
       </div>`;
 
-    document.getElementById('pwa-banner-install-btn', div);
     div.querySelector('#pwa-banner-install-btn').onclick = _triggerInstall;
     div.querySelector('#pwa-banner-close-btn').onclick = _dismissBanner;
     document.body.insertBefore(div, document.body.firstChild);

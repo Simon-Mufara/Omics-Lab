@@ -56,6 +56,3 @@
 .ms-modal-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: .25rem; }
 .ms-modal-cancel { padding: .35rem .8rem; background: #21262d; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; font-size: .8rem; cursor: pointer; font-family: inherit; }
 .ms-modal-save { padding: .35rem .8rem; background: #6e40c9; border: none; border-radius: 6px; color: #fff; font-size: .8rem; font-weight: 600; cursor: pointer; font-family: inherit; }
-/* Toast */
-.ms-toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #21262d; border: 1px solid #30363d; border-radius: 8px; padding: .55rem 1rem; color: #c9d1d9; font-size: .82rem; z-index: 99999; animation: ms-fadein .2s ease; }
-@keyframes ms-fadein { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }

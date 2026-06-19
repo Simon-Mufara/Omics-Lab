@@ -238,27 +238,6 @@ select.grant-input { cursor: pointer; }
   line-height: 1.5;
 }
 
-/* ─── Toast ─── */
-.gr-toast {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  background: #21262d;
-  border: 1px solid #30363d;
-  border-radius: 8px;
-  color: #e6edf3;
-  font-size: .82rem;
-  padding: .6rem 1.1rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,.5);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .22s, transform .22s;
-  pointer-events: none;
-  z-index: 9000;
-}
-.gr-toast.visible { opacity: 1; transform: translateY(0); }
-.gr-toast-error { border-color: rgba(255,107,107,.4); color: #ff6b6b; }
-
 /* ─── Tips ─── */
 .grant-tips {
   margin-top: 2rem;

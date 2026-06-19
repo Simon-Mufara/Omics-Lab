@@ -411,30 +411,6 @@
 .btn-pm-danger:hover { background: rgba(255,80,80,0.1); border-color: #f85149; }
 
 /* ─────────────────────────────────────────────────────
-   Toast Notification
-   ───────────────────────────────────────────────────── */
-.progress-toast {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%) translateY(120%);
-  background: var(--surface2, #161b22);
-  border: 1px solid var(--success, #3fb950);
-  color: var(--text, #e6edf3);
-  padding: 0.7rem 1.25rem;
-  border-radius: 9999px;
-  font-size: 0.88rem;
-  font-weight: 500;
-  z-index: 10000;
-  transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.2s;
-  opacity: 0;
-  white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-}
-.progress-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-.progress-toast.warn { border-color: #f97316; }
-
-/* ─────────────────────────────────────────────────────
    Changelog Section
    ───────────────────────────────────────────────────── */
 .changelog-section {

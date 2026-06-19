@@ -431,34 +431,6 @@
 
 @keyframes auth-spin { to { transform: rotate(360deg); } }
 
-/* ── Toast ── */
-.auth-toast {
-  position: fixed;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0.6rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  z-index: 10000;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-  white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-}
-
-.auth-toast-ok {
-  background: #238636;
-  color: #fff;
-  border: 1px solid rgba(63, 185, 80, 0.4);
-}
-
-.auth-toast-error {
-  background: #b91c1c;
-  color: #fff;
-  border: 1px solid rgba(255, 107, 107, 0.4);
-}
 
 /* ── Mobile ── */
 @media (max-width: 500px) {
