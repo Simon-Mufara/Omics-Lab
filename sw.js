@@ -1,7 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v52: Stale-while-revalidate (JS/CSS), Network-first (HTML),
-        Cache-first (fonts), Network-only (auth/api)
+   v53: Nexus attachments, accessibility, whiteboard, voice-compose
    ═══════════════════════════════════════════════════════════════ */
 
 const STATIC_CACHE  = 'ol-static-v2';  /* js/ css/ images/ */

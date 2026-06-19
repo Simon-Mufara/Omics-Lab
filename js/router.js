@@ -714,6 +714,7 @@ OmicsLab.Router = (function () {
     }
     if (page === 'nexus' && OmicsLab.Nexus) {
       OmicsLab.Nexus.init();
+      setTimeout(() => OmicsLab.NexusAttachments?.init(), 200);
     }
     if (page === 'paperhub' && OmicsLab.PaperHub) {
       OmicsLab.PaperHub.init();
@@ -721,6 +722,7 @@ OmicsLab.Router = (function () {
     if (page === 'teams' && OmicsLab.Teams) {
       OmicsLab.Teams.init();
       setTimeout(() => OmicsLab.Calendar?.init(), 200);
+      setTimeout(() => OmicsLab.Whiteboard?.init(), 300);
     }
     if (page === 'pubmed' && OmicsLab.PubMed) {
       OmicsLab.PubMed.init();
@@ -1117,6 +1119,8 @@ OmicsLab.Router = (function () {
     OmicsLab.Onboarding?.init();
     OmicsLab.MobileNav?.init();
     OmicsLab.PWA?.init();
+    OmicsLab.A11y?.init();
+    OmicsLab.VoiceCompose?.init();
     _buildNav();
     _renderHome();
 
