@@ -1,6 +1,6 @@
 /* OmicsLab Service Worker — offline fallback only */
-/* v42: UniProt Search, Open Targets disease-gene, STRING interactions, bioRxiv/medRxiv preprint feed */
-const CACHE = 'omicslab-v42';
+/* v43: AI Assistant (Claude API streaming), Thesis Coach, BioNLP entity recogniser */
+const CACHE = 'omicslab-v43';
 
 /* On install: skip waiting immediately so new SW takes over without delay */
 self.addEventListener('install', () => self.skipWaiting());

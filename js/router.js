@@ -281,6 +281,27 @@ OmicsLab.Router = (function () {
       tagline: 'bioRxiv & medRxiv preprint feed — Africa-first filter, analyse in Article Analyser',
       sections: ['preprints-section'],
     },
+    ai: {
+      label: 'AI Assistant',
+      icon: '🤖',
+      color: '#58a6ff',
+      tagline: 'Claude-powered genomics expert — streaming answers, Africa-focused system prompt, context-aware suggestions',
+      sections: ['assistant-section'],
+    },
+    thesis: {
+      label: 'Thesis Coach',
+      icon: '📝',
+      color: '#bc8cff',
+      tagline: 'AI-powered thesis writing — 5-chapter tracker, AI draft generation, abstract writer, word-count progress',
+      sections: ['thesis-section'],
+    },
+    bionlp: {
+      label: 'BioNLP',
+      icon: '🔬',
+      color: '#3fb950',
+      tagline: 'Offline biomedical entity recognition — genes, diseases, variants, drugs, Africa terms — fully browser-side, no API',
+      sections: ['bionlp-section'],
+    },
   };
 
   /* Maps each page to its primary nav group for active-state highlighting */
@@ -292,6 +313,7 @@ OmicsLab.Router = (function () {
     nexus: 'research', paperhub: 'research', teams: 'research',
     pubmed: 'research', 'gene-lookup': 'tools', protein: 'tools',
     uniprot: 'tools', targets: 'research', string: 'tools', preprints: 'research',
+    ai: 'tools', thesis: 'research', bionlp: 'tools',
     ask: 'ask', mentor: 'ask',
     profile: null, /* user pill is the nav element for profile */
   };
@@ -476,6 +498,15 @@ OmicsLab.Router = (function () {
     }
     if (page === 'preprints' && OmicsLab.Preprints) {
       OmicsLab.Preprints.init();
+    }
+    if (page === 'ai' && OmicsLab.Assistant) {
+      OmicsLab.Assistant.init();
+    }
+    if (page === 'thesis' && OmicsLab.ThesisCoach) {
+      OmicsLab.ThesisCoach.init();
+    }
+    if (page === 'bionlp' && OmicsLab.BioNLP) {
+      OmicsLab.BioNLP.init();
     }
 
     /* Highlight user pill when on profile page */
