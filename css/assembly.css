@@ -1,0 +1,59 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Genome Assembly Evaluator
+   ═══════════════════════════════════════════════════════════════ */
+.asm-page { max-width: 1240px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.asm-header { text-align: center; margin-bottom: 2rem; }
+.asm-title { font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg,#3fb950,#e3b341); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.asm-sub { font-size: 0.86rem; color: #8b949e; max-width: 680px; margin: 0 auto; }
+
+/* Assembly tabs */
+.asm-assembly-tabs { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+.asm-tab { flex: 1; min-width: 160px; padding: 0.65rem 1rem; background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 10px; cursor: pointer; text-align: left; transition: border-color 0.18s; }
+.asm-tab:hover { border-color: #3fb950; }
+.asm-tab.active { border-color: #3fb950; background: rgba(63,185,80,0.08); }
+.asm-tab-name { display: block; font-size: 0.8rem; font-weight: 700; color: #c9d1d9; }
+.asm-tab-tag { display: inline-block; margin-top: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 10px; font-size: 0.62rem; font-weight: 700; }
+.asm-tab-tag.illumina { background: rgba(88,166,255,0.15); color: #58a6ff; }
+.asm-tab-tag.nanopore { background: rgba(63,185,80,0.15); color: #3fb950; }
+.asm-tab-tag.hybrid { background: rgba(188,140,255,0.15); color: #bc8cff; }
+
+/* Organism bar */
+.asm-organism-bar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; padding: 0.65rem 1rem; background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 8px; margin-bottom: 1.25rem; font-size: 0.76rem; color: #8b949e; }
+.asm-org-sep { color: #30363d; }
+
+/* Layout */
+.asm-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+/* Cards */
+.asm-card { background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.asm-card-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6e7681; margin-bottom: 0.75rem; }
+.asm-card-sub { font-size: 0.68rem; color: #6e7681; margin: -0.5rem 0 0.6rem; }
+
+/* Stats table */
+.asm-stats-tbl { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.asm-stats-tbl td { padding: 0.45rem 0.5rem; border-bottom: 1px solid #0d1117; color: #8b949e; }
+.asm-stats-tbl td:first-child { color: #6e7681; font-size: 0.74rem; }
+.asm-val { font-family: monospace; font-size: 0.84rem !important; color: #c9d1d9 !important; text-align: right; }
+.asm-best { color: #3fb950 !important; }
+.asm-ok { color: #e3b341 !important; }
+.asm-worst { color: #f85149 !important; }
+
+/* Compare table */
+.asm-compare-tbl { width: 100%; border-collapse: collapse; font-size: 0.77rem; }
+.asm-compare-tbl th { padding: 0.4rem 0.6rem; text-align: left; font-size: 0.68rem; color: #6e7681; font-weight: 600; border-bottom: 1px solid #21262d; }
+.asm-compare-tbl td { padding: 0.4rem 0.6rem; border-bottom: 1px solid #0d1117; color: #8b949e; font-family: monospace; font-size: 0.78rem; }
+.asm-compare-label { color: #6e7681 !important; font-family: inherit !important; font-size: 0.74rem !important; }
+.asm-compare-tbl .asm-best { font-weight: 700; color: #3fb950 !important; }
+.asm-compare-tbl .asm-worst { color: #f85149 !important; }
+
+/* Note */
+.asm-note-box { padding: 0.85rem 1rem; background: rgba(88,166,255,0.05); border: 1px solid rgba(88,166,255,0.15); border-radius: 8px; }
+.asm-note-box p { font-size: 0.76rem; color: #8b949e; margin: 0; line-height: 1.65; }
+
+/* Plots */
+.asm-right .asm-card { margin-bottom: 1rem; }
+.asm-right .asm-card:last-child { margin-bottom: 0; }
+
+--blue: #58a6ff; --green: #3fb950; --purple: #bc8cff;
+
+@media (max-width: 900px) { .asm-layout { grid-template-columns: 1fr; } }

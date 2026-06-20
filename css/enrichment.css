@@ -1,0 +1,43 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — GO and Pathway Enrichment Analysis
+   ═══════════════════════════════════════════════════════════════ */
+.enr-page { max-width: 1160px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.enr-header { text-align: center; margin-bottom: 2rem; }
+.enr-title { font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg,#bc8cff,#58a6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.enr-sub { font-size: 0.86rem; color: #8b949e; max-width: 680px; margin: 0 auto; }
+
+/* Dataset tabs */
+.enr-dataset-tabs { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+.enr-ds-btn { flex: 1; min-width: 180px; padding: 0.65rem 1rem; background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 10px; cursor: pointer; text-align: left; transition: border-color 0.18s,background 0.18s; }
+.enr-ds-btn:hover { border-color: #58a6ff; }
+.enr-ds-name { display: block; font-size: 0.82rem; font-weight: 800; margin-bottom: 0.2rem; }
+.enr-ds-src { display: block; font-size: 0.67rem; color: #6e7681; }
+
+/* Meta */
+.enr-meta { margin-bottom: 1.25rem; }
+.enr-meta p { font-size: 0.8rem; color: #8b949e; margin: 0; line-height: 1.65; }
+
+/* Controls */
+.enr-controls { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; padding: 0.65rem 1rem; background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 8px; }
+.enr-ctrl-group { display: flex; align-items: center; gap: 0.35rem; }
+.enr-ctrl-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6e7681; margin-right: 0.2rem; }
+.enr-view-btn, .enr-db-btn { padding: 0.3rem 0.75rem; background: #0d1117; border: 1px solid #21262d; border-radius: 6px; color: #8b949e; font-size: 0.73rem; font-weight: 600; cursor: pointer; transition: all 0.18s; }
+.enr-view-btn:hover, .enr-db-btn:hover { border-color: #58a6ff; color: #c9d1d9; }
+.enr-view-btn.active, .enr-db-btn.active { background: rgba(88,166,255,0.1); border-color: #58a6ff; color: #58a6ff; }
+
+/* Viz box */
+.enr-viz-box { background: #0d1117; border: 1px solid #21262d; border-radius: 10px; padding: 0.5rem; overflow-x: auto; margin-bottom: 1.25rem; min-height: 200px; }
+
+/* Table */
+.enr-table-wrap { overflow-x: auto; border: 1px solid #21262d; border-radius: 10px; }
+.enr-tbl { width: 100%; border-collapse: collapse; font-size: 0.77rem; }
+.enr-tbl thead th { padding: 0.65rem 0.85rem; background: var(--bg-card,#161b22); border-bottom: 1px solid #21262d; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6e7681; text-align: left; }
+.enr-tbl tbody td { padding: 0.5rem 0.85rem; border-bottom: 1px solid #0d1117; color: #8b949e; }
+.enr-tbl tbody tr:hover td { background: rgba(255,255,255,0.02); }
+.enr-id { font-family: monospace; font-size: 0.76rem !important; }
+.enr-p { font-family: monospace; font-size: 0.8rem !important; color: #e3b341 !important; }
+.enr-db-badge { display: inline-block; padding: 0.1rem 0.45rem; border-radius: 5px; font-size: 0.65rem; font-weight: 700; }
+.enr-db-badge.GO { background: rgba(88,166,255,0.12); color: #58a6ff; }
+.enr-db-badge.KEGG { background: rgba(249,115,22,0.12); color: #f97316; }
+
+@media (max-width: 700px) { .enr-page { padding: 1.5rem 0.75rem 3rem; } }

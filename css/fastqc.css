@@ -1,0 +1,51 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — FastQC Visualizer
+   ═══════════════════════════════════════════════════════════════ */
+.fqc-page { max-width: 1240px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.fqc-header { text-align: center; margin-bottom: 2rem; }
+.fqc-title { font-size: clamp(1.5rem,3vw,2.1rem); font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg,#3fb950,#58a6ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.fqc-sub { font-size: 0.86rem; color: #8b949e; max-width: 680px; margin: 0 auto; }
+
+.fqc-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; }
+
+/* Sidebar */
+.fqc-sidebar { display: flex; flex-direction: column; gap: 0.25rem; }
+.fqc-sb-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6e7681; margin: 0.75rem 0 0.4rem; padding-left: 0.25rem; }
+.fqc-sample-btn { width: 100%; text-align: left; padding: 0.65rem 0.8rem; background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 8px; cursor: pointer; transition: border-color 0.18s,background 0.18s; margin-bottom: 0.25rem; }
+.fqc-sample-btn:hover { border-color: #3fb950; }
+.fqc-sample-btn.active { border-color: #3fb950; background: rgba(63,185,80,0.08); }
+.fqc-sb-name { display: block; font-size: 0.78rem; font-weight: 700; color: #c9d1d9; }
+.fqc-sb-plat { display: block; font-size: 0.67rem; color: #6e7681; margin-top: 0.2rem; }
+
+.fqc-info-block { display: flex; flex-direction: column; gap: 0.2rem; }
+.fqc-info-row { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.73rem; padding: 0.2rem 0; border-bottom: 1px solid #0d1117; }
+.fqc-info-label { color: #6e7681; font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.fqc-info-val { color: #c9d1d9; font-family: monospace; font-size: 0.75rem; text-align: right; }
+
+.fqc-mods-block { display: flex; flex-direction: column; gap: 0.3rem; }
+.fqc-mod-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; padding: 0.25rem 0; }
+.fqc-mod-name { flex: 1; color: #8b949e; }
+.fqc-mod-badge { font-size: 0.6rem; font-weight: 700; padding: 0.05rem 0.35rem; border-radius: 4px; border: 1px solid; letter-spacing: 0.05em; }
+
+.fqc-note-box { margin-top: 0.75rem; padding: 0.75rem; background: rgba(88,166,255,0.06); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; }
+.fqc-note { font-size: 0.73rem; color: #8b949e; margin: 0; line-height: 1.6; }
+
+/* Main */
+.fqc-main { display: flex; flex-direction: column; gap: 1rem; }
+.fqc-chart-tabs { display: flex; gap: 0; border: 1px solid #21262d; border-radius: 8px; overflow: hidden; width: fit-content; }
+.fqc-tab { padding: 0.45rem 1rem; background: var(--bg-card,#161b22); border: none; border-right: 1px solid #21262d; color: #8b949e; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.18s; }
+.fqc-tab:last-child { border-right: none; }
+.fqc-tab:hover { background: #21262d; color: #c9d1d9; }
+.fqc-tab.active { background: rgba(63,185,80,0.1); color: #3fb950; }
+
+.fqc-viz-box { background: #0d1117; border: 1px solid #21262d; border-radius: 10px; overflow: hidden; min-height: 280px; }
+
+.fqc-legend { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.72rem; color: #8b949e; align-items: center; }
+.fqc-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.fqc-line { display: inline-block; width: 18px; height: 2.5px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+
+.fqc-interp-box { background: var(--bg-card,#161b22); border: 1px solid #21262d; border-radius: 8px; padding: 1rem; }
+.fqc-interp-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #6e7681; margin-bottom: 0.5rem; }
+.fqc-interp-box p { font-size: 0.8rem; color: #8b949e; margin: 0; line-height: 1.7; }
+
+@media (max-width: 860px) { .fqc-layout { grid-template-columns: 1fr; } .fqc-sidebar { flex-direction: row; flex-wrap: wrap; } .fqc-sample-btn { min-width: 200px; flex: 1; } }

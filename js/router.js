@@ -540,6 +540,41 @@ OmicsLab.Router = (function () {
       tagline: 'Differential expression results from African disease cohorts — malaria, TB, COVID-19 — interactive volcano plots, heatmaps, and gene cards',
       sections: ['rna-atlas-section'],
     },
+    fastqc: {
+      label: 'Read QC (FastQC)',
+      icon: 'activity',
+      color: '#3fb950',
+      tagline: 'FastQC-style read quality metrics — per-base quality boxplots, GC distribution, module PASS/WARN/FAIL — illustrated with African disease sequencing data',
+      sections: ['fastqc-section'],
+    },
+    'single-cell': {
+      label: 'Single-Cell Explorer',
+      icon: 'layers',
+      color: '#bc8cff',
+      tagline: 'UMAP visualization and cell type annotation for African scRNA-seq cohorts — malaria PBMC atlas and TB lung granuloma, with marker gene dotplots',
+      sections: ['single-cell-section'],
+    },
+    assembly: {
+      label: 'Assembly Evaluator',
+      icon: 'cpu',
+      color: '#e3b341',
+      tagline: 'Genome assembly QC — N50, Nx plot, contig distribution, BUSCO completeness — compare short-read, long-read, and hybrid assemblies of African pathogens',
+      sections: ['assembly-section'],
+    },
+    bioethics: {
+      label: 'Bioethics Hub',
+      icon: 'shield',
+      color: '#f97316',
+      tagline: 'African genomics bioethics — CONTEST principles, consent types, data sovereignty case studies, and ethics checklist grounded in H3Africa and Nagoya Protocol',
+      sections: ['bioethics-section'],
+    },
+    enrichment: {
+      label: 'GO Enrichment',
+      icon: 'git-branch',
+      color: '#58a6ff',
+      tagline: 'GO and KEGG pathway enrichment analysis — bar charts and bubble plots for malaria, TB, and COVID-19 DEG lists from African disease cohorts',
+      sections: ['enrichment-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -599,6 +634,8 @@ OmicsLab.Router = (function () {
     ask: 'ask', mentor: 'ask',
     'virtual-lab': 'tools',
     gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research', 'rna-atlas': 'tools',
+    fastqc: 'tools', 'single-cell': 'tools', assembly: 'tools',
+    bioethics: 'research', enrichment: 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -795,6 +832,26 @@ OmicsLab.Router = (function () {
     if (page === 'rna-atlas' && OmicsLab.RNAAtlas) {
       const el = document.getElementById('rna-atlas-content');
       if (el && !el.querySelector('.ra-page')) try { OmicsLab.RNAAtlas.init(); } catch(e) { OmicsLab.Error?.renderPageError('rna-atlas-content','RNAAtlas',e); }
+    }
+    if (page === 'fastqc' && OmicsLab.FastQC) {
+      const el = document.getElementById('fastqc-content');
+      if (el && !el.querySelector('.fqc-page')) try { OmicsLab.FastQC.init(); } catch(e) { OmicsLab.Error?.renderPageError('fastqc-content','FastQC',e); }
+    }
+    if (page === 'single-cell' && OmicsLab.SingleCell) {
+      const el = document.getElementById('single-cell-content');
+      if (el && !el.querySelector('.sc-page')) try { OmicsLab.SingleCell.init(); } catch(e) { OmicsLab.Error?.renderPageError('single-cell-content','SingleCell',e); }
+    }
+    if (page === 'assembly' && OmicsLab.Assembly) {
+      const el = document.getElementById('assembly-content');
+      if (el && !el.querySelector('.asm-page')) try { OmicsLab.Assembly.init(); } catch(e) { OmicsLab.Error?.renderPageError('assembly-content','Assembly',e); }
+    }
+    if (page === 'bioethics' && OmicsLab.Bioethics) {
+      const el = document.getElementById('bioethics-content');
+      if (el && !el.querySelector('.be-page')) try { OmicsLab.Bioethics.init(); } catch(e) { OmicsLab.Error?.renderPageError('bioethics-content','Bioethics',e); }
+    }
+    if (page === 'enrichment' && OmicsLab.Enrichment) {
+      const el = document.getElementById('enrichment-content');
+      if (el && !el.querySelector('.enr-page')) try { OmicsLab.Enrichment.init(); } catch(e) { OmicsLab.Error?.renderPageError('enrichment-content','Enrichment',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
