@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v69: 360 Virtual Lab redesign — inward panorama, real machine SVGs
+   v70: RNA Expression Atlas, README rewrite, DOCS.md
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v13';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v14';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

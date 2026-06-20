@@ -533,6 +533,13 @@ OmicsLab.Router = (function () {
       tagline: 'African Genomics Network — H3Africa, AWI-Gen, KEMRI, SANBI, AHRI, PANDORA, Africa CDC and 18 major research institutions across 55 countries',
       sections: ['network-hub-section'],
     },
+    'rna-atlas': {
+      label: 'RNA Expression Atlas',
+      icon: 'bar-chart',
+      color: '#f85149',
+      tagline: 'Differential expression results from African disease cohorts — malaria, TB, COVID-19 — interactive volcano plots, heatmaps, and gene cards',
+      sections: ['rna-atlas-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -591,7 +598,7 @@ OmicsLab.Router = (function () {
     'one-health': 'research', institution: 'train',
     ask: 'ask', mentor: 'ask',
     'virtual-lab': 'tools',
-    gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research',
+    gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research', 'rna-atlas': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -784,6 +791,10 @@ OmicsLab.Router = (function () {
     if (page === 'network-hub' && OmicsLab.NetworkHub) {
       const el = document.getElementById('network-hub-content');
       if (el && !el.querySelector('.nh-page')) try { OmicsLab.NetworkHub.init(); } catch(e) { OmicsLab.Error?.renderPageError('network-hub-content','NetworkHub',e); }
+    }
+    if (page === 'rna-atlas' && OmicsLab.RNAAtlas) {
+      const el = document.getElementById('rna-atlas-content');
+      if (el && !el.querySelector('.ra-page')) try { OmicsLab.RNAAtlas.init(); } catch(e) { OmicsLab.Error?.renderPageError('rna-atlas-content','RNAAtlas',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
