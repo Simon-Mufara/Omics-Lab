@@ -232,6 +232,10 @@ OmicsLab.KnowledgeGraph = (function () {
           <span class="kg-detail-type" style="background:${n.color}22;color:${n.color}">${n.type}</span>
         </div>
         <div class="kg-detail-desc">${_esc(n.desc)}</div>
+        ${_getNodePage(n) ? `<button class="btn btn-ghost btn-xs kg-detail-nav-btn" onclick="OmicsLab.Router?.navigate('${_getNodePage(n)}')" style="margin:.5rem 0;font-size:.75rem">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Explore in ${_getNodePage(n).replace(/-/g, ' ')}
+        </button>` : ''}
         ${connected.length ? `
           <div class="kg-detail-rels-title">Connections (${connected.length})</div>
           <div class="kg-detail-rels">
@@ -356,7 +360,32 @@ OmicsLab.KnowledgeGraph = (function () {
   function _onSearch(v) {
     _search = v.trim();
     _render();
-    document.getElementById('kg-detail').innerHTML = '<div class="kg-detail-empty">Click a node to explore</div>';
+    /* Auto-select first match for node jump (Prompt 52) */
+    if (_search.length >= 2) {
+      const match = NODES.find(n => n.label.toLowerCase().includes(_search.toLowerCase()));
+      if (match) { _selectedId = match.id; _renderDetail(match.id); }
+    } else {
+      document.getElementById('kg-detail').innerHTML = '<div class="kg-detail-empty">Click a node to explore</div>';
+    }
+  }
+
+  /* ── Node → OmicsLab page link map (Prompt 52) ── */
+  const NODE_PAGE_MAP = {
+    /* Diseases → variant-atlas or clinical-decision */
+    disease:    (n) => n.label.toLowerCase().includes('sickle') || n.label.toLowerCase().includes('malaria') || n.label.toLowerCase().includes('tb') ? 'variant-atlas' : 'clinical-decision',
+    /* Genes → variant-atlas */
+    gene:       () => 'variant-atlas',
+    /* Tools → analysis */
+    tool:       () => 'analysis',
+    /* Populations → popstruct or one-health */
+    population: () => 'popstruct',
+    /* Countries → one-health */
+    country:    () => 'one-health',
+  };
+
+  function _getNodePage(n) {
+    const fn = NODE_PAGE_MAP[n.type];
+    return fn ? fn(n) : null;
   }
 
   /* Cleanup on page leave */

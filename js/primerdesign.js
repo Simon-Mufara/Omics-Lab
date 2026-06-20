@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Primer Design & Validation Tool (Prompt 21)
    Wallace rule Tm, GC%, self-complementarity, hairpin, dimer checks.
    Visual binding alignment SVG. Africa-pathogen gene templates.
@@ -300,7 +300,7 @@ OmicsLab.PrimerDesign = (function () {
             <div class="pd-stat"><div class="pd-stat-label">Dimer</div><div class="pd-stat-val" style="color:${r.dimer>5?'#ff6b6b':'#3fb950'}">${r.dimer} bp</div></div>
           </div>
           ${r.issues.length ? `<div class="pd-issues">
-            ${r.issues.map(iss => `<div class="pd-issue pd-issue-${iss.type}">${iss.type === 'error' ? '✗' : '⚠'} ${iss.text}</div>`).join('')}
+            ${r.issues.map(iss => `<div class="pd-issue pd-issue-${iss.type}">${iss.type === 'error' ? '[FAIL]' : '[!]'} ${iss.text}</div>`).join('')}
           </div>` : '<div class="pd-all-pass">All checks passed.</div>'}
         </div>
         <div class="pd-disclaimer">Validate with NCBI Primer-BLAST before ordering.</div>`;
@@ -383,7 +383,7 @@ OmicsLab.PrimerDesign = (function () {
 
           <div class="pd-right" id="pd-output">
             <div class="pd-empty-state">
-              <div class="pd-empty-icon">🔬</div>
+              <div class="pd-empty-icon">${OmicsLab.Icons?.svg('scissors',32)||''}</div>
               <div class="pd-empty-text">Select a template or paste a sequence, then click <strong>Design / Validate</strong></div>
             </div>
           </div>

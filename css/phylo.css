@@ -53,7 +53,7 @@
 .phylo-act-btn:hover { border-color: #3fb950; color: #3fb950; }
 
 .phylo-empty-state { text-align: center; padding: 2.5rem 1rem; }
-.phylo-empty-icon { font-size: 2.5rem; margin-bottom: .5rem; }
+.phylo-empty-icon { display: flex; align-items: center; justify-content: center; color: var(--text-muted,#8b949e); opacity: .5; margin-bottom: .5rem; }
 .phylo-empty-text { font-size: .85rem; color: #6e7681; }
 .phylo-empty-state-sm { font-size: .8rem; color: #6e7681; text-align: center; padding: 1rem; }
 

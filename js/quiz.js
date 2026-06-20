@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Quiz Mode
    5 MCQ per workflow with explanations
    ═══════════════════════════════════════════════════════════════ */
@@ -318,7 +318,7 @@ OmicsLab.Quiz = (function() {
         <div class="quiz-q-text">${q.q}</div>
         <div class="quiz-opts">${opts}</div>
         <div class="quiz-explanation ${correct?'quiz-exp-correct':'quiz-exp-wrong'}">
-          <strong>${correct ? '✓ Correct!' : '✗ Incorrect'}</strong> — ${q.exp}
+          <strong>${correct ? '[OK] Correct!' : '[FAIL] Incorrect'}</strong> — ${q.exp}
         </div>
         <div class="quiz-footer">
           <button class="quiz-next-btn" onclick="${isLast?'OmicsLab.Quiz._showScore()':'OmicsLab.Quiz._next()'}">

@@ -528,7 +528,7 @@ OmicsLab.VariantInterp = (function () {
 
           <div class="vi-right" id="vi-output">
             <div class="vi-empty-state">
-              <div class="vi-empty-icon">🧬</div>
+              <div class="vi-empty-icon">${OmicsLab.Icons?.svg('dna',32)||''}</div>
               <div class="vi-empty-text">Paste a variant or load an example to begin ACMG classification</div>
             </div>
           </div>

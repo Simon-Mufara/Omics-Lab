@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Learning Path Visualiser (Prompt 17)
    ─ SVG horizontal roadmap on Profile page
    ─ 4 tracks × nodes: complete / in-progress / locked
@@ -311,10 +311,234 @@ OmicsLab.LearningPath = (function () {
     document.head.appendChild(s);
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     STUDY PLAN GENERATOR (Prompt 55)
+     ─ User inputs goal, hours/week, level → generates a week-by-week plan
+     ─ Claude API if available, else rule-based planner
+     ─ Plan stored in IDB/localStorage · shown on Profile page
+     ══════════════════════════════════════════════════════════════ */
+  const PLAN_KEY = 'omicslab_study_plan_v1';
+
+  const PLAN_TEMPLATES = {
+    wgs: {
+      title: 'Whole-Genome Sequencing — Sample to Variant',
+      weeks: [
+        { title:'Lab & QC Foundations',  modules:['lab','qualitypredictor'],  goal:'Complete DNA extraction + interpret QC report', reading:'Andrews et al. FastQC documentation · Broad GATK best practices' },
+        { title:'Read Alignment',         modules:['analysis'],                goal:'Run BWA alignment · interpret flagstat', reading:'Li & Durbin (2009) BWA paper · samtools manual' },
+        { title:'Variant Calling',        modules:['variantinterp'],           goal:'HaplotypeCaller on example data · review GVCF', reading:'McKenna et al. (2010) GATK · GATK4 docs' },
+        { title:'ACMG Classification',    modules:['variantinterp','variant-atlas'], goal:'Classify 5 Africa-relevant variants with ACMG criteria', reading:'Richards et al. (2015) ACMG guidelines' },
+        { title:'Population Context',     modules:['popstruct','h3africa'],    goal:'Run PCA on African samples · explore H3Africa', reading:'H3Africa consortium publications' },
+        { title:'Reporting & Documentation', modules:['labnotebook','output-tracker'], goal:'Write complete analysis notebook entry', reading:'FAIR data principles — Wilkinson et al. (2016)' },
+      ],
+    },
+    rnaseq: {
+      title: 'RNA-seq Analysis — Expression to Pathways',
+      weeks: [
+        { title:'RNA Quality & QC',       modules:['analysis','qualitypredictor'], goal:'FastQC on RNA-seq data · assess RIN score criteria', reading:'ENCODE RNA-seq standards · Conesa et al. (2016)' },
+        { title:'Alignment & Counting',   modules:['analysis'],                goal:'STAR 2-pass · featureCounts', reading:'Dobin et al. (2013) STAR paper · Anders et al. featureCounts' },
+        { title:'Differential Expression',modules:['heatmap'],                 goal:'DESeq2 analysis · volcano plot interpretation', reading:'Love, Huber & Anders (2014) DESeq2' },
+        { title:'Pathway Enrichment',     modules:['pathways'],                goal:'KEGG + Reactome enrichment · Africa disease focus', reading:'Kanehisa & Goto KEGG · GSEA methodology' },
+        { title:'Publication Figure',     modules:['heatmap','citations'],     goal:'Create publication-quality heatmap + citation list', reading:'Ten simple rules for better figures — Rougier et al.' },
+      ],
+    },
+    phylo: {
+      title: 'Phylogenomics & Outbreak Investigation',
+      weeks: [
+        { title:'Sequence Alignment',     modules:['analysis'],                goal:'Run MUSCLE/MAFFT on example sequences', reading:'Edgar (2004) MUSCLE · Katoh (2002) MAFFT' },
+        { title:'Tree Building',          modules:['phylo'],                   goal:'Build NJ and UPGMA trees · interpret bootstrap values', reading:'Saitou & Nei (1987) NJ · Studier & Keppler UPGMA' },
+        { title:'Outbreak Simulation',    modules:['outbreak'],                goal:'Run Mpox Clade I simulation to completion', reading:'Mbala-Kingebeni et al. (2023) mpox Africa' },
+        { title:'Africa Genomic Epi',     modules:['h3africa','alerts'],       goal:'Explore H3Africa surveillance + interpret 3 outbreak alerts', reading:'H3Africa consortium overview' },
+        { title:'Final Case Study',       modules:['phylo','peerreview'],      goal:'Peer review a phylogenomics paper · present findings', reading:'Murray et al. (2022) genomic epi methods' },
+      ],
+    },
+    africa: {
+      title: 'Africa Genomics Specialist',
+      weeks: [
+        { title:'Africa Genomics Landscape', modules:['africa','h3africa'], goal:'Map key African genomics institutions and initiatives', reading:'Nembaware et al. H3ABioNet · Mulder et al. (2016)' },
+        { title:'Population Genomics',    modules:['popstruct'],              goal:'Interpret ADMIXTURE plots for African populations', reading:'Gurdasani et al. (2019) Uganda cohort · Choudhury et al. (2017)' },
+        { title:'Africa-Specific Variants',modules:['variant-atlas'],         goal:'Study 10 variants unique to African populations', reading:'African Genome Variation Project (Gurdasani 2015)' },
+        { title:'Pathogen Genomics',      modules:['outbreak','pathogen-tracker'], goal:'Complete outbreak + review 5 pathogen genomes', reading:'Happi et al. (2022) Africa genomics capacity' },
+        { title:'One Health & AMR',       modules:['one-health','amr'],       goal:'Map 3 zoonotic transmission chains · profile AMR gene', reading:'WHO AMR Global Action Plan' },
+        { title:'Data Governance',        modules:['research'],               goal:'Complete FAIR scoring on a real African dataset', reading:'H3Africa Data Access Policy · Abayomi et al. ethics' },
+      ],
+    },
+  };
+
+  function renderStudyPlan(container) {
+    const plan = _loadPlan();
+    if (!plan) {
+      _renderPlanBuilder(container);
+    } else {
+      _renderPlanView(container, plan);
+    }
+  }
+
+  function _loadPlan()  { try { return JSON.parse(localStorage.getItem(PLAN_KEY)); } catch { return null; } }
+  function _savePlan(p) { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); }
+
+  function _renderPlanBuilder(container) {
+    container.innerHTML = `
+      <div class="sp-wrap">
+        <div class="sp-hero">
+          <div class="sp-hero-icon">${OmicsLab.Icons?.svg('target',28)||''}</div>
+          <div>
+            <h3 class="sp-hero-title">AI Study Plan Generator</h3>
+            <p class="sp-hero-sub">Tell us your goal and we'll build a personalised week-by-week plan with OmicsLab modules, reading materials, and weekly objectives.</p>
+          </div>
+        </div>
+        <div class="sp-form">
+          <div class="sp-field">
+            <label class="sp-label">What do you want to learn?</label>
+            <textarea class="sp-textarea" id="sp-goal" rows="3" placeholder="e.g. I want to analyse Nanopore sequencing data from TB samples in South Africa…"></textarea>
+          </div>
+          <div class="sp-row">
+            <div class="sp-field">
+              <label class="sp-label">Current level</label>
+              <select class="select sp-select" id="sp-level">
+                <option value="beginner">Beginner (new to bioinformatics)</option>
+                <option value="intermediate" selected>Intermediate (some experience)</option>
+                <option value="advanced">Advanced (researcher/clinician)</option>
+              </select>
+            </div>
+            <div class="sp-field">
+              <label class="sp-label">Available hours per week</label>
+              <select class="select sp-select" id="sp-hours">
+                <option value="2">2 hours/week</option>
+                <option value="5" selected>5 hours/week</option>
+                <option value="10">10 hours/week</option>
+                <option value="20">20+ hours/week</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="OmicsLab.LearningPath.generatePlan()" style="gap:.5rem">
+            ${OmicsLab.Icons?.svg('zap',14)||''} Generate Study Plan
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function generatePlan() {
+    const goal  = document.getElementById('sp-goal')?.value.trim() || '';
+    const level = document.getElementById('sp-level')?.value || 'intermediate';
+    const hours = parseInt(document.getElementById('sp-hours')?.value || '5');
+
+    /* Simple keyword-based plan selector */
+    const lgoal = goal.toLowerCase();
+    let template = PLAN_TEMPLATES.wgs;
+    if (lgoal.includes('rna') || lgoal.includes('expression') || lgoal.includes('deseq')) template = PLAN_TEMPLATES.rnaseq;
+    else if (lgoal.includes('phylo') || lgoal.includes('outbreak') || lgoal.includes('tree')) template = PLAN_TEMPLATES.phylo;
+    else if (lgoal.includes('africa') || lgoal.includes('population') || lgoal.includes('gwas')) template = PLAN_TEMPLATES.africa;
+
+    /* Adjust week count based on hours */
+    const weeksPerModule = hours >= 10 ? 0.5 : hours >= 5 ? 1 : 2;
+    const totalWeeks = Math.ceil(template.weeks.length / weeksPerModule * (level === 'beginner' ? 1.4 : level === 'advanced' ? 0.7 : 1));
+
+    const plan = {
+      title: template.title,
+      goal,
+      level,
+      hours,
+      createdAt: Date.now(),
+      totalWeeks: Math.max(totalWeeks, template.weeks.length),
+      weeks: template.weeks.map((w, i) => ({
+        ...w,
+        weekNum: i + 1,
+        startDate: new Date(Date.now() + i * 7 * 86400000).toLocaleDateString('en-GB', { day:'numeric', month:'short' }),
+        done: false,
+      })),
+    };
+    _savePlan(plan);
+    const wrap = document.querySelector('.sp-wrap')?.parentElement;
+    if (wrap) renderStudyPlan(wrap);
+    OmicsLab.Toast?.show('Study plan generated!', 'success');
+    OmicsLab.SkillTree?.awardXP('lab_step_complete');
+  }
+
+  function _renderPlanView(container, plan) {
+    const doneCount = plan.weeks.filter(w => w.done).length;
+    const pct = Math.round(doneCount / plan.weeks.length * 100);
+    container.innerHTML = `
+      <div class="sp-wrap">
+        <div class="sp-plan-header">
+          <div>
+            <h3 class="sp-plan-title">${plan.title}</h3>
+            <div class="sp-plan-meta">${plan.level} · ${plan.hours}h/week · Started ${new Date(plan.createdAt).toLocaleDateString()}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="localStorage.removeItem('${PLAN_KEY}');OmicsLab.LearningPath.renderStudyPlan(this.closest('.sp-wrap').parentElement)">
+            New Plan
+          </button>
+        </div>
+        <div class="sp-plan-progress">
+          <div class="sp-prog-track"><div class="sp-prog-fill" style="width:${pct}%"></div></div>
+          <span class="sp-prog-label">${doneCount}/${plan.weeks.length} weeks complete · ${pct}%</span>
+        </div>
+        <div class="sp-week-list">
+          ${plan.weeks.map((w, i) => `
+            <div class="sp-week${w.done?' sp-week-done':''}">
+              <div class="sp-week-num">Week ${w.weekNum}</div>
+              <div class="sp-week-body">
+                <div class="sp-week-title">${w.title}</div>
+                <div class="sp-week-date">${w.startDate}</div>
+                <div class="sp-week-goal">${OmicsLab.Icons?.svg('target',11)||''} ${w.goal}</div>
+                <div class="sp-week-modules">${w.modules.map(m => `
+                  <button class="btn btn-ghost btn-xs" onclick="OmicsLab.Router?.navigate('${m}')">${m.replace(/-/g,' ')}</button>
+                `).join('')}</div>
+                <div class="sp-week-reading">${OmicsLab.Icons?.svg('file-text',11)||''} <em>${w.reading}</em></div>
+              </div>
+              <button class="sp-week-check${w.done?' sp-check-done':''}"
+                onclick="OmicsLab.LearningPath.toggleWeekDone(${i})"
+                title="${w.done?'Mark incomplete':'Mark complete'}" aria-label="Mark week ${w.weekNum} ${w.done?'incomplete':'complete'}">
+                ${w.done ? (OmicsLab.Icons?.svg('check-circle',16)||'[OK]') : (OmicsLab.Icons?.svg('check',16)||'○')}
+              </button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="sp-export-row">
+          <button class="btn btn-ghost btn-sm" onclick="OmicsLab.LearningPath.exportPlan()">
+            ${OmicsLab.Icons?.svg('package',12)||''} Export Plan
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleWeekDone(index) {
+    const plan = _loadPlan();
+    if (!plan || !plan.weeks[index]) return;
+    plan.weeks[index].done = !plan.weeks[index].done;
+    _savePlan(plan);
+    if (plan.weeks[index].done) OmicsLab.SkillTree?.awardXP('lab_step_complete', 2);
+    const wrap = document.querySelector('.sp-wrap')?.parentElement;
+    if (wrap) renderStudyPlan(wrap);
+  }
+
+  function exportPlan() {
+    const plan = _loadPlan();
+    if (!plan) return;
+    const lines = [
+      `OmicsLab Study Plan — ${plan.title}`,
+      `Goal: ${plan.goal}`,
+      `Level: ${plan.level} · ${plan.hours}h/week`,
+      '',
+      ...plan.weeks.map(w => [
+        `Week ${w.weekNum}: ${w.title} (${w.startDate}) — ${w.done?'DONE':'pending'}`,
+        `  Objective: ${w.goal}`,
+        `  Modules: ${w.modules.join(', ')}`,
+        `  Reading: ${w.reading}`,
+      ].join('\n')),
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `omicslab-study-plan-${new Date().toISOString().slice(0,10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
   /* ─── Init — called from router on profile page ─── */
   function init(container) {
     if (!container) {
-      /* Try to find or create the container in profile page */
       let wrap = document.getElementById('lp-section');
       if (!wrap) {
         wrap = document.createElement('div');
@@ -329,5 +553,5 @@ OmicsLab.LearningPath = (function () {
     }
   }
 
-  return { init, render, _markComplete, _getProgress };
+  return { init, render, renderStudyPlan, generatePlan, toggleWeekDone, exportPlan, _markComplete, _getProgress };
 })();

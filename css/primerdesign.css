@@ -46,7 +46,7 @@
 
 /* ── Empty state ── */
 .pd-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 300px; color: #6e7681; text-align: center; background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 2rem; }
-.pd-empty-icon { font-size: 2.5rem; opacity: .4; }
+.pd-empty-icon { display: flex; align-items: center; justify-content: center; color: var(--text-muted,#8b949e); opacity: .5; }
 .pd-empty-text { font-size: .88rem; max-width: 280px; }
 .pd-error { background: rgba(255,107,107,.08); border: 1px solid rgba(255,107,107,.25); border-radius: 8px; padding: .8rem 1rem; color: #ff6b6b; font-size: .85rem; }
 

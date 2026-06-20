@@ -24,3 +24,14 @@
 .im-bar-fill { height: 100%; border-radius: 4px; transition: width .4s ease; }
 .im-bar-val { font-size: .7rem; color: #8b949e; min-width: 45px; text-align: right; font-family: 'Cascadia Code','Fira Mono',monospace; }
 .im-disclaimer { font-size: .68rem; color: #484f58; margin-top: 1.5rem; line-height: 1.6; }
+/* ── Citation + Sustainability (Prompt 59) ── */
+.im-card { background: var(--bg-surface,#161b22); border: 1px solid var(--border,#30363d); border-radius: 10px; padding: 1.25rem 1.5rem; }
+.im-cite-tabs { display: flex; gap: .4rem; margin-bottom: .75rem; }
+.im-cite-tab { background: var(--bg-overlay,#21262d); border: 1px solid var(--border,#30363d); color: var(--text-muted,#8b949e); border-radius: 6px; padding: .3rem .75rem; font-size: .78rem; cursor: pointer; }
+.im-cite-tab--active { background: var(--green,#3fb950); color: #000; border-color: var(--green,#3fb950); font-weight: 700; }
+.im-cite-pre { background: var(--bg-code,#0d1117); border: 1px solid var(--border,#30363d); border-radius: 6px; padding: .75rem 1rem; font-size: .78rem; font-family: 'Cascadia Code','Fira Mono',monospace; color: var(--text-primary,#e6edf3); white-space: pre-wrap; word-break: break-all; margin: 0; line-height: 1.5; }
+.im-sustain-card { margin-top: .5rem; }
+.im-sustain-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .75rem; }
+.im-sustain-btn { display: inline-flex; align-items: center; gap: .4rem; background: var(--green,#3fb950); color: #000; border: none; border-radius: 7px; padding: .45rem 1rem; font-size: .82rem; font-weight: 700; cursor: pointer; text-decoration: none; }
+.im-sustain-btn--secondary { background: var(--bg-overlay,#21262d); color: var(--text-primary,#e6edf3); border: 1px solid var(--border,#30363d); font-weight: 500; }
+.im-sustain-btn:hover { opacity: .9; }

@@ -11,63 +11,63 @@ OmicsLab.Badges = (function () {
 
   const ALL_BADGES = [
     /* Curriculum */
-    { id: 'wetlab-certified',   icon: '🔬', title: 'Wet-Lab Certified',
+    { id: 'wetlab-certified',   icon: 'microscope',   title: 'Wet-Lab Certified',
       desc: 'Completed the Wet-Lab Scientist learning track.',
       color: '#3fb950', category: 'Curriculum', earnedBy: 'Complete all 5 wet-lab lessons' },
-    { id: 'bioinfo-certified',  icon: '💻', title: 'Bioinformatics Certified',
+    { id: 'bioinfo-certified',  icon: 'cpu',          title: 'Bioinformatics Certified',
       desc: 'Completed the Bioinformatician learning track.',
       color: '#58a6ff', category: 'Curriculum', earnedBy: 'Complete all 5 bioinformatics lessons' },
-    { id: 'pubhealth-certified',icon: '🌍', title: 'Public Health Researcher',
+    { id: 'pubhealth-certified',icon: 'globe',        title: 'Public Health Researcher',
       desc: 'Completed the Public Health Researcher learning track.',
       color: '#d2a8ff', category: 'Curriculum', earnedBy: 'Complete all 5 public health lessons' },
-    { id: 'all-tracks',         icon: '🏆', title: 'OmicsLab Graduate',
+    { id: 'all-tracks',         icon: 'ribbon',       title: 'OmicsLab Graduate',
       desc: 'Completed all three learning tracks — the full OmicsLab curriculum.',
       color: '#f7c948', category: 'Curriculum', earnedBy: 'Complete all three tracks' },
 
     /* Lab simulation */
-    { id: 'first-workflow',     icon: '⚗️', title: 'First Experiment',
+    { id: 'first-workflow',     icon: 'flask',        title: 'First Experiment',
       desc: 'Completed your first omics workflow simulation.',
       color: '#3fb950', category: 'Lab', earnedBy: 'Run any workflow to completion' },
-    { id: 'pipeline-pro',       icon: '🧬', title: 'Pipeline Pro',
+    { id: 'pipeline-pro',       icon: 'dna',          title: 'Pipeline Pro',
       desc: 'Followed the complete bioinformatics pipeline guide.',
       color: '#58a6ff', category: 'Lab', earnedBy: 'View the Pipeline Guide section' },
-    { id: 'sabotage-hunter',    icon: '🕵️', title: 'Sabotage Hunter',
+    { id: 'sabotage-hunter',    icon: 'eye',          title: 'Sabotage Hunter',
       desc: 'Found and identified a hidden error in Sabotage Mode.',
       color: '#f85149', category: 'Lab', earnedBy: 'Detect the error in Sabotage Mode' },
-    { id: 'hpc-operator',       icon: '⚙️', title: 'HPC Operator',
+    { id: 'hpc-operator',       icon: 'server',       title: 'HPC Operator',
       desc: 'Generated a SLURM job script and simulated a job run.',
       color: '#d29922', category: 'Lab', earnedBy: 'Use the HPC Job Builder' },
 
     /* Research */
-    { id: 'fair-champion',      icon: '📋', title: 'FAIR Champion',
+    { id: 'fair-champion',      icon: 'clipboard',    title: 'FAIR Champion',
       desc: 'Submitted a study to the Reproducibility Hub with a FAIR score above 80.',
       color: '#58a6ff', category: 'Research', earnedBy: 'Submit to Repro Hub with FAIR ≥ 80' },
-    { id: 'peer-validator',     icon: '✓', title: 'Peer Validator',
+    { id: 'peer-validator',     icon: 'check-circle', title: 'Peer Validator',
       desc: 'Validated another researcher\'s submission in the Reproducibility Hub.',
       color: '#3fb950', category: 'Research', earnedBy: 'Validate a community submission' },
-    { id: 'repro-score-90',     icon: '🌟', title: 'Reproducibility Star',
+    { id: 'repro-score-90',     icon: 'award',        title: 'Reproducibility Star',
       desc: 'Achieved a reproducibility score of 90 or above.',
       color: '#f7c948', category: 'Research', earnedBy: 'Submit with Reproducibility score ≥ 90' },
 
     /* Knowledge */
-    { id: 'disease-expert',     icon: '🦠', title: 'Disease Expert',
+    { id: 'disease-expert',     icon: 'virus',        title: 'Disease Expert',
       desc: 'Explored 10 or more diseases in the Disease Explorer.',
       color: '#d2a8ff', category: 'Knowledge', earnedBy: 'Open 10 disease profiles' },
-    { id: 'africa-explorer',    icon: '🗺️', title: 'Africa Explorer',
+    { id: 'africa-explorer',    icon: 'map-pin',      title: 'Africa Explorer',
       desc: 'Visited all genomics laboratory locations on the Africa Map.',
       color: '#3fb950', category: 'Knowledge', earnedBy: 'Click all centres on the Africa Map' },
-    { id: 'quiz-ace',           icon: '🎯', title: 'Quiz Ace',
+    { id: 'quiz-ace',           icon: 'target',       title: 'Quiz Ace',
       desc: 'Scored 80% or above in a workflow quiz.',
       color: '#58a6ff', category: 'Knowledge', earnedBy: 'Score ≥ 80% in the quiz' },
-    { id: 'data-sovereign',     icon: '⚖️', title: 'Data Sovereignty Advocate',
+    { id: 'data-sovereign',     icon: 'scale',        title: 'Data Sovereignty Advocate',
       desc: 'Completed the Africa Data Governance module.',
       color: '#d2a8ff', category: 'Knowledge', earnedBy: 'Read the Data Governance section in Africa Hub' },
 
     /* Workshop */
-    { id: 'workshop-host',      icon: '👩‍🏫', title: 'Workshop Host',
+    { id: 'workshop-host',      icon: 'layers',       title: 'Workshop Host',
       desc: 'Created and ran an OmicsLab training workshop session.',
       color: '#d29922', category: 'Workshop', earnedBy: 'Start a workshop session' },
-    { id: 'cohort-complete',    icon: '🎓', title: 'Cohort Trainer',
+    { id: 'cohort-complete',    icon: 'award',        title: 'Cohort Trainer',
       desc: 'Guided a cohort of 5 or more students through a workshop.',
       color: '#f7c948', category: 'Workshop', earnedBy: 'Track 5+ students in workshop mode' },
   ];
@@ -95,7 +95,7 @@ OmicsLab.Badges = (function () {
   }
 
   function _showToast(badge) {
-    OmicsLab.Notify.success(badge.icon + ' Badge unlocked: ' + badge.title, { duration: 5000 });
+    OmicsLab.Notify.success('Badge unlocked: ' + badge.title, { duration: 5000 });
   }
 
   function _refreshBadgeDisplay() {
@@ -120,7 +120,7 @@ OmicsLab.Badges = (function () {
             return `<div class="badge-item ${earned ? 'earned' : 'locked'}" title="${b.earnedBy}"
                        onclick="${earned ? `OmicsLab.Badges.viewCertificate('${b.id}')` : ''}">
               <div class="badge-circle" style="${earned ? `background:${b.color}20;border-color:${b.color}` : ''}">
-                <span class="badge-icon">${earned ? b.icon : '🔒'}</span>
+                <span class="badge-icon">${earned ? (OmicsLab.Icons?.svg(b.icon, 20) || '') : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'}</span>
               </div>
               <div class="badge-name">${b.title}</div>
               ${earned && ts ? `<div class="badge-date">${new Date(ts).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}</div>` : ''}
@@ -150,10 +150,10 @@ OmicsLab.Badges = (function () {
 
     modal.innerHTML = `
       <div class="cert-modal-box">
-        <button class="cert-close" onclick="document.getElementById('cert-modal').classList.remove('open')">✕</button>
+        <button class="cert-close" onclick="document.getElementById('cert-modal').classList.remove('open')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <div class="cert-paper" id="cert-paper">
           <div class="cert-header">
-            <div class="cert-logo">🧬 OmicsLab</div>
+            <div class="cert-logo">OmicsLab</div>
             <div class="cert-issuer">Interactive Omics Training Platform</div>
           </div>
           <div class="cert-divider"></div>
@@ -162,7 +162,7 @@ OmicsLab.Badges = (function () {
             <div class="cert-name" id="cert-name-display">OmicsLab User</div>
             <div class="cert-earned">has successfully earned the badge</div>
             <div class="cert-badge-display" style="color:${badge.color}">
-              <span style="font-size:2.5rem">${badge.icon}</span>
+              <span style="display:flex;align-items:center;justify-content:center">${OmicsLab.Icons?.svg(badge.icon, 40) || ''}</span>
               <div class="cert-badge-title" style="color:${badge.color}">${badge.title}</div>
             </div>
             <div class="cert-desc">${badge.desc}</div>
@@ -178,7 +178,7 @@ OmicsLab.Badges = (function () {
           <input id="cert-name-input" type="text" class="cert-name-field"
                  placeholder="Enter your name for the certificate"
                  oninput="document.getElementById('cert-name-display').textContent=this.value||'OmicsLab User'" />
-          <button class="cert-print-btn" onclick="OmicsLab.Badges.printCertificate()">🖨️ Print / Save PDF</button>
+          <button class="cert-print-btn" onclick="OmicsLab.Badges.printCertificate()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print / Save PDF</button>
           <button class="cert-close-btn" onclick="document.getElementById('cert-modal').classList.remove('open')">Close</button>
         </div>
       </div>`;

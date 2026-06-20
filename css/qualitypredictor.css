@@ -44,7 +44,7 @@
 
 /* ── Empty state ── */
 .qp-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 280px; color: #6e7681; text-align: center; background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 2rem; }
-.qp-empty-icon { font-size: 2.5rem; opacity: .4; }
+.qp-empty-icon { display: flex; align-items: center; justify-content: center; color: var(--text-muted,#8b949e); opacity: .5; }
 .qp-empty-text { font-size: .88rem; max-width: 280px; }
 
 /* ── Result header ── */

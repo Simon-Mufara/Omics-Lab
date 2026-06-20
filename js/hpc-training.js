@@ -159,14 +159,14 @@ OmicsLab.HPCTraining = (function () {
 
   /* ─── SLURM concepts ─── */
   const CONCEPTS = [
-    { icon: '⚙️', title: 'sbatch', body: 'Submits a batch script to SLURM. The scheduler reads the #SBATCH directives and places the job in a queue.' },
-    { icon: '📋', title: 'squeue', body: 'Lists jobs in the queue. Use squeue -u $USER to see your own jobs and their status (PENDING, RUNNING, COMPLETED).' },
-    { icon: '❌', title: 'scancel', body: 'Cancels a queued or running job by job ID. Usage: scancel <jobid>. Stops execution immediately.' },
-    { icon: '🖥️', title: 'sinfo', body: 'Shows available partitions and node states (idle, alloc, drain). Tells you which nodes are free.' },
-    { icon: '📊', title: 'seff', body: 'After a job completes, shows CPU and memory efficiency. A common result: 20% CPU efficiency means you over-requested.' },
-    { icon: '🐳', title: 'Singularity/Apptainer', body: 'HPC-safe containers. Unlike Docker, they run without root. Use singularity exec biotools.sif <cmd> inside your SLURM script.' },
-    { icon: '💾', title: '--mem vs --mem-per-cpu', body: '--mem sets total job memory; --mem-per-cpu sets per-core memory (total = cpus × mem-per-cpu). Never request more than the node has.' },
-    { icon: '⏱️', title: 'Wall time', body: 'The maximum clock time your job is allowed. Format: D-HH:MM:SS or HH:MM:SS. Jobs exceeding this are killed automatically.' }
+    { icon: 'cpu',       title: 'sbatch', body: 'Submits a batch script to SLURM. The scheduler reads the #SBATCH directives and places the job in a queue.' },
+    { icon: 'clipboard', title: 'squeue', body: 'Lists jobs in the queue. Use squeue -u $USER to see your own jobs and their status (PENDING, RUNNING, COMPLETED).' },
+    { icon: 'x-circle',  title: 'scancel', body: 'Cancels a queued or running job by job ID. Usage: scancel <jobid>. Stops execution immediately.' },
+    { icon: 'server',    title: 'sinfo', body: 'Shows available partitions and node states (idle, alloc, drain). Tells you which nodes are free.' },
+    { icon: 'bar-chart', title: 'seff', body: 'After a job completes, shows CPU and memory efficiency. A common result: 20% CPU efficiency means you over-requested.' },
+    { icon: 'package',   title: 'Singularity/Apptainer', body: 'HPC-safe containers. Unlike Docker, they run without root. Use singularity exec biotools.sif <cmd> inside your SLURM script.' },
+    { icon: 'database',  title: '--mem vs --mem-per-cpu', body: '--mem sets total job memory; --mem-per-cpu sets per-core memory (total = cpus × mem-per-cpu). Never request more than the node has.' },
+    { icon: 'clock',     title: 'Wall time', body: 'The maximum clock time your job is allowed. Format: D-HH:MM:SS or HH:MM:SS. Jobs exceeding this are killed automatically.' }
   ];
 
   /* ─── Render helpers ─── */
@@ -297,7 +297,7 @@ OmicsLab.HPCTraining = (function () {
   function _buildConceptsPanel() {
     const cards = CONCEPTS.map(c => `
       <div class="hpc-concept-card">
-        <div class="hpc-concept-icon">${c.icon}</div>
+        <div class="hpc-concept-icon">${OmicsLab.Icons?.svg(c.icon, 22) || ''}</div>
         <div class="hpc-concept-title">${c.title}</div>
         <div class="hpc-concept-body">${c.body}</div>
       </div>`).join('');
@@ -404,26 +404,26 @@ echo "Done: $(date)"</pre>
         <div>
           <div class="hpc-concept-grid" style="grid-template-columns:1fr">
             <div class="hpc-concept-card">
-              <div class="hpc-concept-icon">📦</div>
+              <div class="hpc-concept-icon">${OmicsLab.Icons?.svg('package', 22) || ''}</div>
               <div class="hpc-concept-title">Why not Docker on HPC?</div>
               <div class="hpc-concept-body">Docker requires a daemon running as root, which is a security
               risk on multi-tenant clusters. Singularity converts Docker images and runs them as the
               submitting user — no root needed.</div>
             </div>
             <div class="hpc-concept-card">
-              <div class="hpc-concept-icon">🔄</div>
+              <div class="hpc-concept-icon">${OmicsLab.Icons?.svg('rotate-cw', 22) || ''}</div>
               <div class="hpc-concept-title">Converting Docker → Singularity</div>
               <div class="hpc-concept-body"><span class="hpc-code-inline">singularity pull docker://biocontainers/fastqc:0.12</span>
               converts any Docker Hub or quay.io image to a <span class="hpc-code-inline">.sif</span> file you can cache and reuse.</div>
             </div>
             <div class="hpc-concept-card">
-              <div class="hpc-concept-icon">📁</div>
+              <div class="hpc-concept-icon">${OmicsLab.Icons?.svg('archive', 22) || ''}</div>
               <div class="hpc-concept-title">Bind mounts</div>
               <div class="hpc-concept-body">Use <span class="hpc-code-inline">--bind /scratch:/scratch</span> to make
               your HPC scratch storage visible inside the container. Without a bind, the container only sees its own filesystem.</div>
             </div>
             <div class="hpc-concept-card">
-              <div class="hpc-concept-icon">🌍</div>
+              <div class="hpc-concept-icon">${OmicsLab.Icons?.svg('globe', 22) || ''}</div>
               <div class="hpc-concept-title">Africa HPC resources</div>
               <div class="hpc-concept-body">H3ABioNet provides cluster access and training for African researchers.
               CHPC (South Africa), ILRI (Kenya), and WACCBIP (Ghana) all run SLURM clusters with Singularity.</div>
@@ -530,11 +530,11 @@ echo "Done: $(date)"</pre>
     if (!container) return;
 
     const tabs = [
-      { id: 'submit',     label: '⚙️ Job Builder' },
-      { id: 'queue',      label: '📋 Queue Monitor' },
-      { id: 'concepts',   label: '📖 SLURM Concepts' },
-      { id: 'engines',    label: '🔁 Workflow Engines' },
-      { id: 'containers', label: '🐳 Containers' }
+      { id: 'submit',     label: 'Job Builder' },
+      { id: 'queue',      label: 'Queue Monitor' },
+      { id: 'concepts',   label: 'SLURM Concepts' },
+      { id: 'engines',    label: 'Workflow Engines' },
+      { id: 'containers', label: 'Containers' }
     ];
 
     const tabBar = tabs.map(t =>

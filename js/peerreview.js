@@ -14,7 +14,7 @@ OmicsLab.PeerReview = (function () {
       name: 'Dr. Yewande Adeyemi',
       title: 'Biostatistician & Epidemiologist',
       institution: 'IHVN, Abuja',
-      avatar: '👩🏿‍💻',
+      avatar: 'YA',
       flag: '🇳🇬',
       focus: 'Statistical rigour · sample size · confounding · effect size reporting',
       color: '#58a6ff',
@@ -25,7 +25,7 @@ OmicsLab.PeerReview = (function () {
       name: 'Prof. Kagiso Motsepe',
       title: 'Genomics Methods Specialist',
       institution: 'KRISP, Durban',
-      avatar: '👨🏿‍🔬',
+      avatar: 'KM',
       flag: '🇿🇦',
       focus: 'Wet-lab reproducibility · QC thresholds · bioinformatics pipeline documentation',
       color: '#3fb950',
@@ -36,7 +36,7 @@ OmicsLab.PeerReview = (function () {
       name: 'Dr. Amira Hassan',
       title: 'African Genomics & Ethics Specialist',
       institution: 'ACEGID, Ede',
-      avatar: '👩🏽‍🔬',
+      avatar: 'AH',
       flag: '🇬🇭',
       focus: 'Africa-specific context · ethics · FAIR data · community benefit',
       color: '#bc8cff',
@@ -181,10 +181,10 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
 
   /* ─── Verdict label ─── */
   function _verdict(score) {
-    if (score >= 80) return { label: 'Accept', color: '#3fb950', icon: '✅' };
-    if (score >= 65) return { label: 'Minor Revision', color: '#e3b341', icon: '🔄' };
-    if (score >= 45) return { label: 'Major Revision', color: '#f97316', icon: '⚠️' };
-    return { label: 'Reject', color: '#ff6b6b', icon: '❌' };
+    if (score >= 80) return { label: 'Accept', color: '#3fb950', icon: OmicsLab.Icons?.svg('check-circle',14)||'' };
+    if (score >= 65) return { label: 'Minor Revision', color: '#e3b341', icon: OmicsLab.Icons?.svg('rotate-cw',14)||'' };
+    if (score >= 45) return { label: 'Major Revision', color: '#f97316', icon: OmicsLab.Icons?.svg('alert-triangle',14)||'' };
+    return { label: 'Reject', color: '#ff6b6b', icon: OmicsLab.Icons?.svg('x-circle',14)||'' };
   }
 
   /* ─── Render reviewer card ─── */
@@ -203,7 +203,7 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
     return `
       <div class="pr-reviewer-card" style="--pr-color:${reviewer.color}">
         <div class="pr-rev-header">
-          <div class="pr-rev-avatar">${reviewer.avatar}</div>
+          <div class="pr-rev-avatar" style="background:${reviewer.color}">${reviewer.avatar}</div>
           <div class="pr-rev-info">
             <div class="pr-rev-name">${reviewer.name} ${reviewer.flag}</div>
             <div class="pr-rev-title">${reviewer.title} · ${reviewer.institution}</div>
@@ -322,7 +322,7 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
               <div class="pr-bios-title">Your Reviewers</div>
               ${REVIEWERS.map(r => `
                 <div class="pr-bio-card" style="--pr-color:${r.color}">
-                  <div class="pr-bio-avatar">${r.avatar}</div>
+                  <div class="pr-bio-avatar" style="background:${r.color}">${r.avatar}</div>
                   <div class="pr-bio-info">
                     <div class="pr-bio-name">${r.name} ${r.flag}</div>
                     <div class="pr-bio-title">${r.title}</div>
@@ -335,7 +335,7 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
 
           <div class="pr-right" id="pr-output">
             <div class="pr-empty-state">
-              <div class="pr-empty-icon">📋</div>
+              <div class="pr-empty-icon">${OmicsLab.Icons?.svg('clipboard',28)||''}</div>
               <div class="pr-empty-title">Waiting for your manuscript</div>
               <div class="pr-empty-text">Paste your text on the left and click Submit for Peer Review. The more detail you include, the more specific the feedback.</div>
               <div class="pr-checklist">

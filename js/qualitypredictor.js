@@ -221,7 +221,7 @@ OmicsLab.QualityPredictor = (function () {
                 </select>
               </div>
               <div class="qp-inputs-grid">${metricsHtml}</div>
-              <div class="qp-rin-note">💡 Leave RIN blank for DNA-seq (ATAC-seq, WGS) — only required for RNA-seq.</div>
+              <div class="qp-rin-note">${OmicsLab.Icons?.svg('lightbulb',12)||''} Leave RIN blank for DNA-seq (ATAC-seq, WGS) — only required for RNA-seq.</div>
               <button class="qp-run-btn" onclick="OmicsLab.QualityPredictor._run()">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 Predict Quality
@@ -241,7 +241,7 @@ OmicsLab.QualityPredictor = (function () {
 
           <div class="qp-right" id="qp-output">
             <div class="qp-empty-state">
-              <div class="qp-empty-icon">🔬</div>
+              <div class="qp-empty-icon">${OmicsLab.Icons?.svg('activity',32)||''}</div>
               <div class="qp-empty-text">Enter your QC metrics or load a preset, then click <strong>Predict Quality</strong></div>
             </div>
           </div>

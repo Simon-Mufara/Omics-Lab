@@ -12,7 +12,7 @@ OmicsLab.Career = (function () {
     bioinformatician: {
       id: 'bioinformatician',
       title: 'Bioinformatician',
-      icon: '💻',
+      icon: 'cpu',
       color: '#58a6ff',
       tagline: 'Develop pipelines, analyse multi-omics data, publish algorithms',
       demand: 'Very High',
@@ -48,7 +48,7 @@ OmicsLab.Career = (function () {
     wet_lab_scientist: {
       id: 'wet_lab_scientist',
       title: 'Wet Lab Genomics Scientist',
-      icon: '🧪',
+      icon: 'flask',
       color: '#3fb950',
       tagline: 'Extract DNA/RNA, build libraries, operate sequencers, interpret QC',
       demand: 'High',
@@ -84,7 +84,7 @@ OmicsLab.Career = (function () {
     public_health_genomicist: {
       id: 'public_health_genomicist',
       title: 'Public Health Genomicist',
-      icon: '🌍',
+      icon: 'globe',
       color: '#f97316',
       tagline: 'Translate genomic surveillance into policy and outbreak response',
       demand: 'Very High (post-COVID surge)',
@@ -120,7 +120,7 @@ OmicsLab.Career = (function () {
     clinical_genomicist: {
       id: 'clinical_genomicist',
       title: 'Clinical Genomicist',
-      icon: '🏥',
+      icon: 'heart-pulse',
       color: '#bc8cff',
       tagline: 'Apply genomics to patient diagnosis, precision medicine, and pharmacogenomics',
       demand: 'High (growing rapidly)',
@@ -156,7 +156,7 @@ OmicsLab.Career = (function () {
     data_scientist: {
       id: 'data_scientist',
       title: 'Omics Data Scientist / ML Researcher',
-      icon: '📊',
+      icon: 'bar-chart',
       color: '#e3b341',
       tagline: 'Build ML models for drug discovery, variant prioritisation, and omics integration',
       demand: 'High (strong industry pull)',
@@ -196,7 +196,7 @@ OmicsLab.Career = (function () {
     {
       id: 'q_role',
       text: 'What best describes your current background?',
-      icon: '🎓',
+      icon: 'award',
       options: [
         { val: 'lab', label: 'I work or study in a wet lab (bench work, experiments)' },
         { val: 'comp', label: 'I have a computational / IT background (coding, data analysis)' },
@@ -207,7 +207,7 @@ OmicsLab.Career = (function () {
     {
       id: 'q_passion',
       text: 'Which area excites you the most?',
-      icon: '🔥',
+      icon: 'flame',
       options: [
         { val: 'pipelines', label: 'Building computational pipelines and analysing big datasets' },
         { val: 'bench', label: 'Working with samples, instruments, and generating data in the lab' },
@@ -218,7 +218,7 @@ OmicsLab.Career = (function () {
     {
       id: 'q_skill_level',
       text: 'How would you rate your current genomics skills?',
-      icon: '📈',
+      icon: 'trending-up',
       options: [
         { val: 'beginner', label: 'Beginner — just starting out, mostly self-study' },
         { val: 'some', label: 'Some experience — I\'ve run a few analyses or bench experiments' },
@@ -229,7 +229,7 @@ OmicsLab.Career = (function () {
     {
       id: 'q_goal',
       text: 'What is your primary career goal?',
-      icon: '🎯',
+      icon: 'target',
       options: [
         { val: 'academia', label: 'Academic research — publish, lecture, supervise PhD students' },
         { val: 'industry', label: 'Industry or pharma — higher salary, product-driven work' },
@@ -240,7 +240,7 @@ OmicsLab.Career = (function () {
     {
       id: 'q_africa',
       text: 'Which African challenge motivates you most?',
-      icon: '🌍',
+      icon: 'globe',
       options: [
         { val: 'infectious', label: 'Infectious disease surveillance and outbreak response' },
         { val: 'ncd', label: 'Non-communicable diseases — diabetes, hypertension, cancer in Africa' },
@@ -310,7 +310,7 @@ OmicsLab.Career = (function () {
           <div class="cp-stats-row">
             ${Object.values(PATHS).map(p => `
               <div class="cp-path-pill" style="--cp-color:${p.color}">
-                <span>${p.icon}</span>
+                <span>${OmicsLab.Icons?.svg(p.icon, 14) || ''}</span>
                 <span>${p.title.split(' ')[0]}</span>
               </div>`).join('')}
           </div>
@@ -341,7 +341,7 @@ OmicsLab.Career = (function () {
           <span class="cp-progress-label">Question ${_currentQ + 1} of ${QUESTIONS.length}</span>
         </div>
         <div class="cp-question-card">
-          <div class="cp-q-icon">${q.icon}</div>
+          <div class="cp-q-icon">${OmicsLab.Icons?.svg(q.icon, 28) || ''}</div>
           <div class="cp-q-text">${q.text}</div>
           <div class="cp-q-options">
             ${q.options.map(opt => `
@@ -423,7 +423,7 @@ OmicsLab.Career = (function () {
     body.innerHTML = `
       <div class="cp-result">
         <div class="cp-result-hero" style="--cp-color:${p.color}">
-          <div class="cp-result-icon">${p.icon}</div>
+          <div class="cp-result-icon">${OmicsLab.Icons?.svg(p.icon, 36) || ''}</div>
           <div>
             <div class="cp-result-match">Your best match</div>
             <h3 class="cp-result-title">${p.title}</h3>
@@ -443,7 +443,7 @@ OmicsLab.Career = (function () {
               const path = PATHS[id];
               const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
               return `<div class="cp-score-row">
-                <span class="cp-score-icon">${path.icon}</span>
+                <span class="cp-score-icon">${OmicsLab.Icons?.svg(path.icon, 16) || ''}</span>
                 <span class="cp-score-name">${path.title}</span>
                 <div class="cp-score-bar-wrap">
                   <div class="cp-score-bar-fill" style="width:${pct}%;background:${path.color}"></div>
@@ -528,7 +528,7 @@ OmicsLab.Career = (function () {
                 ${[_result.secondary, _result.tertiary].map(alt => `
                   <button class="cp-also-card" onclick="OmicsLab.Career._viewPath('${alt.id}')"
                           style="--cp-color:${alt.color}">
-                    <span class="cp-also-icon">${alt.icon}</span>
+                    <span class="cp-also-icon">${OmicsLab.Icons?.svg(alt.icon, 20) || ''}</span>
                     <div>
                       <div class="cp-also-title">${alt.title}</div>
                       <div class="cp-also-tagline">${alt.tagline}</div>

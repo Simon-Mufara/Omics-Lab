@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Page Router
    Pages: home · lab · learn · research · africa · analysis · terminal · ask
 
@@ -14,19 +14,19 @@ OmicsLab.Router = (function () {
   const PAGES = {
     home: {
       label: 'Home',
-      icon: '🏠',
+      icon: 'layers',
       sections: ['features-section', 'changelog-section'], /* home-only sections */
     },
     lab: {
       label: 'Lab',
-      icon: '🧪',
+      icon: 'flask',
       color: '#3fb950',
       tagline: 'Interactive wet-lab simulations with live QC feedback',
       sections: ['domain-section', 'sandbox-section', 'sabotage-section', 'compare-section'],
     },
     learn: {
       label: 'Learn',
-      icon: '📚',
+      icon: 'file-text',
       color: '#58a6ff',
       tagline: 'Diseases, tools, instruments, pipelines, and structured curriculum tracks',
       sections: [
@@ -38,280 +38,280 @@ OmicsLab.Router = (function () {
     },
     research: {
       label: 'Research',
-      icon: '🔭',
+      icon: 'search',
       color: '#bc8cff',
       tagline: 'Design studies, submit metadata, run workshops',
       sections: ['research-mode-section', 'repro-hub-section', 'workshop-section'],
     },
     africa: {
       label: 'Africa',
-      icon: '🌍',
+      icon: 'globe',
       color: '#f97316',
       tagline: 'Science Hub, Genomics Map, data governance, and training across 54 nations',
       sections: ['africa-hub-section', 'africa-map-section'],
     },
     analysis: {
       label: 'Analysis',
-      icon: '📊',
+      icon: 'bar-chart',
       color: '#e3b341',
       tagline: 'FASTQ QC, FASTA tools, VCF explorer, expression matrix, MSA viewer — all in your browser',
       sections: ['analysis-section'],
     },
     terminal: {
       label: 'Terminal',
-      icon: '🖥️',
+      icon: 'cpu',
       color: '#3fb950',
       tagline: 'Simulate real pipelines in the browser, or launch a GitHub Codespace to run actual tools on your data',
       sections: ['terminal-section'],
     },
     ask: {
       label: 'Ask',
-      icon: '💬',
+      icon: 'brain',
       color: '#ff6b6b',
       tagline: '55+ pre-written offline answers on workflows, tools, diseases, and African genomics',
       sections: ['qa-section'],
     },
     outbreak: {
       label: 'Outbreak',
-      icon: '🔴',
+      icon: 'alert-triangle',
       color: '#f97316',
       tagline: 'Simulate a genomic outbreak across Africa — sequence samples, build phylo trees, trace the index case',
       sections: ['outbreak-sim-section'],
     },
     datasets: {
       label: 'Datasets',
-      icon: '🗂️',
+      icon: 'database',
       color: '#58a6ff',
       tagline: 'Browse 20 curated real African omics datasets from NCBI SRA, EBI ENA, and GISAID',
       sections: ['datasets-section'],
     },
     career: {
       label: 'Career',
-      icon: '🧭',
+      icon: 'target',
       color: '#bc8cff',
       tagline: 'Discover your ideal genomics career path — personalised quiz, skills roadmap, and African employer guide',
       sections: ['career-section'],
     },
     mentor: {
       label: 'AI Mentor',
-      icon: '🧬',
+      icon: 'dna',
       color: '#3fb950',
       tagline: '176+ expert answers on omics, tools, African genomics, and careers — fully offline, no API',
       sections: ['mentor-section'],
     },
     protocols: {
       label: 'Protocols',
-      icon: '🔬',
+      icon: 'microscope',
       color: '#f97316',
       tagline: 'Browse, fork, and remix community-contributed lab protocols from African genomics researchers',
       sections: ['protocols-section'],
     },
     collab: {
       label: 'Collaborate',
-      icon: '🤝',
+      icon: 'link',
       color: '#58a6ff',
       tagline: 'Real-time WebRTC peer-to-peer lab sessions — work with colleagues live, no server required',
       sections: ['collab-section'],
     },
     grant: {
       label: 'Grant Generator',
-      icon: '📝',
+      icon: 'file-text',
       color: '#e3b341',
       tagline: 'Generate NIH Fogarty, Wellcome Trust, and H3Africa grant sections — Aims, Methods, Budget, Ethics — fully offline',
       sections: ['grant-section'],
     },
     leaderboard: {
       label: 'Leaderboard',
-      icon: '🏆',
+      icon: 'award',
       color: '#e3b341',
       tagline: 'Global rankings, streaks, and a world map of 80+ OmicsLab learners across 30+ countries',
       sections: ['leaderboard-section'],
     },
     debugger: {
       label: 'Protocol Debugger',
-      icon: '🔬',
+      icon: 'microscope',
       color: '#ff6b6b',
       tagline: 'Paste your QC report or describe a failed experiment — 200+ rules return root cause, biology, and corrective actions',
       sections: ['debugger-section'],
     },
     alerts: {
       label: 'Outbreak Alerts',
-      icon: '🚨',
+      icon: 'alert-triangle',
       color: '#f97316',
       tagline: 'Live African disease outbreak feed with genomic surveillance notes, readiness scores, and direct links to OmicsLab workflows',
       sections: ['alerts-section'],
     },
     phylo: {
       label: 'Phylo Tree Builder',
-      icon: '🌿',
+      icon: 'git-branch',
       color: '#3fb950',
       tagline: 'Build Neighbor-Joining and UPGMA phylogenetic trees from FASTA sequences — SVG tree, distance heatmap, Newick export, all offline',
       sections: ['phylo-section'],
     },
     peerreview: {
       label: 'Peer Review Simulator',
-      icon: '📋',
+      icon: 'clipboard',
       color: '#bc8cff',
       tagline: '3 virtual reviewers — biostatistician, genomics methods specialist, African ethics expert — give rubric-based critiques against 40+ evidence quality indicators',
       sections: ['peerreview-section'],
     },
     heatmap: {
       label: 'Expression Visualiser',
-      icon: '🔥',
+      icon: 'flame',
       color: '#e3b341',
       tagline: 'Paste DESeq2 or edgeR output — get a volcano plot, top-gene heatmap, and ranked DE table instantly, all offline',
       sections: ['heatmap-section'],
     },
     journalclub: {
       label: 'Journal Club',
-      icon: '📰',
+      icon: 'file-text',
       color: '#3fb950',
       tagline: '20+ landmark African genomics papers with plain-language summaries, key findings, Africa context, and discussion questions',
       sections: ['journalclub-section'],
     },
     citations: {
       label: 'Citation Manager',
-      icon: '📚',
+      icon: 'archive',
       color: '#58a6ff',
       tagline: 'Build your reference library offline — APA, Vancouver, Nature, BibTeX, RIS export — all saved in your browser',
       sections: ['citations-section'],
     },
     quizbattle: {
       label: 'Quiz Battle',
-      icon: '⚔️',
+      icon: 'zap',
       color: '#ff6b6b',
       tagline: '65+ questions across 12 omics categories — solo timed practice or same-device multiplayer via BroadcastChannel',
       sections: ['quizbattle-section'],
     },
     qualitypredictor: {
       label: 'Quality Predictor',
-      icon: '🔬',
+      icon: 'check-circle',
       color: '#3fb950',
       tagline: 'Enter QC metrics — logistic regression over GATK, ENCODE and H3Africa thresholds returns PASS/FAIL with per-metric root-cause advice',
       sections: ['qualitypredictor-section'],
     },
     variantinterp: {
       label: 'Variant Interpreter',
-      icon: '🧬',
+      icon: 'dna',
       color: '#bc8cff',
       tagline: 'Paste a VCF line or HGVS — ACMG/AMP 2015 criteria, gnomAD African AF, and ClinVar significance for 20+ Africa-relevant disease variants',
       sections: ['variantinterp-section'],
     },
     primerdesign: {
       label: 'Primer Design',
-      icon: '🔬',
+      icon: 'scissors',
       color: '#3fb950',
       tagline: 'Auto-design or validate PCR primer pairs — Wallace Tm, GC%, self-complementarity, dimer checks, SVG alignment diagram, 6 African pathogen gene templates',
       sections: ['primerdesign-section'],
     },
     nexus: {
       label: 'Nexus',
-      icon: '💬',
+      icon: 'link',
       color: '#58a6ff',
       tagline: 'Research communication hub — persistent channels, threaded discussions, @mentions, and pinned resources for African genomics communities',
       sections: ['nexus-section'],
     },
     teams: {
       label: 'Teams',
-      icon: '📹',
+      icon: 'link',
       color: '#58a6ff',
       tagline: 'Research video meetings — join rooms, share screens, raise hands, and collaborate live with the African genomics network',
       sections: ['teams-section'],
     },
     paperhub: {
       label: 'PaperHub',
-      icon: '📄',
+      icon: 'file-text',
       color: '#bc8cff',
       tagline: 'African genomics research library — browse, search, save, cite, and discuss 10+ landmark papers across WGS, outbreak genomics, and population genetics',
       sections: ['paperhub-section'],
     },
     profile: {
       label: 'Profile',
-      icon: '👤',
+      icon: 'award',
       color: '#3fb950',
       tagline: 'Your learning journey, badges, curriculum progress, and personalised recommendations',
       sections: ['profile-section'],
     },
     pubmed: {
       label: 'PubMed',
-      icon: '📰',
+      icon: 'search',
       color: '#58a6ff',
       tagline: 'Live PubMed search — 36M citations with Africa-first filter, save to PaperHub, open in Article Analyser',
       sections: ['pubmed-section'],
     },
     'gene-lookup': {
       label: 'Gene Lookup',
-      icon: '🔍',
+      icon: 'search',
       color: '#3fb950',
       tagline: 'Ensembl gene annotation — coordinates, transcripts, phenotypes, cross-links to gnomAD, AlphaFold, ClinVar',
       sections: ['gene-lookup-section'],
     },
     protein: {
       label: 'Protein Viewer',
-      icon: '🧬',
+      icon: 'dna',
       color: '#bc8cff',
       tagline: 'AlphaFold structure predictions — pLDDT confidence chart, 3D viewer, PDB/mmCIF download',
       sections: ['protein-section'],
     },
     uniprot: {
       label: 'UniProt',
-      icon: '🔖',
+      icon: 'tag',
       color: '#e3b341',
       tagline: 'Search 215M+ proteins — Swiss-Prot curated function, disease annotations, cross-links',
       sections: ['uniprot-section'],
     },
     targets: {
       label: 'Open Targets',
-      icon: '🎯',
+      icon: 'target',
       color: '#bc8cff',
       tagline: 'Disease-gene associations — genetic, drug, pathway and literature evidence scores',
       sections: ['open-targets-section'],
     },
     string: {
       label: 'STRING Network',
-      icon: '🕸️',
+      icon: 'git-branch',
       color: '#3fb950',
       tagline: 'Protein-protein interaction network — experimental, co-expression, text-mining scores',
       sections: ['string-section'],
     },
     preprints: {
       label: 'Preprints',
-      icon: '📑',
+      icon: 'file-text',
       color: '#58a6ff',
       tagline: 'bioRxiv & medRxiv preprint feed — Africa-first filter, analyse in Article Analyser',
       sections: ['preprints-section'],
     },
     pathways: {
       label: 'Pathways',
-      icon: '🔬',
+      icon: 'git-branch',
       color: '#3fb950',
       tagline: 'KEGG disease pathway maps + Reactome browser — Africa disease focus, gene overlay, keyword search',
       sections: ['pathways-section'],
     },
     sra: {
       label: 'SRA Browser',
-      icon: '🗄️',
+      icon: 'database',
       color: '#e3b341',
       tagline: 'Search NCBI Sequence Read Archive — curated Africa datasets, download instructions, SRA Toolkit guide',
       sections: ['sra-section'],
     },
     ai: {
       label: 'AI Assistant',
-      icon: '🤖',
+      icon: 'brain',
       color: '#58a6ff',
       tagline: 'Claude-powered genomics expert — streaming answers, Africa-focused system prompt, context-aware suggestions',
       sections: ['assistant-section'],
     },
     thesis: {
       label: 'Thesis Coach',
-      icon: '📝',
+      icon: 'file-text',
       color: '#bc8cff',
       tagline: 'AI-powered thesis writing — 5-chapter tracker, AI draft generation, abstract writer, word-count progress',
       sections: ['thesis-section'],
     },
     bionlp: {
       label: 'BioNLP',
-      icon: '🔬',
+      icon: 'brain',
       color: '#3fb950',
       tagline: 'Offline biomedical entity recognition — genes, diseases, variants, drugs, Africa terms — fully browser-side, no API',
       sections: ['bionlp-section'],
@@ -319,42 +319,42 @@ OmicsLab.Router = (function () {
     /* ── Part 3: Advanced Analysis Tools ── */
     codon: {
       label: 'Codon Usage',
-      icon: '🧬',
+      icon: 'dna',
       color: '#58a6ff',
       tagline: 'RSCU codon usage bias analysis — compare your sequence against human, M. tuberculosis, and P. falciparum reference tables',
       sections: ['codon-section'],
     },
     nanopore: {
       label: 'Nanopore QC',
-      icon: '🔬',
+      icon: 'activity',
       color: '#3fb950',
       tagline: 'Oxford Nanopore sequencing QC — paste NanoStat output or enter metrics to get PASS/WARN/FAIL thresholds for field sequencing',
       sections: ['nanopore-section'],
     },
     amr: {
       label: 'AMR Profiler',
-      icon: '🛡️',
+      icon: 'shield',
       color: '#ff6b6b',
       tagline: 'Antimicrobial resistance profiling — MDR-TB, XDR-TB, CRE, ESBL classification from mutation profiles',
       sections: ['amr-section'],
     },
     kraken: {
       label: 'Metagenomics',
-      icon: '🦠',
+      icon: 'virus',
       color: '#e3b341',
       tagline: 'Kraken2-style metagenomic taxonomy simulation — 6 African field sample profiles with donut chart and TSV export',
       sections: ['kraken-section'],
     },
     popstruct: {
       label: 'Pop Structure',
-      icon: '📊',
+      icon: 'bar-chart',
       color: '#bc8cff',
       tagline: 'Population structure — ADMIXTURE Q-matrix stacked bars and PCA scatter for AWI-Gen, 1000G African, and SCD cohorts',
       sections: ['popstruct-section'],
     },
     'genome-browser': {
       label: 'Genome Browser',
-      icon: '🔭',
+      icon: 'layers',
       color: '#58a6ff',
       tagline: 'IGV-style genome browser — HBB, G6PD, APOL1, CYP2D6 loci with depth, variants, and gene annotation tracks',
       sections: ['genome-browser-section'],
@@ -362,21 +362,21 @@ OmicsLab.Router = (function () {
     /* ── Part 4: Community ── */
     directory: {
       label: 'Researcher Directory',
-      icon: '👥',
+      icon: 'globe',
       color: '#58a6ff',
       tagline: 'Africa bioinformatics researcher directory — search by country, role, and focus area, register your profile',
       sections: ['directory-section'],
     },
     hackathon: {
       label: 'Hackathon',
-      icon: '⚡',
+      icon: 'zap',
       color: '#f97316',
       tagline: 'Africa bioinformatics hackathon platform — virtual challenges, team formation, leaderboard',
       sections: ['hackathon-section'],
     },
     mentorship: {
       label: 'Mentorship',
-      icon: '🤝',
+      icon: 'link',
       color: '#bc8cff',
       tagline: 'Peer mentorship network — connect African bioinformatics students with experienced researchers',
       sections: ['mentorship-section'],
@@ -384,28 +384,28 @@ OmicsLab.Router = (function () {
     /* ── Part 5: Africa-First ── */
     h3africa: {
       label: 'H3Africa Portal',
-      icon: '🌍',
+      icon: 'globe',
       color: '#f97316',
       tagline: 'H3Africa research portal — projects, datasets, tools, and training resources for African genomics',
       sections: ['h3africa-section'],
     },
     'pathogen-tracker': {
       label: 'Pathogen Tracker',
-      icon: '🛡️',
+      icon: 'shield',
       color: '#ff6b6b',
       tagline: 'Africa pathogen genomics tracker — SARS-CoV-2, TB, malaria, mpox, and cholera surveillance across 30+ countries',
       sections: ['pathogen-tracker-section'],
     },
     glossary: {
       label: 'Glossary',
-      icon: '📖',
+      icon: 'file-text',
       color: '#e3b341',
       tagline: 'Multilingual bioinformatics glossary — 200+ terms in English, Swahili, Hausa, Yoruba, Amharic, and French',
       sections: ['glossary-section'],
     },
     'offline-data': {
       label: 'Offline Data',
-      icon: '📦',
+      icon: 'package',
       color: '#58a6ff',
       tagline: 'Curated offline data packages — H3Africa, malaria, TB, sickle cell, and ancestry reference data for low-bandwidth environments',
       sections: ['offline-data-section'],
@@ -413,29 +413,65 @@ OmicsLab.Router = (function () {
     /* ── Part 6: Research Tools ── */
     labnotebook: {
       label: 'Lab Notebook',
-      icon: '📓',
+      icon: 'clipboard',
       color: '#3fb950',
       tagline: 'Digital lab notebook — structured entries for experiments, analyses, protocols, and results, stored offline',
       sections: ['labnotebook-section'],
     },
     'pipeline-gen': {
       label: 'Pipeline Gen',
-      icon: '⚙️',
+      icon: 'git-branch',
       color: '#bc8cff',
       tagline: 'Snakemake and Nextflow DSL2 pipeline generator — WGS GATK4, RNA-seq, and Africa GWAS boilerplate',
       sections: ['pipeline-gen-section'],
     },
     metaanalysis: {
       label: 'Meta-analysis',
-      icon: '📈',
+      icon: 'trending-up',
       color: '#e3b341',
       tagline: 'Fixed and random effects meta-analysis with forest plot — designed for GWAS across African cohorts',
       sections: ['metaanalysis-section'],
     },
+    /* ── Part 9: New Modules (Prompts 41-60) ── */
+    'skill-tree': {
+      label: 'Skill Tree',
+      icon: 'zap',
+      color: '#e3b341',
+      tagline: 'Adaptive skill tree & XP engine — unlock bioinformatics skills, track your level, earn XP through every simulation and quiz',
+      sections: ['skill-tree-section'],
+    },
+    'variant-atlas': {
+      label: 'Variant Atlas',
+      icon: 'dna',
+      color: '#bc8cff',
+      tagline: 'African Genomics Variant Atlas — 40+ clinically significant variants with Africa-specific allele frequencies, ACMG classifications, and disease context',
+      sections: ['variant-atlas-section'],
+    },
+    'clinical-decision': {
+      label: 'Clinical Genomics',
+      icon: 'activity',
+      color: '#ff6b6b',
+      tagline: 'Clinical genomics decision aid — select patient phenotype terms and get Africa-appropriate genomic test recommendations with diagnostic yield estimates',
+      sections: ['clinical-decision-section'],
+    },
+    'one-health': {
+      label: 'One Health',
+      icon: 'globe',
+      color: '#3fb950',
+      tagline: 'One Health surveillance dashboard — human-animal-environment disease nexus across Africa, 15 zoonotic diseases, climate & genomic drivers',
+      sections: ['one-health-section'],
+    },
+    institution: {
+      label: 'Institution',
+      icon: 'users',
+      color: '#58a6ff',
+      tagline: 'Institution admin mode — create student cohorts, manage 12-week curriculum, track progress offline, export CSV cohort reports',
+      sections: ['institution-section'],
+    },
     /* ── Part 7: Platform ── */
     'api-docs': {
       label: 'Developer API',
-      icon: '⌨️',
+      icon: 'cpu',
       color: '#58a6ff',
       tagline: 'OmicsLab developer API — embed modules, set context, build extensions using the public JavaScript API',
       sections: ['api-docs-section'],
@@ -443,56 +479,84 @@ OmicsLab.Router = (function () {
     /* ── Part 8: Impact ── */
     certification: {
       label: 'Certification',
-      icon: '🎓',
+      icon: 'award',
       color: '#e3b341',
       tagline: 'OmicsLab certification program — track learning progress, earn badges, download a verifiable certificate',
       sections: ['certification-section'],
     },
     impact: {
       label: 'Impact',
-      icon: '📡',
+      icon: 'globe',
       color: '#3fb950',
       tagline: 'Impact Observatory — OmicsLab\'s reach across Africa: users, countries, analyses, and tool usage metrics',
       sections: ['impact-section'],
     },
     partners: {
       label: 'About & Inspiration',
-      icon: '🌍',
+      icon: 'globe',
       color: '#58a6ff',
       tagline: 'About OmicsLab — mission, values, and the open-source community that makes this platform possible',
       sections: ['partners-section'],
     },
     'knowledge-graph': {
       label: 'Knowledge Graph',
-      icon: '🕸️',
+      icon: 'git-branch',
       color: '#bc8cff',
       tagline: 'Africa Genomics Knowledge Graph — diseases, genes, tools, populations, and countries as an interactive force-directed network',
       sections: ['knowledge-graph-section'],
     },
+    'virtual-lab': {
+      label: 'Virtual Lab',
+      icon: 'microscope',
+      color: '#3fb950',
+      tagline: '360° virtual genomics laboratory — explore real instruments, understand how they are used in African genomics research',
+      sections: ['virtual-lab-section'],
+    },
+    gwas: {
+      label: 'GWAS Suite',
+      icon: 'bar-chart',
+      color: '#58a6ff',
+      tagline: 'GWAS analysis pipeline for African cohorts — Manhattan plots, QQ plots, PCA, PLINK2/REGENIE commands, AWI-Gen & H3Africa reference panels',
+      sections: ['gwas-section'],
+    },
+    pharmacogenomics: {
+      label: 'Pharmacogenomics',
+      icon: 'activity',
+      color: '#f97316',
+      tagline: 'Drug-gene interactions in African populations — CYP2B6 efavirenz, G6PD primaquine, NAT2 isoniazid, SLCO1B1 statin — CPIC/WHO clinical recommendations',
+      sections: ['pgx-section'],
+    },
+    'network-hub': {
+      label: 'Genomics Network',
+      icon: 'globe',
+      color: '#3fb950',
+      tagline: 'African Genomics Network — H3Africa, AWI-Gen, KEMRI, SANBI, AHRI, PANDORA, Africa CDC and 18 major research institutions across 55 countries',
+      sections: ['network-hub-section'],
+    },
     settings: {
       label: 'Settings',
-      icon: '⚙️',
+      icon: 'cpu',
       color: '#8b949e',
       tagline: 'Platform preferences — appearance, language, API keys, data privacy, and about',
       sections: ['settings-section'],
     },
     'output-tracker': {
       label: 'Output Tracker',
-      icon: '📋',
+      icon: 'clipboard',
       color: '#3fb950',
       tagline: 'Track your publications, datasets, talks, posters, and grants — CSV and BibTeX export',
       sections: ['output-tracker-section'],
     },
     privacy: {
       label: 'Privacy Policy',
-      icon: '🔒',
+      icon: 'lock-open',
       color: '#8b949e',
       tagline: 'How OmicsLab handles your data — fully local, never shared',
       sections: ['privacy-section'],
     },
     terms: {
       label: 'Terms of Use',
-      icon: '📄',
+      icon: 'file-text',
       color: '#8b949e',
       tagline: 'Terms and conditions for using the OmicsLab platform — free for education and research',
       sections: ['terms-section'],
@@ -522,7 +586,12 @@ OmicsLab.Router = (function () {
     'api-docs': 'tools',
     /* Part 8 */
     certification: 'train', impact: 'research', partners: 'research',
+    /* Part 9 */
+    'skill-tree': 'train', 'variant-atlas': 'tools', 'clinical-decision': 'tools',
+    'one-health': 'research', institution: 'train',
     ask: 'ask', mentor: 'ask',
+    'virtual-lab': 'tools',
+    gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -565,6 +634,7 @@ OmicsLab.Router = (function () {
   function _animateIn(el) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
                  || document.documentElement.dataset.reduceMotion === 'true';
+    el.classList.add('visible'); /* ensure reveal sections become opacity:1 */
     el.classList.remove('page-entering');
     void el.offsetWidth;
     el.classList.add('page-entering');
@@ -649,6 +719,7 @@ OmicsLab.Router = (function () {
 
     /* Track page for personalised dashboard */
     if (page !== 'home') OmicsLab.Dashboard?.trackPage(page);
+    OmicsLab.Analytics?.page(page);
 
     /* Sync mobile bottom tab active state */
     OmicsLab.MobileNav?.syncPage(page);
@@ -668,16 +739,51 @@ OmicsLab.Router = (function () {
     window.scrollTo({ top: 0, behavior: 'instant' });
 
     /* Re-init modules that need it on first visit */
-    /* _si: safe init — catches errors and shows error card instead of blank page */
-    const _si = (mod, sec, name) => { try { mod?.init(); } catch(e) { OmicsLab.Error?.renderPageError(sec, name, e); } };
+    /* _si: safe init — shows skeleton, inits module, hides skeleton, catches errors */
+    const _si = (mod, sec, name) => {
+      OmicsLab.Skeleton?.beforeInit(sec);
+      try { mod?.init(); } catch(e) { OmicsLab.Error?.renderPageError(sec, name, e); }
+      OmicsLab.Skeleton?.hide(sec);
+    };
 
     if (page === 'analysis' && OmicsLab.Analysis) {
       const el = document.getElementById('analysis-studio-content');
       if (el && !el.querySelector('.az-tabs')) try { OmicsLab.Analysis.init(); } catch(e) { OmicsLab.Error?.renderPageError('analysis-studio-content','Analysis',e); }
     }
-    if (page === 'terminal' && OmicsLab.Terminal) {
+    if (page === 'terminal') {
       const el = document.getElementById('terminal-studio-content');
-      if (el && !el.querySelector('.terminal-page')) try { OmicsLab.Terminal.init(); } catch(e) { OmicsLab.Error?.renderPageError('terminal-studio-content','Terminal',e); }
+      if (el && !el.querySelector('.terminal-page')) {
+        if (OmicsLab.Terminal) {
+          try { OmicsLab.Terminal.init(); } catch(e) {
+            el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#f85149;font-family:monospace">
+              <b>Terminal error:</b> ${String(e)}<br><br>
+              <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener"
+                 style="color:#58a6ff">Open in GitHub Codespaces</a></div>`;
+          }
+        } else {
+          el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#8b949e;font-family:monospace">
+            <b style="color:#f85149">Terminal module not loaded.</b><br><br>
+            Check browser console for errors in terminal.js<br><br>
+            <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener"
+               style="color:#58a6ff">Use GitHub Codespaces instead</a></div>`;
+        }
+      }
+    }
+    if (page === 'virtual-lab' && OmicsLab.VirtualLab) {
+      const el = document.getElementById('virtual-lab-content');
+      if (el && !el.querySelector('.vl-page')) try { OmicsLab.VirtualLab.init(); } catch(e) { console.error('VirtualLab init error:', e); }
+    }
+    if (page === 'gwas' && OmicsLab.GWAS) {
+      const el = document.getElementById('gwas-content');
+      if (el && !el.querySelector('.gwas-page')) try { OmicsLab.GWAS.init(); } catch(e) { OmicsLab.Error?.renderPageError('gwas-content','GWAS',e); }
+    }
+    if (page === 'pharmacogenomics' && OmicsLab.PGx) {
+      const el = document.getElementById('pgx-content');
+      if (el && !el.querySelector('.pgx-page')) try { OmicsLab.PGx.init(); } catch(e) { OmicsLab.Error?.renderPageError('pgx-content','Pharmacogenomics',e); }
+    }
+    if (page === 'network-hub' && OmicsLab.NetworkHub) {
+      const el = document.getElementById('network-hub-content');
+      if (el && !el.querySelector('.nh-page')) try { OmicsLab.NetworkHub.init(); } catch(e) { OmicsLab.Error?.renderPageError('network-hub-content','NetworkHub',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
@@ -685,6 +791,17 @@ OmicsLab.Router = (function () {
     if (page === 'profile' && OmicsLab.Profile) {
       OmicsLab.Profile.openProfile();
       setTimeout(() => OmicsLab.LearningPath?.init(), 300);
+    }
+    if (page === 'research') {
+      _si(OmicsLab.ResearchMode, 'research-mode-section', 'ResearchMode');
+      _si(OmicsLab.ReproHub,     'repro-hub-section',     'ReproHub');
+      _si(OmicsLab.Workshop,     'workshop-section',      'Workshop');
+    }
+    if (page === 'learn') {
+      _si(OmicsLab.DiseaseLearning, 'disease-learning-section', 'DiseaseLearning');
+      _si(OmicsLab.HPCTraining,     'hpc-training-section',     'HPCTraining');
+      _si(OmicsLab.Curriculum,      'curriculum-section',       'Curriculum');
+      _si(OmicsLab.Badges,          'badges-section',           'Badges');
     }
     if (page === 'outbreak' && OmicsLab.Outbreak) _si(OmicsLab.Outbreak, 'outbreak-section', 'Outbreak');
     if (page === 'datasets' && OmicsLab.Datasets) _si(OmicsLab.Datasets, 'datasets-section', 'Datasets');
@@ -696,15 +813,9 @@ OmicsLab.Router = (function () {
     if (page === 'leaderboard' && OmicsLab.Leaderboard) _si(OmicsLab.Leaderboard, 'leaderboard-section', 'Leaderboard');
     if (page === 'debugger' && OmicsLab.Debugger) _si(OmicsLab.Debugger, 'debugger-section', 'Debugger');
     if (page === 'alerts' && OmicsLab.Alerts) _si(OmicsLab.Alerts, 'alerts-section', 'Alerts');
-    if (page === 'phylo' && OmicsLab.Phylo) {
-      OmicsLab.Skeleton?.beforeInit('phylo-section');
-      _si(OmicsLab.Phylo, 'phylo-section', 'Phylo');
-    }
+    if (page === 'phylo' && OmicsLab.Phylo) _si(OmicsLab.Phylo, 'phylo-section', 'Phylo');
     if (page === 'peerreview' && OmicsLab.PeerReview) _si(OmicsLab.PeerReview, 'peerreview-section', 'PeerReview');
-    if (page === 'heatmap' && OmicsLab.Heatmap) {
-      OmicsLab.Skeleton?.beforeInit('heatmap-section');
-      _si(OmicsLab.Heatmap, 'heatmap-section', 'Heatmap');
-    }
+    if (page === 'heatmap' && OmicsLab.Heatmap) _si(OmicsLab.Heatmap, 'heatmap-section', 'Heatmap');
     if (page === 'journalclub' && OmicsLab.JournalClub) _si(OmicsLab.JournalClub, 'journalclub-section', 'JournalClub');
     if (page === 'citations' && OmicsLab.Citations) _si(OmicsLab.Citations, 'citations-section', 'Citations');
     if (page === 'quizbattle' && OmicsLab.QuizBattle) _si(OmicsLab.QuizBattle, 'quizbattle-section', 'QuizBattle');
@@ -759,12 +870,23 @@ OmicsLab.Router = (function () {
     if (page === 'certification' && OmicsLab.Certification) _si(OmicsLab.Certification, 'certification-section', 'Certification');
     if (page === 'impact' && OmicsLab.Impact) _si(OmicsLab.Impact, 'impact-section', 'Impact');
     if (page === 'partners' && OmicsLab.Partners) _si(OmicsLab.Partners, 'partners-section', 'Partners');
-    if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) {
-      OmicsLab.Skeleton?.beforeInit('knowledge-graph-section');
-      _si(OmicsLab.KnowledgeGraph, 'knowledge-graph-section', 'KnowledgeGraph');
-    }
+    if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) _si(OmicsLab.KnowledgeGraph, 'knowledge-graph-section', 'KnowledgeGraph');
     if (page === 'settings' && OmicsLab.Settings) _si(OmicsLab.Settings, 'settings-section', 'Settings');
     if (page === 'output-tracker' && OmicsLab.OutputTracker) _si(OmicsLab.OutputTracker, 'output-tracker-section', 'OutputTracker');
+    /* Part 9 — modules use render(container); guard with data-ready to avoid double-render */
+    const _sr = (mod, secId, name, key) => {
+      const el = document.getElementById(secId);
+      if (!el || el.dataset[key]) return;
+      el.dataset[key] = '1';
+      OmicsLab.Skeleton?.beforeInit(secId);
+      try { mod.render(el); } catch(e) { OmicsLab.Error?.renderPageError(secId, name, e); }
+      OmicsLab.Skeleton?.hide(secId);
+    };
+    if (page === 'skill-tree' && OmicsLab.SkillTree)         _sr(OmicsLab.SkillTree,         'skill-tree-section',        'SkillTree',        'stReady');
+    if (page === 'variant-atlas' && OmicsLab.VariantAtlas)   _sr(OmicsLab.VariantAtlas,      'variant-atlas-section',     'VariantAtlas',     'vaReady');
+    if (page === 'clinical-decision' && OmicsLab.ClinicalDecision) _sr(OmicsLab.ClinicalDecision, 'clinical-decision-section', 'ClinicalDecision', 'cdReady');
+    if (page === 'one-health' && OmicsLab.OneHealth)          _sr(OmicsLab.OneHealth,         'one-health-section',        'OneHealth',        'ohReady');
+    if (page === 'institution' && OmicsLab.Institution)       _sr(OmicsLab.Institution,       'institution-section',       'Institution',      'instReady');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
     if (page === 'terms')    OmicsLab.Legal?.render('terms');
     if (page === 'analysis') setTimeout(() => OmicsLab.DataImport?.init(), 400);
@@ -811,7 +933,7 @@ OmicsLab.Router = (function () {
             Home
           </button>
           <span class="prh-sep">/</span>
-          <span class="prh-page-icon">${p.icon}</span>
+          <span class="prh-page-icon">${OmicsLab.Icons?.svg(p.icon, 14) || ''}</span>
           <span class="prh-page-name" style="color:${p.color || 'var(--success)'}">${p.label}</span>
         </div>
         <div class="prh-tagline">${p.tagline || ''}</div>
@@ -866,7 +988,7 @@ OmicsLab.Router = (function () {
         quote: 'OmicsLab completely changed how I teach genomics. Students now arrive at the bench understanding exactly what each step does — the error propagation alone is worth an entire semester.',
         name: 'Dr. Amara Osei-Bonsu',
         role: 'Genomics Training Lecturer · Nairobi, Kenya',
-        avatar: '👩🏿‍🔬',
+        avatar: '👩🏿‍',
         flag: '🇰🇪',
         color: '#3fb950',
       },
@@ -882,7 +1004,7 @@ OmicsLab.Router = (function () {
         quote: 'The Africa Hub content is unlike anything I\'ve seen in a training platform — real population genomics context, One Health surveillance, African disease datasets. It speaks our language.',
         name: 'Fatima Al-Rashidi',
         role: 'Bioinformatician & Trainer · Entebbe, Uganda',
-        avatar: '👩🏽‍🔬',
+        avatar: '👩🏽‍',
         flag: '🇺🇬',
         color: '#bc8cff',
       },
@@ -908,7 +1030,7 @@ OmicsLab.Router = (function () {
         <div class="hiw-steps">
           <div class="hiw-step">
             <div class="hiw-step-num hiw-step-num-1">
-              <span style="font-size:1.5rem">🧪</span>
+              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('flask', 28) || ''}</span>
               <div class="hiw-step-badge">1</div>
             </div>
             <div class="hiw-step-title">Choose your experiment</div>
@@ -925,7 +1047,7 @@ OmicsLab.Router = (function () {
 
           <div class="hiw-step">
             <div class="hiw-step-num hiw-step-num-2">
-              <span style="font-size:1.5rem">⚗️</span>
+              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('activity', 28) || ''}</span>
               <div class="hiw-step-badge">2</div>
             </div>
             <div class="hiw-step-title">Run the protocol, make decisions</div>
@@ -941,7 +1063,7 @@ OmicsLab.Router = (function () {
 
           <div class="hiw-step">
             <div class="hiw-step-num hiw-step-num-3">
-              <span style="font-size:1.5rem">📊</span>
+              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('bar-chart', 28) || ''}</span>
               <div class="hiw-step-badge">3</div>
             </div>
             <div class="hiw-step-title">Get results, earn your certificate</div>
@@ -1096,7 +1218,9 @@ OmicsLab.Router = (function () {
     OmicsLab.MobileNav?.init();
     OmicsLab.PWA?.init();
     OmicsLab.A11y?.init();
+    OmicsLab.Analytics?.init();
     OmicsLab.VoiceCompose?.init();
+    OmicsLab.SkillTree?.initNavBar();
     _buildNav();
     _renderHome();
 

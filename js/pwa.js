@@ -1,7 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
-   OmicsLab — PWA Install, Share & Native Features (Prompt 31)
-   ─ beforeinstallprompt → install banner
-   ─ Web Share API helper
+   OmicsLab — PWA 2.0 (Prompt 57)
+   ─ beforeinstallprompt → custom install modal
+   ─ Re-engagement screen for returning users
+   ─ Cmd+K / Ctrl+K command palette
+   ─ Web Share API + clipboard fallback
    ─ App Badging API for notification count
    ─ Periodic Background Sync registration
    ─ Share target handler (#/share)
@@ -206,6 +208,12 @@ OmicsLab.PWA = (function () {
     /* Handle share target on load */
     _handleShareTarget();
 
+    /* Re-engagement screen */
+    _checkReEngagement();
+
+    /* Command palette (Cmd+K / Ctrl+K) */
+    _initCommandPalette();
+
     /* Register periodic sync */
     _registerPeriodicSync();
 
@@ -226,9 +234,139 @@ OmicsLab.PWA = (function () {
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
       <span style="flex:1">OmicsLab has been updated.</span>
       <button onclick="window.location.reload()" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:5px;padding:.25rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer">Reload</button>
-      <button onclick="this.closest('#pwa-update-banner').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#8b949e);padding:0 4px">✕</button>`;
+      <button onclick="this.closest('#pwa-update-banner').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#8b949e);padding:0 4px;display:flex;align-items:center" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
     document.body.appendChild(div);
   }
 
-  return { init, share, setBadge, buildShareButton };
+  /* ══════════════════════════════════════════════════════════════
+     RE-ENGAGEMENT SCREEN
+     Shows a "Welcome back" overlay after ≥3 days of absence
+     ══════════════════════════════════════════════════════════════ */
+  function _checkReEngagement() {
+    const LAST_KEY = 'omicslab_last_visit';
+    const SEEN_KEY = 'omicslab_reengaged';
+    try {
+      const last = parseInt(localStorage.getItem(LAST_KEY) || '0', 10);
+      const seen = parseInt(localStorage.getItem(SEEN_KEY) || '0', 10);
+      const now  = Date.now();
+      localStorage.setItem(LAST_KEY, now);
+      const gap = now - last;
+      if (!last || gap < 3 * 24 * 60 * 60 * 1000) return;   /* < 3 days — skip */
+      if (now - seen < 7 * 24 * 60 * 60 * 1000) return;     /* shown within 7 days — skip */
+      localStorage.setItem(SEEN_KEY, now);
+      const days = Math.floor(gap / (24 * 60 * 60 * 1000));
+      setTimeout(() => _showReEngageScreen(days), 1500);
+    } catch {}
+  }
+
+  function _showReEngageScreen(days) {
+    if (document.getElementById('pwa-reengage')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'pwa-reengage';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Welcome back to OmicsLab');
+    overlay.style.cssText = `position:fixed;inset:0;z-index:7000;background:rgba(8,12,16,.88);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)`;
+
+    const xp = (() => { try { const s = JSON.parse(localStorage.getItem('omicslab_xp_v1')||'{}'); return s.total||0; } catch { return 0; } })();
+    overlay.innerHTML = `
+      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;padding:2rem;max-width:420px;width:92%;text-align:center">
+        <div style="font-size:2.4rem;margin-bottom:.75rem">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:var(--text-primary,#e6edf3);margin:0 0 .5rem">Welcome back!</h2>
+        <p style="color:var(--text-secondary,#8b949e);font-size:.9rem;margin:0 0 1rem">You've been away for <strong style="color:var(--text-primary)">${days} day${days !== 1 ? 's' : ''}</strong>. Your XP total: <strong style="color:#e3b341">${xp} XP</strong>.</p>
+        <p style="color:var(--text-muted,#6e7681);font-size:.8rem;margin:0 0 1.5rem">Ready to pick up where you left off?</p>
+        <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+          <button onclick="OmicsLab.Router?.navigate('skill-tree');document.getElementById('pwa-reengage').remove()" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;font-weight:700;cursor:pointer">View Skill Tree</button>
+          <button onclick="OmicsLab.Router?.navigate('lab');document.getElementById('pwa-reengage').remove()" style="background:var(--bg-overlay,#21262d);color:var(--text-primary,#e6edf3);border:1px solid var(--border,#30363d);border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;cursor:pointer">Go to Lab</button>
+          <button onclick="document.getElementById('pwa-reengage').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#6e7681);font-size:.78rem;text-decoration:underline">Dismiss</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+  }
+
+  /* ══════════════════════════════════════════════════════════════
+     COMMAND PALETTE (Cmd+K / Ctrl+K)
+     Quick-jump to any page with keyboard
+     ══════════════════════════════════════════════════════════════ */
+  const _CP_PAGES = [
+    { label: 'Lab Simulator',     page: 'lab',              icon: 'beaker' },
+    { label: 'Skill Tree',        page: 'skill-tree',       icon: 'zap' },
+    { label: 'Analysis Studio',   page: 'analysis',         icon: 'bar-chart' },
+    { label: 'Variant Atlas',     page: 'variant-atlas',    icon: 'dna' },
+    { label: 'Clinical Decision', page: 'clinical-decision',icon: 'activity' },
+    { label: 'One Health',        page: 'one-health',       icon: 'globe' },
+    { label: 'Institution',       page: 'institution',      icon: 'users' },
+    { label: 'Nexus',             page: 'nexus',            icon: 'message-circle' },
+    { label: 'Outbreak Game',     page: 'outbreak',         icon: 'virus' },
+    { label: 'Mentorship',        page: 'mentorship',       icon: 'link' },
+    { label: 'AI Assistant',      page: 'ai',               icon: 'brain' },
+    { label: 'Certification',     page: 'certification',    icon: 'award' },
+    { label: 'Knowledge Graph',   page: 'knowledge-graph',  icon: 'git-branch' },
+    { label: 'Settings',          page: 'settings',         icon: 'cpu' },
+    { label: 'Impact',            page: 'impact',           icon: 'globe' },
+  ];
+
+  let _cpOpen = false;
+
+  function _openCommandPalette() {
+    if (_cpOpen) return;
+    _cpOpen = true;
+    const overlay = document.createElement('div');
+    overlay.id = 'pwa-cmdpal';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Command palette');
+    overlay.style.cssText = `position:fixed;inset:0;z-index:8000;background:rgba(8,12,16,.8);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh`;
+    overlay.innerHTML = `
+      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;width:min(560px,94vw);overflow:hidden;box-shadow:0 24px 60px #000a">
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;border-bottom:1px solid var(--border,#30363d)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted,#8b949e)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="pwa-cp-input" type="text" placeholder="Navigate to..." autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:var(--text-primary,#e6edf3);font-size:.95rem" autofocus>
+          <kbd style="background:var(--bg-overlay,#21262d);border:1px solid var(--border,#30363d);border-radius:4px;padding:.1rem .35rem;font-size:.7rem;color:var(--text-muted,#8b949e)">Esc</kbd>
+        </div>
+        <ul id="pwa-cp-list" role="listbox" style="list-style:none;margin:0;padding:.4rem 0;max-height:360px;overflow-y:auto"></ul>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    const input = overlay.querySelector('#pwa-cp-input');
+    const list  = overlay.querySelector('#pwa-cp-list');
+    let _sel = 0;
+
+    function _render(query) {
+      const q = query.toLowerCase();
+      const filtered = _CP_PAGES.filter(p => p.label.toLowerCase().includes(q));
+      list.innerHTML = filtered.map((p, i) => `
+        <li role="option" aria-selected="${i === _sel}" data-page="${p.page}"
+          style="padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;font-size:.9rem;color:var(--text-${i===_sel?'primary':'secondary'},${i===_sel?'#e6edf3':'#8b949e'});background:${i===_sel?'var(--bg-overlay,#21262d)':'transparent'}">
+          <span style="color:var(--text-muted,#6e7681);font-size:.75rem">${p.label}</span>
+        </li>`).join('');
+      list.querySelectorAll('li').forEach(li => {
+        li.onmouseenter = () => { _sel = [...list.children].indexOf(li); _render(input.value); };
+        li.onclick = () => _nav(li.dataset.page);
+      });
+    }
+
+    function _nav(page) { overlay.remove(); _cpOpen = false; OmicsLab.Router?.navigate(page); }
+
+    _render('');
+    input.addEventListener('input', () => { _sel = 0; _render(input.value); });
+    input.addEventListener('keydown', e => {
+      const items = list.querySelectorAll('li');
+      if (e.key === 'ArrowDown') { _sel = Math.min(_sel + 1, items.length - 1); _render(input.value); e.preventDefault(); }
+      if (e.key === 'ArrowUp')   { _sel = Math.max(_sel - 1, 0); _render(input.value); e.preventDefault(); }
+      if (e.key === 'Enter')     { const sel = list.querySelector(`li:nth-child(${_sel + 1})`); if (sel) _nav(sel.dataset.page); }
+      if (e.key === 'Escape')    { overlay.remove(); _cpOpen = false; }
+    });
+    overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); _cpOpen = false; } });
+  }
+
+  function _initCommandPalette() {
+    document.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); _openCommandPalette(); }
+    });
+  }
+
+  return { init, share, setBadge, buildShareButton, openCommandPalette: _openCommandPalette };
 })();

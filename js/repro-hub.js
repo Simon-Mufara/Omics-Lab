@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Research Metadata & Reproducibility Hub
    Collaborative repository for reproducible omics science.
    Stores submissions in localStorage; no server required.
@@ -306,8 +306,8 @@ OmicsLab.ReproHub = (function () {
             <span style="color:${_scoreColor(scores.fair)}">FAIR ${scores.fair}</span>
           </div>
           <div class="rh-browse-stats">
-            <span>🔀 ${s.forks || 0} forks</span>
-            <span>✓ ${s.validations || 0} validations</span>
+            <span>${OmicsLab.Icons?.svg('git-branch',11)||''} ${s.forks || 0} forks</span>
+            <span>[OK] ${s.validations || 0} validations</span>
             <span>▶ ${s.reproduced_runs || 0} reproduced</span>
           </div>
         </div>
@@ -366,7 +366,7 @@ OmicsLab.ReproHub = (function () {
     const all = _getAll();
     const mine = all.filter(s => !s.id.startsWith('seed-'));
     if (!mine.length) {
-      return `<div class="rh-empty"><div style="font-size:2rem;margin-bottom:0.5rem">📋</div>
+      return `<div class="rh-empty"><div style="display:flex;align-items:center;justify-content:center;color:#8b949e;margin-bottom:0.5rem">${OmicsLab.Icons?.svg('clipboard',32)||''}</div>
         <div>No submissions yet. Use the <strong>Submit</strong> tab to add your first study.</div></div>`;
     }
     return `<div class="rh-browse-grid">${mine.map(s => {
@@ -412,7 +412,7 @@ OmicsLab.ReproHub = (function () {
         </div>
         ${c.items.map(f => `
           <div class="rh-fair-item ${c.fields[f]&&c.fields[f].trim().length>1?'rh-fair-pass':'rh-fair-fail'}">
-            ${c.fields[f]&&c.fields[f].trim().length>1?'✓':'✗'} ${f.replace(/_/g,' ')}
+            ${c.fields[f]&&c.fields[f].trim().length>1?'[OK]':'[FAIL]'} ${f.replace(/_/g,' ')}
           </div>`).join('')}
       </div>`).join('');
 
@@ -454,8 +454,8 @@ OmicsLab.ReproHub = (function () {
       ${s.container_spec ? `<div class="rh-section-head" style="margin-top:1rem">Container Specification</div>
         <pre class="rh-modal-pre">${_esc(s.container_spec)}</pre>` : ''}
       <div class="rh-modal-actions">
-        <button class="rh-btn-primary" onclick="OmicsLab.ReproHub.forkSubmission('${s.id}')">🔀 Fork &amp; Improve</button>
-        <button class="rh-btn-secondary" onclick="OmicsLab.ReproHub.validateSubmission('${s.id}')">✓ Mark as Validated</button>
+        <button class="rh-btn-primary" onclick="OmicsLab.ReproHub.forkSubmission('${s.id}')">${OmicsLab.Icons?.svg('git-branch',13)||''} Fork &amp; Improve</button>
+        <button class="rh-btn-secondary" onclick="OmicsLab.ReproHub.validateSubmission('${s.id}')">[OK] Mark as Validated</button>
         <button class="rh-btn-secondary" onclick="OmicsLab.ReproHub.exportSubmission('${s.id}')">⬇ Export JSON</button>
         <button class="rh-btn-ghost" onclick="OmicsLab.ReproHub.closeModal()">Close</button>
       </div>`;
@@ -678,10 +678,10 @@ OmicsLab.ReproHub = (function () {
     if (!container) return;
 
     const tabs = [
-      { id: 'submit',   label: '📤 Submit Study' },
-      { id: 'browse',   label: '🔍 Browse Community' },
-      { id: 'validate', label: '✅ FAIR Validator' },
-      { id: 'my',       label: '👤 My Submissions' }
+      { id: 'submit',   label: 'Submit Study' },
+      { id: 'browse',   label: 'Browse Community' },
+      { id: 'validate', label: 'FAIR Validator' },
+      { id: 'my',       label: 'My Submissions' }
     ];
 
     const tabBar = tabs.map(t =>
@@ -702,7 +702,7 @@ OmicsLab.ReproHub = (function () {
       ${panels}
       <div id="rh-modal" class="rh-modal-overlay" onclick="if(event.target===this)OmicsLab.ReproHub.closeModal()">
         <div class="rh-modal-box">
-          <button class="rh-modal-close" onclick="OmicsLab.ReproHub.closeModal()">✕</button>
+          <button class="rh-modal-close" onclick="OmicsLab.ReproHub.closeModal()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
           <div id="rh-modal-body"></div>
         </div>
       </div>`;

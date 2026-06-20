@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -45,7 +45,14 @@
   <!-- Fonts: preconnect first, then load Sora (display) + Inter (body) + JetBrains Mono (code) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans:wght@400;500;700&family=Noto+Sans+Ethiopic:wght@400;700&family=Sora:wght@400;600;700;800&display=swap">
+
+  <!-- Resource hints for critical scripts -->
+  <link rel="preload" href="js/notify.js" as="script">
+  <link rel="preload" href="js/icons.js" as="script">
+  <link rel="preload" href="js/router.js" as="script">
+  <link rel="preload" href="js/app.js" as="script">
 
   <!-- Design system: load FIRST -->
   <link rel="stylesheet" href="css/tokens.css">
@@ -57,6 +64,10 @@
   <link rel="stylesheet" href="css/enhancements.css">
   <link rel="stylesheet" href="css/analysis.css">
   <link rel="stylesheet" href="css/terminal.css">
+  <link rel="stylesheet" href="css/virtual-lab.css">
+  <link rel="stylesheet" href="css/gwas.css">
+  <link rel="stylesheet" href="css/pharmacogenomics.css">
+  <link rel="stylesheet" href="css/network-hub.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -128,6 +139,12 @@
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/knowledge-graph.css">
   <link rel="stylesheet" href="css/output-tracker.css">
+  <!-- Part 9: New Modules (Prompts 41-60) -->
+  <link rel="stylesheet" href="css/skill-tree.css">
+  <link rel="stylesheet" href="css/variant-atlas.css">
+  <link rel="stylesheet" href="css/clinical-decision.css">
+  <link rel="stylesheet" href="css/one-health.css">
+  <link rel="stylesheet" href="css/institution.css">
   <link rel="stylesheet" href="css/print.css" media="print">
   <link rel="stylesheet" href="css/mobile-nav.css">
 </head>
@@ -156,90 +173,146 @@
     <!-- Desktop primary nav — 4 items -->
     <nav class="nav-primary" id="nav-primary" aria-label="Primary navigation">
 
-      <!-- Train (Lab + Learn) -->
+      <!-- Train — tabbed mega-menu -->
       <div class="nav-group" id="ng-train">
         <button class="nav-group-btn" data-group="train" aria-haspopup="true">
           Train
           <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
-        <div class="nav-mega-drop" role="menu">
-          <div class="nmd-inner">
-            <div class="nmd-col">
-              <div class="nmd-label">Simulations</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('lab')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Lab Simulations</span>
-                  <span class="nmd-desc">14 wet-lab workflows · live QC</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('lab')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Sandbox Mode</span>
-                  <span class="nmd-desc">Free-form protocol exploration</span>
-                </span>
-              </button>
-            </div>
-            <div class="nmd-col">
-              <div class="nmd-label">Education</div>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Curriculum Tracks</span>
-                  <span class="nmd-desc">Structured paths · certificates</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 8V4"/><path d="M8 12H4"/><path d="M16 12h4"/><path d="M12 16v4"/><path d="M9.17 9.17 6.34 6.34"/><path d="M14.83 9.17l2.83-2.83"/><path d="M14.83 14.83l2.83 2.83"/><path d="M9.17 14.83 6.34 17.66"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Disease Explorer</span>
-                  <span class="nmd-desc">40+ Africa-relevant pathogens</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
-                <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Tool Explorer</span>
-                  <span class="nmd-desc">50+ bioinformatics tools explained</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('journalclub')">
-                <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Journal Club</span>
-                  <span class="nmd-desc">20+ landmark papers · plain summaries</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('quizbattle')">
-                <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Quiz Battle</span>
-                  <span class="nmd-desc">65+ questions · solo or multiplayer</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('career')">
-                <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Career Pathfinder</span>
-                  <span class="nmd-desc">Personalised genomics career roadmap</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('leaderboard')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Leaderboard</span>
-                  <span class="nmd-desc">Global rankings · cohort map · streaks</span>
-                </span>
-              </button>
-              <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('certification')">
-                <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
-                <span class="nmd-text">
-                  <span class="nmd-name">Certification</span>
-                  <span class="nmd-desc">Track learning · earn badges · certificate</span>
-                </span>
-              </button>
-            </div>
+        <div class="nav-mega-drop nmd-tabbed" role="menu">
+          <div class="nmd-tabs" role="tablist">
+            <button class="nmd-tab active" role="tab" aria-selected="true"  onclick="OmicsLab.Nav._tab(this,'tr-simulate')">Simulate</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tr-learn')">Learn</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tr-achieve')">Achieve</button>
+            <button class="nmd-tab"        role="tab" aria-selected="false" onclick="OmicsLab.Nav._tab(this,'tr-career')">Career</button>
+          </div>
+
+          <!-- Panel: Simulate (default) -->
+          <div class="nmd-tab-panel" data-panel="tr-simulate">
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('lab')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Lab Simulations</span><span class="nmd-desc">14 wet-lab workflows · live QC</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('analysis')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Analysis Studio</span><span class="nmd-desc">Bioinformatics pipeline studio</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('terminal')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Terminal</span><span class="nmd-desc">Command-line training environment</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('virtual-lab')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Virtual Lab</span><span class="nmd-desc">360 tour of genomics instruments</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pipeline-gen')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pipeline Builder</span><span class="nmd-desc">Visual no-code workflow composer</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('nanopore')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12c2-4 4 4 6 0s4-4 6 0 4 4 6 0"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Nanopore QC</span><span class="nmd-desc">Long-read sequencing quality control</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('amr')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">AMR Analysis</span><span class="nmd-desc">Antibiotic resistance profiling</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('gwas')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">GWAS Suite</span><span class="nmd-desc">Manhattan plots · PLINK2 · AWI-Gen panel</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pharmacogenomics')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pharmacogenomics</span><span class="nmd-desc">CYP variants · HIV/TB/malaria drug-gene</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('network-hub')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Genomics Network</span><span class="nmd-desc">H3Africa · KEMRI · SANBI · 18+ institutions</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Learn -->
+          <div class="nmd-tab-panel" data-panel="tr-learn" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Curriculum Tracks</span><span class="nmd-desc">Structured learning paths · certificates</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 8V4"/><path d="M8 12H4"/><path d="M16 12h4"/><path d="M12 16v4"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Disease Explorer</span><span class="nmd-desc">40+ Africa-relevant pathogens</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('learn')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Tool Explorer</span><span class="nmd-desc">50+ bioinformatics tools explained</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('journalclub')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Journal Club</span><span class="nmd-desc">Landmark papers · AI summaries</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('glossary')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Glossary</span><span class="nmd-desc">1000+ terms · multilingual</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('quizbattle')">
+              <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Quiz Battle</span><span class="nmd-desc">65+ questions · solo or multiplayer</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Achieve -->
+          <div class="nmd-tab-panel" data-panel="tr-achieve" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('certification')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Certification</span><span class="nmd-desc">Earn badges · PDF certificates</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('leaderboard')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Leaderboard</span><span class="nmd-desc">Global rankings · cohort map · streaks</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('labnotebook')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Lab Notebook</span><span class="nmd-desc">Document your experiments</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('impact')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Impact Tracker</span><span class="nmd-desc">Measure your research contribution</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('hackathon')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Hackathon</span><span class="nmd-desc">Community genomics challenges</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('output-tracker')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Output Tracker</span><span class="nmd-desc">Track publications &amp; datasets</span></span>
+            </button>
+          </div>
+
+          <!-- Panel: Career -->
+          <div class="nmd-tab-panel" data-panel="tr-career" hidden>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('career')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Career Pathfinder</span><span class="nmd-desc">Personalised genomics career roadmap</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('mentorship')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Mentorship Hub</span><span class="nmd-desc">Connect with senior researchers</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('grant')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Grant Generator</span><span class="nmd-desc">NIH · Wellcome · Africa sections</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('thesis')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Thesis Coach</span><span class="nmd-desc">AI-assisted thesis writing</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('codon')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 16.1A5 5 0 0 1 5.5 20H20a2 2 0 0 0 2-2v-2.1"/><path d="M2 7.9A5 5 0 0 0 5.5 4H20a2 2 0 0 1 2 2v2.1"/><path d="M8 20v-5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v5"/><path d="M8 4V9a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Codon Usage</span><span class="nmd-desc">RSCU · expression optimisation</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('partners')">
+              <span class="nmd-icon" style="background:rgba(121,192,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">About &amp; Inspiration</span><span class="nmd-desc">OmicsLab mission · open source</span></span>
+            </button>
           </div>
         </div>
       </div>
@@ -499,6 +572,10 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('terminal')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Pipeline Terminal</span><span class="nmd-desc">22 tools simulated · Codespace</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('virtual-lab')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Virtual Lab</span><span class="nmd-desc">360 tour of genomics instruments</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('debugger')">
               <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/><path d="M3 16h4M17 16h4M4 20l4-2M16 18l4 2M4 12l4 2M16 14l4-2"/></svg></span>
@@ -810,7 +887,7 @@
               </div>
             </div>
             <div class="hpc-step active" data-pct="67" data-tool="STAR --runMode alignReads --runThreadN 8">
-              <div class="hpc-step-icon">⟳</div>
+              <div class="hpc-step-icon">~</div>
               <div class="hpc-step-info">
                 <div class="hpc-step-name">STAR — Spliced Alignment</div>
                 <div class="hpc-step-tool">STAR --runMode alignReads --runThreadN 8</div>
@@ -1123,7 +1200,7 @@
       <input class="qa-input" id="qa-input" type="search" autocomplete="off"
              placeholder="e.g. What is RIN score? How does GATK work? What is ATAC-seq?"
              oninput="OmicsLab.QAEngine.search(this.value)">
-      <button class="qa-clear-btn" id="qa-clear-btn" onclick="OmicsLab.QAEngine.clear()" title="Clear">✕</button>
+      <button class="qa-clear-btn" id="qa-clear-btn" onclick="OmicsLab.QAEngine.clear()" title="Clear"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="qa-cat-tabs" id="qa-cat-tabs"><!-- Populated by QAEngine.init() --></div>
     <div class="qa-suggestions" id="qa-suggestions"><!-- Populated by QAEngine.init() --></div>
@@ -1153,7 +1230,7 @@
     </p>
     <div class="sabotage-controls">
       <button class="btn-sabotage" id="sabotage-toggle-btn" onclick="OmicsLab.App.toggleSabotage()">
-        🔬 Sabotage Mode
+        Sabotage Mode
       </button>
       <p id="sabotage-hint" class="sabotage-hint" style="display:none">
         <strong>Sabotage is active.</strong> Start any workflow — one random step will inject a suboptimal choice. Watch your QC metrics carefully. After you see the results, check the Mistake Log to find the injected error.
@@ -1240,9 +1317,29 @@
     <div id="analysis-studio-content"><!-- Populated by analysis.js --></div>
   </div>
 
+  <!-- GWAS Analysis Suite -->
+  <div id="gwas-section">
+    <div id="gwas-content"><!-- Populated by gwas.js --></div>
+  </div>
+
+  <!-- Pharmacogenomics Africa -->
+  <div id="pgx-section">
+    <div id="pgx-content"><!-- Populated by pharmacogenomics.js --></div>
+  </div>
+
+  <!-- African Genomics Network Hub -->
+  <div id="network-hub-section">
+    <div id="network-hub-content"><!-- Populated by network-hub.js --></div>
+  </div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
-  <div class="terminal-studio-section reveal" id="terminal-section">
+  <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
+  </div>
+
+  <!-- 360 Virtual Genomics Lab -->
+  <div id="virtual-lab-section">
+    <div id="virtual-lab-content"><!-- Populated by virtual-lab.js --></div>
   </div>
 
   <!-- Outbreak Simulator -->
@@ -1470,6 +1567,13 @@
   <div class="reveal" id="impact-section"></div>
   <div class="reveal" id="partners-section"></div>
 
+  <!-- Part 9: New Modules (Prompts 41-60) -->
+  <div class="reveal" id="skill-tree-section"></div>
+  <div class="reveal" id="variant-atlas-section"></div>
+  <div class="reveal" id="clinical-decision-section"></div>
+  <div class="reveal" id="one-health-section"></div>
+  <div class="reveal" id="institution-section"></div>
+
   <!-- Changelog / What's New -->
   <div class="changelog-section reveal" id="changelog-section">
     <div class="section-label" data-i18n="sec.changelog.label">Platform updates</div>
@@ -1490,12 +1594,12 @@
 
     <!-- Language switcher strip -->
     <div class="footer-lang-strip">
-      <span style="font-size:0.75rem;margin-right:0.25rem">🌍 Language:</span>
-      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('en')">🇬🇧 English</span>
-      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('fr')">🇫🇷 Français</span>
-      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('sw')">🇰🇪 Kiswahili</span>
-      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('pt')">🇲🇿 Português</span>
-      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('ar')">🇪🇬 العربية</span>
+      <span style="font-size:0.75rem;margin-right:0.25rem">Language:</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('en')">EN English</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('fr')">FR Français</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('sw')">SW Kiswahili</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('pt')">PT Português</span>
+      <span class="footer-lang-pill" onclick="OmicsLab.I18n.apply('ar')">AR العربية</span>
     </div>
 
     <!-- Quick stats -->
@@ -1706,7 +1810,7 @@
       <div class="qc-section qc-section-scrollable">
         <div class="qc-label">Mistake Log</div>
         <div class="mistake-list" id="mistake-log">
-          <div class="no-mistakes">✓ No mistakes yet</div>
+          <div class="no-mistakes">No mistakes yet</div>
         </div>
       </div>
     </aside>
@@ -1727,7 +1831,7 @@
   <div class="compare-modal" role="dialog" aria-modal="true" aria-label="Compare Workflows">
     <div class="compare-modal-header">
       <div class="compare-modal-title">Protocol Comparison</div>
-      <button class="compare-modal-close" onclick="OmicsLab.Compare.close()">✕</button>
+      <button class="compare-modal-close" onclick="OmicsLab.Compare.close()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div class="compare-selectors">
       <div class="compare-sel-wrap">
@@ -1755,7 +1859,7 @@
   <div class="troubleshoot-modal" role="dialog" aria-modal="true" aria-label="Troubleshooting Assistant">
     <div class="ts-modal-header">
       <div class="ts-modal-title">Troubleshooting Decision Tree</div>
-      <button class="ts-modal-close" onclick="OmicsLab.Troubleshoot.close()">✕</button>
+      <button class="ts-modal-close" onclick="OmicsLab.Troubleshoot.close()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
     <div id="troubleshoot-modal-body" class="ts-modal-body">
       <!-- Populated by Troubleshoot.open() -->
@@ -1774,126 +1878,138 @@
 <button class="back-to-top" id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
 
 <!-- Scripts — load order matters (notify first, then icons → namespace → data → engine → bench → app) -->
-<script src="js/notify.js"></script>
-<script src="js/icons.js"></script>
-<script src="js/qa.js"></script>
-<script src="js/workflows.js"></script>
-<script src="js/diseases.js"></script>
-<script src="js/disease-learning.js"></script>
-<script src="js/gallery.js"></script>
-<script src="js/equipment.js"></script>
-<script src="js/engine.js"></script>
-<script src="js/bench.js"></script>
-<script src="js/compare.js"></script>
-<script src="js/quiz.js"></script>
-<script src="js/africa-map.js"></script>
-<script src="js/troubleshoot.js"></script>
-<script src="js/sandbox.js"></script>
-<script src="js/research-mode.js"></script>
-<script src="js/hpc-training.js"></script>
-<script src="js/repro-hub.js"></script>
-<script src="js/curriculum.js"></script>
-<script src="js/badges.js"></script>
-<script src="js/africa-hub.js"></script>
-<script src="js/workshop.js"></script>
-<script src="js/i18n.js"></script>
-<script src="js/progress.js"></script>
-<script src="js/search.js"></script>
-<script src="js/changelog.js"></script>
-<script src="js/analysis.js"></script>
-<script src="js/terminal.js"></script>
-<script src="js/profile.js"></script>
-<script src="js/tour.js"></script>
-<script src="js/testimonials.js"></script>
-<script src="js/sound.js"></script>
-<script src="js/voice.js"></script>
-<script src="js/outbreak.js"></script>
-<script src="js/datasets.js"></script>
-<script src="js/career.js"></script>
-<script src="js/mentor.js"></script>
-<script src="js/protocols.js"></script>
-<script src="js/collab.js"></script>
-<script src="js/grant.js"></script>
-<script src="js/leaderboard.js"></script>
-<script src="js/debugger.js"></script>
-<script src="js/alerts.js"></script>
-<script src="js/phylo.js"></script>
-<script src="js/peerreview.js"></script>
-<script src="js/heatmap.js"></script>
-<script src="js/journalclub.js"></script>
-<script src="js/citations.js"></script>
-<script src="js/quizbattle.js"></script>
-<script src="js/qualitypredictor.js"></script>
-<script src="js/variantinterp.js"></script>
-<script src="js/primerdesign.js"></script>
-<script src="js/nexus.js"></script>
-<script src="js/paperhub.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/teams.js"></script>
-<script src="js/pubmed.js"></script>
-<script src="js/gene-lookup.js"></script>
-<script src="js/protein-viewer.js"></script>
-<script src="js/uniprot.js"></script>
-<script src="js/open-targets.js"></script>
-<script src="js/string-net.js"></script>
-<script src="js/preprints.js"></script>
-<script src="js/pathways.js"></script>
-<script src="js/sra-browser.js"></script>
-<script src="js/assistant.js"></script>
-<script src="js/thesis-coach.js"></script>
-<script src="js/bionlp.js"></script>
+<script defer src="js/notify.js"></script>
+<script defer src="js/icons.js"></script>
+<script defer src="js/qa.js"></script>
+<script defer src="js/workflows.js"></script>
+<script defer src="js/diseases.js"></script>
+<script defer src="js/disease-learning.js"></script>
+<script defer src="js/gallery.js"></script>
+<script defer src="js/equipment.js"></script>
+<script defer src="js/engine.js"></script>
+<script defer src="js/bench.js"></script>
+<script defer src="js/compare.js"></script>
+<script defer src="js/quiz.js"></script>
+<script defer src="js/africa-map.js"></script>
+<script defer src="js/troubleshoot.js"></script>
+<script defer src="js/sandbox.js"></script>
+<script defer src="js/research-mode.js"></script>
+<script defer src="js/hpc-training.js"></script>
+<script defer src="js/repro-hub.js"></script>
+<script defer src="js/curriculum.js"></script>
+<script defer src="js/badges.js"></script>
+<script defer src="js/africa-hub.js"></script>
+<script defer src="js/workshop.js"></script>
+<script defer src="js/i18n.js"></script>
+<script defer src="js/progress.js"></script>
+<script defer src="js/search.js"></script>
+<script defer src="js/changelog.js"></script>
+<script defer src="js/analysis.js"></script>
+<script defer src="js/virtual-lab.js"></script>
+<script defer src="js/gwas.js"></script>
+<script defer src="js/pharmacogenomics.js"></script>
+<script defer src="js/network-hub.js"></script>
+<script defer src="js/terminal.js"></script>
+<script defer src="js/profile.js"></script>
+<script defer src="js/tour.js"></script>
+<script defer src="js/testimonials.js"></script>
+<script defer src="js/sound.js"></script>
+<script defer src="js/voice.js"></script>
+<script defer src="js/outbreak.js"></script>
+<script defer src="js/datasets.js"></script>
+<script defer src="js/career.js"></script>
+<script defer src="js/mentor.js"></script>
+<script defer src="js/protocols.js"></script>
+<script defer src="js/collab.js"></script>
+<script defer src="js/grant.js"></script>
+<script defer src="js/leaderboard.js"></script>
+<script defer src="js/debugger.js"></script>
+<script defer src="js/alerts.js"></script>
+<script defer src="js/phylo.js"></script>
+<script defer src="js/peerreview.js"></script>
+<script defer src="js/heatmap.js"></script>
+<script defer src="js/journalclub.js"></script>
+<script defer src="js/citations.js"></script>
+<script defer src="js/quizbattle.js"></script>
+<script defer src="js/qualitypredictor.js"></script>
+<script defer src="js/variantinterp.js"></script>
+<script defer src="js/primerdesign.js"></script>
+<script defer src="js/nexus.js"></script>
+<script defer src="js/paperhub.js"></script>
+<script defer src="js/auth.js"></script>
+<script defer src="js/teams.js"></script>
+<script defer src="js/pubmed.js"></script>
+<script defer src="js/gene-lookup.js"></script>
+<script defer src="js/protein-viewer.js"></script>
+<script defer src="js/uniprot.js"></script>
+<script defer src="js/open-targets.js"></script>
+<script defer src="js/string-net.js"></script>
+<script defer src="js/preprints.js"></script>
+<script defer src="js/pathways.js"></script>
+<script defer src="js/sra-browser.js"></script>
+<script defer src="js/assistant.js"></script>
+<script defer src="js/thesis-coach.js"></script>
+<script defer src="js/bionlp.js"></script>
 <!-- Part 3 -->
-<script src="js/codon.js"></script>
-<script src="js/nanopore.js"></script>
-<script src="js/amr.js"></script>
-<script src="js/kraken.js"></script>
-<script src="js/popstruct.js"></script>
-<script src="js/genomebrowser.js"></script>
+<script defer src="js/codon.js"></script>
+<script defer src="js/nanopore.js"></script>
+<script defer src="js/amr.js"></script>
+<script defer src="js/kraken.js"></script>
+<script defer src="js/popstruct.js"></script>
+<script defer src="js/genomebrowser.js"></script>
 <!-- Part 4 -->
-<script src="js/directory.js"></script>
-<script src="js/hackathon.js"></script>
-<script src="js/mentorship.js"></script>
+<script defer src="js/directory.js"></script>
+<script defer src="js/hackathon.js"></script>
+<script defer src="js/mentorship.js"></script>
 <!-- Part 5 -->
-<script src="js/h3africa.js"></script>
-<script src="js/pathogen-tracker.js"></script>
-<script src="js/glossary.js"></script>
-<script src="js/offline-data.js"></script>
+<script defer src="js/h3africa.js"></script>
+<script defer src="js/pathogen-tracker.js"></script>
+<script defer src="js/glossary.js"></script>
+<script defer src="js/offline-data.js"></script>
 <!-- Part 6 -->
-<script src="js/labnotebook.js"></script>
-<script src="js/pipeline-gen.js"></script>
-<script src="js/metaanalysis.js"></script>
+<script defer src="js/labnotebook.js"></script>
+<script defer src="js/pipeline-gen.js"></script>
+<script defer src="js/metaanalysis.js"></script>
 <!-- Part 7 -->
-<script src="js/idb-manager.js"></script>
-<script src="js/api-docs.js"></script>
+<script defer src="js/idb-manager.js"></script>
+<script defer src="js/api-docs.js"></script>
 <!-- Part 8 -->
-<script src="js/certification.js"></script>
-<script src="js/impact.js"></script>
-<script src="js/partners.js"></script>
+<script defer src="js/certification.js"></script>
+<script defer src="js/impact.js"></script>
+<script defer src="js/partners.js"></script>
+<!-- Part 9: New Modules (Prompts 41-60) -->
+<script defer src="js/wasm-tools.js"></script>
+<script defer src="js/skill-tree.js"></script>
+<script defer src="js/variant-atlas.js"></script>
+<script defer src="js/clinical-decision.js"></script>
+<script defer src="js/one-health.js"></script>
+<script defer src="js/institution.js"></script>
 <!-- Foundation modules (load before router) -->
-<script src="js/error.js"></script>
-<script src="js/skeleton.js"></script>
-<script src="js/settings.js"></script>
-<script src="js/knowledge-graph.js"></script>
-<script src="js/notifications.js"></script>
-<script src="js/offline-indicator.js"></script>
-<script src="js/output-tracker.js"></script>
-<script src="js/onboarding.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/dashboard.js"></script>
-<script src="js/mobile-nav.js"></script>
-<script src="js/pwa.js"></script>
-<script src="js/learning-path.js"></script>
-<script src="js/calendar.js"></script>
-<script src="js/focus-trap.js"></script>
-<script src="js/a11y.js"></script>
-<script src="js/nexus-attachments.js"></script>
-<script src="js/whiteboard.js"></script>
-<script src="js/voice-compose.js"></script>
-<script src="js/data-import.js"></script>
-<script src="js/legal.js"></script>
-<script src="js/locales/en.js"></script>
-<script src="js/router.js"></script>
-<script src="js/app.js"></script>
+<script defer src="js/error.js"></script>
+<script defer src="js/skeleton.js"></script>
+<script defer src="js/settings.js"></script>
+<script defer src="js/knowledge-graph.js"></script>
+<script defer src="js/notifications.js"></script>
+<script defer src="js/offline-indicator.js"></script>
+<script defer src="js/output-tracker.js"></script>
+<script defer src="js/onboarding.js"></script>
+<script defer src="js/theme.js"></script>
+<script defer src="js/dashboard.js"></script>
+<script defer src="js/mobile-nav.js"></script>
+<script defer src="js/pwa.js"></script>
+<script defer src="js/learning-path.js"></script>
+<script defer src="js/calendar.js"></script>
+<script defer src="js/focus-trap.js"></script>
+<script defer src="js/a11y.js"></script>
+<script defer src="js/nexus-attachments.js"></script>
+<script defer src="js/whiteboard.js"></script>
+<script defer src="js/voice-compose.js"></script>
+<script defer src="js/data-import.js"></script>
+<script defer src="js/legal.js"></script>
+<script defer src="js/analytics.js"></script>
+<script defer src="js/locales/en.js"></script>
+<script defer src="js/router.js"></script>
+<script defer src="js/app.js"></script>
 <style>
   @keyframes shakeField {
     0%,100%{transform:translateX(0)}
@@ -1974,6 +2090,19 @@
       if (panel) panel.hidden = false;
     }
 
+    /* Wire aria-expanded on nav group dropdowns */
+    document.querySelectorAll('.nav-group').forEach(function(group) {
+      var btn = group.querySelector('.nav-group-btn');
+      if (!btn) return;
+      btn.setAttribute('aria-expanded', 'false');
+      group.addEventListener('mouseenter', function() { btn.setAttribute('aria-expanded', 'true'); });
+      group.addEventListener('mouseleave', function() { btn.setAttribute('aria-expanded', 'false'); });
+      group.addEventListener('focusin',    function() { btn.setAttribute('aria-expanded', 'true'); });
+      group.addEventListener('focusout',   function(e) {
+        if (!group.contains(e.relatedTarget)) btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
     return { open, close, _tab };
   })();
 
@@ -2049,7 +2178,7 @@
         const step = steps[activeIdx];
         step.classList.remove('active');
         step.classList.add('done');
-        step.querySelector('.hpc-step-icon').textContent = '✓';
+        step.querySelector('.hpc-step-icon').textContent = '[OK]';
         if (fillEl) fillEl.style.width = '100%';
         if (pctEl)  pctEl.textContent  = '100%';
 
@@ -2070,7 +2199,7 @@
             activeIdx = 0; pct = 0;
             steps[0].classList.remove('pending');
             steps[0].classList.add('active');
-            steps[0].querySelector('.hpc-step-icon').textContent = '⟳';
+            steps[0].querySelector('.hpc-step-icon').textContent = '~';
             if (cmdEl) cmdEl.textContent = CMDS[0];
           }, 1800);
           return;
@@ -2080,7 +2209,7 @@
         pct = 0;
         steps[activeIdx].classList.remove('pending');
         steps[activeIdx].classList.add('active');
-        steps[activeIdx].querySelector('.hpc-step-icon').textContent = '⟳';
+        steps[activeIdx].querySelector('.hpc-step-icon').textContent = '~';
         const nFill = steps[activeIdx].querySelector('.hpc-prog-fill');
         const nPct  = steps[activeIdx].querySelector('.hpc-prog-pct');
         if (nFill) nFill.style.width = '0%';

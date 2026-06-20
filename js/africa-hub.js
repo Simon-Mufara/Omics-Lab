@@ -42,22 +42,22 @@ OmicsLab.AfricaHub = (function () {
   const POPULATION_GENOMICS = {
     why: 'Africa is the birthplace of modern humans and contains more genetic diversity than the rest of the world combined. Yet 78% of genome-wide association study participants are of European ancestry. This creates a systematic bias: variants common in Africa are under-discovered, drug targets are missed, and polygenic risk scores perform poorly in African populations.',
     initiatives: [
-      { name: 'H3Africa', icon: '🌐', size: '53+ cohorts · 500K+ samples',
+      { name: 'H3Africa', icon: 'globe', size: '53+ cohorts · 500K+ samples',
         desc: 'The Human Heredity and Health in Africa consortium — the largest African genomics programme. Covers 30+ countries, 53+ cohorts spanning CVD, kidney disease, T2D, HIV, malaria, and mental health.',
         url: 'h3africa.org', colour: '#3fb950' },
-      { name: 'AWI-Gen', icon: '🧬', size: '12,000 participants · 6 African sites',
+      { name: 'AWI-Gen', icon: 'dna', size: '12,000 participants · 6 African sites',
         desc: 'Africa-Wits INDEPTH partnership for genomic studies. Six sites across sub-Saharan Africa studying cardiometabolic disease, body composition, and genetic ancestry.',
         url: 'awigen.org', colour: '#58a6ff' },
-      { name: 'APCDR', icon: '💊', size: '100K+ participants',
+      { name: 'APCDR', icon: 'thermometer', size: '100K+ participants',
         desc: 'African Partnership for Chronic Disease Research. Focuses on non-communicable diseases under-studied in Africa — type 2 diabetes, hypertension, stroke.',
         url: 'apcdr.org', colour: '#d2a8ff' },
-      { name: 'MalariaGEN', icon: '🦟', size: '20,000+ P. falciparum genomes',
+      { name: 'MalariaGEN', icon: 'virus', size: '20,000+ P. falciparum genomes',
         desc: 'The Malaria Genomic Epidemiology Network. Tracks drug resistance, transmission, and population structure of Plasmodium falciparum across Africa.',
         url: 'malariagen.net', colour: '#d29922' },
-      { name: 'H3ABioNet', icon: '💻', size: '32 nodes · 27 African countries',
+      { name: 'H3ABioNet', icon: 'cpu', size: '32 nodes · 27 African countries',
         desc: 'The Pan-African Bioinformatics Network for H3Africa. Provides HPC infrastructure, training, and analytical pipelines specifically for African genomics data.',
         url: 'h3abionet.org', colour: '#58a6ff' },
-      { name: 'PANDORA-ID-NET', icon: '🔬', size: '9 African countries',
+      { name: 'PANDORA-ID-NET', icon: 'microscope', size: '9 African countries',
         desc: 'Pandemic preparedness and outbreak response network. Focuses on diagnostics and pathogen genomics for emerging infections.',
         url: 'pandora-id.net', colour: '#f85149' }
     ],
@@ -74,11 +74,11 @@ OmicsLab.AfricaHub = (function () {
   const ONE_HEALTH = {
     intro: 'One Health recognises that human, animal, and environmental health are inseparable. 75% of emerging infectious diseases in humans are zoonotic — originating in animals. In Africa, the human-wildlife interface, livestock dependence, and climate change make One Health surveillance essential.',
     domains: [
-      { icon: '👤', title: 'Human Health', color: '#58a6ff',
+      { icon: 'heart-pulse', title: 'Human Health', color: '#58a6ff',
         points: ['Clinical surveillance networks (WHO GOARN)', 'SARS-CoV-2, Mpox, Ebola sequencing', 'Antimicrobial resistance monitoring', 'H3Africa cohort studies'] },
-      { icon: '🐄', title: 'Animal Health', color: '#3fb950',
+      { icon: 'tag', title: 'Animal Health', color: '#3fb950',
         points: ['Zoonotic spillover surveillance (bats, rodents)', 'Livestock pathogen genomics (ILRI)', 'Rift Valley Fever, Brucellosis, Leptospirosis', 'Wildlife-domestic animal interface'] },
-      { icon: '🌿', title: 'Environmental Health', color: '#d29922',
+      { icon: 'mountain', title: 'Environmental Health', color: '#d29922',
         points: ['Environmental DNA (eDNA) surveillance', 'Water-borne pathogen monitoring', 'Antimicrobial residues in soil/water', 'Climate change & vector range expansion'] }
     ],
     platforms: [
@@ -92,12 +92,12 @@ OmicsLab.AfricaHub = (function () {
 
   const IMPACT = {
     platform: [
-      { icon: '🔬', label: 'Workflows Available', value: '14+' },
-      { icon: '🦠', label: 'Diseases Covered', value: '40+' },
-      { icon: '🌍', label: 'African Lab Centres', value: '20+' },
-      { icon: '🛠️', label: 'Bioinformatics Tools', value: '50+' },
-      { icon: '📋', label: 'Training Modules', value: '15' },
-      { icon: '🎓', label: 'Learning Tracks', value: '3' }
+      { icon: 'flask',     label: 'Workflows Available', value: '14+' },
+      { icon: 'virus',     label: 'Diseases Covered', value: '40+' },
+      { icon: 'globe',     label: 'African Lab Centres', value: '20+' },
+      { icon: 'layers',    label: 'Bioinformatics Tools', value: '50+' },
+      { icon: 'clipboard', label: 'Training Modules', value: '15' },
+      { icon: 'award',     label: 'Learning Tracks', value: '3' }
     ],
     problem: 'Sub-Saharan Africa has fewer than 1 bioinformatician per 1,000,000 people. A single H3Africa study can generate terabytes of data that nobody in the country can analyse. OmicsLab bridges this gap with zero-cost, zero-install, browser-based training.',
     grantRelevance: [
@@ -163,7 +163,7 @@ OmicsLab.AfricaHub = (function () {
         </table>
       </div>
       <div class="ah-callout" onclick="OmicsLab.Badges&&OmicsLab.Badges.unlock('data-sovereign')">
-        <span class="ah-callout-icon">⚖️</span>
+        <span class="ah-callout-icon">${OmicsLab.Icons?.svg('scale', 18) || ''}</span>
         <div><strong>Mark as read to earn the Data Sovereignty Advocate badge.</strong> Click here to confirm you've reviewed these principles.</div>
       </div>`;
   }
@@ -178,7 +178,7 @@ OmicsLab.AfricaHub = (function () {
     const initiatives = POPULATION_GENOMICS.initiatives.map(i => `
       <div class="ah-initiative-card" style="border-top-color:${i.colour}">
         <div class="ah-init-head">
-          <span class="ah-init-icon">${i.icon}</span>
+          <span class="ah-init-icon">${OmicsLab.Icons?.svg(i.icon, 18) || ''}</span>
           <div>
             <div class="ah-init-name">${i.name}</div>
             <div class="ah-init-size">${i.size}</div>
@@ -190,7 +190,7 @@ OmicsLab.AfricaHub = (function () {
 
     return `
       <div class="ah-why-box">
-        <div class="ah-why-icon">🌍</div>
+        <div class="ah-why-icon">${OmicsLab.Icons?.svg('globe', 22) || ''}</div>
         <div class="ah-why-text">${POPULATION_GENOMICS.why}</div>
       </div>
       <div class="ah-stats-grid">${stats}</div>
@@ -201,7 +201,7 @@ OmicsLab.AfricaHub = (function () {
   function _buildOneHealthPanel() {
     const domains = ONE_HEALTH.domains.map(d => `
       <div class="ah-oh-domain" style="border-top-color:${d.color}">
-        <div class="ah-oh-icon">${d.icon}</div>
+        <div class="ah-oh-icon">${OmicsLab.Icons?.svg(d.icon, 22) || ''}</div>
         <div class="ah-oh-title" style="color:${d.color}">${d.title}</div>
         <ul class="ah-oh-list">
           ${d.points.map(p => `<li>${p}</li>`).join('')}
@@ -213,7 +213,7 @@ OmicsLab.AfricaHub = (function () {
 
     return `
       <div class="ah-why-box" style="border-left-color:#3fb950">
-        <div class="ah-why-icon">🔗</div>
+        <div class="ah-why-icon">${OmicsLab.Icons?.svg('link', 22) || ''}</div>
         <div class="ah-why-text">${ONE_HEALTH.intro}</div>
       </div>
       <div class="ah-oh-grid">${domains}</div>
@@ -227,7 +227,7 @@ OmicsLab.AfricaHub = (function () {
   function _buildImpactPanel() {
     const stats = IMPACT.platform.map(s => `
       <div class="ah-impact-stat">
-        <div class="ah-impact-icon">${s.icon}</div>
+        <div class="ah-impact-icon">${OmicsLab.Icons?.svg(s.icon, 22) || ''}</div>
         <div class="ah-impact-value">${s.value}</div>
         <div class="ah-impact-label">${s.label}</div>
       </div>`).join('');
@@ -240,7 +240,7 @@ OmicsLab.AfricaHub = (function () {
 
     return `
       <div class="ah-problem-box">
-        <div class="ah-why-icon">❗</div>
+        <div class="ah-why-icon">${OmicsLab.Icons?.svg('alert-triangle', 22) || ''}</div>
         <div class="ah-why-text"><strong>The Problem OmicsLab Solves:</strong> ${IMPACT.problem}</div>
       </div>
       <div class="ah-impact-grid">${stats}</div>
@@ -257,10 +257,10 @@ OmicsLab.AfricaHub = (function () {
         <div class="ah-training-name">${t.name}</div>
         <div class="ah-training-meta">
           <span class="ah-training-type">${t.type}</span>
-          <span class="ah-training-deadline">📅 ${t.deadline}</span>
+          <span class="ah-training-deadline">${OmicsLab.Icons?.svg('clock', 12) || ''} ${t.deadline}</span>
         </div>
         <div class="ah-training-desc">${t.desc}</div>
-        <div class="ah-training-url">🔗 ${t.url}</div>
+        <div class="ah-training-url">${OmicsLab.Icons?.svg('link', 12) || ''} ${t.url}</div>
       </div>`).join('');
 
     return `
@@ -283,11 +283,11 @@ OmicsLab.AfricaHub = (function () {
     if (!container) return;
 
     const tabs = [
-      { id: 'governance', label: '⚖️ Data Governance' },
-      { id: 'popgen',     label: '🧬 Population Genomics' },
-      { id: 'onehealth',  label: '🔗 One Health' },
-      { id: 'impact',     label: '📊 Impact & Grants' },
-      { id: 'training',   label: '🎓 Training Opportunities' }
+      { id: 'governance', label: 'Data Governance' },
+      { id: 'popgen',     label: 'Population Genomics' },
+      { id: 'onehealth',  label: 'One Health' },
+      { id: 'impact',     label: 'Impact & Grants' },
+      { id: 'training',   label: 'Training Opportunities' }
     ];
 
     const panels = [

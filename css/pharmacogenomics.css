@@ -1,0 +1,146 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Pharmacogenomics Africa CSS
+   ═══════════════════════════════════════════════════════════════ */
+
+.pgx-page { max-width: 1200px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+
+.pgx-header { text-align: center; margin-bottom: 2rem; }
+.pgx-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800;
+  background: linear-gradient(135deg, #f97316, #e3b341);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin: 0 0 0.4rem;
+}
+.pgx-subtitle { font-size: 0.88rem; color: var(--text-muted, #8b949e); margin: 0; }
+
+/* Summary stats */
+.pgx-summary-row {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; margin-bottom: 2rem;
+}
+.pgx-summary-card {
+  background: var(--bg-card, #161b22); border: 1px solid #21262d;
+  border-top: 3px solid; border-radius: 10px; padding: 1rem;
+}
+.pgx-summary-stat { font-size: 1.5rem; font-weight: 800; font-family: var(--font-mono, monospace); }
+.pgx-summary-label { font-size: 0.78rem; color: #c9d1d9; margin: 0.25rem 0 0.15rem; }
+.pgx-summary-note { font-size: 0.7rem; color: #8b949e; }
+
+/* Filter */
+.pgx-filter-row {
+  display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;
+}
+.pgx-filter-label { font-size: 0.78rem; color: #8b949e; white-space: nowrap; }
+.pgx-cat-btn {
+  padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid #30363d;
+  background: transparent; color: #8b949e; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+  transition: all 0.2s;
+}
+.pgx-cat-btn:hover { border-color: #f97316; color: #c9d1d9; }
+.pgx-cat-btn.active { background: rgba(249,115,22,0.12); border-color: #f97316; color: #f97316; }
+
+/* Layout */
+.pgx-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+
+/* Sidebar */
+.pgx-gene-sidebar { display: flex; flex-direction: column; gap: 0; }
+.pgx-sidebar-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  color: #8b949e; margin-bottom: 0.5rem;
+}
+.pgx-gene-btn {
+  display: block; width: 100%; text-align: left; padding: 0.65rem 0.85rem;
+  border: 1px solid transparent; border-radius: 8px; background: transparent;
+  cursor: pointer; margin-bottom: 0.35rem; transition: all 0.18s;
+}
+.pgx-gene-btn:hover { background: rgba(255,255,255,0.04); }
+.pgx-gene-name { font-weight: 800; font-size: 0.92rem; font-family: var(--font-mono, monospace); }
+.pgx-gene-func { font-size: 0.68rem; color: #8b949e; margin-top: 0.15rem; }
+
+/* Detail panel */
+.pgx-detail-panel {
+  background: var(--bg-card, #161b22); border: 1px solid #21262d;
+  border-radius: 14px; padding: 1.5rem; min-height: 400px;
+}
+.pgx-empty {
+  display: flex; align-items: center; justify-content: center;
+  height: 200px; color: #8b949e; font-size: 0.85rem; text-align: center;
+  max-width: 400px; margin: 0 auto; line-height: 1.6;
+}
+.pgx-detail-header {
+  padding-bottom: 0.85rem; border-bottom: 2px solid; margin-bottom: 1rem;
+}
+.pgx-detail-gene { font-size: 1.6rem; font-weight: 900; font-family: var(--font-mono, monospace); }
+.pgx-detail-fullname { font-size: 0.85rem; color: #c9d1d9; margin-top: 0.1rem; }
+.pgx-detail-function { font-size: 0.75rem; color: #8b949e; margin-top: 0.1rem; font-style: italic; }
+
+.pgx-summary-box {
+  background: rgba(255,255,255,0.03); border: 1px solid;
+  border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.82rem;
+  color: #c9d1d9; line-height: 1.65; margin-bottom: 1.25rem;
+}
+
+.pgx-section-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #8b949e; margin-bottom: 0.5rem;
+}
+
+.pgx-table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #21262d; }
+.pgx-table {
+  width: 100%; border-collapse: collapse; font-size: 0.78rem;
+}
+.pgx-table th {
+  padding: 0.5rem 0.75rem; text-align: left; font-size: 0.68rem;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: #8b949e; border-bottom: 1px solid #30363d; background: #0d1117;
+  white-space: nowrap;
+}
+.pgx-table td {
+  padding: 0.55rem 0.75rem; border-bottom: 1px solid #21262d; color: #8b949e;
+  vertical-align: middle;
+}
+.pgx-table tbody tr:last-child td { border-bottom: none; }
+.pgx-table tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+.pgx-cat-badge {
+  padding: 0.18rem 0.5rem; border-radius: 20px; font-size: 0.68rem;
+  font-weight: 700; white-space: nowrap;
+}
+.pgx-level { font-weight: 700; font-size: 0.72rem; white-space: nowrap; }
+
+.pgx-africa-note {
+  margin-top: 1.25rem; padding: 0.85rem 1rem;
+  background: rgba(63,185,80,0.06); border-radius: 8px; border-left: 3px solid #3fb950;
+}
+.pgx-africa-note-title {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #3fb950; margin-bottom: 0.4rem;
+}
+.pgx-africa-note { font-size: 0.8rem; color: #c9d1d9; line-height: 1.6; }
+
+/* Resources */
+.pgx-resources { border-top: 1px solid #21262d; padding-top: 2rem; }
+.pgx-resources-title {
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; color: #8b949e; margin-bottom: 1rem;
+}
+.pgx-resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; }
+.pgx-resource-card {
+  background: var(--bg-card, #161b22); border: 1px solid #21262d;
+  border-radius: 8px; padding: 0.75rem;
+  transition: border-color 0.2s;
+}
+.pgx-resource-card:hover { border-color: #f97316; }
+.pgx-resource-name { font-weight: 700; color: #f97316; font-size: 0.82rem; margin-bottom: 0.25rem; }
+.pgx-resource-desc { font-size: 0.72rem; color: #8b949e; line-height: 1.45; }
+
+@media (max-width: 860px) {
+  .pgx-summary-row { grid-template-columns: repeat(2, 1fr); }
+  .pgx-layout { grid-template-columns: 1fr; }
+  .pgx-gene-sidebar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+  .pgx-sidebar-title { grid-column: 1/-1; }
+}
+@media (max-width: 520px) {
+  .pgx-summary-row { grid-template-columns: 1fr 1fr; }
+  .pgx-gene-sidebar { grid-template-columns: repeat(2, 1fr); }
+  .pgx-page { padding: 1.5rem 1rem 3rem; }
+}

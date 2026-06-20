@@ -508,7 +508,7 @@ A proportion of any intellectual property generated from this work will be held 
           </div>
           <pre class="grant-output" id="gr-output"></pre>
           <div class="grant-disclaimer">
-            ⚠️ This text is AI-assisted and uses template language. Always review, fact-check, and customise before submission. Pilot data, actual IRB details, and institutional signatures must be added by you. OmicsLab provides structure, not a substitute for scientific writing.
+            ${OmicsLab.Icons?.svg('alert-triangle', 14) || ''} This text is AI-assisted and uses template language. Always review, fact-check, and customise before submission. Pilot data, actual IRB details, and institutional signatures must be added by you. OmicsLab provides structure, not a substitute for scientific writing.
           </div>
         </div>
 
@@ -517,27 +517,27 @@ A proportion of any intellectual property generated from this work will be held 
           <div class="grant-tips-title">Writing tips for African-context grants</div>
           <div class="grant-tips-grid">
             <div class="grant-tip">
-              <div class="grant-tip-icon">🎯</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('target', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Lead with burden</strong> — Open with Africa-specific disease burden statistics from WHO AFRO or GBD. Reviewers want to see continental context before global numbers.</div>
             </div>
             <div class="grant-tip">
-              <div class="grant-tip-icon">🌍</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('globe', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Cite H3Africa policies</strong> — Wellcome Trust and NIH Fogarty expect explicit reference to H3Africa Data Access Policy and FAIR principles for data sharing.</div>
             </div>
             <div class="grant-tip">
-              <div class="grant-tip-icon">🧬</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('dna', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Name African reference panels</strong> — Mention AWI-Gen, H3Africa, or African Genome Variation Project as reference populations. This signals awareness of population-specific methodology.</div>
             </div>
             <div class="grant-tip">
-              <div class="grant-tip-icon">📚</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('file-text', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Quantify capacity building</strong> — Funders value mentorship. State exact numbers: "training 3 PhD students + 12 workshop participants" beats "building capacity".</div>
             </div>
             <div class="grant-tip">
-              <div class="grant-tip-icon">🤝</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('link', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Community advisory board</strong> — H3Africa and Wellcome require evidence of community engagement. Name your CAB structure and when it was formed, even in early proposals.</div>
             </div>
             <div class="grant-tip">
-              <div class="grant-tip-icon">💰</div>
+              <div class="grant-tip-icon">${OmicsLab.Icons?.svg('scale', 20) || ''}</div>
               <div class="grant-tip-text"><strong>Justify every line item</strong> — African grant reviewers often query whether costs are appropriate for local context. Cite local market rates or consortium pricing for kits and sequencing.</div>
             </div>
           </div>

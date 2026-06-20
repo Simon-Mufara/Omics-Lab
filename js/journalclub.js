@@ -428,7 +428,7 @@ OmicsLab.JournalClub = (function () {
     modal.innerHTML = `
       <div class="jc-modal-overlay" onclick="OmicsLab.JournalClub._close()"></div>
       <div class="jc-modal-box">
-        <button class="jc-modal-close" onclick="OmicsLab.JournalClub._close()">✕</button>
+        <button class="jc-modal-close" onclick="OmicsLab.JournalClub._close()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <div class="jc-modal-inner">
           <div class="jc-modal-meta">
             <span class="jc-category">${p.category}</span>

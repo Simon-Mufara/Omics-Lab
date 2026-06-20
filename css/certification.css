@@ -34,3 +34,43 @@
 .ct-goto-btn { padding: .18rem .45rem; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #8b949e; font-size: .68rem; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: .25rem; }
 .ct-goto-btn:hover { color: #58a6ff; border-color: rgba(88,166,255,.3); }
 .ct-module-pts { font-size: .7rem; font-weight: 700; min-width: 45px; text-align: right; font-family: 'Cascadia Code','Fira Mono',monospace; }
+
+/* ── Open Badges modal ── */
+.ct-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+  padding: 1rem;
+}
+.ct-modal {
+  background: var(--surface, #161b22);
+  border: 1px solid var(--border, #30363d);
+  border-radius: .75rem;
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 40px rgba(0,0,0,.5);
+}
+.ct-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .9rem 1.1rem;
+  border-bottom: 1px solid var(--border, #30363d);
+  font-weight: 700;
+  color: var(--text-primary, #e6edf3);
+  gap: .5rem;
+}
+.ct-modal-header button { background: none; border: none; cursor: pointer; color: var(--text-muted, #8b949e); display: flex; padding: .2rem; }
+.ct-modal-body { padding: 1.1rem; display: flex; flex-direction: column; gap: .75rem; }
+.ct-cred-note  { font-size: .78rem; color: var(--text-secondary, #8b949e); margin: 0; line-height: 1.55; }
+.ct-cred-id    { font-size: .65rem; color: var(--text-muted, #8b949e); font-family: 'JetBrains Mono', monospace; word-break: break-all; }
+.ct-cred-id code { color: var(--accent, #3fb950); }
+.ct-cred-tracks { display: flex; flex-direction: column; gap: .35rem; }
+.ct-cred-track-row { display: flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--text-primary, #e6edf3); }
+.ct-copy-cred  { align-self: flex-start; }

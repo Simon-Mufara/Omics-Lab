@@ -25,6 +25,10 @@
   <!-- Analysis tools -->
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/analysis</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/terminal</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/virtual-lab</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/gwas</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/pharmacogenomics</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/network-hub</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/variantinterp</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/qualitypredictor</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/primerdesign</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -77,8 +81,21 @@
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/glossary</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/offline-data</loc><changefreq>monthly</changefreq><priority>0.65</priority></url>
 
+  <!-- Research & Collaboration -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/collab</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/labnotebook</loc><changefreq>weekly</changefreq><priority>0.75</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/output-tracker</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/metaanalysis</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/pipeline-gen</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
+
   <!-- Legal -->
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/privacy</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://simon-mufara.github.io/Omics-Lab/#/terms</loc><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <!-- New modules (Prompts 41-60) -->
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/skill-tree</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/variant-atlas</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/clinical-decision</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/one-health</loc><changefreq>monthly</changefreq><priority>0.80</priority></url>
+  <url><loc>https://simon-mufara.github.io/Omics-Lab/#/institution</loc><changefreq>monthly</changefreq><priority>0.75</priority></url>
 
 </urlset>

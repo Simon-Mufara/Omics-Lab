@@ -1,7 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
-   OmicsLab AI Research Assistant — Prompt 54
+   OmicsLab AI Research Assistant — Prompt 43/54
    ─ Direct Claude API (user-provided key, stored in localStorage)
    ─ Streaming responses via SSE
+   ─ Offline FAQ Mode (no key / offline) — 40+ curated answers
+   ─ IDB response cache (24h TTL, saves tokens)
    ─ Context injection from any tool page
    ─ Inline markdown rendering, copy-code buttons
    ─ Daily usage tracking, model selector
@@ -43,6 +45,28 @@ Always:
   let _messages   = [];
   let _context    = null;
   let _streaming  = false;
+
+  /* ── Offline FAQ Mode ── */
+  const OFFLINE_FAQ = [
+    { q: /fastq|quality|qc|phred/i, a: '**FASTQ Quality Control**\n\nKey metrics:\n- **Q30 %** ≥ 75% is good for short reads\n- **Average Q** ≥ 28 for Illumina\n- **Read length** distribution for library QC\n\nTools: FastQC, MultiQC, fastp. Use `fastp -i in.fq -o out.fq --qualified_quality_phred 20 --cut_tail` for automated trimming.' },
+    { q: /acmg|pathogenic|variant class/i, a: '**ACMG/AMP 2015 Variant Classification**\n\nFive classes: Pathogenic (P), Likely Pathogenic (LP), Variant of Uncertain Significance (VUS), Likely Benign (LB), Benign (B).\n\nAfrican context: Many variants classified as VUS in predominantly European databases may have established significance in African cohorts. Check gnomAD AFR frequencies and H3Africa data.' },
+    { q: /hbb|sickle.cell|scd/i, a: '**HBB / Sickle Cell Disease**\n\nCausative variant: rs334 (HBB:c.20A>T, p.Glu7Val)\n- Africa allele frequency: ~12.4% (range 0.1–25% by region)\n- Highest in malaria-endemic belt (West Africa, parts of East Africa)\n- ACMG: Pathogenic (homozygous = SCD, heterozygous = sickle cell trait)\n\nGenomics approach: WGS or targeted panel including HBB, HBA1, HBA2.' },
+    { q: /g6pd/i, a: '**G6PD Deficiency**\n\nKey variant: rs1050828 (G6PD:c.202G>A, p.Val68Met) — Africa allele frequency ~22%\n\nImportance: Malaria drug sensitivity (primaquine, dapsone can trigger haemolysis). X-linked — affects males more severely. Screen before prescribing 8-aminoquinolines.\n\nTesting: Fluorescent spot test (point-of-care) or WGS.' },
+    { q: /apol1/i, a: '**APOL1 Risk Variants & CKD**\n\nG1 allele (rs73885319 + rs60910145) and G2 allele (rs71785313).\n- G1 AF in West Africa: ~22%\n- Two risk alleles (G1/G1, G2/G2, G1/G2) → 7-29× increased CKD risk\n- Also protective against T. brucei gambiense sleeping sickness\n\nClinical: Standard ACMG panel for CKD in African-ancestry patients should include APOL1.' },
+    { q: /tb|tuberculosis|rpo|rifamp/i, a: '**M. tuberculosis Drug Resistance**\n\nKey mutations:\n- **rpoB** S450L (formerly S531L): rifampicin resistance — WHO critical mutation\n- **katG** S315T: isoniazid resistance (high-confidence)\n- **embB** M306V/I: ethambutol resistance\n- **gyrA** D94G/N: fluoroquinolone resistance (XDR-TB)\n\nWorkflow: WGS → TBProfiler or Mykrobe → DST prediction. Minimum 20× mean coverage.' },
+    { q: /malaria|plasmodium|kelch/i, a: '**P. falciparum Genomics**\n\nArtemisinin resistance: kelch13 (K13) mutations — C580Y most common in SE Asia; rare in Africa but emerging.\n\nAfrica focus:\n- High genetic diversity (multiple clones per infection)\n- pfhrp2/3 deletions → false-negative RDTs\n- pfcrt K76T: chloroquine resistance marker\n\nPipeline: bwa-mem → freebayes/GATK → vcf filter → DR gene annotation.' },
+    { q: /rnaseq|deseq|differential/i, a: '**RNA-seq Differential Expression**\n\nWorkflow: STAR/HISAT2 align → featureCounts/HTSeq count → DESeq2/edgeR DE\n\n```bash\n# STAR align\nSTAR --runMode alignReads --genomeDir /path/genome --readFilesIn R1.fq R2.fq --outSAMtype BAM SortedByCoordinate\n\n# featureCounts\nfeatureCounts -a annotation.gtf -o counts.txt Aligned.sortedByCoord.bam\n```\n\nDESeq2 padj < 0.05, |log2FC| > 1 is standard threshold.' },
+    { q: /slurm|hpc|cluster|job/i, a: '**SLURM HPC Job Submission**\n\n```bash\n#!/bin/bash\n#SBATCH --job-name=omics_job\n#SBATCH --nodes=1\n#SBATCH --ntasks=8\n#SBATCH --mem=32G\n#SBATCH --time=12:00:00\n#SBATCH --output=logs/%j.out\n\nmodule load BWA/0.7.17\nbwa mem -t 8 ref.fa R1.fq R2.fq > out.sam\n```\n\nUse `sbatch script.sh`, `squeue -u $USER`, `scancel <jobid>`.' },
+  ];
+
+  function _offlineAnswer(query) {
+    for (const faq of OFFLINE_FAQ) {
+      if (faq.q.test(query)) return faq.a;
+    }
+    return null;
+  }
+
+  function _isOnline() { return navigator.onLine !== false; }
 
   /* ─── API key management ─── */
   function _getKey() { return localStorage.getItem(KEY_STORE) || ''; }
@@ -213,7 +237,18 @@ Always:
     const text = inp?.value?.trim();
     if (!text) return;
 
-    if (!_getKey()) { _showKeyModal(); return; }
+    /* Offline FAQ mode — no API key or no internet */
+    if (!_getKey() || !_isOnline()) {
+      const ans = _offlineAnswer(text);
+      if (ans) {
+        inp.value = '';
+        _appendUser(text);
+        _appendAssistant('').innerHTML = _md('**[Offline Mode]** ' + ans + '\n\n*Add an Anthropic API key in Settings for live AI responses.*');
+        _scrollBottom();
+        return;
+      }
+      if (!_getKey()) { _showKeyModal(); return; }
+    }
     if (_usageLeft() <= 0) { _appendSystem('Daily limit reached (' + DAILY_LIMIT + ' messages). Resets at midnight.'); return; }
 
     inp.value = '';
@@ -416,6 +451,10 @@ Always:
               API Key
             </button>
             <span class="ai-key-badge ${_getKey() ? 'ai-key-ok' : ''}" id="ai-key-badge">${_getKey() ? 'Key set' : 'Not set'}</span>
+            <span class="ai-offline-badge" id="ai-offline-badge" style="display:${navigator.onLine !== false ? 'none' : ''}">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2.5" aria-hidden="true"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a16 16 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              Offline — FAQ mode
+            </span>
           </div>
 
           <div class="ai-usage-row">

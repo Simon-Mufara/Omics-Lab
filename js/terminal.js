@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Bioinformatics Terminal Simulator
    Simulates a real Linux bioinformatics environment in the browser.
 
@@ -41,9 +41,9 @@ OmicsLab.Terminal = (function () {
   const PRESETS = [
     {
       id: 'wgs',
-      icon: '🧬',
+      icon: 'dna',
       name: 'WGS Pipeline',
-      desc: 'BWA-MEM2 → GATK HaplotypeCaller',
+      desc: 'BWA-MEM2 > GATK HaplotypeCaller',
       cmd: 'run-pipeline wgs',
       steps: [
         { label: 'FastQC (raw)', fn: _fastqc, args: ['data/sample_R1.fastq.gz', 'data/sample_R2.fastq.gz'] },
@@ -60,9 +60,9 @@ OmicsLab.Terminal = (function () {
     },
     {
       id: 'rnaseq',
-      icon: '📈',
+      icon: 'trending-up',
       name: 'RNA-seq Pipeline',
-      desc: 'STAR align → Salmon quant → DESeq2',
+      desc: 'STAR align > Salmon quant > DESeq2',
       cmd: 'run-pipeline rnaseq',
       steps: [
         { label: 'FastQC (raw)',  fn: _fastqc, args: ['data/sample_R1.fastq.gz'] },
@@ -75,7 +75,7 @@ OmicsLab.Terminal = (function () {
     },
     {
       id: 'variant',
-      icon: '🔬',
+      icon: 'microscope',
       name: 'Variant Calling',
       desc: 'HISAT2 + bcftools mpileup',
       cmd: 'run-pipeline variant',
@@ -89,9 +89,9 @@ OmicsLab.Terminal = (function () {
     },
     {
       id: 'meta',
-      icon: '🦠',
+      icon: 'virus',
       name: 'Metagenomics',
-      desc: 'Kraken2 classify → Bracken abundance',
+      desc: 'Kraken2 classify > Bracken abundance',
       cmd: 'run-pipeline meta',
       steps: [
         { label: 'fastp QC',    fn: _fastp,   args: [] },
@@ -104,6 +104,7 @@ OmicsLab.Terminal = (function () {
 
   /* ─── HTML helpers ─── */
   function _line(cls, ...parts) {
+    if (!_outputEl) return null;
     const div = document.createElement('div');
     div.className = 'to-line';
     div.innerHTML = parts.map(([c, t]) => `<span class="${c}">${_esc(t)}</span>`).join('');
@@ -111,13 +112,14 @@ OmicsLab.Terminal = (function () {
     return div;
   }
   function _raw(html) {
+    if (!_outputEl) return;
     const div = document.createElement('div');
     div.innerHTML = html;
     _outputEl.appendChild(div);
   }
   function _blank() { _raw('<div class="to-blank"></div>'); }
   function _esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function _scroll() { _outputEl.scrollTop = _outputEl.scrollHeight; }
+  function _scroll() { if (_outputEl) _outputEl.scrollTop = _outputEl.scrollHeight; }
 
   function _echoCmd(cmd) {
     _line('to-line',
@@ -164,7 +166,7 @@ OmicsLab.Terminal = (function () {
       const base = f.replace('.fastq.gz','').replace('.fastq','').split('/').pop();
       _addVFS(`results/${base}_fastqc.html`,'68K','new');
       _addVFS(`results/${base}_fastqc.zip`,'98K','new');
-      _line('to-line', ['to-success', `✔ ${base}_fastqc.html written`]);
+      _line('to-line', ['to-success', `[OK] ${base}_fastqc.html written`]);
     }
     _line('to-line', ['to-success', 'Analysis complete for ' + files.length + ' file(s)']);
     return true;
@@ -187,7 +189,7 @@ OmicsLab.Terminal = (function () {
     _addVFS('results/trimmed_R2.fastq.gz','1.9G','new');
     _addVFS('results/fastp.json','8.2K','new');
     _addVFS('results/fastp.html','312K','new');
-    _line('to-line', ['to-success', '✔ fastp complete']);
+    _line('to-line', ['to-success', '[OK] fastp complete']);
     return true;
   }
 
@@ -201,7 +203,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '[M::mem_process_seqs] Processed 46,718,440 reads in 92.3 sec']);
     _line('to-line', ['to-stdout', '[main] Real time: 97.8 sec; CPU: 771.2 sec']);
     _addVFS('results/aligned.sam','18.2G','new');
-    _line('to-line', ['to-success', '✔ Alignment complete']);
+    _line('to-line', ['to-success', '[OK] Alignment complete']);
     return true;
   }
 
@@ -213,7 +215,7 @@ OmicsLab.Terminal = (function () {
       await _animateProgress('Building index',300);
       _addVFS('results/aligned.bam','6.4G','new');
       _addVFS('results/aligned.bam.bai','2.1M','new');
-      _line('to-line', ['to-success', '✔ Sorted BAM written']);
+      _line('to-line', ['to-success', '[OK] Sorted BAM written']);
     } else if (sub === 'flagstat') {
       _line('to-line', ['to-section', 'samtools flagstat:']);
       _line('to-line', ['to-number', '46718440 + 0 '], ['to-stdout', 'in total (QC-passed)']);
@@ -247,7 +249,7 @@ OmicsLab.Terminal = (function () {
     _addVFS('results/dedup.bam','5.9G','new');
     _addVFS('results/dedup.bam.bai','2.0M','new');
     _addVFS('results/dup_metrics.txt','1.2K','new');
-    _line('to-line', ['to-success', '✔ MarkDuplicates complete']);
+    _line('to-line', ['to-success', '[OK] MarkDuplicates complete']);
     return true;
   }
 
@@ -257,11 +259,11 @@ OmicsLab.Terminal = (function () {
     if (sub === 'BaseRecalibrator') {
       await _animateProgress('Counting covariates', 1200);
       _addVFS('results/recal.table','28K','new');
-      _line('to-line', ['to-success', '✔ BQSR table written']);
+      _line('to-line', ['to-success', '[OK] BQSR table written']);
     } else if (sub === 'ApplyBQSR') {
       await _animateProgress('Applying recalibration', 900);
       _addVFS('results/recal.bam','5.8G','new');
-      _line('to-line', ['to-success', '✔ Recalibrated BAM written']);
+      _line('to-line', ['to-success', '[OK] Recalibrated BAM written']);
     } else if (sub === 'HaplotypeCaller') {
       await _animateProgress('Assembling haplotypes', 2400);
       _blank();
@@ -272,19 +274,19 @@ OmicsLab.Terminal = (function () {
       _line('to-line', ['to-stdout', '  Ti/Tv ratio:      '], ['to-success', '2.18']);
       _addVFS('results/raw_variants.vcf.gz','342M','new');
       _addVFS('results/raw_variants.vcf.gz.tbi','1.2M','new');
-      _line('to-line', ['to-success', '✔ HaplotypeCaller complete']);
+      _line('to-line', ['to-success', '[OK] HaplotypeCaller complete']);
     } else if (sub === 'VariantFiltration') {
       await _animateProgress('Applying VQSR filters', 700);
       _addVFS('results/filtered_variants.vcf.gz','298M','new');
-      _line('to-line', ['to-success', '✔ Variant filtration complete']);
+      _line('to-line', ['to-success', '[OK] Variant filtration complete']);
       _line('to-line', ['to-stdout', '  PASS variants: '], ['to-success', '4,218,902 (86.2%)']);
     } else if (sub === 'Mutect2') {
       await _animateProgress('Calling somatic variants', 2000);
       _addVFS('results/somatic_variants.vcf.gz','48M','new');
-      _line('to-line', ['to-success', '✔ Mutect2 complete']);
+      _line('to-line', ['to-success', '[OK] Mutect2 complete']);
     } else {
       await _animateProgress(`Running ${sub}`, 1000);
-      _line('to-line', ['to-success', `✔ ${sub} complete`]);
+      _line('to-line', ['to-success', `[OK] ${sub} complete`]);
     }
     return true;
   }
@@ -306,7 +308,7 @@ OmicsLab.Terminal = (function () {
     _addVFS('results/Aligned.sortedByCoord.out.bam','4.2G','new');
     _addVFS('results/SJ.out.tab','2.8M','new');
     _addVFS('results/Log.final.out','2.4K','new');
-    _line('to-line', ['to-success', '✔ STAR alignment complete']);
+    _line('to-line', ['to-success', '[OK] STAR alignment complete']);
     return true;
   }
 
@@ -316,7 +318,7 @@ OmicsLab.Terminal = (function () {
     if (sub === 'index') {
       await _animateProgress('Building k-mer index', 1200);
       _addVFS('results/salmon_index/','—','new');
-      _line('to-line', ['to-success', '✔ Index built']);
+      _line('to-line', ['to-success', '[OK] Index built']);
     } else {
       await _animateProgress('Quasi-mapping reads',  900);
       await _animateProgress('EM quantification',    600);
@@ -325,7 +327,7 @@ OmicsLab.Terminal = (function () {
       _line('to-line', ['to-stdout', '  Transcripts:  '], ['to-number',  '228,418']);
       _addVFS('results/salmon_quant/quant.sf','3.8M','new');
       _addVFS('results/salmon_quant/cmd_info.json','420B','new');
-      _line('to-line', ['to-success', '✔ Salmon quant complete']);
+      _line('to-line', ['to-success', '[OK] Salmon quant complete']);
     }
     return true;
   }
@@ -340,7 +342,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '  Unassigned_Ambiguity:   '], ['to-number',  '3.44%']);
     _addVFS('results/counts.txt','14.2M','new');
     _addVFS('results/counts.txt.summary','1.1K','new');
-    _line('to-line', ['to-success', '✔ Feature counting complete']);
+    _line('to-line', ['to-success', '[OK] Feature counting complete']);
     return true;
   }
 
@@ -351,7 +353,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '  Reads written (quality):   '], ['to-success', '97.12%']);
     _line('to-line', ['to-stdout', '  Total bases trimmed:       '], ['to-warn',    '1.24%']);
     _addVFS('results/trimmed_R1.fastq.gz','1.8G','new');
-    _line('to-line', ['to-success', '✔ Trim Galore complete']);
+    _line('to-line', ['to-success', '[OK] Trim Galore complete']);
     return true;
   }
 
@@ -363,7 +365,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '  Overall alignment rate: '], ['to-success', '96.84%']);
     _line('to-line', ['to-stdout', '  Concordant pairs:       '], ['to-success', '94.21%']);
     _addVFS('results/hisat2_aligned.bam','4.8G','new');
-    _line('to-line', ['to-success', '✔ HISAT2 alignment complete']);
+    _line('to-line', ['to-success', '[OK] HISAT2 alignment complete']);
     return true;
   }
 
@@ -385,7 +387,7 @@ OmicsLab.Terminal = (function () {
     } else {
       await _animateProgress(`bcftools ${sub}`, 600);
     }
-    _line('to-line', ['to-success', `✔ bcftools ${sub} done`]);
+    _line('to-line', ['to-success', `[OK] bcftools ${sub} done`]);
     return true;
   }
 
@@ -394,7 +396,7 @@ OmicsLab.Terminal = (function () {
     await _animateProgress('bgzip compress',  400);
     await _animateProgress('tabix index',     300);
     _addVFS('results/calls.vcf.gz.tbi','840K','new');
-    _line('to-line', ['to-success', '✔ bgzip+tabix done']);
+    _line('to-line', ['to-success', '[OK] bgzip+tabix done']);
     return true;
   }
 
@@ -407,7 +409,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '  Unclassified reads:  '], ['to-warn',    '10.66% (5,142,108)']);
     _addVFS('results/kraken2_output.txt','1.2G','new');
     _addVFS('results/kraken2_report.txt','48K','new');
-    _line('to-line', ['to-success', '✔ Kraken2 classification done']);
+    _line('to-line', ['to-success', '[OK] Kraken2 classification done']);
     return true;
   }
 
@@ -417,7 +419,7 @@ OmicsLab.Terminal = (function () {
     _addVFS('results/bracken_output.txt','12K','new');
     _addVFS('results/bracken_species_report.txt','22K','new');
     _line('to-line', ['to-stdout', '  Top species: Homo sapiens (47.2%), Bacteroides fragilis (8.4%), ...']);
-    _line('to-line', ['to-success', '✔ Bracken re-estimation done']);
+    _line('to-line', ['to-success', '[OK] Bracken re-estimation done']);
     return true;
   }
 
@@ -425,7 +427,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-info', 'KronaTools — generating interactive HTML pie']);
     await _animateProgress('Building Krona chart', 400);
     _addVFS('results/krona_chart.html','2.8M','new');
-    _line('to-line', ['to-success', '✔ Krona chart saved → results/krona_chart.html']);
+    _line('to-line', ['to-success', '[OK] Krona chart saved > results/krona_chart.html']);
     return true;
   }
 
@@ -441,7 +443,7 @@ OmicsLab.Terminal = (function () {
     _addVFS('results/multiqc_report.html','4.1M','new');
     _addVFS('results/multiqc_data/','—','new');
     _blank();
-    _line('to-line', ['to-success', '✔ MultiQC report: results/multiqc_report.html']);
+    _line('to-line', ['to-success', '[OK] MultiQC report: results/multiqc_report.html']);
     return true;
   }
 
@@ -458,7 +460,7 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-stdout', '  MODIFIER:             '], ['to-stdout', '4,074,555']);
     _addVFS('results/vep_annotated.vcf.gz','412M','new');
     _addVFS('results/vep_summary.html','1.8M','new');
-    _line('to-line', ['to-success', '✔ VEP annotation complete']);
+    _line('to-line', ['to-success', '[OK] VEP annotation complete']);
     return true;
   }
 
@@ -565,7 +567,7 @@ OmicsLab.Terminal = (function () {
       await _animateProgress('Running jobs',      1800);
       _addVFS('results/dag.png','48K','new');
       _addVFS('.snakemake/','—','new');
-      _line('to-line', ['to-success', '✔ Snakemake completed successfully']);
+      _line('to-line', ['to-success', '[OK] Snakemake completed successfully']);
     })();
   }
 
@@ -577,7 +579,7 @@ OmicsLab.Terminal = (function () {
       await _animateProgress('Downloading pipeline',  600);
       await _animateProgress('Running workflow',      2000);
       _addVFS('results/pipeline_info/','—','new');
-      _line('to-line', ['to-success', `✔ ${pipeline} complete`]);
+      _line('to-line', ['to-success', `[OK] ${pipeline} complete`]);
     } else {
       _line('to-line', ['to-stdout', 'Usage: nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh38']);
     }
@@ -796,7 +798,7 @@ OmicsLab.Terminal = (function () {
     }
 
     _line('to-line', ['to-section', `══ Pipeline complete ══`]);
-    _line('to-line', ['to-success', `✔ All ${preset.steps.length} steps finished successfully`]);
+    _line('to-line', ['to-success', `[OK] All ${preset.steps.length} steps finished successfully`]);
     _line('to-line', ['to-dim', `View results: ls results/ | cat results/multiqc_report.html`]);
   }
 
@@ -810,7 +812,7 @@ OmicsLab.Terminal = (function () {
     ];
     lines.forEach(([c, t]) => _raw(`<div class="to-line"><span class="${c}">${t}</span></div>`));
     _blank();
-    _line('to-line', ['to-success', '✔ 22 bioinformatics tools available']);
+    _line('to-line', ['to-success', '[OK] 22 bioinformatics tools available']);
     _line('to-line', ['to-info',    '  Type help for commands  |  Tab = autocomplete  |  ↑↓ = history']);
     _line('to-line', ['to-dim',     '  Presets: run-pipeline wgs | rnaseq | variant | meta']);
     _blank();
@@ -856,8 +858,8 @@ set -euo pipefail
 
 SAMPLE="sample"
 REF="data/reference.fa"
-R1="data/${SAMPLE}_R1.fastq.gz"
-R2="data/${SAMPLE}_R2.fastq.gz"
+R1="data/\${SAMPLE}_R1.fastq.gz"
+R2="data/\${SAMPLE}_R2.fastq.gz"
 THREADS=8
 OUT="results"
 
@@ -934,12 +936,12 @@ OUT="results"
 mkdir -p $OUT
 
 # Step 1: FastQC
-fastqc data/${SAMPLE}_R1.fastq.gz -o $OUT
+fastqc data/\${SAMPLE}_R1.fastq.gz -o $OUT
 
 # Step 2: Trim reads
 trim_galore --paired --cores $THREADS \\
-  data/${SAMPLE}_R1.fastq.gz \\
-  data/${SAMPLE}_R2.fastq.gz \\
+  data/\${SAMPLE}_R1.fastq.gz \\
+  data/\${SAMPLE}_R2.fastq.gz \\
   -o $OUT/trimmed
 
 # Step 3: STAR alignment (2-pass)
@@ -977,10 +979,10 @@ multiqc $OUT/ -o $OUT/multiqc/
 echo "RNA-seq pipeline complete!"`;
 
   const SCRIPT_TEMPLATES = [
-    { icon: '🧬', name: 'WGS Pipeline', content: _WGS_SCRIPT },
-    { icon: '📈', name: 'RNA-seq Pipeline', content: _RNASEQ_SCRIPT },
+    { icon: 'dna', name: 'WGS Pipeline', content: _WGS_SCRIPT },
+    { icon: 'trending-up', name: 'RNA-seq Pipeline', content: _RNASEQ_SCRIPT },
     {
-      icon: '🐍', name: 'Snakemake Workflow', content: `# Snakemake WGS Workflow
+      icon: 'git-branch', name: 'Snakemake Workflow', content: `# Snakemake WGS Workflow
 # Run: snakemake -j 8 --use-conda
 
 SAMPLES = ["sample1", "sample2", "sample3"]
@@ -1024,7 +1026,7 @@ rule align:
         "bwa mem -t {threads} {input.ref} {input.r1} {input.r2} | samtools sort -o {output}"`,
     },
     {
-      icon: '🌊', name: 'Nextflow (nf-core)', content: `// nf-core/rnaseq pipeline launch
+      icon: 'activity', name: 'Nextflow (nf-core)', content: `// nf-core/rnaseq pipeline launch
 // Docs: https://nf-co.re/rnaseq
 
 nextflow run nf-core/rnaseq \\
@@ -1043,16 +1045,528 @@ nextflow run nf-core/rnaseq \\
     },
   ];
 
+  /* ─── Python Notebook (Pyodide) ─── */
+  let _py = null;
+  let _pyLoading = false;
+  let _cellSeq = 0;
+  let _activeNb = 'seq';
+
+  const _NB_DATA = [
+    {
+      id: 'seq', name: 'Sequence Analysis', icon: 'dna',
+      desc: 'DNA analysis, GC content, quality metrics, HBB gene',
+      cells: [
+        {
+          title: 'HBB Gene Segment Analysis',
+          code: `# OmicsLab — Sequence Analysis
+# Analyzing the HBB (beta-globin) gene — sickle cell locus
+
+seq = "ATGGTGCACCTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAAGTTGGTGGTGAGGCCCTGGGCAGG"
+gc  = (seq.count('G') + seq.count('C')) / len(seq) * 100
+
+print("Gene: HBB — beta-globin (chr11:5,246,696-5,248,301)")
+print(f"Segment length : {len(seq)} bp")
+print(f"GC content     : {gc:.1f}%")
+print()
+print("First 10 codons:")
+codons = [seq[i:i+3] for i in range(0, 30, 3)]
+codon_table = {"ATG":"Met","GTG":"Val","CAC":"His","CTG":"Leu","ACT":"Thr",
+               "CCT":"Pro","GAG":"Glu","GAA":"Glu","GTC":"Val","TCA":"Ser"}
+for i,c in enumerate(codons):
+    aa = codon_table.get(c, "???")
+    print(f"  codon {i+1:2d}: {c} = {aa}")
+print()
+print("SCD mutation: codon 6 GAG→GTG (Glu→Val) causes HbS aggregation")`
+        },
+        {
+          title: 'Mutation Detection',
+          code: `# rs334 (HbS): single nucleotide change causing sickle cell disease
+ref_codon = "GAG"  # Glutamic acid (charged, hydrophilic)
+scd_codon = "GTG"  # Valine        (nonpolar, hydrophobic)
+
+print("HBB codon 6 comparison:")
+print(f"  Reference: {ref_codon} > Glu (hydrophilic, charged)")
+print(f"  SCD allele: {scd_codon} > Val (hydrophobic)")
+print()
+print("Consequence: Val at position 6 causes HbS polymerization under low O2")
+print()
+
+# Simulated cohort
+import random
+random.seed(42)
+n = 1000
+af_scd = 0.056  # African allele frequency of HbS
+
+alleles = [random.random() < af_scd for _ in range(n*2)]
+HbAA = sum(1 for i in range(n) if not alleles[2*i] and not alleles[2*i+1])
+HbAS = sum(1 for i in range(n) if alleles[2*i] != alleles[2*i+1])
+HbSS = sum(1 for i in range(n) if alleles[2*i] and alleles[2*i+1])
+print(f"Simulated cohort (N={n}, AF={af_scd}):")
+print(f"  HbAA (normal)         : {HbAA} ({HbAA/n*100:.1f}%)")
+print(f"  HbAS (carrier/trait)  : {HbAS} ({HbAS/n*100:.1f}%)")
+print(f"  HbSS (sickle disease) : {HbSS} ({HbSS/n*100:.1f}%)")
+print(f"  Note: HbAS confers ~50% protection against severe malaria")`
+        },
+        {
+          title: 'FASTQ Quality Simulation',
+          code: `# Simulate Phred quality scores — typical Illumina NovaSeq pattern
+import random, math
+random.seed(2024)
+
+n_reads, read_len = 200, 150
+
+def sim_quals(length):
+    return [max(10, min(40, int(36 - (i/length)**2.5*18 + random.gauss(0,1.5))))
+            for i in range(length)]
+
+all_quals = [sim_quals(read_len) for _ in range(n_reads)]
+means = [sum(q)/len(q) for q in all_quals]
+overall = sum(means)/len(means)
+q30_pct = sum(m>=30 for m in means)/len(means)*100
+
+print(f"FastQC Summary  ({n_reads} reads x {read_len} bp)")
+print("="*42)
+print(f"  Mean quality score  : Q{overall:.1f}")
+print(f"  % reads Q>=30       : {q30_pct:.1f}%  ({'PASS' if q30_pct>80 else 'WARN'})")
+print()
+print("Per-base quality profile (every 15 bp):")
+pos_means = [sum(all_quals[r][i] for r in range(n_reads))/n_reads for i in range(read_len)]
+for i in range(0, read_len, 15):
+    q = pos_means[i]
+    bar = '█'*int(q/40*24) + '░'*(24-int(q/40*24))
+    flag = 'PASS' if q>=30 else ('WARN' if q>=20 else 'FAIL')
+    print(f"  bp {i+1:3d}: {bar} Q{q:.0f} {flag}")`
+        }
+      ]
+    },
+    {
+      id: 'variants', name: 'African Variants', icon: 'activity',
+      desc: 'Allele frequencies, HWE test, ACMG classification',
+      cells: [
+        {
+          title: 'African Variant Landscape',
+          code: `# Key disease variants enriched in African populations
+# Source: 1000 Genomes, gnomAD v4
+
+variants = [
+    dict(rsid="rs334",      gene="HBB",   change="p.Glu7Val",   afr=0.056, eur=0.003, cond="Sickle Cell Disease"),
+    dict(rsid="rs76723693", gene="APOL1", change="G2 allele",   afr=0.135, eur=0.002, cond="CKD / FSGS risk"),
+    dict(rsid="rs1050828",  gene="G6PD",  change="p.Asn126Asp", afr=0.180, eur=0.010, cond="G6PD Deficiency (A-)"),
+    dict(rsid="rs8176719",  gene="ABO",   change="O del",        afr=0.620, eur=0.490, cond="Blood group O"),
+    dict(rsid="rs4986790",  gene="TLR4",  change="p.Asp299Gly", afr=0.040, eur=0.070, cond="Malaria susceptibility"),
+]
+
+print(f"{'rsID':<14} {'Gene':<7} {'AFR':>6} {'EUR':>6} {'Fold':>6}  Condition")
+print("-"*68)
+for v in variants:
+    fold = v['afr']/v['eur'] if v['eur']>0 else 99
+    print(f"{v['rsid']:<14} {v['gene']:<7} {v['afr']:>6.3f} {v['eur']:>6.3f} {fold:>6.1f}x  {v['cond']}")
+print()
+print("AFR = African ancestry (gnomAD)   EUR = European ancestry")
+print("Fold = enrichment in African relative to European populations")`
+        },
+        {
+          title: 'Hardy-Weinberg Equilibrium',
+          code: `# HWE test (chi-square, 1 df)
+import math
+
+def hwe(AA, Aa, aa, label):
+    n = AA+Aa+aa
+    p = (2*AA+Aa)/(2*n)
+    q = 1-p
+    eAA, eAa, eaa = p**2*n, 2*p*q*n, q**2*n
+    x2 = sum((o-e)**2/e for o,e in [(AA,eAA),(Aa,eAa),(aa,eaa)] if e>0)
+    sig = x2 > 3.841  # chi2(df=1, p=0.05)
+    print(f"{'='*52}")
+    print(f"  Variant: {label}")
+    print(f"  p(ref)={p:.4f}  q(alt)={q:.4f}")
+    print(f"  Observed : AA={AA}  Aa={Aa}  aa={aa}")
+    print(f"  Expected : AA={eAA:.0f}  Aa={eAa:.0f}  aa={eaa:.0f}")
+    print(f"  Chi²={x2:.3f} > {'HWE REJECTED (p<0.05)' if sig else 'Not rejected (p>0.05)'}")
+    if sig: print(f"  Likely cause: selection / stratification / genotyping error")
+
+# Malaria-endemic African cohort
+hwe(845, 100, 55,  "HBB rs334 (SCD) — N=1000, heterozygote advantage")
+hwe(710, 255, 35,  "APOL1 G2 — N=1000, CKD risk variant")`
+        },
+        {
+          title: 'ACMG/AMP Pathogenicity Scoring',
+          code: `# ACMG/AMP 2015 classification framework
+# Richards et al. Genet Med 2015;17:405-424
+
+WEIGHTS = {
+    "PVS1":("Pathogenic","Very Strong",8), "PS1":("Pathogenic","Strong",4),
+    "PS3":("Pathogenic","Strong",4),       "PM1":("Pathogenic","Moderate",2),
+    "PM2":("Pathogenic","Moderate",2),     "PM5":("Pathogenic","Moderate",2),
+    "PP3":("Pathogenic","Supporting",1),   "PP5":("Pathogenic","Supporting",1),
+    "BA1":("Benign","Stand-Alone",16),     "BS1":("Benign","Strong",4),
+    "BP4":("Benign","Supporting",1),       "BP7":("Benign","Supporting",1),
+}
+
+LABELS = {
+    "PVS1":"Null variant (LOF mechanism)", "PS1":"Same AA change, established path.",
+    "PS3":"Functional studies — deleterious", "PM1":"Critical functional domain",
+    "PM2":"Absent from population databases", "PP3":"Computational predictions: deleterious",
+    "PP5":"Classified pathogenic in ClinVar",
+}
+
+def classify(met_criteria):
+    p = sum(WEIGHTS[c][2] for c in met_criteria if c in WEIGHTS and WEIGHTS[c][0]=="Pathogenic")
+    b = sum(WEIGHTS[c][2] for c in met_criteria if c in WEIGHTS and WEIGHTS[c][0]=="Benign")
+    if p>=10:   cls="PATHOGENIC"
+    elif p>=6:  cls="LIKELY PATHOGENIC"
+    elif b>=16: cls="BENIGN"
+    elif b>=4:  cls="LIKELY BENIGN"
+    else:       cls="VARIANT OF UNCERTAIN SIGNIFICANCE"
+    return cls, p, b
+
+# rs334
+crit = ["PVS1","PS1","PS3","PM1","PM2"]
+cls, p, b = classify(crit)
+print(f"Variant: HBB p.Glu7Val (rs334)")
+print(f"Criteria: {', '.join(crit)}")
+print(f"Path score: {p}  |  Benign score: {b}")
+print(f"Classification: {cls}")
+print()
+print("Criteria details:")
+for c in crit:
+    print(f"  {c}: {LABELS.get(c,'')}")`
+        }
+      ]
+    },
+    {
+      id: 'rnaseq', name: 'RNA-seq DEG', icon: 'trending-up',
+      desc: 'Count matrices, fold-change, pathway analysis',
+      cells: [
+        {
+          title: 'Simulate Count Matrix',
+          code: `# RNA-seq: 20 genes, 6 samples (3 ctrl vs 3 malaria-treated)
+import random
+random.seed(2024)
+
+GENES = ["HBB","APOL1","G6PD","TNF","IL6","CCL2","STAT3","NFKB1",
+         "BCL2","MYC","TP53","IFNG","IL10","CXCL10","VCAM1",
+         "GAPDH","ACTB","B2M","RPLP0","EEF1A1"]  # last 5 = housekeeping
+
+# Malaria-induced expression changes
+UP   = {"TNF":8.0,"IL6":6.5,"CCL2":5.0,"NFKB1":3.2,"CXCL10":7.0,"VCAM1":4.5,"IFNG":5.5}
+DOWN = {"HBB":0.35,"G6PD":0.6,"BCL2":0.5,"IL10":0.45}
+
+base = {g: random.randint(300,8000) for g in GENES}
+ctrl = {g: [max(1,int(base[g]*(1+random.gauss(0,.2)))) for _ in range(3)] for g in GENES}
+treat= {g: [max(1,int(base[g]*UP.get(g,DOWN.get(g,1.0))*(1+random.gauss(0,.2)))) for _ in range(3)] for g in GENES}
+
+print(f"{'Gene':<10} {'Ctrl1':>6} {'Ctrl2':>6} {'Ctrl3':>6} | {'Trt1':>6} {'Trt2':>6} {'Trt3':>6}")
+print("-"*52)
+for g in GENES[:12]:
+    c = ctrl[g]; t = treat[g]
+    print(f"{g:<10} {c[0]:>6} {c[1]:>6} {c[2]:>6} | {t[0]:>6} {t[1]:>6} {t[2]:>6}")`
+        },
+        {
+          title: 'Differential Expression (Log2FC)',
+          code: `# DEG analysis: log2 fold-change + simulated adjusted p-value
+import random, math
+random.seed(2024)
+
+GENES = ["HBB","APOL1","G6PD","TNF","IL6","CCL2","STAT3","NFKB1",
+         "BCL2","MYC","TP53","IFNG","IL10","CXCL10","VCAM1",
+         "GAPDH","ACTB","B2M","RPLP0","EEF1A1"]
+UP   = {"TNF":8.0,"IL6":6.5,"CCL2":5.0,"NFKB1":3.2,"CXCL10":7.0,"VCAM1":4.5,"IFNG":5.5}
+DOWN = {"HBB":0.35,"G6PD":0.6,"BCL2":0.5,"IL10":0.45}
+
+def l2fc(fc): return math.log2(fc) if fc>0 else 0
+results = []
+for g in GENES:
+    fc = UP.get(g, DOWN.get(g, 1.0 + random.gauss(0,0.1)))
+    lfc = l2fc(fc)
+    padj = 0.0001 if abs(lfc)>2 else (0.02 if abs(lfc)>1 else 0.35+random.random()*0.5)
+    results.append((g, lfc, padj))
+
+results.sort(key=lambda x: -abs(x[1]))
+print(f"{'Gene':<10} {'log2FC':>8} {'padj':>10}  {'Sig':>4}  Direction")
+print("-"*46)
+for g,lfc,p in results:
+    sig = "***" if p<0.001 else ("*" if p<0.05 else "ns")
+    dr = "UP  " if lfc>0 else "DOWN"
+    mark = "<-- DEG" if abs(lfc)>1 and p<0.05 else ""
+    print(f"{g:<10} {lfc:>+8.3f} {p:>10.5f}  {sig:>4}  {dr} {mark}")`
+        },
+        {
+          title: 'Pathway Enrichment (ORA)',
+          code: `# Over-Representation Analysis — simulated pathway enrichment
+# Significant DEGs from malaria infection model
+import math
+
+DEGS = {"TNF","IL6","CCL2","NFKB1","CXCL10","VCAM1","IFNG","STAT3"}
+
+PATHWAYS = {
+    "Cytokine signaling (KEGG)":       {"TNF","IL6","CCL2","CXCL10","IL10","IFNG","IL1B","IL12A"},
+    "NF-kB signaling":                  {"NFKB1","TNF","IL6","VCAM1","BCL2","BIRC3","TRAF2"},
+    "Malaria (KEGG)":                   {"TNF","IL6","IFNG","VCAM1","CXCL10","ICAM1","IL10"},
+    "Interferon-gamma response":        {"IFNG","STAT3","CXCL10","IRF1","SOCS1","GBP1"},
+    "Complement activation":            {"C3","C4A","CFB","CFH","C1Q","MBL2"},
+    "Glycolysis / Gluconeogenesis":     {"HBB","G6PD","GAPDH","LDHA","TPI1","ENO1"},
+}
+
+UNIVERSE = 20000
+
+def ora(pathway_genes, deg_set, universe=UNIVERSE):
+    k  = len(deg_set & pathway_genes)
+    n  = len(deg_set)
+    K  = len(pathway_genes)
+    N  = universe
+    if k == 0: return k, 1.0
+    # Hypergeometric approximation (Fisher exact-like)
+    fold = (k/n) / (K/N)
+    p = max(1e-8, 1 - (k/K)**2 * fold / 10)  # simplified
+    return k, round(p, 5)
+
+print(f"{'Pathway':<35} {'k':>3} {'K':>5} {'p-value':>10}  Sig")
+print("-"*58)
+for pw, genes in PATHWAYS.items():
+    k, p = ora(genes, DEGS)
+    sig = "***" if p<0.001 else ("*" if p<0.05 else "ns")
+    print(f"{pw[:34]:<35} {k:>3} {len(genes):>5} {p:>10.5f}  {sig}")`
+        }
+      ]
+    },
+    {
+      id: 'popgen', name: 'Population Genetics', icon: 'globe',
+      desc: 'FST, HWE, admixture, African diversity',
+      cells: [
+        {
+          title: 'Population Differentiation (FST)',
+          code: `# Weir & Cockerham FST — African population structure
+import random
+random.seed(42)
+
+POPS = ["YRI (Yoruba,NG)","LWK (Luhya,KE)","GWD (Gambia)","MSL (Mende,SL)","ASW (Afr-Am,US)"]
+N_LOCI = 15
+
+# Simulate allele frequencies with drift from shared ancestral freq
+anc = [random.uniform(0.1, 0.9) for _ in range(N_LOCI)]
+drift = [0.06, 0.07, 0.08, 0.07, 0.15]  # ASW has more drift (admixture)
+pop_freqs = [[max(0,min(1,anc[j]+random.gauss(0,drift[i]))) for j in range(N_LOCI)] for i in range(5)]
+
+def fst_locus(freqs):
+    n = len(freqs)
+    pb = sum(freqs)/n
+    if pb in (0,1): return None
+    Ht = 2*pb*(1-pb)
+    Hs = sum(2*p*(1-p) for p in freqs)/n
+    return max(0,(Ht-Hs)/Ht)
+
+fsts = [fst_locus([pop_freqs[i][j] for i in range(5)]) for j in range(N_LOCI)]
+fsts = [f for f in fsts if f is not None]
+print(f"FST across {len(fsts)} SNPs, 5 African populations")
+print(f"  Mean FST : {sum(fsts)/len(fsts):.4f}")
+print(f"  Min / Max: {min(fsts):.4f} / {max(fsts):.4f}")
+print()
+print(f"Reference values (1000G):")
+print(f"  Within Africa:        FST ~ 0.015-0.030")
+print(f"  Africa vs. Europe:    FST ~ 0.10-0.15")
+print(f"  Africa vs. East Asia: FST ~ 0.15-0.18")
+print()
+for i,f in enumerate(fsts[:8]):
+    bar = '█'*int(f*200) + '░'*(int(0.15*200)-int(f*200))
+    print(f"  SNP {i+1:2d}: {bar} {f:.4f}")`
+        },
+        {
+          title: 'Admixture Proportions (K=3)',
+          code: `# ADMIXTURE-like output: 3 ancestral components
+import random
+random.seed(99)
+
+SAMPLES = [
+    ("NA18501","YRI"),("NA18502","YRI"),("NA18504","YRI"),
+    ("NA19099","LWK"),("NA19102","LWK"),
+    ("HG02922","GWD"),("HG02923","GWD"),
+    ("NA20502","TSI"),("NA20503","TSI"),
+    ("NA21732","GIH"),
+]
+
+def admix(pop):
+    r = random.gauss
+    if pop=="YRI": k1,k2,k3 = 0.93+r(0,.02), 0.05+r(0,.01), 0.02
+    elif pop=="LWK": k1,k2,k3 = 0.72+r(0,.03), 0.24+r(0,.02), 0.04
+    elif pop=="GWD": k1,k2,k3 = 0.89+r(0,.02), 0.07+r(0,.01), 0.04
+    elif pop=="TSI": k1,k2,k3 = 0.02, 0.04, 0.94+r(0,.01)
+    else: k1,k2,k3 = 0.05, 0.06, 0.89+r(0,.02)
+    t=k1+k2+k3; return k1/t,k2/t,k3/t
+
+print(f"{'Sample':<11} {'Pop':<5}  {'K1 W.Afr':>9} {'K2 E.Afr':>9} {'K3 non-Afr':>10}  Stacked bar")
+print("-"*65)
+for s,p in SAMPLES:
+    k1,k2,k3 = admix(p)
+    bar = '█'*int(k1*20)+'▓'*int(k2*20)+'░'*int(k3*20)
+    print(f"{s:<11} {p:<5}  {k1:>9.3f} {k2:>9.3f} {k3:>10.3f}  {bar}")
+print()
+print("█=West African  ▓=East African  ░=Non-African")`
+        }
+      ]
+    }
+  ];
+
+  async function _loadPyodide() {
+    if (_py) return _py;
+    if (_pyLoading) {
+      await new Promise(r => { const t = setInterval(() => { if (_py || !_pyLoading) { clearInterval(t); r(); } }, 200); });
+      return _py;
+    }
+    _pyLoading = true;
+    _setKernelStatus('loading');
+    try {
+      if (!window.loadPyodide) {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
+          s.onload = resolve;
+          s.onerror = () => reject(new Error('Failed to load Pyodide CDN'));
+          document.head.appendChild(s);
+        });
+      }
+      _py = await window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' });
+      _pyLoading = false;
+      _setKernelStatus('ready');
+      return _py;
+    } catch (e) {
+      _pyLoading = false;
+      _setKernelStatus('error', e.message);
+      return null;
+    }
+  }
+
+  function _setKernelStatus(state, msg) {
+    const el = document.getElementById('nb-kernel-status');
+    if (!el) return;
+    const labels = { loading:'Python kernel loading (first time may take ~20s)…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
+    const colors = { loading:'#e3b341', ready:'#3fb950', error:'#f85149' };
+    el.textContent = msg || labels[state] || state;
+    el.style.color = colors[state] || '#8b949e';
+    const dot = document.getElementById('nb-kernel-dot');
+    if (dot) { dot.style.background = colors[state] || '#8b949e'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
+  }
+
+  function _renderNotebook(nbId) {
+    const nb = _NB_DATA.find(n => n.id === nbId);
+    if (!nb) return;
+    _activeNb = nbId;
+
+    /* Update tab active state */
+    document.querySelectorAll('.nb-selector-btn').forEach(b => b.classList.toggle('active', b.dataset.nb === nbId));
+
+    const cells = document.getElementById('nb-cells');
+    if (!cells) return;
+    _cellSeq = 0;
+    cells.innerHTML = nb.cells.map((cell, i) => _cellHTML(cell, i)).join('');
+  }
+
+  function _cellHTML(cell, idx) {
+    _cellSeq++;
+    const n = _cellSeq;
+    return `<div class="nb-cell" data-cell-idx="${idx}">
+      <div class="nb-cell-gutter">
+        <span class="nb-cell-num" id="nb-num-${n}">In [${n}]:</span>
+        <button class="nb-run-btn" onclick="OmicsLab.Terminal.runCell(this)" data-cell-n="${n}" title="Run cell (Shift+Enter)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+      </div>
+      <div class="nb-cell-body">
+        <div class="nb-cell-title">${cell.title || ''}</div>
+        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="${cell.code.split('\n').length + 1}">${_esc(cell.code)}</textarea>
+        <div class="nb-output" id="nb-out-${n}"></div>
+      </div>
+    </div>`;
+  }
+
+  async function runCell(btn) {
+    const n = parseInt(btn.dataset.cellN);
+    const codeEl = document.getElementById('nb-code-' + n);
+    const outEl  = document.getElementById('nb-out-'  + n);
+    const numEl  = document.getElementById('nb-num-'  + n);
+    if (!codeEl || !outEl) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>';
+    outEl.innerHTML = '<div class="nb-running">Running…</div>';
+    if (numEl) numEl.textContent = 'In [*]:';
+
+    const py = await _loadPyodide();
+    if (!py) {
+      outEl.innerHTML = '<div class="nb-out-error">Kernel unavailable. Check internet connection and try again.</div>';
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+      return;
+    }
+
+    const code = codeEl.value;
+    let stdout = '';
+    py.setStdout({ batched: s => { stdout += s + '\n'; } });
+
+    try {
+      const result = await py.runPythonAsync(code);
+      let out = stdout;
+      if (result !== undefined && result !== null && String(result) !== 'None') out += String(result);
+      outEl.innerHTML = out
+        ? `<div class="nb-out-stdout"><pre>${_esc(out.trimEnd())}</pre></div>`
+        : '<div class="nb-out-empty">Cell executed — no output</div>';
+    } catch (err) {
+      outEl.innerHTML = `<div class="nb-out-error"><b>Error:</b> ${_esc(String(err))}</div>`;
+    }
+
+    if (numEl) numEl.textContent = 'Out[' + n + ']:';
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+    OmicsLab.SkillTree?.awardXP('notebook_run');
+  }
+
+  function addNotebookCell() {
+    const cells = document.getElementById('nb-cells');
+    if (!cells) return;
+    _cellSeq++;
+    const n = _cellSeq;
+    const div = document.createElement('div');
+    div.className = 'nb-cell nb-cell--new';
+    div.dataset.cellIdx = n;
+    div.innerHTML = `
+      <div class="nb-cell-gutter">
+        <span class="nb-cell-num" id="nb-num-${n}">In [${n}]:</span>
+        <button class="nb-run-btn" onclick="OmicsLab.Terminal.runCell(this)" data-cell-n="${n}" title="Run cell">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
+        </button>
+      </div>
+      <div class="nb-cell-body">
+        <div class="nb-cell-title"></div>
+        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="5" placeholder="# Write Python code here…"></textarea>
+        <div class="nb-output" id="nb-out-${n}"></div>
+      </div>`;
+    cells.appendChild(div);
+    div.querySelector('textarea')?.focus();
+    div.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function clearNotebook() {
+    document.querySelectorAll('.nb-output').forEach(el => { el.innerHTML = ''; });
+    document.querySelectorAll('.nb-cell-num').forEach((el,i) => { el.textContent = 'In [' + (i+1) + ']:'; });
+  }
+
+  function restartKernel() {
+    _py = null; _pyLoading = false;
+    clearNotebook();
+    _setKernelStatus('loading');
+    setTimeout(() => _loadPyodide(), 200);
+  }
+
   /* ─── Render the full terminal section ─── */
   function init() {
     const container = document.getElementById('terminal-studio-content');
     if (!container) return;
     if (container.querySelector('.terminal-page')) return; /* already init */
-
+    try {
     container.innerHTML = `
       <div class="terminal-page">
         <div class="terminal-page-header">
-          <div class="terminal-page-title">🖥️ Bioinformatics Terminal</div>
+          <div class="terminal-page-title">${OmicsLab.Icons?.svg('cpu',18)||''} Bioinformatics Terminal</div>
           <div class="terminal-page-desc">
             Simulate real bioinformatics pipelines in your browser, or launch a full GitHub Codespace
             to run actual tools on real data — no install, cloud-powered, VS Code in the browser.
@@ -1078,8 +1592,12 @@ nextflow run nf-core/rnaseq \\
 
         <!-- Mode tabs -->
         <div class="term-mode-tabs">
-          <button class="term-mode-tab active" onclick="OmicsLab.Terminal.switchMode('terminal',this)">⚡ Terminal</button>
-          <button class="term-mode-tab" onclick="OmicsLab.Terminal.switchMode('editor',this)">📝 Script Editor</button>
+          <button class="term-mode-tab active" onclick="OmicsLab.Terminal.switchMode('terminal',this)">${OmicsLab.Icons?.svg('cpu',13)||''} Terminal</button>
+          <button class="term-mode-tab" onclick="OmicsLab.Terminal.switchMode('editor',this)">${OmicsLab.Icons?.svg('file-text',13)||''} Script Editor</button>
+          <button class="term-mode-tab nb-tab-btn" onclick="OmicsLab.Terminal.switchMode('notebook',this)">
+            ${OmicsLab.Icons?.svg('book-open',13)||''} Python Notebook
+            <span class="nb-badge">NEW</span>
+          </button>
         </div>
 
         <!-- Terminal panel -->
@@ -1101,7 +1619,7 @@ nextflow run nf-core/rnaseq \\
                   <input class="term-input" id="term-input" type="text"
                     placeholder="type a command or click a preset →"
                     autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-                  <button class="term-run-btn" id="term-run-btn">Run ↵</button>
+                  <button class="term-run-btn" id="term-run-btn">Run</button>
                 </div>
               </div>
             </div>
@@ -1111,13 +1629,13 @@ nextflow run nf-core/rnaseq \\
               <!-- Pipeline presets -->
               <div class="ts-card">
                 <div class="ts-card-header">
-                  <span>⚡ Pipeline Presets</span>
+                  <span>${OmicsLab.Icons?.svg('zap',13)||''} Pipeline Presets</span>
                 </div>
                 <div class="ts-card-body">
                   <div class="preset-list" id="preset-list">
                     ${PRESETS.map(p => `
                       <button class="preset-btn" onclick="OmicsLab.Terminal.runPreset('${p.id}')">
-                        <span class="preset-icon">${p.icon}</span>
+                        <span class="preset-icon">${OmicsLab.Icons?.svg(p.icon,16)||''}</span>
                         <span class="preset-info">
                           <span class="preset-name">${p.name}</span>
                           <span class="preset-cmd">${p.desc}</span>
@@ -1130,7 +1648,7 @@ nextflow run nf-core/rnaseq \\
               <!-- Output files -->
               <div class="ts-card">
                 <div class="ts-card-header">
-                  <span>📁 Output Files</span>
+                  <span>${OmicsLab.Icons?.svg('package',13)||''} Output Files</span>
                   <span style="font-size:0.68rem;font-weight:400;color:var(--text-muted)">results/</span>
                 </div>
                 <div class="ts-card-body">
@@ -1155,7 +1673,7 @@ nextflow run nf-core/rnaseq \\
 
               <!-- Codespace CTA -->
               <div class="codespace-cta">
-                <div class="ccs-title">🚀 Want to run real data?</div>
+                <div class="ccs-title">${OmicsLab.Icons?.svg('zap',14)||''} Want to run real data?</div>
                 <div class="ccs-desc">
                   Open a GitHub Codespace — a full VS Code environment in your browser with all tools pre-installed via conda. Run your own FASTQ files, store results, download reports.
                 </div>
@@ -1180,10 +1698,10 @@ nextflow run nf-core/rnaseq \\
               <div class="se-topbar">
                 <span class="se-filename" id="se-filename">pipeline.sh</span>
                 <span class="se-lang-badge">bash</span>
-                <button class="se-action-btn" onclick="OmicsLab.Terminal.copyScript()">📋 Copy</button>
-                <button class="se-action-btn" onclick="OmicsLab.Terminal.downloadScript()">⬇ Download</button>
+                <button class="se-action-btn" onclick="OmicsLab.Terminal.copyScript()">${OmicsLab.Icons?.svg('clipboard',13)||''} Copy</button>
+                <button class="se-action-btn" onclick="OmicsLab.Terminal.downloadScript()">Download</button>
                 <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1"
-                   target="_blank" rel="noopener" class="se-run-btn">▶ Run in Codespace</a>
+                   target="_blank" rel="noopener" class="se-run-btn">Run in Codespace</a>
               </div>
               <textarea class="script-textarea" id="script-editor" spellcheck="false"
                 placeholder="# Paste your pipeline script here or choose a template →">${_WGS_SCRIPT}</textarea>
@@ -1192,18 +1710,18 @@ nextflow run nf-core/rnaseq \\
 
             <div class="term-sidebar">
               <div class="ts-card">
-                <div class="ts-card-header">📄 Script Templates</div>
+                <div class="ts-card-header">${OmicsLab.Icons?.svg('file-text',13)||''} Script Templates</div>
                 <div class="ts-card-body">
                   <div class="script-templates">
                     ${SCRIPT_TEMPLATES.map((t, i) => `
                       <button class="st-btn" onclick="OmicsLab.Terminal.loadTemplate(${i})">
-                        ${t.icon} ${t.name}
+                        ${OmicsLab.Icons?.svg(t.icon,14)||''} ${t.name}
                       </button>`).join('')}
                   </div>
                 </div>
               </div>
               <div class="codespace-cta">
-                <div class="ccs-title">💡 Run this script</div>
+                <div class="ccs-title">${OmicsLab.Icons?.svg('lightbulb',14)||''} Run this script</div>
                 <div class="ccs-desc">
                   Open a Codespace, paste your script, and run it on real data with all tools pre-installed.
                 </div>
@@ -1214,6 +1732,46 @@ nextflow run nf-core/rnaseq \\
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- ═══ Python Notebook Panel ═══ -->
+        <div class="notebook-panel" id="notebook-panel">
+
+          <!-- Kernel status bar -->
+          <div class="nb-kernel-bar">
+            <span id="nb-kernel-dot" class="nb-kernel-dot"></span>
+            <span id="nb-kernel-status" class="nb-kernel-status">Kernel idle — click Run to start Python</span>
+            <span class="nb-kernel-sep"></span>
+            <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.clearNotebook()" title="Clear all outputs">
+              ${OmicsLab.Icons?.svg('trash-2',12)||''} Clear outputs
+            </button>
+            <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.restartKernel()" title="Restart Python kernel">
+              ${OmicsLab.Icons?.svg('refresh-cw',12)||''} Restart kernel
+            </button>
+            <button class="nb-toolbar-btn nb-toolbar-btn--add" onclick="OmicsLab.Terminal.addNotebookCell()" title="Add a new code cell">
+              ${OmicsLab.Icons?.svg('plus',12)||''} Add cell
+            </button>
+          </div>
+
+          <!-- Notebook selectors -->
+          <div class="nb-selector-row">
+            ${_NB_DATA.map(nb => `
+              <button class="nb-selector-btn${nb.id==='seq'?' active':''}" data-nb="${nb.id}"
+                onclick="OmicsLab.Terminal._renderNotebook(this.dataset.nb)">
+                ${OmicsLab.Icons?.svg(nb.icon,14)||''} ${nb.name}
+                <span class="nb-selector-desc">${nb.desc}</span>
+              </button>`).join('')}
+          </div>
+
+          <!-- Pyodide info bar -->
+          <div class="nb-info-bar">
+            ${OmicsLab.Icons?.svg('info',12)||''}
+            <span>Real Python executes in your browser via <b>Pyodide</b> (WebAssembly). First run loads ~10 MB from CDN. Works offline after that.</span>
+          </div>
+
+          <!-- Cells -->
+          <div id="nb-cells" class="nb-cells"></div>
+
         </div>
       </div>`;
 
@@ -1250,7 +1808,20 @@ nextflow run nf-core/rnaseq \\
     });
 
     /* Clicking anywhere on terminal focuses input */
-    container.querySelector('.term-window').addEventListener('click', () => _inputEl.focus());
+    const tw = container.querySelector('.term-window');
+    if (tw) tw.addEventListener('click', () => _inputEl && _inputEl.focus());
+    } catch(err) {
+      container.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#f85149;font-family:monospace">
+        <div style="font-size:1.4rem;font-weight:700;margin-bottom:1rem">Terminal failed to load</div>
+        <div style="font-size:0.9rem;color:#8b949e;max-width:480px;margin:0 auto">${String(err)}</div>
+        <div style="margin-top:2rem">
+          <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener"
+             style="display:inline-block;padding:0.6rem 1.5rem;background:#238636;color:#fff;text-decoration:none;border-radius:6px;font-size:0.88rem">
+            Open in GitHub Codespaces instead
+          </a>
+        </div>
+      </div>`;
+    }
   }
 
   /* ─── Public API ─── */
@@ -1276,9 +1847,20 @@ nextflow run nf-core/rnaseq \\
   function switchMode(mode, btn) {
     document.querySelectorAll('.term-mode-tab').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.terminal-panel, .script-editor-panel').forEach(el => el.classList.remove('active'));
-    const panel = document.getElementById(mode === 'editor' ? 'editor-panel' : 'term-panel');
-    if (panel) panel.classList.add('active');
+    document.querySelectorAll('.terminal-panel, .script-editor-panel, .notebook-panel').forEach(el => el.classList.remove('active'));
+    if (mode === 'notebook') {
+      const nb = document.getElementById('notebook-panel');
+      if (nb) {
+        nb.classList.add('active');
+        if (!nb.dataset.nbReady) {
+          nb.dataset.nbReady = '1';
+          _renderNotebook(_activeNb);
+        }
+      }
+    } else {
+      const panel = document.getElementById(mode === 'editor' ? 'editor-panel' : 'term-panel');
+      if (panel) panel.classList.add('active');
+    }
   }
 
   function loadTemplate(idx) {
@@ -1295,7 +1877,7 @@ nextflow run nf-core/rnaseq \\
     if (!editor) return;
     navigator.clipboard.writeText(editor.value).then(() => {
       const btn = document.querySelector('.se-action-btn');
-      if (btn) { btn.textContent = '✔ Copied!'; setTimeout(() => btn.textContent = '📋 Copy', 1800); }
+      if (btn) { btn.innerHTML = `${OmicsLab.Icons?.svg('check',13)||''} Copied!`; setTimeout(() => { btn.innerHTML = `${OmicsLab.Icons?.svg('clipboard',13)||''} Copy`; }, 1800); }
     }).catch(() => {
       editor.select();
       document.execCommand('copy');
@@ -1314,5 +1896,6 @@ nextflow run nf-core/rnaseq \\
     URL.revokeObjectURL(a.href);
   }
 
-  return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript };
+  return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript,
+           runCell, addNotebookCell, clearNotebook, restartKernel, _renderNotebook };
 })();

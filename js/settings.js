@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Settings Page (Prompt 10)
    ─ Profile · Appearance (theme/accent/font) · Language
    ─ Notifications · Privacy & Data · About
@@ -229,7 +229,7 @@ OmicsLab.Settings = (function () {
               onclick="OmicsLab.Settings._onLang('${l.code}')">
               <span class="st-lang-flag">${l.flag}</span>
               <span class="st-lang-name">${_esc(l.name)}</span>
-              ${s.language===l.code?'<span class="st-lang-check">✓</span>':''}
+              ${s.language===l.code?'<span class="st-lang-check">[OK]</span>':''}
             </button>`).join('')}
         </div>
         <div class="st-help" style="margin-top:.75rem">Changing language reloads the interface. Some tools may remain in English until fully translated.</div>

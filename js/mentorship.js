@@ -157,6 +157,10 @@ OmicsLab.Mentorship = (function () {
         <div class="ms-my-bio">${p.bio || ''}</div>
         ${conns.length ? `<div class="ms-my-conns">Connections: ${connList}</div>` : ''}
         <button class="ms-edit-btn" onclick="OmicsLab.Mentorship._showRegisterModal('${p.role}')">Edit Profile</button>
+        <button class="ms-edit-btn" onclick="OmicsLab.Mentorship._shareProfile()" style="margin-left:.5rem">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share Profile
+        </button>
       </div>`;
   }
 
@@ -197,5 +201,34 @@ OmicsLab.Mentorship = (function () {
     _renderCards({ q:'', country:'', focus:'' });
   }
 
-  return { init, _connect, _filter, _showRegisterModal, _saveProfile };
+  /* ── QR-code shareable profile (Prompt 53) ── */
+  function _shareProfile() {
+    const profile = JSON.parse(localStorage.getItem('omicslab_my_mentor_profile') || 'null');
+    if (!profile) { OmicsLab.Toast?.show('Register your profile first', 'info'); return; }
+
+    /* Encode profile as URL hash data */
+    const data = encodeURIComponent(JSON.stringify({ name: profile.name, country: profile.country, role: profile.role, focus: profile.focus, bio: profile.bio?.slice(0, 120) }));
+    const shareUrl = `${location.origin}${location.pathname}#/mentorship?profile=${data}`;
+
+    /* Inline QR using Google Charts API (no CDN dependency needed) */
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `position:fixed;inset:0;z-index:7000;background:rgba(8,12,16,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)`;
+    overlay.innerHTML = `
+      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;padding:2rem;max-width:380px;width:92%;text-align:center">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary,#e6edf3);margin:0 0 1rem">Share Your Mentor Profile</h3>
+        <img src="${qrApiUrl}" alt="QR code for mentor profile" width="180" height="180" style="border-radius:8px;margin:0 auto .75rem;display:block;background:#fff;padding:8px" loading="lazy">
+        <p style="color:var(--text-muted,#8b949e);font-size:.78rem;margin:0 0 1rem">Scan to view your mentor profile, or copy the link below</p>
+        <input type="text" value="${shareUrl}" readonly style="width:100%;background:var(--bg-overlay,#21262d);border:1px solid var(--border,#30363d);border-radius:6px;color:var(--text-secondary,#c9d1d9);font-size:.72rem;padding:.4rem .6rem;font-family:monospace;box-sizing:border-box" onclick="this.select()">
+        <div style="display:flex;gap:.6rem;justify-content:center;margin-top:1rem">
+          <button onclick="navigator.clipboard?.writeText('${shareUrl.replace(/'/g,"\\'")}').then(()=>OmicsLab.Toast?.show('Link copied','success'))" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:7px;padding:.4rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">Copy Link</button>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:var(--bg-overlay,#21262d);color:var(--text-primary,#e6edf3);border:1px solid var(--border,#30363d);border-radius:7px;padding:.4rem 1rem;font-size:.82rem;cursor:pointer">Close</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+  }
+
+  return { init, _connect, _filter, _showRegisterModal, _saveProfile, _shareProfile };
 })();

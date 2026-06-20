@@ -496,7 +496,7 @@ OmicsLab.Datasets = (function () {
 
     if (!results.length) {
       grid.innerHTML = `<div class="ds-empty">
-        <div class="ds-empty-icon">🔍</div>
+        <div class="ds-empty-icon">${OmicsLab.Icons?.svg('search', 28) || ''}</div>
         <div class="ds-empty-msg">No datasets match your filters</div>
         <button class="ds-empty-reset" onclick="OmicsLab.Datasets._resetFilters()">Clear filters</button>
       </div>`;

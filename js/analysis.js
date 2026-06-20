@@ -887,23 +887,23 @@ MASRRGRESQTGQKKMSS-SGSSTPAGQNRFTPKKKKKK--KKKPEGKKSSNLRSSPENNDSSGPEERESPAPPQ`,
     if (!el) return;
 
     const tabs = [
-      { id: 'fastq',      icon: '📊', label: 'FASTQ QC',         accept: '.fastq,.fq,.fastq.gz,.txt', placeholder: 'Paste FASTQ content here (supports Illumina and Nanopore format)…' },
-      { id: 'fasta',      icon: '🧬', label: 'FASTA Tools',      accept: '.fasta,.fa,.fna,.txt',       placeholder: 'Paste one or more FASTA sequences here…' },
-      { id: 'vcf',        icon: '🔬', label: 'VCF Explorer',     accept: '.vcf,.vcf.gz,.txt',          placeholder: 'Paste VCF content here (include the ## header lines)…' },
-      { id: 'expression', icon: '📈', label: 'Expression Matrix', accept: '.tsv,.csv,.txt',             placeholder: 'Paste a count matrix (TSV/CSV). First column = gene names, first row = sample names…' },
-      { id: 'alignment',  icon: '🎯', label: 'MSA Viewer',        accept: '.fasta,.fa,.aln,.txt',       placeholder: 'Paste a FASTA-format multiple sequence alignment. All sequences must be the same length…' },
+      { id: 'fastq',      icon: 'bar-chart', label: 'FASTQ QC',         accept: '.fastq,.fq,.fastq.gz,.txt', placeholder: 'Paste FASTQ content here (supports Illumina and Nanopore format)…' },
+      { id: 'fasta',      icon: 'dna',       label: 'FASTA Tools',      accept: '.fasta,.fa,.fna,.txt',       placeholder: 'Paste one or more FASTA sequences here…' },
+      { id: 'vcf',        icon: 'microscope',label: 'VCF Explorer',     accept: '.vcf,.vcf.gz,.txt',          placeholder: 'Paste VCF content here (include the ## header lines)…' },
+      { id: 'expression', icon: 'trending-up',label: 'Expression Matrix', accept: '.tsv,.csv,.txt',            placeholder: 'Paste a count matrix (TSV/CSV). First column = gene names, first row = sample names…' },
+      { id: 'alignment',  icon: 'target',    label: 'MSA Viewer',        accept: '.fasta,.fa,.aln,.txt',       placeholder: 'Paste a FASTA-format multiple sequence alignment. All sequences must be the same length…' },
     ];
 
     el.innerHTML = `
       <div class="az-tabs">
-        ${tabs.map((t, i) => `<button class="az-tab${i===0?' active':''}" data-tab="${t.id}" onclick="OmicsLab.Analysis.switchTab('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
+        ${tabs.map((t, i) => `<button class="az-tab${i===0?' active':''}" data-tab="${t.id}" onclick="OmicsLab.Analysis.switchTab('${t.id}')">${OmicsLab.Icons?.svg(t.icon, 13) || ''} ${t.label}</button>`).join('')}
       </div>
 
       ${tabs.map((t, i) => `
         <div class="az-panel-content${i===0?' active':''}" data-panel="${t.id}">
           <div class="az-input-area">
             <div class="az-input-header">
-              <span class="az-input-title">${t.icon} ${t.label}</span>
+              <span class="az-input-title">${OmicsLab.Icons?.svg(t.icon, 14) || ''} ${t.label}</span>
               <div class="az-input-actions">
                 <button class="az-demo-btn" onclick="OmicsLab.Analysis.loadDemo('${t.id}')">Load demo data</button>
                 <label class="az-file-btn">

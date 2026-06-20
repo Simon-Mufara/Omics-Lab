@@ -154,8 +154,11 @@
 .lb-table td { padding: .65rem .85rem; vertical-align: middle; }
 
 /* Rank cell */
-.lb-rank-num { font-size: .85rem; color: #8b949e; }
-.lb-rank-medal { font-size: 1.1rem; }
+.lb-rank-num { font-size: .85rem; color: #8b949e; font-weight: 700; }
+.lb-rank-medal { font-size: .85rem; font-weight: 800; }
+.lb-row-top:nth-child(1) .lb-rank-medal { color: #e3b341; }
+.lb-row-top:nth-child(2) .lb-rank-medal { color: #8b949e; }
+.lb-row-top:nth-child(3) .lb-rank-medal { color: #b87333; }
 
 /* Name cell */
 .lb-td-name { display: flex; align-items: center; gap: .6rem; }

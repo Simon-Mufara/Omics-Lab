@@ -405,12 +405,11 @@ OmicsLab.Debugger = (function () {
   /* ─── Render result card ─── */
   function _renderResult(rule) {
     const sevColors = { critical: '#ff6b6b', warning: '#f97316', info: '#58a6ff' };
-    const sevIcons  = { critical: '🔴', warning: '🟠', info: '🔵' };
     const color = sevColors[rule.severity];
     return `
       <div class="dbg-result-card" style="--dbg-color:${color}">
         <div class="dbg-result-header">
-          <span class="dbg-sev-badge dbg-sev-${rule.severity}">${sevIcons[rule.severity]} ${rule.severity.toUpperCase()}</span>
+          <span class="dbg-sev-badge dbg-sev-${rule.severity}"><span class="dbg-sev-dot" style="background:${color}"></span>${rule.severity.toUpperCase()}</span>
           <span class="dbg-category">${rule.category}</span>
           <span class="dbg-rule-id">${rule.id}</span>
         </div>
@@ -447,7 +446,7 @@ OmicsLab.Debugger = (function () {
     if (!results.length) {
       out.innerHTML = `
         <div class="dbg-no-match">
-          <div class="dbg-no-match-icon">🔍</div>
+          <div class="dbg-no-match-icon">${OmicsLab.Icons?.svg('search', 28) || ''}</div>
           <div class="dbg-no-match-title">No known issues detected</div>
           <div class="dbg-no-match-desc">Your description didn't match any of the 200+ diagnostic rules. Try including specific metric values (e.g. "RIN: 3.2", "Q30: 45%", "duplication rate: 78%", "mapping rate: 42%") or paste a FastQC/MultiQC summary directly.</div>
         </div>`;
@@ -469,7 +468,7 @@ OmicsLab.Debugger = (function () {
             ${warnings ? `<span class="dbg-chip dbg-chip-warning">${warnings} warning${warnings !== 1 ? 's' : ''}</span>` : ''}
             ${info     ? `<span class="dbg-chip dbg-chip-info">${info} info</span>` : ''}
           </div>
-          ${critical ? '<div class="dbg-summary-alert">⚠️ Critical issues found — do not proceed to the next step until resolved.</div>' : ''}
+          ${critical ? `<div class="dbg-summary-alert">${OmicsLab.Icons?.svg('alert-triangle', 14) || ''} Critical issues found — do not proceed to the next step until resolved.</div>` : ''}
         </div>`;
     }
 

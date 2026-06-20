@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Workshop / Instructor Mode
    Create session codes, track cohort progress, export attendance
    reports, and manage workshop delivery.
@@ -107,7 +107,7 @@ OmicsLab.Workshop = (function () {
     const rows = [['Student Name', 'Joined', ...MODULES.map(m => m.label), 'Completed', 'Completion %']];
     session.students.forEach(s => {
       const pct = Math.round(s.completed.length / MODULES.length * 100);
-      rows.push([s.name, s.joined.slice(0,10), ...MODULES.map(m => s.completed.includes(m.id) ? '✓' : ''), s.completed.length, pct + '%']);
+      rows.push([s.name, s.joined.slice(0,10), ...MODULES.map(m => s.completed.includes(m.id) ? '[OK]' : ''), s.completed.length, pct + '%']);
     });
 
     const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
@@ -164,7 +164,7 @@ OmicsLab.Workshop = (function () {
 
     const moduleChecks = MODULES.map(m => `
       <div class="ws-module-check ${myCompleted.includes(m.id) ? 'done' : ''}">
-        <span>${myCompleted.includes(m.id) ? '✓' : '○'}</span>
+        <span>${myCompleted.includes(m.id) ? '[OK]' : '○'}</span>
         <span>${m.label}</span>
         <button class="ws-go-btn" onclick="OmicsLab.Workshop.markModuleDone('${m.id}')">
           ${myCompleted.includes(m.id) ? 'Review' : 'Go →'}
@@ -197,7 +197,7 @@ OmicsLab.Workshop = (function () {
           </table>
         </div>
         <div class="ws-export-row">
-          <button class="ws-btn" onclick="OmicsLab.Workshop.exportReport()">📊 Export CSV Report</button>
+          <button class="ws-btn" onclick="OmicsLab.Workshop.exportReport()">${OmicsLab.Icons?.svg('bar-chart', 13) || ''} Export CSV Report</button>
           <button class="ws-btn" onclick="OmicsLab.Workshop.exportJSON()">⬇ Export JSON</button>
         </div>
       </div>
@@ -231,14 +231,14 @@ OmicsLab.Workshop = (function () {
     if (!container) return;
 
     const tracks = OmicsLab.Curriculum
-      ? Object.values(OmicsLab.Curriculum.TRACKS).map(t => `<option value="${t.id}">${t.icon} ${t.title}</option>`).join('')
+      ? Object.values(OmicsLab.Curriculum.TRACKS).map(t => `<option value="${t.id}">${t.title}</option>`).join('')
       : '<option value="bioinformatics">Bioinformatics</option><option value="wetlab">Wet-Lab</option><option value="publichealth">Public Health</option>';
 
     container.innerHTML = `
     <div class="ws-layout">
       <div class="ws-setup-col">
         <div class="ws-card">
-          <div class="ws-card-head">🏫 Create Session (Instructor)</div>
+          <div class="ws-card-head">${OmicsLab.Icons?.svg('layers', 14) || ''} Create Session (Instructor)</div>
           <div class="ws-field"><label>Session Name</label><input id="ws-session-name" type="text" placeholder="e.g. H3ABioNet Workshop 2026" /></div>
           <div class="ws-field"><label>Location / Institution</label><input id="ws-location" type="text" placeholder="e.g. KEMRI, Nairobi" /></div>
           <div class="ws-field"><label>Date</label><input id="ws-date" type="date" value="${new Date().toISOString().slice(0,10)}" /></div>
@@ -247,14 +247,14 @@ OmicsLab.Workshop = (function () {
         </div>
 
         <div class="ws-card" style="margin-top:1rem">
-          <div class="ws-card-head">🎓 Join Session (Student)</div>
+          <div class="ws-card-head">${OmicsLab.Icons?.svg('award', 14) || ''} Join Session (Student)</div>
           <div class="ws-field"><label>Session Code</label><input id="ws-join-code" type="text" placeholder="e.g. ABC123" maxlength="6" style="text-transform:uppercase" /></div>
           <div class="ws-field"><label>Your Name</label><input id="ws-student-name" type="text" placeholder="Full name" /></div>
           <button class="ws-btn-primary" onclick="OmicsLab.Workshop.joinSession()">Join Session</button>
         </div>
 
         <div class="ws-card" style="margin-top:1rem">
-          <div class="ws-card-head">📁 Past Sessions</div>
+          <div class="ws-card-head">${OmicsLab.Icons?.svg('archive', 14) || ''} Past Sessions</div>
           <div id="ws-history-list"></div>
         </div>
       </div>

@@ -104,7 +104,9 @@
   border-color: #3fb950;
   box-shadow: 0 0 0 1px #3fb950, 0 4px 16px rgba(63,185,80,0.15);
 }
-.ob-path-emoji { font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+.ob-path-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-bottom: 4px; }
+.ob-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f97316; animation: ob-blink 1.2s ease-in-out infinite; }
+@keyframes ob-blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 .ob-path-name  { font-size: 0.82rem; font-weight: 700; color: #e6edf3; }
 .ob-path-stat  { font-size: 0.72rem; color: #8b949e; }
 .ob-path-desc  { font-size: 0.7rem; color: #6e7681; line-height: 1.4; margin-top: 4px; }

@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════
    OmicsLab — Oxford Nanopore QC Analyser (Part 3)
    Paste NanoStat/NanoPlot output or enter metrics manually.
    Evaluates read quality against MinION/GridION field thresholds
@@ -105,7 +105,7 @@ Number, percentage and megabases of reads above quality cutoffs:
       else if (g === 'fail') failCount++;
       const displayVal = val !== undefined ? (key === 'total_bases' ? val.toFixed(2) + ' Gb' : key === 'n50' || key === 'mean_length' ? Math.round(val).toLocaleString() + ' bp' : key.startsWith('pct') ? val.toFixed(1) + '%' : val.toFixed(1)) : '—';
       const colors = { pass:'#3fb950', warn:'#e3b341', fail:'#ff6b6b', missing:'#484f58' };
-      const icons = { pass:'✓', warn:'!', fail:'✗', missing:'?' };
+      const icons = { pass:'[OK]', warn:'!', fail:'[FAIL]', missing:'?' };
       return `<div class="np-metric-row">
         <span class="np-status-dot" style="background:${colors[g]}">${icons[g]}</span>
         <div class="np-metric-body">

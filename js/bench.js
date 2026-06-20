@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Bench Renderer + Drag-and-Drop System
    ═══════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
@@ -89,7 +89,7 @@ OmicsLab.QC = (function() {
     const log = document.getElementById('mistake-log');
     if (!log) return;
     if (OmicsLab.State.mistakes.length === 0) {
-      log.innerHTML = '<div class="no-mistakes">✓ No mistakes yet</div>';
+      log.innerHTML = '<div class="no-mistakes">[OK] No mistakes yet</div>';
     } else {
       log.innerHTML = OmicsLab.State.mistakes.map(m =>
         `<div class="mistake-entry"><strong>Step ${m.step}:</strong> ${m.choice}</div>`
@@ -209,7 +209,7 @@ OmicsLab.ProtocolPanel = (function() {
       let cls = 'locked';
       if (i < currentIdx) cls = 'done';
       else if (i === currentIdx) cls = 'active';
-      const num = i < currentIdx ? '✓' : (i + 1);
+      const num = i < currentIdx ? '[OK]' : (i + 1);
       return `<div class="proto-step ${cls}">
         <div class="proto-num">${num}</div>
         <div class="proto-info">
@@ -253,7 +253,7 @@ OmicsLab.DragDrop = (function() {
         <div class="equip-icon" id="equip-icon">${OmicsLab.Icons.svg(step.equipIcon || 'flask', 44)}</div>
         <div class="equip-name">${step.equipName || 'Equipment'}</div>
         <div class="equip-hint">${step.dropHint || 'Drag reagent here'}</div>
-        <div class="equip-status" id="equip-status">✓ Reagent Added</div>
+        <div class="equip-status" id="equip-status">[OK] Reagent Added</div>
       </div>
     </div>`;
   }
@@ -490,16 +490,16 @@ OmicsLab.Renderer = (function() {
       if (dot) { dot.classList.remove('running'); dot.classList.add('done'); }
 
       const cycles = equipEl.querySelector('.tc-cycles');
-      if (cycles) cycles.textContent = cycles.textContent.replace('Running', '✓ Complete');
+      if (cycles) cycles.textContent = cycles.textContent.replace('Running', '[OK] Complete');
 
       const typing = equipEl.querySelector('.term-line.typing');
-      if (typing) typing.innerHTML = 'Processing reads ██████████ 100% <span style="color:var(--success)">✓ done</span>';
+      if (typing) typing.innerHTML = 'Processing reads ██████████ 100% <span style="color:var(--success)">[OK] done</span>';
 
       const nameLabel = equipEl.querySelector('.equip-name-label');
       if (nameLabel && !equipEl.querySelector('.equip-done-badge')) {
         const badge = document.createElement('span');
         badge.className = 'equip-done-badge';
-        badge.textContent = '✓ Run complete';
+        badge.textContent = '[OK] Run complete';
         nameLabel.after(badge);
       }
     }, simMs);
@@ -528,7 +528,7 @@ OmicsLab.Renderer = (function() {
     `;
 
     OmicsLab.DragDrop.attachEvents(step, (rid, opt, reagent) => {
-      const titles = { good:'✓ Correct Choice', bad:'✗ Problematic Choice', warn:'⚠ Suboptimal Choice' };
+      const titles = { good:'[OK] Correct Choice', bad:'[FAIL] Problematic Choice', warn:'[!] Suboptimal Choice' };
       const bodies = {
         good:`<strong>${reagent.label}</strong> is the optimal reagent here. Quality metrics maintained.`,
         bad: `<strong>${reagent.label}</strong> will cause significant downstream problems. Check the QC panel for the impact.`,
@@ -552,7 +552,7 @@ OmicsLab.Renderer = (function() {
       <div class="choice-grid" id="choice-grid">
         ${opts.map((o, i) => {
           const badgeCls = o.impact === 'good' ? 'badge-green' : o.impact === 'bad' ? 'badge-red' : 'badge-orange';
-          const badgeLbl = o.impact === 'good' ? '✓ Optimal' : o.impact === 'bad' ? '✗ Avoid' : '⚠ Suboptimal';
+          const badgeLbl = o.impact === 'good' ? '[OK] Optimal' : o.impact === 'bad' ? '[FAIL] Avoid' : '[!] Suboptimal';
           return `<button class="choice-btn" data-idx="${i}">
             <div class="cb-title">${o.label}</div>
             <div class="cb-desc">${o.desc}</div>
@@ -582,7 +582,7 @@ OmicsLab.Renderer = (function() {
           else OmicsLab.Sound.error();
         }
 
-        const titles = { good:'✓ Excellent', bad:'✗ Poor choice', warn:'⚠ Suboptimal' };
+        const titles = { good:'[OK] Excellent', bad:'[FAIL] Poor choice', warn:'[!] Suboptimal' };
         const bodies = {
           good:`<strong>${opt.label}</strong> — optimal for this step. No quality penalty.`,
           bad: `<strong>${opt.label}</strong> causes significant problems. Your QC metrics have dropped.`,
@@ -648,7 +648,7 @@ OmicsLab.Renderer = (function() {
       const banner = document.createElement('div');
       banner.id = 'sabotage-active-banner';
       banner.className = 'sabotage-active-banner';
-      banner.textContent = '⚠ SABOTAGE MODE — injecting error into this step…';
+      banner.textContent = '[!] SABOTAGE MODE — injecting error into this step…';
       bench.prepend(banner);
     }, 300);
 
@@ -672,7 +672,7 @@ OmicsLab.Renderer = (function() {
     const zone = document.getElementById('main-drop-zone');
     if (!zone || zone.classList.contains('filled')) return;
     OmicsLab.DragDrop.handleDrop(worstRid, step, zone, (rid, opt, r) => {
-      const title = opt.impact === 'bad' ? '⚠ Sabotage! Worst Reagent Auto-Selected' : '⚠ Sabotage! Suboptimal Reagent Auto-Selected';
+      const title = opt.impact === 'bad' ? '[!] Sabotage! Worst Reagent Auto-Selected' : '[!] Sabotage! Suboptimal Reagent Auto-Selected';
       showFeedback(opt.impact === 'bad' ? 'bad' : 'warn', title,
         `<strong>Sabotage Mode</strong> forced <strong>${r.label}</strong>. Check your QC metrics for the impact!`);
       const btn = document.getElementById('btn-advance');
@@ -711,7 +711,7 @@ OmicsLab.Renderer = (function() {
 
     slider.disabled = true;
 
-    const titles = { good:'✓ On target', bad:'✗ Out of range', warn:'⚠ Off-optimal' };
+    const titles = { good:'[OK] On target', bad:'[FAIL] Out of range', warn:'[!] Off-optimal' };
     const bodies  = {
       good: `${v} ${step.unit} is within the optimal range (~${step.optimal} ${step.unit}).`,
       warn: `${v} ${step.unit} is somewhat off from optimal (~${step.optimal} ${step.unit}). Minor penalty applied.`,

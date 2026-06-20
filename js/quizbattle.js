@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Multiplayer Quiz Battle (Prompt 18)
    Two players compete via BroadcastChannel (same device) or
    single-player mode. 10-question timed rounds, 100+ question bank.
@@ -221,7 +221,7 @@ OmicsLab.QuizBattle = (function () {
     const fb = document.getElementById('qb-feedback');
     if (fb) {
       const correct = chosen === q.answer;
-      fb.textContent = chosen === -1 ? `⏱ Time up! Answer: ${q.options[q.answer]}` : correct ? `✓ Correct! +${q.pts} pts` : `✗ Wrong. Answer: ${q.options[q.answer]}`;
+      fb.textContent = chosen === -1 ? `⏱ Time up! Answer: ${q.options[q.answer]}` : correct ? `[OK] Correct! +${q.pts} pts` : `[FAIL] Wrong. Answer: ${q.options[q.answer]}`;
       fb.style.color = chosen === -1 ? '#e3b341' : correct ? '#3fb950' : '#ff6b6b';
     }
 
@@ -261,7 +261,7 @@ OmicsLab.QuizBattle = (function () {
 
     gameEl.innerHTML = `
       <div class="qb-end-screen">
-        <div class="qb-end-title">${solo ? 'Quiz Complete!' : '🏆 Game Over!'}</div>
+        <div class="qb-end-title">${solo ? 'Quiz Complete!' : `${OmicsLab.Icons?.svg('award',20)||''} Game Over!`}</div>
         ${solo ? `
           <div class="qb-end-score">${p1} <span class="qb-end-max">/ ${N_QUESTIONS * 15} pts</span></div>
           <div class="qb-end-pct">${pct}% correct</div>
@@ -272,7 +272,7 @@ OmicsLab.QuizBattle = (function () {
             <div class="qb-end-vs">vs</div>
             <div class="qb-end-player ${p2>p1?'qb-end-winner':''}"><div>${_state.names.p2}</div><div class="qb-end-pscore">${p2}</div></div>
           </div>
-          <div class="qb-end-winner-lbl">${winner === 'Tie!' ? '🤝 It\'s a Tie!' : `🏆 ${winner} wins!`}</div>
+          <div class="qb-end-winner-lbl">${winner === 'Tie!' ? `${OmicsLab.Icons?.svg('check-circle',16)||''} It's a Tie!` : `${OmicsLab.Icons?.svg('award',16)||''} ${winner} wins!`}</div>
         `}
         <button class="qb-restart-btn" onclick="OmicsLab.QuizBattle._restart()">Play Again</button>
       </div>`;
@@ -307,7 +307,7 @@ OmicsLab.QuizBattle = (function () {
       }
       if (msg.type === 'GUEST_READY') {
         const s = document.getElementById('qb-multi-status');
-        if (s) s.textContent = `✓ ${p2name} connected!`;
+        if (s) s.textContent = `[OK] ${p2name} connected!`;
       }
     };
 
@@ -383,7 +383,7 @@ OmicsLab.QuizBattle = (function () {
         <div class="qb-lobby">
           <!-- Solo -->
           <div class="qb-mode-card">
-            <div class="qb-mode-icon">🧬</div>
+            <div class="qb-mode-icon">${OmicsLab.Icons?.svg('dna',28)||''}</div>
             <div class="qb-mode-title">Solo Practice</div>
             <div class="qb-mode-desc">${N_QUESTIONS} questions · timed · scored</div>
             <input type="text" id="qb-p1-name" class="qb-name-inp" placeholder="Your name" value="Researcher">
@@ -392,7 +392,7 @@ OmicsLab.QuizBattle = (function () {
 
           <!-- Multiplayer Host -->
           <div class="qb-mode-card">
-            <div class="qb-mode-icon">⚔️</div>
+            <div class="qb-mode-icon">${OmicsLab.Icons?.svg('zap',28)||''}</div>
             <div class="qb-mode-title">Host Battle</div>
             <div class="qb-mode-desc">Play vs a friend in another browser tab on the same device</div>
             <input type="text" id="qb-p1-name" class="qb-name-inp" placeholder="Your name (P1)">
@@ -403,7 +403,7 @@ OmicsLab.QuizBattle = (function () {
 
           <!-- Join Guest -->
           <div class="qb-mode-card">
-            <div class="qb-mode-icon">🤝</div>
+            <div class="qb-mode-icon">${OmicsLab.Icons?.svg('link',28)||''}</div>
             <div class="qb-mode-title">Join as Guest</div>
             <div class="qb-mode-desc">Enter the session code from your opponent's tab</div>
             <input type="text" id="qb-p2-name-guest" class="qb-name-inp" placeholder="Your name (P2)">

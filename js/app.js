@@ -350,7 +350,7 @@ OmicsLab.App = (function() {
     if (!m) return '';
     const africaPremium = Math.round((m.costAf - m.cost) / m.cost * 100);
     const q = OmicsLab.State.quality;
-    const efficiencyPenalty = q.sampleIntegrity < 70 || q.purity < 70 ? '⚠️ Low sample quality may require re-extraction — add ~30–50% to reagent cost.' : '';
+    const efficiencyPenalty = q.sampleIntegrity < 70 || q.purity < 70 ? `${OmicsLab.Icons?.svg('alert-triangle',12) || ''} Low sample quality may require re-extraction — add ~30–50% to reagent cost.` : '';
     return `
       <div class="results-card">
         <div class="results-card-title">${OmicsLab.Icons.svg('trending-up',16)} Cost &amp; Time Estimate</div>
@@ -458,7 +458,7 @@ OmicsLab.App = (function() {
     if (!fb) return;
     const correct = choice === v.verdict;
     fb.className = 'vw-feedback ' + (correct ? 'vw-fb-correct' : 'vw-fb-wrong');
-    fb.innerHTML = `<strong>${correct ? '✓ Correct!' : '✗ Expected: ' + v.verdict}</strong> — ${v.exp}`;
+    fb.innerHTML = `<strong style="display:inline-flex;align-items:center;gap:.25rem">${correct ? (OmicsLab.Icons?.svg('check',12)||'') + ' Correct!' : (OmicsLab.Icons?.svg('x',12)||'') + ' Expected: ' + v.verdict}</strong> — ${v.exp}`;
     /* Disable buttons on the card */
     const card = document.getElementById('vw-card-' + idx);
     if (card) card.querySelectorAll('.vw-btn').forEach(b => b.disabled = true);
@@ -612,7 +612,9 @@ OmicsLab.App = (function() {
     OmicsLab.SabotageMode = !OmicsLab.SabotageMode;
     const btn = document.getElementById('sabotage-toggle-btn');
     if (btn) {
-      btn.textContent = OmicsLab.SabotageMode ? '🔴 Sabotage ON — Find the hidden error!' : '🔬 Sabotage Mode';
+      btn.innerHTML = OmicsLab.SabotageMode
+        ? `${OmicsLab.Icons?.svg('alert-triangle',13) || ''} Sabotage ON — Find the hidden error!`
+        : `${OmicsLab.Icons?.svg('microscope',13) || ''} Sabotage Mode`;
       btn.classList.toggle('sabotage-active', OmicsLab.SabotageMode);
     }
     const hint = document.getElementById('sabotage-hint');
@@ -845,7 +847,7 @@ OmicsLab.App = (function() {
           <div class="dm-name">${d.name}</div>
           <div class="dm-cat">${d.category}</div>
         </div>
-        <button class="dm-close" onclick="OmicsLab.App._closeDiseaseModal()" aria-label="Close">✕</button>
+        <button class="dm-close" onclick="OmicsLab.App._closeDiseaseModal()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       ${statsHtml}
     </div>
@@ -1066,7 +1068,7 @@ OmicsLab.App = (function() {
       <div class="emd-header">
         ${photoHtml}
         <div class="emd-photo-gradient"></div>
-        <button class="emd-close" onclick="OmicsLab.App._closeEquipmentModal()">✕</button>
+        <button class="emd-close" onclick="OmicsLab.App._closeEquipmentModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
       <div class="emd-body">
         <div class="emd-maker">${eq.manufacturer}</div>

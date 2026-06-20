@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Curriculum Learning Paths
    Structured tracks with progress tracking, prerequisites,
    next-lesson flow, and completion triggers for the badge system.
@@ -13,7 +13,7 @@ OmicsLab.Curriculum = (function () {
   const TRACKS = {
     wetlab: {
       id: 'wetlab',
-      icon: '🔬',
+      icon: 'microscope',
       title: 'Wet-Lab Scientist',
       subtitle: 'From sample to sequencer',
       color: '#3fb950',
@@ -22,27 +22,27 @@ OmicsLab.Curriculum = (function () {
       badge: 'wetlab-certified',
       lessons: [
         { id: 'wl-01', title: 'Sample Collection & Integrity', duration: '15 min',
-          icon: '💉', section: 'disease-explorer-section',
+          icon: 'droplet', section: 'disease-explorer-section',
           summary: 'Learn biobanking standards, cold-chain requirements, and how poor sample integrity cascades into bad sequencing data.',
           keyPoints: ['DIN/RIN scores and what they mean', 'Cold-chain failures in field conditions', 'Africa-specific sample transport challenges'],
           action: 'disease-explorer-section' },
         { id: 'wl-02', title: 'DNA & RNA Extraction', duration: '20 min',
-          icon: '🧪', section: 'domain-section',
+          icon: 'flask', section: 'domain-section',
           summary: 'Compare extraction kits, troubleshoot inhibitor contamination, and understand why extraction method affects downstream results.',
           keyPoints: ['Phenol-chloroform vs. column methods', 'Inhibitor removal for soil/blood', 'Yield vs. purity trade-offs'],
           action: 'domain-section' },
         { id: 'wl-03', title: 'Library Preparation', duration: '25 min',
-          icon: '📚', section: 'domain-section',
+          icon: 'layers', section: 'domain-section',
           summary: 'Walk through adapter ligation, PCR amplification, and size selection. Understand how each step can introduce bias.',
           keyPoints: ['Fragmentation methods', 'Adapter ligation efficiency', 'PCR duplicate rates and how to minimise them'],
           action: 'domain-section' },
         { id: 'wl-04', title: 'Sequencing Platforms', duration: '20 min',
-          icon: '⚡', section: 'equipment-gallery-section',
+          icon: 'zap', section: 'equipment-gallery-section',
           summary: 'Compare Illumina, Oxford Nanopore, and PacBio. Know when each platform is right for Africa-based research.',
           keyPoints: ['Short-read vs. long-read trade-offs', 'Nanopore field sequencing for outbreaks', 'Cost per base in African lab context'],
           action: 'equipment-gallery-section' },
         { id: 'wl-05', title: 'QC & Run Metrics', duration: '15 min',
-          icon: '📊', section: 'bioinfo-pipeline-section',
+          icon: 'bar-chart', section: 'bioinfo-pipeline-section',
           summary: 'Interpret FastQC reports, identify run failures early, and decide whether to re-sequence.',
           keyPoints: ['Q30 thresholds', 'Adapter content and GC bias', 'When to flag a run as failed'],
           action: 'bioinfo-pipeline-section' }
@@ -51,7 +51,7 @@ OmicsLab.Curriculum = (function () {
 
     bioinformatics: {
       id: 'bioinformatics',
-      icon: '💻',
+      icon: 'cpu',
       title: 'Bioinformatician',
       subtitle: 'From reads to results',
       color: '#58a6ff',
@@ -60,27 +60,27 @@ OmicsLab.Curriculum = (function () {
       badge: 'bioinfo-certified',
       lessons: [
         { id: 'bi-01', title: 'Linux & HPC Fundamentals', duration: '20 min',
-          icon: '🖥️', section: 'hpc-training-section',
+          icon: 'server', section: 'hpc-training-section',
           summary: 'Navigate a Linux cluster, write SLURM job scripts, and manage files on HPC storage systems.',
           keyPoints: ['Essential bash commands', 'SLURM sbatch / squeue / scancel', 'File transfer with rsync and scp'],
           action: 'hpc-training-section' },
         { id: 'bi-02', title: 'Quality Control', duration: '15 min',
-          icon: '🔍', section: 'bioinfo-pipeline-section',
+          icon: 'check-circle', section: 'bioinfo-pipeline-section',
           summary: 'Run FastQC and MultiQC, interpret every report section, and decide on trimming parameters.',
           keyPoints: ['Per-base quality scores', 'Overrepresented sequences', 'When to trim vs. discard'],
           action: 'bioinfo-pipeline-section' },
         { id: 'bi-03', title: 'Alignment & Sorting', duration: '25 min',
-          icon: '🧬', section: 'bioinfo-pipeline-section',
+          icon: 'dna', section: 'bioinfo-pipeline-section',
           summary: 'Align reads to a reference genome, sort and index BAM files, and interpret mapping statistics.',
           keyPoints: ['BWA-MEM2 vs. STAR for DNA vs. RNA', 'Mapping rate interpretation', 'SAMtools view, sort, index'],
           action: 'bioinfo-pipeline-section' },
         { id: 'bi-04', title: 'Variant Calling & Annotation', duration: '30 min',
-          icon: '🔬', section: 'bioinfo-pipeline-section',
+          icon: 'microscope', section: 'bioinfo-pipeline-section',
           summary: 'Call SNPs and indels with GATK, filter variants, and annotate with VEP against African population databases.',
           keyPoints: ['GVCF workflow for cohorts', 'VQSR vs. hard filtering', 'gnomAD AFR frequency context'],
           action: 'bioinfo-pipeline-section' },
         { id: 'bi-05', title: 'Workflow Engines & Reproducibility', duration: '20 min',
-          icon: '⚙️', section: 'hpc-training-section',
+          icon: 'rotate-cw', section: 'hpc-training-section',
           summary: 'Write a Snakemake or Nextflow workflow, containerise it with Singularity, and submit it to SLURM.',
           keyPoints: ['Snakemake rules and DAGs', 'Singularity on HPC', 'Sharing workflows via Repro Hub'],
           action: 'repro-hub-section' }
@@ -89,7 +89,7 @@ OmicsLab.Curriculum = (function () {
 
     publichealth: {
       id: 'publichealth',
-      icon: '🌍',
+      icon: 'globe',
       title: 'Public Health Researcher',
       subtitle: 'From variants to impact',
       color: '#d2a8ff',
@@ -98,27 +98,27 @@ OmicsLab.Curriculum = (function () {
       badge: 'pubhealth-certified',
       lessons: [
         { id: 'ph-01', title: 'Genomic Epidemiology Basics', duration: '20 min',
-          icon: '📈', section: 'disease-explorer-section',
+          icon: 'trending-up', section: 'disease-explorer-section',
           summary: 'Understand how pathogen genomics tracks outbreaks, drug resistance, and transmission chains across Africa.',
           keyPoints: ['Phylogenetic trees in plain language', 'Nextstrain & outbreak.info', 'COVID-19 and Mpox case studies from Africa'],
           action: 'disease-explorer-section' },
         { id: 'ph-02', title: 'Disease Surveillance Workflows', duration: '20 min',
-          icon: '🦠', section: 'domain-section',
+          icon: 'virus', section: 'domain-section',
           summary: 'Follow a complete surveillance workflow from sample to sequencing report, as used by Africa CDC and WHO.',
           keyPoints: ['Sentinel site selection', 'SARS-CoV-2 sequencing for variants', 'Reporting chains to WHO GOARN'],
           action: 'domain-section' },
         { id: 'ph-03', title: 'Data Governance & Ethics', duration: '25 min',
-          icon: '⚖️', section: 'africa-hub-section',
+          icon: 'scale', section: 'africa-hub-section',
           summary: 'Apply H3Africa data governance principles, understand data sovereignty, and navigate material transfer agreements.',
           keyPoints: ['H3Africa data access policy', 'AU data governance framework', 'Community engagement requirements'],
           action: 'africa-hub-section' },
         { id: 'ph-04', title: 'Communicating Genomic Findings', duration: '15 min',
-          icon: '📢', section: 'disease-learning-section',
+          icon: 'globe', section: 'disease-learning-section',
           summary: 'Translate variant calls and surveillance data into actionable public health language for ministers and media.',
           keyPoints: ['Avoiding genomics jargon', 'Visualisations for non-scientists', 'Risk communication during outbreaks'],
           action: 'disease-learning-section' },
         { id: 'ph-05', title: 'Publishing, Depositing & Sharing Data', duration: '20 min',
-          icon: '📤', section: 'repro-hub-section',
+          icon: 'database', section: 'repro-hub-section',
           summary: 'Deposit data in ENA/SRA, write a reproducible methods section, and calculate your FAIR score.',
           keyPoints: ['ENA submission walkthrough', 'Writing a reproducible methods section', 'FAIR score checklist'],
           action: 'repro-hub-section' }
@@ -163,9 +163,9 @@ OmicsLab.Curriculum = (function () {
     return `
     <div class="curr-track-card" onclick="OmicsLab.Curriculum.openTrack('${track.id}')">
       <div class="curr-track-top" style="--track-color:${track.color}">
-        <div class="curr-track-icon">${track.icon}</div>
+        <div class="curr-track-icon">${OmicsLab.Icons?.svg(track.icon, 28) || track.icon}</div>
         <div class="curr-track-badge-area" id="curr-badge-${track.id}">
-          ${prog.pct === 100 ? '<span class="curr-complete-badge">✓ Complete</span>' : ''}
+          ${prog.pct === 100 ? '<span class="curr-complete-badge">[OK] Complete</span>' : ''}
         </div>
       </div>
       <div class="curr-track-body">
@@ -194,9 +194,9 @@ OmicsLab.Curriculum = (function () {
       const isNext = i === nextIdx;
       return `
       <div class="curr-lesson-row ${done ? 'done' : isNext ? 'next' : 'locked'}">
-        <div class="curr-lesson-num">${done ? '✓' : (i + 1)}</div>
+        <div class="curr-lesson-num">${done ? '[OK]' : (i + 1)}</div>
         <div class="curr-lesson-info">
-          <div class="curr-lesson-title">${l.icon} ${l.title}</div>
+          <div class="curr-lesson-title">${OmicsLab.Icons?.svg(l.icon, 14) || ''} ${l.title}</div>
           <div class="curr-lesson-meta">${l.duration} · ${l.summary.substring(0, 90)}…</div>
           <div class="curr-key-points">
             ${l.keyPoints.map(p => `<span class="curr-kp">• ${p}</span>`).join('')}
@@ -219,7 +219,7 @@ OmicsLab.Curriculum = (function () {
     return `
     <div class="curr-detail-panel" id="curr-detail-${trackId}">
       <div class="curr-detail-header" style="border-left-color:${track.color}">
-        <div class="curr-detail-title">${track.icon} ${track.title}</div>
+        <div class="curr-detail-title">${OmicsLab.Icons?.svg(track.icon, 20) || ''} ${track.title}</div>
         <div class="curr-detail-sub">${track.subtitle}</div>
         <div class="curr-detail-outcome"><strong>Learning outcome:</strong> ${track.outcome}</div>
         <div class="curr-detail-progress">
@@ -273,7 +273,7 @@ OmicsLab.Curriculum = (function () {
     Object.keys(TRACKS).forEach(tid => {
       const badgeArea = document.getElementById('curr-badge-' + tid);
       const prog = _trackProgress(tid);
-      if (badgeArea && prog.pct === 100) badgeArea.innerHTML = '<span class="curr-complete-badge">✓ Complete</span>';
+      if (badgeArea && prog.pct === 100) badgeArea.innerHTML = '<span class="curr-complete-badge">[OK] Complete</span>';
       const fill = document.querySelector(`.curr-track-card[onclick*="${tid}"] .curr-progress-fill`);
       if (fill) { fill.style.width = prog.pct + '%'; fill.style.background = TRACKS[tid].color; }
       const label = document.querySelector(`.curr-track-card[onclick*="${tid}"] .curr-progress-label`);

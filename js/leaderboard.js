@@ -13,18 +13,18 @@ OmicsLab.Leaderboard = (function () {
   /* ─── Synthetic global cohort (80 entries) ─── */
   const SEED_COHORT = [
     /* Africa */
-    {name:'Amara Osei-Bonsu',    country:'Ghana',          city:'Accra',           score:98, streak:22, badge:'🥇', domain:'WGS',         lat:5.6037,   lng:-0.1870},
-    {name:'Sipho Dlamini',       country:'South Africa',   city:'Cape Town',       score:96, streak:18, badge:'🥇', domain:'RNA-seq',      lat:-33.9249, lng:18.4241},
-    {name:'Fatima Al-Rashidi',   country:'Uganda',         city:'Entebbe',         score:95, streak:15, badge:'🥇', domain:'Metagenomics', lat:0.0553,   lng:32.4633},
-    {name:'Kwame Asante',        country:'Ghana',          city:'Kumasi',          score:93, streak:14, badge:'🥈', domain:'ATAC-seq',     lat:6.6880,   lng:-1.6244},
-    {name:'Ngozi Okonkwo',       country:'Nigeria',        city:'Lagos',           score:92, streak:13, badge:'🥈', domain:'scRNA-seq',    lat:6.5244,   lng:3.3792},
-    {name:'Tamirat Bekele',      country:'Ethiopia',       city:'Addis Ababa',     score:91, streak:12, badge:'🥈', domain:'WGS',         lat:9.0320,   lng:38.7469},
-    {name:'Ayo Abiodun',         country:'Nigeria',        city:'Abuja',           score:90, streak:11, badge:'🥈', domain:'Proteomics',   lat:9.0579,   lng:7.4951},
-    {name:'Mariam Diallo',       country:'Senegal',        city:'Dakar',           score:89, streak:10, badge:'🥈', domain:'WGS',         lat:14.7167,  lng:-17.4677},
-    {name:'Chidi Eze',           country:'Nigeria',        city:'Ibadan',          score:88, streak:9,  badge:'🥉', domain:'ChIP-seq',     lat:7.3775,   lng:3.9470},
-    {name:'Aisha Hassan',        country:'Kenya',          city:'Nairobi',         score:87, streak:9,  badge:'🥉', domain:'RNA-seq',      lat:-1.2921,  lng:36.8219},
-    {name:'Nomvula Mokoena',     country:'South Africa',   city:'Johannesburg',    score:86, streak:8,  badge:'🥉', domain:'Metabolomics', lat:-26.2041, lng:28.0473},
-    {name:'Patrick Mugisha',     country:'Uganda',         city:'Kampala',         score:85, streak:8,  badge:'🥉', domain:'Metagenomics', lat:0.3476,   lng:32.5825},
+    {name:'Amara Osei-Bonsu',    country:'Ghana',          city:'Accra',           score:98, streak:22, badge:'', domain:'WGS',         lat:5.6037,   lng:-0.1870},
+    {name:'Sipho Dlamini',       country:'South Africa',   city:'Cape Town',       score:96, streak:18, badge:'', domain:'RNA-seq',      lat:-33.9249, lng:18.4241},
+    {name:'Fatima Al-Rashidi',   country:'Uganda',         city:'Entebbe',         score:95, streak:15, badge:'', domain:'Metagenomics', lat:0.0553,   lng:32.4633},
+    {name:'Kwame Asante',        country:'Ghana',          city:'Kumasi',          score:93, streak:14, badge:'', domain:'ATAC-seq',     lat:6.6880,   lng:-1.6244},
+    {name:'Ngozi Okonkwo',       country:'Nigeria',        city:'Lagos',           score:92, streak:13, badge:'', domain:'scRNA-seq',    lat:6.5244,   lng:3.3792},
+    {name:'Tamirat Bekele',      country:'Ethiopia',       city:'Addis Ababa',     score:91, streak:12, badge:'', domain:'WGS',         lat:9.0320,   lng:38.7469},
+    {name:'Ayo Abiodun',         country:'Nigeria',        city:'Abuja',           score:90, streak:11, badge:'', domain:'Proteomics',   lat:9.0579,   lng:7.4951},
+    {name:'Mariam Diallo',       country:'Senegal',        city:'Dakar',           score:89, streak:10, badge:'', domain:'WGS',         lat:14.7167,  lng:-17.4677},
+    {name:'Chidi Eze',           country:'Nigeria',        city:'Ibadan',          score:88, streak:9,  badge:'', domain:'ChIP-seq',     lat:7.3775,   lng:3.9470},
+    {name:'Aisha Hassan',        country:'Kenya',          city:'Nairobi',         score:87, streak:9,  badge:'', domain:'RNA-seq',      lat:-1.2921,  lng:36.8219},
+    {name:'Nomvula Mokoena',     country:'South Africa',   city:'Johannesburg',    score:86, streak:8,  badge:'', domain:'Metabolomics', lat:-26.2041, lng:28.0473},
+    {name:'Patrick Mugisha',     country:'Uganda',         city:'Kampala',         score:85, streak:8,  badge:'', domain:'Metagenomics', lat:0.3476,   lng:32.5825},
     {name:'Aicha Koné',          country:'Côte d\'Ivoire', city:'Abidjan',         score:84, streak:7,  badge:'',   domain:'WGS',         lat:5.3600,   lng:-4.0083},
     {name:'Festus Kamau',        country:'Kenya',          city:'Mombasa',         score:83, streak:7,  badge:'',   domain:'scRNA-seq',    lat:-4.0435,  lng:39.6682},
     {name:'Blessing Okafor',     country:'Nigeria',        city:'Port Harcourt',   score:82, streak:6,  badge:'',   domain:'ATAC-seq',     lat:4.8156,   lng:7.0498},
@@ -118,7 +118,7 @@ OmicsLab.Leaderboard = (function () {
       name, country, city,
       score: best || 0,
       streak,
-      badge: best >= 95 ? '🥇' : best >= 85 ? '🥈' : best >= 70 ? '🥉' : '',
+      badge: '',
       domain: sessions[sessions.length - 1]?.domain || '—',
       isMe: true,
       lat: profile.lat || -1.2921,
@@ -187,7 +187,7 @@ OmicsLab.Leaderboard = (function () {
                     <span class="lb-score-num">${e.score}</span>
                   </div>
                 </td>
-                <td class="lb-td-streak">${e.streak > 0 ? '🔥 ' + e.streak + 'd' : '—'}</td>
+                <td class="lb-td-streak">${e.streak > 0 ? `${OmicsLab.Icons?.svg('flame',12)||''} ${e.streak}d` : '—'}</td>
               </tr>`).join('')}
           </tbody>
         </table>

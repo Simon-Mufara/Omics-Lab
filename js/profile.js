@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Profile & First-Visit Setup
    Stores profile in localStorage as 'omicslab_profile'
    Time spent in 'omicslab_time_spent' (minutes)
@@ -71,61 +71,61 @@ OmicsLab.Profile = (function () {
     { name:'Zambia',                     flag:'🇿🇲' },
     { name:'Zimbabwe',                   flag:'🇿🇼' },
     { divider: true },
-    { name:'International (outside Africa)', flag:'🌐' },
+    { name:'International (outside Africa)', flag:'' },
   ];
 
   const ROLES = [
-    { id:'Student',    icon:'🎓', desc:'Studying omics or bioinformatics' },
-    { id:'Researcher', icon:'🔬', desc:'Academic or industry research' },
-    { id:'Instructor', icon:'🏫', desc:'Teaching or training others' },
-    { id:'Clinician',  icon:'🏥', desc:'Clinical or public health work' },
+    { id:'Student',    icon:'award',       desc:'Studying omics or bioinformatics' },
+    { id:'Researcher', icon:'microscope',  desc:'Academic or industry research' },
+    { id:'Instructor', icon:'layers',      desc:'Teaching or training others' },
+    { id:'Clinician',  icon:'heart-pulse', desc:'Clinical or public health work' },
   ];
 
   const ROLE_RECS = {
     Student: [
-      { page:'lab',      icon:'🧪', color:'rgba(63,185,80,0.12)',   name:'WGS Simulation',        desc:'Build wet-lab fundamentals step by step' },
-      { page:'learn',    icon:'🦠', color:'rgba(88,166,255,0.12)',  name:'Disease Explorer',       desc:'Study 40+ Africa-relevant diseases' },
-      { page:'learn',    icon:'🎓', color:'rgba(188,140,255,0.12)', name:'Curriculum Tracks',      desc:'Follow a structured path, earn certificates' },
+      { page:'lab',      icon:'flask',      color:'rgba(63,185,80,0.12)',   name:'WGS Simulation',        desc:'Build wet-lab fundamentals step by step' },
+      { page:'learn',    icon:'virus',      color:'rgba(88,166,255,0.12)',  name:'Disease Explorer',       desc:'Study 40+ Africa-relevant diseases' },
+      { page:'learn',    icon:'award',      color:'rgba(188,140,255,0.12)', name:'Curriculum Tracks',      desc:'Follow a structured path, earn certificates' },
     ],
     Researcher: [
-      { page:'lab',      icon:'🧬', color:'rgba(63,185,80,0.12)',   name:'Advanced WGS / GATK4',   desc:'Full variant calling pipeline' },
-      { page:'research', icon:'🔭', color:'rgba(188,140,255,0.12)', name:'Research Mode',          desc:'Design reproducible FAIR studies' },
-      { page:'terminal', icon:'🖥️', color:'rgba(88,166,255,0.12)',  name:'Pipeline Terminal',      desc:'Run Snakemake & Nextflow workflows' },
+      { page:'lab',      icon:'dna',        color:'rgba(63,185,80,0.12)',   name:'Advanced WGS / GATK4',   desc:'Full variant calling pipeline' },
+      { page:'research', icon:'search',     color:'rgba(188,140,255,0.12)', name:'Research Mode',          desc:'Design reproducible FAIR studies' },
+      { page:'terminal', icon:'cpu',        color:'rgba(88,166,255,0.12)',  name:'Pipeline Terminal',      desc:'Run Snakemake & Nextflow workflows' },
     ],
     Instructor: [
-      { page:'research', icon:'🏫', color:'rgba(188,140,255,0.12)', name:'Workshop Mode',          desc:'Set up cohort training sessions' },
-      { page:'learn',    icon:'📋', color:'rgba(88,166,255,0.12)',  name:'Curriculum Builder',     desc:'Customise learning tracks for your class' },
-      { page:'research', icon:'🔁', color:'rgba(227,179,65,0.12)',  name:'Repro Hub',              desc:'Share reproducible protocols' },
+      { page:'research', icon:'layers',     color:'rgba(188,140,255,0.12)', name:'Workshop Mode',          desc:'Set up cohort training sessions' },
+      { page:'learn',    icon:'clipboard',  color:'rgba(88,166,255,0.12)',  name:'Curriculum Builder',     desc:'Customise learning tracks for your class' },
+      { page:'research', icon:'rotate-cw',  color:'rgba(227,179,65,0.12)',  name:'Repro Hub',              desc:'Share reproducible protocols' },
     ],
     Clinician: [
-      { page:'learn',    icon:'🏥', color:'rgba(255,107,107,0.12)', name:'Clinical Disease Profiles', desc:'Genomics of 22 diseases' },
-      { page:'africa',   icon:'🌍', color:'rgba(249,115,22,0.12)',  name:'Africa Hub',             desc:'One Health · H3Africa governance' },
-      { page:'learn',    icon:'🛠️', color:'rgba(63,185,80,0.12)',   name:'Clinical Tools',         desc:'Bioinformatics for the clinic' },
+      { page:'learn',    icon:'heart-pulse',color:'rgba(255,107,107,0.12)', name:'Clinical Disease Profiles', desc:'Genomics of 22 diseases' },
+      { page:'africa',   icon:'globe',      color:'rgba(249,115,22,0.12)',  name:'Africa Hub',             desc:'One Health · H3Africa governance' },
+      { page:'learn',    icon:'cpu',        color:'rgba(63,185,80,0.12)',   name:'Clinical Tools',         desc:'Bioinformatics for the clinic' },
     ],
   };
 
   const TRACKS = [
-    { id:'wgs',      name:'WGS Foundation',     icon:'🧬', color:'#3fb950', bg:'rgba(63,185,80,0.1)',   desc:'DNA extraction → GATK4 variant annotation',  steps:8,  page:'lab' },
-    { id:'rnaseq',   name:'RNA-seq Essentials',  icon:'🔬', color:'#58a6ff', bg:'rgba(88,166,255,0.1)', desc:'FastQC → STAR → DESeq2 differential expression', steps:6, page:'lab' },
-    { id:'africa',   name:'Africa Omics',        icon:'🌍', color:'#f97316', bg:'rgba(249,115,22,0.1)', desc:'H3Africa, AWI-Gen, population genomics',     steps:5,  page:'africa' },
-    { id:'meta',     name:'Metagenomics Intro',  icon:'🦠', color:'#bc8cff', bg:'rgba(188,140,255,0.1)',desc:'Kraken2 · Bracken · community profiling',      steps:5,  page:'lab' },
-    { id:'hpc',      name:'HPC & Pipelines',     icon:'⚙️', color:'#e3b341', bg:'rgba(227,179,65,0.1)', desc:'Slurm, Snakemake, Nextflow on HPC clusters',  steps:6,  page:'learn' },
-    { id:'clinical', name:'Clinical Genomics',   icon:'🏥', color:'#ff6b6b', bg:'rgba(255,107,107,0.1)',desc:'Variant interpretation for clinical practice', steps:4,  page:'learn' },
+    { id:'wgs',      name:'WGS Foundation',     icon:'dna',        color:'#3fb950', bg:'rgba(63,185,80,0.1)',   desc:'DNA extraction → GATK4 variant annotation',  steps:8,  page:'lab' },
+    { id:'rnaseq',   name:'RNA-seq Essentials',  icon:'microscope', color:'#58a6ff', bg:'rgba(88,166,255,0.1)', desc:'FastQC → STAR → DESeq2 differential expression', steps:6, page:'lab' },
+    { id:'africa',   name:'Africa Omics',        icon:'globe',      color:'#f97316', bg:'rgba(249,115,22,0.1)', desc:'H3Africa, AWI-Gen, population genomics',     steps:5,  page:'africa' },
+    { id:'meta',     name:'Metagenomics Intro',  icon:'virus',      color:'#bc8cff', bg:'rgba(188,140,255,0.1)',desc:'Kraken2 · Bracken · community profiling',      steps:5,  page:'lab' },
+    { id:'hpc',      name:'HPC & Pipelines',     icon:'cpu',        color:'#e3b341', bg:'rgba(227,179,65,0.1)', desc:'Slurm, Snakemake, Nextflow on HPC clusters',  steps:6,  page:'learn' },
+    { id:'clinical', name:'Clinical Genomics',   icon:'heart-pulse',color:'#ff6b6b', bg:'rgba(255,107,107,0.1)',desc:'Variant interpretation for clinical practice', steps:4,  page:'learn' },
   ];
 
   const BADGES = [
-    { id:'first_workflow', name:'First Workflow',  icon:'🧪', desc:'Complete your first simulation' },
-    { id:'qc_master',      name:'QC Master',       icon:'📊', desc:'Score 95%+ on any workflow QC' },
-    { id:'pipeline_pro',   name:'Pipeline Pro',    icon:'🖥️', desc:'Run 5 different pipelines' },
-    { id:'africa_exp',     name:'Africa Explorer', icon:'🌍', desc:'Complete the Africa Hub tour' },
-    { id:'researcher',     name:'Researcher',      icon:'🔭', desc:'Design your first study' },
-    { id:'instructor',     name:'Instructor',      icon:'🏫', desc:'Launch a workshop session' },
-    { id:'speed_run',      name:'Speed Run',       icon:'⚡', desc:'Complete a workflow in < 5 min' },
-    { id:'perfectionist',  name:'Perfectionist',   icon:'🏆', desc:'Score 100% on any workflow' },
-    { id:'multilingual',   name:'Multilingual',    icon:'🌐', desc:'Switch to 3+ languages' },
-    { id:'night_owl',      name:'Night Owl',       icon:'🦉', desc:'Study past midnight' },
-    { id:'streak_7',       name:'7-Day Streak',    icon:'🔥', desc:'Use OmicsLab 7 days in a row' },
-    { id:'community',      name:'Community',       icon:'🤝', desc:'Share your results' },
+    { id:'first_workflow', name:'First Workflow',  icon:'flask',      desc:'Complete your first simulation' },
+    { id:'qc_master',      name:'QC Master',       icon:'bar-chart',  desc:'Score 95%+ on any workflow QC' },
+    { id:'pipeline_pro',   name:'Pipeline Pro',    icon:'cpu',        desc:'Run 5 different pipelines' },
+    { id:'africa_exp',     name:'Africa Explorer', icon:'globe',      desc:'Complete the Africa Hub tour' },
+    { id:'researcher',     name:'Researcher',      icon:'search',     desc:'Design your first study' },
+    { id:'instructor',     name:'Instructor',      icon:'layers',     desc:'Launch a workshop session' },
+    { id:'speed_run',      name:'Speed Run',       icon:'zap',        desc:'Complete a workflow in < 5 min' },
+    { id:'perfectionist',  name:'Perfectionist',   icon:'award',      desc:'Score 100% on any workflow' },
+    { id:'multilingual',   name:'Multilingual',    icon:'globe',      desc:'Switch to 3+ languages' },
+    { id:'night_owl',      name:'Night Owl',       icon:'eye',        desc:'Study past midnight' },
+    { id:'streak_7',       name:'7-Day Streak',    icon:'flame',      desc:'Use OmicsLab 7 days in a row' },
+    { id:'community',      name:'Community',       icon:'link',       desc:'Share your results' },
   ];
 
   /* ── Session time tracking ── */
@@ -202,7 +202,7 @@ OmicsLab.Profile = (function () {
 
   function _countryFlag(name) {
     const c = COUNTRIES.find(c => c.name === name);
-    return c ? c.flag : '🌐';
+    return c ? c.flag : '';
   }
 
   function _initials(name) {
@@ -244,7 +244,7 @@ OmicsLab.Profile = (function () {
     const flag      = _countryFlag(profile.country);
     const isNew     = (Date.now() - (profile.createdAt || 0)) < 300000; /* within 5 min */
     const greeting  = isNew ? `Welcome to OmicsLab, ` : `Welcome back, `;
-    welcomeEl.innerHTML = `<span class="hero-welcome-wave">${flag}</span> ${greeting}<span class="hero-welcome-name">${firstName}</span> 👋`;
+    welcomeEl.innerHTML = `<span class="hero-welcome-wave">${flag}</span> ${greeting}<span class="hero-welcome-name">${firstName}</span>`;
     welcomeEl.style.display = 'flex';
   }
 
@@ -336,7 +336,7 @@ OmicsLab.Profile = (function () {
         ${ROLES.map(r => `
           <button type="button" class="sm-role-card${_selectedRole === r.id ? ' selected' : ''}"
                   data-role="${r.id}" onclick="OmicsLab.Profile._selectRole('${r.id}')">
-            <span class="sm-role-icon">${r.icon}</span>
+            <span class="sm-role-icon">${OmicsLab.Icons?.svg(r.icon,20)||''}</span>
             <span class="sm-role-text">
               <span class="sm-role-name">${r.id}</span>
               <span class="sm-role-desc">${r.desc}</span>
@@ -446,7 +446,7 @@ OmicsLab.Profile = (function () {
         <div class="profile-info">
           <div class="profile-name">${_esc(profile.name)}</div>
           <div class="profile-meta">
-            ${profile.institution ? `<span class="profile-meta-item">🏛️ ${_esc(profile.institution)}</span>` : ''}
+            ${profile.institution ? `<span class="profile-meta-item">${OmicsLab.Icons?.svg('layers',12)||''} ${_esc(profile.institution)}</span>` : ''}
             ${profile.country    ? `<span class="profile-meta-item">${flag} ${_esc(profile.country)}</span>` : ''}
             <span class="profile-role-pill role-pill-${profile.role}">${profile.role}</span>
           </div>
@@ -473,7 +473,7 @@ OmicsLab.Profile = (function () {
           <div class="profile-stat-label">Badges earned</div>
         </div>
         <div class="profile-stat">
-          <div class="profile-stat-num">${streak}<span class="acc">🔥</span></div>
+          <div class="profile-stat-num">${streak}<span class="acc" style="display:inline-flex;vertical-align:middle;color:#f97316">${OmicsLab.Icons?.svg('flame',14)||''}</span></div>
           <div class="profile-stat-label">Day streak</div>
         </div>
       </div>
@@ -486,7 +486,7 @@ OmicsLab.Profile = (function () {
       <div class="recs-grid">
         ${recs.map(r => `
           <button class="rec-card" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('${r.page}')">
-            <span class="rec-icon" style="background:${r.color}">${r.icon}</span>
+            <span class="rec-icon" style="background:${r.color}">${OmicsLab.Icons?.svg(r.icon,18)||''}</span>
             <span class="rec-text">
               <span class="rec-name">${r.name}</span>
               <span class="rec-desc">${r.desc}</span>
@@ -504,7 +504,7 @@ OmicsLab.Profile = (function () {
           <div class="track-card">
             <div class="track-card-head">
               <div class="track-card-left">
-                <span class="track-icon" style="background:${t.bg}">${t.icon}</span>
+                <span class="track-icon" style="background:${t.bg};color:${t.color}">${OmicsLab.Icons?.svg(t.icon,18)||''}</span>
                 <span class="track-name">${t.name}</span>
               </div>
               <span class="track-pct" style="color:${t.color}">${t.pct}%</span>
@@ -516,7 +516,7 @@ OmicsLab.Profile = (function () {
               </div>
               <div class="track-meta-row">
                 <span>${t.done} / ${t.steps} steps</span>
-                <span>${t.pct === 100 ? '✓ Complete' : t.pct > 0 ? 'In progress' : 'Not started'}</span>
+                <span>${t.pct === 100 ? '[OK] Complete' : t.pct > 0 ? 'In progress' : 'Not started'}</span>
               </div>
             </div>
             <button class="track-cta-btn" style="color:${t.color}" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('${t.page}')">
@@ -535,8 +535,8 @@ OmicsLab.Profile = (function () {
         ${BADGES.map(b => {
           const isEarned = earnedBadges.includes(b.id);
           return `<div class="badge-tile ${isEarned ? 'earned' : 'locked'}" title="${b.desc}">
-            ${isEarned ? '<div class="badge-earned-star">★</div>' : ''}
-            <div class="badge-tile-icon">${b.icon}</div>
+            ${isEarned ? `<div class="badge-earned-star">${OmicsLab.Icons?.svg('check-circle',12)||''}</div>` : ''}
+            <div class="badge-tile-icon">${OmicsLab.Icons?.svg(b.icon,24)||''}</div>
             <div class="badge-tile-name">${b.name}</div>
           </div>`;
         }).join('')}

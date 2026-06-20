@@ -43,9 +43,9 @@ OmicsLab.I18n = (function () {
   ];
 
   const GROUP_LABELS = {
-    za:  '🇿🇦 Izilimi Zase-Ningizimu Afrika · South African Languages',
-    pan: '🌍 Izilimi Zase-Afrika · Pan-African Languages',
-    int: '🌐 International',
+    za:  'Izilimi Zase-Ningizimu Afrika · South African Languages',
+    pan: 'Izilimi Zase-Afrika · Pan-African Languages',
+    int: 'International',
   };
 
   /* ─── Base English dictionary (always loaded — never async) ─── */

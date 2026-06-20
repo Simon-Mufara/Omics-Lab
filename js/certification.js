@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════
    OmicsLab — Certification Program (Part 8)
    Track learning progress across OmicsLab modules,
    earn badges, and generate a verifiable certificate.
@@ -168,10 +168,16 @@ OmicsLab.Certification = (function () {
           <div class="ct-total-chip"><span class="ct-total-n">${completed}/${TRACKS.length}</span><span class="ct-total-l">Tracks complete</span></div>
           <div class="ct-total-chip"><span class="ct-total-n">${Math.round((total/maxTotal)*100)}%</span><span class="ct-total-l">Overall progress</span></div>
         </div>
-        <button class="ct-cert-btn" onclick="OmicsLab.Certification._generateCertificate()">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-          Download Certificate (SVG)
-        </button>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+          <button class="ct-cert-btn" onclick="OmicsLab.Certification._generateCertificate()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+            Download Certificate (SVG)
+          </button>
+          <button class="ct-cert-btn" style="background:rgba(88,166,255,.12);border-color:rgba(88,166,255,.3);color:#58a6ff" onclick="OmicsLab.Certification._generateOpenBadge()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Open Badge 3.0 JSON-LD
+          </button>
+        </div>
       </div>
       ${TRACKS.map(t => {
         const prog = _trackProgress(t.id);
@@ -203,6 +209,138 @@ OmicsLab.Certification = (function () {
       }).join('')}`;
   }
 
+  /* ─── Open Badges 3.0 / W3C Verifiable Credential ─── */
+  function _generateOpenBadge() {
+    const s = _getState();
+    const name = s.profile?.name || 'OmicsLab Learner';
+    const inst = s.profile?.inst || '';
+    const completedTracks = TRACKS.filter(t => _trackProgress(t.id).pct === 100);
+    if (!completedTracks.length) {
+      OmicsLab.Toast?.show('Complete at least one full track to generate a credential', 'warning');
+      return;
+    }
+    const credId   = 'urn:uuid:' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+    const issuedAt = new Date().toISOString();
+
+    const credential = {
+      '@context': [
+        'https://www.w3.org/2018/credentials/v1',
+        'https://purl.imsglobal.org/spec/ob/v3p0/context.json',
+      ],
+      id: credId,
+      type: ['VerifiableCredential', 'OpenBadgeCredential'],
+      issuer: {
+        id: 'https://simon-mufara.github.io/Omics-Lab/',
+        type: 'Profile',
+        name: 'OmicsLab Bioinformatics Platform',
+        url: 'https://simon-mufara.github.io/Omics-Lab/',
+        description: 'Africa-first interactive omics training platform — offline, free, open source.',
+      },
+      issuanceDate: issuedAt,
+      credentialSubject: {
+        id: 'did:omicslab:' + btoa(name).replace(/[+=\/]/g, '').slice(0, 16),
+        type: 'AchievementSubject',
+        name,
+        institution: inst || undefined,
+        achievement: completedTracks.map(t => ({
+          id: `https://simon-mufara.github.io/Omics-Lab/achievements/${t.id}`,
+          type: 'Achievement',
+          name: t.title,
+          description: t.desc,
+          level: t.level,
+          points: _trackProgress(t.id).maxPoints,
+          criteria: { narrative: `Completed all modules in the ${t.title} track on OmicsLab.` },
+        })),
+        totalPoints: _totalPoints(),
+        completedAt: issuedAt,
+      },
+      proof: {
+        type: 'Ed25519Signature2020',
+        created: issuedAt,
+        verificationMethod: 'https://simon-mufara.github.io/Omics-Lab/#key-1',
+        proofPurpose: 'assertionMethod',
+        proofValue: 'SELF_ISSUED_DEMO_' + Date.now().toString(36).toUpperCase(),
+        warning: 'Self-issued for demonstration — not cryptographically signed by a CA.',
+      },
+    };
+
+    /* Save to localStorage */
+    const existing = JSON.parse(localStorage.getItem('omicslab_credentials') || '[]');
+    existing.push(credential);
+    localStorage.setItem('omicslab_credentials', JSON.stringify(existing));
+
+    /* Download JSON-LD */
+    const blob = new Blob([JSON.stringify(credential, null, 2)], { type: 'application/ld+json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `omicslab-credential-${name.replace(/\s+/g,'-')}-${issuedAt.slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+
+    OmicsLab.Toast?.show('Open Badge 3.0 credential downloaded!', 'success');
+    /* Show verification modal */
+    _showCredentialModal(credential);
+    /* Award XP */
+    OmicsLab.SkillTree?.awardXP('certificate_earned');
+  }
+
+  function _showCredentialModal(cred) {
+    const existing = document.getElementById('ct-cred-modal');
+    if (existing) existing.remove();
+    const modal = document.createElement('div');
+    modal.id = 'ct-cred-modal';
+    modal.className = 'ct-modal-overlay';
+    modal.innerHTML = `
+      <div class="ct-modal">
+        <div class="ct-modal-header">
+          <span>${OmicsLab.Icons?.svg('award',16)||''} Open Badge 3.0 Credential</span>
+          <button onclick="document.getElementById('ct-cred-modal').remove()">${OmicsLab.Icons?.svg('x',14)||'x'}</button>
+        </div>
+        <div class="ct-modal-body">
+          <p class="ct-cred-note">Your W3C Verifiable Credential has been downloaded and saved locally. Share the JSON file with employers or institutions — they can paste it below to verify.</p>
+          <div class="ct-cred-id">ID: <code>${cred.id}</code></div>
+          <div class="ct-cred-tracks">
+            ${(cred.credentialSubject?.achievement || []).map(a => `
+              <div class="ct-cred-track-row">
+                ${OmicsLab.Icons?.svg('check-circle',12)||''} ${a.name} — ${a.level}
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-ghost btn-sm ct-copy-cred" onclick="navigator.clipboard?.writeText(${JSON.stringify(JSON.stringify(cred,null,2))}).then(()=>OmicsLab.Toast?.show('Credential JSON copied','success'))">
+            ${OmicsLab.Icons?.svg('clipboard',12)||''} Copy Credential JSON
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  }
+
+  /* ─── Verify pasted credential ─── */
+  function verifyCredential(jsonText) {
+    try {
+      const cred = JSON.parse(jsonText);
+      if (!cred['@context'] || !cred.type?.includes('OpenBadgeCredential')) {
+        return { valid: false, reason: 'Not a valid Open Badge 3.0 credential.' };
+      }
+      const subject = cred.credentialSubject || {};
+      return {
+        valid: true,
+        name: subject.name,
+        institution: subject.institution,
+        tracks: (subject.achievement || []).map(a => a.name),
+        points: subject.totalPoints,
+        issued: cred.issuanceDate,
+        issuer: cred.issuer?.name,
+        id: cred.id,
+        warning: cred.proof?.warning,
+      };
+    } catch { return { valid: false, reason: 'Invalid JSON — paste the full credential file content.' }; }
+  }
+
   function init() {
     const section = document.getElementById('certification-section');
     if (!section || section.dataset.ctReady) return;
@@ -214,12 +352,12 @@ OmicsLab.Certification = (function () {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
             Certification Program
           </div>
-          <div class="ct-header-sub">Track your OmicsLab learning journey · Earn badges · Download certificate</div>
+          <div class="ct-header-sub">Track your OmicsLab learning journey · Earn verifiable badges · Download Open Badge 3.0 credentials</div>
         </div>
         <div id="cert-body"></div>
       </div>`;
     _render();
   }
 
-  return { init, _toggleModule, _generateCertificate, _saveProfile, _render };
+  return { init, _toggleModule, _generateCertificate, _generateOpenBadge, verifyCredential, _showCredentialModal, _saveProfile, _render };
 })();

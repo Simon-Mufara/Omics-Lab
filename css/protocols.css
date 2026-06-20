@@ -178,7 +178,8 @@
 }
 .pr-verified { color: #3fb950; font-size: 0.7rem; font-weight: 700; margin-left: auto; }
 .pr-card-title { font-size: 0.85rem; font-weight: 700; color: #e6edf3; line-height: 1.35; }
-.pr-card-author { font-size: 0.72rem; color: #8b949e; }
+.pr-card-author { font-size: 0.72rem; color: #8b949e; display: flex; align-items: center; gap: 0.35rem; }
+.pr-author-av { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; background: #238636; color: #fff; font-size: 0.6rem; font-weight: 700; flex-shrink: 0; }
 .pr-card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
 .pr-tag {
   background: rgba(255,255,255,0.05);

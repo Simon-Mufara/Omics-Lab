@@ -11,7 +11,7 @@
 /* ── Lobby ── */
 .qb-lobby { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
 .qb-mode-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.25rem; display: flex; flex-direction: column; gap: .6rem; text-align: center; }
-.qb-mode-icon { font-size: 2rem; }
+.qb-mode-icon { display: flex; align-items: center; justify-content: center; color: var(--accent,#3fb950); }
 .qb-mode-title { font-size: 1rem; font-weight: 700; color: #e6edf3; }
 .qb-mode-desc { font-size: .78rem; color: #8b949e; }
 .qb-name-inp { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e6edf3; font-size: .83rem; padding: .35rem .7rem; text-align: center; width: 100%; box-sizing: border-box; }

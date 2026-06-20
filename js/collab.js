@@ -1,142 +1,176 @@
 /* ═══════════════════════════════════════════════════════════════
-   OmicsLab — Live Collaboration (Prompt 7)
-   WebRTC peer-to-peer + BroadcastChannel for same-device/tab sync.
-   Copy-paste SDP signaling for cross-device (no server needed).
+   OmicsLab — Live Collaboration  (redesigned)
+   Mode A: BroadcastChannel  — same browser, multiple tabs (instant)
+   Mode B: Video Session     — Jitsi Meet room (cross-device video)
+   Mode C: Peer Link         — WebRTC DataChannel (cross-device data)
    ═══════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Collab = (function () {
 
-  const ICE_SERVERS = [
+  const ICE = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun.cloudflare.com:3478' },
   ];
 
   /* ─── State ─── */
-  let _role = null;       /* 'host' | 'guest' */
-  let _pc = null;         /* RTCPeerConnection */
-  let _dc = null;         /* RTCDataChannel */
-  let _bc = null;         /* BroadcastChannel (same-browser sync) */
-  let _sessionId = null;
-  let _peers = [];        /* connected peer names */
+  let _bc    = null;   // BroadcastChannel
+  let _pc    = null;   // RTCPeerConnection
+  let _dc    = null;   // RTCDataChannel
+  let _bcId  = null;
   let _myName = '';
-  let _labState = {};     /* shared lab step state */
+  let _peers = [];
+  let _iceDone = false;
 
-  /* ─── Unique session ID ─── */
-  function _genId() {
+  /* ─── IDs ─── */
+  function _genCode() {
     return Math.random().toString(36).slice(2, 8).toUpperCase();
   }
 
-  /* ─── Shared lab state helpers ─── */
+  /* ─── Messaging ─── */
   function _broadcastState(type, data) {
     const msg = JSON.stringify({ type, data, from: _myName, ts: Date.now() });
     if (_dc && _dc.readyState === 'open') _dc.send(msg);
     if (_bc) _bc.postMessage({ type, data, from: _myName });
   }
 
-  function _handleMessage(raw) {
+  function _handleMsg(raw) {
     let msg;
     try { msg = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { return; }
-    _renderIncomingMessage(msg);
-    if (msg.type === 'lab_step') _applyRemoteStep(msg.data);
-    if (msg.type === 'cursor') _renderRemoteCursor(msg);
-    if (msg.type === 'chat') _appendChat(msg.from, msg.data.text, false);
-    if (msg.type === 'join') _onPeerJoined(msg.from);
-    if (msg.type === 'state_sync') _applyFullState(msg.data);
+    if (msg.type === 'chat')       _appendChat(msg.from, msg.data.text, false);
+    if (msg.type === 'join')       _onPeerJoin(msg.from);
+    if (msg.type === 'leave')      _onPeerLeave(msg.from);
+    if (msg.type === 'ping')       _broadcastState('pong', {});
+    if (msg.type === 'lab_step')   _appendSystemMsg(`${msg.from} started: ${msg.data.step}`);
+    if (msg.type === 'nav')        { if (OmicsLab.Router) OmicsLab.Router.navigate(msg.data.page); _appendSystemMsg(`${msg.from} navigated to ${msg.data.page}`); }
+    _renderActivity(msg);
   }
 
-  function _applyRemoteStep(data) { /* hook into bench.js step state if available */ }
-  function _renderRemoteCursor(msg) { /* show remote cursor indicator */ }
-  function _applyFullState(data) { _labState = data; }
-
-  function _onPeerJoined(name) {
+  function _onPeerJoin(name) {
     if (!_peers.includes(name)) _peers.push(name);
-    _updatePeerList();
-    _appendSystemMsg(name + ' joined the session');
-    /* Send full state to new peer */
-    _broadcastState('state_sync', _labState);
+    _updateMemberList();
+    _appendSystemMsg(`${name} joined the session`);
   }
 
-  /* ─── BroadcastChannel (same-browser / multiple tabs) ─── */
-  function _initBC(sessionId) {
-    if (!('BroadcastChannel' in window)) return;
-    _bc = new BroadcastChannel('omicslab_session_' + sessionId);
-    _bc.onmessage = e => _handleMessage(e.data);
+  function _onPeerLeave(name) {
+    _peers = _peers.filter(p => p !== name);
+    _updateMemberList();
+    _appendSystemMsg(`${name} left the session`);
   }
 
-  /* ─── WebRTC host: create offer ─── */
-  async function _createOffer() {
-    _pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-    _dc = _pc.createDataChannel('omicslab_collab');
-    _setupDataChannel(_dc);
+  /* ─── Mode A: BroadcastChannel ─── */
+  function _joinBC(id) {
+    if (_bc) { _bc.close(); _bc = null; }
+    _bcId = id;
+    _bc = new BroadcastChannel('omicslab_' + id);
+    _bc.onmessage = e => _handleMsg(e.data);
+    _broadcastState('join', { name: _myName });
+    _setConnected(true, 'bc');
+    _updateMemberList();
+    _appendSystemMsg(`Connected to session ${id} (same-device sync active)`);
+    document.getElementById('collab-live-panel').style.display = '';
+  }
+
+  /* ─── Mode B: Video Session (Jitsi Meet) ─── */
+  function _openVideo(code) {
+    const room = 'OmicsLab-' + code;
+    const url = 'https://meet.jit.si/' + room;
+    window.open(url, '_blank', 'noopener');
+    _appendSystemMsg(`Video room opened — share "meet.jit.si/${room}" with collaborators`);
+    document.getElementById('collab-video-link').textContent = 'meet.jit.si/' + room;
+    document.getElementById('collab-video-row').style.display = '';
+  }
+
+  /* ─── Mode C: WebRTC ─── */
+  async function _rtcHost() {
+    _pc = new RTCPeerConnection({ iceServers: ICE });
+    _dc = _pc.createDataChannel('omicslab');
+    _setupDC(_dc);
+
+    let candidates = [];
+    _iceDone = false;
 
     _pc.onicecandidate = e => {
-      if (!e.candidate) {
-        /* ICE gathering complete — offer is ready */
-        const offer = JSON.stringify(_pc.localDescription);
-        document.getElementById('collab-offer-box').value = offer;
-        document.getElementById('collab-offer-step').style.display = '';
-        _appendSystemMsg('Offer ready — share it with your collaborator');
+      if (e.candidate) { candidates.push(e.candidate); return; }
+      /* Gathering complete */
+      _iceDone = true;
+      const sdp = JSON.stringify(_pc.localDescription);
+      document.getElementById('collab-offer-out').value = sdp;
+      _showStep('collab-rtc-step2');
+      _setProgress('offer-ready');
+    };
+
+    _pc.onicegatheringstatechange = () => {
+      if (_pc.iceGatheringState === 'complete' && !_iceDone) {
+        _iceDone = true;
+        document.getElementById('collab-offer-out').value = JSON.stringify(_pc.localDescription);
+        _showStep('collab-rtc-step2');
+        _setProgress('offer-ready');
       }
     };
 
+    /* Timeout fallback at 8s */
+    setTimeout(() => {
+      if (!_iceDone && _pc.localDescription) {
+        _iceDone = true;
+        document.getElementById('collab-offer-out').value = JSON.stringify(_pc.localDescription);
+        _showStep('collab-rtc-step2');
+        _setProgress('offer-ready');
+      }
+    }, 8000);
+
     const offer = await _pc.createOffer();
     await _pc.setLocalDescription(offer);
+    _setProgress('gathering');
   }
 
-  /* ─── WebRTC host: receive answer ─── */
-  async function _receiveAnswer(answerJson) {
-    try {
-      const answer = JSON.parse(answerJson);
-      await _pc.setRemoteDescription(new RTCSessionDescription(answer));
-      _appendSystemMsg('Answer accepted — waiting for peer connection…');
-    } catch (e) {
-      _appendSystemMsg('Invalid answer — please paste the full JSON from your collaborator.');
-    }
+  async function _rtcAnswer(offerJson) {
+    const offer = JSON.parse(offerJson);
+    _pc = new RTCPeerConnection({ iceServers: ICE });
+    _pc.ondatachannel = e => { _dc = e.channel; _setupDC(_dc); };
+
+    _iceDone = false;
+    _pc.onicecandidate = e => {
+      if (e.candidate) return;
+      _iceDone = true;
+      document.getElementById('collab-answer-out').value = JSON.stringify(_pc.localDescription);
+      _showStep('collab-rtc-step3-guest');
+      _setProgress('answer-ready');
+    };
+
+    setTimeout(() => {
+      if (!_iceDone && _pc.localDescription) {
+        _iceDone = true;
+        document.getElementById('collab-answer-out').value = JSON.stringify(_pc.localDescription);
+        _showStep('collab-rtc-step3-guest');
+        _setProgress('answer-ready');
+      }
+    }, 8000);
+
+    await _pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await _pc.createAnswer();
+    await _pc.setLocalDescription(answer);
+    _setProgress('gathering');
   }
 
-  /* ─── WebRTC guest: receive offer, create answer ─── */
-  async function _receiveOffer(offerJson) {
-    try {
-      const offer = JSON.parse(offerJson);
-      _pc = new RTCPeerConnection({ iceServers: ICE_SERVERS });
-
-      _pc.ondatachannel = e => {
-        _dc = e.channel;
-        _setupDataChannel(_dc);
-      };
-
-      _pc.onicecandidate = e => {
-        if (!e.candidate) {
-          const answer = JSON.stringify(_pc.localDescription);
-          document.getElementById('collab-answer-box').value = answer;
-          document.getElementById('collab-answer-step').style.display = '';
-          _appendSystemMsg('Answer ready — share it back with the host');
-        }
-      };
-
-      await _pc.setRemoteDescription(new RTCSessionDescription(offer));
-      const answer = await _pc.createAnswer();
-      await _pc.setLocalDescription(answer);
-    } catch (e) {
-      _appendSystemMsg('Invalid offer — please paste the full JSON from the host.');
-    }
+  async function _rtcAcceptAnswer(answerJson) {
+    const answer = JSON.parse(answerJson);
+    await _pc.setRemoteDescription(new RTCSessionDescription(answer));
+    _setProgress('connecting');
   }
 
-  /* ─── DataChannel setup ─── */
-  function _setupDataChannel(dc) {
+  function _setupDC(dc) {
     dc.onopen = () => {
-      _appendSystemMsg('Peer connection established!');
-      _updateConnStatus(true);
-      /* Announce presence */
+      _appendSystemMsg('Peer-to-peer connection established');
+      _setConnected(true, 'rtc');
       _broadcastState('join', { name: _myName });
+      _setProgress('connected');
+      document.getElementById('collab-live-panel').style.display = '';
     };
-    dc.onclose = () => {
-      _appendSystemMsg('Peer disconnected.');
-      _updateConnStatus(false);
-    };
-    dc.onmessage = e => _handleMessage(e.data);
-    dc.onerror = e => _appendSystemMsg('Connection error: ' + e.message);
+    dc.onclose  = () => { _setConnected(false, 'rtc'); _appendSystemMsg('Peer disconnected'); };
+    dc.onmessage = e => _handleMsg(e.data);
+    dc.onerror  = () => _appendSystemMsg('Connection error — check network and try again');
   }
 
   /* ─── Chat ─── */
@@ -145,63 +179,107 @@ OmicsLab.Collab = (function () {
     if (!text) return;
     _appendChat(_myName, text, true);
     _broadcastState('chat', { text });
-    const input = document.getElementById('collab-chat-input');
-    if (input) input.value = '';
+    const inp = document.getElementById('collab-chat-input');
+    if (inp) inp.value = '';
   }
 
-  function _appendChat(from, text, isMine) {
+  function _appendChat(from, text, mine) {
     const feed = document.getElementById('collab-chat-feed');
     if (!feed) return;
-    const div = document.createElement('div');
-    div.className = 'collab-chat-msg' + (isMine ? ' mine' : '');
-    div.innerHTML = `<span class="collab-chat-name">${from}</span><span class="collab-chat-text">${text.replace(/</g,'&lt;')}</span>`;
-    feed.appendChild(div);
+    const d = document.createElement('div');
+    d.className = 'collab-chat-msg' + (mine ? ' mine' : '');
+    d.innerHTML = `<span class="collab-chat-name">${_esc(from)}</span><span class="collab-chat-text">${_esc(text)}</span>`;
+    feed.appendChild(d);
     feed.scrollTop = feed.scrollHeight;
   }
 
   function _appendSystemMsg(msg) {
     const feed = document.getElementById('collab-chat-feed');
     if (!feed) return;
-    const div = document.createElement('div');
-    div.className = 'collab-system-msg';
-    div.textContent = msg;
-    feed.appendChild(div);
+    const d = document.createElement('div');
+    d.className = 'collab-sys-msg';
+    d.textContent = msg;
+    feed.appendChild(d);
     feed.scrollTop = feed.scrollHeight;
   }
 
-  function _renderIncomingMessage(msg) {
-    /* Generic activity feed */
+  function _renderActivity(msg) {
     const feed = document.getElementById('collab-activity');
     if (!feed) return;
-    const div = document.createElement('div');
-    div.className = 'collab-activity-item';
-    div.innerHTML = `<span class="collab-act-time">${new Date().toLocaleTimeString()}</span>
-      <span class="collab-act-peer">${msg.from}</span>
-      <span class="collab-act-type">${msg.type.replace(/_/g,' ')}</span>`;
-    feed.insertBefore(div, feed.firstChild);
-    if (feed.children.length > 20) feed.removeChild(feed.lastChild);
+    const d = document.createElement('div');
+    d.className = 'collab-act-item';
+    d.innerHTML = `<span class="collab-act-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+      <span class="collab-act-who">${_esc(msg.from)}</span>
+      <span class="collab-act-what">${msg.type.replace(/_/g,' ')}</span>`;
+    feed.insertBefore(d, feed.firstChild);
+    while (feed.children.length > 25) feed.removeChild(feed.lastChild);
   }
 
   /* ─── UI helpers ─── */
-  function _updateConnStatus(connected) {
-    const dot = document.getElementById('collab-status-dot');
+  function _setConnected(yes, mode) {
+    const dot   = document.getElementById('collab-status-dot');
     const label = document.getElementById('collab-status-label');
-    if (dot) dot.className = 'collab-status-dot' + (connected ? ' connected' : '');
-    if (label) label.textContent = connected ? 'Connected' : 'Disconnected';
-    /* Show/hide session panels */
-    const live = document.getElementById('collab-live-panel');
-    if (live) live.style.display = connected ? '' : 'none';
+    const badge = document.getElementById('collab-mode-badge');
+    if (dot)   { dot.className = 'collab-status-dot' + (yes ? ' connected' : ''); }
+    if (label) { label.textContent = yes ? 'Connected' : 'Disconnected'; }
+    if (badge && yes) {
+      badge.textContent = mode === 'bc' ? 'SAME-DEVICE SYNC' : 'PEER-TO-PEER LINK';
+      badge.style.display = '';
+    }
   }
 
-  function _updatePeerList() {
-    const el = document.getElementById('collab-peers');
+  function _updateMemberList() {
+    const el = document.getElementById('collab-members');
     if (!el) return;
-    el.innerHTML = [{ name: _myName, me: true }, ..._peers.map(n => ({ name: n, me: false }))].map(p => `
-      <div class="collab-peer">
-        <div class="collab-peer-avatar">${p.name.charAt(0).toUpperCase()}</div>
-        <span class="collab-peer-name">${p.name}${p.me ? ' (you)' : ''}</span>
-        ${p.me ? '<span class="collab-peer-host">HOST</span>' : ''}
+    const all = [{ name: _myName, me: true }, ..._peers.map(n => ({ name: n, me: false }))];
+    el.innerHTML = all.map(p => `
+      <div class="collab-member">
+        <div class="collab-member-av">${p.name.charAt(0).toUpperCase()}</div>
+        <div class="collab-member-name">${_esc(p.name)}${p.me ? '<span class="collab-me-tag">you</span>' : ''}</div>
       </div>`).join('');
+  }
+
+  function _showStep(id) {
+    ['collab-rtc-step2','collab-rtc-step3','collab-rtc-step3-guest'].forEach(s => {
+      const el = document.getElementById(s);
+      if (el) el.style.display = s === id ? '' : 'none';
+    });
+  }
+
+  function _setProgress(state) {
+    const bar  = document.getElementById('collab-rtc-progress');
+    const label = document.getElementById('collab-rtc-progress-label');
+    if (!bar) return;
+    const MAP = {
+      gathering:    { w:'40%',  text:'Gathering connection info…', color:'#e3b341' },
+      'offer-ready':{ w:'65%',  text:'Offer ready — share it with your partner', color:'#58a6ff' },
+      'answer-ready':{ w:'65%', text:'Answer ready — send it back to the host', color:'#58a6ff' },
+      connecting:   { w:'85%',  text:'Connecting to peer…', color:'#f97316' },
+      connected:    { w:'100%', text:'Connected!', color:'#3fb950' },
+    };
+    const s = MAP[state] || {};
+    bar.style.width = s.w || '0%';
+    bar.style.background = s.color || '#58a6ff';
+    if (label) label.textContent = s.text || '';
+  }
+
+  function _copyField(id, btn) {
+    const el = document.getElementById(id);
+    if (!el || !el.value) return;
+    navigator.clipboard.writeText(el.value).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+      btn.style.color = '#3fb950';
+      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
+    });
+  }
+
+  function _esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ─── Broadcast nav event ─── */
+  function shareNav(page) {
+    _broadcastState('nav', { page });
+    _appendSystemMsg(`Shared navigation to ${page}`);
   }
 
   /* ─── Init ─── */
@@ -212,243 +290,309 @@ OmicsLab.Collab = (function () {
     _render(section);
   }
 
+  /* ─── Main render ─── */
   function _render(section) {
     section.innerHTML = `
-      <div class="collab-wrap">
-        <div class="collab-header">
-          <div>
-            <div class="collab-badge">LIVE COLLABORATION</div>
-            <h2 class="collab-title">Real-Time Lab Sessions</h2>
-            <p class="collab-subtitle">Work on lab protocols together with colleagues — see each other's steps, chat, and sync state in real time. WebRTC peer-to-peer, no server required.</p>
+    <div class="collab-wrap">
+
+      <!-- Header -->
+      <div class="collab-header">
+        <div>
+          <div class="collab-badge-label">LIVE COLLABORATION</div>
+          <h2 class="collab-title">Real-Time Lab Sessions</h2>
+          <p class="collab-subtitle">Work together on protocols and analysis — chat, sync lab steps, share navigation. Choose the connection mode that fits your setup.</p>
+        </div>
+        <div class="collab-conn-status">
+          <span class="collab-status-dot" id="collab-status-dot"></span>
+          <span id="collab-status-label">Not connected</span>
+          <span class="collab-mode-badge" id="collab-mode-badge" style="display:none"></span>
+        </div>
+      </div>
+
+      <!-- Name entry -->
+      <div class="collab-name-row" id="collab-name-row">
+        <label class="collab-label">Your display name</label>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <input class="collab-input" id="collab-name" placeholder="e.g. Kwame Asante" maxlength="30" style="max-width:220px"/>
+          <button class="collab-btn-go" id="collab-name-confirm" onclick="OmicsLab.Collab._confirmName()">Set name →</button>
+        </div>
+      </div>
+
+      <!-- MODE PANELS (hidden until name set) -->
+      <div id="collab-modes-wrap" style="display:none">
+
+        <!-- ══ MODE A: Same-Device BroadcastChannel ══ -->
+        <div class="collab-mode-card collab-mode-a">
+          <div class="collab-mode-head">
+            <div class="collab-mode-icon-wrap" style="background:rgba(63,185,80,.12);color:#3fb950">${OmicsLab.Icons?.svg('zap', 20) || ''}</div>
+            <div>
+              <div class="collab-mode-name">Quick Sync <span class="collab-mode-tag collab-tag-green">SAME DEVICE</span></div>
+              <div class="collab-mode-desc">All browser tabs on this device share a session code — instant sync, no copy-paste required. Perfect for instructor + student setups on one computer.</div>
+            </div>
           </div>
-          <div class="collab-conn-status">
-            <div class="collab-status-dot" id="collab-status-dot"></div>
-            <span id="collab-status-label">Not connected</span>
+          <div class="collab-bc-grid">
+            <div class="collab-bc-col">
+              <div class="collab-step-head">
+                <div class="collab-step-num">A</div>
+                <div><strong>Create session</strong></div>
+              </div>
+              <button class="collab-btn-primary" onclick="OmicsLab.Collab._bcCreate()">Create Quick Session</button>
+              <div id="collab-bc-code-row" style="display:none">
+                <div class="collab-code-display" id="collab-bc-code-display">——</div>
+                <div style="font-size:.75rem;color:#8b949e;margin-top:.35rem">Share this code with collaborators on this device</div>
+              </div>
+            </div>
+            <div class="collab-bc-col">
+              <div class="collab-step-head">
+                <div class="collab-step-num">B</div>
+                <div><strong>Join session</strong></div>
+              </div>
+              <div style="display:flex;gap:.35rem">
+                <input class="collab-input" id="collab-bc-join-code" placeholder="Session code" maxlength="6" style="text-transform:uppercase;max-width:130px"/>
+                <button class="collab-btn-primary" onclick="OmicsLab.Collab._bcJoin()">Join</button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Name + session setup -->
-        <div class="collab-setup-card" id="collab-setup">
-          <div class="collab-setup-title">Set up your session</div>
-          <div class="collab-setup-row">
-            <div class="collab-field">
-              <label class="collab-label">Your display name</label>
-              <input class="collab-input" id="collab-name" placeholder="e.g. Kwame A." maxlength="30"/>
+        <!-- ══ MODE B: Video Session ══ -->
+        <div class="collab-mode-card collab-mode-b">
+          <div class="collab-mode-head">
+            <div class="collab-mode-icon-wrap" style="background:rgba(88,166,255,.12);color:#58a6ff">${OmicsLab.Icons?.svg('link', 20) || ''}</div>
+            <div>
+              <div class="collab-mode-name">Video Session <span class="collab-mode-tag collab-tag-blue">CROSS-DEVICE</span></div>
+              <div class="collab-mode-desc">Opens a free Jitsi Meet video call — works on any device, no sign-up needed. Enter a code or generate one, then share the room link.</div>
             </div>
           </div>
-          <div class="collab-mode-choice">
-            <button class="collab-mode-btn" id="collab-host-btn" onclick="OmicsLab.Collab._startHost()">
-              <div class="collab-mode-icon">👑</div>
-              <div class="collab-mode-label">Host Session</div>
-              <div class="collab-mode-desc">Create a new session and invite a collaborator</div>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+            <input class="collab-input" id="collab-video-code" placeholder="Room code (auto-filled)" maxlength="12" style="max-width:180px"/>
+            <button class="collab-btn-primary" style="background:#1a56a0;border-color:#1a56a0" onclick="OmicsLab.Collab._startVideo()">Open Video Room</button>
+          </div>
+          <div id="collab-video-row" style="display:none;margin-top:.75rem">
+            <div class="collab-video-link-row">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.82v6.36a1 1 0 0 1-1.447.89L15 14M3 8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+              Share: <span id="collab-video-link" class="collab-video-link-text"></span>
+              <button class="collab-copy-tiny" onclick="navigator.clipboard.writeText('https://'+document.getElementById('collab-video-link').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)})">Copy</button>
+            </div>
+            <div style="font-size:.73rem;color:#8b949e;margin-top:.3rem">Send this link to anyone — no account or install needed</div>
+          </div>
+        </div>
+
+        <!-- ══ MODE C: Cross-Device Peer Link (WebRTC) ══ -->
+        <div class="collab-mode-card collab-mode-c">
+          <div class="collab-mode-head">
+            <div class="collab-mode-icon-wrap" style="background:rgba(188,140,255,.12);color:#bc8cff">${OmicsLab.Icons?.svg('git-branch', 20) || ''}</div>
+            <div>
+              <div class="collab-mode-name">Peer Data Link <span class="collab-mode-tag collab-tag-purple">CROSS-DEVICE SYNC</span></div>
+              <div class="collab-mode-desc">Direct peer-to-peer data channel — syncs lab state, navigation, and chat across different devices with no server. Requires exchanging one connection code each way.</div>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="collab-rtc-progress-wrap" id="collab-rtc-progress-wrap" style="display:none">
+            <div class="collab-rtc-progress-bar"><div class="collab-rtc-progress-fill" id="collab-rtc-progress"></div></div>
+            <div class="collab-rtc-progress-label" id="collab-rtc-progress-label"></div>
+          </div>
+
+          <div class="collab-rtc-mode-btns">
+            <button class="collab-btn-mode" id="collab-rtc-host-btn" onclick="OmicsLab.Collab._rtcStartHost()">
+              ${OmicsLab.Icons?.svg('award', 14) || ''} I am the Host
             </button>
-            <button class="collab-mode-btn" id="collab-guest-btn" onclick="OmicsLab.Collab._startGuest()">
-              <div class="collab-mode-icon">🤝</div>
-              <div class="collab-mode-label">Join Session</div>
-              <div class="collab-mode-desc">Paste an offer from your host to join</div>
+            <button class="collab-btn-mode" id="collab-rtc-guest-btn" onclick="OmicsLab.Collab._rtcStartGuest()">
+              ${OmicsLab.Icons?.svg('link', 14) || ''} I am Joining
             </button>
           </div>
-        </div>
 
-        <!-- Host flow -->
-        <div class="collab-flow-card" id="collab-host-flow" style="display:none">
-          <div class="collab-flow-title">Host — Share your offer</div>
-          <div class="collab-step-box">
-            <div class="collab-step-num">1</div>
-            <div class="collab-step-body">
-              <div class="collab-step-title">Your connection offer</div>
-              <div class="collab-step-desc">Copy this and send to your collaborator (chat, email, WhatsApp)</div>
-              <textarea class="collab-sdp-box" id="collab-offer-box" readonly placeholder="Generating offer…" rows="4"></textarea>
-              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyBox('collab-offer-box',this)">Copy Offer</button>
+          <!-- HOST steps -->
+          <div id="collab-rtc-host-flow" style="display:none">
+            <div class="collab-rtc-step" id="collab-rtc-step1-host">
+              <div class="collab-step-head"><div class="collab-step-num">1</div><div>Generating your connection offer…</div></div>
+              <div class="collab-rtc-wait"><div class="collab-spin"></div> Collecting network info (up to 8 seconds)</div>
+            </div>
+            <div class="collab-rtc-step" id="collab-rtc-step2" style="display:none">
+              <div class="collab-step-head"><div class="collab-step-num">2</div><div>Copy your offer — send it to your collaborator</div></div>
+              <textarea class="collab-sdp-box" id="collab-offer-out" readonly rows="3"></textarea>
+              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyField('collab-offer-out',this)">${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy Offer</button>
+            </div>
+            <div class="collab-rtc-step" id="collab-rtc-step3" style="display:none">
+              <div class="collab-step-head"><div class="collab-step-num">3</div><div>Paste the answer your collaborator sends back</div></div>
+              <textarea class="collab-sdp-box" id="collab-answer-in" placeholder="Paste answer here…" rows="3"></textarea>
+              <button class="collab-accept-btn" onclick="OmicsLab.Collab._rtcFinish()">${OmicsLab.Icons?.svg('zap', 13) || ''} Connect</button>
             </div>
           </div>
-          <div class="collab-step-box" id="collab-offer-step" style="display:none">
-            <div class="collab-step-num">2</div>
-            <div class="collab-step-body">
-              <div class="collab-step-title">Paste your collaborator's answer</div>
-              <textarea class="collab-sdp-box" id="collab-answer-input" placeholder="Paste answer JSON here…" rows="4"></textarea>
-              <button class="collab-accept-btn" onclick="OmicsLab.Collab._acceptAnswer()">Connect</button>
-            </div>
-          </div>
-        </div>
 
-        <!-- Guest flow -->
-        <div class="collab-flow-card" id="collab-guest-flow" style="display:none">
-          <div class="collab-flow-title">Guest — Join a session</div>
-          <div class="collab-step-box">
-            <div class="collab-step-num">1</div>
-            <div class="collab-step-body">
-              <div class="collab-step-title">Paste the host's offer</div>
-              <textarea class="collab-sdp-box" id="collab-offer-input" placeholder="Paste offer JSON from host…" rows="4"></textarea>
-              <button class="collab-accept-btn" onclick="OmicsLab.Collab._acceptOffer()">Generate Answer</button>
+          <!-- GUEST steps -->
+          <div id="collab-rtc-guest-flow" style="display:none">
+            <div class="collab-rtc-step">
+              <div class="collab-step-head"><div class="collab-step-num">1</div><div>Paste the host's offer</div></div>
+              <textarea class="collab-sdp-box" id="collab-offer-in" placeholder="Paste offer from host…" rows="3"></textarea>
+              <button class="collab-accept-btn" onclick="OmicsLab.Collab._rtcGuestAnswer()">${OmicsLab.Icons?.svg('zap', 13) || ''} Generate Answer</button>
             </div>
-          </div>
-          <div class="collab-step-box" id="collab-answer-step" style="display:none">
-            <div class="collab-step-num">2</div>
-            <div class="collab-step-body">
-              <div class="collab-step-title">Send your answer to the host</div>
-              <textarea class="collab-sdp-box" id="collab-answer-box" readonly placeholder="Answer will appear here…" rows="4"></textarea>
-              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyBox('collab-answer-box',this)">Copy Answer</button>
+            <div class="collab-rtc-step" id="collab-rtc-step3-guest" style="display:none">
+              <div class="collab-step-head"><div class="collab-step-num">2</div><div>Copy your answer — send it back to the host</div></div>
+              <textarea class="collab-sdp-box" id="collab-answer-out" readonly rows="3"></textarea>
+              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyField('collab-answer-out',this)">${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy Answer</button>
+              <div class="collab-rtc-hint">After the host pastes your answer and clicks Connect, you'll both be linked.</div>
             </div>
           </div>
         </div>
 
-        <!-- Same-browser / BroadcastChannel session -->
-        <div class="collab-bc-card">
-          <div class="collab-bc-icon">⚡</div>
-          <div class="collab-bc-body">
-            <div class="collab-bc-title">Same-Device / Same-Browser Quick Connect</div>
-            <div class="collab-bc-desc">Open this page in a second tab or window — they'll sync automatically using the same session ID without any copy-paste signaling.</div>
-            <div class="collab-bc-row">
-              <input class="collab-input" id="collab-bc-id" placeholder="Session ID (e.g. AB12CD)" style="max-width:180px"/>
-              <button class="collab-accept-btn" onclick="OmicsLab.Collab._joinBC()">Join BroadcastChannel</button>
-            </div>
-          </div>
-        </div>
+      </div><!-- /modes-wrap -->
 
-        <!-- Live panel (shown when connected) -->
-        <div class="collab-live-panel" id="collab-live-panel" style="display:none">
-          <div class="collab-live-grid">
-            <!-- Peers -->
-            <div class="collab-panel-box">
-              <div class="collab-panel-label">Session Members</div>
-              <div id="collab-peers" class="collab-peers-list"></div>
-            </div>
+      <!-- ══ LIVE PANEL (shown when any connection active) ══ -->
+      <div class="collab-live-panel" id="collab-live-panel" style="display:none">
+        <div class="collab-live-grid">
 
-            <!-- Shared state / activity -->
-            <div class="collab-panel-box">
-              <div class="collab-panel-label">Activity Feed</div>
-              <div id="collab-activity" class="collab-activity-feed"></div>
-            </div>
-
-            <!-- Chat -->
-            <div class="collab-panel-box collab-chat-panel">
-              <div class="collab-panel-label">Session Chat</div>
-              <div id="collab-chat-feed" class="collab-chat-feed"></div>
-              <div class="collab-chat-input-row">
-                <input class="collab-input" id="collab-chat-input" placeholder="Send a message…"
-                       onkeydown="if(event.key==='Enter')OmicsLab.Collab.sendChat(this.value)"/>
-                <button class="collab-send-btn" onclick="OmicsLab.Collab.sendChat(document.getElementById('collab-chat-input').value)">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                </button>
+          <!-- Members -->
+          <div class="collab-panel-box">
+            <div class="collab-panel-label">Session Members</div>
+            <div id="collab-members" class="collab-members-list"></div>
+            <div class="collab-shared-tools">
+              <div style="font-size:.72rem;font-weight:600;color:#8b949e;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Broadcast lab events</div>
+              <div class="collab-tools-row">
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'DNA Extraction',status:'started'})">${OmicsLab.Icons?.svg('flask',12)||''} DNA Extraction</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Library Prep',status:'started'})">${OmicsLab.Icons?.svg('package',12)||''} Library Prep</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Sequencing',status:'started'})">${OmicsLab.Icons?.svg('microscope',12)||''} Sequencing</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'QC',status:'started'})">${OmicsLab.Icons?.svg('bar-chart',12)||''} Run QC</button>
+              </div>
+              <div class="collab-tools-row" style="margin-top:.3rem">
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('lab')" style="color:#3fb950">${OmicsLab.Icons?.svg('flask',12)||''} Send to Lab</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('africa')" style="color:#f97316">${OmicsLab.Icons?.svg('globe',12)||''} Send to Africa Hub</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('analysis')" style="color:#e3b341">${OmicsLab.Icons?.svg('bar-chart',12)||''} Send to Analysis</button>
               </div>
             </div>
           </div>
 
-          <!-- Shared lab tools -->
-          <div class="collab-shared-tools">
-            <div class="collab-panel-label">Broadcast Lab Events to Peers</div>
-            <div class="collab-tools-row">
-              <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'DNA Extraction',status:'started'})">
-                🧪 Start DNA Extraction
-              </button>
-              <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Library Prep',status:'started'})">
-                📚 Start Library Prep
-              </button>
-              <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Sequencing',status:'started'})">
-                🔬 Start Sequencing
-              </button>
-              <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'QC',status:'started'})">
-                📊 Run QC
-              </button>
-            </div>
+          <!-- Activity feed -->
+          <div class="collab-panel-box">
+            <div class="collab-panel-label">Activity</div>
+            <div id="collab-activity" class="collab-activity-feed"></div>
           </div>
-        </div>
 
-        <!-- How it works -->
-        <div class="collab-how-section">
-          <div class="collab-how-title">How it works</div>
-          <div class="collab-how-steps">
-            <div class="collab-how-step">
-              <div class="collab-how-num">1</div>
-              <div class="collab-how-text"><strong>Host</strong> clicks "Host Session", waits for offer JSON to appear</div>
-            </div>
-            <div class="collab-how-step">
-              <div class="collab-how-num">2</div>
-              <div class="collab-how-text"><strong>Host</strong> copies offer JSON, sends to collaborator via WhatsApp / email / chat</div>
-            </div>
-            <div class="collab-how-step">
-              <div class="collab-how-num">3</div>
-              <div class="collab-how-text"><strong>Guest</strong> clicks "Join Session", pastes offer, generates answer JSON</div>
-            </div>
-            <div class="collab-how-step">
-              <div class="collab-how-num">4</div>
-              <div class="collab-how-text"><strong>Guest</strong> sends answer JSON back to host; host pastes it and clicks Connect</div>
-            </div>
-            <div class="collab-how-step">
-              <div class="collab-how-num">5</div>
-              <div class="collab-how-text">Direct WebRTC connection established — peer-to-peer, no server, no cloud</div>
+          <!-- Chat -->
+          <div class="collab-panel-box collab-chat-panel">
+            <div class="collab-panel-label">Session Chat</div>
+            <div id="collab-chat-feed" class="collab-chat-feed"></div>
+            <div class="collab-chat-row">
+              <input class="collab-input" id="collab-chat-input" placeholder="Message…"
+                     onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();OmicsLab.Collab.sendChat(this.value)}"/>
+              <button class="collab-send-btn" onclick="OmicsLab.Collab.sendChat(document.getElementById('collab-chat-input').value)">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
             </div>
           </div>
-          <div class="collab-tech-note">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            Uses WebRTC DataChannel + Google STUN servers for NAT traversal. Works on Chrome, Firefox, Edge, Safari 15+. Both peers must be online for initial handshake; after connection, data flows directly between browsers.
-          </div>
+
         </div>
-      </div>`;
+      </div>
+
+    </div>`;
+
+    /* Pre-fill video code input */
+    const vc = document.getElementById('collab-video-code');
+    if (vc) vc.value = _genCode();
   }
 
   /* ─── Flow handlers ─── */
-  function _startHost() {
+  function _confirmName() {
     const name = document.getElementById('collab-name')?.value?.trim();
-    if (!name) { alert('Please enter your display name first.'); return; }
+    if (!name) { OmicsLab.Notify.error('Please enter your display name'); return; }
     _myName = name;
-    _role = 'host';
-    _sessionId = _genId();
-    document.getElementById('collab-host-flow').style.display = '';
-    document.getElementById('collab-guest-flow').style.display = 'none';
-    _initBC(_sessionId);
-    _createOffer();
-    document.getElementById('collab-bc-id').value = _sessionId;
-    _updatePeerList();
+    document.getElementById('collab-name-row').innerHTML = `
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#8b949e">
+        <div class="collab-member-av" style="width:28px;height:28px;font-size:.75rem">${name.charAt(0).toUpperCase()}</div>
+        Signed in as <strong style="color:#e6edf3">${_esc(name)}</strong>
+        <button class="collab-copy-tiny" onclick="OmicsLab.Collab._resetName()" style="margin-left:.25rem">Change</button>
+      </div>`;
+    document.getElementById('collab-modes-wrap').style.display = '';
+    _updateMemberList();
   }
 
-  function _startGuest() {
-    const name = document.getElementById('collab-name')?.value?.trim();
-    if (!name) { alert('Please enter your display name first.'); return; }
-    _myName = name;
-    _role = 'guest';
-    document.getElementById('collab-guest-flow').style.display = '';
-    document.getElementById('collab-host-flow').style.display = 'none';
-    _updatePeerList();
+  function _resetName() {
+    _myName = '';
+    document.getElementById('collab-modes-wrap').style.display = 'none';
+    document.getElementById('collab-name-row').innerHTML = `
+      <label class="collab-label">Your display name</label>
+      <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <input class="collab-input" id="collab-name" placeholder="e.g. Kwame Asante" maxlength="30" style="max-width:220px"/>
+        <button class="collab-btn-go" onclick="OmicsLab.Collab._confirmName()">Set name →</button>
+      </div>`;
   }
 
-  function _acceptOffer() {
-    const json = document.getElementById('collab-offer-input')?.value?.trim();
-    if (!json) { alert('Please paste the offer JSON first.'); return; }
-    _receiveOffer(json);
+  function _bcCreate() {
+    const code = _genCode();
+    _joinBC(code);
+    document.getElementById('collab-bc-code-row').style.display = '';
+    document.getElementById('collab-bc-code-display').textContent = code;
+    document.getElementById('collab-bc-join-code').value = code;
   }
 
-  function _acceptAnswer() {
-    const json = document.getElementById('collab-answer-input')?.value?.trim();
-    if (!json) { alert('Please paste the answer JSON first.'); return; }
-    _receiveAnswer(json);
+  function _bcJoin() {
+    const code = (document.getElementById('collab-bc-join-code')?.value || '').trim().toUpperCase();
+    if (code.length < 4) { OmicsLab.Notify.error('Enter a valid session code'); return; }
+    _joinBC(code);
   }
 
-  function _joinBC() {
-    const id = document.getElementById('collab-bc-id')?.value?.trim().toUpperCase();
-    if (!id) { alert('Please enter a session ID.'); return; }
-    const name = document.getElementById('collab-name')?.value?.trim() || 'Collaborator';
-    _myName = name;
-    _sessionId = id;
-    _initBC(id);
-    _updateConnStatus(true);
-    _updatePeerList();
-    _broadcastState('join', { name: _myName });
-    _appendSystemMsg('Joined BroadcastChannel session: ' + id);
-    document.getElementById('collab-live-panel').style.display = '';
+  function _startVideo() {
+    const code = (document.getElementById('collab-video-code')?.value || '').trim().toUpperCase() || _genCode();
+    _openVideo(code);
   }
 
-  function _copyBox(id, btn) {
-    const box = document.getElementById(id);
-    if (!box || !box.value) return;
-    navigator.clipboard.writeText(box.value).then(() => {
-      const orig = btn.textContent;
-      btn.textContent = 'Copied!';
+  function _rtcStartHost() {
+    document.getElementById('collab-rtc-host-flow').style.display = '';
+    document.getElementById('collab-rtc-guest-flow').style.display = 'none';
+    document.getElementById('collab-rtc-host-btn').classList.add('active');
+    document.getElementById('collab-rtc-guest-btn').classList.remove('active');
+    document.getElementById('collab-rtc-progress-wrap').style.display = '';
+    _rtcHost().catch(e => _appendSystemMsg('WebRTC error: ' + e.message));
+  }
+
+  function _rtcStartGuest() {
+    document.getElementById('collab-rtc-guest-flow').style.display = '';
+    document.getElementById('collab-rtc-host-flow').style.display = 'none';
+    document.getElementById('collab-rtc-guest-btn').classList.add('active');
+    document.getElementById('collab-rtc-host-btn').classList.remove('active');
+    document.getElementById('collab-rtc-progress-wrap').style.display = '';
+    _setProgress('gathering');
+  }
+
+  function _rtcGuestAnswer() {
+    const json = document.getElementById('collab-offer-in')?.value?.trim();
+    if (!json) { OmicsLab.Notify.error('Paste the host offer first'); return; }
+    try {
+      _rtcAnswer(json).catch(e => OmicsLab.Notify.error('Invalid offer: ' + e.message));
+    } catch(e) { OmicsLab.Notify.error('Could not parse offer — make sure you pasted the full text'); }
+  }
+
+  function _rtcFinish() {
+    const json = document.getElementById('collab-answer-in')?.value?.trim();
+    if (!json) { OmicsLab.Notify.error('Paste the answer first'); return; }
+    document.getElementById('collab-rtc-step3').style.display = '';
+    try {
+      _rtcAcceptAnswer(json).catch(e => OmicsLab.Notify.error('Could not accept answer: ' + e.message));
+    } catch(e) { OmicsLab.Notify.error('Invalid answer — make sure you pasted the full text'); }
+  }
+
+  /* Expose _copyField so inline onclick can call it */
+  function _copyField(id, btn) {
+    const el = document.getElementById(id);
+    if (!el || !el.value) return;
+    navigator.clipboard.writeText(el.value).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = `${OmicsLab.Icons?.svg('check',12)||''} Copied!`;
       btn.style.color = '#3fb950';
-      setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
+      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
+    }).catch(() => {
+      el.select();
+      document.execCommand('copy');
     });
   }
 
-  return { init, sendChat, _startHost, _startGuest, _acceptOffer, _acceptAnswer, _joinBC, _copyBox, _broadcastState };
+  return {
+    init, sendChat, shareNav,
+    _confirmName, _resetName,
+    _bcCreate, _bcJoin,
+    _startVideo,
+    _rtcStartHost, _rtcStartGuest, _rtcGuestAnswer, _rtcFinish,
+    _broadcastState, _copyField,
+  };
 })();

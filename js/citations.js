@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Citation & Reference Manager (Prompt 17)
    DOI/manual entry → localStorage library → APA/Vancouver/Nature
    export. Fully offline. No API required for manual entries.
@@ -101,7 +101,7 @@ OmicsLab.Citations = (function () {
     });
 
     const s = document.getElementById('cit-add-status');
-    if (s) { s.textContent = `✓ Added: ${title.slice(0,50)}`; s.style.color = '#3fb950'; setTimeout(() => { s.textContent=''; }, 3000); }
+    if (s) { s.textContent = `[OK] Added: ${title.slice(0,50)}`; s.style.color = '#3fb950'; setTimeout(() => { s.textContent=''; }, 3000); }
 
     _refreshLibrary();
   }
@@ -129,7 +129,7 @@ OmicsLab.Citations = (function () {
     a.click();
 
     const s = document.getElementById('cit-export-status');
-    if (s) { s.textContent = `✓ Exported ${refs.length} references as ${style}`; setTimeout(() => { s.textContent=''; }, 3000); }
+    if (s) { s.textContent = `[OK] Exported ${refs.length} references as ${style}`; setTimeout(() => { s.textContent=''; }, 3000); }
   }
 
   /* ─── Copy all in selected format ─── */
@@ -139,7 +139,7 @@ OmicsLab.Citations = (function () {
     const text = refs.map((r,i) => `[${i+1}] ` + _format(r, style)).join('\n\n');
     navigator.clipboard.writeText(text).then(() => {
       const s = document.getElementById('cit-export-status');
-      if (s) { s.textContent = `✓ Copied ${refs.length} references to clipboard`; setTimeout(() => { s.textContent=''; }, 3000); }
+      if (s) { s.textContent = `[OK] Copied ${refs.length} references to clipboard`; setTimeout(() => { s.textContent=''; }, 3000); }
     });
   }
 

@@ -51,6 +51,36 @@ OmicsLab.Impact = (function () {
     ],
   };
 
+  /* ── Citation formats ── */
+  const _citeFormats = {
+    apa: `Mufara, S. (2025). OmicsLab Simulator: An interactive omics training platform for African researchers (Version 2.0) [Software]. https://simon-mufara.github.io/Omics-Lab/`,
+    bibtex: `@software{mufara2025omicslab,
+  author    = {Mufara, Simon},
+  title     = {OmicsLab Simulator},
+  year      = {2025},
+  version   = {2.0},
+  url       = {https://simon-mufara.github.io/Omics-Lab/},
+  note      = {Interactive omics training platform for African researchers}
+}`,
+    mla: `Mufara, Simon. OmicsLab Simulator. Version 2.0, 2025, https://simon-mufara.github.io/Omics-Lab/.`,
+  };
+  let _citeActive = 'apa';
+
+  function _setCiteFormat(fmt) {
+    _citeActive = fmt;
+    const pre = document.getElementById('im-cite-text');
+    if (pre) pre.textContent = _citeFormats[fmt];
+    document.querySelectorAll('.im-cite-tab').forEach(t => t.classList.toggle('im-cite-tab--active', t.dataset.fmt === fmt));
+  }
+
+  function _copyCite() {
+    navigator.clipboard?.writeText(_citeFormats[_citeActive]).then(() => {
+      OmicsLab.Toast?.show('Citation copied', 'success');
+    }).catch(() => {
+      OmicsLab.Toast?.show(_citeFormats[_citeActive].slice(0, 60) + '…', 'info');
+    });
+  }
+
   function _getLocalStats() {
     const keys = ['omicslab_labnotebook_entries','omicslab_hackathon_teams','omicslab_certification','omicslab_my_dir_profile','omicslab_my_mentor_profile'];
     const nbEntries = JSON.parse(localStorage.getItem('omicslab_labnotebook_entries') || '[]').length;
@@ -147,8 +177,40 @@ OmicsLab.Impact = (function () {
           </div>
         </div>
         <div class="im-disclaimer">Aggregate numbers are illustrative projections for educational purposes. Local session data reflects this browser only.</div>
+
+        <!-- Citation generator -->
+        <div class="im-section-label" style="margin-top:2rem">Cite OmicsLab in Your Research</div>
+        <div class="im-card" id="im-cite-card">
+          <div class="im-cite-tabs" role="tablist">
+            <button class="im-cite-tab im-cite-tab--active" role="tab" data-fmt="apa" onclick="OmicsLab.Impact._setCiteFormat('apa')">APA</button>
+            <button class="im-cite-tab" role="tab" data-fmt="bibtex" onclick="OmicsLab.Impact._setCiteFormat('bibtex')">BibTeX</button>
+            <button class="im-cite-tab" role="tab" data-fmt="mla" onclick="OmicsLab.Impact._setCiteFormat('mla')">MLA</button>
+          </div>
+          <pre id="im-cite-text" class="im-cite-pre">${_citeFormats['apa']}</pre>
+          <button class="btn btn-ghost btn-sm" onclick="OmicsLab.Impact._copyCite()" style="margin-top:.5rem">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Citation
+          </button>
+        </div>
+
+        <!-- Sustainability -->
+        <div class="im-section-label" style="margin-top:2rem">Sustainability &amp; Support</div>
+        <div class="im-card im-sustain-card">
+          <p style="color:var(--text-secondary,#c9d1d9);font-size:.9rem;margin:0 0 1rem">OmicsLab is maintained by <strong>Simon Mufara</strong>, a computational biologist at UCT, with the mission to make world-class omics training free and accessible across Africa. It has no institutional funding — it exists through community support.</p>
+          <div class="im-sustain-actions">
+            <a href="https://github.com/Simon-Mufara/Omics-Lab" target="_blank" rel="noopener" class="im-sustain-btn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.419 2.865 8.17 6.839 9.49.5.09.682-.217.682-.482 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.578.688.48A10.019 10.019 0 0 0 22 12c0-5.523-4.477-10-10-10z"/></svg>
+              Star on GitHub
+            </a>
+            <a href="https://github.com/Simon-Mufara/Omics-Lab/issues" target="_blank" rel="noopener" class="im-sustain-btn im-sustain-btn--secondary">Report a Bug</a>
+            <button class="im-sustain-btn im-sustain-btn--secondary" onclick="OmicsLab.Router?.navigate('settings')">
+              Add Locale Translation
+            </button>
+          </div>
+          <p style="color:var(--text-muted,#6e7681);font-size:.78rem;margin:1rem 0 0">If OmicsLab helped your research or teaching, consider sharing it with your network or citing it in your publications using the citation generator above.</p>
+        </div>
       </div>`;
   }
 
-  return { init };
+  return { init, _setCiteFormat, _copyCite };
 })();

@@ -308,7 +308,7 @@ OmicsLab.Auth = (function () {
           </div>` : ''}
 
           <div class="auth-field">
-            <label class="auth-label">Email address</label>
+            <label class="auth-label">Email address <span style="font-weight:400;color:#6e7681;font-size:.7rem">(stored locally — no email sent)</span></label>
             <input class="auth-input" id="auth-email" type="email" placeholder="you@institution.ac.za" required autocomplete="email"/>
           </div>
 
@@ -358,7 +358,10 @@ OmicsLab.Auth = (function () {
 
         ${isSignIn ? `<div class="auth-footer-links">
           <button class="auth-link-btn" onclick="OmicsLab.Auth.openModal('register')">New to OmicsLab? Create an account</button>
-        </div>` : ''}
+        </div>` : `<div class="auth-local-notice">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Your account is saved locally in this browser. No email confirmation is sent. To use OmicsLab on another device, create an account there too.
+        </div>`}
       </div>`;
   }
 

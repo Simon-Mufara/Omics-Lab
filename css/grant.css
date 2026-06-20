@@ -228,6 +228,7 @@ select.grant-input { cursor: pointer; }
   tab-size: 2;
 }
 .grant-disclaimer {
+  display:flex;align-items:flex-start;gap:.5rem;
   font-size: .75rem;
   color: #6e7681;
   background: rgba(249,115,22,.07);
@@ -237,6 +238,7 @@ select.grant-input { cursor: pointer; }
   margin-top: .75rem;
   line-height: 1.5;
 }
+.grant-disclaimer svg { flex-shrink:0;margin-top:.1rem;color:rgba(249,115,22,.7); }
 
 /* ─── Tips ─── */
 .grant-tips {
@@ -266,7 +268,7 @@ select.grant-input { cursor: pointer; }
   border-radius: 8px;
   padding: .85rem;
 }
-.grant-tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+.grant-tip-icon { display:flex;align-items:center;flex-shrink:0;color:var(--text-muted,#8b949e); }
 .grant-tip-text { font-size: .8rem; color: #8b949e; line-height: 1.5; }
 .grant-tip-text strong { color: #e6edf3; }
 

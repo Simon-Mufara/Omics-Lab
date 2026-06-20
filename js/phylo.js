@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Interactive Phylogenetic Tree Builder (Prompt 13)
    NJ (Neighbor-Joining) + UPGMA algorithms, pure JS, SVG output.
    Newick string export. Paste FASTA or distance matrix.
@@ -454,7 +454,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     if (!el) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
       const btn = document.getElementById('phylo-copy-btn');
-      if (btn) { btn.textContent = '✓ Copied'; setTimeout(() => { btn.textContent = 'Copy Newick'; }, 1800); }
+      if (btn) { btn.textContent = '[OK] Copied'; setTimeout(() => { btn.textContent = 'Copy Newick'; }, 1800); }
     });
   }
 
@@ -538,7 +538,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
               </div>
               <div id="phylo-tree-svg" class="phylo-tree-canvas">
                 <div class="phylo-empty-state">
-                  <div class="phylo-empty-icon">🌿</div>
+                  <div class="phylo-empty-icon">${OmicsLab.Icons?.svg('git-branch',32)||''}</div>
                   <div class="phylo-empty-text">Load an example or paste sequences above, then click <strong>Build Tree</strong></div>
                 </div>
               </div>

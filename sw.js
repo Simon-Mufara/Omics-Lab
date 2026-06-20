@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v57: Full toast CSS cleanup (9 files), pwa.js bug fix, section ID fixes
+   v68: GWAS Suite, Pharmacogenomics Africa, Network Hub — 3 new research modules, SW cache v12
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v2';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v12';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

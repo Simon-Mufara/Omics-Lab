@@ -16,7 +16,7 @@ OmicsLab.Protocols = (function () {
       id: 'p001',
       title: 'H3Africa WGS Library Prep — Low-Input Human Blood',
       author: 'Kwame A. — Noguchi Memorial, Ghana',
-      avatar: '👨🏿‍🔬',
+      avatar: '',
       institution: 'Noguchi Memorial Institute for Medical Research',
       country: 'Ghana',
       domain: 'Genomics',
@@ -44,7 +44,7 @@ OmicsLab.Protocols = (function () {
       id: 'p002',
       title: 'ARTIC v4.1 SARS-CoV-2 Sequencing — Nanopore MinION (Africa CDC)',
       author: 'Nkosi M. — NICD, South Africa',
-      avatar: '👩🏿‍💻',
+      avatar: '',
       institution: 'National Institute for Communicable Diseases',
       country: 'South Africa',
       domain: 'Virology',
@@ -71,7 +71,7 @@ OmicsLab.Protocols = (function () {
       id: 'p003',
       title: 'M. tuberculosis WGS — Clinical MGIT Isolates',
       author: 'Abebe T. — AHRI, Ethiopia',
-      avatar: '👨🏾‍🔬',
+      avatar: '',
       institution: 'Armauer Hansen Research Institute',
       country: 'Ethiopia',
       domain: 'Bacteriology',
@@ -98,7 +98,7 @@ OmicsLab.Protocols = (function () {
       id: 'p004',
       title: 'Gut Microbiome 16S rRNA Amplicon — Stool (V3-V4)',
       author: 'Fatuma K. — KEMRI, Kenya',
-      avatar: '👩🏾‍🔬',
+      avatar: '',
       institution: 'KEMRI Wellcome Trust Research Programme',
       country: 'Kenya',
       domain: 'Metagenomics',
@@ -125,7 +125,7 @@ OmicsLab.Protocols = (function () {
       id: 'p005',
       title: 'Bulk RNA-seq from PBMC — HIV Immune Profiling',
       author: 'Sipho D. — UCT, South Africa',
-      avatar: '👨🏿‍💻',
+      avatar: '',
       institution: 'University of Cape Town',
       country: 'South Africa',
       domain: 'Transcriptomics',
@@ -152,7 +152,7 @@ OmicsLab.Protocols = (function () {
       id: 'p006',
       title: 'Sanger Sequencing for Clinical Resistance Genotyping — Low Resource',
       author: 'Amina F. — INRSP, Senegal',
-      avatar: '👩🏾‍💼',
+      avatar: '',
       institution: 'Institut National de Recherche en Santé Publique',
       country: 'Senegal',
       domain: 'Genomics',
@@ -178,7 +178,7 @@ OmicsLab.Protocols = (function () {
       id: 'p007',
       title: 'CRISPR/Cas9 Guide RNA Design for African Crop Improvement (Cassava)',
       author: 'Olumide A. — IITA, Nigeria',
-      avatar: '👨🏿‍🌾',
+      avatar: '',
       institution: 'International Institute of Tropical Agriculture',
       country: 'Nigeria',
       domain: 'Genomics',
@@ -204,7 +204,7 @@ OmicsLab.Protocols = (function () {
       id: 'p008',
       title: 'Low-Cost Ebola/Lassa Rapid Diagnostics — Field-Deployable PCR',
       author: 'Dr. Olufemi O. — NCDC, Nigeria',
-      avatar: '👨🏿‍⚕️',
+      avatar: '',
       institution: 'Nigeria Centre for Disease Control',
       country: 'Nigeria',
       domain: 'Virology',
@@ -335,7 +335,7 @@ OmicsLab.Protocols = (function () {
 
     if (!filtered.length) {
       content.innerHTML = `<div class="pr-empty">
-        <div class="pr-empty-icon">🔬</div>
+        <div class="pr-empty-icon">${OmicsLab.Icons?.svg('microscope', 28) || ''}</div>
         <p class="pr-empty-msg">${tab === 'mine' ? 'No protocols yet — create your first!' : 'No protocols match your filters.'}</p>
         ${tab === 'mine' ? '<button class="pr-empty-cta" onclick="OmicsLab.Protocols._newProtocol()">Create Protocol</button>' : '<button class="pr-empty-cta" onclick="OmicsLab.Protocols._resetFilters()">Clear filters</button>'}
       </div>`;
@@ -347,10 +347,10 @@ OmicsLab.Protocols = (function () {
         <div class="pr-card-top">
           <span class="pr-card-domain">${p.domain}</span>
           <span class="pr-card-type">${p.dataType}</span>
-          ${p.verified ? '<span class="pr-verified" title="Verified protocol">✓</span>' : ''}
+          ${p.verified ? `<span class="pr-verified" title="Verified protocol">${OmicsLab.Icons?.svg('check-circle',12)||''}</span>` : ''}
         </div>
         <div class="pr-card-title">${p.title}</div>
-        <div class="pr-card-author">${p.avatar} ${p.author} · ${p.country}</div>
+        <div class="pr-card-author"><span class="pr-author-av">${(p.author||'?').charAt(0).toUpperCase()}</span> ${p.author} · ${p.country}</div>
         <div class="pr-card-tags">${p.tags.slice(0,4).map(t => `<span class="pr-tag">${t}</span>`).join('')}</div>
         <div class="pr-card-footer">
           <span class="pr-card-meta">
@@ -362,7 +362,7 @@ OmicsLab.Protocols = (function () {
             ${p.forks} forks
           </span>
           <span class="pr-card-meta">${p.steps.length} steps</span>
-          ${p.rating ? `<span class="pr-card-rating">★ ${p.rating}</span>` : ''}
+          ${p.rating ? `<span class="pr-card-rating"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ${p.rating}</span>` : ''}
         </div>
       </div>`).join('')}
     </div>`;
@@ -399,10 +399,10 @@ OmicsLab.Protocols = (function () {
         </div>
 
         <div class="pr-detail-header">
-          ${p.verified ? '<span class="pr-verified-badge">✓ Verified Protocol</span>' : ''}
+          ${p.verified ? `<span class="pr-verified-badge">${OmicsLab.Icons?.svg('check-circle',12)||''} Verified Protocol</span>` : ''}
           <h3 class="pr-detail-title">${p.title}</h3>
           <div class="pr-detail-meta">
-            <span>${p.avatar} <strong>${p.author}</strong></span>
+            <span><span class="pr-author-av">${(p.author||'?').charAt(0).toUpperCase()}</span> <strong>${p.author}</strong></span>
             <span>·</span>
             <span>${p.institution}</span>
             <span>·</span>
@@ -458,7 +458,7 @@ OmicsLab.Protocols = (function () {
       id: 'my_' + Date.now(),
       title: 'Fork of: ' + original.title,
       author: 'You (forked from ' + original.author + ')',
-      avatar: '👤',
+      avatar: '',
       institution: 'My Lab',
       country: 'My Country',
       forks: 0,
@@ -493,7 +493,7 @@ OmicsLab.Protocols = (function () {
       id: 'my_' + Date.now(),
       title: '',
       author: 'You',
-      avatar: '👤',
+      avatar: '',
       institution: '',
       country: '',
       domain: 'Genomics',

@@ -327,7 +327,7 @@ OmicsLab.Alerts = (function () {
 
   /* ─── Severity colour ─── */
   const SEV_COLOR = { critical: '#ff6b6b', warning: '#f97316', info: '#58a6ff', 'monitoring': '#bc8cff', 'contained': '#3fb950', 'endemic': '#e3b341', 'active': '#ff6b6b', 'seasonal-surge': '#f97316', 'endemic-peak': '#e3b341' };
-  const STATUS_LABEL = { active: '🔴 ACTIVE', critical: '🔴 CRITICAL', warning: '🟠 WARNING', contained: '✅ CONTAINED', monitoring: '🔵 MONITORING', info: '🔵 MONITORING', 'seasonal-surge': '🟠 SEASONAL SURGE', 'endemic': '🟡 ENDEMIC', 'endemic-peak': '🟠 ENDEMIC PEAK' };
+  const STATUS_LABEL = { active: 'ACTIVE', critical: 'CRITICAL', warning: 'WARNING', contained: 'CONTAINED', monitoring: 'MONITORING', info: 'MONITORING', 'seasonal-surge': 'SEASONAL SURGE', 'endemic': 'ENDEMIC', 'endemic-peak': 'ENDEMIC PEAK' };
 
   /* ─── Render ticker ─── */
   function _renderTicker(outbreaks) {
@@ -355,7 +355,7 @@ OmicsLab.Alerts = (function () {
     return `
       <div class="alt-card" style="--alt-color:${o.color || SEV_COLOR[o.severity]}">
         <div class="alt-card-top">
-          <div class="alt-status-badge" style="color:${o.color}">${statusLabel}</div>
+          <div class="alt-status-badge" style="color:${o.color}"><span class="alt-status-dot" style="background:${o.color}"></span>${statusLabel}</div>
           <div class="alt-card-tags">${o.tags.slice(0,3).map(t => `<span class="alt-tag">${t}</span>`).join('')}</div>
         </div>
         <div class="alt-disease">${o.disease}</div>
@@ -436,7 +436,7 @@ OmicsLab.Alerts = (function () {
       .then(() => {
         _lastFetch = new Date().toLocaleString();
         if (ts) ts.textContent = 'WHO AFRO feed checked — curated data shown (live parsing not available in static PWA)';
-        if (btn) { btn.textContent = '✓ Online — using curated data'; btn.style.color = '#3fb950'; }
+        if (btn) { btn.textContent = 'Online — using curated data'; btn.style.color = '#3fb950'; }
       })
       .catch(() => {
         if (ts) ts.textContent = 'Offline — showing bundled outbreak data';

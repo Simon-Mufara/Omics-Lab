@@ -281,6 +281,20 @@
   padding: 0.25rem 1.25rem 1.25rem;
   text-align: center;
 }
+.auth-local-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #6e7681;
+  line-height: 1.5;
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 6px;
+  padding: 0.55rem 0.75rem;
+  margin: 0.25rem 1.25rem 1rem;
+}
+.auth-local-notice svg { flex-shrink: 0; margin-top: 0.15rem; color: #484f58; }
 
 .auth-link-btn {
   background: transparent;

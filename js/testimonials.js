@@ -129,7 +129,7 @@ OmicsLab.Testimonials = (function () {
 
         <!-- "Used by X countries" animated banner -->
         <div class="tst-used-banner">
-          <span class="tst-globe">🌍</span>
+          <span class="tst-globe">${OmicsLab.Icons?.svg('globe',20)||''}</span>
           <span class="tst-used-text">Used by researchers across</span>
           <span class="tst-used-count" id="tst-countries-count" data-target="12">12</span>
           <span class="tst-used-text">African countries</span>

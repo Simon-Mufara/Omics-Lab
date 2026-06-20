@@ -44,24 +44,24 @@ OmicsLab.Dashboard = (function () {
 
   /* ─── Page metadata (matches PAGES in router.js) ─── */
   const PAGE_META = {
-    lab:            { label:'Lab Simulator',       icon:'🧪', color:'#3fb950', sub:'14 interactive protocols' },
-    analysis:       { label:'Analysis Suite',      icon:'📊', color:'#e3b341', sub:'FASTQ · VCF · MSA · RNA-seq' },
-    variantinterp:  { label:'Variant Interpreter', icon:'🧬', color:'#bc8cff', sub:'ACMG · gnomAD · ClinVar' },
-    primerdesign:   { label:'Primer Design',       icon:'🔬', color:'#3fb950', sub:'Tm · GC% · dimer checks' },
-    phylo:          { label:'Phylo Tree Builder',  icon:'🌿', color:'#3fb950', sub:'NJ · UPGMA · Newick export' },
-    heatmap:        { label:'Expression Visualiser',icon:'🔥',color:'#e3b341', sub:'Volcano · heatmap · DE table' },
-    qualitypredictor:{label:'Quality Predictor',   icon:'🔬', color:'#3fb950', sub:'GATK · H3Africa thresholds' },
-    pubmed:         { label:'PubMed',              icon:'📰', color:'#58a6ff', sub:'36M citations · Africa filter' },
-    'gene-lookup':  { label:'Gene Lookup',         icon:'🔍', color:'#3fb950', sub:'Ensembl · gnomAD · AlphaFold' },
-    nexus:          { label:'Nexus Hub',            icon:'💬', color:'#58a6ff', sub:'Channels · threads · @mentions' },
-    alerts:         { label:'Outbreak Alerts',     icon:'🚨', color:'#ff6b6b', sub:'Live Africa surveillance' },
-    career:         { label:'Career Quiz',         icon:'🧭', color:'#bc8cff', sub:'Personalised roadmap' },
-    paperhub:       { label:'PaperHub',            icon:'📄', color:'#bc8cff', sub:'Africa genomics library' },
-    pathways:       { label:'Pathways',            icon:'🔬', color:'#3fb950', sub:'KEGG · Reactome · Africa' },
-    sra:            { label:'SRA Browser',         icon:'🗄️', color:'#e3b341', sub:'Africa datasets · download' },
-    'knowledge-graph':{label:'Knowledge Graph',   icon:'🕸️', color:'#bc8cff', sub:'Diseases · genes · tools' },
-    'output-tracker':{label:'Output Tracker',     icon:'📋', color:'#3fb950', sub:'Publications · grants · talks' },
-    settings:       { label:'Settings',           icon:'⚙️', color:'#8b949e', sub:'Appearance · language · keys' },
+    lab:            { label:'Lab Simulator',        icon:'flask',       color:'#3fb950', sub:'14 interactive protocols' },
+    analysis:       { label:'Analysis Suite',       icon:'bar-chart',   color:'#e3b341', sub:'FASTQ · VCF · MSA · RNA-seq' },
+    variantinterp:  { label:'Variant Interpreter',  icon:'dna',         color:'#bc8cff', sub:'ACMG · gnomAD · ClinVar' },
+    primerdesign:   { label:'Primer Design',        icon:'scissors',    color:'#3fb950', sub:'Tm · GC% · dimer checks' },
+    phylo:          { label:'Phylo Tree Builder',   icon:'git-branch',  color:'#3fb950', sub:'NJ · UPGMA · Newick export' },
+    heatmap:        { label:'Expression Visualiser',icon:'activity',    color:'#e3b341', sub:'Volcano · heatmap · DE table' },
+    qualitypredictor:{label:'Quality Predictor',    icon:'check-circle',color:'#3fb950', sub:'GATK · H3Africa thresholds' },
+    pubmed:         { label:'PubMed',               icon:'file-text',   color:'#58a6ff', sub:'36M citations · Africa filter' },
+    'gene-lookup':  { label:'Gene Lookup',          icon:'search',      color:'#3fb950', sub:'Ensembl · gnomAD · AlphaFold' },
+    nexus:          { label:'Nexus Hub',             icon:'brain',       color:'#58a6ff', sub:'Channels · threads · @mentions' },
+    alerts:         { label:'Outbreak Alerts',      icon:'alert-triangle', color:'#ff6b6b', sub:'Live Africa surveillance' },
+    career:         { label:'Career Quiz',          icon:'target',      color:'#bc8cff', sub:'Personalised roadmap' },
+    paperhub:       { label:'PaperHub',             icon:'file-text',   color:'#bc8cff', sub:'Africa genomics library' },
+    pathways:       { label:'Pathways',             icon:'activity',    color:'#3fb950', sub:'KEGG · Reactome · Africa' },
+    sra:            { label:'SRA Browser',          icon:'database',    color:'#e3b341', sub:'Africa datasets · download' },
+    'knowledge-graph':{label:'Knowledge Graph',    icon:'layers',      color:'#bc8cff', sub:'Diseases · genes · tools' },
+    'output-tracker':{label:'Output Tracker',      icon:'clipboard',   color:'#3fb950', sub:'Publications · grants · talks' },
+    settings:       { label:'Settings',            icon:'cpu',         color:'#8b949e', sub:'Appearance · language · keys' },
   };
 
   /* ─── Recommendation engine ─── */
@@ -125,7 +125,7 @@ OmicsLab.Dashboard = (function () {
                     if (!meta) return '';
                     return `
                       <button class="db-continue-btn" onclick="OmicsLab.Router.navigate('${page}')">
-                        <span class="db-cont-icon">${meta.icon}</span>
+                        <span class="db-cont-icon">${OmicsLab.Icons?.svg(meta.icon, 16) || ''}</span>
                         <span class="db-cont-body">
                           <span class="db-cont-name" style="color:${meta.color}">${_esc(meta.label)}</span>
                           <span class="db-cont-sub">${_esc(meta.sub)}</span>
@@ -149,7 +149,7 @@ OmicsLab.Dashboard = (function () {
                     if (!meta) return '';
                     return `
                       <button class="db-continue-btn" onclick="OmicsLab.Router.navigate('${page}')">
-                        <span class="db-cont-icon">${meta.icon}</span>
+                        <span class="db-cont-icon">${OmicsLab.Icons?.svg(meta.icon, 16) || ''}</span>
                         <span class="db-cont-body">
                           <span class="db-cont-name" style="color:${meta.color}">${_esc(meta.label)}</span>
                           <span class="db-cont-sub">${_esc(meta.sub)}</span>
@@ -169,11 +169,11 @@ OmicsLab.Dashboard = (function () {
               </div>
               <div class="db-pulse-items" id="db-pulse-items">
                 <div class="db-pulse-item">
-                  <span class="db-pulse-country">🇨🇩 DRC</span>
+                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin',11)||''} DRC</span>
                   <span class="db-pulse-event">Mpox Clade I — active genomic surveillance</span>
                 </div>
                 <div class="db-pulse-item">
-                  <span class="db-pulse-country">🌍 East Africa</span>
+                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('globe',11)||''} East Africa</span>
                   <span class="db-pulse-event">Cholera V. cholerae O1 — El Tor biotype cluster</span>
                 </div>
               </div>
@@ -198,7 +198,7 @@ OmicsLab.Dashboard = (function () {
       if (alerts && alerts.length) {
         container.innerHTML = alerts.map(a => `
           <div class="db-pulse-item">
-            <span class="db-pulse-country">${_esc(a.flag || '🌍')} ${_esc(a.country || 'Africa')}</span>
+            <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin',11)||''} ${_esc(a.country || 'Africa')}</span>
             <span class="db-pulse-event">${_esc(a.title || a.name || 'Active surveillance')}</span>
           </div>`).join('');
       }
@@ -224,7 +224,7 @@ OmicsLab.Dashboard = (function () {
       .db-continue-list{display:flex;flex-direction:column;gap:.25rem}
       .db-continue-btn{display:flex;align-items:center;gap:.5rem;background:none;border:1px solid transparent;border-radius:6px;padding:.35rem .45rem;cursor:pointer;text-align:left;width:100%;transition:background .1s,border-color .1s}
       .db-continue-btn:hover{background:var(--bg-overlay,#21262d);border-color:var(--border-muted,#30363d)}
-      .db-cont-icon{font-size:.95rem;flex-shrink:0;width:20px;text-align:center}
+      .db-cont-icon{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:20px;color:var(--text-muted,#8b949e)}
       .db-cont-body{flex:1;min-width:0}
       .db-cont-name{display:block;font-size:.78rem;font-weight:600;line-height:1.3}
       .db-cont-sub{display:block;font-size:.65rem;color:var(--text-muted,#8b949e);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

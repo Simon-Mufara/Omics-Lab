@@ -473,7 +473,7 @@ OmicsLab.Mentor = (function () {
       if (!result) {
         _appendMessage('bot', `
           <div class="mentor-bot-wrap">
-            <div class="mentor-bot-avatar">🧬</div>
+            <div class="mentor-bot-avatar">${OmicsLab.Icons?.svg('dna',16)||''}</div>
             <div class="mentor-bot-bubble">
               <p>I don't have a specific answer for that yet. Try rephrasing, or browse topics using the category buttons above. You can also check the
               <a href="https://www.h3abionet.org/education-and-training" target="_blank" rel="noopener noreferrer">H3ABioNet training materials</a> for specialised resources.</p>
@@ -491,7 +491,7 @@ OmicsLab.Mentor = (function () {
 
       _appendMessage('bot', `
         <div class="mentor-bot-wrap">
-          <div class="mentor-bot-avatar">🧬</div>
+          <div class="mentor-bot-avatar">${OmicsLab.Icons?.svg('dna',16)||''}</div>
           <div class="mentor-bot-bubble">
             <div class="mentor-category-tag">${answer.category}</div>
             <p class="mentor-answer-q">${answer.q}</p>
@@ -509,7 +509,7 @@ OmicsLab.Mentor = (function () {
 
     _appendMessage('bot', `
       <div class="mentor-bot-wrap">
-        <div class="mentor-bot-avatar">🧬</div>
+        <div class="mentor-bot-avatar">${OmicsLab.Icons?.svg('dna',16)||''}</div>
         <div class="mentor-bot-bubble mentor-welcome">
           <div class="mentor-welcome-title">Hi! I'm your Offline AI Mentor</div>
           <p class="mentor-welcome-sub">Ask me anything about omics, bioinformatics, African genomics, tools, careers, or wet-lab protocols. I have <strong>${corpus.length}+ expert answers</strong> — all offline, no internet required.</p>
@@ -540,7 +540,7 @@ OmicsLab.Mentor = (function () {
 
     _appendMessage('bot', `
       <div class="mentor-bot-wrap">
-        <div class="mentor-bot-avatar">📚</div>
+        <div class="mentor-bot-avatar">${OmicsLab.Icons?.svg('file-text',16)||''}</div>
         <div class="mentor-bot-bubble">
           <div class="mentor-category-tag">${cat}</div>
           <p>Here are questions in the <strong>${cat}</strong> category — click any to get the answer:</p>

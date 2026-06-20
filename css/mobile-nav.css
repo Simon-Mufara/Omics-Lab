@@ -82,9 +82,10 @@
     gap: 2px;
   }
 
-  /* ── Add padding to page so content doesn't hide behind tab bar ── */
-  #screen-landing {
-    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+  /* ── Add padding to all pages so content doesn't hide behind tab bar ── */
+  #screen-landing,
+  .reveal {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   /* ── Modal slide-up ── */

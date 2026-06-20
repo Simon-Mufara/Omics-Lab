@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════
    OmicsLab — Developer API Documentation (Part 7)
    Documents the public OmicsLab JavaScript API so
    developers can embed modules or build extensions.
@@ -42,7 +42,7 @@ OmicsLab.Router.currentPage(); // → 'ai'
 // PAGES registry (read-only reference)
 OmicsLab.Router.PAGES;
 // {
-//   variants: { label:'Variant Interpreter', icon:'🧬', color:'#ff6b6b', ... },
+//   variants: { label:'Variant Interpreter', icon:'', color:'#ff6b6b', ... },
 //   ai:       { label:'AI Assistant',        icon:'🤖', color:'#58a6ff', ... },
 //   ...
 // }

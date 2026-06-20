@@ -38,14 +38,27 @@ OmicsLab.Onboarding = (function () {
       page: 'learn',
       color: '#bc8cff',
     },
+    healthcare: {
+      label: 'Disease Explorer',
+      desc: 'Understand diseases in plain language — what genes are involved, how genomics helps diagnosis and treatment. No biology degree required.',
+      icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+      page: 'learn',
+      color: '#ff6b6b',
+    },
   };
 
   /* ─── Hotspot highlights ─── */
-  const HOTSPOTS = [
+  const HOTSPOTS_DEFAULT = [
     { label: 'Lab', sub: '14 interactive protocols from WGS to metagenomics', page: 'lab', color: '#3fb950' },
     { label: 'Tools', sub: '55+ API-powered tools: gene lookup, pathways, SRA, variant interpretation', page: 'variantinterp', color: '#58a6ff' },
     { label: 'Africa Hub', sub: 'Genomics map, H3Africa portal, pathogen surveillance, offline datasets', page: 'africa', color: '#f97316' },
     { label: 'Nexus', sub: 'Research communication hub with channels, threads, and @mentions', page: 'nexus', color: '#bc8cff' },
+  ];
+  const HOTSPOTS_HEALTHCARE = [
+    { label: 'Disease Explorer', sub: 'Plain-language disease profiles — genes, mutations, clinical relevance', page: 'learn', color: '#ff6b6b' },
+    { label: 'Glossary', sub: '200+ terms explained simply — DNA, variant, sequencing, allele and more', page: 'glossary', color: '#e3b341' },
+    { label: 'Outbreak Alerts', sub: 'Genomic surveillance of Africa outbreaks — TB, malaria, mpox, cholera', page: 'alerts', color: '#f97316' },
+    { label: 'AI Mentor', sub: 'Ask any question in plain English — your 24/7 genomics explainer', page: 'mentor', color: '#3fb950' },
   ];
 
   /* ─── Init ─── */
@@ -96,21 +109,26 @@ OmicsLab.Onboarding = (function () {
       <div class="ob-welcome-title">Welcome to OmicsLab</div>
       <div class="ob-welcome-sub">Africa's open genomics training platform. Let's personalise your experience in 30 seconds.</div>
       <div class="ob-role-label">I am a…</div>
-      <div class="ob-role-cards">
+      <div class="ob-role-cards ob-role-cards-4">
         <button class="ob-role-card" onclick="OmicsLab.Onboarding._pickRole('student',this)">
-          <div class="ob-role-icon">🎓</div>
+          <div class="ob-role-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
           <div class="ob-role-name">Student</div>
           <div class="ob-role-desc">Learning omics for the first time</div>
         </button>
         <button class="ob-role-card" onclick="OmicsLab.Onboarding._pickRole('researcher',this)">
-          <div class="ob-role-icon">🔬</div>
+          <div class="ob-role-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg></div>
           <div class="ob-role-name">Researcher</div>
           <div class="ob-role-desc">Running my own genomics projects</div>
         </button>
         <button class="ob-role-card" onclick="OmicsLab.Onboarding._pickRole('instructor',this)">
-          <div class="ob-role-icon">📚</div>
+          <div class="ob-role-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
           <div class="ob-role-name">Instructor</div>
           <div class="ob-role-desc">Teaching genomics to others</div>
+        </button>
+        <button class="ob-role-card" onclick="OmicsLab.Onboarding._pickRole('healthcare',this)">
+          <div class="ob-role-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="ob-role-name">Nurse / Clinician</div>
+          <div class="ob-role-desc">Healthcare worker new to genomics</div>
         </button>
       </div>
       ${_dots(1)}
@@ -131,10 +149,13 @@ OmicsLab.Onboarding = (function () {
   function _showStep2() {
     _step = 2;
     const sug = ROLE_SUGGEST[_role] || ROLE_SUGGEST.researcher;
+    const isHealthcare = _role === 'healthcare';
     _modal(`
       <div class="ob-step-label">Step 2 of 5</div>
-      <div class="ob-step-title">Pick your first workflow</div>
-      <div class="ob-step-sub">Based on your role, we recommend starting here:</div>
+      <div class="ob-step-title">${isHealthcare ? 'Welcome — no jargon, we promise' : 'Pick your first workflow'}</div>
+      <div class="ob-step-sub">${isHealthcare
+        ? 'OmicsLab explains genomics concepts in plain language. Every technical term has a simple explanation. Start with the Disease Explorer to see how genes connect to the diseases you work with every day.'
+        : 'Based on your role, we recommend starting here:'}</div>
       <div class="ob-suggest-card" style="border-color:${sug.color}30">
         <div class="ob-sug-icon" style="color:${sug.color}">${sug.icon}</div>
         <div class="ob-sug-body">
@@ -159,12 +180,13 @@ OmicsLab.Onboarding = (function () {
   /* ─── Step 3: Feature hotspots ─── */
   function _showStep3() {
     _step = 3;
+    const hotspots = _role === 'healthcare' ? HOTSPOTS_HEALTHCARE : HOTSPOTS_DEFAULT;
     _modal(`
       <div class="ob-step-label">Step 3 of 5</div>
-      <div class="ob-step-title">Four things to know</div>
+      <div class="ob-step-title">${_role === 'healthcare' ? 'Your starting points' : 'Four things to know'}</div>
       <div class="ob-step-sub">Click any feature to navigate there:</div>
       <div class="ob-hotspots">
-        ${HOTSPOTS.map(h => `
+        ${hotspots.map(h => `
           <button class="ob-hotspot" onclick="OmicsLab.Onboarding._gotoHotspot('${h.page}')">
             <div class="ob-hotspot-dot" style="background:${h.color}"></div>
             <div class="ob-hotspot-body">
@@ -216,7 +238,7 @@ OmicsLab.Onboarding = (function () {
     _step = 5;
     _modal(`
       <div class="ob-confetti" id="ob-confetti"></div>
-      <div class="ob-ready-icon">🌍</div>
+      <div class="ob-ready-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
       <div class="ob-welcome-title">You're ready!</div>
       <div class="ob-welcome-sub">
         Welcome to OmicsLab — Africa's open genomics training platform.<br>
@@ -285,16 +307,18 @@ OmicsLab.Onboarding = (function () {
       .ob-logo{margin-bottom:.75rem}
       .ob-welcome-title{font-size:1.35rem;font-weight:800;color:#e6edf3;margin-bottom:.5rem;font-family:'Sora','Inter',sans-serif}
       .ob-welcome-sub{font-size:.85rem;color:#8b949e;line-height:1.6;margin-bottom:1.4rem}
-      .ob-ready-icon{font-size:2.5rem;margin-bottom:.6rem}
+      .ob-ready-icon{display:flex;justify-content:center;margin-bottom:.75rem}
       .ob-step-label{font-size:.7rem;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
       .ob-step-title{font-size:1.1rem;font-weight:800;color:#e6edf3;margin-bottom:.4rem}
       .ob-step-sub{font-size:.82rem;color:#8b949e;line-height:1.6;margin-bottom:1.25rem}
       .ob-role-label{font-size:.72rem;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.65rem}
       .ob-role-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:1.4rem}
+      .ob-role-cards-4{grid-template-columns:repeat(2,1fr)}
       .ob-role-card{background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:.85rem .5rem;cursor:pointer;text-align:center;transition:border-color .12s,background .12s}
       .ob-role-card:hover{background:#161b22;border-color:#30363d}
       .ob-role-selected{border-color:#3fb950!important;background:rgba(63,185,80,.06)!important}
-      .ob-role-icon{font-size:1.6rem;margin-bottom:.35rem}
+      .ob-role-selected .ob-role-icon{color:#3fb950}
+      .ob-role-icon{display:flex;justify-content:center;align-items:center;height:2rem;margin-bottom:.4rem;color:var(--text-muted,#8b949e)}
       .ob-role-name{font-size:.82rem;font-weight:700;color:#e6edf3;margin-bottom:.15rem}
       .ob-role-desc{font-size:.68rem;color:#8b949e;line-height:1.4}
       .ob-suggest-card{display:flex;align-items:flex-start;gap:.75rem;background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:.9rem;margin-bottom:1.1rem;text-align:left}

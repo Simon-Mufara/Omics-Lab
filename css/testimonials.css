@@ -24,7 +24,7 @@
   max-width: 90vw;
   font-family: 'Inter', system-ui, sans-serif;
 }
-.tst-globe { font-size: 1.15rem; }
+.tst-globe { display: flex; align-items: center; color: #3fb950; }
 .tst-used-text {
   font-size: 0.9rem;
   color: #8b949e;

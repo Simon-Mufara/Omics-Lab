@@ -138,6 +138,50 @@ OmicsLab.LabNotebook = (function () {
     sel.innerHTML = `<option value="">All tags</option>` + tags.map(t => `<option ${t===cur?'selected':''}>${t}</option>`).join('');
   }
 
+  /* ── FAIR / ISA-Tab JSON Export (Prompt 47) ── */
+  function _exportISATab() {
+    const entries = _getEntries().sort((a, b) => b.date.localeCompare(a.date));
+    if (!entries.length) { OmicsLab.Toast?.show('No entries to export', 'info'); return; }
+
+    const isa = {
+      '@context': 'https://schema.org/',
+      '@type': 'Dataset',
+      name: 'OmicsLab Lab Notebook',
+      description: 'Lab notebook entries exported from OmicsLab Simulator in ISA-Tab/JSON-LD format',
+      creator: { '@type': 'Person', name: 'OmicsLab User' },
+      dateCreated: new Date().toISOString(),
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+      isAccessibleForFree: true,
+      hasPart: entries.map(e => ({
+        '@type': 'CreativeWork',
+        identifier: e.id,
+        name: e.title,
+        dateCreated: e.date,
+        genre: e.type,
+        keywords: (e.tags || []).join(', '),
+        text: e.content,
+        encodingFormat: 'text/plain',
+      })),
+      /* ISA-Tab style investigation block */
+      investigation: {
+        title: 'OmicsLab Research Log',
+        description: 'Exported from OmicsLab Lab Notebook',
+        submissionDate: new Date().toISOString().slice(0, 10),
+        publicReleaseDate: new Date().toISOString().slice(0, 10),
+        studies: entries.filter(e => e.type === 'experiment').map(e => ({
+          identifier: e.id,
+          title: e.title,
+          description: e.content,
+          studyDesignDescriptor: { term: e.type, termAccessionNumber: '', termSourceRef: 'OBO' },
+        })),
+      },
+    };
+
+    const blob = new Blob([JSON.stringify(isa, null, 2)], { type: 'application/ld+json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lab-notebook-isa.jsonld'; a.click();
+    OmicsLab.Toast?.show('Exported ISA-Tab JSON-LD', 'success');
+  }
+
   function _exportMarkdown() {
     const entries = _getEntries().sort((a, b) => b.date.localeCompare(a.date));
     if (!entries.length) return;
@@ -165,6 +209,10 @@ OmicsLab.LabNotebook = (function () {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Export MD
             </button>
+            <button class="ln-export-btn" onclick="OmicsLab.LabNotebook._exportISATab()" title="Export as FAIR ISA-Tab JSON-LD">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              FAIR Export
+            </button>
             <button class="ln-new-btn" onclick="OmicsLab.LabNotebook._showEditor()">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               New Entry
@@ -187,5 +235,5 @@ OmicsLab.LabNotebook = (function () {
     _renderList();
   }
 
-  return { init, _showEditor, _saveEntry, _deleteEntry, _viewEntry, _exportMarkdown, _filter };
+  return { init, _showEditor, _saveEntry, _deleteEntry, _viewEntry, _exportMarkdown, _exportISATab, _filter };
 })();

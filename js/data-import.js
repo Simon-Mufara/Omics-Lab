@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Data Import (Prompt 37)
    ─ Drag-drop zone for FASTQ / VCF / expression matrix files
    ─ Web Worker parsing (non-blocking) with progress bar
@@ -215,7 +215,7 @@ OmicsLab.DataImport = (function () {
 
     return `
       <div class="di-status-badge" style="background:rgba(${r.pass?'63,185,80':'249,115,22'},.1);color:${passColor};border:1px solid ${passColor}40">
-        ${r.pass ? '✓' : '!'} ${passLabel}
+        ${r.pass ? '[OK]' : '!'} ${passLabel}
       </div>
       <div class="di-metrics-grid">${metricHtml}</div>
       ${chartHtml}
@@ -380,15 +380,15 @@ OmicsLab.DataImport = (function () {
 
       <div class="di-zones-row">
         ${[
-          { id:'fastq', icon:'📊', label:'FASTQ File', hint:'.fastq  .fq', color:'#3fb950', accept:'.fastq,.fq,.fastq.gz,.fq.gz,.txt' },
-          { id:'vcf',   icon:'🔬', label:'VCF File',   hint:'.vcf  .vcf.gz', color:'#bc8cff', accept:'.vcf,.vcf.gz,.txt' },
-          { id:'matrix',icon:'📈', label:'Expression Matrix', hint:'.csv  .tsv', color:'#58a6ff', accept:'.csv,.tsv,.txt' },
+          { id:'fastq', icon:'bar-chart', label:'FASTQ File', hint:'.fastq  .fq', color:'#3fb950', accept:'.fastq,.fq,.fastq.gz,.fq.gz,.txt' },
+          { id:'vcf',   icon:'microscope', label:'VCF File',   hint:'.vcf  .vcf.gz', color:'#bc8cff', accept:'.vcf,.vcf.gz,.txt' },
+          { id:'matrix',icon:'trending-up', label:'Expression Matrix', hint:'.csv  .tsv', color:'#58a6ff', accept:'.csv,.tsv,.txt' },
         ].map(z => `
           <div class="di-zone" id="di-zone-${z.id}" data-type="${z.id}"
                tabindex="0" role="button"
                aria-label="Drop ${z.label} file here or click to browse"
                style="--di-color:${z.color}">
-            <div class="di-zone-icon">${z.icon}</div>
+            <div class="di-zone-icon">${OmicsLab.Icons?.svg(z.icon, 28) || ''}</div>
             <div class="di-zone-label">${z.label}</div>
             <div class="di-zone-hint">${z.hint}</div>
             <label class="di-file-btn">
@@ -521,7 +521,7 @@ OmicsLab.DataImport = (function () {
       .di-zone{background:#161b22;border:1.5px dashed #30363d;border-radius:9px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
       .di-zone:hover,.di-zone:focus{border-color:var(--di-color,#58a6ff);background:rgba(88,166,255,.04);outline:none}
       .di-zone.di-zone-over{border-color:var(--di-color,#58a6ff);background:rgba(88,166,255,.08);border-style:solid}
-      .di-zone-icon{font-size:1.6rem}
+      .di-zone-icon{display:flex;align-items:center;justify-content:center;color:var(--di-color,#58a6ff)}
       .di-zone-label{font-size:.82rem;font-weight:600;color:#e6edf3}
       .di-zone-hint{font-size:.68rem;color:#8b949e;font-family:'JetBrains Mono',monospace}
       .di-file-btn{font-size:.72rem;padding:.22rem .65rem;background:#21262d;border:1px solid #30363d;border-radius:5px;cursor:pointer;color:#8b949e;margin-top:.2rem;transition:background .15s}
