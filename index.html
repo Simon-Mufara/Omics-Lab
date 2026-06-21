@@ -235,6 +235,22 @@
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Genomics Network</span><span class="nmd-desc">H3Africa · KEMRI · SANBI · 18+ institutions</span></span>
             </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('fastqc')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Read QC (FastQC)</span><span class="nmd-desc">Per-base quality · GC content · PASS/WARN/FAIL</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('single-cell')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Single-Cell Explorer</span><span class="nmd-desc">UMAP · cell type annotation · malaria &amp; TB</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('assembly')">
+              <span class="nmd-icon" style="background:rgba(227,179,65,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="2" x2="9" y2="4"/><line x1="15" y1="2" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="22"/><line x1="15" y1="20" x2="15" y2="22"/><line x1="2" y1="9" x2="4" y2="9"/><line x1="2" y1="15" x2="4" y2="15"/><line x1="20" y1="9" x2="22" y2="9"/><line x1="20" y1="15" x2="22" y2="15"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Assembly Evaluator</span><span class="nmd-desc">N50 · Nx plot · short vs long-read vs hybrid</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('enrichment')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">GO Enrichment</span><span class="nmd-desc">GO · KEGG · bubble plot · African DEG lists</span></span>
+            </button>
           </div>
 
           <!-- Panel: Learn -->
@@ -390,6 +406,10 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pathogen-tracker')">
               <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Pathogen Tracker</span><span class="nmd-desc">SARS-CoV-2 · TB · malaria · mpox surveillance</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('bioethics')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Bioethics Hub</span><span class="nmd-desc">CONTEST · consent types · Nagoya · case studies</span></span>
             </button>
           </div>
 
