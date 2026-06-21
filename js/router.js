@@ -589,6 +589,13 @@ OmicsLab.Router = (function () {
       tagline: '5 real African clinical genomics cases — solve MDR-TB, sickle cell, outbreak, GWAS, and SARS-CoV-2 mysteries through decision-based investigation',
       sections: ['case-files-section'],
     },
+    'ai-ml-bio': {
+      label: 'AI & ML in Bioinformatics',
+      icon: 'brain',
+      color: '#bc8cff',
+      tagline: 'Foundation models, neural networks, and classical ML for genomics — LLMs (ESM-2, AlphaFold, scGPT), interactive NN visualizer, workflow code, and African AI initiatives',
+      sections: ['ai-ml-bio-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -650,7 +657,7 @@ OmicsLab.Router = (function () {
     gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research', 'rna-atlas': 'tools',
     fastqc: 'tools', 'single-cell': 'tools', assembly: 'tools',
     bioethics: 'research', enrichment: 'tools',
-    'pipeline-visual': 'tools', 'case-files': 'tools',
+    'pipeline-visual': 'tools', 'case-files': 'tools', 'ai-ml-bio': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -875,6 +882,10 @@ OmicsLab.Router = (function () {
     if (page === 'case-files' && OmicsLab.CaseFiles) {
       const el = document.getElementById('case-files-content');
       if (el && !el.querySelector('.cf-page')) try { OmicsLab.CaseFiles.init(); } catch(e) { OmicsLab.Error?.renderPageError('case-files-content','CaseFiles',e); }
+    }
+    if (page === 'ai-ml-bio' && OmicsLab.AIMLBio) {
+      const el = document.getElementById('ai-ml-bio-content');
+      if (el && !el.querySelector('.aml-page')) try { OmicsLab.AIMLBio.init(); } catch(e) { OmicsLab.Error?.renderPageError('ai-ml-bio-content','AIMLBio',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);

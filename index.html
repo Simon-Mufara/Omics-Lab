@@ -76,6 +76,7 @@
   <link rel="stylesheet" href="css/enrichment.css">
   <link rel="stylesheet" href="css/pipeline-visual.css">
   <link rel="stylesheet" href="css/case-files.css">
+  <link rel="stylesheet" href="css/ai-ml-bio.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -260,6 +261,10 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('case-files')">
               <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Case Files</span><span class="nmd-desc">MDR-TB · sickle cell · outbreak · GWAS · COVID</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('ai-ml-bio')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.97-10.5A2.5 2.5 0 0 1 7.5 6H9.5zM14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.97-10.5A2.5 2.5 0 0 0 16.5 6H14.5z"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">AI & ML in Bioinformatics</span><span class="nmd-desc">LLMs · Neural Networks · AlphaFold · ESM-2</span></span>
             </button>
           </div>
 
@@ -1408,6 +1413,11 @@
     <div id="case-files-content"><!-- Populated by case-files.js --></div>
   </div>
 
+  <!-- AI & Machine Learning in Bioinformatics -->
+  <div id="ai-ml-bio-section">
+    <div id="ai-ml-bio-content"><!-- Populated by ai-ml-bio.js --></div>
+  </div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
   <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
@@ -2062,6 +2072,7 @@
 <script defer src="js/enrichment.js"></script>
 <script defer src="js/pipeline-visual.js"></script>
 <script defer src="js/case-files.js"></script>
+<script defer src="js/ai-ml-bio.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>
