@@ -1,0 +1,66 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Epigenomics Explorer
+   ═══════════════════════════════════════════════════════════════ */
+.epi-page { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 5rem; }
+.epi-header { text-align:center; margin-bottom:2rem; }
+.epi-title { font-size:clamp(1.6rem,3.2vw,2.3rem); font-weight:800; margin:0 0 0.5rem; background:linear-gradient(135deg,#3fb950,#58a6ff,#bc8cff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.epi-sub { font-size:0.86rem; color:#8b949e; max-width:720px; margin:0 auto; line-height:1.65; }
+.epi-tabs { display:flex; gap:0.35rem; background:#0d1117; border:1px solid #21262d; border-radius:10px; padding:0.35rem; flex-wrap:wrap; margin-bottom:2rem; }
+.epi-tab { flex:1; min-width:120px; padding:0.55rem 0.75rem; background:none; border:none; border-radius:7px; color:#6e7681; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all 0.18s; }
+.epi-tab:hover { color:#c9d1d9; background:rgba(255,255,255,0.04); }
+.epi-tab.active { background:#161b22; color:#c9d1d9; box-shadow:0 1px 4px rgba(0,0,0,.4); }
+.epi-sb-title { font-size:0.63rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#6e7681; margin-bottom:0.6rem; }
+.epi-concept-box { padding:1rem 1.25rem; background:rgba(63,185,80,0.05); border:1px solid rgba(63,185,80,0.2); border-left:3px solid #3fb950; border-radius:0 8px 8px 0; margin-bottom:1.5rem; }
+.epi-concept-title { font-size:0.9rem; font-weight:800; color:#3fb950; margin-bottom:0.4rem; }
+.epi-concept-body { font-size:0.8rem; color:#c9d1d9; line-height:1.72; margin:0; }
+/* Methylation */
+.epi-meth-viz { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1.1rem; margin-bottom:1.25rem; }
+.epi-meth-row { display:grid; grid-template-columns:130px 1fr 44px; gap:0.6rem; align-items:center; margin-bottom:0.2rem; }
+.epi-meth-ctx { font-family:monospace; font-size:0.78rem; font-weight:700; color:#c9d1d9; }
+.epi-meth-bar-wrap { height:8px; background:#0d1117; border-radius:4px; overflow:hidden; }
+.epi-meth-bar { height:100%; border-radius:4px; transition:width 0.6s ease; }
+.epi-meth-pct { font-size:0.72rem; font-family:monospace; color:#6e7681; text-align:right; }
+.epi-meth-body { padding:0.5rem 0 0.75rem 130px; border-bottom:1px solid #21262d; margin-bottom:0.5rem; }
+.epi-meth-desc { font-size:0.74rem; color:#8b949e; margin:0 0 0.3rem; line-height:1.6; }
+.epi-meth-africa { font-size:0.71rem; color:#f97316; line-height:1.55; padding:0.3rem 0.55rem; background:rgba(249,115,22,0.05); border-left:2px solid rgba(249,115,22,0.35); border-radius:0 4px 4px 0; margin:0; }
+.epi-bisulfite-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1.1rem; }
+.epi-bs-steps { display:flex; flex-direction:column; gap:0.55rem; margin-top:0.5rem; }
+.epi-bs-step { display:flex; gap:0.75rem; align-items:flex-start; font-size:0.78rem; color:#8b949e; }
+.epi-bs-n { flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#3fb950; color:#000; font-size:0.68rem; font-weight:800; display:flex; align-items:center; justify-content:center; }
+/* Histones */
+.epi-histone-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:0.85rem; margin-bottom:1.25rem; }
+.epi-histone-card { background:#161b22; border:1px solid #21262d; border-top:3px solid; border-radius:10px; padding:0.9rem; }
+.epi-histone-mark { font-family:monospace; font-size:1rem; font-weight:900; margin-bottom:0.1rem; }
+.epi-histone-type { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.06em; color:#6e7681; margin-bottom:0.4rem; }
+.epi-histone-assoc { font-size:0.75rem; color:#8b949e; line-height:1.6; margin:0 0 0.5rem; }
+.epi-histone-eg { font-size:0.7rem; color:#c9d1d9; padding:0.3rem 0.5rem; background:#0d1117; border-radius:5px; line-height:1.5; }
+.epi-eg-lbl { display:block; font-size:0.58rem; font-weight:700; text-transform:uppercase; color:#58a6ff; margin-bottom:0.15rem; letter-spacing:0.06em; }
+.epi-chip-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1.1rem; }
+.epi-chip-steps { display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem; }
+.epi-chip-step { display:flex; gap:0.7rem; font-size:0.78rem; color:#8b949e; align-items:flex-start; }
+.epi-cs-n { flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#bc8cff22; color:#bc8cff; font-size:0.68rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:1px solid #bc8cff55; }
+/* Chromatin */
+.epi-atac-layout { display:grid; grid-template-columns:1fr 360px; gap:1.5rem; align-items:start; }
+.epi-assay-tbl { background:#0d1117; border-radius:8px; overflow:hidden; font-size:0.74rem; margin-bottom:0.75rem; }
+.epi-at-hdr,.epi-at-row { display:grid; grid-template-columns:120px 100px 1fr 1fr; gap:0.5rem; padding:0.55rem 0.75rem; }
+.epi-at-hdr { background:#161b22; color:#6e7681; font-size:0.65rem; font-weight:700; text-transform:uppercase; border-bottom:1px solid #21262d; }
+.epi-at-row { color:#8b949e; border-bottom:1px solid #21262d; }
+.epi-at-row:last-child { border-bottom:none; }
+.epi-at-name { color:#c9d1d9; font-weight:700; }
+.epi-atac-pipeline { }
+.epi-ap-step { display:flex; gap:0.65rem; font-size:0.75rem; color:#8b949e; align-items:flex-start; padding:0.3rem 0; }
+.epi-ap-n { flex-shrink:0; width:18px; height:18px; border-radius:50%; background:#58a6ff22; color:#58a6ff; font-size:0.65rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:1px solid #58a6ff44; }
+.epi-atac-note { font-size:0.72rem; color:#6e7681; line-height:1.6; margin-top:0.6rem; padding:0.5rem 0.75rem; background:rgba(88,166,255,0.05); border-left:2px solid #58a6ff; border-radius:0 5px 5px 0; }
+/* Africa */
+.epi-africa-grid { display:flex; flex-direction:column; gap:0.85rem; margin-bottom:1.5rem; }
+.epi-africa-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
+.epi-af-study { font-size:0.88rem; font-weight:800; color:#c9d1d9; margin-bottom:0.4rem; }
+.epi-af-finding { font-size:0.78rem; color:#8b949e; line-height:1.65; margin:0 0 0.5rem; }
+.epi-af-doi { font-size:0.68rem; font-family:monospace; color:#58a6ff; }
+.epi-tools-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
+.epi-tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:0.5rem; margin-top:0.6rem; }
+.epi-tool { display:flex; flex-direction:column; padding:0.55rem 0.75rem; background:#0d1117; border-radius:7px; }
+.epi-tool-name { font-family:monospace; font-size:0.8rem; font-weight:700; color:#c9d1d9; }
+.epi-tool-use { font-size:0.7rem; color:#6e7681; margin-top:0.2rem; }
+@media (max-width:900px) { .epi-atac-layout { grid-template-columns:1fr; } }
+@media (max-width:640px) { .epi-page { padding:1.5rem 0.75rem 3rem; } .epi-tab { min-width:80px; font-size:0.68rem; } .epi-meth-row { grid-template-columns:100px 1fr 36px; } }

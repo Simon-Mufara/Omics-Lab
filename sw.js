@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v19: Nav restructure — Train/Learn/Tools properly organised
+   v20: Epigenomics, CRISPR Design Lab, Proteomics Fundamentals
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v19';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v20';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

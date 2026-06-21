@@ -79,6 +79,9 @@
   <link rel="stylesheet" href="css/ai-ml-bio.css">
   <link rel="stylesheet" href="css/stats-genomics.css">
   <link rel="stylesheet" href="css/seq-align.css">
+  <link rel="stylesheet" href="css/epigenomics.css">
+  <link rel="stylesheet" href="css/crispr.css">
+  <link rel="stylesheet" href="css/proteomics.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -263,6 +266,18 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('quizbattle')">
               <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Quiz Battle</span><span class="nmd-desc">65+ questions across 12 omics categories</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('epigenomics')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Epigenomics Explorer</span><span class="nmd-desc">DNA methylation · histone marks · ATAC-seq · Africa</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('crispr')">
+              <span class="nmd-icon" style="background:rgba(248,81,73,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">CRISPR Design Lab</span><span class="nmd-desc">Guide design · editing outcomes · sickle cell · malaria</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('proteomics')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M8 12l2 2 4-4"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Proteomics Fundamentals</span><span class="nmd-desc">LC-MS/MS · quantification · African disease proteomes</span></span>
             </button>
           </div>
 
@@ -1426,6 +1441,21 @@
     <div id="seq-align-content"><!-- Populated by seq-align.js --></div>
   </div>
 
+  <!-- Epigenomics Explorer -->
+  <div id="epigenomics-section">
+    <div id="epigenomics-content"><!-- Populated by epigenomics.js --></div>
+  </div>
+
+  <!-- CRISPR Design Lab -->
+  <div id="crispr-section">
+    <div id="crispr-content"><!-- Populated by crispr.js --></div>
+  </div>
+
+  <!-- Proteomics Fundamentals -->
+  <div id="proteomics-section">
+    <div id="proteomics-content"><!-- Populated by proteomics.js --></div>
+  </div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
   <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
@@ -2083,6 +2113,9 @@
 <script defer src="js/ai-ml-bio.js"></script>
 <script defer src="js/stats-genomics.js"></script>
 <script defer src="js/seq-align.js"></script>
+<script defer src="js/epigenomics.js"></script>
+<script defer src="js/crispr.js"></script>
+<script defer src="js/proteomics.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>

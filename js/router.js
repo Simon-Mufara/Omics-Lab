@@ -610,6 +610,27 @@ OmicsLab.Router = (function () {
       tagline: 'Animated Needleman-Wunsch & Smith-Waterman with DP table visualisation — HBB, rpoB, kelch13, CYP2B6 African disease presets, scoring matrices, MSA theory',
       sections: ['seq-align-section'],
     },
+    epigenomics: {
+      label: 'Epigenomics Explorer',
+      icon: 'layers',
+      color: '#3fb950',
+      tagline: 'DNA methylation, histone modifications, chromatin accessibility (ATAC-seq), and epigenetic regulation of African disease genes — malaria, TB, sickle cell',
+      sections: ['epigenomics-section'],
+    },
+    crispr: {
+      label: 'CRISPR Design Lab',
+      icon: 'scissors',
+      color: '#f85149',
+      tagline: 'CRISPR-Cas9 mechanism, guide RNA design tool, editing outcomes (NHEJ/HDR/base editing/prime editing), CRISPR systems comparison, and Africa applications',
+      sections: ['crispr-section'],
+    },
+    proteomics: {
+      label: 'Proteomics Fundamentals',
+      icon: 'layers',
+      color: '#bc8cff',
+      tagline: 'Mass spectrometry basics, LC-MS/MS workflow, protein quantification strategies (LFQ/TMT/SILAC/MRM), and African disease proteomics studies',
+      sections: ['proteomics-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -673,6 +694,7 @@ OmicsLab.Router = (function () {
     bioethics: 'research', enrichment: 'tools',
     'pipeline-visual': 'train', 'case-files': 'train', 'ai-ml-bio': 'train',
     'stats-genomics': 'train', 'seq-align': 'train',
+    epigenomics: 'train', crispr: 'train', proteomics: 'train',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -909,6 +931,18 @@ OmicsLab.Router = (function () {
     if (page === 'seq-align' && OmicsLab.SeqAlign) {
       const el = document.getElementById('seq-align-content');
       if (el && !el.querySelector('.sa-page')) try { OmicsLab.SeqAlign.init(); } catch(e) { OmicsLab.Error?.renderPageError('seq-align-content','SeqAlign',e); }
+    }
+    if (page === 'epigenomics' && OmicsLab.Epigenomics) {
+      const el = document.getElementById('epigenomics-content');
+      if (el && !el.querySelector('.epi-page')) try { OmicsLab.Epigenomics.init(); } catch(e) { OmicsLab.Error?.renderPageError('epigenomics-content','Epigenomics',e); }
+    }
+    if (page === 'crispr' && OmicsLab.CRISPR) {
+      const el = document.getElementById('crispr-content');
+      if (el && !el.querySelector('.crispr-page')) try { OmicsLab.CRISPR.init(); } catch(e) { OmicsLab.Error?.renderPageError('crispr-content','CRISPR',e); }
+    }
+    if (page === 'proteomics' && OmicsLab.Proteomics) {
+      const el = document.getElementById('proteomics-content');
+      if (el && !el.querySelector('.prot-page')) try { OmicsLab.Proteomics.init(); } catch(e) { OmicsLab.Error?.renderPageError('proteomics-content','Proteomics',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
