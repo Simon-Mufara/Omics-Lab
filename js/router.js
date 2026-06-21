@@ -575,6 +575,20 @@ OmicsLab.Router = (function () {
       tagline: 'GO and KEGG pathway enrichment analysis — bar charts and bubble plots for malaria, TB, and COVID-19 DEG lists from African disease cohorts',
       sections: ['enrichment-section'],
     },
+    'pipeline-visual': {
+      label: 'Pipeline Visualiser',
+      icon: 'git-branch',
+      color: '#3fb950',
+      tagline: 'Interactive bioinformatics pipeline builder — explore WGS, RNA-seq, metagenomics, and Nanopore ARTIC workflows node-by-node with African genomics context',
+      sections: ['pipeline-visual-section'],
+    },
+    'case-files': {
+      label: 'Genomics Case Files',
+      icon: 'clipboard',
+      color: '#f97316',
+      tagline: '5 real African clinical genomics cases — solve MDR-TB, sickle cell, outbreak, GWAS, and SARS-CoV-2 mysteries through decision-based investigation',
+      sections: ['case-files-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -636,6 +650,7 @@ OmicsLab.Router = (function () {
     gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research', 'rna-atlas': 'tools',
     fastqc: 'tools', 'single-cell': 'tools', assembly: 'tools',
     bioethics: 'research', enrichment: 'tools',
+    'pipeline-visual': 'tools', 'case-files': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -852,6 +867,14 @@ OmicsLab.Router = (function () {
     if (page === 'enrichment' && OmicsLab.Enrichment) {
       const el = document.getElementById('enrichment-content');
       if (el && !el.querySelector('.enr-page')) try { OmicsLab.Enrichment.init(); } catch(e) { OmicsLab.Error?.renderPageError('enrichment-content','Enrichment',e); }
+    }
+    if (page === 'pipeline-visual' && OmicsLab.PipelineVisual) {
+      const el = document.getElementById('pipeline-visual-content');
+      if (el && !el.querySelector('.pvl-page')) try { OmicsLab.PipelineVisual.init(); } catch(e) { OmicsLab.Error?.renderPageError('pipeline-visual-content','PipelineVisual',e); }
+    }
+    if (page === 'case-files' && OmicsLab.CaseFiles) {
+      const el = document.getElementById('case-files-content');
+      if (el && !el.querySelector('.cf-page')) try { OmicsLab.CaseFiles.init(); } catch(e) { OmicsLab.Error?.renderPageError('case-files-content','CaseFiles',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);

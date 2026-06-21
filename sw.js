@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v80: FastQC, Single-Cell Explorer, Assembly Evaluator, Bioethics Hub, GO Enrichment
+   v16: Pipeline Visualiser, Genomics Case Files
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v15';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v16';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

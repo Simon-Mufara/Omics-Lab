@@ -74,6 +74,8 @@
   <link rel="stylesheet" href="css/assembly.css">
   <link rel="stylesheet" href="css/bioethics.css">
   <link rel="stylesheet" href="css/enrichment.css">
+  <link rel="stylesheet" href="css/pipeline-visual.css">
+  <link rel="stylesheet" href="css/case-files.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -250,6 +252,14 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('enrichment')">
               <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">GO Enrichment</span><span class="nmd-desc">GO · KEGG · bubble plot · African DEG lists</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pipeline-visual')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6M13 6h3a2 2 0 0 1 2 2v7"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Pipeline Visualiser</span><span class="nmd-desc">WGS · RNA-seq · Nanopore · interactive nodes</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('case-files')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Case Files</span><span class="nmd-desc">MDR-TB · sickle cell · outbreak · GWAS · COVID</span></span>
             </button>
           </div>
 
@@ -1388,6 +1398,16 @@
     <div id="enrichment-content"><!-- Populated by enrichment.js --></div>
   </div>
 
+  <!-- Visual Pipeline Builder -->
+  <div id="pipeline-visual-section">
+    <div id="pipeline-visual-content"><!-- Populated by pipeline-visual.js --></div>
+  </div>
+
+  <!-- Genomics Case Files -->
+  <div id="case-files-section">
+    <div id="case-files-content"><!-- Populated by case-files.js --></div>
+  </div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
   <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
@@ -2040,6 +2060,8 @@
 <script defer src="js/assembly.js"></script>
 <script defer src="js/bioethics.js"></script>
 <script defer src="js/enrichment.js"></script>
+<script defer src="js/pipeline-visual.js"></script>
+<script defer src="js/case-files.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>
