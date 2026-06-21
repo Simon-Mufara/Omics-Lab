@@ -596,6 +596,20 @@ OmicsLab.Router = (function () {
       tagline: 'Foundation models, neural networks, and classical ML for genomics — LLMs (ESM-2, AlphaFold, scGPT), interactive NN visualizer, workflow code, and African AI initiatives',
       sections: ['ai-ml-bio-section'],
     },
+    'stats-genomics': {
+      label: 'Statistics for Genomics',
+      icon: 'bar-chart',
+      color: '#58a6ff',
+      tagline: 'Multiple testing (Bonferroni, FDR), power analysis with interactive calculators, effect sizes (OR, Cohen\'s d, FST), Bayesian variant classification, and critical pitfalls',
+      sections: ['stats-genomics-section'],
+    },
+    'seq-align': {
+      label: 'Sequence Alignment',
+      icon: 'layers',
+      color: '#3fb950',
+      tagline: 'Animated Needleman-Wunsch & Smith-Waterman with DP table visualisation — HBB, rpoB, kelch13, CYP2B6 African disease presets, scoring matrices, MSA theory',
+      sections: ['seq-align-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -658,6 +672,7 @@ OmicsLab.Router = (function () {
     fastqc: 'tools', 'single-cell': 'tools', assembly: 'tools',
     bioethics: 'research', enrichment: 'tools',
     'pipeline-visual': 'tools', 'case-files': 'tools', 'ai-ml-bio': 'tools',
+    'stats-genomics': 'tools', 'seq-align': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -886,6 +901,14 @@ OmicsLab.Router = (function () {
     if (page === 'ai-ml-bio' && OmicsLab.AIMLBio) {
       const el = document.getElementById('ai-ml-bio-content');
       if (el && !el.querySelector('.aml-page')) try { OmicsLab.AIMLBio.init(); } catch(e) { OmicsLab.Error?.renderPageError('ai-ml-bio-content','AIMLBio',e); }
+    }
+    if (page === 'stats-genomics' && OmicsLab.StatsGenomics) {
+      const el = document.getElementById('stats-genomics-content');
+      if (el && !el.querySelector('.sg-page')) try { OmicsLab.StatsGenomics.init(); } catch(e) { OmicsLab.Error?.renderPageError('stats-genomics-content','StatsGenomics',e); }
+    }
+    if (page === 'seq-align' && OmicsLab.SeqAlign) {
+      const el = document.getElementById('seq-align-content');
+      if (el && !el.querySelector('.sa-page')) try { OmicsLab.SeqAlign.init(); } catch(e) { OmicsLab.Error?.renderPageError('seq-align-content','SeqAlign',e); }
     }
     if (page === 'africa' && OmicsLab.AfricaMap) {
       setTimeout(() => { try { OmicsLab.AfricaMap.init(); } catch(e) { OmicsLab.Error?.renderPageError('africa-section','AfricaMap',e); } }, 100);
