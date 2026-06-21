@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v18: Stats for Genomics, Sequence Alignment Explorer
+   v19: Nav restructure — Train/Learn/Tools properly organised
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v18';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v19';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
