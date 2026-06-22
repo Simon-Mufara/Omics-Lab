@@ -82,6 +82,10 @@
   <link rel="stylesheet" href="css/epigenomics.css">
   <link rel="stylesheet" href="css/crispr.css">
   <link rel="stylesheet" href="css/proteomics.css">
+  <link rel="stylesheet" href="css/research-wizard.css">
+  <link rel="stylesheet" href="css/alignment-viewer.css">
+  <link rel="stylesheet" href="css/recombination.css">
+  <link rel="stylesheet" href="css/social.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -375,6 +379,14 @@
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Output Tracker</span><span class="nmd-desc">Publications · datasets · talks · grants</span></span>
             </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research-wizard')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Research Design Wizard</span><span class="nmd-desc">PICO · study type · ethics · pipeline plan</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('social')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Social Hub</span><span class="nmd-desc">Online now · friends · direct messages</span></span>
+            </button>
           </div>
 
           <!-- Panel: Africa -->
@@ -494,6 +506,14 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('phylo')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Phylo Tree Builder</span><span class="nmd-desc">NJ · UPGMA · SVG tree · Newick</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('alignment-viewer')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Alignment Viewer</span><span class="nmd-desc">AliView-style · colour MSA · conservation</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('recombination')">
+              <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Recombination Scanner</span><span class="nmd-desc">SimPlot · RDP4-style · breakpoints</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('primerdesign')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
@@ -766,6 +786,13 @@
           <span class="mob-nav-item-text">
             <span class="mob-nav-item-name">Africa Hub</span>
             <span class="mob-nav-item-desc">H3Africa, genomics map, 54 nations</span>
+          </span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('research-wizard');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
+          <span class="mob-nav-item-text">
+            <span class="mob-nav-item-name">Research Design Wizard</span>
+            <span class="mob-nav-item-desc">PICO · ethics · pipeline plan</span>
           </span>
         </button>
       </div>
@@ -1456,6 +1483,18 @@
     <div id="proteomics-content"><!-- Populated by proteomics.js --></div>
   </div>
 
+  <!-- Research Design Wizard -->
+  <div id="research-wizard-section"><!-- Populated by research-wizard.js --></div>
+
+  <!-- Alignment Viewer -->
+  <div id="alignment-viewer-section"><!-- Populated by alignment-viewer.js --></div>
+
+  <!-- Recombination Scanner -->
+  <div id="recombination-section"><!-- Populated by recombination.js --></div>
+
+  <!-- Social Hub -->
+  <div id="social-section"><!-- Populated by social.js --></div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
   <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
@@ -2116,6 +2155,10 @@
 <script defer src="js/epigenomics.js"></script>
 <script defer src="js/crispr.js"></script>
 <script defer src="js/proteomics.js"></script>
+<script defer src="js/research-wizard.js"></script>
+<script defer src="js/alignment-viewer.js"></script>
+<script defer src="js/recombination.js"></script>
+<script defer src="js/social.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>

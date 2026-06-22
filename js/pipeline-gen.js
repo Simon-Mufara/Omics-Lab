@@ -336,7 +336,685 @@ workflow {
   };
 
   let _activePipe = 'wgs_gatk';
-  let _activeFw = 'smk';
+  let _activeFw   = 'smk';
+
+  /* ══════════════════════════════════════════════
+     FILE WIZARD — users describe their data, get
+     a ready-to-run Linux bash script
+     ══════════════════════════════════════════════ */
+  let _wiz = {
+    fileType: '', goal: '', samples: '', ref: '', threads: '8', env: 'conda', outDir: 'results', generated: ''
+  };
+
+  function _wizRender() {
+    const wrap = document.getElementById('pg-wizard-wrap');
+    if (!wrap) return;
+    wrap.innerHTML = _wizHtml();
+  }
+
+  function _wizHtml() {
+    return `
+    <div class="pg-wiz-card">
+      <div class="pg-wiz-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Generate a Script from Your Files
+      </div>
+      <p class="pg-wiz-sub">Tell us what data you have and what you want to do — we'll generate a ready-to-run bash script for your Linux server or HPC.</p>
+
+      <div class="pg-wiz-grid">
+        <!-- Step 1: File type -->
+        <div class="pg-wiz-step">
+          <div class="pg-wiz-step-num">1</div>
+          <div class="pg-wiz-step-body">
+            <div class="pg-wiz-label">What files do you have?</div>
+            <div class="pg-wiz-chips" id="pg-wiz-filetype">
+              ${[
+                ['fastq-pe','FASTQ paired-end (R1 + R2)'],
+                ['fastq-se','FASTQ single-end'],
+                ['bam','BAM files (already aligned)'],
+                ['vcf','VCF files (variants)'],
+                ['fasta','FASTA sequences'],
+                ['counts','Count matrix (RNA-seq)'],
+              ].map(([v,l]) => `<button class="pg-wiz-chip${_wiz.fileType===v?' pg-wiz-chip-active':''}"
+                onclick="OmicsLab.PipelineGen._wizSet('fileType','${v}')">${l}</button>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Goal -->
+        <div class="pg-wiz-step">
+          <div class="pg-wiz-step-num">2</div>
+          <div class="pg-wiz-step-body">
+            <div class="pg-wiz-label">What do you want to do?</div>
+            <div class="pg-wiz-chips" id="pg-wiz-goal">
+              ${[
+                ['variant','Call SNPs/Indels (GATK)'],
+                ['rnaseq-de','Differential gene expression'],
+                ['gwas','GWAS association testing'],
+                ['assembly','De novo genome assembly'],
+                ['metagenomics','Metagenomics / 16S'],
+                ['phylo','Build a phylogenetic tree'],
+                ['qc','QC only (FastQC + MultiQC)'],
+                ['amr','AMR resistance calling'],
+              ].map(([v,l]) => `<button class="pg-wiz-chip${_wiz.goal===v?' pg-wiz-chip-active':''}"
+                onclick="OmicsLab.PipelineGen._wizSet('goal','${v}')">${l}</button>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Sample names -->
+        <div class="pg-wiz-step">
+          <div class="pg-wiz-step-num">3</div>
+          <div class="pg-wiz-step-body">
+            <div class="pg-wiz-label">Sample names <span class="pg-wiz-hint">(one per line, or comma-separated)</span></div>
+            <textarea class="pg-wiz-textarea" id="pg-wiz-samples" rows="4"
+              placeholder="sample_001&#10;sample_002&#10;patient_KE_003&#10;control_01"
+              oninput="OmicsLab.PipelineGen._wizSave()">${_wiz.samples}</textarea>
+          </div>
+        </div>
+
+        <!-- Step 4: Config -->
+        <div class="pg-wiz-step">
+          <div class="pg-wiz-step-num">4</div>
+          <div class="pg-wiz-step-body">
+            <div class="pg-wiz-label">Configuration</div>
+            <div class="pg-wiz-config-grid">
+              <div>
+                <div class="pg-wiz-config-label">Reference genome path</div>
+                <input class="pg-wiz-input" id="pg-wiz-ref" value="${_wiz.ref}"
+                  placeholder="/data/ref/hg38.fa  or  GRCh38.fasta"
+                  oninput="OmicsLab.PipelineGen._wizSave()"/>
+              </div>
+              <div>
+                <div class="pg-wiz-config-label">Output directory</div>
+                <input class="pg-wiz-input" id="pg-wiz-outdir" value="${_wiz.outDir}"
+                  placeholder="results" oninput="OmicsLab.PipelineGen._wizSave()"/>
+              </div>
+              <div>
+                <div class="pg-wiz-config-label">CPU threads</div>
+                <input class="pg-wiz-input" id="pg-wiz-threads" type="number" min="1" max="128"
+                  value="${_wiz.threads}" oninput="OmicsLab.PipelineGen._wizSave()"/>
+              </div>
+              <div>
+                <div class="pg-wiz-config-label">Environment manager</div>
+                <select class="pg-wiz-input" id="pg-wiz-env" onchange="OmicsLab.PipelineGen._wizSave()">
+                  <option value="conda" ${_wiz.env==='conda'?'selected':''}>conda / mamba</option>
+                  <option value="module" ${_wiz.env==='module'?'selected':''}>SLURM modules</option>
+                  <option value="docker" ${_wiz.env==='docker'?'selected':''}>Docker / Singularity</option>
+                  <option value="none" ${_wiz.env==='none'?'selected':''}>Tools already in PATH</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="pg-wiz-gen-btn" onclick="OmicsLab.PipelineGen._wizGenerate()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Generate My Script
+      </button>
+
+      ${_wiz.generated ? `
+      <div class="pg-wiz-output-wrap">
+        <div class="pg-wiz-output-hdr">
+          <span class="pg-wiz-output-label">Your custom pipeline script</span>
+          <div style="display:flex;gap:.4rem">
+            <button class="pg-act-btn" onclick="OmicsLab.PipelineGen._wizCopy()">Copy</button>
+            <button class="pg-act-btn" onclick="OmicsLab.PipelineGen._wizDownload()">Download .sh</button>
+          </div>
+        </div>
+        <pre class="pg-output" id="pg-wiz-output">${_wiz.generated}</pre>
+      </div>` : ''}
+    </div>`;
+  }
+
+  function _wizSet(field, val) {
+    _wiz[field] = val;
+    _wizRender();
+  }
+
+  function _wizSave() {
+    _wiz.samples = document.getElementById('pg-wiz-samples')?.value || _wiz.samples;
+    _wiz.ref     = document.getElementById('pg-wiz-ref')?.value     || _wiz.ref;
+    _wiz.outDir  = document.getElementById('pg-wiz-outdir')?.value  || _wiz.outDir;
+    _wiz.threads = document.getElementById('pg-wiz-threads')?.value || _wiz.threads;
+    _wiz.env     = document.getElementById('pg-wiz-env')?.value     || _wiz.env;
+  }
+
+  function _wizGenerate() {
+    _wizSave();
+    if (!_wiz.fileType) { OmicsLab.Notify?.error('Please select what files you have (Step 1)'); return; }
+    if (!_wiz.goal)     { OmicsLab.Notify?.error('Please select your analysis goal (Step 2)'); return; }
+    const samples = _wiz.samples.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+    if (!samples.length) { OmicsLab.Notify?.error('Please enter at least one sample name (Step 3)'); return; }
+    _wiz.generated = _buildScript(samples);
+    _wizRender();
+    setTimeout(() => document.getElementById('pg-wiz-output')?.scrollIntoView({ behavior: 'smooth' }), 100);
+  }
+
+  function _buildScript(samples) {
+    const ref    = _wiz.ref     || '/path/to/reference.fa';
+    const outDir = _wiz.outDir  || 'results';
+    const cpu    = _wiz.threads || '8';
+    const envMgr = _wiz.env;
+    const now    = new Date().toISOString().slice(0, 10);
+
+    const envBlock = {
+      conda:  `# Activate conda environment\nsource "$(conda info --base)/etc/profile.d/conda.sh"\nconda activate omicslab  # or your env name`,
+      module: `# Load HPC modules\nmodule purge\nmodule load FastQC Trimmomatic BWA SAMtools GATK`,
+      docker: `# Note: use singularity exec or docker run per tool\nSINGULARITY_IMG=/path/to/bioinfo.sif`,
+      none:   `# Using tools already in PATH`,
+    }[envMgr] || '';
+
+    const sampleList = samples.map(s => `    "${s}"`).join('\n');
+
+    /* Goal-specific script blocks */
+    const scripts = {
+      'variant': `
+# ═══════════════════════════════════════════════════════
+# WGS VARIANT CALLING PIPELINE — GATK4 HaplotypeCaller
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+IFS=$'\\n\\t'
+
+# ── Configuration ──────────────────────────────────────
+REF="${ref}"
+OUTDIR="${outDir}"
+THREADS=${cpu}
+DBSNP="$OUTDIR/dbsnp.vcf.gz"      # download from GATK bundle
+SAMPLES=(
+${sampleList}
+)
+
+# ── Directory setup ────────────────────────────────────
+mkdir -p "$OUTDIR"/{qc,trimmed,bam,gvcf,vcf,logs}
+
+${envBlock}
+
+echo "Starting variant calling pipeline for \${#SAMPLES[@]} samples..."
+
+# ── Step 1: Quality control ────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[QC] $SAMPLE"
+    fastqc -t "$THREADS" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        -o "$OUTDIR/qc/" 2> "$OUTDIR/logs/\${SAMPLE}_fastqc.log"
+done
+multiqc "$OUTDIR/qc/" -o "$OUTDIR/qc/" --quiet
+
+# ── Step 2: Adapter trimming ───────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[TRIM] $SAMPLE"
+    trim_galore --paired --cores "$THREADS" \\
+        -o "$OUTDIR/trimmed/" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        2> "$OUTDIR/logs/\${SAMPLE}_trim.log"
+done
+
+# ── Step 3: Alignment ──────────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[ALIGN] $SAMPLE"
+    bwa-mem2 mem -t "$THREADS" \\
+        -R "@RG\\tID:\${SAMPLE}\\tSM:\${SAMPLE}\\tPL:ILLUMINA\\tLB:\${SAMPLE}" \\
+        "$REF" \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R1_val_1.fq.gz" \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R2_val_2.fq.gz" \\
+        2> "$OUTDIR/logs/\${SAMPLE}_bwa.log" | \\
+    samtools sort -@ "$THREADS" -o "$OUTDIR/bam/\${SAMPLE}.sorted.bam" -
+    samtools index "$OUTDIR/bam/\${SAMPLE}.sorted.bam"
+done
+
+# ── Step 4: Mark duplicates ────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[MARKDUP] $SAMPLE"
+    gatk MarkDuplicates \\
+        -I "$OUTDIR/bam/\${SAMPLE}.sorted.bam" \\
+        -O "$OUTDIR/bam/\${SAMPLE}.markdup.bam" \\
+        -M "$OUTDIR/bam/\${SAMPLE}.markdup.metrics" \\
+        --CREATE_INDEX true 2> "$OUTDIR/logs/\${SAMPLE}_markdup.log"
+done
+
+# ── Step 5: Base Quality Score Recalibration ───────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[BQSR] $SAMPLE"
+    gatk BaseRecalibrator \\
+        -I "$OUTDIR/bam/\${SAMPLE}.markdup.bam" \\
+        -R "$REF" --known-sites "$DBSNP" \\
+        -O "$OUTDIR/bam/\${SAMPLE}.recal.table" 2>> "$OUTDIR/logs/\${SAMPLE}_bqsr.log"
+    gatk ApplyBQSR \\
+        -I "$OUTDIR/bam/\${SAMPLE}.markdup.bam" \\
+        -R "$REF" --bqsr-recal-file "$OUTDIR/bam/\${SAMPLE}.recal.table" \\
+        -O "$OUTDIR/bam/\${SAMPLE}.recal.bam" 2>> "$OUTDIR/logs/\${SAMPLE}_bqsr.log"
+done
+
+# ── Step 6: Variant calling (gVCF mode) ───────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[HAPLOTYPECALLER] $SAMPLE"
+    gatk HaplotypeCaller \\
+        -R "$REF" -I "$OUTDIR/bam/\${SAMPLE}.recal.bam" \\
+        -O "$OUTDIR/gvcf/\${SAMPLE}.g.vcf.gz" \\
+        -ERC GVCF --dbsnp "$DBSNP" \\
+        --native-pair-hmm-threads "$THREADS" \\
+        2> "$OUTDIR/logs/\${SAMPLE}_hc.log"
+done
+
+# ── Step 7: Joint genotyping ───────────────────────────
+echo "[JOINT GENOTYPE]"
+GVCF_ARGS=$(printf -- "-V $OUTDIR/gvcf/%s.g.vcf.gz " "\${SAMPLES[@]}")
+gatk CombineGVCFs -R "$REF" \$GVCF_ARGS -O "$OUTDIR/vcf/cohort.g.vcf.gz"
+gatk GenotypeGVCFs -R "$REF" -V "$OUTDIR/vcf/cohort.g.vcf.gz" \\
+    -O "$OUTDIR/vcf/cohort.raw.vcf.gz"
+
+# ── Step 8: Variant filtration (hard filter if <30 samples) ──
+gatk VariantFiltration \\
+    -V "$OUTDIR/vcf/cohort.raw.vcf.gz" \\
+    --filter-expression "QD < 2.0" --filter-name "QD2" \\
+    --filter-expression "FS > 60.0" --filter-name "FS60" \\
+    --filter-expression "MQ < 40.0" --filter-name "MQ40" \\
+    -O "$OUTDIR/vcf/cohort.filtered.vcf.gz"
+
+echo "✓ Pipeline complete. Results in $OUTDIR/vcf/"`,
+
+      'rnaseq-de': `
+# ═══════════════════════════════════════════════════════
+# RNA-seq DIFFERENTIAL EXPRESSION PIPELINE
+# STAR alignment + DESeq2
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+IFS=$'\\n\\t'
+
+# ── Configuration ──────────────────────────────────────
+STAR_INDEX="/path/to/star_index"    # built with STAR --runMode genomeGenerate
+GTF="/path/to/annotation.gtf"       # e.g. Homo_sapiens.GRCh38.110.gtf
+OUTDIR="${outDir}"
+THREADS=${cpu}
+SAMPLES=(
+${sampleList}
+)
+
+mkdir -p "$OUTDIR"/{qc,trimmed,star,counts,logs}
+
+${envBlock}
+
+# ── Step 1: FastQC ─────────────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    fastqc -t "$THREADS" data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        -o "$OUTDIR/qc/" 2> "$OUTDIR/logs/\${SAMPLE}_qc.log"
+done
+multiqc "$OUTDIR/qc/" -o "$OUTDIR/qc/" --quiet
+
+# ── Step 2: Trimming ───────────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    trim_galore --paired --cores "$THREADS" -q 20 \\
+        -o "$OUTDIR/trimmed/" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        2> "$OUTDIR/logs/\${SAMPLE}_trim.log"
+done
+
+# ── Step 3: STAR alignment ─────────────────────────────
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[STAR] $SAMPLE"
+    STAR --runThreadN "$THREADS" \\
+        --genomeDir "$STAR_INDEX" \\
+        --readFilesIn "$OUTDIR/trimmed/\${SAMPLE}_R1_val_1.fq.gz" \\
+                      "$OUTDIR/trimmed/\${SAMPLE}_R2_val_2.fq.gz" \\
+        --readFilesCommand zcat \\
+        --outSAMtype BAM SortedByCoordinate \\
+        --outSAMattributes NH HI AS NM \\
+        --outFileNamePrefix "$OUTDIR/star/\${SAMPLE}." \\
+        --quantMode GeneCounts \\
+        2> "$OUTDIR/logs/\${SAMPLE}_star.log"
+    samtools index "$OUTDIR/star/\${SAMPLE}.Aligned.sortedByCoord.out.bam"
+done
+
+# ── Step 4: featureCounts ──────────────────────────────
+echo "[COUNTS]"
+BAMS=$(printf "$OUTDIR/star/%s.Aligned.sortedByCoord.out.bam " "\${SAMPLES[@]}")
+featureCounts -T "$THREADS" -p -s 0 \\
+    -a "$GTF" -o "$OUTDIR/counts/all_counts.txt" \\
+    \$BAMS 2> "$OUTDIR/logs/featurecounts.log"
+
+# ── Step 5: DESeq2 (R script, auto-generated) ─────────
+cat > "$OUTDIR/deseq2_analysis.R" << 'RSCRIPT'
+library(DESeq2)
+library(ggplot2)
+
+# Load count matrix
+counts <- read.table("${outDir}/counts/all_counts.txt",
+                     header=TRUE, skip=1, row.names=1)
+counts <- counts[, 6:ncol(counts)]
+colnames(counts) <- sub(".Aligned.*", "", basename(colnames(counts)))
+
+# Define condition (EDIT: match your sample names)
+condition <- factor(c(rep("treatment", ncol(counts)/2),
+                      rep("control",   ncol(counts)/2)))
+coldata <- data.frame(row.names=colnames(counts), condition)
+
+# Run DESeq2
+dds <- DESeqDataSetFromMatrix(countData=counts, colData=coldata, design=~condition)
+dds <- dds[rowSums(counts(dds)) >= 10, ]
+dds <- DESeq(dds)
+
+# Results
+res <- results(dds, contrast=c("condition","treatment","control"))
+res_sig <- subset(res, padj < 0.05 & abs(log2FoldChange) > 1)
+write.csv(as.data.frame(res_sig), "${outDir}/DEGs_significant.csv")
+
+# Volcano plot
+png("${outDir}/volcano_plot.png", width=800, height=600)
+EnhancedVolcano::EnhancedVolcano(res,
+    lab=rownames(res), x='log2FoldChange', y='pvalue',
+    title='Differential Expression', pCutoff=0.05, FCcutoff=1)
+dev.off()
+cat(sprintf("Significant DEGs: %d\\n", nrow(res_sig)))
+RSCRIPT
+
+Rscript "$OUTDIR/deseq2_analysis.R"
+echo "✓ RNA-seq pipeline complete. DEGs in $OUTDIR/DEGs_significant.csv"`,
+
+      'gwas': `
+# ═══════════════════════════════════════════════════════
+# GWAS PIPELINE — PLINK2 + SAIGE (Africa-optimised)
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+
+PLINK_PREFIX="/path/to/your/plink_data"  # BED/BIM/FAM without extension
+PHENO_FILE="phenotype.txt"               # Col1=FID Col2=IID Col3=PHENOTYPE
+COVAR_FILE="covariates.txt"              # age, sex, 5 PCs
+OUTDIR="${outDir}"
+THREADS=${cpu}
+MAF=0.01
+GENO=0.02
+MIND=0.05
+HWE=1e-6
+
+mkdir -p "$OUTDIR"/{qc,pca,gwas,results,logs}
+
+${envBlock}
+
+# ── Step 1: Sample QC ──────────────────────────────────
+echo "[QC] Sample-level filtering..."
+plink2 --bfile "$PLINK_PREFIX" \\
+    --mind $MIND --geno $GENO --hwe $HWE --maf $MAF \\
+    --out "$OUTDIR/qc/step1_sampleqc" \\
+    --make-bed --threads "$THREADS" \\
+    2> "$OUTDIR/logs/sampleqc.log"
+
+# ── Step 2: LD pruning for PCA ─────────────────────────
+echo "[PCA] LD pruning..."
+plink2 --bfile "$OUTDIR/qc/step1_sampleqc" \\
+    --indep-pairwise 50 10 0.1 \\
+    --out "$OUTDIR/pca/pruned" --threads "$THREADS"
+
+# ── Step 3: PCA ────────────────────────────────────────
+plink2 --bfile "$OUTDIR/qc/step1_sampleqc" \\
+    --extract "$OUTDIR/pca/pruned.prune.in" \\
+    --pca 20 --out "$OUTDIR/pca/pca" --threads "$THREADS"
+
+# ── Step 4: SAIGE Step 1 — fit null model ─────────────
+echo "[SAIGE] Step 1: null GLMM..."
+Rscript $(which step1_fitNULLGLMM.R) \\
+    --phenoFile="$PHENO_FILE" \\
+    --phenoCol=PHENOTYPE \\
+    --covarColList=age,sex,PC1,PC2,PC3,PC4,PC5 \\
+    --sampleCovarColList=age \\
+    --plinkFile="$OUTDIR/qc/step1_sampleqc" \\
+    --traitType=binary \\
+    --outputPrefix="$OUTDIR/gwas/step1" \\
+    --nThreads="$THREADS" \\
+    2> "$OUTDIR/logs/saige_step1.log"
+
+# ── Step 5: SAIGE Step 2 — association testing ─────────
+echo "[SAIGE] Step 2: association testing..."
+Rscript $(which step2_SPAtests.R) \\
+    --bedFile="$OUTDIR/qc/step1_sampleqc.bed" \\
+    --bimFile="$OUTDIR/qc/step1_sampleqc.bim" \\
+    --famFile="$OUTDIR/qc/step1_sampleqc.fam" \\
+    --GMMATmodelFile="$OUTDIR/gwas/step1.rda" \\
+    --varianceRatioFile="$OUTDIR/gwas/step1.varianceRatio.txt" \\
+    --SAIGEOutputFile="$OUTDIR/gwas/gwas_results.txt" \\
+    --chrom=1 --LOCO=TRUE \\
+    2> "$OUTDIR/logs/saige_step2.log"
+
+# ── Step 6: Summary & Manhattan plot (R) ───────────────
+cat > "$OUTDIR/manhattan_plot.R" << 'RSCRIPT'
+library(qqman)
+res <- read.table("${outDir}/gwas/gwas_results.txt", header=TRUE, sep="\\t")
+res <- res[!is.na(res$p.value), ]
+png("${outDir}/manhattan.png", width=1200, height=500)
+manhattan(res, chr="CHR", bp="POS", snp="SNPID", p="p.value",
+          suggestiveline=-log10(1e-5), genomewideline=-log10(5e-8))
+dev.off()
+hits <- subset(res, p.value < 5e-8)
+write.csv(hits, "${outDir}/significant_hits.csv", row.names=FALSE)
+cat(sprintf("Genome-wide significant hits: %d\\n", nrow(hits)))
+RSCRIPT
+Rscript "$OUTDIR/manhattan_plot.R"
+echo "✓ GWAS complete. Results in $OUTDIR/gwas/"`,
+
+      'qc': `
+# ═══════════════════════════════════════════════════════
+# QC PIPELINE — FastQC + Trimmomatic + MultiQC
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+OUTDIR="${outDir}"
+THREADS=${cpu}
+SAMPLES=(
+${sampleList}
+)
+mkdir -p "$OUTDIR"/{qc_raw,trimmed,qc_trimmed,logs}
+${envBlock}
+
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[QC-RAW] $SAMPLE"
+    fastqc -t "$THREADS" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        -o "$OUTDIR/qc_raw/"
+
+    echo "[TRIM] $SAMPLE"
+    trimmomatic PE -threads "$THREADS" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R1_paired.fq.gz" "$OUTDIR/trimmed/\${SAMPLE}_R1_unpaired.fq.gz" \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R2_paired.fq.gz" "$OUTDIR/trimmed/\${SAMPLE}_R2_unpaired.fq.gz" \\
+        ILLUMINACLIP:TruSeq3-PE.fa:2:30:10:2:keepBothReads \\
+        LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36 \\
+        2> "$OUTDIR/logs/\${SAMPLE}_trimmomatic.log"
+
+    echo "[QC-TRIMMED] $SAMPLE"
+    fastqc -t "$THREADS" \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R1_paired.fq.gz" \\
+        "$OUTDIR/trimmed/\${SAMPLE}_R2_paired.fq.gz" \\
+        -o "$OUTDIR/qc_trimmed/"
+done
+multiqc "$OUTDIR/" -o "$OUTDIR/" --quiet
+echo "✓ QC complete. See $OUTDIR/multiqc_report.html"`,
+
+      'phylo': `
+# ═══════════════════════════════════════════════════════
+# PHYLOGENETIC ANALYSIS PIPELINE
+# MAFFT alignment + IQ-TREE maximum likelihood
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+OUTDIR="${outDir}"
+THREADS=${cpu}
+
+mkdir -p "$OUTDIR"/{aligned,trees,logs}
+${envBlock}
+
+# ── Assumes FASTA files in data/ directory ─────────────
+# Concatenate all FASTA files
+cat data/*.fasta > "$OUTDIR/all_sequences.fasta"
+
+# ── Step 1: Multiple sequence alignment (MAFFT) ────────
+echo "[ALIGN] Running MAFFT..."
+mafft --auto --thread "$THREADS" "$OUTDIR/all_sequences.fasta" \\
+    > "$OUTDIR/aligned/aligned.fasta" \\
+    2> "$OUTDIR/logs/mafft.log"
+
+# ── Step 2: Alignment trimming (trimAl) ───────────────
+echo "[TRIM] Trimming alignment..."
+trimal -in "$OUTDIR/aligned/aligned.fasta" \\
+    -out "$OUTDIR/aligned/aligned_trimmed.fasta" \\
+    -automated1 2> "$OUTDIR/logs/trimal.log"
+
+# ── Step 3: Best substitution model (ModelTest-NG) ────
+echo "[MODEL] Finding best substitution model..."
+modeltest-ng -i "$OUTDIR/aligned/aligned_trimmed.fasta" \\
+    -T raxml -o "$OUTDIR/trees/modeltest" \\
+    --threads "$THREADS" 2> "$OUTDIR/logs/modeltest.log"
+
+# ── Step 4: ML tree (IQ-TREE2) ────────────────────────
+echo "[TREE] Building maximum likelihood tree..."
+iqtree2 -s "$OUTDIR/aligned/aligned_trimmed.fasta" \\
+    --prefix "$OUTDIR/trees/ml_tree" \\
+    -B 1000 -T "$THREADS" \\
+    --redo 2> "$OUTDIR/logs/iqtree.log"
+
+echo "✓ Phylogenetics complete."
+echo "  Tree: $OUTDIR/trees/ml_tree.treefile"
+echo "  View with FigTree or MEGA"`,
+
+      'metagenomics': `
+# ═══════════════════════════════════════════════════════
+# METAGENOMICS PIPELINE — Kraken2 + Bracken + KrakenTools
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+KRAKEN_DB="/path/to/kraken2_db"     # e.g. /data/kraken/k2_standard
+OUTDIR="${outDir}"
+THREADS=${cpu}
+SAMPLES=(
+${sampleList}
+)
+mkdir -p "$OUTDIR"/{kraken,bracken,diversity,logs}
+${envBlock}
+
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[KRAKEN2] $SAMPLE"
+    kraken2 --db "$KRAKEN_DB" --threads "$THREADS" \\
+        --report "$OUTDIR/kraken/\${SAMPLE}.report" \\
+        --output "$OUTDIR/kraken/\${SAMPLE}.kraken" \\
+        --gzip-compressed --paired \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz \\
+        2> "$OUTDIR/logs/\${SAMPLE}_kraken.log"
+
+    echo "[BRACKEN] $SAMPLE"
+    bracken -d "$KRAKEN_DB" \\
+        -i "$OUTDIR/kraken/\${SAMPLE}.report" \\
+        -o "$OUTDIR/bracken/\${SAMPLE}.bracken" \\
+        -r 150 -l S -t 10 \\
+        2> "$OUTDIR/logs/\${SAMPLE}_bracken.log"
+done
+
+# Combine bracken outputs
+python3 $(which combine_bracken_outputs.py) \\
+    --files $(printf "$OUTDIR/bracken/%s.bracken " "\${SAMPLES[@]}") \\
+    --output "$OUTDIR/diversity/combined_bracken.txt"
+
+# Alpha diversity
+python3 $(which KrakenTools/DiversityTools/alpha_diversity.py) \\
+    -f "$OUTDIR/kraken/\${SAMPLES[0]}.report" -a Sh
+
+echo "✓ Metagenomics complete. Results in $OUTDIR/"`,
+
+      'assembly': `
+# ═══════════════════════════════════════════════════════
+# DE NOVO GENOME ASSEMBLY PIPELINE — SPAdes / Flye
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+OUTDIR="${outDir}"
+THREADS=${cpu}
+SAMPLES=(
+${sampleList}
+)
+mkdir -p "$OUTDIR"/{qc,trimmed,assembly,quast,logs}
+${envBlock}
+
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[ASSEMBLE] $SAMPLE"
+    # QC + trim first
+    fastqc -t "$THREADS" data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz -o "$OUTDIR/qc/"
+    trim_galore --paired --cores "$THREADS" -o "$OUTDIR/trimmed/" \\
+        data/\${SAMPLE}_R1.fastq.gz data/\${SAMPLE}_R2.fastq.gz
+
+    # SPAdes assembly (use --isolate for bacterial genomes)
+    spades.py --careful --isolate -t "$THREADS" \\
+        -1 "$OUTDIR/trimmed/\${SAMPLE}_R1_val_1.fq.gz" \\
+        -2 "$OUTDIR/trimmed/\${SAMPLE}_R2_val_2.fq.gz" \\
+        -o "$OUTDIR/assembly/\${SAMPLE}/" \\
+        2> "$OUTDIR/logs/\${SAMPLE}_spades.log"
+
+    # Assembly QC with QUAST
+    quast.py "$OUTDIR/assembly/\${SAMPLE}/scaffolds.fasta" \\
+        -o "$OUTDIR/quast/\${SAMPLE}/" -t "$THREADS" \\
+        2> "$OUTDIR/logs/\${SAMPLE}_quast.log"
+done
+echo "✓ Assembly complete. Check $OUTDIR/quast/ for N50/L50 statistics"`,
+
+      'amr': `
+# ═══════════════════════════════════════════════════════
+# AMR RESISTANCE CALLING PIPELINE — ABRicate + CARD
+# Generated by OmicsLab Pipeline Generator — ${now}
+# ═══════════════════════════════════════════════════════
+set -euo pipefail
+OUTDIR="${outDir}"
+THREADS=${cpu}
+SAMPLES=(
+${sampleList}
+)
+mkdir -p "$OUTDIR"/{assembly,amr,logs}
+${envBlock}
+
+for SAMPLE in "\${SAMPLES[@]}"; do
+    echo "[AMR] $SAMPLE — assuming assembled FASTA in data/"
+    # If you have FASTQ, assemble first with SPAdes:
+    # spades.py --isolate -t "$THREADS" -1 data/\${SAMPLE}_R1.fastq.gz -2 data/\${SAMPLE}_R2.fastq.gz -o "$OUTDIR/assembly/\${SAMPLE}/"
+
+    # Screen for AMR genes with ABRicate (CARD database)
+    abricate --db card data/\${SAMPLE}.fasta \\
+        > "$OUTDIR/amr/\${SAMPLE}_card.txt" \\
+        2> "$OUTDIR/logs/\${SAMPLE}_abricate.log"
+
+    # Also screen with ResFinder
+    abricate --db resfinder data/\${SAMPLE}.fasta \\
+        > "$OUTDIR/amr/\${SAMPLE}_resfinder.txt"
+
+    # Pointfinder (chromosomal mutations — useful for TB, Salmonella)
+    # pointfinder -i data/\${SAMPLE}.fasta -s tuberculosis -o "$OUTDIR/amr/\${SAMPLE}_point/"
+done
+
+# Summarise across all samples
+abricate --summary "$OUTDIR/amr/"*_card.txt > "$OUTDIR/amr/summary_card.txt"
+echo "✓ AMR screening complete. See $OUTDIR/amr/summary_card.txt"`,
+    };
+
+    const script = scripts[_wiz.goal] || `# Script for goal '${_wiz.goal}' with file type '${_wiz.fileType}'
+# Generated by OmicsLab — ${now}
+set -euo pipefail
+echo "Custom pipeline — add your commands here"`;
+
+    return script.trimStart();
+  }
+
+  function _wizCopy() {
+    navigator.clipboard.writeText(_wiz.generated).then(() => OmicsLab.Notify?.success('Script copied'));
+  }
+
+  function _wizDownload() {
+    const blob = new Blob([_wiz.generated], { type: 'text/x-sh' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'omicslab_pipeline_' + new Date().toISOString().slice(0, 10) + '.sh';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    OmicsLab.Notify?.success('Script downloaded');
+  }
 
   /* ── NLP pipeline suggestion (Prompt 46) ── */
   const NLP_MAP = [
@@ -432,65 +1110,80 @@ ${code}`;
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#bc8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
             Pipeline Generator 2.0
           </div>
-          <div class="pg-header-sub">Generate Snakemake, Nextflow DSL2, or SLURM batch pipelines for common omics workflows</div>
+          <div class="pg-header-sub">Generate Snakemake, Nextflow DSL2, or SLURM batch pipelines — or get a ready-to-run bash script from your own files</div>
         </div>
-        <!-- NLP input (Prompt 46) -->
-        <div class="pg-nlp-row">
-          <input class="pg-nlp-input" id="pg-nlp-input" type="text" placeholder="Describe your analysis (e.g. &quot;WGS variant calling on malaria samples&quot;) and press Suggest…" autocomplete="off">
-          <button class="pg-nlp-btn" onclick="OmicsLab.PipelineGen._nlpSuggest()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Suggest
-          </button>
-        </div>
-        <div class="pg-layout">
-          <div class="pg-left">
-            <div class="pg-section-label">Workflow</div>
-            <div class="pg-pipe-list">
-              ${Object.entries(PIPELINES).map(([id, p]) => `<button class="pg-pipe-btn${id===_activePipe?' pg-pipe-active':''}" data-pid="${id}" onclick="OmicsLab.PipelineGen._selectPipe('${id}')">${p.label}</button>`).join('')}
-            </div>
-            <div class="pg-section-label" style="margin-top:1rem">Framework</div>
-            <div class="pg-fw-row">
-              <button class="pg-fw-btn pg-fw-active" data-fw="smk" onclick="OmicsLab.PipelineGen._selectFw('smk')">Snakemake</button>
-              <button class="pg-fw-btn" data-fw="nxf" onclick="OmicsLab.PipelineGen._selectFw('nxf')">Nextflow</button>
-              <button class="pg-fw-btn" data-fw="slurm" onclick="OmicsLab.PipelineGen._selectFw('slurm')">SLURM</button>
-            </div>
-            <div class="pg-section-label" style="margin-top:1rem">Parameters</div>
-            <div class="pg-params">
-              <div class="pg-param-row">
-                <label class="pg-param-label">Threads per rule</label>
-                <input class="pg-param-input" id="pg-threads" type="number" value="8" min="1" max="128">
-              </div>
-              <div class="pg-param-row">
-                <label class="pg-param-label">Reference FASTA path</label>
-                <input class="pg-param-input" id="pg-ref" value="hg38.fa" placeholder="e.g. /data/ref/hg38.fa">
-              </div>
-              <div class="pg-param-row">
-                <label class="pg-param-label">Min allele freq (GWAS)</label>
-                <input class="pg-param-input" id="pg-maf" value="0.01" placeholder="0.01">
-              </div>
-            </div>
-            <button class="pg-gen-btn" onclick="OmicsLab.PipelineGen._generate()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-              Generate Pipeline
+
+        <!-- ══ FILE WIZARD ══ -->
+        <div id="pg-wizard-wrap"></div>
+
+        <!-- ══ ADVANCED: TEMPLATE MODE ══ -->
+        <details class="pg-template-details" id="pg-template-details">
+          <summary class="pg-template-summary">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            Advanced: Snakemake / Nextflow / SLURM template generator
+          </summary>
+          <!-- NLP input -->
+          <div class="pg-nlp-row" style="margin-top:.75rem">
+            <input class="pg-nlp-input" id="pg-nlp-input" type="text" placeholder="Describe your analysis (e.g. &quot;WGS variant calling on malaria samples&quot;) and press Suggest…" autocomplete="off">
+            <button class="pg-nlp-btn" onclick="OmicsLab.PipelineGen._nlpSuggest()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Suggest
             </button>
           </div>
-          <div class="pg-right">
-            <div class="pg-pipe-desc" id="pg-pipe-desc">${p0.desc}</div>
-            <div class="pg-steps" id="pg-steps">${p0.steps.map(s => `<div class="pg-step">${s}</div>`).join('<div class="pg-step-arrow">→</div>')}</div>
-            <div class="pg-output-wrap" id="pg-output-wrap" style="display:none">
-              <div class="pg-output-hdr">
-                <span class="pg-output-label">Generated Pipeline</span>
-                <div style="display:flex;gap:.4rem">
-                  <button class="pg-act-btn" id="pg-copy-btn" onclick="OmicsLab.PipelineGen._copy()">Copy</button>
-                  <button class="pg-act-btn" onclick="OmicsLab.PipelineGen._download()">Download</button>
+          <div class="pg-layout">
+            <div class="pg-left">
+              <div class="pg-section-label">Workflow</div>
+              <div class="pg-pipe-list">
+                ${Object.entries(PIPELINES).map(([id, p]) => `<button class="pg-pipe-btn${id===_activePipe?' pg-pipe-active':''}" data-pid="${id}" onclick="OmicsLab.PipelineGen._selectPipe('${id}')">${p.label}</button>`).join('')}
+              </div>
+              <div class="pg-section-label" style="margin-top:1rem">Framework</div>
+              <div class="pg-fw-row">
+                <button class="pg-fw-btn pg-fw-active" data-fw="smk" onclick="OmicsLab.PipelineGen._selectFw('smk')">Snakemake</button>
+                <button class="pg-fw-btn" data-fw="nxf" onclick="OmicsLab.PipelineGen._selectFw('nxf')">Nextflow</button>
+                <button class="pg-fw-btn" data-fw="slurm" onclick="OmicsLab.PipelineGen._selectFw('slurm')">SLURM</button>
+              </div>
+              <div class="pg-section-label" style="margin-top:1rem">Parameters</div>
+              <div class="pg-params">
+                <div class="pg-param-row">
+                  <label class="pg-param-label">Threads per rule</label>
+                  <input class="pg-param-input" id="pg-threads" type="number" value="8" min="1" max="128">
+                </div>
+                <div class="pg-param-row">
+                  <label class="pg-param-label">Reference FASTA path</label>
+                  <input class="pg-param-input" id="pg-ref" value="hg38.fa" placeholder="e.g. /data/ref/hg38.fa">
+                </div>
+                <div class="pg-param-row">
+                  <label class="pg-param-label">Min allele freq (GWAS)</label>
+                  <input class="pg-param-input" id="pg-maf" value="0.01" placeholder="0.01">
                 </div>
               </div>
-              <pre class="pg-output" id="pg-output"></pre>
+              <button class="pg-gen-btn" onclick="OmicsLab.PipelineGen._generate()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                Generate Template
+              </button>
+            </div>
+            <div class="pg-right">
+              <div class="pg-pipe-desc" id="pg-pipe-desc">${p0.desc}</div>
+              <div class="pg-steps" id="pg-steps">${p0.steps.map(s => `<div class="pg-step">${s}</div>`).join('<div class="pg-step-arrow">→</div>')}</div>
+              <div class="pg-output-wrap" id="pg-output-wrap" style="display:none">
+                <div class="pg-output-hdr">
+                  <span class="pg-output-label">Generated Template</span>
+                  <div style="display:flex;gap:.4rem">
+                    <button class="pg-act-btn" id="pg-copy-btn" onclick="OmicsLab.PipelineGen._copy()">Copy</button>
+                    <button class="pg-act-btn" onclick="OmicsLab.PipelineGen._download()">Download</button>
+                  </div>
+                </div>
+                <pre class="pg-output" id="pg-output"></pre>
+              </div>
             </div>
           </div>
-        </div>
+        </details>
       </div>`;
+
+    /* Render wizard after section HTML is built */
+    setTimeout(() => _wizRender(), 0);
   }
 
-  return { init, _generate, _copy, _download, _selectPipe, _selectFw, _nlpSuggest };
+  return { init, _generate, _copy, _download, _selectPipe, _selectFw, _nlpSuggest,
+           _wizSet, _wizSave, _wizGenerate, _wizCopy, _wizDownload };
 })();

@@ -631,6 +631,34 @@ OmicsLab.Router = (function () {
       tagline: 'Mass spectrometry basics, LC-MS/MS workflow, protein quantification strategies (LFQ/TMT/SILAC/MRM), and African disease proteomics studies',
       sections: ['proteomics-section'],
     },
+    'research-wizard': {
+      label: 'Research Design Wizard',
+      icon: 'compass',
+      color: '#bc8cff',
+      tagline: 'Guided step-by-step research design: PICO hypothesis → study type → sample planning → ethics → bioinformatics pipeline → exportable protocol',
+      sections: ['research-wizard-section'],
+    },
+    'alignment-viewer': {
+      label: 'Alignment Viewer',
+      icon: 'align-left',
+      color: '#58a6ff',
+      tagline: 'Visual multiple sequence alignment viewer — AliView-equivalent: colour-coded nucleotides, conservation profile, column statistics, FASTA export',
+      sections: ['alignment-viewer-section'],
+    },
+    recombination: {
+      label: 'Recombination Scanner',
+      icon: 'activity',
+      color: '#f97316',
+      tagline: 'Multi-method recombination detection: SimPlot, Bootscan, MaxChi, SiScan, 3Seq — inspired by RDP4/5 (UCT CBIO)',
+      sections: ['recombination-section'],
+    },
+    social: {
+      label: 'Social Hub',
+      icon: 'users',
+      color: '#3fb950',
+      tagline: 'Connect with other OmicsLab researchers — see who is online, add friends by code, and chat directly in the platform',
+      sections: ['social-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -695,6 +723,8 @@ OmicsLab.Router = (function () {
     'pipeline-visual': 'train', 'case-files': 'train', 'ai-ml-bio': 'train',
     'stats-genomics': 'train', 'seq-align': 'train',
     epigenomics: 'train', crispr: 'train', proteomics: 'train',
+    'research-wizard': 'research', 'alignment-viewer': 'tools', recombination: 'tools',
+    social: 'research',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -1048,6 +1078,10 @@ OmicsLab.Router = (function () {
     if (page === 'clinical-decision' && OmicsLab.ClinicalDecision) _sr(OmicsLab.ClinicalDecision, 'clinical-decision-section', 'ClinicalDecision', 'cdReady');
     if (page === 'one-health' && OmicsLab.OneHealth)          _sr(OmicsLab.OneHealth,         'one-health-section',        'OneHealth',        'ohReady');
     if (page === 'institution' && OmicsLab.Institution)       _sr(OmicsLab.Institution,       'institution-section',       'Institution',      'instReady');
+    if (page === 'research-wizard' && OmicsLab.ResearchWizard) _si(OmicsLab.ResearchWizard, 'research-wizard-section', 'ResearchWizard');
+    if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
+    if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');
+    if (page === 'social' && OmicsLab.Social)                 _si(OmicsLab.Social,          'social-section',            'Social');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
     if (page === 'terms')    OmicsLab.Legal?.render('terms');
     if (page === 'analysis') setTimeout(() => OmicsLab.DataImport?.init(), 400);

@@ -181,6 +181,16 @@
 .cm-tick { color: #3fb950; font-weight: 700; font-size: 0.8rem; }
 .cm-cross { color: #f85149; font-size: 0.74rem; font-family: monospace; white-space: nowrap; }
 
+/* ── Exercise 4: Feature selection chips ── */
+.aml-feat-grid { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .75rem; }
+.aml-feat-chip { font-size: .78rem; background: #0d1117; border: 1px solid #30363d; color: #8b949e;
+  border-radius: 99px; padding: .3rem .8rem; cursor: pointer; font-family: inherit; transition: all .15s; }
+.aml-feat-chip:hover:not([disabled]) { border-color: #58a6ff; color: #58a6ff; }
+.aml-feat-chip.feat-active { background: #58a6ff15; border-color: #58a6ff; color: #58a6ff; }
+.aml-feat-chip.feat-ok { background: #3fb95015; border-color: #3fb950; color: #3fb950; cursor: default; }
+.aml-feat-chip.feat-bad { background: #f8514915; border-color: #f85149; color: #f85149; cursor: default; }
+.aml-feat-chip.feat-missed { border-color: #e3b34160; color: #e3b341; background: #e3b34110; cursor: default; }
+
 @media (max-width: 720px) {
   .aml-options-grid { grid-template-columns: 1fr; }
   .aml-ex-body > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }

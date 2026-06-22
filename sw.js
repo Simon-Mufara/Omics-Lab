@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v21: Jitsi collab fix, back navigation, AI/ML Practice tab, DOI cleanup
+   v23: Social Hub, Pipeline Wizard, AI/ML Ex4, Recombination multi-method, Auth UX
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v21';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v23';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

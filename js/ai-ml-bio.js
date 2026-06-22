@@ -82,6 +82,11 @@ OmicsLab.AIMLBio = (function () {
     { name: 'Autoencoder (VAE)', icon: 'cpu', color: '#ff6b6b', use: 'Single-cell dimensionality reduction (scVI) · Denoising · Batch correction', pro: 'Learns compact representations; generative; denoises', con: 'Complex to train; interpretability limited; mode collapse risk', example: 'scVI batch-corrects 4 African TB lung granuloma scRNA-seq datasets' },
   ];
 
+  /* ─── Feature selection exercise data (stable order) ─── */
+  const GOOD_FEATS = ['GC content', 'k-mer frequencies', 'Sequence entropy', 'Conservation score', 'Codon bias'];
+  const BAD_FEATS  = ['Sample collection date', 'Researcher initials', 'File creation timestamp', 'Gel image filename'];
+  const ALL_FEATS  = ['GC content', 'Sample collection date', 'k-mer frequencies', 'Researcher initials', 'Sequence entropy', 'File creation timestamp', 'Conservation score', 'Codon bias', 'Gel image filename'];
+
   /* ─── State ─── */
   let _tab = 'llms';
   let _modelId = 'nucleotide-transformer';
@@ -516,6 +521,7 @@ OmicsLab.AIMLBio = (function () {
     cmChecked: false,
     featChosen: new Set(),
     featChecked: false,
+    featResult: null,
   };
 
   const _EX1 = [
@@ -549,15 +555,11 @@ OmicsLab.AIMLBio = (function () {
     const cm = { tp: 87, fp: 13, fn: 9, tn: 91 };
     const cmTotal = cm.tp + cm.fp + cm.fn + cm.tn;
 
-    const GOOD_FEATS  = new Set(['GC content','k-mer frequencies','Sequence entropy','Conservation score','Codon bias']);
-    const BAD_FEATS   = new Set(['Sample collection date','Researcher initials','File creation timestamp','Gel image filename']);
-    const ALL_FEATS   = [...GOOD_FEATS, ...BAD_FEATS].sort(() => 0.5 - Math.random()).sort(() => 0.5 - Math.random());
-
     return `
     <div class="aml-practice-page">
       <div class="aml-concept-box" style="border-color:rgba(227,179,65,0.3);background:rgba(227,179,65,0.05)">
         <div class="aml-concept-title" style="color:#e3b341">Practice Exercises</div>
-        <p class="aml-concept-body">Three hands-on exercises — choose the right model, build a valid pipeline, and interpret a real classifier output. These are the decisions you make daily as an applied ML bioinformatician.</p>
+        <p class="aml-concept-body">Four hands-on exercises — choose the right model, build a valid pipeline, interpret a real classifier output, and identify biologically meaningful features. These are decisions you make daily as an applied ML bioinformatician.</p>
       </div>
 
       <!-- ══ Exercise 1: Model Selection ══ -->
@@ -604,7 +606,7 @@ OmicsLab.AIMLBio = (function () {
             <div>
               <div class="aml-ex-section-label">Available steps — click to add</div>
               <div class="aml-pipe-available" id="aml-pipe-avail">
-                ${pipeAvail.map(s => `<button class="aml-pipe-step-btn" onclick="OmicsLab.AIMLBio._addPipeStep('${s.replace(/'/g,'\\'')}')">${s}</button>`).join('')}
+                ${pipeAvail.map(s => `<button class="aml-pipe-step-btn" onclick="OmicsLab.AIMLBio._addPipeStep('${s.replace(/'/g, "\\'")}')">${s}</button>`).join('')}
                 ${pipeAvail.length === 0 ? '<div class="aml-pipe-done">All steps placed!</div>' : ''}
               </div>
             </div>
@@ -691,6 +693,41 @@ OmicsLab.AIMLBio = (function () {
         </div>
       </div>
 
+      <!-- ══ Exercise 4: Feature Selection ══ -->
+      <div class="aml-ex-card">
+        <div class="aml-ex-header">
+          <span class="aml-ex-num">04</span>
+          <div>
+            <div class="aml-ex-title">Feature Selection</div>
+            <div class="aml-ex-sub">Select only biologically valid features — avoid leakage and noise</div>
+          </div>
+        </div>
+        <div class="aml-ex-body">
+          <p class="aml-scenario-box">You are training a Random Forest to classify pathogenic vs. benign DNA variants. Your dataset has 9 candidate features. Select only the features with genuine biological signal — including anything else would introduce data leakage or add noise with no predictive value.</p>
+          <div class="aml-feat-grid">
+            ${ALL_FEATS.map(f => {
+              const active = _px.featChosen.has(f);
+              const isGood = GOOD_FEATS.includes(f);
+              let cls = 'aml-feat-chip' + (active ? ' feat-active' : '');
+              if (_px.featChecked) cls += active && isGood ? ' feat-ok' : active && !isGood ? ' feat-bad' : !active && isGood ? ' feat-missed' : '';
+              return `<button class="${cls}" onclick="OmicsLab.AIMLBio._featToggle('${f.replace(/'/g, '\\u0027')}')" ${_px.featChecked ? 'disabled' : ''}>${f}</button>`;
+            }).join('')}
+          </div>
+          <div style="display:flex;gap:.5rem;margin-top:.85rem;align-items:center;flex-wrap:wrap">
+            <button class="aml-next-btn" onclick="OmicsLab.AIMLBio._checkFeats()" ${_px.featChecked ? 'disabled' : ''}>Check selection</button>
+            ${_px.featChecked ? `<button class="aml-reset-btn" onclick="OmicsLab.AIMLBio._resetFeats()">Try again</button>` : ''}
+          </div>
+          ${_px.featChecked ? (() => {
+            const correct = GOOD_FEATS.every(f => _px.featChosen.has(f)) && [..._px.featChosen].every(f => GOOD_FEATS.includes(f));
+            return `<div class="aml-feedback-box ${correct ? 'fb-correct' : 'fb-wrong'}" style="margin-top:.65rem;font-size:.76rem">
+              ${correct
+                ? '<strong>Excellent!</strong> All five biological features selected. GC content, k-mer profiles, entropy, conservation, and codon bias directly capture sequence-level signals linked to pathogenicity and function.'
+                : `<strong>Not quite.</strong> Valid features: <em>${GOOD_FEATS.join(', ')}</em>. Avoid administrative metadata (collection date, initials, timestamps, filenames) — models that learn these patterns will fail on new samples and give a false sense of accuracy.`}
+            </div>`;
+          })() : ''}
+        </div>
+      </div>
+
     </div>`;
   }
 
@@ -737,9 +774,27 @@ OmicsLab.AIMLBio = (function () {
     setTab('practice');
   }
 
+  /* ── Exercise 4 handlers ── */
+  function _featToggle(f) {
+    if (_px.featChecked) return;
+    if (_px.featChosen.has(f)) _px.featChosen.delete(f); else _px.featChosen.add(f);
+    setTab('practice');
+  }
+
+  function _checkFeats() {
+    _px.featChecked = true;
+    setTab('practice');
+  }
+
+  function _resetFeats() {
+    _px.featChosen = new Set();
+    _px.featChecked = false;
+    setTab('practice');
+  }
+
   /* ─── Helpers ─── */
   function selectModel(id) { _modelId = id; setTab('llms'); }
   function _esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  return { init, setTab, selectModel, runForwardPass, resetNN, _answerQ1, _nextQ1, _addPipeStep, _resetPipe, _cmInput, _checkCM, _resetCM };
+  return { init, setTab, selectModel, runForwardPass, resetNN, _answerQ1, _nextQ1, _addPipeStep, _resetPipe, _cmInput, _checkCM, _resetCM, _featToggle, _checkFeats, _resetFeats };
 })();

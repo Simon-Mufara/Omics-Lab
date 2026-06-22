@@ -525,9 +525,26 @@ OmicsLab.Auth = (function () {
       const result = register({ name, email, password, institution, country, role });
       if (btn) { btn.disabled = false; btn.textContent = 'Create account'; }
       if (!result.ok) { _setFormError(result.error); return; }
-      closeModal();
-      _showToast('Account created. Welcome to OmicsLab, ' + result.user.name.split(' ')[0] + '.');
+      _showRegisterSuccess(result.user);
     }
+  }
+
+  /* ─── Registration success screen ─── */
+  function _showRegisterSuccess(user) {
+    let overlay = document.getElementById('auth-modal-overlay');
+    if (!overlay) return;
+    overlay.innerHTML = `
+      <div class="auth-modal" role="dialog" style="text-align:center;padding:2rem 1.5rem">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(63,185,80,0.12);border:1.5px solid rgba(63,185,80,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="font-size:1.1rem;font-weight:700;color:#e6edf3;margin-bottom:.4rem">Account created!</div>
+        <div style="font-size:.85rem;color:#3fb950;font-weight:600;margin-bottom:.9rem">You are now signed in as ${_esc(user.name.split(' ')[0])}</div>
+        <p style="font-size:.78rem;color:#8b949e;line-height:1.65;max-width:300px;margin:0 auto 1.5rem">
+          Your account is saved in this browser — no email verification needed. To access OmicsLab on another device, create an account there too.
+        </p>
+        <button class="auth-submit-btn" onclick="OmicsLab.Auth.closeModal()">Continue to OmicsLab</button>
+      </div>`;
   }
 
   /* ─── Account save ─── */
