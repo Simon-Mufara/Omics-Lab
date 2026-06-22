@@ -186,7 +186,6 @@ OmicsLab.Epigenomics = (function () {
       <div class="epi-africa-card">
         <div class="epi-af-study">${s.study}</div>
         <p class="epi-af-finding">${s.finding}</p>
-        <div class="epi-af-doi">DOI: ${s.doi}</div>
       </div>`).join('');
 
     return `

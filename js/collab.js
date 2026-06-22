@@ -72,14 +72,53 @@ OmicsLab.Collab = (function () {
     document.getElementById('collab-live-panel').style.display = '';
   }
 
-  /* ─── Mode B: Video Session (Jitsi Meet) ─── */
+  /* ─── Mode B: Video Session (Jitsi Meet embedded) ─── */
   function _openVideo(code) {
     const room = 'OmicsLab-' + code;
-    const url = 'https://meet.jit.si/' + room;
-    window.open(url, '_blank', 'noopener');
-    _appendSystemMsg(`Video room opened — share "meet.jit.si/${room}" with collaborators`);
-    document.getElementById('collab-video-link').textContent = 'meet.jit.si/' + room;
-    document.getElementById('collab-video-row').style.display = '';
+    const userName = _myName || 'OmicsLab User';
+    const jitsiUrl = 'https://meet.jit.si/' + room
+      + '#userInfo.displayName=' + encodeURIComponent(userName)
+      + '&config.prejoinPageEnabled=false';
+
+    /* Update share link row */
+    const linkEl = document.getElementById('collab-video-link');
+    const rowEl  = document.getElementById('collab-video-row');
+    if (linkEl) linkEl.textContent = 'meet.jit.si/' + room;
+    if (rowEl)  rowEl.style.display = '';
+
+    /* Embed iframe inside the Mode B card */
+    let embedEl = document.getElementById('collab-jitsi-embed');
+    if (!embedEl) {
+      embedEl = document.createElement('div');
+      embedEl.id = 'collab-jitsi-embed';
+      const modeB = document.querySelector('.collab-mode-b');
+      if (modeB) modeB.appendChild(embedEl);
+    }
+    embedEl.style.marginTop = '1rem';
+    embedEl.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;flex-wrap:wrap;gap:.35rem">
+        <span style="font-size:.78rem;color:#8b949e">
+          Session active — share code
+          <strong style="color:#c9d1d9;font-family:monospace">${code}</strong>
+          with collaborators on any device
+        </span>
+        <div style="display:flex;gap:.4rem">
+          <button class="collab-copy-tiny" onclick="navigator.clipboard.writeText('${code}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy code',1500)})">Copy code</button>
+          <button class="collab-copy-tiny" onclick="const e=document.getElementById('collab-jitsi-embed');e.innerHTML='';e.style.display='none'">Close</button>
+        </div>
+      </div>
+      <iframe
+        src="${jitsiUrl}"
+        allow="camera *; microphone *; fullscreen *; display-capture *; autoplay *"
+        allowfullscreen
+        style="width:100%;height:500px;border:none;border-radius:12px;background:#0d1117"
+        title="OmicsLab Video Session">
+      </iframe>`;
+    embedEl.style.display = '';
+
+    _appendSystemMsg('Video session started — code "' + code + '" — anyone entering this code joins the same call');
+    _setConnected(true, 'jitsi');
+    document.getElementById('collab-live-panel').style.display = '';
   }
 
   /* ─── Mode C: WebRTC ─── */
@@ -223,7 +262,8 @@ OmicsLab.Collab = (function () {
     if (dot)   { dot.className = 'collab-status-dot' + (yes ? ' connected' : ''); }
     if (label) { label.textContent = yes ? 'Connected' : 'Disconnected'; }
     if (badge && yes) {
-      badge.textContent = mode === 'bc' ? 'SAME-DEVICE SYNC' : 'PEER-TO-PEER LINK';
+      const LABELS = { bc: 'SAME-DEVICE SYNC', rtc: 'PEER-TO-PEER LINK', jitsi: 'VIDEO SESSION ACTIVE' };
+      badge.textContent = LABELS[mode] || 'CONNECTED';
       badge.style.display = '';
     }
   }
@@ -361,7 +401,7 @@ OmicsLab.Collab = (function () {
             <div class="collab-mode-icon-wrap" style="background:rgba(88,166,255,.12);color:#58a6ff">${OmicsLab.Icons?.svg('link', 20) || ''}</div>
             <div>
               <div class="collab-mode-name">Video Session <span class="collab-mode-tag collab-tag-blue">CROSS-DEVICE</span></div>
-              <div class="collab-mode-desc">Opens a free Jitsi Meet video call — works on any device, no sign-up needed. Enter a code or generate one, then share the room link.</div>
+              <div class="collab-mode-desc">Embedded video call via Jitsi Meet — anyone on any device who enters the same code joins the same room instantly. No sign-up, no install needed.</div>
             </div>
           </div>
           <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
@@ -378,61 +418,31 @@ OmicsLab.Collab = (function () {
           </div>
         </div>
 
-        <!-- ══ MODE C: Cross-Device Peer Link (WebRTC) ══ -->
-        <div class="collab-mode-card collab-mode-c">
+        <!-- ══ How it works note ══ -->
+        <div class="collab-mode-card" style="background:rgba(88,166,255,0.04);border-color:rgba(88,166,255,0.18)">
           <div class="collab-mode-head">
-            <div class="collab-mode-icon-wrap" style="background:rgba(188,140,255,.12);color:#bc8cff">${OmicsLab.Icons?.svg('git-branch', 20) || ''}</div>
+            <div class="collab-mode-icon-wrap" style="background:rgba(88,166,255,.12);color:#58a6ff">${OmicsLab.Icons?.svg('info', 20) || ''}</div>
             <div>
-              <div class="collab-mode-name">Peer Data Link <span class="collab-mode-tag collab-tag-purple">CROSS-DEVICE SYNC</span></div>
-              <div class="collab-mode-desc">Direct peer-to-peer data channel — syncs lab state, navigation, and chat across different devices with no server. Requires exchanging one connection code each way.</div>
+              <div class="collab-mode-name">How cross-device collaboration works</div>
+              <div class="collab-mode-desc">
+                Use <strong style="color:#c9d1d9">Video Session</strong> above for real-time collaboration across different computers and phones.
+                One person generates a room code — everyone who enters the same code joins the same call automatically, with no account or installation needed.
+                The same-device Quick Sync is ideal for instructor + student setups on one computer.
+              </div>
             </div>
           </div>
-
-          <!-- Progress bar -->
-          <div class="collab-rtc-progress-wrap" id="collab-rtc-progress-wrap" style="display:none">
-            <div class="collab-rtc-progress-bar"><div class="collab-rtc-progress-fill" id="collab-rtc-progress"></div></div>
-            <div class="collab-rtc-progress-label" id="collab-rtc-progress-label"></div>
-          </div>
-
-          <div class="collab-rtc-mode-btns">
-            <button class="collab-btn-mode" id="collab-rtc-host-btn" onclick="OmicsLab.Collab._rtcStartHost()">
-              ${OmicsLab.Icons?.svg('award', 14) || ''} I am the Host
-            </button>
-            <button class="collab-btn-mode" id="collab-rtc-guest-btn" onclick="OmicsLab.Collab._rtcStartGuest()">
-              ${OmicsLab.Icons?.svg('link', 14) || ''} I am Joining
-            </button>
-          </div>
-
-          <!-- HOST steps -->
-          <div id="collab-rtc-host-flow" style="display:none">
-            <div class="collab-rtc-step" id="collab-rtc-step1-host">
-              <div class="collab-step-head"><div class="collab-step-num">1</div><div>Generating your connection offer…</div></div>
-              <div class="collab-rtc-wait"><div class="collab-spin"></div> Collecting network info (up to 8 seconds)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem">
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Works on any device, anywhere in the world
             </div>
-            <div class="collab-rtc-step" id="collab-rtc-step2" style="display:none">
-              <div class="collab-step-head"><div class="collab-step-num">2</div><div>Copy your offer — send it to your collaborator</div></div>
-              <textarea class="collab-sdp-box" id="collab-offer-out" readonly rows="3"></textarea>
-              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyField('collab-offer-out',this)">${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy Offer</button>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              No sign-up, no installation
             </div>
-            <div class="collab-rtc-step" id="collab-rtc-step3" style="display:none">
-              <div class="collab-step-head"><div class="collab-step-num">3</div><div>Paste the answer your collaborator sends back</div></div>
-              <textarea class="collab-sdp-box" id="collab-answer-in" placeholder="Paste answer here…" rows="3"></textarea>
-              <button class="collab-accept-btn" onclick="OmicsLab.Collab._rtcFinish()">${OmicsLab.Icons?.svg('zap', 13) || ''} Connect</button>
-            </div>
-          </div>
-
-          <!-- GUEST steps -->
-          <div id="collab-rtc-guest-flow" style="display:none">
-            <div class="collab-rtc-step">
-              <div class="collab-step-head"><div class="collab-step-num">1</div><div>Paste the host's offer</div></div>
-              <textarea class="collab-sdp-box" id="collab-offer-in" placeholder="Paste offer from host…" rows="3"></textarea>
-              <button class="collab-accept-btn" onclick="OmicsLab.Collab._rtcGuestAnswer()">${OmicsLab.Icons?.svg('zap', 13) || ''} Generate Answer</button>
-            </div>
-            <div class="collab-rtc-step" id="collab-rtc-step3-guest" style="display:none">
-              <div class="collab-step-head"><div class="collab-step-num">2</div><div>Copy your answer — send it back to the host</div></div>
-              <textarea class="collab-sdp-box" id="collab-answer-out" readonly rows="3"></textarea>
-              <button class="collab-copy-btn" onclick="OmicsLab.Collab._copyField('collab-answer-out',this)">${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy Answer</button>
-              <div class="collab-rtc-hint">After the host pastes your answer and clicks Connect, you'll both be linked.</div>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Video, audio, and screen sharing included
             </div>
           </div>
         </div>

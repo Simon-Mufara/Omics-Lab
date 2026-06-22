@@ -116,3 +116,73 @@
 
 @media (max-width: 900px) { .aml-llm-layout { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .aml-page { padding: 1.5rem 0.75rem 3rem; } .aml-tabs { gap: 0.2rem; } .aml-tab { min-width: 100px; font-size: 0.7rem; } }
+
+/* ── Practice & Build tab ── */
+.aml-practice-page { display: flex; flex-direction: column; gap: 1.5rem; }
+.aml-ex-card { background: #161b22; border: 1px solid #21262d; border-radius: 12px; overflow: hidden; }
+.aml-ex-header { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; background: #0d1117; border-bottom: 1px solid #21262d; flex-wrap: wrap; }
+.aml-ex-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 10px; background: rgba(227,179,65,0.12); border: 1px solid rgba(227,179,65,0.3); color: #e3b341; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; font-family: monospace; }
+.aml-ex-title { font-size: 0.92rem; font-weight: 800; color: #e6edf3; }
+.aml-ex-sub { font-size: 0.73rem; color: #6e7681; margin-top: 0.1rem; }
+.aml-ex-score { margin-left: auto; font-size: 0.75rem; font-family: monospace; color: #8b949e; padding: 0.25rem 0.6rem; background: #161b22; border: 1px solid #21262d; border-radius: 6px; }
+.aml-ex-body { padding: 1.1rem 1.25rem; }
+.aml-ex-section-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6e7681; margin-bottom: 0.6rem; }
+
+.aml-scenario-box { padding: 0.85rem 1rem; background: #0d1117; border-left: 3px solid #e3b341; border-radius: 0 8px 8px 0; font-size: 0.8rem; color: #c9d1d9; line-height: 1.68; margin-bottom: 1rem; }
+
+.aml-options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+.aml-option-btn { padding: 0.6rem 0.85rem; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; color: #8b949e; font-size: 0.78rem; text-align: left; cursor: pointer; transition: all 0.15s; line-height: 1.45; }
+.aml-option-btn:hover:not(:disabled) { border-color: #e3b341; color: #e6edf3; background: rgba(227,179,65,0.05); }
+.aml-option-btn:disabled { cursor: default; }
+.aml-option-btn.opt-correct { border-color: #3fb950; background: rgba(63,185,80,0.08); color: #3fb950; }
+.aml-option-btn.opt-wrong { border-color: #f85149; background: rgba(248,81,73,0.08); color: #f85149; }
+.aml-option-btn.opt-dim { opacity: 0.4; }
+
+.aml-feedback-box { padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.78rem; line-height: 1.65; margin-top: 0.75rem; }
+.aml-feedback-box.fb-correct { background: rgba(63,185,80,0.07); border: 1px solid rgba(63,185,80,0.25); color: #c9d1d9; }
+.aml-feedback-box.fb-wrong { background: rgba(248,81,73,0.07); border: 1px solid rgba(248,81,73,0.25); color: #c9d1d9; }
+.aml-feedback-box strong { color: #3fb950; }
+.aml-feedback-box.fb-wrong strong { color: #f85149; }
+
+.aml-next-btn { padding: 0.5rem 1.1rem; background: #e3b341; border: none; border-radius: 7px; color: #0d1117; font-size: 0.78rem; font-weight: 800; cursor: pointer; margin-top: 0.75rem; transition: background 0.15s; }
+.aml-next-btn:hover { background: #d4a22e; }
+.aml-reset-btn { padding: 0.4rem 0.85rem; background: none; border: 1px solid #30363d; border-radius: 7px; color: #6e7681; font-size: 0.74rem; cursor: pointer; margin-top: 0.75rem; transition: all 0.15s; }
+.aml-reset-btn:hover { border-color: #8b949e; color: #c9d1d9; }
+.aml-ex-complete { margin-top: 0.75rem; font-size: 0.78rem; color: #3fb950; font-weight: 700; }
+
+/* Pipeline builder */
+.aml-pipe-available { display: flex; flex-direction: column; gap: 0.3rem; min-height: 120px; }
+.aml-pipe-step-btn { padding: 0.5rem 0.75rem; background: #0d1117; border: 1px solid #21262d; border-radius: 7px; color: #8b949e; font-size: 0.73rem; text-align: left; cursor: pointer; transition: all 0.15s; }
+.aml-pipe-step-btn:hover { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.05); }
+.aml-pipe-built { display: flex; flex-direction: column; gap: 0.3rem; min-height: 120px; }
+.aml-pipe-built-step { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.65rem; border-radius: 7px; font-size: 0.73rem; }
+.aml-pipe-built-step.step-ok { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); color: #c9d1d9; }
+.aml-pipe-built-step.step-err { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); color: #c9d1d9; }
+.aml-pipe-step-n { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: #21262d; color: #8b949e; font-size: 0.66rem; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.step-ok .aml-pipe-step-n { background: rgba(63,185,80,0.2); color: #3fb950; }
+.step-err .aml-pipe-step-n { background: rgba(248,81,73,0.2); color: #f85149; }
+.aml-pipe-done { font-size: 0.75rem; color: #3fb950; padding: 0.35rem; }
+
+/* Confusion matrix */
+.aml-cm-tbl { border-collapse: collapse; font-size: 0.76rem; }
+.aml-cm-tbl th, .aml-cm-tbl td { padding: 0.5rem 0.75rem; border: 1px solid #21262d; text-align: center; }
+.aml-cm-tbl th { background: #0d1117; color: #6e7681; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+.aml-cm-tp { background: rgba(63,185,80,0.1); color: #3fb950; font-weight: 700; }
+.aml-cm-tn { background: rgba(88,166,255,0.1); color: #58a6ff; font-weight: 700; }
+.aml-cm-fp { background: rgba(248,81,73,0.08); color: #f85149; }
+.aml-cm-fn { background: rgba(249,115,22,0.08); color: #f97316; }
+.aml-cm-inputs { display: flex; flex-direction: column; gap: 0.5rem; }
+.aml-cm-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+.aml-cm-lbl { font-size: 0.71rem; color: #8b949e; font-family: monospace; flex: 1; min-width: 220px; }
+.aml-cm-input { width: 60px; padding: 0.35rem 0.5rem; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #c9d1d9; font-family: monospace; font-size: 0.82rem; text-align: center; }
+.aml-cm-input:focus { outline: none; border-color: #58a6ff; }
+.aml-cm-input.cm-ok { border-color: #3fb950; background: rgba(63,185,80,0.08); }
+.aml-cm-input.cm-bad { border-color: #f85149; background: rgba(248,81,73,0.08); }
+.cm-tick { color: #3fb950; font-weight: 700; font-size: 0.8rem; }
+.cm-cross { color: #f85149; font-size: 0.74rem; font-family: monospace; white-space: nowrap; }
+
+@media (max-width: 720px) {
+  .aml-options-grid { grid-template-columns: 1fr; }
+  .aml-ex-body > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+  .aml-cm-lbl { min-width: 160px; font-size: 0.65rem; }
+}

@@ -889,67 +889,74 @@ OmicsLab.Teams = (function () {
     _renderRooms();
   }
 
-  /* ─── Join a room → request media → show meeting UI ─── */
-  async function joinRoom(roomId) {
+  /* ─── Stable Jitsi room map — same code → same call for every user ─── */
+  const _JITSI_MAP = {
+    'rm-genomics':  'OmicsLab-AfricanGenomics',
+    'rm-outbreak':  'OmicsLab-OutbreakResponse',
+    'rm-h3africa':  'OmicsLab-H3AfricaHub',
+    'rm-training':  'OmicsLab-BioinfTraining',
+    'rm-journal':   'OmicsLab-JournalClubHub',
+  };
+
+  /* ─── Join a room → embed Jitsi Meet (all users get the same room) ─── */
+  function joinRoom(roomId) {
     const room = _rooms.find(r => r.id === roomId);
     if (!room) return;
 
     _roomId = roomId;
+    _inMeeting = true;
 
-    /* Show loading / permission request state */
-    const section = document.getElementById('teams-section');
-    if (section) {
-      section.innerHTML = `
-        <div class="tm-meeting-loading">
-          <div class="tm-perm-card" id="tm-perm-card">
-            <div class="tm-perm-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-            </div>
-            <h3 class="tm-perm-title">Allow microphone and camera</h3>
-            <p class="tm-perm-desc">OmicsLab needs access to your camera and microphone for the meeting.<br>Your browser will ask for permission — click <strong>Allow</strong>.</p>
-            <div class="tm-perm-spinner" id="tm-perm-spinner">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-              Requesting permission…
-            </div>
-            <button class="tm-btn-secondary" onclick="OmicsLab.Teams._cancelJoin()" style="margin-top:1rem">Cancel</button>
-          </div>
-        </div>`;
-    }
-
-    /* Request media */
-    const result = await _requestMedia(true, true);
-
-    if (result.denied) {
-      _showPermDenied(room, result.reason);
-      return;
-    }
-
-    if (result.noDevice) {
-      _showNoDevice(room);
-      return;
-    }
-
-    _stream = result.stream;
-
-    /* Update room participant count */
+    /* Increment participant count */
     room.participants = (room.participants || 0) + 1;
     _save();
 
-    /* Setup BroadcastChannel for same-device signaling */
-    try {
-      _channel = new BroadcastChannel('omicslab_meeting_' + roomId);
-      _channel.onmessage = _onBroadcastMsg;
-      _channel.postMessage({ type: 'JOINED', name: _myName() });
-    } catch {}
+    const jitsiRoom = _JITSI_MAP[roomId]
+      || ('OmicsLab-Room-' + roomId.replace('rm-', '').toUpperCase().replace(/-/g, ''));
 
-    _chatMessages = [];
-    _inMeeting = true;
-    _muted = false;
-    _camOff = result.audioOnly;
-    _handRaised = false;
-    _peers = [];
+    _renderMeetingJitsi(room, jitsiRoom);
+  }
 
-    _renderMeeting(room, result.audioOnly);
+  /* ─── Render Jitsi iframe meeting ─── */
+  function _renderMeetingJitsi(room, jitsiRoom) {
+    const section = document.getElementById('teams-section');
+    if (!section) return;
+
+    const displayName = _myName();
+    const jitsiUrl = 'https://meet.jit.si/' + jitsiRoom
+      + '#userInfo.displayName=' + encodeURIComponent(displayName)
+      + '&config.prejoinPageEnabled=false'
+      + '&config.startWithAudioMuted=false';
+
+    section.innerHTML = `
+    <div class="tm-jitsi-page">
+      <div class="tm-jitsi-topbar">
+        <div class="tm-jitsi-info">
+          <div class="tm-jitsi-live-dot"></div>
+          <span class="tm-jitsi-room-name">${_escHtml(room.name)}</span>
+          <span class="tm-jitsi-tag">LIVE</span>
+        </div>
+        <div class="tm-jitsi-right">
+          <div class="tm-jitsi-share-hint">
+            Room code: <strong style="font-family:monospace;color:#c9d1d9">${jitsiRoom}</strong>
+            <button class="tm-jitsi-copy-btn" onclick="navigator.clipboard.writeText('${jitsiRoom}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)})">Copy</button>
+          </div>
+          <button class="tm-ctrl-btn tm-ctrl-leave" onclick="OmicsLab.Teams.leaveMeeting()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Leave
+          </button>
+        </div>
+      </div>
+      <iframe
+        src="${jitsiUrl}"
+        allow="camera *; microphone *; fullscreen *; display-capture *; autoplay *"
+        allowfullscreen
+        class="tm-jitsi-iframe"
+        title="OmicsLab ${_escHtml(room.name)}">
+      </iframe>
+      <div class="tm-jitsi-note">
+        All participants joining <strong>${_escHtml(room.name)}</strong> connect to the same live call automatically — no account or installation needed.
+      </div>
+    </div>`;
   }
 
   /* ─── Permission denied UI ─── */
@@ -1345,7 +1352,6 @@ OmicsLab.Teams = (function () {
   /* ─── Leave meeting ─── */
   function leaveMeeting() {
     _broadcastEvent({ type: 'LEFT', name: _myName() });
-    /* Decrement participant count */
     const room = _rooms.find(r => r.id === _roomId);
     if (room && room.participants > 0) room.participants--;
     _save();

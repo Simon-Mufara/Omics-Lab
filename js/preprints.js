@@ -70,7 +70,7 @@ OmicsLab.Preprints = (function () {
     });
 
     const res = await fetch(`${CROSSREF}?${params}`, {
-      headers: { 'User-Agent': 'OmicsLab (kaykayxsimon@gmail.com)' },
+      headers: { 'User-Agent': 'OmicsLab (simon.mufara1@gmail.com)' },
     });
     if (!res.ok) throw new Error('CrossRef API ' + res.status);
     const data = await res.json();

@@ -1242,3 +1242,89 @@
   from { opacity: 0; transform: translateX(-50%) translateY(8px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* ══════════════════════════════════════════════
+   JITSI EMBED MEETING (cross-device via meet.jit.si)
+   ══════════════════════════════════════════════ */
+.tm-jitsi-page { display: flex; flex-direction: column; height: 100%; min-height: calc(100vh - 120px); }
+
+.tm-jitsi-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: #161b22;
+  border-bottom: 1px solid #21262d;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.tm-jitsi-info { display: flex; align-items: center; gap: 0.65rem; }
+.tm-jitsi-live-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #3fb950;
+  flex-shrink: 0;
+  position: relative;
+}
+.tm-jitsi-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid rgba(63,185,80,0.4);
+  animation: tm-pulse 2s infinite;
+}
+@keyframes tm-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(1.35); }
+}
+
+.tm-jitsi-room-name { font-size: 0.92rem; font-weight: 700; color: #e6edf3; }
+.tm-jitsi-tag {
+  font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em;
+  color: #3fb950; background: rgba(63,185,80,0.1);
+  border: 1px solid rgba(63,185,80,0.3);
+  border-radius: 4px; padding: 0.1rem 0.45rem;
+}
+
+.tm-jitsi-right { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+
+.tm-jitsi-share-hint { font-size: 0.75rem; color: #8b949e; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+
+.tm-jitsi-copy-btn {
+  padding: 0.15rem 0.5rem;
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #8b949e;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.tm-jitsi-copy-btn:hover { background: #30363d; color: #e6edf3; }
+
+.tm-jitsi-iframe {
+  flex: 1;
+  width: 100%;
+  min-height: 480px;
+  border: none;
+  background: #0d1117;
+}
+
+.tm-jitsi-note {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.73rem;
+  color: #6e7681;
+  background: #0d1117;
+  border-top: 1px solid #21262d;
+  line-height: 1.55;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .tm-jitsi-topbar { padding: 0.6rem 1rem; }
+  .tm-jitsi-iframe { min-height: 360px; }
+  .tm-jitsi-share-hint { font-size: 0.68rem; }
+}

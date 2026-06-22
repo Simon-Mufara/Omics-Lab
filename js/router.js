@@ -710,6 +710,7 @@ OmicsLab.Router = (function () {
   const GLOBAL_SECTIONS = ['changelog-section'];
 
   let _currentPage = 'home';
+  let _prevPage    = 'home';
 
   /* ─── Nav progress bar ─── */
   let _npTimer = null;
@@ -751,6 +752,7 @@ OmicsLab.Router = (function () {
       return;
     }
     _npStart();
+    if (_currentPage !== page) _prevPage = _currentPage;
     _currentPage = page;
 
     /* Dynamic <title> + <meta description> per route */
@@ -1083,13 +1085,15 @@ OmicsLab.Router = (function () {
     }
 
     const p = PAGES[page];
+    const backDest  = (_prevPage && _prevPage !== page) ? _prevPage : 'home';
+    const backLabel = backDest === 'home' ? 'Home' : (PAGES[backDest]?.label || 'Back');
     header.style.display = '';
     header.innerHTML = `
       <div class="page-route-header">
         <div class="prh-left">
-          <button class="prh-home-btn" onclick="OmicsLab.Router.navigate('home')" aria-label="Back to home">
+          <button class="prh-home-btn" onclick="OmicsLab.Router.navigate('${backDest}')" aria-label="Back to ${backLabel}">
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            Home
+            ${backLabel}
           </button>
           <span class="prh-sep">/</span>
           <span class="prh-page-icon">${OmicsLab.Icons?.svg(p.icon, 14) || ''}</span>

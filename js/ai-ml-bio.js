@@ -108,11 +108,12 @@ OmicsLab.AIMLBio = (function () {
 
       <div class="aml-tabs" role="tablist">
         ${[
-          ['llms',    'Foundation Models & LLMs'],
-          ['nn',      'Neural Networks'],
+          ['llms',     'Foundation Models & LLMs'],
+          ['nn',       'Neural Networks'],
           ['classical','Classical ML'],
           ['workflows','Workflows & Code'],
-          ['africa',  'Africa Applications'],
+          ['africa',   'Africa Applications'],
+          ['practice', 'Practice & Build'],
         ].map(([id,label]) => `
           <button class="aml-tab${_tab===id?' active':''}" role="tab" aria-selected="${_tab===id}" data-tab="${id}"
                   onclick="OmicsLab.AIMLBio.setTab('${id}')">${label}</button>
@@ -143,6 +144,7 @@ OmicsLab.AIMLBio = (function () {
     if (_tab === 'classical') body.innerHTML = _tabClassical();
     if (_tab === 'workflows') body.innerHTML = _tabWorkflows();
     if (_tab === 'africa')    body.innerHTML = _tabAfrica();
+    if (_tab === 'practice')  body.innerHTML = _tabPractice();
   }
 
   /* ═══════════ TAB: LLMs ════════════ */
@@ -504,9 +506,240 @@ OmicsLab.AIMLBio = (function () {
     </div>`;
   }
 
+  /* ═══════════ TAB: PRACTICE & BUILD ════════════ */
+
+  /* ── Practice state (persists across tab switches) ── */
+  let _px = {
+    q1idx: 0, q1answered: null, q1score: 0, q1total: 0,
+    pipeBuilt: [],
+    cmAnswers: { sens: '', prec: '', spec: '', fdr: '' },
+    cmChecked: false,
+    featChosen: new Set(),
+    featChecked: false,
+  };
+
+  const _EX1 = [
+    {
+      scenario: 'You have WGS data from 500 sickle cell patients and 500 healthy controls — 50,000 SNPs per sample. You need to identify which variants predict hospitalisation rate AND explain your findings to a clinical team.',
+      options: ['Deep Neural Network (10 layers)', 'Random Forest with feature importance', 'k-Means Clustering', 'PCA dimensionality reduction'],
+      correct: 1,
+      explain: 'Random Forest ranks each SNP by Gini importance, runs well on 1,000 samples with 50,000 features, and produces decision trees clinicians can follow. Neural networks need more samples and are hard to explain. k-Means is unsupervised (no outcome label). PCA is dimension reduction, not classification.',
+    },
+    {
+      scenario: 'You have 50,000 bulk RNA-seq samples from multiple cancers. You want to discover entirely new cancer subtypes — nobody has defined them yet and you don\'t know how many groups exist.',
+      options: ['Logistic Regression (binary)', 'SVM with RBF kernel', 'Graph-based clustering (Leiden/Louvain)', 'Random Forest classifier'],
+      correct: 2,
+      explain: 'Subtype discovery is unsupervised. Leiden/Louvain algorithms build a k-NN graph and optimise cluster modularity — the resolution parameter explores different granularities without specifying k. All supervised methods (LR, SVM, RF) require labelled training data with predefined categories.',
+    },
+    {
+      scenario: 'Your lab in Nairobi will classify M. tuberculosis drug resistance from 5,000 whole-genome sequences. The model must run offline on a laptop with no GPU, and needs to handle 10 antibiotics at once.',
+      options: ['GPT-4 via API', 'Shallow Random Forest (compressed)', 'AlphaFold2 structure prediction', 'Large transformer with 1B parameters'],
+      correct: 1,
+      explain: 'A shallow RF (max_depth ≤ 10) with SNPs as binary features compresses to < 10 MB, runs in milliseconds without GPU, handles multi-label prediction (each antibiotic is a separate tree), and achieved 97% accuracy on the 10,000-genome CRyPTIC dataset. LLMs need internet/GPU; AlphaFold predicts 3D structure, not resistance; large transformers require GPU inference.',
+    },
+  ];
+
+  function _tabPractice() {
+    const q = _EX1[_px.q1idx];
+    const q1answered = _px.q1answered !== null;
+    const pipeOrder  = ['Load raw FASTQ reads','Quality control (FastQC)','Trim adapters & low-quality bases','Extract k-mer / feature matrix','Split train / validation / test sets','Fit model on training set only','Evaluate on held-out test set','Report AUC, sensitivity, specificity'];
+    const pipeAvail  = pipeOrder.filter(s => !_px.pipeBuilt.includes(s));
+    const pipeCorrect = _px.pipeBuilt.join('||') === pipeOrder.slice(0, _px.pipeBuilt.length).join('||');
+
+    const cm = { tp: 87, fp: 13, fn: 9, tn: 91 };
+    const cmTotal = cm.tp + cm.fp + cm.fn + cm.tn;
+
+    const GOOD_FEATS  = new Set(['GC content','k-mer frequencies','Sequence entropy','Conservation score','Codon bias']);
+    const BAD_FEATS   = new Set(['Sample collection date','Researcher initials','File creation timestamp','Gel image filename']);
+    const ALL_FEATS   = [...GOOD_FEATS, ...BAD_FEATS].sort(() => 0.5 - Math.random()).sort(() => 0.5 - Math.random());
+
+    return `
+    <div class="aml-practice-page">
+      <div class="aml-concept-box" style="border-color:rgba(227,179,65,0.3);background:rgba(227,179,65,0.05)">
+        <div class="aml-concept-title" style="color:#e3b341">Practice Exercises</div>
+        <p class="aml-concept-body">Three hands-on exercises — choose the right model, build a valid pipeline, and interpret a real classifier output. These are the decisions you make daily as an applied ML bioinformatician.</p>
+      </div>
+
+      <!-- ══ Exercise 1: Model Selection ══ -->
+      <div class="aml-ex-card">
+        <div class="aml-ex-header">
+          <span class="aml-ex-num">01</span>
+          <div>
+            <div class="aml-ex-title">Choose the Right Model</div>
+            <div class="aml-ex-sub">Scenario ${_px.q1idx + 1} of ${_EX1.length} — select the best ML approach</div>
+          </div>
+          <div class="aml-ex-score">${_px.q1score}/${_px.q1total} correct</div>
+        </div>
+        <div class="aml-ex-body">
+          <div class="aml-scenario-box">${q.scenario}</div>
+          <div class="aml-options-grid">
+            ${q.options.map((opt, i) => {
+              let cls = 'aml-option-btn';
+              if (q1answered) cls += i === q.correct ? ' opt-correct' : (i === _px.q1answered ? ' opt-wrong' : ' opt-dim');
+              return `<button class="${cls}" onclick="OmicsLab.AIMLBio._answerQ1(${i})" ${q1answered ? 'disabled' : ''}>${opt}</button>`;
+            }).join('')}
+          </div>
+          ${q1answered ? `
+            <div class="aml-feedback-box ${_px.q1answered === q.correct ? 'fb-correct' : 'fb-wrong'}">
+              <strong>${_px.q1answered === q.correct ? 'Correct!' : 'Not quite —'}</strong> ${q.explain}
+            </div>
+            ${_px.q1idx < _EX1.length - 1
+              ? `<button class="aml-next-btn" onclick="OmicsLab.AIMLBio._nextQ1()">Next scenario →</button>`
+              : `<div class="aml-ex-complete">All scenarios complete — score: ${_px.q1score}/${_px.q1total}</div>`}
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- ══ Exercise 2: Pipeline Builder ══ -->
+      <div class="aml-ex-card">
+        <div class="aml-ex-header">
+          <span class="aml-ex-num">02</span>
+          <div>
+            <div class="aml-ex-title">Build an ML Analysis Pipeline</div>
+            <div class="aml-ex-sub">Click the steps in the correct order for a DNA sequence classifier</div>
+          </div>
+        </div>
+        <div class="aml-ex-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+              <div class="aml-ex-section-label">Available steps — click to add</div>
+              <div class="aml-pipe-available" id="aml-pipe-avail">
+                ${pipeAvail.map(s => `<button class="aml-pipe-step-btn" onclick="OmicsLab.AIMLBio._addPipeStep('${s.replace(/'/g,'\\'')}')">${s}</button>`).join('')}
+                ${pipeAvail.length === 0 ? '<div class="aml-pipe-done">All steps placed!</div>' : ''}
+              </div>
+            </div>
+            <div>
+              <div class="aml-ex-section-label">Your pipeline (${_px.pipeBuilt.length}/${pipeOrder.length} steps)</div>
+              <div class="aml-pipe-built">
+                ${_px.pipeBuilt.map((s, i) => {
+                  const correct = s === pipeOrder[i];
+                  return `<div class="aml-pipe-built-step ${correct ? 'step-ok' : 'step-err'}">
+                    <span class="aml-pipe-step-n">${i + 1}</span>
+                    <span>${s}</span>
+                  </div>`;
+                }).join('')}
+                ${_px.pipeBuilt.length === 0 ? '<div style="font-size:.76rem;color:#484f58;padding:.5rem">Click steps on the left to build your pipeline</div>' : ''}
+              </div>
+              ${_px.pipeBuilt.length > 0 ? `<button class="aml-reset-btn" onclick="OmicsLab.AIMLBio._resetPipe()">Reset pipeline</button>` : ''}
+            </div>
+          </div>
+          ${!pipeCorrect && _px.pipeBuilt.length > 0 ? `
+            <div class="aml-feedback-box fb-wrong" style="font-size:.77rem">
+              Step ${_px.pipeBuilt.length} is incorrect. Hint: <em>${pipeOrder[_px.pipeBuilt.length - 1] === _px.pipeBuilt[_px.pipeBuilt.length - 1] ? pipeOrder[_px.pipeBuilt.length]?.split(' ').slice(0,2).join(' ') + '…' : 'think about what needs to happen before "' + _px.pipeBuilt[_px.pipeBuilt.length - 1] + '"'}</em>
+            </div>` : ''}
+          ${_px.pipeBuilt.length === pipeOrder.length && pipeCorrect ? `
+            <div class="aml-feedback-box fb-correct">Pipeline complete and correct! Key rule: always split data BEFORE fitting the model to prevent data leakage.</div>` : ''}
+        </div>
+      </div>
+
+      <!-- ══ Exercise 3: Confusion Matrix ══ -->
+      <div class="aml-ex-card">
+        <div class="aml-ex-header">
+          <span class="aml-ex-num">03</span>
+          <div>
+            <div class="aml-ex-title">Interpret a Classifier</div>
+            <div class="aml-ex-sub">A Random Forest predicts MDR-TB resistance from SNPs. Calculate the metrics below.</div>
+          </div>
+        </div>
+        <div class="aml-ex-body">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start">
+            <div>
+              <div class="aml-ex-section-label" style="margin-bottom:.5rem">Confusion matrix (n=${cmTotal})</div>
+              <table class="aml-cm-tbl">
+                <thead><tr><th></th><th>Predicted +</th><th>Predicted −</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Actual +</strong></td><td class="aml-cm-tp">TP = ${cm.tp}</td><td class="aml-cm-fn">FN = ${cm.fn}</td></tr>
+                  <tr><td><strong>Actual −</strong></td><td class="aml-cm-fp">FP = ${cm.fp}</td><td class="aml-cm-tn">TN = ${cm.tn}</td></tr>
+                </tbody>
+              </table>
+              <div style="font-size:.68rem;color:#6e7681;margin-top:.4rem">+ = MDR-TB resistant &nbsp;|&nbsp; − = susceptible</div>
+            </div>
+            <div>
+              <div class="aml-ex-section-label" style="margin-bottom:.5rem">Your calculations (enter % rounded to nearest whole number)</div>
+              <div class="aml-cm-inputs">
+                ${[
+                  ['sens', 'Sensitivity (Recall)  = TP / (TP + FN)', Math.round(cm.tp / (cm.tp + cm.fn) * 100)],
+                  ['spec', 'Specificity           = TN / (TN + FP)', Math.round(cm.tn / (cm.tn + cm.fp) * 100)],
+                  ['prec', 'Precision (PPV)       = TP / (TP + FP)', Math.round(cm.tp / (cm.tp + cm.fp) * 100)],
+                  ['fdr',  'False Discovery Rate  = FP / (FP + TP)', Math.round(cm.fp / (cm.fp + cm.tp) * 100)],
+                ].map(([key, lbl, ans]) => {
+                  const val  = _px.cmAnswers[key];
+                  const ok   = _px.cmChecked && parseInt(val) === ans;
+                  const bad  = _px.cmChecked && parseInt(val) !== ans;
+                  return `<div class="aml-cm-row">
+                    <span class="aml-cm-lbl">${lbl}</span>
+                    <div style="display:flex;align-items:center;gap:.4rem">
+                      <input class="aml-cm-input ${ok ? 'cm-ok' : bad ? 'cm-bad' : ''}" type="number" min="0" max="100"
+                        value="${val}" placeholder="?"
+                        oninput="OmicsLab.AIMLBio._cmInput('${key}', this.value)"/>
+                      <span>%</span>
+                      ${_px.cmChecked ? `<span class="${ok ? 'cm-tick' : 'cm-cross'}">${ok ? '✓' : '✗ ' + ans + '%'}</span>` : ''}
+                    </div>
+                  </div>`;
+                }).join('')}
+              </div>
+              <div style="display:flex;gap:.5rem;margin-top:.75rem;align-items:center">
+                <button class="aml-next-btn" onclick="OmicsLab.AIMLBio._checkCM()">Check answers</button>
+                ${_px.cmChecked ? '<button class="aml-reset-btn" onclick="OmicsLab.AIMLBio._resetCM()">Reset</button>' : ''}
+              </div>
+              ${_px.cmChecked ? `
+                <div class="aml-feedback-box ${Object.entries({sens: Math.round(cm.tp/(cm.tp+cm.fn)*100), spec: Math.round(cm.tn/(cm.tn+cm.fp)*100), prec: Math.round(cm.tp/(cm.tp+cm.fp)*100), fdr: Math.round(cm.fp/(cm.fp+cm.tp)*100)}).every(([k,v]) => parseInt(_px.cmAnswers[k]) === v) ? 'fb-correct' : 'fb-wrong'}" style="margin-top:.6rem;font-size:.76rem">
+                  For MDR-TB screening, <strong>sensitivity (${Math.round(cm.tp/(cm.tp+cm.fn)*100)}%)</strong> matters most — missing a resistant case risks treatment failure. The FDR (${Math.round(cm.fp/(cm.fp+cm.tp)*100)}%) tells you how often the test cries wolf. Trade-offs depend on clinical context.
+                </div>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>`;
+  }
+
+  /* ── Exercise 1 handlers ── */
+  function _answerQ1(i) {
+    if (_px.q1answered !== null) return;
+    _px.q1answered = i;
+    _px.q1total++;
+    if (i === _EX1[_px.q1idx].correct) _px.q1score++;
+    setTab('practice');
+  }
+
+  function _nextQ1() {
+    _px.q1idx   = (_px.q1idx + 1) % _EX1.length;
+    _px.q1answered = null;
+    setTab('practice');
+  }
+
+  /* ── Exercise 2 handlers ── */
+  const _PIPE_ORDER = ['Load raw FASTQ reads','Quality control (FastQC)','Trim adapters & low-quality bases','Extract k-mer / feature matrix','Split train / validation / test sets','Fit model on training set only','Evaluate on held-out test set','Report AUC, sensitivity, specificity'];
+
+  function _addPipeStep(step) {
+    if (_px.pipeBuilt.includes(step)) return;
+    _px.pipeBuilt.push(step);
+    setTab('practice');
+  }
+
+  function _resetPipe() {
+    _px.pipeBuilt = [];
+    setTab('practice');
+  }
+
+  /* ── Exercise 3 handlers ── */
+  function _cmInput(key, val) { _px.cmAnswers[key] = val; }
+
+  function _checkCM() {
+    _px.cmChecked = true;
+    setTab('practice');
+  }
+
+  function _resetCM() {
+    _px.cmAnswers = { sens: '', prec: '', spec: '', fdr: '' };
+    _px.cmChecked = false;
+    setTab('practice');
+  }
+
   /* ─── Helpers ─── */
   function selectModel(id) { _modelId = id; setTab('llms'); }
   function _esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  return { init, setTab, selectModel, runForwardPass, resetNN };
+  return { init, setTab, selectModel, runForwardPass, resetNN, _answerQ1, _nextQ1, _addPipeStep, _resetPipe, _cmInput, _checkCM, _resetCM };
 })();

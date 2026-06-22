@@ -188,7 +188,6 @@ OmicsLab.Proteomics = (function () {
       <div class="prot-africa-card">
         <div class="prot-af-study">${s.study}</div>
         <p class="prot-af-finding">${s.finding}</p>
-        <div class="prot-af-doi">DOI: ${s.doi}</div>
       </div>`).join('');
 
     return `
