@@ -659,6 +659,20 @@ OmicsLab.Router = (function () {
       tagline: 'Connect with other OmicsLab researchers — see who is online, add friends by code, and chat directly in the platform',
       sections: ['social-section'],
     },
+    'scrna-explorer': {
+      label: 'scRNA-seq Explorer',
+      icon: 'layers',
+      color: '#bc8cff',
+      tagline: 'Full scRNA-seq analysis — UMAP, clustering, differential expression, and cell-type annotation — built by Simon Mufara and embedded live inside OmicsLab',
+      sections: ['scrna-explorer-section'],
+    },
+    'variants-explorer': {
+      label: 'Variant Analysis Suite',
+      icon: 'dna',
+      color: '#58a6ff',
+      tagline: 'Clinical-grade variant analysis — VCF upload, annotation, gnomAD frequencies, ACMG classification, and filtering — built by Simon Mufara and embedded live inside OmicsLab',
+      sections: ['variants-explorer-section'],
+    },
     settings: {
       label: 'Settings',
       icon: 'cpu',
@@ -725,6 +739,8 @@ OmicsLab.Router = (function () {
     epigenomics: 'train', crispr: 'train', proteomics: 'train',
     'research-wizard': 'research', 'alignment-viewer': 'tools', recombination: 'tools',
     social: 'research',
+    'scrna-explorer': 'tools',
+    'variants-explorer': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     settings: null,
@@ -1082,6 +1098,8 @@ OmicsLab.Router = (function () {
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');
     if (page === 'social' && OmicsLab.Social)                 _si(OmicsLab.Social,          'social-section',            'Social');
+    if (page === 'scrna-explorer')     OmicsLab.EmbeddedApps?.init('scrna-explorer');
+    if (page === 'variants-explorer')  OmicsLab.EmbeddedApps?.init('variants-explorer');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
     if (page === 'terms')    OmicsLab.Legal?.render('terms');
     if (page === 'analysis') setTimeout(() => OmicsLab.DataImport?.init(), 400);

@@ -86,6 +86,7 @@
   <link rel="stylesheet" href="css/alignment-viewer.css">
   <link rel="stylesheet" href="css/recombination.css">
   <link rel="stylesheet" href="css/social.css">
+  <link rel="stylesheet" href="css/embedded-app.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -514,6 +515,14 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('recombination')">
               <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Recombination Scanner</span><span class="nmd-desc">SimPlot · RDP4-style · breakpoints</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('scrna-explorer')">
+              <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">scRNA-seq Explorer</span><span class="nmd-desc">UMAP · clustering · cell-type annotation · live app</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('variants-explorer')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Variant Analysis Suite</span><span class="nmd-desc">VCF · ACMG · gnomAD · clinical variants · live app</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('primerdesign')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
@@ -1495,6 +1504,12 @@
   <!-- Social Hub -->
   <div id="social-section"><!-- Populated by social.js --></div>
 
+  <!-- Embedded: scRNA-seq Clinical Explorer -->
+  <div id="scrna-explorer-section"><!-- Populated by embedded-apps.js --></div>
+
+  <!-- Embedded: Variant Analysis Suite -->
+  <div id="variants-explorer-section"><!-- Populated by embedded-apps.js --></div>
+
   <!-- Bioinformatics Terminal + Codespace Launcher -->
   <div class="terminal-studio-section" id="terminal-section">
     <div id="terminal-studio-content"><!-- Populated by terminal.js --></div>
@@ -2159,6 +2174,7 @@
 <script defer src="js/alignment-viewer.js"></script>
 <script defer src="js/recombination.js"></script>
 <script defer src="js/social.js"></script>
+<script defer src="js/embedded-apps.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>
