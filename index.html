@@ -904,62 +904,10 @@
   <div class="hero hero-new" id="hero-new">
     <div class="hero-new-inner">
 
-      <!-- Left: bold mission copy -->
-      <div class="hero-new-left">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Africa's Omics Training Platform
-        </div>
-
         <!-- Personalised greeting (populated by OmicsLab.Profile) -->
-        <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
+      <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
 
-        <h1 class="hero-title-new">
-          The Training Platform<br>
-          <span class="accent-line">Africa's Genomics<br>Scientists Deserve</span>
-        </h1>
-
-        <p class="hero-sub-new">
-          Simulate real wet-lab protocols, run bioinformatics pipelines,
-          study 22 diseases, and earn certificates — all offline, all free,
-          built from the ground up for African researchers.
-        </p>
-
-        <div class="hero-cta-new">
-          <button class="btn-hero-primary-new" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Start Learning Free
-          </button>
-          <button class="btn-hero-secondary-new" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
-            How it works
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-          </button>
-        </div>
-
-        <div class="hero-trust-new">
-          <span class="hero-trust-chip">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Zero install
-          </span>
-          <span class="hero-trust-divider"></span>
-          <span class="hero-trust-chip">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Works offline
-          </span>
-          <span class="hero-trust-divider"></span>
-          <span class="hero-trust-chip">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-            Free forever
-          </span>
-          <span class="hero-trust-divider"></span>
-          <span class="hero-trust-chip">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            54 African countries
-          </span>
-        </div>
-      </div>
-
-      <!-- Right: live animated RNA-seq pipeline card -->
+      <!-- Live animated RNA-seq pipeline card -->
       <div class="hero-pipeline-card" aria-label="Live RNA-seq pipeline simulation preview" id="hero-pipeline-card">
         <div class="hpc-topbar">
           <span class="hpc-dot hpc-dot-r"></span>
@@ -1369,8 +1317,8 @@
     <div id="profile-page-content" class="profile-page-wrap"></div>
   </div>
 
-  <!-- Features -->
-  <div class="features-section reveal" id="features-section">
+  <!-- Features (removed from home; now covered by home-hero.js category grid) -->
+  <div class="features-section reveal" id="features-section" style="display:none">
     <div class="section-label">Platform capabilities</div>
     <h2 class="section-title">Built for Serious Learning</h2>
     <div class="feature-grid">

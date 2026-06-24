@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v28: DNA hero animation, central dogma, user guide manual, pricing redesign
+   v29: Remove old hero text/CTA, centre pipeline card, drop features-section from home
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v28';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v29';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

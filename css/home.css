@@ -26,7 +26,7 @@ h1, h2, h3, .section-title, .hero-title-new {
    ═══════════════════════════════════════════════════════════════ */
 .hero-new {
   position: relative;
-  min-height: 92vh;
+  min-height: 52vh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -62,12 +62,11 @@ h1, h2, h3, .section-title, .hero-title-new {
 .hero-new-inner {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  max-width: 860px;
   margin: 0 auto;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 480px;
-  gap: 4rem;
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -198,6 +197,8 @@ h1, h2, h3, .section-title, .hero-title-new {
   overflow: hidden;
   box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(63,185,80,0.08);
   position: relative;
+  width: 100%;
+  max-width: 800px;
 }
 .hpc-topbar {
   display: flex;
@@ -878,11 +879,10 @@ h1, h2, h3, .section-title, .hero-title-new {
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
-  .hero-new-inner { grid-template-columns: 1fr 400px; gap: 2.5rem; }
+  .hero-new-inner { max-width: 720px; }
 }
 @media (max-width: 900px) {
-  .hero-new-inner { grid-template-columns: 1fr; }
-  .hero-pipeline-card { max-width: 520px; }
+  .hero-pipeline-card { max-width: 100%; }
   .hiw-steps { grid-template-columns: 1fr; }
   .hiw-steps::before { display: none; }
   .wf-cards-row { grid-template-columns: 1fr; }

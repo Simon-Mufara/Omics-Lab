@@ -15,7 +15,7 @@ OmicsLab.Router = (function () {
     home: {
       label: 'Home',
       icon: 'layers',
-      sections: ['home-visual-section', 'features-section', 'changelog-section'],
+      sections: ['home-visual-section', 'changelog-section'],
     },
     guide: {
       label: 'User Guide',
