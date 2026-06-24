@@ -468,6 +468,13 @@ OmicsLab.Router = (function () {
       tagline: 'Institution admin mode — create student cohorts, manage 12-week curriculum, track progress offline, export CSV cohort reports',
       sections: ['institution-section'],
     },
+    pricing: {
+      label: 'Plans & Pricing',
+      icon: 'trending-up',
+      color: '#3fb950',
+      tagline: 'OmicsLab licensing tiers — Community (free), Campus, and Enterprise. Bring structured bioinformatics training to your institution.',
+      sections: ['pricing-section'],
+    },
     /* ── Part 7: Platform ── */
     'api-docs': {
       label: 'Developer API',
@@ -743,6 +750,7 @@ OmicsLab.Router = (function () {
     'variants-explorer': 'tools',
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
+    pricing: 'research',
     settings: null,
     profile: null, /* user pill is the nav element for profile */
     privacy: null,
@@ -1094,6 +1102,7 @@ OmicsLab.Router = (function () {
     if (page === 'clinical-decision' && OmicsLab.ClinicalDecision) _sr(OmicsLab.ClinicalDecision, 'clinical-decision-section', 'ClinicalDecision', 'cdReady');
     if (page === 'one-health' && OmicsLab.OneHealth)          _sr(OmicsLab.OneHealth,         'one-health-section',        'OneHealth',        'ohReady');
     if (page === 'institution' && OmicsLab.Institution)       _sr(OmicsLab.Institution,       'institution-section',       'Institution',      'instReady');
+    if (page === 'pricing' && OmicsLab.Pricing)               _si(OmicsLab.Pricing,           'pricing-section',           'Pricing');
     if (page === 'research-wizard' && OmicsLab.ResearchWizard) _si(OmicsLab.ResearchWizard, 'research-wizard-section', 'ResearchWizard');
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');

@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v24: Embedded Apps (scRNA-seq Explorer, Variant Analysis Suite), nav items
+   v25: Pricing page, institution dashboard overhaul, developer photo
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v24';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v25';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

@@ -87,6 +87,7 @@
   <link rel="stylesheet" href="css/recombination.css">
   <link rel="stylesheet" href="css/social.css">
   <link rel="stylesheet" href="css/embedded-app.css">
+  <link rel="stylesheet" href="css/pricing.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -331,6 +332,10 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('thesis')">
               <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Thesis Coach</span><span class="nmd-desc">AI-assisted thesis writing</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('pricing')">
+              <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Plans &amp; Pricing</span><span class="nmd-desc">Campus · Enterprise · institutional licensing</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('partners')">
               <span class="nmd-icon" style="background:rgba(121,192,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
@@ -1504,6 +1509,9 @@
   <!-- Social Hub -->
   <div id="social-section"><!-- Populated by social.js --></div>
 
+  <!-- Plans & Pricing -->
+  <div id="pricing-section"><!-- Populated by pricing.js --></div>
+
   <!-- Embedded: scRNA-seq Clinical Explorer -->
   <div id="scrna-explorer-section"><!-- Populated by embedded-apps.js --></div>
 
@@ -2176,6 +2184,7 @@
 <script defer src="js/recombination.js"></script>
 <script defer src="js/social.js"></script>
 <script defer src="js/embedded-apps.js"></script>
+<script defer src="js/pricing.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>
