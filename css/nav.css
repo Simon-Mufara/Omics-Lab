@@ -61,6 +61,21 @@
   position: relative;
 }
 .nav-group-btn:hover { color: #e6edf3; background: rgba(255,255,255,0.05); }
+
+/* Institutions / Pricing direct tab */
+.nav-pricing-btn {
+  background: rgba(63,185,80,0.1) !important;
+  border: 1px solid rgba(63,185,80,0.35) !important;
+  color: #3fb950 !important;
+  border-radius: 6px !important;
+  font-weight: 700 !important;
+  padding: 0.3rem 0.85rem !important;
+  margin-left: 0.25rem;
+}
+.nav-pricing-btn:hover {
+  background: rgba(63,185,80,0.2) !important;
+  color: #4fc862 !important;
+}
 .nav-group-btn.active { color: #e6edf3; }
 .nav-group-btn.active::after {
   content: '';

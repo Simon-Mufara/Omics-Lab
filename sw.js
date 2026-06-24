@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v26: Fix email, kill welcome-back popup, pricing subnav + footer links
+   v27: Add For Institutions nav tab, pricing subnav, email fix, no welcome popup
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v26';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v27';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
