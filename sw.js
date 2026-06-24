@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v30: Add Study Pack module (study-pack.js/css), home layout — DNA hero first, terminal 2-col
+   v31: 3D DNA helix rebuild (glowing nucleotides, ribbon strands, base labels), About page fix
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v30';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v31';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
