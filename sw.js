@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v27: Add For Institutions nav tab, pricing subnav, email fix, no welcome popup
+   v28: DNA hero animation, central dogma, user guide manual, pricing redesign
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v27';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v28';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

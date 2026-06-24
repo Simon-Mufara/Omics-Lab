@@ -15,7 +15,14 @@ OmicsLab.Router = (function () {
     home: {
       label: 'Home',
       icon: 'layers',
-      sections: ['features-section', 'changelog-section'], /* home-only sections */
+      sections: ['home-visual-section', 'features-section', 'changelog-section'],
+    },
+    guide: {
+      label: 'User Guide',
+      icon: 'file-text',
+      color: '#58a6ff',
+      tagline: 'Complete manual for all 87+ OmicsLab tools — searchable, categorised, with why-it-matters notes for every module',
+      sections: ['guide-section'],
     },
     lab: {
       label: 'Lab',
@@ -751,6 +758,7 @@ OmicsLab.Router = (function () {
     'knowledge-graph': 'tools',
     'output-tracker': 'research',
     pricing: 'research',
+    guide: 'train',
     settings: null,
     profile: null, /* user pill is the nav element for profile */
     privacy: null,
@@ -860,6 +868,13 @@ OmicsLab.Router = (function () {
       const showHome = page === 'home';
       homeContent.style.display = showHome ? '' : 'none';
       if (showHome) _animateIn(homeContent);
+    }
+
+    /* Home visual hero (DNA animation) */
+    if (page === 'home') {
+      setTimeout(() => OmicsLab.HomeHero?.init(), 60);
+    } else {
+      OmicsLab.HomeHero?.stop();
     }
 
     /* Show/hide hero + stats strip */
@@ -1103,6 +1118,7 @@ OmicsLab.Router = (function () {
     if (page === 'one-health' && OmicsLab.OneHealth)          _sr(OmicsLab.OneHealth,         'one-health-section',        'OneHealth',        'ohReady');
     if (page === 'institution' && OmicsLab.Institution)       _sr(OmicsLab.Institution,       'institution-section',       'Institution',      'instReady');
     if (page === 'pricing' && OmicsLab.Pricing)               _si(OmicsLab.Pricing,           'pricing-section',           'Pricing');
+    if (page === 'guide'   && OmicsLab.UserGuide)             _si(OmicsLab.UserGuide,         'guide-section',             'UserGuide');
     if (page === 'research-wizard' && OmicsLab.ResearchWizard) _si(OmicsLab.ResearchWizard, 'research-wizard-section', 'ResearchWizard');
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');

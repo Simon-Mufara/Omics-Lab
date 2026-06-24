@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — User Guide Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Page shell ── */
+.ug-page {
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+.ug-header {
+  background: linear-gradient(180deg, rgba(30,35,45,.9) 0%, rgba(13,17,23,0) 100%);
+  border-bottom: 1px solid #21262d;
+  padding: 2.5rem 0 2rem;
+}
+.ug-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+.ug-eyebrow {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #58a6ff;
+  margin-bottom: .6rem;
+}
+.ug-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 900;
+  color: #e6edf3;
+  line-height: 1.2;
+  margin-bottom: .7rem;
+}
+.ug-subtitle {
+  font-size: .87rem;
+  color: #8b949e;
+  line-height: 1.7;
+  max-width: 680px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Search */
+.ug-search-wrap {
+  position: relative;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.ug-search-icon {
+  position: absolute;
+  left: .9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #484f58;
+  pointer-events: none;
+}
+.ug-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 10px;
+  color: #e6edf3;
+  font-size: .88rem;
+  font-family: inherit;
+  padding: .7rem .9rem .7rem 2.4rem;
+  outline: none;
+  transition: border-color .15s;
+}
+.ug-search-input:focus { border-color: #58a6ff; }
+.ug-search-input::placeholder { color: #484f58; }
+
+/* ── Body layout ── */
+.ug-body {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 4rem;
+}
+
+/* ── Sidebar ── */
+.ug-sidebar {
+  padding-right: 1.5rem;
+  padding-top: .5rem;
+}
+.ug-cats {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  position: sticky;
+  top: 80px;
+}
+.ug-cat-btn {
+  text-align: left;
+  padding: .45rem .75rem;
+  background: none;
+  border: none;
+  color: #8b949e;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.ug-cat-btn:hover { background: #21262d; color: #e6edf3; }
+.ug-cat-active { background: rgba(88,166,255,.1) !important; color: #58a6ff !important; }
+
+/* ── Main content ── */
+.ug-main { min-width: 0; }
+.ug-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px solid #21262d;
+}
+.ug-count {
+  font-size: .75rem;
+  font-weight: 700;
+  color: #484f58;
+}
+
+/* ── Card grid ── */
+.ug-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* ── Module card ── */
+.ug-card {
+  background: #0d1117;
+  border: 1px solid #21262d;
+  border-radius: 12px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  transition: border-color .2s, background .2s;
+}
+.ug-card:hover {
+  border-color: var(--mc, #30363d);
+  background: #161b22;
+}
+
+/* Card top */
+.ug-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+}
+.ug-card-icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid #21262d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mc, #8b949e);
+}
+.ug-card-name {
+  font-size: .9rem;
+  font-weight: 800;
+  color: #e6edf3;
+  line-height: 1.25;
+}
+.ug-card-tagline {
+  font-size: .73rem;
+  color: var(--mc, #8b949e);
+  font-weight: 600;
+  margin-top: .15rem;
+}
+
+/* Description */
+.ug-card-desc {
+  font-size: .78rem;
+  color: #8b949e;
+  line-height: 1.7;
+  margin: 0;
+  flex: 1;
+}
+
+/* Why it matters */
+.ug-card-why {
+  background: rgba(255,255,255,.025);
+  border-left: 2px solid var(--mc, #30363d);
+  border-radius: 0 6px 6px 0;
+  padding: .5rem .7rem;
+}
+.ug-why-label {
+  display: block;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--mc, #484f58);
+  margin-bottom: .2rem;
+}
+.ug-why-text {
+  font-size: .76rem;
+  color: #c9d1d9;
+  line-height: 1.55;
+}
+
+/* Footer */
+.ug-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.ug-tags {
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.ug-tag {
+  font-size: .62rem;
+  font-weight: 700;
+  color: #484f58;
+  border: 1px solid #21262d;
+  border-radius: 99px;
+  padding: .1rem .5rem;
+}
+.ug-open-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .8rem;
+  background: rgba(88,166,255,.08);
+  border: 1px solid rgba(88,166,255,.2);
+  color: #58a6ff;
+  font-size: .75rem;
+  font-weight: 700;
+  font-family: inherit;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.ug-open-btn:hover { background: rgba(88,166,255,.16); }
+
+/* How to access */
+.ug-card-how {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .67rem;
+  color: #484f58;
+  padding-top: .4rem;
+  border-top: 1px solid #21262d;
+}
+
+/* Empty state */
+.ug-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #484f58;
+}
+.ug-empty p { font-size: .88rem; margin: .75rem 0 1rem; }
+.ug-empty strong { color: #8b949e; }
+.ug-clear-btn {
+  padding: .45rem 1.1rem;
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #8b949e;
+  font-size: .8rem;
+  font-family: inherit;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.ug-clear-btn:hover { background: #21262d; color: #e6edf3; }
+
+/* ── Responsive ── */
+@media (max-width: 800px) {
+  .ug-body { grid-template-columns: 1fr; }
+  .ug-sidebar { padding-right: 0; padding-bottom: 1rem; }
+  .ug-cats { flex-direction: row; flex-wrap: wrap; position: static; }
+  .ug-cat-btn { font-size: .73rem; padding: .3rem .65rem; }
+}
+@media (max-width: 500px) {
+  .ug-grid { grid-template-columns: 1fr; }
+}
