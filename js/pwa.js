@@ -208,8 +208,8 @@ OmicsLab.PWA = (function () {
     /* Handle share target on load */
     _handleShareTarget();
 
-    /* Re-engagement screen */
-    _checkReEngagement();
+    /* Re-engagement screen — disabled */
+    // _checkReEngagement();
 
     /* Command palette (Cmd+K / Ctrl+K) */
     _initCommandPalette();

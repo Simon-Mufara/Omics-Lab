@@ -2,6 +2,50 @@
    OmicsLab — Plans & Pricing Styles
    ═══════════════════════════════════════════════════════════════ */
 
+/* ── Sticky in-page nav ── */
+.prc-subnav {
+  position: sticky;
+  top: 56px; /* below the main nav */
+  z-index: 200;
+  background: rgba(13,17,23,.92);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #21262d;
+}
+.prc-subnav-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: .15rem;
+  overflow-x: auto;
+}
+.prc-subnav-inner::-webkit-scrollbar { display: none; }
+.prc-subnav-link {
+  flex-shrink: 0;
+  font-size: .78rem;
+  font-weight: 600;
+  color: #8b949e;
+  text-decoration: none;
+  padding: .65rem .75rem;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.prc-subnav-link:hover { color: #e6edf3; }
+.prc-subnav-cta {
+  margin-left: auto;
+  color: #3fb950;
+  border: 1px solid rgba(63,185,80,.3);
+  border-radius: 6px;
+  padding: .35rem .85rem;
+  margin-top: .3rem;
+  margin-bottom: .3rem;
+  border-bottom: 1px solid rgba(63,185,80,.3);
+}
+.prc-subnav-cta:hover { background: rgba(63,185,80,.1); color: #3fb950; }
+
 .prc-wrap {
   max-width: 1060px;
   margin: 0 auto;
@@ -114,7 +158,7 @@
 
 /* ── Comparison table ── */
 .prc-compare { margin-bottom: 2.5rem; }
-.prc-compare-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.prc-compare-wrap { overflow-x: auto; }
 .prc-table {
   width: 100%; border-collapse: collapse; font-size: .8rem;
   min-width: 540px;

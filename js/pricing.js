@@ -233,7 +233,7 @@ OmicsLab.Pricing = (function () {
       msg || '(no message)',
     ].join('\n');
 
-    const mailto = `mailto:kaykayxsimon@gmail.com?subject=${encodeURIComponent(`OmicsLab ${tierLabel} — ${inst}`)}&body=${encodeURIComponent(body)}`;
+    const mailto = `mailto:simon.mufara1@gmail.com?subject=${encodeURIComponent(`OmicsLab ${tierLabel} — ${inst}`)}&body=${encodeURIComponent(body)}`;
     window.open(mailto, '_blank');
 
     document.getElementById('pricing-inquiry-overlay')?.remove();
@@ -256,10 +256,22 @@ OmicsLab.Pricing = (function () {
         : `<span class="prc-feat-val">${ok}</span>`;
 
     section.innerHTML = `
+    <!-- Sticky in-page navigation -->
+    <div class="prc-subnav" id="prc-subnav">
+      <div class="prc-subnav-inner">
+        <a class="prc-subnav-link" href="#prc-plans">Plans</a>
+        <a class="prc-subnav-link" href="#prc-who-section">Who it's for</a>
+        <a class="prc-subnav-link" href="#prc-compare-section">Compare</a>
+        <a class="prc-subnav-link" href="#prc-pilot-section">Pilot Programme</a>
+        <a class="prc-subnav-link" href="#prc-faq-section">FAQ</a>
+        <a class="prc-subnav-link prc-subnav-cta" href="#prc-contact">Get a Quote</a>
+      </div>
+    </div>
+
     <div class="prc-wrap">
 
       <!-- Header -->
-      <div class="prc-header">
+      <div class="prc-header" id="prc-plans">
         <div class="prc-eyebrow">Plans &amp; Pricing</div>
         <h1 class="prc-title">Professional bioinformatics training<br>built for Africa</h1>
         <p class="prc-subtitle">Free for individual learners. Structured licensing for institutions that need cohort management, branded certificates, and support.</p>
@@ -292,7 +304,7 @@ OmicsLab.Pricing = (function () {
       </div>
 
       <!-- Who is it for -->
-      <div class="prc-who">
+      <div class="prc-who" id="prc-who-section">
         <div class="prc-section-label">Who uses OmicsLab</div>
         <div class="prc-who-grid">
           ${WHO_FOR.map(w => `
@@ -304,7 +316,7 @@ OmicsLab.Pricing = (function () {
       </div>
 
       <!-- Comparison table -->
-      <div class="prc-compare">
+      <div class="prc-compare" id="prc-compare-section">
         <div class="prc-section-label">Full feature comparison</div>
         <div class="prc-compare-wrap">
           <table class="prc-table">
@@ -330,7 +342,7 @@ OmicsLab.Pricing = (function () {
       </div>
 
       <!-- Pilot programme CTA -->
-      <div class="prc-pilot">
+      <div class="prc-pilot" id="prc-pilot-section">
         <div class="prc-pilot-inner">
           <div class="prc-pilot-left">
             <div class="prc-pilot-title">Free 3-month pilot for grant-funded programmes</div>
@@ -341,7 +353,7 @@ OmicsLab.Pricing = (function () {
       </div>
 
       <!-- FAQ -->
-      <div class="prc-faq">
+      <div class="prc-faq" id="prc-faq-section">
         <div class="prc-section-label">Frequently asked questions</div>
         <div class="prc-faq-list">
           ${FAQS.map((f, i) => `
@@ -356,7 +368,7 @@ OmicsLab.Pricing = (function () {
       </div>
 
       <!-- Bottom CTA -->
-      <div class="prc-bottom-cta">
+      <div class="prc-bottom-cta" id="prc-contact">
         <div class="prc-bottom-title">Ready to bring OmicsLab to your institution?</div>
         <p class="prc-bottom-sub">Simon personally handles every institutional onboarding. Expect a response within 24 hours.</p>
         <div class="prc-bottom-btns">
@@ -365,7 +377,7 @@ OmicsLab.Pricing = (function () {
         </div>
         <div class="prc-bottom-contact">
           Or email directly:
-          <a href="mailto:kaykayxsimon@gmail.com" class="prc-bottom-email">kaykayxsimon@gmail.com</a>
+          <a href="mailto:simon.mufara1@gmail.com" class="prc-bottom-email">simon.mufara1@gmail.com</a>
         </div>
       </div>
 
