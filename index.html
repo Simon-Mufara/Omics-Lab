@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -90,6 +90,7 @@
   <link rel="stylesheet" href="css/pricing.css">
   <link rel="stylesheet" href="css/home-hero.css">
   <link rel="stylesheet" href="css/user-guide.css">
+  <link rel="stylesheet" href="css/study-pack.css">
   <link rel="stylesheet" href="css/home.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/profile.css">
@@ -274,6 +275,10 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('quizbattle')">
               <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Quiz Battle</span><span class="nmd-desc">65+ questions across 12 omics categories</span></span>
+            </button>
+            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('study')">
+              <span class="nmd-icon" style="background:rgba(88,166,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg></span>
+              <span class="nmd-text"><span class="nmd-name">Study Pack</span><span class="nmd-desc">35 modules · objectives · concepts · note-taking</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('epigenomics')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></span>
@@ -900,14 +905,40 @@
   <!-- ══ PERSONALISED DASHBOARD — shown when returning to home ══ -->
   <div id="home-dashboard" style="display:none"></div>
 
-  <!-- ══ HERO — Redesigned ══ -->
+  <!-- ══ HOME VISUAL: DNA animation + central dogma + categories (FIRST on home) ══ -->
+  <div id="home-visual-section" style="display:none"></div>
+
+  <!-- ══ HERO: Terminal demo section ══ -->
   <div class="hero hero-new" id="hero-new">
     <div class="hero-new-inner">
 
-        <!-- Personalised greeting (populated by OmicsLab.Profile) -->
-      <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
+      <!-- Left: terminal context -->
+      <div class="hero-new-left">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Live Platform Demo
+        </div>
+        <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
+        <h2 class="hero-demohead">
+          Watch a real RNA-seq<br>
+          <span class="accent-line">pipeline running live</span>
+        </h2>
+        <p class="hero-demosub">
+          FastQC, STAR alignment, featureCounts, and DESeq2 — running step-by-step in your browser, exactly as they would on a real HPC cluster.
+        </p>
+        <ul class="hv-feat-list" style="margin-bottom:1.5rem">
+          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#3fb950"></span>FastQC read quality control</li>
+          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#58a6ff"></span>STAR spliced alignment</li>
+          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#bc8cff"></span>featureCounts gene quantification</li>
+          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#f97316"></span>DESeq2 differential expression</li>
+        </ul>
+        <button class="hv-btn-p" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('terminal')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          Try the Terminal
+        </button>
+      </div>
 
-      <!-- Live animated RNA-seq pipeline card -->
+      <!-- Right: live animated RNA-seq pipeline card -->
       <div class="hero-pipeline-card" aria-label="Live RNA-seq pipeline simulation preview" id="hero-pipeline-card">
         <div class="hpc-topbar">
           <span class="hpc-dot hpc-dot-r"></span>
@@ -1023,9 +1054,6 @@
       <div class="stat-new-label">Languages</div>
     </div>
   </div>
-
-  <!-- Home Visual Hero: DNA animation + central dogma + categories (home page only) -->
-  <div id="home-visual-section" style="display:none"></div>
 
   <!-- Domain grid (moved to #screen-chooser — open via "Lab" nav button) -->
   <div class="domain-section reveal" id="domain-section">
@@ -1478,6 +1506,7 @@
 
   <!-- User Guide & Manual -->
   <div id="guide-section"><!-- Populated by user-guide.js --></div>
+  <div id="study-section"><!-- Populated by study-pack.js --></div>
 
   <!-- Embedded: scRNA-seq Clinical Explorer -->
   <div id="scrna-explorer-section"><!-- Populated by embedded-apps.js --></div>
@@ -2157,6 +2186,7 @@
 <script defer src="js/pricing.js"></script>
 <script defer src="js/home-hero.js"></script>
 <script defer src="js/user-guide.js"></script>
+<script defer src="js/study-pack.js"></script>
 <!-- Part 9: New Modules (Prompts 41-60) -->
 <script defer src="js/wasm-tools.js"></script>
 <script defer src="js/skill-tree.js"></script>

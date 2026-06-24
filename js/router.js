@@ -659,6 +659,13 @@ OmicsLab.Router = (function () {
       tagline: 'Visual multiple sequence alignment viewer — AliView-equivalent: colour-coded nucleotides, conservation profile, column statistics, FASTA export',
       sections: ['alignment-viewer-section'],
     },
+    study: {
+      label: 'Study Pack',
+      icon: 'file-text',
+      color: '#58a6ff',
+      tagline: 'Structured study guide for 35 core modules — learning objectives, key concepts, persistent note-taking, progress tracking, and export',
+      sections: ['study-section'],
+    },
     recombination: {
       label: 'Recombination Scanner',
       icon: 'activity',
@@ -759,6 +766,7 @@ OmicsLab.Router = (function () {
     'output-tracker': 'research',
     pricing: 'research',
     guide: 'train',
+    study: 'train',
     settings: null,
     profile: null, /* user pill is the nav element for profile */
     privacy: null,
@@ -1119,6 +1127,7 @@ OmicsLab.Router = (function () {
     if (page === 'institution' && OmicsLab.Institution)       _sr(OmicsLab.Institution,       'institution-section',       'Institution',      'instReady');
     if (page === 'pricing' && OmicsLab.Pricing)               _si(OmicsLab.Pricing,           'pricing-section',           'Pricing');
     if (page === 'guide'   && OmicsLab.UserGuide)             _si(OmicsLab.UserGuide,         'guide-section',             'UserGuide');
+    if (page === 'study'   && OmicsLab.StudyPack)             _si(OmicsLab.StudyPack,         'study-section',             'StudyPack');
     if (page === 'research-wizard' && OmicsLab.ResearchWizard) _si(OmicsLab.ResearchWizard, 'research-wizard-section', 'ResearchWizard');
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');
