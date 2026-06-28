@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>OmicsLab — Offline</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .wrap {
+      max-width: 480px;
+      text-align: center;
+    }
+    .icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1.5rem;
+      background: rgba(63,185,80,0.1);
+      border: 1px solid rgba(63,185,80,0.25);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #e6edf3;
+    }
+    p {
+      font-size: 0.9rem;
+      color: #7d8590;
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #3fb950;
+      color: #0d1117;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .note {
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: #484f58;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="icon">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 6s1-2 11-2 11 2 11 2"/>
+        <path d="M1 6v12s1 2 11 2 11-2 11-2V6"/>
+        <path d="M12 4v16"/>
+        <path d="M1 12h22"/>
+      </svg>
+    </div>
+    <h1>You're offline</h1>
+    <p>
+      OmicsLab is optimised for offline use — once you've loaded it once, most modules work without internet.
+      It looks like this is your first visit or the cache was cleared.
+      Connect to the internet and reload to get started.
+    </p>
+    <a class="btn" href="/" onclick="location.reload();return false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Try again
+    </a>
+    <p class="note">OmicsLab · Africa's Omics Training Platform</p>
+  </div>
+</body>
+</html>

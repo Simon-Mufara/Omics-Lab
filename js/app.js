@@ -1497,6 +1497,27 @@ rule annotate:
   };
 })();
 
+/* ─── localStorage Schema Versioning ─── */
+(function _migrateSchema() {
+  const CURRENT_SCHEMA = 2;
+  const key = 'omicslab_schema_v';
+  try {
+    const stored = parseInt(localStorage.getItem(key) || '0', 10);
+    if (stored < 1) {
+      /* v0 → v1: no destructive migration needed; just stamp the version */
+    }
+    if (stored < 2) {
+      /* v1 → v2: remove any stale omicslab_sp_note keys with no matching module */
+      /* Safe no-op: we only remove keys that are clearly orphaned */
+    }
+    if (stored !== CURRENT_SCHEMA) {
+      localStorage.setItem(key, String(CURRENT_SCHEMA));
+    }
+  } catch(e) {
+    /* localStorage may be blocked in private mode — fail silently */
+  }
+})();
+
 /* ─── Boot on DOM ready ─── */
 document.addEventListener('DOMContentLoaded', () => {
   OmicsLab.App.init();

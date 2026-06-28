@@ -15,7 +15,7 @@ OmicsLab.Router = (function () {
     home: {
       label: 'Home',
       icon: 'layers',
-      sections: ['home-visual-section', 'changelog-section'],
+      sections: ['showcase-section', 'home-visual-section', 'changelog-section'],
     },
     guide: {
       label: 'User Guide',
@@ -878,10 +878,12 @@ OmicsLab.Router = (function () {
       if (showHome) _animateIn(homeContent);
     }
 
-    /* Home visual hero (DNA animation) — init on every home visit, stop on leave */
+    /* Home visual hero (DNA animation) + showcase — init on every home visit, stop on leave */
     if (page === 'home') {
+      OmicsLab.Showcase?.init();
       OmicsLab.HomeHero?.init();
     } else {
+      OmicsLab.Showcase?.stop();
       OmicsLab.HomeHero?.stop();
     }
 
@@ -924,7 +926,20 @@ OmicsLab.Router = (function () {
     /* _si: safe init — shows skeleton, inits module, hides skeleton, catches errors */
     const _si = (mod, sec, name) => {
       OmicsLab.Skeleton?.beforeInit(sec);
-      try { mod?.init(); } catch(e) { OmicsLab.Error?.renderPageError(sec, name, e); }
+      try {
+        mod?.init();
+      } catch(e) {
+        if (OmicsLab.Error?.renderPageError) {
+          OmicsLab.Error.renderPageError(sec, name, e);
+        } else {
+          const el = document.getElementById(sec);
+          if (el) el.innerHTML = `<div style="padding:2rem;text-align:center;color:#7d8590">
+            <p style="margin-bottom:1rem;font-size:0.9rem">Failed to load <strong style="color:#e6edf3">${name}</strong>.</p>
+            <button onclick="location.reload()" style="background:#3fb950;color:#0d1117;border:none;border-radius:6px;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer">Reload</button>
+          </div>`;
+        }
+        console.error('[OmicsLab] module init failed:', name, e);
+      }
       OmicsLab.Skeleton?.hide(sec);
     };
 

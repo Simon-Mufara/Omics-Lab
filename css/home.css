@@ -904,3 +904,74 @@ h1, h2, h3, .section-title, .hero-title-new {
   .stat-new:nth-child(3),
   .stat-new:nth-child(4) { border-top: 1px solid #21262d; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE GLOBAL FIXES — 700px and below
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 700px) {
+
+  /* Pipeline card: prevent horizontal overflow */
+  .hero-pipeline-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .hpc-body { padding: 0.9rem 0.9rem 0.4rem; }
+  .hpc-step-meta { font-size: 0.72rem; }
+
+  /* Terminal card in hero */
+  .hero-new-right { width: 100%; overflow: hidden; }
+
+  /* stats strip: 2 columns */
+  .stats-strip-new { grid-template-columns: repeat(2,1fr); }
+  .stat-new { padding: 1rem 0.75rem; }
+  .stat-new-num { font-size: 1.4rem; }
+
+  /* Prevent any section from overflowing viewport */
+  #screen-landing section,
+  #screen-landing > div {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Nav bar height — ensure safe-area padding on iOS */
+  .landing-nav {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Touch targets — all interactive elements at least 44px tall */
+  button, .btn, [role="button"], a.btn {
+    min-height: 44px;
+  }
+
+  /* Font sizes: ensure readability */
+  .hv-leg { font-size: 0.78rem; }
+  .hv-cats-grid { grid-template-columns: repeat(2,1fr); }
+
+  /* home-page-content sections padding */
+  .hiw-section,
+  .featured-wf-section,
+  .home-cta-section { padding-left: 1rem; padding-right: 1rem; }
+
+  /* How it works: single column */
+  .hiw-steps { gap: 1rem; }
+
+  /* Featured workflow cards: stack */
+  .wf-card { padding: 1.25rem 1rem; }
+}
+
+@media (max-width: 480px) {
+  /* Very small phones */
+  .hero-new { padding: 3rem 1rem 2rem; }
+  .hero-demohead { font-size: 1.25rem; }
+  .hero-demosub { font-size: 0.82rem; }
+  .hpc-topbar { padding: 0.55rem 0.75rem; }
+  .hpc-bar-title { font-size: 0.65rem; }
+  .stats-strip-new { grid-template-columns: 1fr 1fr; }
+  .stat-new-num { font-size: 1.2rem; }
+
+  /* Study pack: single column always */
+  .sp-layout { grid-template-columns: 1fr !important; }
+  .sp-sidebar { display: none; }
+}

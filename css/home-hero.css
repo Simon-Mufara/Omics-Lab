@@ -463,6 +463,15 @@
   .hv-cats-grid { grid-template-columns: 1fr; }
   .hv-canvas-wrap { height: 300px; }
 }
+@media (max-width: 480px) {
+  .hv-canvas-wrap { height: 240px; }
+  .hv-section-title { font-size: 1rem; }
+  .hv-legend { gap: .5rem .9rem; }
+  .hv-leg { font-size: .72rem; }
+  .hv-cats-grid { grid-template-columns: 1fr; gap: .5rem; }
+  .hv-cat-card { padding: .65rem .9rem; }
+}
 @media (max-width: 440px) {
   .hv-d-icon { width: 62px; height: 62px; border-radius: 12px; }
+  .hv-canvas-wrap { height: 200px; }
 }

@@ -1,16 +1,25 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v32: Home page cleanup — remove testimonials/fake stats, fix HomeHero animation restart, fix changelog reveal class
+   v33: Platform showcase, mobile fixes, offline.html precache, _si() hardened, schema versioning
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v32';  /* js/ css/ images/ */
-const PAGES_CACHE   = 'ol-pages-v1';   /* index.html */
+const STATIC_CACHE  = 'ol-static-v33';  /* js/ css/ images/ */
+const PAGES_CACHE   = 'ol-pages-v2';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
+
+/* Precache offline fallback on install */
+const OFFLINE_URL = '/Omics-Lab/offline.html';
 
 const ORIGIN = self.location.origin;
 
-/* ─── Install: skip waiting immediately ─── */
-self.addEventListener('install', () => self.skipWaiting());
+/* ─── Install: precache offline.html, then skip waiting ─── */
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(PAGES_CACHE)
+      .then(cache => cache.add(OFFLINE_URL))
+      .then(() => self.skipWaiting())
+  );
+});
 
 /* ─── Activate: delete old caches, claim clients ─── */
 self.addEventListener('activate', e => {
@@ -48,10 +57,10 @@ self.addEventListener('fetch', e => {
     return; /* let the request pass through unmodified */
   }
 
-  /* 4. index.html → Network-First with 3s timeout */
+  /* 4. index.html → Network-First with 3s timeout; offline.html fallback */
   if (path === '/' || path === '/Omics-Lab/' || path.endsWith('/index.html') ||
       path === '/Omics-Lab' || path === '') {
-    e.respondWith(_networkFirst(e.request, PAGES_CACHE, 3000));
+    e.respondWith(_networkFirstWithOffline(e.request, PAGES_CACHE, 3000));
     return;
   }
 
@@ -98,6 +107,26 @@ async function _networkFirst(req, cacheName, timeoutMs) {
     clearTimeout(timer);
     const cached = await cache.match(req);
     return cached || Response.error();
+  }
+}
+
+/* ─── Network-First for index.html with offline.html fallback ─── */
+async function _networkFirstWithOffline(req, cacheName, timeoutMs) {
+  const cache = await caches.open(cacheName);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(req, { signal: controller.signal });
+    clearTimeout(timer);
+    if (res && res.ok) cache.put(req, res.clone());
+    return res;
+  } catch {
+    clearTimeout(timer);
+    const cached = await cache.match(req);
+    if (cached) return cached;
+    /* First-time offline — serve precached offline page */
+    const offline = await caches.match(OFFLINE_URL);
+    return offline || Response.error();
   }
 }
 
