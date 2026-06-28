@@ -878,9 +878,9 @@ OmicsLab.Router = (function () {
       if (showHome) _animateIn(homeContent);
     }
 
-    /* Home visual hero (DNA animation) */
+    /* Home visual hero (DNA animation) — init on every home visit, stop on leave */
     if (page === 'home') {
-      setTimeout(() => OmicsLab.HomeHero?.init(), 60);
+      OmicsLab.HomeHero?.init();
     } else {
       OmicsLab.HomeHero?.stop();
     }
@@ -1358,32 +1358,6 @@ OmicsLab.Router = (function () {
         </div>
       </div>
 
-      <!-- ══ IMPACT STATS ══ -->
-      <div class="social-proof-section">
-        <div class="social-proof-inner">
-          <div class="impact-stats-row" id="impact-stats-row">
-            <div class="impact-stat">
-              <div class="impact-stat-num" data-target="2400"><span>0</span><span style="color:var(--green)">+</span></div>
-              <div class="impact-stat-label">Researchers trained across Africa</div>
-            </div>
-            <div class="impact-stat">
-              <div class="impact-stat-num" data-target="54"><span>0</span></div>
-              <div class="impact-stat-label">African countries with active users</div>
-            </div>
-            <div class="impact-stat">
-              <div class="impact-stat-num"><span>92</span><span style="color:var(--green)">%</span></div>
-              <div class="impact-stat-label">Average course completion rate</div>
-            </div>
-            <div class="impact-stat">
-              <div class="impact-stat-num" data-target="14"><span>0</span><span style="color:var(--green)">+</span></div>
-              <div class="impact-stat-label">Workflows covering 8 omics domains</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══ TESTIMONIALS + PARTNER LOGOS (js/testimonials.js) ══ -->
-      ${OmicsLab.Testimonials ? OmicsLab.Testimonials.renderSection() : ''}
 
       <!-- ══ BOTTOM CTA ══ -->
       <div class="home-cta-section">
@@ -1436,8 +1410,6 @@ OmicsLab.Router = (function () {
     const statsRow = document.getElementById('impact-stats-row');
     if (statsRow) observer.observe(statsRow);
 
-    /* Init testimonials country counter */
-    if (OmicsLab.Testimonials) OmicsLab.Testimonials.initCounters(homeContent);
   }
 
   /* ─── Sync nav active state to current page on init ─── */

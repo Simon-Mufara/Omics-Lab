@@ -428,32 +428,46 @@ OmicsLab.HomeHero = (function () {
 </section>`;
   }
 
-  /* ── Public API ── */
+  /* ── Internal resize handler (kept across navigations) ── */
+  let _resizeHandler = null;
+
+  /* ── Render HTML content once, then (re)start animation every visit ── */
   function init() {
     const el = document.getElementById('home-visual-section');
-    if (!el || el.dataset.hvReady) return;
-    el.dataset.hvReady = '1';
+    if (!el) return;
 
-    el.innerHTML = _dnaHtml() + _dogmaHtml() + _catsHtml();
-
-    /* Resize + start canvas */
-    const canvas = document.getElementById('hv-dna-canvas');
-    if (canvas) {
-      _canvas = canvas;
-      function resize() {
-        const wrap = canvas.parentElement;
-        if (!wrap) return;
-        const w = wrap.clientWidth  || 320;
-        const h = wrap.clientHeight || 480;
-        if (canvas.width !== w || canvas.height !== h) {
-          canvas.width  = w;
-          canvas.height = h;
-        }
-      }
-      resize();
-      window.addEventListener('resize', resize, { passive: true });
-      _animate(canvas);
+    /* Render content only on first call */
+    if (!el.dataset.hvReady) {
+      el.dataset.hvReady = '1';
+      el.innerHTML = _dnaHtml() + _dogmaHtml() + _catsHtml();
     }
+
+    /* Always (re)start the animation — stop() may have paused it */
+    const canvas = document.getElementById('hv-dna-canvas');
+    if (!canvas) return;
+    _canvas = canvas;
+
+    /* Size canvas to its container */
+    function _resize() {
+      const wrap = canvas.parentElement;
+      if (!wrap) return;
+      const w = wrap.clientWidth  || 320;
+      const h = wrap.clientHeight || 520;
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width  = w;
+        canvas.height = h;
+      }
+    }
+
+    /* Attach resize listener once */
+    if (!_resizeHandler) {
+      _resizeHandler = _resize;
+      window.addEventListener('resize', _resizeHandler, { passive: true });
+    }
+
+    /* Size first, then animate */
+    _resize();
+    _animate(canvas);
   }
 
   return { init, stop };
