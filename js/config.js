@@ -7,8 +7,8 @@ window.OMICSLAB_CONFIG = {
 
   /* ── Supabase ──────────────────────────────────────────────────
      supabase.com → Project Settings → API → Project URL / anon key  */
-  supabaseUrl:     '',   // e.g. 'https://xxxx.supabase.co'
-  supabaseAnonKey: '',   // starts with 'eyJ...'
+  supabaseUrl:     'https://gfsuklduvlnpilvretkz.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdmc3VrbGR1dmxucGlsdnJldGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwMTYzMDcsImV4cCI6MjA5ODU5MjMwN30.DvGRkEyiBHRXS4PHSY6be0EDGvcGs1WVJu_kNBpDgqI',
 
   /* ── Clerk ─────────────────────────────────────────────────────
      dashboard.clerk.com → API Keys → Publishable Key              */
