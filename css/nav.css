@@ -313,6 +313,26 @@
   border-color: rgba(63,185,80,0.5);
   box-shadow: 0 0 0 3px rgba(63,185,80,0.08);
 }
+/* Sign-in CTA button in nav (shown when logged out) */
+.nav-signin-btn {
+  display: flex;
+  align-items: center;
+  padding: .42rem 1rem;
+  background: rgba(63,185,80,0.12);
+  border: 1px solid rgba(63,185,80,0.4);
+  border-radius: 8px;
+  color: #3fb950;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .14s, border-color .14s, color .14s;
+}
+.nav-signin-btn:hover {
+  background: rgba(63,185,80,0.22);
+  border-color: rgba(63,185,80,0.65);
+  color: #56d364;
+}
 
 /* ── Mobile hamburger ── */
 .nav-hamburger {
