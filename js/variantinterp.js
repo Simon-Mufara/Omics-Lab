@@ -313,11 +313,17 @@ OmicsLab.VariantInterp = (function () {
         </div>
 
         <div class="vi-ai-strip">
-          <span class="vi-ai-strip-label">Get an AI explanation with Africa-specific genomics context</span>
-          <button class="vi-ai-btn" onclick="OmicsLab.VariantInterp._askAI()">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg>
-            Ask AI about this variant
-          </button>
+          <span class="vi-ai-strip-label">Africa-specific AI genomics analysis</span>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="vi-ai-btn" onclick="OmicsLab.VariantInterp._askAI()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Ask AI
+            </button>
+            <button class="vi-ai-btn" id="vi-ai-report-btn" onclick="OmicsLab.VariantInterp._generateReport()" style="--vab-color:#bc8cff">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #30363d;border-radius:3px;padding:0 .25rem;background:#21262d">Ctrl R</kbd>
+            </button>
+          </div>
         </div>
       </div>`;
 
@@ -472,6 +478,93 @@ OmicsLab.VariantInterp = (function () {
     if (OmicsLab.Router) OmicsLab.Router.navigate('ai');
   }
 
+  /* ─── Generate full AI clinical report ─── */
+  async function _generateReport() {
+    if (!_lastResult) { alert('Interpret a variant first.'); return; }
+    const key = localStorage.getItem('omicslab_anthropic_key');
+    if (!key) {
+      alert('Add your Claude API key in Settings → API key to use AI features.');
+      return;
+    }
+
+    const btn = document.getElementById('vi-ai-report-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+
+    const { variantLabel, d, acmg, afrAf } = _lastResult;
+    const prompt = [
+      `Generate a structured clinical genomics report for the following variant found in an African patient.`,
+      ``,
+      `**Variant:** ${variantLabel}`,
+      `**Gene:** ${d.gene || 'unknown'}  |  **Consequence:** ${(d.consequence||'unknown').replace(/_/g,' ')}`,
+      d.hgvsc ? `**cDNA:** ${d.hgvsc}` : '',
+      d.hgvsp && d.hgvsp !== '—' ? `**Protein:** ${d.hgvsp}` : '',
+      `**Disease association:** ${d.disease || 'not specified in local database'}`,
+      `**ACMG Classification:** ${acmg.classification}`,
+      `**Criteria applied:** ${acmg.applied.join(', ') || 'none'}`,
+      `**AFR allele frequency (gnomAD):** ${afrAf !== null && afrAf !== undefined ? afrAf.toExponential(3) : 'not available'}`,
+      `**ClinVar:** ${d.clinvar || 'not curated'}`,
+      ``,
+      `Write the report with these sections:`,
+      `1. **Summary** (2 sentences)`,
+      `2. **Variant Details** (gene function, consequence, protein impact)`,
+      `3. **Population Context** (African-specific frequency and relevance — CRITICAL for this report)`,
+      `4. **Clinical Significance** (ACMG classification rationale, disease implications)`,
+      `5. **African Genomics Context** (why this variant matters specifically in African populations)`,
+      `6. **Recommended Next Steps** (confirmatory testing, family screening, clinical referral)`,
+      ``,
+      `Be concise and clinically accurate. Use markdown formatting.`,
+    ].filter(Boolean).join('\n');
+
+    /* Inject a report panel below the AI strip */
+    let panel = document.getElementById('vi-report-panel');
+    if (!panel) {
+      panel = document.createElement('div');
+      panel.id = 'vi-report-panel';
+      panel.style.cssText = 'margin:1rem;padding:1rem;background:#0d1117;border:1px solid #30363d;border-radius:8px;font-size:.8rem;line-height:1.7;color:#c9d1d9';
+      document.getElementById('vi-output')?.appendChild(panel);
+    }
+    panel.innerHTML = '<em style="color:#8b949e">Generating clinical report with Fable 5…</em>';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-fable-5',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+      const data = await resp.json();
+      const text = data?.content?.[0]?.text || 'No response received.';
+      const html = text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^#{1,3}\s+(.+)$/gm, '<h4 style="color:#e6edf3;margin:.75rem 0 .25rem">$1</h4>')
+        .replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>')
+        .replace(/\n\n/g, '<br>')
+        .replace(/(<li>.*?<\/li>)/gs, '<ul style="padding-left:1.25rem;margin:.3rem 0">$1</ul>');
+      panel.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;border-bottom:1px solid #21262d;padding-bottom:.5rem">
+          <strong style="color:#bc8cff;font-size:.82rem">AI Clinical Report — ${variantLabel}</strong>
+          <button onclick="this.closest('#vi-report-panel').remove()" style="background:none;border:none;color:#484f58;cursor:pointer;font-size:.75rem">dismiss</button>
+        </div>
+        ${html}
+        <div style="margin-top:.75rem;font-size:.68rem;color:#484f58;border-top:1px solid #21262d;padding-top:.5rem">
+          Generated by Claude Fable 5. Not a clinical diagnostic report. Validate with a certified clinical genetics laboratory.
+        </div>`;
+    } catch (err) {
+      panel.innerHTML = `<span style="color:#f85149">Error: ${err.message || 'Request failed'}</span>`;
+    }
+
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #30363d;border-radius:3px;padding:0 .25rem;background:#21262d">Ctrl R</kbd>`; }
+  }
+
   /* ─── Init ─── */
   function init() {
     const section = document.getElementById('variantinterp-section');
@@ -541,5 +634,5 @@ OmicsLab.VariantInterp = (function () {
     }
   }
 
-  return { init, _interpret, _loadExample, _askAI };
+  return { init, _interpret, _loadExample, _askAI, _generateReport };
 })();

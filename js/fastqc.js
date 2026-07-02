@@ -211,6 +211,19 @@ OmicsLab.FastQC = (function () {
     <p class="fqc-sub">FastQC-style per-base quality, GC distribution, and module summary for African genomics sequencing data — COVID-19 ARTIC, TB whole-genome, and malaria WGS.</p>
   </div>
 
+  <div class="fqc-drop-zone" id="fqc-drop"
+    ondragover="event.preventDefault();this.classList.add('fqc-drop-active')"
+    ondragleave="this.classList.remove('fqc-drop-active')"
+    ondrop="OmicsLab.FastQC._onDrop(event)">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <span class="fqc-drop-text">Drop a real .fastq / .fastq.gz file here to parse basic QC stats</span>
+    <label class="fqc-browse-btn">
+      Browse
+      <input type="file" accept=".fastq,.fq,.fastq.gz,.fq.gz" style="display:none" onchange="OmicsLab.FastQC._onFile(this.files[0])">
+    </label>
+  </div>
+  <div id="fqc-file-result" style="display:none"></div>
+
   <div class="fqc-layout">
     <aside class="fqc-sidebar">
       <div class="fqc-sb-title">Sample</div>
@@ -266,5 +279,113 @@ OmicsLab.FastQC = (function () {
     _renderChart(); _refreshPanel();
   }
 
-  return { init, selectSample, setChart };
+  /* ── FASTQ drag-drop file parser ── */
+  function _onDrop(e) {
+    e.preventDefault();
+    const drop = document.getElementById('fqc-drop');
+    if (drop) drop.classList.remove('fqc-drop-active');
+    const file = e.dataTransfer?.files?.[0];
+    if (file) _onFile(file);
+  }
+
+  async function _onFile(file) {
+    if (!file) return;
+    const res = document.getElementById('fqc-file-result');
+    if (!res) return;
+    res.style.display = 'block';
+    res.innerHTML = `<div class="fqc-file-parsing">Parsing <strong>${file.name}</strong>…</div>`;
+
+    try {
+      /* Read up to first 512 KB to get a representative sample */
+      const MAX = 512 * 1024;
+      const slice = file.slice(0, MAX);
+      let text = '';
+      if (file.name.endsWith('.gz')) {
+        /* Use DecompressionStream if supported */
+        if ('DecompressionStream' in window) {
+          const ds = new DecompressionStream('gzip');
+          const piped = slice.stream().pipeThrough(ds);
+          const reader = piped.getReader();
+          const chunks = [];
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+            if (chunks.reduce((s,c)=>s+c.length,0) > MAX) break;
+          }
+          const buf = new Uint8Array(chunks.reduce((s,c)=>s+c.length,0));
+          let off = 0; for (const c of chunks) { buf.set(c, off); off += c.length; }
+          text = new TextDecoder().decode(buf);
+        } else {
+          res.innerHTML = `<div class="fqc-file-err">gzip decompression not supported in this browser. Unzip the file and try again.</div>`;
+          return;
+        }
+      } else {
+        text = await slice.text();
+      }
+
+      /* Parse FASTQ: groups of 4 lines */
+      const lines  = text.split('\n');
+      let reads = 0, totalLen = 0, totalQ = 0, totalBases = 0, below20 = 0;
+      const gcCount = { G:0, C:0, A:0, T:0, N:0 };
+      const lenDist = {};
+
+      for (let i = 0; i + 3 < lines.length; i += 4) {
+        if (!lines[i].startsWith('@')) continue;
+        const seq = lines[i+1] || '';
+        const qual = lines[i+3] || '';
+        if (!seq || !qual) continue;
+        reads++;
+        totalLen += seq.length;
+        const key = Math.round(seq.length / 50) * 50;
+        lenDist[key] = (lenDist[key] || 0) + 1;
+        for (const b of seq.toUpperCase()) gcCount[b] = (gcCount[b] || 0) + 1;
+        let qSum = 0;
+        for (const c of qual) {
+          const q = c.charCodeAt(0) - 33;
+          qSum += q;
+          totalBases++;
+          if (q < 20) below20++;
+        }
+        totalQ += qSum / (qual.length || 1);
+      }
+
+      if (!reads) {
+        res.innerHTML = `<div class="fqc-file-err">No valid FASTQ reads found. Is this a FASTQ file?</div>`;
+        return;
+      }
+
+      const meanLen = (totalLen / reads).toFixed(1);
+      const meanQ   = (totalQ / reads).toFixed(1);
+      const gcPct   = (((gcCount.G||0) + (gcCount.C||0)) / Math.max(1, totalBases) * 100).toFixed(1);
+      const q20pct  = ((1 - below20 / Math.max(1, totalBases)) * 100).toFixed(1);
+      const isTruncated = file.size > MAX;
+
+      res.innerHTML = `
+        <div class="fqc-file-card">
+          <div class="fqc-file-name">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            ${file.name} <span class="fqc-file-size">(${(file.size/1048576).toFixed(1)} MB${isTruncated?' — sampled first 512 KB':''})</span>
+          </div>
+          <div class="fqc-file-stats">
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">Reads parsed</span><span class="fqc-fstat-val">${reads.toLocaleString()}</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">Mean read length</span><span class="fqc-fstat-val">${meanLen} bp</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">Mean Phred quality</span><span class="fqc-fstat-val" style="color:${meanQ>=30?'#3fb950':meanQ>=20?'#e3b341':'#f85149'}">${meanQ}</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">%Q≥20 bases</span><span class="fqc-fstat-val" style="color:${q20pct>=90?'#3fb950':q20pct>=70?'#e3b341':'#f85149'}">${q20pct}%</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">GC content</span><span class="fqc-fstat-val" style="color:${gcPct>=40&&gcPct<=60?'#3fb950':'#e3b341'}">${gcPct}%</span></div>
+          </div>
+          <div class="fqc-file-verdict ${meanQ>=28&&q20pct>=90?'fqc-verdict-pass':meanQ>=20?'fqc-verdict-warn':'fqc-verdict-fail'}">
+            ${meanQ>=28&&q20pct>=90
+              ? 'PASS — High-quality data suitable for downstream analysis.'
+              : meanQ>=20
+                ? 'WARN — Acceptable quality. Consider trimming low-quality bases before alignment.'
+                : 'FAIL — Low mean quality. Trimming strongly recommended. Check sequencer run metrics.'}
+          </div>
+        </div>`;
+    } catch (err) {
+      res.innerHTML = `<div class="fqc-file-err">Parse error: ${err.message}</div>`;
+    }
+  }
+
+  return { init, selectSample, setChart, _onDrop, _onFile };
 })();

@@ -149,6 +149,10 @@ OmicsLab.Glossary = (function () {
             <option value="">All categories</option>
             ${cats.map(c => `<option>${c}</option>`).join('')}
           </select>
+          <button class="gl-flashcard-btn" onclick="OmicsLab.Glossary.openFlashcards()" title="Flashcard mode (F)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            Flashcards
+          </button>
         </div>
         <div class="gl-lang-row">
           <span class="gl-lang-label">Show languages:</span>
@@ -159,5 +163,81 @@ OmicsLab.Glossary = (function () {
     _filter();
   }
 
-  return { init, _filter, _toggleLang };
+  /* ── Flashcard mode ── */
+  function openFlashcards() {
+    const cat = document.getElementById('gl-cat')?.value || '';
+    const q   = (document.getElementById('gl-q')?.value || '').toLowerCase();
+    let pool  = TERMS.filter(t => {
+      const txt = t.join(' ').toLowerCase();
+      return (!q || txt.includes(q)) && (!cat || t[1] === cat);
+    });
+    if (!pool.length) pool = [...TERMS];
+    pool = pool.sort(() => Math.random() - .5);
+
+    let idx = 0; let flipped = false;
+
+    let overlay = document.getElementById('gl-fc-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'gl-fc-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(1,4,9,.88);z-index:8000;display:flex;align-items:center;justify-content:center;padding:1rem';
+      overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+      document.body.appendChild(overlay);
+    }
+
+    function render() {
+      const t = pool[idx];
+      const catColor = { Genomics:'#3fb950', Sequencing:'#58a6ff', Analysis:'#e3b341', Tools:'#bc8cff', Statistics:'#f97316', 'Wet Lab':'#ff6b6b', 'Population Genetics':'#58a6ff', 'Clinical Genomics':'#ff6b6b', Databases:'#8b949e', 'Africa & Consortia':'#f97316', Pathogens:'#ff6b6b', 'ML & AI':'#bc8cff' }[t[1]] || '#8b949e';
+      overlay.innerHTML = `
+        <div style="background:#161b22;border:1px solid #30363d;border-radius:16px;padding:1.75rem;max-width:520px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.7);text-align:center">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+            <span style="font-size:.72rem;color:#8b949e">${idx+1} / ${pool.length}</span>
+            <span style="font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${catColor};border:1px solid ${catColor}30;border-radius:999px;padding:.1rem .6rem">${t[1]}</span>
+            <button onclick="document.getElementById('gl-fc-overlay').remove()" style="background:none;border:none;color:#8b949e;cursor:pointer;font-size:1.1rem">×</button>
+          </div>
+          <div id="gl-fc-card" style="min-height:140px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;background:#0d1117;border-radius:12px;padding:2rem;border:2px solid ${catColor}22;margin-bottom:1.25rem;transition:all .15s" onclick="OmicsLab.Glossary._fcFlip()">
+            ${flipped ? `
+              <div style="font-size:.72rem;color:#8b949e;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem">Definition</div>
+              <div style="font-size:.95rem;color:#e6edf3;line-height:1.6">${t[2]}</div>
+              ${t[3] ? `<div style="font-size:.78rem;color:#3fb950;margin-top:.5rem">Swahili: <em>${t[3]}</em></div>` : ''}
+            ` : `
+              <div style="font-size:.72rem;color:#8b949e;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem">Term</div>
+              <div style="font-size:1.75rem;font-weight:800;color:#e6edf3">${t[0]}</div>
+              <div style="font-size:.72rem;color:#484f58;margin-top:.25rem">tap to reveal</div>
+            `}
+          </div>
+          <div style="display:flex;justify-content:center;gap:.75rem">
+            <button onclick="OmicsLab.Glossary._fcNav(-1)" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem" ${idx===0?'disabled':''}>← Prev</button>
+            <button onclick="OmicsLab.Glossary._fcFlip()" style="background:#bc8cff22;border:1px solid #bc8cff55;color:#bc8cff;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem">${flipped?'Show Term':'Flip'}</button>
+            <button onclick="OmicsLab.Glossary._fcNav(1)" style="background:#21262d;border:1px solid #30363d;color:#c9d1d9;border-radius:8px;padding:.45rem 1rem;cursor:pointer;font-size:.82rem">Next →</button>
+          </div>
+          <div style="margin-top:1rem;font-size:.68rem;color:#484f58">Press ← → to navigate · Esc to close</div>
+        </div>`;
+    }
+
+    /* Expose state manipulation for buttons */
+    window._glFC = {
+      nav: (dir) => {
+        idx = Math.min(pool.length - 1, Math.max(0, idx + dir));
+        flipped = false;
+        render();
+      },
+      flip: () => { flipped = !flipped; render(); },
+    };
+
+    /* Keyboard nav */
+    function _onKey(e) {
+      if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', _onKey); }
+      if (e.key === 'ArrowRight') window._glFC.nav(1);
+      if (e.key === 'ArrowLeft')  window._glFC.nav(-1);
+      if (e.key === ' ') { e.preventDefault(); window._glFC.flip(); }
+    }
+    document.addEventListener('keydown', _onKey);
+    render();
+  }
+
+  function _fcFlip() { window._glFC?.flip(); }
+  function _fcNav(dir) { window._glFC?.nav(dir); }
+
+  return { init, _filter, _toggleLang, openFlashcards, _fcFlip, _fcNav };
 })();

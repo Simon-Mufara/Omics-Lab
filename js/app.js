@@ -1477,7 +1477,7 @@ rule annotate:
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/Omics-Lab/sw.js').catch(() => {});
       navigator.serviceWorker.addEventListener('message', e => {
-        if (e.data && e.data.type === 'SW_UPDATED') window.location.reload();
+        if (e.data && e.data.type === 'SW_UPDATED') _showSwBanner();
       });
     }
   }
@@ -1541,6 +1541,40 @@ document.addEventListener('DOMContentLoaded', () => {
   _startHeroPreviewCycle();
   _initScrollReveal();
 });
+
+function _showSwBanner() {
+  if (document.getElementById('sw-update-banner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'sw-update-banner';
+  banner.setAttribute('role', 'status');
+  banner.style.cssText = [
+    'position:fixed;bottom:0;left:0;right:0;z-index:9999',
+    'display:flex;align-items:center;justify-content:space-between;gap:.75rem',
+    'background:#1c2128;border-top:1px solid #30363d',
+    'padding:.65rem 1.25rem calc(.65rem + env(safe-area-inset-bottom,0px))',
+    'font-size:.82rem;color:#c9d1d9;font-family:inherit',
+    'animation:sw-slide .25s ease',
+  ].join(';');
+  banner.innerHTML = `
+    <style>@keyframes sw-slide{from{transform:translateY(100%)}to{transform:none}}</style>
+    <span>
+      <strong style="color:#3fb950">Update available</strong>
+      — A new version of OmicsLab is ready.
+    </span>
+    <div style="display:flex;gap:.5rem;flex-shrink:0">
+      <button onclick="window.location.reload()" style="
+        background:#3fb950;color:#0d1117;border:none;border-radius:6px;
+        padding:.3rem .75rem;font-size:.78rem;font-weight:700;cursor:pointer">
+        Reload
+      </button>
+      <button onclick="this.closest('#sw-update-banner').remove()" style="
+        background:none;border:1px solid #30363d;color:#8b949e;
+        border-radius:6px;padding:.3rem .6rem;font-size:.78rem;cursor:pointer">
+        Later
+      </button>
+    </div>`;
+  document.body.appendChild(banner);
+}
 
 function _initScrollReveal() {
   const revealAll = () => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));

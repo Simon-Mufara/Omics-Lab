@@ -48,6 +48,7 @@ OmicsLab.MobileNav = (function () {
     { id: 'qualitypredictor',label: 'Quality Predictor',   color: '#3fb950' },
     { id: 'gene-lookup',     label: 'Gene Lookup',         color: '#3fb950' },
     { id: 'pubmed',          label: 'PubMed',              color: '#58a6ff' },
+    { id: 'gatk',            label: 'GATK Builder',        color: '#e3b341' },
   ];
 
   let _active = 'home';
@@ -189,7 +190,7 @@ OmicsLab.MobileNav = (function () {
     const tools = [
       'analysis','variantinterp','primerdesign','phylo','heatmap','study',
       'qualitypredictor','knowledge-graph','gene-lookup','pathways','pubmed',
-      'terminal','codon','nanopore','amr','kraken','popstruct','genome-browser',
+      'terminal','codon','nanopore','amr','kraken','popstruct','genome-browser','gatk',
       'uniprot','protein','string','preprints','sra','pipeline-gen','metaanalysis',
       'citations','bionlp','assistant','ask','learn','glossary','case-files',
       'seq-align','pipeline-visual','journalclub','quizbattle','epigenomics',

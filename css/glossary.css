@@ -7,6 +7,8 @@
 .gl-search { flex: 1; min-width: 200px; padding: .4rem .7rem; background: #161b22; border: 1px solid #30363d; border-radius: 7px; color: #c9d1d9; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
 .gl-search:focus { border-color: #e3b341; }
 .gl-cat-filter { padding: .4rem .6rem; background: #161b22; border: 1px solid #30363d; border-radius: 7px; color: #c9d1d9; font-size: .82rem; font-family: inherit; outline: none; }
+.gl-flashcard-btn { display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .75rem;background:#e3b34122;border:1px solid #e3b34155;color:#e3b341;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;transition:background .12s;white-space:nowrap; }
+.gl-flashcard-btn:hover { background:#e3b34133; }
 .gl-lang-row { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
 .gl-lang-label { font-size: .72rem; color: #8b949e; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
 .gl-lang-opt { display: flex; align-items: center; gap: .3rem; font-size: .78rem; color: #c9d1d9; cursor: pointer; }

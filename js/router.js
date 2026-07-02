@@ -561,6 +561,13 @@ OmicsLab.Router = (function () {
       tagline: 'FastQC-style read quality metrics — per-base quality boxplots, GC distribution, module PASS/WARN/FAIL — illustrated with African disease sequencing data',
       sections: ['fastqc-section'],
     },
+    gatk: {
+      label: 'GATK Command Builder',
+      icon: 'terminal',
+      color: '#e3b341',
+      tagline: 'Build GATK4 best-practices commands for germline variant calling — HaplotypeCaller, BQSR, MarkDuplicates, GenotypeGVCFs, VQSR, and more',
+      sections: ['gatk-section'],
+    },
     'single-cell': {
       label: 'Single-Cell Explorer',
       icon: 'layers',
@@ -901,8 +908,17 @@ OmicsLab.Router = (function () {
       dash.style.display = showDash ? '' : 'none';
     }
 
-    /* Track page for personalised dashboard */
-    if (page !== 'home') OmicsLab.Dashboard?.trackPage(page);
+    /* Track page for personalised dashboard + continue-where-you-left-off */
+    if (page !== 'home') {
+      OmicsLab.Dashboard?.trackPage(page);
+      try {
+        const p = PAGES[page];
+        localStorage.setItem('omicslab_last_page', JSON.stringify({
+          page, label: p?.label || page, color: p?.color || '#3fb950',
+          tagline: p?.tagline || '', ts: Date.now(),
+        }));
+      } catch {}
+    }
     OmicsLab.Analytics?.page(page);
 
     /* Sync mobile bottom tab active state */
@@ -989,6 +1005,10 @@ OmicsLab.Router = (function () {
     if (page === 'fastqc' && OmicsLab.FastQC) {
       const el = document.getElementById('fastqc-content');
       if (el && !el.querySelector('.fqc-page')) try { OmicsLab.FastQC.init(); } catch(e) { OmicsLab.Error?.renderPageError('fastqc-content','FastQC',e); }
+    }
+    if (page === 'gatk' && OmicsLab.GATK) {
+      const el = document.getElementById('gatk-section');
+      if (el && !el.dataset.gatkReady) try { OmicsLab.GATK.init(); } catch(e) {}
     }
     if (page === 'single-cell' && OmicsLab.SingleCell) {
       const el = document.getElementById('single-cell-content');
@@ -1283,7 +1303,81 @@ OmicsLab.Router = (function () {
       { mark: 'GT', name: 'GATK\nStandards', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)' },
     ];
 
+    /* ── Today's Focus data (from Study Pack categories) ── */
+    const FOCUS_ITEMS = [
+      { title:'DNA Extraction & QC', why:'The quality of your DNA determines every downstream result — degradation and inhibitors cause silent failures.', page:'lab', color:'#3fb950' },
+      { title:'FASTQ Quality Control', why:'Phred scores below Q30 introduce systematic errors that propagate through alignment and variant calling.', page:'fastqc', color:'#3fb950' },
+      { title:'Reference Genome Bias', why:'Most reference panels are European-derived — understanding this bias is essential for African genomics research.', page:'learn', color:'#f97316' },
+      { title:'ACMG/AMP Variant Classification', why:'Getting classification right matters clinically — a VUS in a European database may be Pathogenic in an African cohort.', page:'variantinterp', color:'#bc8cff' },
+      { title:'Phylogenetic Tree Interpretation', why:'Reading a phylo tree correctly lets you trace pathogen transmission chains and identify the index case.', page:'outbreak', color:'#f97316' },
+      { title:'APOL1 Risk Alleles & CKD', why:'G1/G2 risk alleles occur in ~22% of West Africans — missing them in clinical workup leads to preventable renal disease.', page:'variantinterp', color:'#58a6ff' },
+      { title:'RNA-seq Differential Expression', why:'Choosing between DESeq2 and edgeR, and setting correct thresholds (padj < 0.05, |log2FC| > 1), changes your biology.', page:'heatmap', color:'#58a6ff' },
+      { title:'Antimicrobial Resistance Genomics', why:'rpoB S450L is the most important TB resistance mutation globally — every clinical microbiologist must know it.', page:'amr', color:'#f97316' },
+      { title:'Population Structure & PCA', why:'Failing to correct for population structure inflates GWAS false positives by orders of magnitude.', page:'gwas', color:'#e3b341' },
+      { title:'G6PD Deficiency Screening', why:'Prescribing primaquine to a G6PD-deficient patient can trigger life-threatening haemolysis.', page:'pharmacogenomics', color:'#e3b341' },
+      { title:'Nanopore Sequencing QC', why:'Long-read accuracy metrics differ fundamentally from Illumina — N50 read length and basecall accuracy drive pipeline choice.', page:'nanopore', color:'#3fb950' },
+      { title:'CRISPR Guide Design', why:'Off-target scores and PAM site selection determine whether your edit is a clean knockout or a mosaic disaster.', page:'crispr', color:'#bc8cff' },
+      { title:'scRNA-seq Clustering', why:'Choosing the wrong resolution parameter merges cell types or splits one type into artefactual clusters.', page:'single-cell', color:'#58a6ff' },
+      { title:'Epigenomics & DNA Methylation', why:'African populations show distinct methylation patterns that alter gene expression and disease susceptibility.', page:'epigenomics', color:'#3fb950' },
+    ];
+    const dayIdx = Math.floor(Date.now() / 86400000) % FOCUS_ITEMS.length;
+    const focus  = FOCUS_ITEMS[dayIdx];
+
+    /* ── Continue where you left off ── */
+    let continueHtml = '';
+    try {
+      const lp = JSON.parse(localStorage.getItem('omicslab_last_page') || 'null');
+      if (lp && lp.page && lp.label) {
+        const mins = Math.round((Date.now() - lp.ts) / 60000);
+        const when = mins < 2 ? 'just now' : mins < 60 ? `${mins}m ago` : mins < 1440 ? `${Math.round(mins/60)}h ago` : `${Math.round(mins/1440)}d ago`;
+        continueHtml = `
+        <div class="home-continue-banner" onclick="OmicsLab.Router.navigate('${lp.page}')" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter')OmicsLab.Router.navigate('${lp.page}')"
+             style="--cont-color:${lp.color || '#3fb950'}">
+          <div class="home-continue-dot"></div>
+          <div class="home-continue-body">
+            <span class="home-continue-label">Continue where you left off</span>
+            <span class="home-continue-page">${lp.label}</span>
+          </div>
+          <div class="home-continue-meta">${when}</div>
+          <svg class="home-continue-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>`;
+      }
+    } catch {}
+
     homeContent.innerHTML = `
+
+      <!-- ══ CONTINUE + TODAY'S FOCUS ══ -->
+      <div class="home-focus-row">
+        ${continueHtml}
+        <div class="home-focus-card" onclick="OmicsLab.Router.navigate('${focus.page}')" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter')OmicsLab.Router.navigate('${focus.page}')"
+             style="--focus-color:${focus.color}">
+          <div class="home-focus-tag">Today's Focus</div>
+          <div class="home-focus-title">${focus.title}</div>
+          <div class="home-focus-why">${focus.why}</div>
+          <span class="home-focus-cta">Open module →</span>
+        </div>
+
+        <div class="home-pipeline-card-mini">
+          <div class="home-pipeline-mini-label">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bc8cff" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.97-10.5A2.5 2.5 0 0 1 7.5 6H9.5zM14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.97-10.5A2.5 2.5 0 0 0 16.5 6H14.5z"/></svg>
+            AI Pipeline Recommender
+          </div>
+          <div class="home-pipeline-mini-sub">Describe your data and get an instant pipeline suggestion</div>
+          <div class="home-pipeline-mini-form">
+            <textarea class="home-pipeline-mini-input" id="hpm-input" rows="2"
+              placeholder="e.g. 30x WGS from 50 Kenyan TB patients, Illumina NovaSeq 6000..."
+              onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();OmicsLab.Router._pipelineRecommend()}"
+            ></textarea>
+            <button class="home-pipeline-mini-btn" onclick="OmicsLab.Router._pipelineRecommend()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Recommend
+            </button>
+          </div>
+          <div class="home-pipeline-mini-result" id="hpm-result" style="display:none"></div>
+        </div>
+      </div>
 
       <!-- ══ HOW IT WORKS ══ -->
       <div id="how-it-works" class="hiw-section">
@@ -1499,5 +1593,54 @@ OmicsLab.Router = (function () {
     }
   }
 
-  return { init, navigate, PAGES };
+  /* ─── AI Pipeline Recommender (mini widget on home) ─── */
+  async function _pipelineRecommend() {
+    const input  = document.getElementById('hpm-input');
+    const result = document.getElementById('hpm-result');
+    if (!input || !result) return;
+
+    const query = input.value.trim();
+    if (!query) { input.focus(); return; }
+
+    const key = localStorage.getItem('omicslab_anthropic_key');
+    if (!key) {
+      result.style.display = 'block';
+      result.innerHTML = `<span style="color:#f97316">Add your Claude API key in Settings to use AI features.</span>`;
+      return;
+    }
+
+    result.style.display = 'block';
+    result.innerHTML = `<span style="color:#8b949e;font-style:italic">Analysing your data description…</span>`;
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-fable-5',
+          max_tokens: 512,
+          system: 'You are an expert bioinformatics pipeline advisor specialising in African genomics. Given a brief data description, recommend the best analysis pipeline in 3-5 bullet points: recommended tools in order, key QC thresholds, and one common pitfall to avoid. Be concise and practical. Use markdown bullet points.',
+          messages: [{ role: 'user', content: `Data description: ${query}\n\nRecommend the best bioinformatics pipeline for this data.` }],
+        }),
+      });
+      const data = await resp.json();
+      const text = data?.content?.[0]?.text || 'No response received.';
+      /* Convert markdown bullets to HTML */
+      const html = text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^[-*•]\s+(.+)$/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+        .replace(/\n\n/g, '<br>');
+      result.innerHTML = `<div class="hpm-answer">${html}</div>`;
+    } catch (err) {
+      result.innerHTML = `<span style="color:#f85149">Error: ${err.message || 'Request failed'}</span>`;
+    }
+  }
+
+  return { init, navigate, PAGES, _pipelineRecommend };
 })();

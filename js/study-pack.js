@@ -832,10 +832,16 @@ OmicsLab.StudyPack = (function () {
           <h1 class="sp-title">Study Pack</h1>
           <p class="sp-sub">Learning objectives, key concepts, and note-taking for ${MODULES.length} core modules. Notes are saved locally — private to your browser.</p>
         </div>
-        <button class="sp-export-btn" onclick="OmicsLab.StudyPack._exportNotes()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export Notes
-        </button>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <button class="sp-export-btn" onclick="OmicsLab.StudyPack._generateQuiz()" style="background:#bc8cff22;border-color:#bc8cff55;color:#bc8cff">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            AI Quiz
+          </button>
+          <button class="sp-export-btn" onclick="OmicsLab.StudyPack._exportNotes()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Notes
+          </button>
+        </div>
       </div>
       <div id="sp-progress" class="sp-progress-wrap">${_progressHtml(p)}</div>
     </div>
@@ -873,5 +879,127 @@ OmicsLab.StudyPack = (function () {
 </div>`;
   }
 
-  return { init, onCat, onStatus, onSearch, _toggle, _bookmark, _setStatus, _noteInput, _exportNotes };
+  /* ── AI Quiz Generator ── */
+  async function _generateQuiz() {
+    const key = localStorage.getItem('omicslab_anthropic_key');
+    if (!key) {
+      alert('Add your Claude API key in Settings to use AI features.');
+      return;
+    }
+
+    /* Pick 5 random modules from visible/current category */
+    const pool = _cat === 'all' ? MODULES : MODULES.filter(m => m.cat === _cat);
+    const sample = pool.sort(() => Math.random() - .5).slice(0, 5);
+    const topics = sample.map(m => `${m.title}: ${(m.objectives||[]).slice(0,2).join('; ')}`).join('\n');
+
+    /* Create modal */
+    let overlay = document.getElementById('sp-quiz-overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'sp-quiz-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(1,4,9,.8);z-index:5000;display:flex;align-items:center;justify-content:center;padding:1rem';
+      overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+      document.body.appendChild(overlay);
+    }
+    overlay.innerHTML = `
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.5rem;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+          <strong style="color:#bc8cff;font-size:.95rem">AI Study Quiz</strong>
+          <button onclick="document.getElementById('sp-quiz-overlay').remove()" style="background:none;border:none;color:#8b949e;cursor:pointer;font-size:1.2rem">×</button>
+        </div>
+        <div id="sp-quiz-body" style="color:#8b949e;font-style:italic;font-size:.82rem">Generating quiz questions with Fable 5…</div>
+      </div>`;
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-fable-5',
+          max_tokens: 1200,
+          system: 'You are an expert bioinformatics educator creating quiz questions for African genomics trainees. Generate multiple-choice questions that test conceptual understanding, not just recall. Emphasise African populations, clinical relevance, and practical application.',
+          messages: [{ role: 'user', content: `Generate 5 multiple-choice quiz questions based on these omics topics:\n\n${topics}\n\nFormat each question EXACTLY as:\n\nQ1. [Question text]\nA) [Option]\nB) [Option]\nC) [Option]\nD) [Option]\nAnswer: [Letter]) [Brief explanation why this is correct]\n\n(repeat for Q2–Q5)` }],
+        }),
+      });
+      const data = await resp.json();
+      const text = data?.content?.[0]?.text || '';
+
+      /* Parse and render questions interactively */
+      const qBlocks = text.split(/\n(?=Q\d+\.)/).filter(b => b.trim());
+      const body = document.getElementById('sp-quiz-body');
+      if (!body) return;
+
+      let score = 0; let answered = 0;
+      body.innerHTML = `
+        <div style="margin-bottom:1rem;font-size:.75rem;color:#8b949e">Topics: ${sample.map(m=>m.title).join(' · ')}</div>
+        ${qBlocks.map((block, qi) => {
+          const lines = block.trim().split('\n').filter(l => l.trim());
+          const qText = (lines[0] || '').replace(/^Q\d+\.\s*/, '');
+          const opts  = lines.filter(l => /^[A-D]\)/.test(l.trim()));
+          const ansLine = lines.find(l => /^Answer:/i.test(l.trim())) || '';
+          const ansLetter = (ansLine.match(/Answer:\s*([A-D])/i) || [])[1] || '';
+          const ansExp = ansLine.replace(/^Answer:\s*[A-D]\)\s*/i, '');
+          return `
+            <div class="sp-quiz-q" id="sp-q-${qi}" style="margin-bottom:1.25rem;padding:1rem;background:#0d1117;border-radius:8px;border:1px solid #21262d">
+              <div style="font-size:.85rem;font-weight:700;color:#e6edf3;margin-bottom:.75rem">${qi+1}. ${qText}</div>
+              ${opts.map(opt => {
+                const letter = (opt.match(/^([A-D])\)/)||[])[1];
+                return `<button onclick="OmicsLab.StudyPack._checkAnswer(${qi},'${letter}','${ansLetter}','${encodeURIComponent(ansExp)}')"
+                  class="sp-quiz-opt" data-qi="${qi}" data-opt="${letter}"
+                  style="display:block;width:100%;text-align:left;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:.45rem .75rem;font-size:.8rem;color:#c9d1d9;cursor:pointer;margin:.25rem 0;transition:background .1s">
+                  ${opt.trim()}
+                </button>`;
+              }).join('')}
+              <div id="sp-q-${qi}-exp" style="display:none;margin-top:.5rem;font-size:.75rem;padding:.5rem;border-radius:6px;line-height:1.55"></div>
+            </div>`;
+        }).join('')}
+        <div id="sp-quiz-score" style="display:none;margin-top:1rem;padding:1rem;background:#161b22;border-radius:8px;text-align:center;font-weight:700;font-size:1.1rem"></div>`;
+
+      /* Store answer tracking */
+      window._spQuizState = { total: qBlocks.length, answered: 0, score: 0 };
+    } catch (err) {
+      const body = document.getElementById('sp-quiz-body');
+      if (body) body.innerHTML = `<span style="color:#f85149">Error: ${err.message || 'Request failed'}</span>`;
+    }
+  }
+
+  function _checkAnswer(qi, chosen, correct, expEncoded) {
+    const opts = document.querySelectorAll(`[data-qi="${qi}"]`);
+    const exp  = document.getElementById(`sp-q-${qi}-exp`);
+    const state = window._spQuizState;
+    if (!state || opts[0]?.disabled) return;
+
+    opts.forEach(btn => {
+      btn.disabled = true;
+      if (btn.dataset.opt === correct) btn.style.background = '#2ea04322';
+      if (btn.dataset.opt === chosen && chosen !== correct) btn.style.background = '#f8514922';
+    });
+    if (exp) {
+      const isRight = chosen === correct;
+      exp.style.display = 'block';
+      exp.style.background = isRight ? '#2ea04311' : '#f8514911';
+      exp.style.color = isRight ? '#3fb950' : '#f85149';
+      exp.textContent = (isRight ? '✓ Correct. ' : `✗ Correct answer: ${correct}. `) + decodeURIComponent(expEncoded);
+    }
+    if (state) {
+      state.answered++;
+      if (chosen === correct) state.score++;
+      if (state.answered >= state.total) {
+        const scoreEl = document.getElementById('sp-quiz-score');
+        if (scoreEl) {
+          scoreEl.style.display = 'block';
+          const pct = Math.round((state.score / state.total) * 100);
+          scoreEl.style.color = pct >= 80 ? '#3fb950' : pct >= 60 ? '#e3b341' : '#f85149';
+          scoreEl.innerHTML = `${state.score}/${state.total} — ${pct}% ${pct >= 80 ? '— Excellent!' : pct >= 60 ? '— Good effort!' : '— Review these topics.'}`;
+        }
+      }
+    }
+  }
+
+  return { init, onCat, onStatus, onSearch, _toggle, _bookmark, _setStatus, _noteInput, _exportNotes, _generateQuiz, _checkAnswer };
 })();

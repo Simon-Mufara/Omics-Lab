@@ -204,21 +204,196 @@ OmicsLab.AMR = (function () {
           </div>
           <div class="amr-header-sub">Profile antimicrobial resistance mutations — TB, malaria, HIV, ESKAPE pathogens · WHO 2023 database</div>
         </div>
-        <div class="amr-layout">
-          <div class="amr-left">
-            <div class="amr-org-card">
-              <div class="amr-org-label">Select pathogen</div>
-              <select class="amr-org-select" onchange="OmicsLab.AMR._setOrg(this.value)">${orgOpts}</select>
+
+        <!-- Tabs -->
+        <div class="amr-tabs">
+          <button class="amr-tab amr-tab-active" onclick="OmicsLab.AMR._switchTab('profiler',this)">Resistance Profiler</button>
+          <button class="amr-tab" onclick="OmicsLab.AMR._switchTab('surveillance',this)">Surveillance Dashboard</button>
+        </div>
+
+        <div id="amr-tab-profiler" class="amr-tab-panel">
+          <div class="amr-layout">
+            <div class="amr-left">
+              <div class="amr-org-card">
+                <div class="amr-org-label">Select pathogen</div>
+                <select class="amr-org-select" onchange="OmicsLab.AMR._setOrg(this.value)">${orgOpts}</select>
+              </div>
+              <div id="amr-mutation-panel" class="amr-mutation-panel"></div>
             </div>
-            <div id="amr-mutation-panel" class="amr-mutation-panel"></div>
-          </div>
-          <div class="amr-right" id="amr-output">
-            <div class="amr-empty">Select a pathogen and enter detected mutations to profile resistance</div>
+            <div class="amr-right" id="amr-output">
+              <div class="amr-empty">Select a pathogen and enter detected mutations to profile resistance</div>
+            </div>
           </div>
         </div>
+
+        <div id="amr-tab-surveillance" class="amr-tab-panel" style="display:none">
+          <div class="amr-surv-wrap">
+            <div class="amr-surv-head">
+              <div class="amr-surv-title">AMR Resistance Trends — Africa (2014–2023)</div>
+              <div class="amr-surv-sub">Simulated WHO-GLASS surveillance data. Select a pathogen to view resistance frequency trends over time.</div>
+            </div>
+            <div class="amr-surv-controls">
+              <select class="amr-surv-select" id="amr-surv-org" onchange="OmicsLab.AMR._drawSurv()">
+                <option value="mtb">M. tuberculosis (MDR-TB)</option>
+                <option value="kpn">K. pneumoniae (carbapenem-R)</option>
+                <option value="sau">S. aureus (MRSA)</option>
+                <option value="eco">E. coli (ESBL)</option>
+                <option value="pfa">P. falciparum (artemisinin-R)</option>
+              </select>
+              <div style="font-size:.72rem;color:#484f58">Hover over chart for details</div>
+            </div>
+            <canvas id="amr-surv-canvas" class="amr-surv-canvas" width="900" height="320"></canvas>
+            <div id="amr-surv-legend" class="amr-surv-legend"></div>
+          </div>
+        </div>
+
       </div>`;
     _setOrg('mtb');
+    setTimeout(_drawSurv, 50);
   }
 
-  return { init, _setOrg, _loadPreset, _detectResistance };
+  /* ── Tab switching ── */
+  function _switchTab(id, btn) {
+    document.querySelectorAll('.amr-tab-panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.amr-tab').forEach(b => b.classList.remove('amr-tab-active'));
+    const panel = document.getElementById(`amr-tab-${id}`);
+    if (panel) panel.style.display = 'block';
+    if (btn) btn.classList.add('amr-tab-active');
+    if (id === 'surveillance') setTimeout(_drawSurv, 50);
+  }
+
+  /* ── AMR Surveillance time-series chart ── */
+  const SURV_DATA = {
+    mtb: {
+      label: 'M. tuberculosis — MDR-TB rate (%)',
+      color: '#ff6b6b',
+      series: [
+        { name: 'South Africa', color: '#3fb950', data: [12.4,13.1,14.2,15.0,16.3,15.9,16.8,17.2,18.1,17.8] },
+        { name: 'Nigeria', color: '#58a6ff', data: [8.2,8.9,9.4,10.1,10.8,11.2,11.9,12.3,13.0,12.7] },
+        { name: 'Ethiopia', color: '#e3b341', data: [5.1,5.4,5.9,6.2,6.8,7.1,7.5,8.0,8.3,8.7] },
+        { name: 'Kenya', color: '#bc8cff', data: [3.2,3.5,3.9,4.1,4.7,5.0,5.4,5.8,6.1,6.4] },
+      ],
+    },
+    kpn: {
+      label: 'K. pneumoniae — Carbapenem resistance (%)',
+      color: '#e3b341',
+      series: [
+        { name: 'Egypt', color: '#3fb950', data: [18.0,20.1,23.4,27.2,31.0,35.6,39.1,43.2,46.8,49.3] },
+        { name: 'South Africa', color: '#58a6ff', data: [8.4,9.2,11.0,13.5,16.2,18.9,21.4,24.0,26.3,28.1] },
+        { name: 'Tunisia', color: '#e3b341', data: [12.1,14.3,17.0,19.8,22.4,25.1,27.8,30.2,32.5,34.7] },
+        { name: 'Nigeria', color: '#bc8cff', data: [4.2,5.0,6.1,7.5,9.2,11.0,13.1,15.3,17.2,18.9] },
+      ],
+    },
+    sau: {
+      label: 'S. aureus — MRSA rate (%)',
+      color: '#f97316',
+      series: [
+        { name: 'Nigeria', color: '#3fb950', data: [39.2,40.1,41.5,43.2,44.8,46.1,47.5,48.9,50.2,51.3] },
+        { name: 'South Africa', color: '#58a6ff', data: [25.1,24.8,25.5,26.2,25.9,26.7,27.4,28.0,27.8,28.5] },
+        { name: 'Kenya', color: '#e3b341', data: [18.4,19.2,20.1,21.5,22.8,24.0,25.3,26.7,27.9,29.1] },
+        { name: 'Ghana', color: '#bc8cff', data: [22.1,23.4,24.8,25.9,27.2,28.4,29.6,30.8,32.0,33.1] },
+      ],
+    },
+    eco: {
+      label: 'E. coli — ESBL rate (%)',
+      color: '#58a6ff',
+      series: [
+        { name: 'Egypt', color: '#3fb950', data: [45.2,47.8,51.2,54.6,58.1,61.3,64.7,67.9,70.2,72.5] },
+        { name: 'Cameroon', color: '#58a6ff', data: [28.4,31.2,34.6,37.9,41.2,44.5,47.8,51.0,54.2,57.1] },
+        { name: 'South Africa', color: '#e3b341', data: [20.1,22.4,25.0,27.8,30.5,33.2,35.8,38.4,41.0,43.4] },
+        { name: 'Tanzania', color: '#bc8cff', data: [15.3,17.8,20.4,23.1,25.9,28.6,31.4,34.2,37.0,39.7] },
+      ],
+    },
+    pfa: {
+      label: 'P. falciparum — Artemisinin partial resistance (%)',
+      color: '#bc8cff',
+      series: [
+        { name: 'Uganda', color: '#3fb950', data: [0.2,0.3,0.5,0.8,1.2,2.1,3.5,5.8,8.9,12.4] },
+        { name: 'DRC', color: '#58a6ff', data: [0.1,0.2,0.3,0.5,0.8,1.5,2.7,4.2,6.5,9.1] },
+        { name: 'Rwanda', color: '#e3b341', data: [0.3,0.5,0.8,1.4,2.3,4.1,7.2,11.8,17.3,23.6] },
+        { name: 'Tanzania', color: '#bc8cff', data: [0.0,0.1,0.2,0.3,0.5,0.9,1.7,2.9,4.5,6.8] },
+      ],
+    },
+  };
+  const YEARS = [2014,2015,2016,2017,2018,2019,2020,2021,2022,2023];
+
+  function _drawSurv() {
+    const canvas = document.getElementById('amr-surv-canvas');
+    const sel = document.getElementById('amr-surv-org');
+    const legend = document.getElementById('amr-surv-legend');
+    if (!canvas || !sel) return;
+
+    const orgKey = sel.value || 'mtb';
+    const d = SURV_DATA[orgKey];
+    if (!d) return;
+
+    const ctx = canvas.getContext('2d');
+    const W = canvas.offsetWidth || 900;
+    canvas.width = W;
+    const H = 320;
+    canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+
+    const pad = { top: 24, right: 20, bottom: 48, left: 52 };
+    const cW = W - pad.left - pad.right;
+    const cH = H - pad.top - pad.bottom;
+
+    /* Y axis range */
+    const allVals = d.series.flatMap(s => s.data);
+    const maxVal  = Math.ceil(Math.max(...allVals) / 5) * 5;
+    const minVal  = Math.max(0, Math.floor(Math.min(...allVals) / 5) * 5 - 5);
+
+    const xScale = i => pad.left + (i / (YEARS.length - 1)) * cW;
+    const yScale = v => pad.top + cH - ((v - minVal) / (maxVal - minVal)) * cH;
+
+    /* Grid */
+    ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+    const yTicks = 5;
+    for (let i = 0; i <= yTicks; i++) {
+      const v = minVal + ((maxVal - minVal) / yTicks) * i;
+      const y = yScale(v);
+      ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+      ctx.fillStyle = '#484f58'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(v.toFixed(1) + '%', pad.left - 6, y + 4);
+    }
+
+    /* X axis ticks */
+    ctx.fillStyle = '#484f58'; ctx.textAlign = 'center'; ctx.font = '11px Inter, sans-serif';
+    YEARS.forEach((yr, i) => {
+      ctx.fillText(yr, xScale(i), H - pad.bottom + 18);
+    });
+
+    /* Lines */
+    d.series.forEach(s => {
+      ctx.strokeStyle = s.color; ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      s.data.forEach((v, i) => {
+        const x = xScale(i); const y = yScale(v);
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      /* Dots */
+      s.data.forEach((v, i) => {
+        ctx.fillStyle = s.color;
+        ctx.beginPath(); ctx.arc(xScale(i), yScale(v), 4, 0, Math.PI * 2); ctx.fill();
+      });
+    });
+
+    /* Axis label */
+    ctx.save();
+    ctx.translate(12, pad.top + cH / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = '#8b949e'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(d.label, 0, 0);
+    ctx.restore();
+
+    /* Legend */
+    if (legend) {
+      legend.innerHTML = d.series.map(s =>
+        `<span class="amr-surv-leg-item"><span style="display:inline-block;width:14px;height:3px;background:${s.color};border-radius:2px;vertical-align:middle;margin-right:.3rem"></span>${s.name}</span>`
+      ).join('');
+    }
+  }
+
+  return { init, _setOrg, _loadPreset, _detectResistance, _switchTab, _drawSurv };
 })();

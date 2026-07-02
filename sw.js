@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v34: Fable 5 default model, simplified registration, auth nav fix, mobile nav fix, roundRect polyfill
+   v35: 20 new features — AI report, quiz, pipeline recommender, flashcards, GATK builder, FASTQ drag-drop, AMR surveillance chart, keyboard shortcuts, SW banner, continue tracking
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v34';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v35';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v2';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

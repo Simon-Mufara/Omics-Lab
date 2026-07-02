@@ -136,6 +136,7 @@
   <link rel="stylesheet" href="css/codon.css">
   <link rel="stylesheet" href="css/nanopore.css">
   <link rel="stylesheet" href="css/amr.css">
+  <link rel="stylesheet" href="css/gatk.css">
   <link rel="stylesheet" href="css/kraken.css">
   <link rel="stylesheet" href="css/popstruct.css">
   <link rel="stylesheet" href="css/genomebrowser.css">
@@ -1484,6 +1485,9 @@
     <div id="epigenomics-content"><!-- Populated by epigenomics.js --></div>
   </div>
 
+  <!-- GATK Command Builder -->
+  <div id="gatk-section"><!-- Populated by gatk.js --></div>
+
   <!-- CRISPR Design Lab -->
   <div id="crispr-section">
     <div id="crispr-content"><!-- Populated by crispr.js --></div>
@@ -2146,6 +2150,7 @@
 <script defer src="js/codon.js"></script>
 <script defer src="js/nanopore.js"></script>
 <script defer src="js/amr.js"></script>
+<script defer src="js/gatk.js"></script>
 <script defer src="js/kraken.js"></script>
 <script defer src="js/popstruct.js"></script>
 <script defer src="js/genomebrowser.js"></script>
@@ -2212,6 +2217,7 @@
 <script defer src="js/theme.js"></script>
 <script defer src="js/dashboard.js"></script>
 <script defer src="js/mobile-nav.js"></script>
+<script defer src="js/shortcuts.js"></script>
 <script defer src="js/pwa.js"></script>
 <script defer src="js/learning-path.js"></script>
 <script defer src="js/calendar.js"></script>
@@ -2330,6 +2336,9 @@
     if (OmicsLab.Terminal)  OmicsLab.Terminal.init();
     if (OmicsLab.Router)    OmicsLab.Router.init();
     if (OmicsLab.Profile)   OmicsLab.Profile.init();
+    if (OmicsLab.MobileNav) OmicsLab.MobileNav.init();
+    if (OmicsLab.Shortcuts) OmicsLab.Shortcuts.init();
+    if (OmicsLab.Theme)     OmicsLab.Theme.init?.();
     _startHeroPipelineAnimation();
     _initStatCounters();
   });
