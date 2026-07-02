@@ -12,7 +12,7 @@ window.OMICSLAB_CONFIG = {
 
   /* ── Clerk ─────────────────────────────────────────────────────
      dashboard.clerk.com → API Keys → Publishable Key              */
-  clerkPublishableKey: '',  // ← paste your pk_live_... key from Clerk → API Keys
+  clerkPublishableKey: 'pk_live_Y2xlcmsub21pY3NkYXRhbGFiLnRlY2gk',
 
   /* ── Stripe (publishable — safe for client) ────────────────────
      dashboard.stripe.com → Developers → API Keys                   */
