@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v33: Platform showcase, mobile fixes, offline.html precache, _si() hardened, schema versioning
+   v34: Fable 5 default model, simplified registration, auth nav fix, mobile nav fix, roundRect polyfill
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v33';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v34';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v2';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 

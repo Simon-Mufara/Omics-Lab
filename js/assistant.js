@@ -18,8 +18,9 @@ OmicsLab.Assistant = (function () {
   const DAILY_LIMIT = 20;
 
   const MODELS = [
-    { id: 'claude-haiku-4-5-20251001',  label: 'Haiku 4.5 — fast' },
-    { id: 'claude-sonnet-4-6',           label: 'Sonnet 4.6 — smart' },
+    { id: 'claude-fable-5',              label: 'Fable 5 — most capable' },
+    { id: 'claude-sonnet-4-6',           label: 'Sonnet 4.6 — balanced' },
+    { id: 'claude-haiku-4-5-20251001',   label: 'Haiku 4.5 — fast' },
   ];
 
   /* ─── Africa genomics system prompt ─── */

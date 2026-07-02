@@ -82,10 +82,14 @@
     gap: 2px;
   }
 
-  /* ── Add padding to all pages so content doesn't hide behind tab bar ── */
-  #screen-landing,
-  .reveal {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)) !important;
+  /* ── Add padding so content doesn't hide behind tab bar ── */
+  #screen-landing {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  /* Module sections that scroll independently */
+  .sp-main, .guide-body, .qa-body,
+  .domain-content, .analysis-wrap {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── Modal slide-up ── */

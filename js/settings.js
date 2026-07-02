@@ -316,7 +316,7 @@ OmicsLab.Settings = (function () {
         <div class="st-section-title">About</div>
         <div class="st-about-row"><span class="st-about-label">App version</span><span class="st-about-val">2026.06</span></div>
         <div class="st-about-row"><span class="st-about-label">Cache version</span><span class="st-about-val">${cacheVer}</span></div>
-        <div class="st-about-row"><span class="st-about-label">AI model</span><span class="st-about-val">Claude claude-sonnet-4-6 (Anthropic)</span></div>
+        <div class="st-about-row"><span class="st-about-label">AI model</span><span class="st-about-val">Claude Fable 5 (Anthropic)</span></div>
         <div class="st-about-row"><span class="st-about-label">Licence</span><span class="st-about-val">MIT</span></div>
         <div class="st-about-row"><span class="st-about-label">Built by</span><span class="st-about-val">Simon Mufara · UCT · South Africa</span></div>
         <div class="st-about-actions">

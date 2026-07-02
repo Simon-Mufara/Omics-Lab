@@ -38,16 +38,16 @@ OmicsLab.MobileNav = (function () {
 
   /* Tool picker entries for the "Tools" sheet */
   const TOOL_SHEET_ITEMS = [
-    { id: 'analysis',        label: 'Analysis Suite',     color: '#e3b341' },
-    { id: 'variantinterp',   label: 'Variant Interpreter',color: '#bc8cff' },
+    { id: 'analysis',        label: 'Analysis Suite',      color: '#e3b341' },
+    { id: 'variantinterp',   label: 'Variant Interpreter', color: '#bc8cff' },
+    { id: 'study',           label: 'Study Pack',          color: '#58a6ff' },
+    { id: 'terminal',        label: 'Terminal',            color: '#3fb950' },
     { id: 'primerdesign',    label: 'Primer Design',       color: '#3fb950' },
-    { id: 'phylo',           label: 'Phylo Tree Builder',  color: '#3fb950' },
-    { id: 'heatmap',         label: 'Expression Visualiser',color:'#e3b341' },
-    { id: 'qualitypredictor',label: 'Quality Predictor',  color: '#3fb950' },
-    { id: 'knowledge-graph', label: 'Knowledge Graph',    color: '#bc8cff' },
-    { id: 'gene-lookup',     label: 'Gene Lookup',        color: '#3fb950' },
-    { id: 'pathways',        label: 'Pathways',           color: '#3fb950' },
-    { id: 'pubmed',          label: 'PubMed',             color: '#58a6ff' },
+    { id: 'phylo',           label: 'Phylo Tree',          color: '#3fb950' },
+    { id: 'heatmap',         label: 'Expression Viewer',   color: '#e3b341' },
+    { id: 'qualitypredictor',label: 'Quality Predictor',   color: '#3fb950' },
+    { id: 'gene-lookup',     label: 'Gene Lookup',         color: '#3fb950' },
+    { id: 'pubmed',          label: 'PubMed',              color: '#58a6ff' },
   ];
 
   let _active = 'home';
@@ -178,16 +178,24 @@ OmicsLab.MobileNav = (function () {
   function syncPage(page) {
     /* Map page → tab id */
     const tabMap = {
-      home: 'home', lab: 'lab', profile: 'profile', research: 'research',
-      africa: 'research', datasets: 'research', nexus: 'research',
-      paperhub: 'research', teams: 'research', grants: 'research',
-      alerts: 'research', labnotebook: 'research', 'output-tracker': 'research',
+      home: 'home',
+      lab: 'lab', 'virtual-lab': 'lab', outbreak: 'lab', debugger: 'lab',
+      profile: 'profile', settings: 'profile', guide: 'profile',
+      research: 'research', africa: 'research', datasets: 'research',
+      nexus: 'research', paperhub: 'research', teams: 'research',
+      grants: 'research', alerts: 'research', labnotebook: 'research',
+      'output-tracker': 'research', collab: 'research', impact: 'research',
     };
-    const tools = ['analysis','variantinterp','primerdesign','phylo','heatmap',
+    const tools = [
+      'analysis','variantinterp','primerdesign','phylo','heatmap','study',
       'qualitypredictor','knowledge-graph','gene-lookup','pathways','pubmed',
       'terminal','codon','nanopore','amr','kraken','popstruct','genome-browser',
       'uniprot','protein','string','preprints','sra','pipeline-gen','metaanalysis',
-      'citations','bionlp'];
+      'citations','bionlp','assistant','ask','learn','glossary','case-files',
+      'seq-align','pipeline-visual','journalclub','quizbattle','epigenomics',
+      'crispr','proteomics','ai-ml-bio','stats-genomics','gwas','pharmacogenomics',
+      'single-cell','assembly','enrichment','recombination','alignment-viewer',
+    ];
 
     if (tools.includes(page)) {
       _setActive('_tools');

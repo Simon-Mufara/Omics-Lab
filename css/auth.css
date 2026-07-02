@@ -446,9 +446,37 @@
 @keyframes auth-spin { to { transform: rotate(360deg); } }
 
 
+/* ── Label hint ── */
+.auth-label-hint {
+  font-weight: 400;
+  color: #6e7681;
+  font-size: 0.7rem;
+}
+
 /* ── Mobile ── */
-@media (max-width: 500px) {
-  .auth-modal { border-radius: 8px; }
+@media (max-width: 540px) {
+  .auth-modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .auth-modal {
+    border-radius: 14px 14px 0 0;
+    max-width: 100%;
+    max-height: 95vh;
+    animation: auth-slide-mobile 0.22s ease;
+  }
+  .auth-modal-wide { max-width: 100%; }
+  @keyframes auth-slide-mobile {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
   .auth-field-row { grid-template-columns: 1fr; }
   .auth-social-row { flex-direction: column; }
+  .auth-form { padding: 0.75rem 1rem 1rem; }
+  .auth-modal-header { padding: 1rem 1rem 0.75rem; }
+  .auth-account-body { padding: 1rem; }
+  .auth-local-notice { margin-left: 1rem; margin-right: 1rem; }
+  .auth-footer-links { padding-left: 1rem; padding-right: 1rem; }
+  /* Bottom safe-area padding on iOS */
+  .auth-form { padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); }
 }

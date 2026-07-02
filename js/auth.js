@@ -194,13 +194,13 @@ OmicsLab.Auth = (function () {
 
   /* ─── Nav UI ─── */
   function _updateNavUI() {
-    const pill   = document.getElementById('nav-user-pill');
-    const avatar = document.getElementById('nav-user-avatar');
-    const name   = document.getElementById('nav-user-name');
+    const pill      = document.getElementById('nav-user-pill');
+    const avatar    = document.getElementById('nav-user-avatar');
+    const nameEl    = document.getElementById('nav-user-name');
     const signinBtn = document.getElementById('nav-signin-btn');
 
     if (_user) {
-      if (pill) pill.style.display = '';
+      if (pill)      { pill.style.display = ''; pill.setAttribute('aria-label', `${_user.name} — Account settings`); }
       if (signinBtn) signinBtn.style.display = 'none';
       if (avatar) {
         if (_user.avatar) {
@@ -209,9 +209,12 @@ OmicsLab.Auth = (function () {
           avatar.textContent = _initials(_user.name);
         }
       }
-      if (name) name.textContent = _user.name.split(' ')[0] + (_user.name.split(' ')[1] ? ' ' + _user.name.split(' ')[1][0] + '.' : '');
+      if (nameEl) {
+        const parts = _user.name.trim().split(/\s+/);
+        nameEl.textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
+      }
     } else {
-      if (pill) pill.style.display = 'none';
+      if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
     }
   }
@@ -281,39 +284,20 @@ OmicsLab.Auth = (function () {
           <button class="auth-tab ${!isSignIn ? 'auth-tab-active' : ''}" onclick="OmicsLab.Auth.openModal('register')">Create account</button>
         </div>
 
-        <div class="auth-social-row">
-          <button class="auth-social-btn auth-social-github" onclick="OmicsLab.Auth.oauthStart('github')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-            GitHub
-          </button>
-          <button class="auth-social-btn auth-social-google" onclick="OmicsLab.Auth.oauthStart('google')">
-            <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Google
-          </button>
-          <button class="auth-social-btn auth-social-linkedin" onclick="OmicsLab.Auth.oauthStart('linkedin')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="#0A66C2" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            LinkedIn
-          </button>
-        </div>
-
-        <div class="auth-divider"><span>or</span></div>
-
         <form class="auth-form" onsubmit="event.preventDefault(); OmicsLab.Auth._submitForm('${isSignIn ? 'signin' : 'register'}')">
           ${!isSignIn ? `
-          <div class="auth-field-row">
-            <div class="auth-field">
-              <label class="auth-label">Full name</label>
-              <input class="auth-input" id="auth-name" type="text" placeholder="Dr. Amara Osei" required autocomplete="name"/>
-            </div>
+          <div class="auth-field">
+            <label class="auth-label" for="auth-name">Full name</label>
+            <input class="auth-input" id="auth-name" type="text" placeholder="Dr. Amara Osei" required autocomplete="name"/>
           </div>` : ''}
 
           <div class="auth-field">
-            <label class="auth-label">Email address <span style="font-weight:400;color:#6e7681;font-size:.7rem">(stored locally — no email sent)</span></label>
+            <label class="auth-label" for="auth-email">Email address <span class="auth-label-hint">(stored locally — no email sent)</span></label>
             <input class="auth-input" id="auth-email" type="email" placeholder="you@institution.ac.za" required autocomplete="email"/>
           </div>
 
           <div class="auth-field">
-            <label class="auth-label">Password</label>
+            <label class="auth-label" for="auth-password">Password</label>
             <div class="auth-pw-wrap">
               <input class="auth-input" id="auth-password" type="password" placeholder="${isSignIn ? '••••••••' : 'At least 8 characters'}" required autocomplete="${isSignIn ? 'current-password' : 'new-password'}" minlength="8"/>
               <button type="button" class="auth-pw-toggle" onclick="OmicsLab.Auth._togglePw()" aria-label="Toggle password visibility">
@@ -321,33 +305,6 @@ OmicsLab.Auth = (function () {
               </button>
             </div>
           </div>
-
-          ${!isSignIn ? `
-          <div class="auth-field-row">
-            <div class="auth-field">
-              <label class="auth-label">Institution</label>
-              <input class="auth-input" id="auth-institution" type="text" placeholder="UCT, KEMRI, ACEGID…" autocomplete="organization"/>
-            </div>
-            <div class="auth-field">
-              <label class="auth-label">Country</label>
-              <select class="auth-input auth-select" id="auth-country">
-                <option value="">Select country</option>
-                ${AFRICAN_COUNTRIES.map(c => `<option value="${c}">${c}</option>`).join('')}
-                <option value="Other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="auth-field">
-            <label class="auth-label">I am a…</label>
-            <select class="auth-input auth-select" id="auth-role">
-              <option value="researcher">Researcher / Scientist</option>
-              <option value="student">Student (undergraduate/postgraduate)</option>
-              <option value="instructor">Instructor / Educator</option>
-              <option value="clinician">Clinician / Medical professional</option>
-              <option value="bioinformatician">Bioinformatician</option>
-              <option value="public-health">Public health professional</option>
-            </select>
-          </div>` : ''}
 
           <div class="auth-error" id="auth-form-error" style="display:none"></div>
 
@@ -360,7 +317,7 @@ OmicsLab.Auth = (function () {
           <button class="auth-link-btn" onclick="OmicsLab.Auth.openModal('register')">New to OmicsLab? Create an account</button>
         </div>` : `<div class="auth-local-notice">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          Your account is saved locally in this browser. No email confirmation is sent. To use OmicsLab on another device, create an account there too.
+          Account saved locally — no email confirmation needed. You can add your institution and country in your profile later.
         </div>`}
       </div>`;
   }
@@ -517,12 +474,9 @@ OmicsLab.Auth = (function () {
       const name        = document.getElementById('auth-name')?.value?.trim();
       const email       = document.getElementById('auth-email')?.value?.trim();
       const password    = document.getElementById('auth-password')?.value;
-      const institution = document.getElementById('auth-institution')?.value?.trim();
-      const country     = document.getElementById('auth-country')?.value;
-      const role        = document.getElementById('auth-role')?.value || 'researcher';
       if (!name || name.length < 2) { _setFormError('Please enter your full name.'); if (btn) { btn.disabled = false; btn.textContent = 'Create account'; } return; }
       if (password.length < 8) { _setFormError('Password must be at least 8 characters.'); if (btn) { btn.disabled = false; btn.textContent = 'Create account'; } return; }
-      const result = register({ name, email, password, institution, country, role });
+      const result = register({ name, email, password });
       if (btn) { btn.disabled = false; btn.textContent = 'Create account'; }
       if (!result.ok) { _setFormError(result.error); return; }
       _showRegisterSuccess(result.user);
@@ -600,8 +554,12 @@ OmicsLab.Auth = (function () {
 
   /* ─── Toast ─── */
   function _showToast(msg, isError) {
-    if (isError) OmicsLab.Notify.error(msg);
-    else OmicsLab.Notify.success(msg);
+    if (OmicsLab.Notify) {
+      if (isError) OmicsLab.Notify.error(msg);
+      else OmicsLab.Notify.success(msg);
+    } else {
+      console.log('[OmicsLab Auth]', msg);
+    }
   }
 
   /* ─── Helpers ─── */
@@ -636,22 +594,22 @@ OmicsLab.Auth = (function () {
   function _injectSignInBtn() {
     const pill = document.getElementById('nav-user-pill');
     if (!pill) return;
-    if (!_user) pill.style.display = 'none';
+
+    /* Inject sign-in button once, before the pill */
     if (!document.getElementById('nav-signin-btn')) {
       const btn = document.createElement('button');
-      btn.id = 'nav-signin-btn';
+      btn.id        = 'nav-signin-btn';
       btn.className = 'nav-signin-btn';
-      btn.onclick = () => openModal(_user ? 'account' : 'signin');
+      btn.setAttribute('aria-label', 'Sign in to OmicsLab');
+      btn.onclick = () => openModal('signin');
       btn.innerHTML = `
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
         Sign in`;
-      btn.style.display = _user ? 'none' : '';
       pill.parentNode.insertBefore(btn, pill);
     }
-    if (pill) {
-      const origClick = pill.onclick;
-      pill.onclick = () => _user ? openModal('account') : openModal('signin');
-    }
+
+    /* Wire the pill (already has onclick for auth modal in HTML, but ensure it works) */
+    pill.onclick = () => openModal(_user ? 'account' : 'signin');
   }
 
   /* ─── Public API ─── */

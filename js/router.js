@@ -880,11 +880,11 @@ OmicsLab.Router = (function () {
 
     /* Home visual hero (DNA animation) + showcase — init on every home visit, stop on leave */
     if (page === 'home') {
-      OmicsLab.Showcase?.init();
-      OmicsLab.HomeHero?.init();
+      try { OmicsLab.Showcase?.init(); } catch(e) { console.warn('[OmicsLab] Showcase init failed:', e); }
+      try { OmicsLab.HomeHero?.init(); } catch(e) { console.warn('[OmicsLab] HomeHero init failed:', e); }
     } else {
-      OmicsLab.Showcase?.stop();
-      OmicsLab.HomeHero?.stop();
+      try { OmicsLab.Showcase?.stop(); } catch {}
+      try { OmicsLab.HomeHero?.stop(); } catch {}
     }
 
     /* Show/hide hero + stats strip */
