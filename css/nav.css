@@ -243,6 +243,18 @@
 .nav-right .nav-search-btn:hover { background: rgba(255,255,255,0.08); color: #c9d1d9; border-color: #484f58; }
 .nav-settings-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: none; border: 1px solid transparent; border-radius: 7px; color: #6e7681; cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
 .nav-settings-btn:hover { background: rgba(255,255,255,0.06); color: #c9d1d9; border-color: #30363d; }
+/* Study music button */
+.nav-music-btn {
+  display: flex; align-items: center; gap: .35rem;
+  padding: .38rem .65rem;
+  background: rgba(255,255,255,.04); border: 1px solid #30363d;
+  border-radius: 8px; color: #6e7681; font-size: .78rem; font-weight: 500;
+  cursor: pointer; font-family: inherit; white-space: nowrap;
+  transition: background .12s, color .12s, border-color .12s;
+}
+.nav-music-btn:hover { background: rgba(255,255,255,.08); color: #c9d1d9; border-color: #484f58; }
+.nav-music-btn.sm-playing { color: #3fb950; border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.08); }
+.nav-music-btn .sm-label { font-size: .72rem; }
 .nav-search-kbd {
   font-size: 0.65rem;
   padding: 0.05rem 0.3rem;

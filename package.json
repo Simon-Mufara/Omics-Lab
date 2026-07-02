@@ -1,0 +1,23 @@
+{
+  "name": "omicslab-simulator",
+  "version": "1.0.0",
+  "description": "Africa's interactive omics training platform",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validate": "node scripts/validate-html.js",
+    "lint": "node scripts/validate-html.js && node -e \"require('fs').readdirSync('api').forEach(f=>require('child_process').execSync('node --check api/'+f,{stdio:'inherit'}))\"",
+    "check:console": "grep -rn 'console\\.log(' js/ --include='*.js' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0"
+  },
+  "dependencies": {
+    "@pinecone-database/pinecone": "^2.2.2",
+    "@upstash/redis": "^1.31.3",
+    "resend": "^3.2.0",
+    "stripe": "^14.25.0"
+  },
+  "devDependencies": {
+    "html-validate": "^9.4.0"
+  }
+}

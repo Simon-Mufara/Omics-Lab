@@ -22,14 +22,14 @@
   <meta name="keywords" content="omics training, bioinformatics, genomics Africa, RNA-seq, WGS, proteomics, metagenomics, H3Africa, FASTQ, GATK, sequencing simulator, free genomics course">
   <meta name="author" content="Simon Mufara">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://simon-mufara.github.io/Omics-Lab/">
+  <link rel="canonical" href="https://omicslab.africa/">
 
   <!-- Open Graph -->
   <meta property="og:title" content="OmicsLab Simulator — Africa's Omics Training Platform">
   <meta property="og:description" content="Learn omics workflows by doing them — 14 interactive protocols, bioinformatics pipeline guides, Africa genomics labs, and 20 real instruments. Free, offline, no install.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://simon-mufara.github.io/Omics-Lab/">
-  <meta property="og:image" content="https://simon-mufara.github.io/Omics-Lab/og-image.svg">
+  <meta property="og:url" content="https://omicslab.africa/">
+  <meta property="og:image" content="https://omicslab.africa/og-image.svg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="OmicsLab Simulator">
@@ -39,7 +39,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="OmicsLab Simulator — Africa's Omics Training Platform">
   <meta name="twitter:description" content="14 interactive omics workflows, Africa genomics labs, 20 real instruments. Free, offline, no install. Built for African researchers.">
-  <meta name="twitter:image" content="https://simon-mufara.github.io/Omics-Lab/og-image.svg">
+  <meta name="twitter:image" content="https://omicslab.africa/og-image.svg">
   <meta name="twitter:creator" content="@SimonMufara">
 
   <!-- Fonts: preconnect first, then load Sora (display) + Inter (body) + JetBrains Mono (code) -->
@@ -734,6 +734,13 @@
 
     <!-- Right utilities -->
     <div class="nav-right" id="nav-right">
+      <button id="sm-btn" class="nav-music-btn" title="Study &amp; Focus Music" aria-label="Study Music Player"
+              onclick="OmicsLab.StudyMusic&&OmicsLab.StudyMusic._togglePanel()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+        </svg>
+        <span class="sm-label">Focus</span>
+      </button>
       <button class="nav-search-btn" onclick="OmicsLab.Search&&OmicsLab.Search.open()" aria-label="Search (Ctrl+K)" title="Search">
         <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Search
@@ -2072,6 +2079,26 @@
 <!-- Back to top -->
 <button class="back-to-top" id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg></button>
 
+<!-- ══════════════════════════════════════════════════════
+     Third-party CDNs — async, gracefully absent offline
+     ══════════════════════════════════════════════════════ -->
+
+<!-- Supabase JS v2 -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" async></script>
+
+<!-- PostHog async stub (init happens in analytics.js) -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","ui.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+</script>
+
+<!-- Sentry browser SDK (async — errors captured after load) -->
+<script src="https://browser.sentry-cdn.com/7.99.0/bundle.tracing.min.js" crossorigin="anonymous" async
+        onload="window.__sentryReady=true;document.dispatchEvent(new Event('sentry-ready'))"></script>
+
+<!-- OmicsLab service layer — must run before feature modules -->
+<script defer src="js/config.js"></script>
+<script defer src="js/db.js"></script>
+
 <!-- Scripts — load order matters (notify first, then icons → namespace → data → engine → bench → app) -->
 <script defer src="js/notify.js"></script>
 <script defer src="js/icons.js"></script>
@@ -2133,6 +2160,7 @@
 <script defer src="js/nexus.js"></script>
 <script defer src="js/paperhub.js"></script>
 <script defer src="js/auth.js"></script>
+<script defer src="js/auth-clerk.js"></script>
 <script defer src="js/teams.js"></script>
 <script defer src="js/pubmed.js"></script>
 <script defer src="js/gene-lookup.js"></script>
@@ -2214,6 +2242,7 @@
 <script defer src="js/offline-indicator.js"></script>
 <script defer src="js/output-tracker.js"></script>
 <script defer src="js/onboarding.js"></script>
+<script defer src="js/study-music.js"></script>
 <script defer src="js/theme.js"></script>
 <script defer src="js/dashboard.js"></script>
 <script defer src="js/mobile-nav.js"></script>
@@ -2224,6 +2253,7 @@
 <script defer src="js/focus-trap.js"></script>
 <script defer src="js/a11y.js"></script>
 <script defer src="js/nexus-attachments.js"></script>
+<script defer src="js/nexus-realtime.js"></script>
 <script defer src="js/whiteboard.js"></script>
 <script defer src="js/voice-compose.js"></script>
 <script defer src="js/data-import.js"></script>
@@ -2337,8 +2367,22 @@
     if (OmicsLab.Router)    OmicsLab.Router.init();
     if (OmicsLab.Profile)   OmicsLab.Profile.init();
     if (OmicsLab.MobileNav) OmicsLab.MobileNav.init();
-    if (OmicsLab.Shortcuts) OmicsLab.Shortcuts.init();
-    if (OmicsLab.Theme)     OmicsLab.Theme.init?.();
+    if (OmicsLab.Shortcuts)   OmicsLab.Shortcuts.init();
+    if (OmicsLab.Theme)       OmicsLab.Theme.init?.();
+    if (OmicsLab.StudyMusic)  OmicsLab.StudyMusic.init();
+    /* Service layer */
+    if (OmicsLab.DB)              OmicsLab.DB.init();
+    if (OmicsLab.Analytics)       OmicsLab.Analytics.init();
+    if (OmicsLab.AuthClerk)       OmicsLab.AuthClerk.init();
+    if (OmicsLab.NexusRealtime)   OmicsLab.NexusRealtime.init();
+    /* Sentry — init when SDK loads (may be after DOMContentLoaded) */
+    function _initSentry() {
+      var dsn = window.OMICSLAB_CONFIG && window.OMICSLAB_CONFIG.sentryDsn;
+      if (!dsn || !window.Sentry) return;
+      Sentry.init({ dsn: dsn, integrations: [new Sentry.BrowserTracing()], tracesSampleRate: 0.1, ignoreErrors: ['ResizeObserver loop', 'Non-Error promise rejection'] });
+    }
+    if (window.__sentryReady) { _initSentry(); }
+    else { document.addEventListener('sentry-ready', _initSentry, { once: true }); }
     _startHeroPipelineAnimation();
     _initStatCounters();
   });

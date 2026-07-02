@@ -89,7 +89,11 @@ OmicsLab.Onboarding = (function () {
   }
 
   function _close() {
-    if (_overlay) { _overlay.classList.add('ob-out'); setTimeout(() => _overlay?.remove(), 220); }
+    if (_overlay) {
+      const el = _overlay;
+      el.classList.add('ob-out');
+      setTimeout(() => el.remove(), 220);
+    }
     _overlay = null;
   }
 

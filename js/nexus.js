@@ -81,6 +81,42 @@ OmicsLab.Nexus = (function () {
     return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
   }
 
+  /* ─── Inject a message received from another user (realtime) ─── */
+  function _injectMessage(msg, channelId) {
+    channelId = channelId || _state.activeChannel;
+    const ch = _ch(channelId);
+    if (!ch) return;
+    if (_hasMessage(msg.id, channelId)) return; /* deduplicate */
+
+    ch.messages.push(msg);
+    _save();
+
+    if (channelId === _state.activeChannel) {
+      /* Append to DOM without full re-render */
+      const list = document.getElementById('nx-messages-list');
+      if (list) {
+        const empty = list.querySelector('.nx-empty-ch');
+        if (empty) empty.remove();
+        list.insertAdjacentHTML('beforeend', _msgHtml(msg));
+        _scrollBottom();
+      }
+      /* Animate the new message in */
+      const el = document.querySelector(`[data-msgid="${msg.id}"]`);
+      if (el) el.classList.add('nx-msg-new');
+    } else {
+      /* Re-render sidebar to update unread badge */
+      _renderSidebar();
+    }
+  }
+
+  function _hasMessage(id, channelId) {
+    channelId = channelId || _state.activeChannel;
+    const ch = _ch(channelId);
+    return !!(ch?.messages.find(m => m.id === id));
+  }
+
+  function _getActiveChannel() { return _state.activeChannel; }
+
   /* ─── Render sidebar ─── */
   function _renderSidebar() {
     const s = document.getElementById('nx-sidebar');
@@ -103,7 +139,7 @@ OmicsLab.Nexus = (function () {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           OmicsLab Nexus
         </div>
-        <div class="nx-workspace-sub">African Genomics Network</div>
+        <div class="nx-workspace-sub">African Genomics Network <span id="nx-online-count"></span></div>
       </div>
 
       <div class="nx-sidebar-section">
@@ -241,6 +277,7 @@ OmicsLab.Nexus = (function () {
     _renderSidebar();
     _renderMessages();
     _closeThread();
+    OmicsLab.NexusRealtime?.switchChannel?.(id);
   }
 
   /* ─── Send message ─── */
@@ -270,6 +307,9 @@ OmicsLab.Nexus = (function () {
     ta.value = '';
     ta.style.height = '';
     _renderMessages();
+
+    /* Broadcast to other users via Supabase Realtime if available */
+    OmicsLab.NexusRealtime?.broadcast?.(_state.activeChannel, msg);
   }
 
   /* ─── Send thread reply ─── */
@@ -347,5 +387,11 @@ OmicsLab.Nexus = (function () {
     _renderMessages();
   }
 
-  return { init, _switchChannel, _send, _sendThread, _react, _openThread, _closeThread, _composerKey, _threadKey };
+  return {
+    init,
+    _switchChannel, _send, _sendThread, _react, _openThread, _closeThread,
+    _composerKey, _threadKey,
+    /* Realtime hooks */
+    _injectMessage, _hasMessage, _getActiveChannel,
+  };
 })();

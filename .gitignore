@@ -1,0 +1,28 @@
+# Environment — NEVER commit real secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Vercel
+.vercel/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+*.swp
+*.swo
+
+# Temporary / uploads
+*.jpeg
+*.jpg
+*.png
+!og-image.svg
+!og-image.png

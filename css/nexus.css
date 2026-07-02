@@ -541,3 +541,52 @@
   .nx-thread { display: none; }
   .nx-wrap { height: calc(100vh - 3.5rem); }
 }
+
+/* ── Realtime: new message slide-in animation ── */
+@keyframes nx-msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nx-msg-new {
+  animation: nx-msg-in 0.22s ease forwards;
+  will-change: opacity, transform;
+}
+
+/* ── Realtime: online count in sidebar ── */
+#nx-online-count {
+  font-size: 0.65rem;
+  color: #3fb950;
+  margin-left: 0.25rem;
+  transition: opacity 0.2s;
+}
+
+/* Live indicator dot on the workspace name */
+#nx-online-count[data-rt="live"]::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #3fb950;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+  animation: nx-pulse 2s ease-in-out infinite;
+  will-change: opacity;
+}
+
+#nx-online-count[data-rt="offline"]::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #8b949e;
+  border-radius: 50%;
+  margin-right: 0.25rem;
+  vertical-align: middle;
+}
+
+@keyframes nx-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
