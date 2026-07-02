@@ -25,6 +25,8 @@ window.OMICSLAB_CONFIG = {
 
   /* ── Sentry ─────────────────────────────────────────────────────
      sentry.io → Settings → Projects → Client Keys → DSN            */
+  appUrl: 'https://omicsdatalab.tech',
+
   sentryDsn: '',     // 'https://xxx@xxx.ingest.sentry.io/xxx'
 
   /* ── Pricing page plan IDs (match Stripe Price IDs) ─────────── */
