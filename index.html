@@ -975,7 +975,7 @@
           FastQC, STAR alignment, featureCounts, and DESeq2 — running step-by-step in your browser, exactly as they would on a real HPC cluster.
         </p>
         <ul class="hv-feat-list" style="margin-bottom:1.5rem">
-          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#3fb950"></span>FastQC read quality control</li>
+          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#00C4A0"></span>FastQC read quality control</li>
           <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#58a6ff"></span>STAR spliced alignment</li>
           <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#bc8cff"></span>featureCounts gene quantification</li>
           <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#f97316"></span>DESeq2 differential expression</li>
@@ -989,10 +989,7 @@
       <!-- Right: live animated RNA-seq pipeline card -->
       <div class="hero-pipeline-card" aria-label="Live RNA-seq pipeline simulation preview" id="hero-pipeline-card">
         <div class="hpc-topbar">
-          <span class="hpc-dot hpc-dot-r"></span>
-          <span class="hpc-dot hpc-dot-y"></span>
-          <span class="hpc-dot hpc-dot-g"></span>
-          <span class="hpc-bar-title">omicslab — RNA-seq pipeline</span>
+          <span class="hpc-bar-title">omicslab / analysis / rna-seq</span>
           <span class="hpc-badge-live">LIVE</span>
         </div>
 
@@ -1846,12 +1843,13 @@
     </div>
 
     <div style="display:flex;align-items:center;justify-content:center;gap:.6rem;color:var(--text-muted);font-size:0.82rem;text-align:center;flex-wrap:wrap">
-      <img src="images/simon-mufara.jpg" alt="Simon Mufara" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:50% 15%;border:1.5px solid rgba(63,185,80,0.4);flex-shrink:0">
-      Built by <a href="https://github.com/Simon-Mufara" style="color:var(--success);text-decoration:none" target="_blank" rel="noopener">Simon Mufara</a>
+      <img src="images/simon-mufara.jpg" alt="Simon Mufara" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:50% 15%;border:1.5px solid rgba(0,196,160,0.4);flex-shrink:0">
+      Built by <a href="https://github.com/Simon-Mufara" style="color:var(--green);text-decoration:none" target="_blank" rel="noopener">Simon Mufara</a>
       &nbsp;·&nbsp; Computational Biologist &amp; Bioinformatician &nbsp;·&nbsp; UCT
     </div>
 
     <div class="footer-links">
+      <a onclick="OmicsLab.Router&&OmicsLab.Router.navigate('partners')" style="cursor:pointer">About</a>
       <a onclick="OmicsLab.Router&&OmicsLab.Router.navigate('guide')" style="cursor:pointer">User Guide</a>
       <a onclick="OmicsLab.Router&&OmicsLab.Router.navigate('pricing')" style="cursor:pointer">Plans &amp; Pricing</a>
       <a onclick="OmicsLab.Router&&OmicsLab.Router.navigate('institution')" style="cursor:pointer">Institution Mode</a>

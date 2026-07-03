@@ -28,7 +28,7 @@
 
   /* Domain accent colours */
   --genomics:    #58a6ff;
-  --transcripto: #3fb950;
+  --transcripto: #00C4A0;
   --epigenomics: #d2a8ff;
   --metagenomics:#ffa657;
   --metabolomics:#f78166;
@@ -37,13 +37,13 @@
   --multiomics:  #e3b341;
 
   /* Status */
-  --success:     #3fb950;
+  --success:     #00C4A0;
   --warning:     #d29922;
   --danger:      #e5534b;
   --info:        #58a6ff;
 
   /* Shadows / glows */
-  --glow-green:  0 0 20px rgba(63,185,80,0.25);
+  --glow-green:  0 0 20px rgba(0,196,160,0.25);
   --glow-blue:   0 0 20px rgba(88,166,255,0.25);
   --glow-red:    0 0 20px rgba(229,83,75,0.25);
 

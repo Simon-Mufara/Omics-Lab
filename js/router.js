@@ -508,8 +508,15 @@ OmicsLab.Router = (function () {
     partners: {
       label: 'About & Inspiration',
       icon: 'globe',
-      color: '#58a6ff',
-      tagline: 'About OmicsLab — mission, values, and the open-source community that makes this platform possible',
+      color: '#00C4A0',
+      tagline: 'About OmicsLab — Simon Mufara, UCT, and the mission to make world-class omics training free across Africa',
+      sections: ['partners-section'],
+    },
+    about: {
+      label: 'About',
+      icon: 'globe',
+      color: '#00C4A0',
+      tagline: 'About OmicsLab — Simon Mufara, UCT, and the mission to make world-class omics training free across Africa',
       sections: ['partners-section'],
     },
     'knowledge-graph': {
@@ -753,7 +760,7 @@ OmicsLab.Router = (function () {
     /* Part 7 */
     'api-docs': 'tools',
     /* Part 8 */
-    certification: 'train', impact: 'research', partners: 'research',
+    certification: 'train', impact: 'research', partners: 'research', about: 'research',
     /* Part 9 */
     'skill-tree': 'train', 'variant-atlas': 'tools', 'clinical-decision': 'tools',
     'one-health': 'research', institution: 'train',
@@ -1142,7 +1149,7 @@ OmicsLab.Router = (function () {
     /* Part 8 */
     if (page === 'certification' && OmicsLab.Certification) _si(OmicsLab.Certification, 'certification-section', 'Certification');
     if (page === 'impact' && OmicsLab.Impact) _si(OmicsLab.Impact, 'impact-section', 'Impact');
-    if (page === 'partners' && OmicsLab.Partners) _si(OmicsLab.Partners, 'partners-section', 'Partners');
+    if ((page === 'partners' || page === 'about') && OmicsLab.Partners) _si(OmicsLab.Partners, 'partners-section', 'Partners');
     if (page === 'knowledge-graph' && OmicsLab.KnowledgeGraph) _si(OmicsLab.KnowledgeGraph, 'knowledge-graph-section', 'KnowledgeGraph');
     if (page === 'settings' && OmicsLab.Settings) _si(OmicsLab.Settings, 'settings-section', 'Settings');
     if (page === 'output-tracker' && OmicsLab.OutputTracker) _si(OmicsLab.OutputTracker, 'output-tracker-section', 'OutputTracker');

@@ -6,10 +6,10 @@
 
 :root {
   /* ── Colour palette ── */
-  --green:       #3fb950;
-  --green-dim:   #238636;
-  --green-glow:  rgba(63,185,80,0.15);
-  --green-bg:    rgba(63,185,80,0.08);
+  --green:       #00C4A0;
+  --green-dim:   #007A6A;
+  --green-glow:  rgba(0,196,160,0.15);
+  --green-bg:    rgba(0,196,160,0.08);
   --blue:        #58a6ff;
   --blue-dim:    rgba(88,166,255,0.12);
   --blue-bg:     rgba(88,166,255,0.08);
@@ -23,29 +23,29 @@
   --yellow-bg:   rgba(227,179,65,0.08);
 
   /* ── Accent (user-overridable via Settings) ── */
-  --accent:      #3fb950;
-  --accent-dim:  #238636;
-  --accent-bg:   rgba(63,185,80,0.08);
+  --accent:      #00C4A0;
+  --accent-dim:  #007A6A;
+  --accent-bg:   rgba(0,196,160,0.08);
 
   /* ── Dark theme surfaces (default) ── */
-  --bg-root:     #010409;
-  --bg-base:     #010409;
-  --bg-canvas:   #0d1117;
-  --bg-surface:  #161b22;
-  --bg-overlay:  #21262d;
-  --bg-inset:    #0d1117;
+  --bg-root:     #060A14;
+  --bg-base:     #060A14;
+  --bg-canvas:   #0D1524;
+  --bg-surface:  #111B2E;
+  --bg-overlay:  #182236;
+  --bg-inset:    #0D1524;
 
   /* ── Dark theme text ── */
-  --text-primary:   #e6edf3;
-  --text-secondary: #c9d1d9;
-  --text-muted:     #8b949e;
-  --text-faint:     #484f58;
-  --text-link:      #58a6ff;
+  --text-primary:   #E4DDD2;
+  --text-secondary: #A8A098;
+  --text-muted:     #6E6860;
+  --text-faint:     #3C3840;
+  --text-link:      #00C4A0;
 
   /* ── Dark theme borders ── */
-  --border-default: #21262d;
-  --border-muted:   #30363d;
-  --border-strong:  #484f58;
+  --border-default: #182236;
+  --border-muted:   #243048;
+  --border-strong:  #354060;
 
   /* ── Border radii ── */
   --radius-xs:   3px;
@@ -72,20 +72,21 @@
   --font-mono:  'JetBrains Mono', 'Fira Code', monospace;
   --font-brand: 'Sora', 'Inter', sans-serif;
 
-  --text-xs:   0.7rem;
-  --text-sm:   0.8rem;
-  --text-base: 0.875rem;
-  --text-md:   1rem;
-  --text-lg:   1.1rem;
-  --text-xl:   1.25rem;
-  --text-2xl:  1.5rem;
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-md:   1.0625rem; /* 17px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.3125rem; /* 21px */
+  --text-2xl:  1.5625rem; /* 25px */
 
-  /* ── Shadows ── */
-  --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-sm: 0 1px 4px rgba(0,0,0,0.4);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
-  --shadow-xl: 0 24px 64px rgba(0,0,0,0.6);
+  /* ── Shadows — border-glow + elevation (visible on dark) ── */
+  --shadow-xs: 0 0 0 1px rgba(255,255,255,0.04), 0 1px 3px rgba(0,0,0,0.5);
+  --shadow-sm: 0 0 0 1px rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.5);
+  --shadow-md: 0 0 0 1px rgba(255,255,255,0.05), 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-lg: 0 0 0 1px rgba(255,255,255,0.06), 0 12px 40px rgba(0,0,0,0.6);
+  --shadow-xl: 0 0 0 1px rgba(255,255,255,0.06), 0 24px 64px rgba(0,0,0,0.7);
+  --shadow-accent: 0 8px 32px rgba(0,196,160,0.14);
 
   /* ── Motion ── */
   --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
@@ -110,22 +111,38 @@
 
 /* ── Light theme overrides ── */
 [data-theme="light"] {
-  --bg-root:      #ffffff;
-  --bg-base:      #ffffff;
-  --bg-canvas:    #f6f8fa;
-  --bg-surface:   #ffffff;
-  --bg-overlay:   #f1f3f5;
-  --bg-inset:     #f6f8fa;
+  --bg-root:      #FAF8F4;
+  --bg-base:      #FAF8F4;
+  --bg-canvas:    #F4F1EB;
+  --bg-surface:   #FFFFFF;
+  --bg-overlay:   #EDE9E2;
+  --bg-inset:     #F4F1EB;
 
-  --text-primary:   #24292f;
-  --text-secondary: #57606a;
-  --text-muted:     #6e7781;
-  --text-faint:     #a8b1ba;
-  --text-link:      #0969da;
+  --text-primary:   #14110C;
+  --text-secondary: #3D382F;
+  --text-muted:     #79726A;
+  --text-faint:     #B0A898;
+  --text-link:      #007A6A;
 
-  --border-default: #d0d7de;
-  --border-muted:   #e1e4e8;
-  --border-strong:  #b1bac4;
+  --border-default: #D8D2C8;
+  --border-muted:   #E8E3DA;
+  --border-strong:  #BDB6AA;
+
+  /* Teal readable on light backgrounds */
+  --green:       #007A6A;
+  --green-dim:   #005C56;
+  --green-glow:  rgba(0,122,106,0.15);
+  --green-bg:    rgba(0,122,106,0.08);
+  --accent:      #007A6A;
+  --accent-dim:  #005C56;
+  --accent-bg:   rgba(0,122,106,0.08);
+
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+  --shadow-xl: 0 24px 64px rgba(0,0,0,0.15);
+  --shadow-accent: 0 8px 32px rgba(0,122,106,0.16);
 }
 
 /* ── Reduced motion ── */
