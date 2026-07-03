@@ -25,38 +25,54 @@ OmicsLab.AuthClerk = (function () {
   }
 
   function _loadScript(publishableKey) {
-    /* If the static <script id="clerk-sdk"> tag already exists in HTML */
     const existing = document.getElementById('clerk-sdk');
     if (existing) {
-      if (window.Clerk) {
-        _boot(publishableKey);
-      } else {
-        existing.addEventListener('load',  () => _boot(publishableKey));
-        existing.addEventListener('error', () => {
-          _loading = false;
-          console.error('[AuthClerk] Clerk CDN script failed to load');
-        });
-      }
+      /* Static tag already in HTML — script may have already fired its load event.
+         Poll for window.Clerk rather than relying on the event. */
+      _pollForClerk(publishableKey);
       return;
     }
-    /* Dynamic injection fallback */
+    /* Dynamic injection fallback (no static tag) */
     const s = document.createElement('script');
     s.id  = 'clerk-sdk';
     s.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
+    s.dataset.clerkPublishableKey = publishableKey;
     s.async = true;
-    s.onload  = () => _boot(publishableKey);
-    s.onerror = () => {
-      _loading = false;
-      console.error('[AuthClerk] Clerk CDN failed to load — local auth only');
-    };
+    s.onload  = () => _pollForClerk(publishableKey);
+    s.onerror = () => { _loading = false; console.error('[AuthClerk] CDN failed'); };
     document.head.appendChild(s);
     console.log('[AuthClerk] Injecting Clerk SDK from CDN…');
   }
 
+  function _pollForClerk(publishableKey) {
+    let attempts = 0;
+    const poll = setInterval(() => {
+      attempts++;
+      if (window.Clerk) {
+        clearInterval(poll);
+        _boot(publishableKey);
+      } else if (attempts > 50) {   // 10 s timeout
+        clearInterval(poll);
+        _loading = false;
+        console.error('[AuthClerk] Timed out waiting for window.Clerk');
+      }
+    }, 200);
+  }
+
   async function _boot(publishableKey) {
     try {
-      console.log('[AuthClerk] window.Clerk available, booting…');
-      _clerk = new window.Clerk(publishableKey);
+      const C = window.Clerk;
+      console.log('[AuthClerk] window.Clerk type:', typeof C, !!C);
+      /* Clerk v5 CDN: with data-clerk-publishable-key the script pre-initializes
+         an instance and exposes it as window.Clerk (has .load / .addListener).
+         Without the key attr it exports the class constructor (typeof === 'function'). */
+      if (typeof C === 'function') {
+        _clerk = new C(publishableKey);
+      } else if (C && typeof C.load === 'function') {
+        _clerk = C;   // already an initialized instance
+      } else {
+        throw new Error('Unexpected window.Clerk: ' + typeof C);
+      }
       await _clerk.load();
       _ready   = true;
       _loading = false;
