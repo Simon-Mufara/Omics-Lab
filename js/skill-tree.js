@@ -184,11 +184,14 @@ OmicsLab.SkillTree = (function () {
     bar.querySelector('.st-nav-xp').textContent = lv.xp + ' XP';
   }
 
-  /* ─── Render nav XP bar (called from app.js) ─── */
+  /* ─── Render nav XP bar — only shown after first XP earned ─── */
   function initNavBar() {
     const nav = document.getElementById('main-nav');
-    if (!nav || document.getElementById('st-nav-bar')) return;
+    if (!nav) return;
     const lv = getLevel();
+    /* Don't show the bar until the user has earned at least 1 XP */
+    if (lv.xp < 1) return;
+    if (document.getElementById('st-nav-bar')) { _updateNavXP(); return; }
     const pct = lv.nextXp ? Math.round((lv.xp - LEVELS[lv.index].xp) / (lv.nextXp - LEVELS[lv.index].xp) * 100) : 100;
     const bar = document.createElement('div');
     bar.id = 'st-nav-bar';

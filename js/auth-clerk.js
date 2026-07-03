@@ -12,6 +12,33 @@ OmicsLab.AuthClerk = (function () {
   let _user      = null;
   let _callbacks = [];
 
+  /* OmicsLab dark theme for Clerk modals */
+  const _appearance = {
+    variables: {
+      colorBackground:    '#0d1117',
+      colorText:          '#c9d1d9',
+      colorTextSecondary: '#8b949e',
+      colorPrimary:       '#3fb950',
+      colorDanger:        '#f85149',
+      colorInputBackground: '#161b22',
+      colorInputText:     '#c9d1d9',
+      borderRadius:       '10px',
+      fontFamily:         'inherit',
+    },
+    elements: {
+      card:             'background:#161b22;border:1px solid #30363d;box-shadow:0 16px 48px rgba(0,0,0,0.6)',
+      headerTitle:      'color:#e6edf3;font-size:1.15rem',
+      headerSubtitle:   'color:#8b949e',
+      socialButtonsBlockButton: 'background:#21262d;border:1px solid #30363d;color:#c9d1d9',
+      socialButtonsBlockButton__hover: 'background:#30363d',
+      dividerLine:      'background:#30363d',
+      dividerText:      'color:#8b949e',
+      formFieldInput:   'background:#0d1117;border-color:#30363d;color:#c9d1d9',
+      formFieldLabel:   'color:#8b949e',
+      footerActionLink: 'color:#3fb950',
+    },
+  };
+
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
     const key = window.OMICSLAB_CONFIG?.clerkPublishableKey;
@@ -102,15 +129,17 @@ OmicsLab.AuthClerk = (function () {
     OmicsLab.Auth.openModal = function (tab) {
       if (tab === 'account') {
         if (_clerk.user) {
-          /* Clerk user — show Clerk's profile UI */
-          _clerk.openUserProfile({});
+          _clerk.openUserProfile({ appearance: _appearance });
         } else {
-          /* Local auth user — fall back to original modal */
           _originalOpenModal?.('account');
         }
         return;
       }
-      if (tab === 'register') { _clerk.openSignUp({}); } else { _clerk.openSignIn({}); }
+      if (tab === 'register') {
+        _clerk.openSignUp({ appearance: _appearance });
+      } else {
+        _clerk.openSignIn({ appearance: _appearance });
+      }
     };
     OmicsLab.Auth._showModal = OmicsLab.Auth.openModal;
 
@@ -149,6 +178,16 @@ OmicsLab.AuthClerk = (function () {
       localStorage.setItem('omicslab_auth_token', 'clerk_managed');
     } catch {}
     _updateNav(_user);
+
+    /* First-time sign-in → take user straight to the Guide */
+    const isNewUser = !localStorage.getItem(`omicslab_guide_seen_${_user.id}`);
+    if (isNewUser) {
+      localStorage.setItem(`omicslab_guide_seen_${_user.id}`, '1');
+      setTimeout(() => {
+        if (OmicsLab.Router?.navigate) OmicsLab.Router.navigate('guide');
+      }, 600);
+    }
+
     if (OmicsLab.DB?.isReady) {
       OmicsLab.DB.upsertUser({ clerk_id: _user.id, email: _user.email, name: _user.name, avatar_url: _user.avatarUrl, role: _user.role, plan: _user.plan });
       OmicsLab.DB.syncOnSignIn(_user.id);
@@ -187,24 +226,24 @@ OmicsLab.AuthClerk = (function () {
 
   /* signIn waits up to 6s for Clerk to load before giving up */
   function signIn() {
-    if (_ready) { _clerk.openSignIn({}); return; }
+    if (_ready) { _clerk.openSignIn({ appearance: _appearance }); return; }
     if (!_loading) { OmicsLab.Auth?.openModal?.('signin'); return; }
     console.log('[AuthClerk] Waiting for Clerk to load…');
     let waited = 0;
     const poll = setInterval(() => {
       waited += 200;
-      if (_ready) { clearInterval(poll); _clerk.openSignIn({}); }
+      if (_ready) { clearInterval(poll); _clerk.openSignIn({ appearance: _appearance }); }
       else if (!_loading || waited >= 6000) { clearInterval(poll); OmicsLab.Auth?.openModal?.('signin'); }
     }, 200);
   }
 
   function signUp() {
-    if (_ready) { _clerk.openSignUp({}); return; }
+    if (_ready) { _clerk.openSignUp({ appearance: _appearance }); return; }
     if (!_loading) { OmicsLab.Auth?.openModal?.('register'); return; }
     let waited = 0;
     const poll = setInterval(() => {
       waited += 200;
-      if (_ready) { clearInterval(poll); _clerk.openSignUp({}); }
+      if (_ready) { clearInterval(poll); _clerk.openSignUp({ appearance: _appearance }); }
       else if (!_loading || waited >= 6000) { clearInterval(poll); OmicsLab.Auth?.openModal?.('register'); }
     }, 200);
   }
