@@ -12,30 +12,18 @@ OmicsLab.AuthClerk = (function () {
   let _user      = null;
   let _callbacks = [];
 
-  /* OmicsLab dark theme for Clerk modals */
+  /* OmicsLab dark theme for Clerk modals — variables only (most stable API) */
   const _appearance = {
     variables: {
-      colorBackground:    '#0d1117',
-      colorText:          '#c9d1d9',
-      colorTextSecondary: '#8b949e',
-      colorPrimary:       '#3fb950',
-      colorDanger:        '#f85149',
+      colorBackground:      '#0d1117',
+      colorText:            '#c9d1d9',
+      colorTextSecondary:   '#8b949e',
+      colorPrimary:         '#3fb950',
+      colorDanger:          '#f85149',
       colorInputBackground: '#161b22',
-      colorInputText:     '#c9d1d9',
-      borderRadius:       '10px',
-      fontFamily:         'inherit',
-    },
-    elements: {
-      card:             'background:#161b22;border:1px solid #30363d;box-shadow:0 16px 48px rgba(0,0,0,0.6)',
-      headerTitle:      'color:#e6edf3;font-size:1.15rem',
-      headerSubtitle:   'color:#8b949e',
-      socialButtonsBlockButton: 'background:#21262d;border:1px solid #30363d;color:#c9d1d9',
-      socialButtonsBlockButton__hover: 'background:#30363d',
-      dividerLine:      'background:#30363d',
-      dividerText:      'color:#8b949e',
-      formFieldInput:   'background:#0d1117;border-color:#30363d;color:#c9d1d9',
-      formFieldLabel:   'color:#8b949e',
-      footerActionLink: 'color:#3fb950',
+      colorInputText:       '#c9d1d9',
+      borderRadius:         '10px',
+      fontFamily:           'inherit',
     },
   };
 
