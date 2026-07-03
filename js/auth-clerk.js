@@ -97,8 +97,19 @@ OmicsLab.AuthClerk = (function () {
   function _patchAuthModal() {
     if (!OmicsLab.Auth) return;
 
+    const _originalOpenModal = OmicsLab.Auth.openModal?.bind?.(OmicsLab.Auth);
+
     OmicsLab.Auth.openModal = function (tab) {
-      if (tab === 'account') { _clerk.openUserProfile({}); return; }
+      if (tab === 'account') {
+        if (_clerk.user) {
+          /* Clerk user — show Clerk's profile UI */
+          _clerk.openUserProfile({});
+        } else {
+          /* Local auth user — fall back to original modal */
+          _originalOpenModal?.('account');
+        }
+        return;
+      }
       if (tab === 'register') { _clerk.openSignUp({}); } else { _clerk.openSignIn({}); }
     };
     OmicsLab.Auth._showModal = OmicsLab.Auth.openModal;
