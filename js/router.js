@@ -846,9 +846,9 @@ OmicsLab.Router = (function () {
       }
     }
 
-    /* Update URL hash without scroll */
-    const hash = '#/' + page;
-    if (location.hash !== hash) history.pushState(null, '', hash);
+    /* Update URL to clean path (SEO-friendly, no hash) */
+    const path = page === 'home' ? '/' : '/' + page;
+    if (location.pathname !== path) history.pushState(null, '', path);
 
     /* Lab page → open the full-screen chooser instead of landing page sections */
     if (page === 'lab') {
@@ -1530,8 +1530,12 @@ OmicsLab.Router = (function () {
     });
   }
 
-  /* ─── Parse hash → page slug ─── */
+  /* ─── Parse URL → page slug (supports both /page paths and legacy #/page hashes) ─── */
   function _hashToPage() {
+    /* Prefer pathname-based routing (new) */
+    const path = location.pathname.replace(/^\//, '').split('/')[0];
+    if (path && PAGES[path]) return path;
+    /* Fall back to hash (legacy bookmarks) */
     const hash = location.hash;
     if (!hash || hash === '#/' || hash === '#') return 'home';
     const slug = hash.replace(/^#\//, '').split('/')[0];
