@@ -95,7 +95,9 @@ OmicsLab.AuthClerk = (function () {
 
       _patchAuthModal();
 
-      if (_clerk.user) _syncUser(_clerk.user);
+      /* Sync immediately — this also clears any stale local auth.js session
+         when Clerk reports no user, so the Sign In button appears right away */
+      _syncUser(_clerk.user || null);
 
       _clerk.addListener(({ user }) => {
         _syncUser(user);

@@ -56,6 +56,8 @@ OmicsLab.Auth = (function () {
 
   /* ─── Restore session on load ─── */
   function _restoreSession() {
+    /* When Clerk is configured it owns auth — don't restore local sessions */
+    if (window.OMICSLAB_CONFIG?.clerkPublishableKey) return;
     const s = _loadSession();
     if (!s || !s.token || !s.userId) return;
     if (s.expires && Date.now() > s.expires) { _clearSession(); return; }
