@@ -42,7 +42,7 @@ OmicsLab.AuthClerk = (function () {
     /* Dynamic injection fallback */
     const s = document.createElement('script');
     s.id  = 'clerk-sdk';
-    s.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js';
+    s.src = 'https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js';
     s.async = true;
     s.onload  = () => _boot(publishableKey);
     s.onerror = () => {
