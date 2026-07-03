@@ -114,8 +114,12 @@ OmicsLab.AuthClerk = (function () {
     };
     OmicsLab.Auth._showModal = OmicsLab.Auth.openModal;
 
+    const _originalSignOut = OmicsLab.Auth.signOut?.bind?.(OmicsLab.Auth);
     OmicsLab.Auth.signOut = async function () {
-      if (_clerk) await _clerk.signOut();
+      /* Sign out of Clerk (no-op if no Clerk session) */
+      if (_clerk) await _clerk.signOut().catch(() => {});
+      /* Also clear auth.js local session so it doesn't restore on reload */
+      _originalSignOut?.();
       _syncUser(null);
       OmicsLab.Analytics?.reset?.();
       _callbacks.forEach(cb => cb(null));
