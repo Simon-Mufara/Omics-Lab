@@ -198,6 +198,10 @@ OmicsLab.Auth = (function () {
     const avatar    = document.getElementById('nav-user-avatar');
     const nameEl    = document.getElementById('nav-user-name');
     const signinBtn = document.getElementById('nav-signin-btn');
+    const mobSignin  = document.getElementById('mob-auth-signin');
+    const mobAccount = document.getElementById('mob-auth-account');
+    const mobSignout = document.getElementById('mob-auth-signout');
+    const mobName    = document.getElementById('mob-auth-username');
 
     if (_user) {
       if (pill)      { pill.style.display = ''; pill.setAttribute('aria-label', `${_user.name} — Account settings`); }
@@ -213,9 +217,16 @@ OmicsLab.Auth = (function () {
         const parts = _user.name.trim().split(/\s+/);
         nameEl.textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
       }
+      if (mobSignin)  mobSignin.style.display  = 'none';
+      if (mobAccount) mobAccount.style.display = '';
+      if (mobSignout) mobSignout.style.display = '';
+      if (mobName)    mobName.textContent = _user.name.trim().split(/\s+/)[0] + ''s Account';
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
+      if (mobSignin)  mobSignin.style.display  = '';
+      if (mobAccount) mobAccount.style.display = 'none';
+      if (mobSignout) mobSignout.style.display = 'none';
     }
   }
 

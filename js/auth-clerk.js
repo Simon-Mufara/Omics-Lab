@@ -129,7 +129,6 @@ OmicsLab.AuthClerk = (function () {
         _clerk.openSignIn({ appearance: _appearance });
       }
     };
-    OmicsLab.Auth._showModal = OmicsLab.Auth.openModal;
 
     const _originalSignOut = OmicsLab.Auth.signOut?.bind?.(OmicsLab.Auth);
     OmicsLab.Auth.signOut = async function () {
@@ -149,7 +148,11 @@ OmicsLab.AuthClerk = (function () {
   function _syncUser(clerkUser) {
     if (!clerkUser) {
       _user = null;
-      try { localStorage.removeItem('omicslab_user_profile'); localStorage.removeItem('omicslab_auth_token'); } catch {}
+      try {
+        localStorage.removeItem('omicslab_user_profile');
+        localStorage.removeItem('omicslab_auth_token');
+        localStorage.removeItem('omicslab_session_v2'); /* clear local auth.js session so it doesn't resurrect on reload */
+      } catch {}
       _updateNav(null);
       return;
     }
@@ -188,12 +191,19 @@ OmicsLab.AuthClerk = (function () {
     }
   }
 
-  /* ── Nav pill update ─────────────────────────────────────────── */
+  /* ── Nav pill + mobile auth update ──────────────────────────── */
   function _updateNav(user) {
+    /* Desktop nav */
     const pill      = document.getElementById('nav-user-pill');
     const avatar    = document.getElementById('nav-user-avatar');
     const nameEl    = document.getElementById('nav-user-name');
     const signinBtn = document.getElementById('nav-signin-btn');
+    /* Mobile overlay */
+    const mobSignin  = document.getElementById('mob-auth-signin');
+    const mobAccount = document.getElementById('mob-auth-account');
+    const mobSignout = document.getElementById('mob-auth-signout');
+    const mobName    = document.getElementById('mob-auth-username');
+
     if (user) {
       if (signinBtn) signinBtn.style.display = 'none';
       if (pill) { pill.style.display = ''; pill.setAttribute('aria-label', `${user.name} — Account settings`); }
@@ -202,11 +212,20 @@ OmicsLab.AuthClerk = (function () {
         else { avatar.textContent = user.name.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
       }
       if (nameEl) { const p = user.name.trim().split(/\s+/); nameEl.textContent = p[0] + (p[1] ? ' '+p[1][0]+'.' : ''); }
+      /* Mobile */
+      if (mobSignin)  mobSignin.style.display  = 'none';
+      if (mobAccount) mobAccount.style.display = '';
+      if (mobSignout) mobSignout.style.display = '';
+      if (mobName)    mobName.textContent = user.name.trim().split(/\s+/)[0] + '’s Account';
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
       if (avatar)    avatar.textContent = '';
       if (nameEl)    nameEl.textContent  = '';
+      /* Mobile */
+      if (mobSignin)  mobSignin.style.display  = '';
+      if (mobAccount) mobAccount.style.display = 'none';
+      if (mobSignout) mobSignout.style.display = 'none';
     }
   }
 
