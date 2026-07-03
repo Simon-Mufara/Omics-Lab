@@ -182,8 +182,14 @@ OmicsLab.AuthClerk = (function () {
     }
 
     if (OmicsLab.DB?.isReady) {
-      OmicsLab.DB.upsertUser({ clerk_id: _user.id, email: _user.email, name: _user.name, avatar_url: _user.avatarUrl, role: _user.role, plan: _user.plan });
-      OmicsLab.DB.syncOnSignIn(_user.id);
+      /* Supabase RLS requires a Clerk JWT — gate sync on token availability.
+         Configure a "supabase" JWT template in Clerk dashboard to enable cloud sync. */
+      getToken().then(jwt => {
+        if (!jwt) return;
+        OmicsLab.DB.setSession?.(jwt);
+        OmicsLab.DB.upsertUser({ clerk_id: _user.id, email: _user.email, name: _user.name, avatar_url: _user.avatarUrl, role: _user.role, plan: _user.plan });
+        OmicsLab.DB.syncOnSignIn(_user.id);
+      }).catch(() => {});
     }
     OmicsLab.Analytics?.identify?.(_user.id, { email: _user.email, name: _user.name, plan: _user.plan });
     const sentKey = `omicslab_welcome_sent_${_user.id}`;
@@ -218,7 +224,7 @@ OmicsLab.AuthClerk = (function () {
       if (mobSignin)  mobSignin.style.display  = 'none';
       if (mobAccount) mobAccount.style.display = '';
       if (mobSignout) mobSignout.style.display = '';
-      if (mobName)    mobName.textContent = user.name.trim().split(/\s+/)[0] + '’s Account';
+      if (mobName)    mobName.textContent = user.name.trim().split(/\s+/)[0];
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';

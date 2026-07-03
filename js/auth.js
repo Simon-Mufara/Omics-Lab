@@ -222,7 +222,7 @@ OmicsLab.Auth = (function () {
       if (mobSignin)  mobSignin.style.display  = 'none';
       if (mobAccount) mobAccount.style.display = '';
       if (mobSignout) mobSignout.style.display = '';
-      if (mobName)    mobName.textContent = _user.name.trim().split(/\s+/)[0] + ''s Account';
+      if (mobName)    mobName.textContent = _user.name.trim().split(/\s+/)[0];
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
