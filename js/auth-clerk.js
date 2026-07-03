@@ -243,6 +243,12 @@ OmicsLab.AuthClerk = (function () {
     _callbacks.forEach(cb => cb(null));
   }
 
+  function openAccount() {
+    if (!_ready) { signIn(); return; }
+    if (_clerk.user) _clerk.openUserProfile({ appearance: _appearance });
+    else _clerk.openSignIn({ appearance: _appearance });
+  }
+
   function getUser()    { return _user; }
   function isSignedIn() { return _ready && !!_user; }
   function onAuthChange(cb) { if (typeof cb === 'function') _callbacks.push(cb); }
@@ -251,5 +257,5 @@ OmicsLab.AuthClerk = (function () {
     try { return await _clerk.session.getToken({ template: 'supabase' }); } catch { return null; }
   }
 
-  return { init, signIn, signUp, signOut, getUser, isSignedIn, onAuthChange, getToken };
+  return { init, signIn, signUp, signOut, openAccount, getUser, isSignedIn, onAuthChange, getToken };
 })();

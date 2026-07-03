@@ -398,6 +398,7 @@ OmicsLab.Profile = (function () {
   function _skip() {
     saveProfile({ name: 'Researcher', institution: '', country: '', role: 'Researcher', skipped: true });
     _closeModal();
+    setTimeout(() => { OmicsLab.Router?.navigate('guide'); }, 300);
   }
 
   function _closeModal() {

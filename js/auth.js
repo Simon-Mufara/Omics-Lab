@@ -228,6 +228,14 @@ OmicsLab.Auth = (function () {
   }
 
   function _showModal(tab) {
+    /* Delegate to Clerk when available — covers all internal callers */
+    const clerk = window.OmicsLab?.AuthClerk;
+    if (clerk) {
+      if (tab === 'account') { clerk.openAccount(); }
+      else if (tab === 'register') { clerk.signUp(); }
+      else { clerk.signIn(); }
+      return;
+    }
     let overlay = document.getElementById('auth-modal-overlay');
     if (!overlay) {
       overlay = document.createElement('div');

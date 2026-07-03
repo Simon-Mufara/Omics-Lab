@@ -287,6 +287,7 @@ OmicsLab.Onboarding = (function () {
   function skip() {
     localStorage.setItem(FLAG, '1');
     _close();
+    OmicsLab.Router?.navigate('guide');
   }
 
   function done() {

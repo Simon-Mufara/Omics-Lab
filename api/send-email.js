@@ -6,8 +6,8 @@
    ═══════════════════════════════════════════════════════════════ */
 
 const RESEND_API_KEY  = process.env.RESEND_API_KEY;
-const FROM_EMAIL      = process.env.RESEND_FROM_EMAIL || 'noreply@omicslab.africa';
-const APP_URL         = process.env.NEXT_PUBLIC_APP_URL || 'https://omicslab.africa';
+const FROM_EMAIL      = process.env.RESEND_FROM_EMAIL || 'noreply@omicsdatalab.tech';
+const APP_URL         = process.env.NEXT_PUBLIC_APP_URL || 'https://omicsdatalab.tech';
 
 const TEMPLATES = {
   welcome: ({ name }) => ({
