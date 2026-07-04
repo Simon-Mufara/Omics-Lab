@@ -81,7 +81,8 @@ OmicsLab.Dashboard = (function () {
 
   /* ─── Render dashboard ─── */
   function render(container) {
-    const user = (() => { try { return JSON.parse(localStorage.getItem('omicslab_user') || 'null'); } catch { return null; } })();
+    const user = OmicsLab.AuthClerk?.getUser?.()
+              || (() => { try { return JSON.parse(localStorage.getItem('omicslab_user_profile') || localStorage.getItem('omicslab_user') || 'null'); } catch { return null; } })();
     const name = user?.name || localStorage.getItem('omicslab_profile_name') || 'Researcher';
     const inst = user?.institution || localStorage.getItem('omicslab_profile_institution') || '';
     const history = _getHistory().slice(0, 3);

@@ -10,6 +10,26 @@
   --font-body:    var(--font-sans,  'Inter', system-ui, sans-serif);
 }
 
+/* ── Hero welcome badge (signed-in users only) ── */
+.hero-welcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0,196,160,0.1);
+  border: 1px solid rgba(0,196,160,0.25);
+  border-radius: 20px;
+  padding: 0.28rem 0.8rem;
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+.hero-welcome-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
 /* ── Trust bar ── */
 .hero-trust-bar {
   display: flex;

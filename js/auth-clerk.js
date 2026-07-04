@@ -238,6 +238,15 @@ OmicsLab.AuthClerk = (function () {
       if (mobAccount) mobAccount.style.display = '';
       if (mobSignout) mobSignout.style.display = '';
       if (mobName)    mobName.textContent = user.name.trim().split(/\s+/)[0];
+      /* Hero welcome badge for signed-in users */
+      const welcome = document.getElementById('hero-welcome');
+      if (welcome) {
+        const firstName = user.name.trim().split(/\s+/)[0];
+        const hour = new Date().getHours();
+        const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+        welcome.innerHTML = `<span class="hero-welcome-text">${greeting}, ${firstName}</span>`;
+        welcome.style.display = '';
+      }
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
@@ -248,6 +257,9 @@ OmicsLab.AuthClerk = (function () {
       if (mobSignin)  mobSignin.style.display  = '';
       if (mobAccount) mobAccount.style.display = 'none';
       if (mobSignout) mobSignout.style.display = 'none';
+      /* Hide hero-welcome for guests */
+      const welcome = document.getElementById('hero-welcome');
+      if (welcome) welcome.style.display = 'none';
     }
   }
 

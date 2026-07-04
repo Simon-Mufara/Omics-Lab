@@ -4,8 +4,8 @@
         sign-out session clearing, SW comment sync
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v44';  /* js/ css/ images/ */
-const PAGES_CACHE   = 'ol-pages-v6';   /* index.html + offline.html */
+const STATIC_CACHE  = 'ol-static-v45';  /* js/ css/ images/ */
+const PAGES_CACHE   = 'ol-pages-v7';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
 /* Precache offline fallback on install */
