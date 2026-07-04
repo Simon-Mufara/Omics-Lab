@@ -53,16 +53,16 @@ OmicsLab.Impact = (function () {
 
   /* ── Citation formats ── */
   const _citeFormats = {
-    apa: `Mufara, S. (2025). OmicsLab Simulator: An interactive omics training platform for African researchers (Version 2.0) [Software]. https://simon-mufara.github.io/Omics-Lab/`,
+    apa: `Mufara, S. (2025). OmicsLab Simulator: An interactive omics training platform for African researchers (Version 2.0) [Software]. https://omicsdatalab.tech/`,
     bibtex: `@software{mufara2025omicslab,
   author    = {Mufara, Simon},
   title     = {OmicsLab Simulator},
   year      = {2025},
   version   = {2.0},
-  url       = {https://simon-mufara.github.io/Omics-Lab/},
+  url       = {https://omicsdatalab.tech/},
   note      = {Interactive omics training platform for African researchers}
 }`,
-    mla: `Mufara, Simon. OmicsLab Simulator. Version 2.0, 2025, https://simon-mufara.github.io/Omics-Lab/.`,
+    mla: `Mufara, Simon. OmicsLab Simulator. Version 2.0, 2025, https://omicsdatalab.tech/.`,
   };
   let _citeActive = 'apa';
 

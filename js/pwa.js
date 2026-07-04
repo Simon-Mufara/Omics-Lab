@@ -227,15 +227,51 @@ OmicsLab.PWA = (function () {
 
   function _showUpdateBanner() {
     if (document.getElementById('pwa-update-banner')) return;
+
+    /* Persist in notification centre so the user can see it later */
+    OmicsLab.Notifications?.add(
+      'OmicsLab updated',
+      'A new version has been deployed. Reload to get the latest tools and fixes.',
+      { cat: 'update' }
+    );
+
     const div = document.createElement('div');
     div.id = 'pwa-update-banner';
-    div.style.cssText = `position:fixed;top:56px;left:0;right:0;z-index:6000;background:#1a4731;border-bottom:1px solid var(--green,#00C4A0);padding:.5rem 1rem;display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--text-primary,#E4DDD2)`;
+    div.setAttribute('role', 'status');
+    div.setAttribute('aria-live', 'polite');
+    div.style.cssText = [
+      'position:fixed;bottom:0;left:0;right:0;z-index:9000',
+      'display:flex;align-items:center;justify-content:space-between;gap:.75rem',
+      'background:var(--bg-surface,#111B2E);border-top:2px solid var(--accent,#00C4A0)',
+      'padding:.65rem 1.25rem calc(.65rem + env(safe-area-inset-bottom,0px)) 1.25rem',
+      'font-size:.82rem;color:var(--text-secondary,#A8A098);font-family:inherit',
+      'animation:_ub-slide .25s ease both',
+      'box-shadow:0 -4px 24px rgba(0,196,160,.12)',
+    ].join(';');
     div.innerHTML = `
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
-      <span style="flex:1">OmicsLab has been updated.</span>
-      <button onclick="window.location.reload()" style="background:var(--green,#00C4A0);color:#000;border:none;border-radius:5px;padding:.25rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer">Reload</button>
-      <button onclick="this.closest('#pwa-update-banner').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#A8A098);padding:0 4px;display:flex;align-items:center" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+      <style>@keyframes _ub-slide{from{transform:translateY(100%)}to{transform:none}}</style>
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      <span style="flex:1">
+        <strong style="color:var(--accent,#00C4A0)">Update ready</strong>
+        — OmicsLab has new tools and fixes waiting.
+      </span>
+      <div style="display:flex;gap:.5rem;flex-shrink:0">
+        <button onclick="window.location.reload()" style="background:var(--accent,#00C4A0);color:#060A14;border:none;border-radius:6px;padding:.3rem .8rem;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.01em">
+          Reload now
+        </button>
+        <button onclick="document.getElementById('pwa-update-banner').remove()" aria-label="Dismiss update banner" style="background:none;border:1px solid var(--border-default,#182236);color:var(--text-muted,#A8A098);border-radius:6px;padding:.3rem .55rem;font-size:.78rem;cursor:pointer;display:flex;align-items:center">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>`;
+
+    /* Sit above mobile tab bar */
+    const mobileNav = document.querySelector('.mobile-nav-bar, [class*="mobile-tab"]');
+    if (mobileNav) div.style.bottom = '56px';
+
     document.body.appendChild(div);
+
+    /* Auto-dismiss after 30 s if user hasn't interacted */
+    setTimeout(() => document.getElementById('pwa-update-banner')?.remove(), 30000);
   }
 
   /* ══════════════════════════════════════════════════════════════

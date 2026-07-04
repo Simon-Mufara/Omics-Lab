@@ -7,7 +7,7 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Legal = (function () {
 
-  const BASE_URL   = 'https://simon-mufara.github.io/Omics-Lab/';
+  const BASE_URL   = 'https://omicsdatalab.tech/';
   const CONTACT    = 'simon.mufara1@gmail.com';
   const UPDATED_PRIVACY = 'June 2026';
   const UPDATED_TERMS   = 'June 2026';

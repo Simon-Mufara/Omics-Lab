@@ -233,10 +233,10 @@ OmicsLab.Certification = (function () {
       id: credId,
       type: ['VerifiableCredential', 'OpenBadgeCredential'],
       issuer: {
-        id: 'https://simon-mufara.github.io/Omics-Lab/',
+        id: 'https://omicsdatalab.tech/',
         type: 'Profile',
         name: 'OmicsLab Bioinformatics Platform',
-        url: 'https://simon-mufara.github.io/Omics-Lab/',
+        url: 'https://omicsdatalab.tech/',
         description: 'Africa-first interactive omics training platform — offline, free, open source.',
       },
       issuanceDate: issuedAt,
@@ -246,7 +246,7 @@ OmicsLab.Certification = (function () {
         name,
         institution: inst || undefined,
         achievement: completedTracks.map(t => ({
-          id: `https://simon-mufara.github.io/Omics-Lab/achievements/${t.id}`,
+          id: `https://omicsdatalab.tech/achievements/${t.id}`,
           type: 'Achievement',
           name: t.title,
           description: t.desc,
@@ -260,7 +260,7 @@ OmicsLab.Certification = (function () {
       proof: {
         type: 'Ed25519Signature2020',
         created: issuedAt,
-        verificationMethod: 'https://simon-mufara.github.io/Omics-Lab/#key-1',
+        verificationMethod: 'https://omicsdatalab.tech/#key-1',
         proofPurpose: 'assertionMethod',
         proofValue: 'SELF_ISSUED_DEMO_' + Date.now().toString(36).toUpperCase(),
         warning: 'Self-issued for demonstration — not cryptographically signed by a CA.',
