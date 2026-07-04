@@ -793,6 +793,123 @@ OmicsLab.Router = (function () {
   /* Always-visible sections (footer, changelog) */
   const GLOBAL_SECTIONS = ['changelog-section'];
 
+  /* ─── CSS lazy-loading: map each route to its stylesheet(s) ─── */
+  /* Critical CSS (tokens, components, app, nav, auth, home) is in <head>.
+     Everything else is injected on first visit to avoid loading 100 files upfront. */
+  const PAGE_CSS = {
+    guide:              ['css/user-guide.css'],
+    learn:              ['css/disease-learning.css','css/equipment.css','css/study-pack.css','css/certification.css','css/bioethics.css','css/enrichment.css'],
+    research:           ['css/research-mode.css','css/research-wizard.css','css/datasets.css','css/collab.css','css/grant.css','css/paperhub.css','css/pubmed.css','css/preprints.css','css/sra-browser.css','css/popstruct.css','css/peerreview.css','css/citations.css','css/metaanalysis.css'],
+    africa:             ['css/h3africa.css','css/one-health.css'],
+    analysis:           ['css/analysis.css','css/alignment-viewer.css','css/heatmap.css','css/qualitypredictor.css','css/variantinterp.css','css/protein-viewer.css','css/pathways.css','css/genomebrowser.css','css/variant-atlas.css'],
+    terminal:           ['css/terminal.css'],
+    ask:                ['css/mentor.css'],
+    assistant:          ['css/assistant.css'],
+    settings:           ['css/settings.css'],
+    profile:            ['css/profile.css'],
+    career:             ['css/career.css','css/mentorship.css','css/thesis-coach.css'],
+    lab:                ['css/lab.css'],
+    outbreak:           ['css/outbreak.css'],
+    datasets:           ['css/datasets.css'],
+    mentor:             ['css/mentor.css'],
+    protocols:          ['css/protocols.css'],
+    collab:             ['css/collab.css'],
+    grant:              ['css/grant.css'],
+    leaderboard:        ['css/leaderboard.css'],
+    debugger:           ['css/debugger.css'],
+    alerts:             ['css/alerts.css'],
+    phylo:              ['css/phylo.css'],
+    peerreview:         ['css/peerreview.css'],
+    heatmap:            ['css/heatmap.css'],
+    journalclub:        ['css/journalclub.css'],
+    citations:          ['css/citations.css'],
+    quizbattle:         ['css/quizbattle.css'],
+    qualitypredictor:   ['css/qualitypredictor.css'],
+    variantinterp:      ['css/variantinterp.css'],
+    primerdesign:       ['css/primerdesign.css'],
+    nexus:              ['css/nexus.css'],
+    teams:              ['css/teams.css'],
+    paperhub:           ['css/paperhub.css'],
+    pubmed:             ['css/pubmed.css'],
+    'gene-lookup':      ['css/gene-lookup.css'],
+    protein:            ['css/protein-viewer.css'],
+    uniprot:            ['css/uniprot.css'],
+    targets:            ['css/open-targets.css'],
+    string:             ['css/string-net.css'],
+    preprints:          ['css/preprints.css'],
+    pathways:           ['css/pathways.css'],
+    sra:                ['css/sra-browser.css'],
+    bionlp:             ['css/bionlp.css'],
+    codon:              ['css/codon.css'],
+    nanopore:           ['css/nanopore.css'],
+    amr:                ['css/amr.css'],
+    gatk:               ['css/gatk.css'],
+    kraken:             ['css/kraken.css'],
+    popstruct:          ['css/popstruct.css'],
+    'genome-browser':   ['css/genomebrowser.css'],
+    directory:          ['css/directory.css'],
+    hackathon:          ['css/hackathon.css'],
+    mentorship:         ['css/mentorship.css'],
+    glossary:           ['css/glossary.css'],
+    h3africa:           ['css/h3africa.css'],
+    'pathogen-tracker': ['css/pathogen-tracker.css'],
+    'offline-data':     ['css/offline-data.css'],
+    labnotebook:        ['css/labnotebook.css'],
+    'pipeline-gen':     ['css/pipeline-gen.css'],
+    metaanalysis:       ['css/metaanalysis.css'],
+    'api-docs':         ['css/api-docs.css'],
+    certification:      ['css/certification.css'],
+    impact:             ['css/impact.css'],
+    partners:           ['css/partners.css'],
+    tour:               ['css/tour.css'],
+    'knowledge-graph':  ['css/knowledge-graph.css'],
+    'output-tracker':   ['css/output-tracker.css'],
+    'skill-tree':       ['css/skill-tree.css'],
+    'variant-atlas':    ['css/variant-atlas.css'],
+    'clinical-decision':['css/clinical-decision.css'],
+    'one-health':       ['css/one-health.css'],
+    institution:        ['css/institution.css'],
+    pricing:            ['css/pricing.css'],
+    social:             ['css/social.css'],
+    'virtual-lab':      ['css/virtual-lab.css'],
+    gwas:               ['css/gwas.css'],
+    pharmacogenomics:   ['css/pharmacogenomics.css'],
+    'network-hub':      ['css/network-hub.css'],
+    'rna-atlas':        ['css/rna-atlas.css'],
+    fastqc:             ['css/fastqc.css'],
+    'single-cell':      ['css/single-cell.css'],
+    assembly:           ['css/assembly.css'],
+    bioethics:          ['css/bioethics.css'],
+    enrichment:         ['css/enrichment.css'],
+    'pipeline-visual':  ['css/pipeline-visual.css'],
+    'case-files':       ['css/case-files.css'],
+    'ai-ml-bio':        ['css/ai-ml-bio.css'],
+    'stats-genomics':   ['css/stats-genomics.css'],
+    'seq-align':        ['css/seq-align.css'],
+    epigenomics:        ['css/epigenomics.css'],
+    crispr:             ['css/crispr.css'],
+    proteomics:         ['css/proteomics.css'],
+    'research-wizard':  ['css/research-wizard.css'],
+    'alignment-viewer': ['css/alignment-viewer.css'],
+    study:              ['css/study-pack.css'],
+    recombination:      ['css/recombination.css'],
+  };
+
+  /* Inject <link> tags on demand; idempotent — each href loaded once */
+  const _loadedCss = new Set();
+  function _loadCss(page) {
+    const files = PAGE_CSS[page];
+    if (!files) return;
+    files.forEach(href => {
+      if (_loadedCss.has(href)) return;
+      _loadedCss.add(href);
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      document.head.appendChild(link);
+    });
+  }
+
   let _currentPage = 'home';
   let _prevPage    = 'home';
 
@@ -835,6 +952,7 @@ OmicsLab.Router = (function () {
       OmicsLab.Error?.render404(page);
       return;
     }
+    _loadCss(page);
     _npStart();
     if (_currentPage !== page) _prevPage = _currentPage;
     _currentPage = page;
