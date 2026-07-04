@@ -1025,10 +1025,14 @@ OmicsLab.Router = (function () {
     if (hero)  { hero.style.display  = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(hero); }
     if (stats) { stats.style.display = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(stats); }
 
-    /* Dashboard — shown on home only when history exists */
+    /* Dashboard — shown on home only when a user exists (Clerk or localStorage) */
     const dash = document.getElementById('home-dashboard');
     if (dash) {
-      const showDash = page === 'home';
+      const _dashUser = () => {
+        if (OmicsLab.AuthClerk?.getUser?.()) return true;
+        try { return !!JSON.parse(localStorage.getItem('omicslab_user_profile') || 'null'); } catch { return false; }
+      };
+      const showDash = page === 'home' && _dashUser();
       if (showDash) OmicsLab.Dashboard?.render(dash);
       dash.style.display = showDash ? '' : 'none';
     }
@@ -1719,6 +1723,19 @@ OmicsLab.Router = (function () {
         navigate('home');
       };
     }
+
+    /* Re-render dashboard when Clerk auth resolves (fires ~1-3s after page load) */
+    OmicsLab.AuthClerk?.onAuthChange?.(function(user) {
+      if (_currentPage !== 'home') return;
+      const dash = document.getElementById('home-dashboard');
+      if (!dash) return;
+      if (user) {
+        OmicsLab.Dashboard?.render(dash);
+        dash.style.display = '';
+      } else {
+        dash.style.display = 'none';
+      }
+    });
   }
 
   /* ─── AI Pipeline Recommender (mini widget on home) ─── */
