@@ -15,19 +15,26 @@ OmicsLab.AuthClerk = (function () {
   /* OmicsLab dark theme for Clerk modals — variables only (most stable API) */
   const _appearance = {
     variables: {
-      colorBackground:      '#0d1117',
-      colorText:            '#c9d1d9',
-      colorTextSecondary:   '#8b949e',
-      colorPrimary:         '#3fb950',
+      colorBackground:      '#0D1524',
+      colorText:            '#E4DDD2',
+      colorTextSecondary:   '#A8A098',
+      colorPrimary:         '#00C4A0',
       colorDanger:          '#f85149',
-      colorInputBackground: '#161b22',
-      colorInputText:       '#c9d1d9',
+      colorInputBackground: '#111B2E',
+      colorInputText:       '#E4DDD2',
       borderRadius:         '10px',
       fontFamily:           'inherit',
     },
   };
 
   /* ── Init ────────────────────────────────────────────────────── */
+  function _showSkeleton() {
+    const skel = document.getElementById('nav-auth-skeleton');
+    const btn  = document.getElementById('nav-signin-btn');
+    if (skel) skel.style.display = '';
+    if (btn)  btn.style.display  = 'none';
+  }
+
   function init() {
     const key = window.OMICSLAB_CONFIG?.clerkPublishableKey;
     if (!key) {
@@ -36,6 +43,7 @@ OmicsLab.AuthClerk = (function () {
     }
     console.log('[AuthClerk] Starting with key:', key.slice(0, 20) + '…');
     _loading = true;
+    _showSkeleton();
     _loadScript(key);
   }
 
@@ -201,6 +209,9 @@ OmicsLab.AuthClerk = (function () {
 
   /* ── Nav pill + mobile auth update ──────────────────────────── */
   function _updateNav(user) {
+    /* Hide skeleton now that Clerk has resolved */
+    const skel = document.getElementById('nav-auth-skeleton');
+    if (skel) skel.style.display = 'none';
     /* Desktop nav */
     const pill      = document.getElementById('nav-user-pill');
     const avatar    = document.getElementById('nav-user-avatar');

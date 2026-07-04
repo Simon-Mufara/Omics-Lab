@@ -83,7 +83,7 @@
   bottom: -13px; left: 50%;
   transform: translateX(-50%);
   width: 20px; height: 2px;
-  background: #3fb950;
+  background: var(--accent);
   border-radius: 1px;
 }
 
@@ -205,7 +205,7 @@
   flex-shrink: 0;
 }
 .nmd-tab:hover { color: #c9d1d9; }
-.nmd-tab.active { color: #e6edf3; border-bottom-color: #3fb950; }
+.nmd-tab.active { color: #e6edf3; border-bottom-color: var(--accent); }
 .nmd-tab-panel {
   display: flex;
   flex-direction: column;
@@ -253,7 +253,7 @@
   transition: background .12s, color .12s, border-color .12s;
 }
 .nav-music-btn:hover { background: rgba(255,255,255,.08); color: #c9d1d9; border-color: #484f58; }
-.nav-music-btn.sm-playing { color: #3fb950; border-color: rgba(63,185,80,.4); background: rgba(63,185,80,.08); }
+.nav-music-btn.sm-playing { color: var(--accent); border-color: rgba(0,196,160,.4); background: rgba(0,196,160,.08); }
 .nav-music-btn .sm-label { font-size: .72rem; }
 .nav-search-kbd {
   font-size: 0.65rem;
@@ -270,8 +270,8 @@
   align-items: center;
   gap: 0.45rem;
   padding: 0.25rem 0.7rem 0.25rem 0.25rem;
-  background: rgba(63,185,80,0.07);
-  border: 1px solid rgba(63,185,80,0.18);
+  background: rgba(0,196,160,0.07);
+  border: 1px solid rgba(0,196,160,0.18);
   border-radius: 9999px;
   cursor: pointer;
   font-family: 'Inter', system-ui, sans-serif;
@@ -279,13 +279,13 @@
   text-align: left;
 }
 .nav-user-pill:hover {
-  background: rgba(63,185,80,0.13);
-  border-color: rgba(63,185,80,0.35);
+  background: rgba(0,196,160,0.13);
+  border-color: rgba(0,196,160,0.35);
 }
 .nav-user-avatar {
   width: 28px; height: 28px;
   border-radius: 50%;
-  background: #3fb950;
+  background: var(--accent);
   color: #0d1117;
   font-size: 0.65rem;
   font-weight: 800;
@@ -309,19 +309,19 @@
 }
 /* When viewing the profile page */
 .nav-user-pill.active-pill {
-  background: rgba(63,185,80,0.18);
-  border-color: rgba(63,185,80,0.5);
-  box-shadow: 0 0 0 3px rgba(63,185,80,0.08);
+  background: rgba(0,196,160,0.18);
+  border-color: rgba(0,196,160,0.5);
+  box-shadow: 0 0 0 3px rgba(0,196,160,0.08);
 }
 /* Sign-in CTA button in nav (shown when logged out) */
 .nav-signin-btn {
   display: flex;
   align-items: center;
   padding: .42rem 1rem;
-  background: rgba(63,185,80,0.12);
-  border: 1px solid rgba(63,185,80,0.4);
+  background: rgba(0,196,160,0.12);
+  border: 1px solid rgba(0,196,160,0.4);
   border-radius: 8px;
-  color: #3fb950;
+  color: var(--accent);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -329,8 +329,8 @@
   transition: background .14s, border-color .14s, color .14s;
 }
 .nav-signin-btn:hover {
-  background: rgba(63,185,80,0.22);
-  border-color: rgba(63,185,80,0.65);
+  background: rgba(0,196,160,0.22);
+  border-color: rgba(0,196,160,0.65);
   color: #56d364;
 }
 
@@ -488,7 +488,7 @@
   gap: 0.5rem;
   width: 100%;
   padding: 0.85rem 1rem;
-  background: #3fb950;
+  background: var(--accent);
   border: none;
   border-radius: 10px;
   color: #0d1117;
@@ -585,7 +585,7 @@
   font-family: inherit;
 }
 .i18n-search::placeholder { color: rgba(255,255,255,0.35); }
-.i18n-search:focus { border-color: #3fb950; }
+.i18n-search:focus { border-color: var(--accent); }
 
 .i18n-group { padding: 4px 0; }
 .i18n-group + .i18n-group { border-top: 1px solid rgba(255,255,255,0.06); margin-top: 2px; }
@@ -618,10 +618,10 @@
   text-align: left;
 }
 .i18n-option:hover { background: rgba(255,255,255,0.07); color: #e6edf3; }
-.i18n-option.active { color: #3fb950; }
+.i18n-option.active { color: var(--accent); }
 .i18n-opt-flag { font-size: 1rem; line-height: 1; flex-shrink: 0; }
 .i18n-opt-label { flex: 1; }
-.i18n-opt-check { color: #3fb950; font-size: 0.8rem; flex-shrink: 0; }
+.i18n-opt-check { color: var(--accent); font-size: 0.8rem; flex-shrink: 0; }
 
 /* RTL support */
 body.lang-rtl .i18n-dropdown { right: auto; left: 0; }
@@ -637,10 +637,10 @@ body { font-family: 'Sora', 'Noto Sans', 'Noto Sans Ethiopic', 'Inter', system-u
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(63,185,80,0.1);
-  border: 1px solid rgba(63,185,80,0.25);
+  background: rgba(0,196,160,0.1);
+  border: 1px solid rgba(0,196,160,0.25);
   border-radius: 6px;
-  color: #3fb950;
+  color: var(--accent);
   width: 28px;
   height: 28px;
   cursor: pointer;
@@ -649,7 +649,7 @@ body { font-family: 'Sora', 'Noto Sans', 'Noto Sans Ethiopic', 'Inter', system-u
   transition: background 0.15s, border-color 0.15s;
   flex-shrink: 0;
 }
-.voice-speak-btn:hover { background: rgba(63,185,80,0.2); border-color: rgba(63,185,80,0.45); }
+.voice-speak-btn:hover { background: rgba(0,196,160,0.2); border-color: rgba(0,196,160,0.45); }
 .voice-speak-btn svg { pointer-events: none; }
 
 /* ── Mic denied panel ── */
@@ -705,6 +705,29 @@ body { font-family: 'Sora', 'Noto Sans', 'Noto Sans Ethiopic', 'Inter', system-u
   font-size: 0.74rem;
   color: #c9d1d9;
   line-height: 1.5;
+}
+
+/* ── Auth skeleton shimmer (transform-only for compositor path) ── */
+.nav-auth-skeleton {
+  display: none;
+  width: 72px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+  position: relative;
+}
+.nav-auth-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, var(--bg-overlay) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: nav-skel-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes nav-skel-shimmer {
+  to { transform: translateX(200%); }
 }
 
 .vc-denied-num {

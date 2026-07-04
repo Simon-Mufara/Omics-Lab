@@ -27,7 +27,7 @@ OmicsLab.Router = (function () {
     lab: {
       label: 'Lab',
       icon: 'flask',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Interactive wet-lab simulations with live QC feedback',
       sections: ['domain-section', 'sandbox-section', 'sabotage-section', 'compare-section'],
     },
@@ -67,7 +67,7 @@ OmicsLab.Router = (function () {
     terminal: {
       label: 'Terminal',
       icon: 'cpu',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Simulate real pipelines in the browser, or launch a GitHub Codespace to run actual tools on your data',
       sections: ['terminal-section'],
     },
@@ -102,7 +102,7 @@ OmicsLab.Router = (function () {
     mentor: {
       label: 'AI Mentor',
       icon: 'dna',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: '176+ expert answers on omics, tools, African genomics, and careers — fully offline, no API',
       sections: ['mentor-section'],
     },
@@ -151,7 +151,7 @@ OmicsLab.Router = (function () {
     phylo: {
       label: 'Phylo Tree Builder',
       icon: 'git-branch',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Build Neighbor-Joining and UPGMA phylogenetic trees from FASTA sequences — SVG tree, distance heatmap, Newick export, all offline',
       sections: ['phylo-section'],
     },
@@ -172,7 +172,7 @@ OmicsLab.Router = (function () {
     journalclub: {
       label: 'Journal Club',
       icon: 'file-text',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: '20+ landmark African genomics papers with plain-language summaries, key findings, Africa context, and discussion questions',
       sections: ['journalclub-section'],
     },
@@ -193,7 +193,7 @@ OmicsLab.Router = (function () {
     qualitypredictor: {
       label: 'Quality Predictor',
       icon: 'check-circle',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Enter QC metrics — logistic regression over GATK, ENCODE and H3Africa thresholds returns PASS/FAIL with per-metric root-cause advice',
       sections: ['qualitypredictor-section'],
     },
@@ -207,7 +207,7 @@ OmicsLab.Router = (function () {
     primerdesign: {
       label: 'Primer Design',
       icon: 'scissors',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Auto-design or validate PCR primer pairs — Wallace Tm, GC%, self-complementarity, dimer checks, SVG alignment diagram, 6 African pathogen gene templates',
       sections: ['primerdesign-section'],
     },
@@ -235,7 +235,7 @@ OmicsLab.Router = (function () {
     profile: {
       label: 'Profile',
       icon: 'award',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Your learning journey, badges, curriculum progress, and personalised recommendations',
       sections: ['profile-section'],
     },
@@ -249,7 +249,7 @@ OmicsLab.Router = (function () {
     'gene-lookup': {
       label: 'Gene Lookup',
       icon: 'search',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Ensembl gene annotation — coordinates, transcripts, phenotypes, cross-links to gnomAD, AlphaFold, ClinVar',
       sections: ['gene-lookup-section'],
     },
@@ -277,7 +277,7 @@ OmicsLab.Router = (function () {
     string: {
       label: 'STRING Network',
       icon: 'git-branch',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Protein-protein interaction network — experimental, co-expression, text-mining scores',
       sections: ['string-section'],
     },
@@ -291,7 +291,7 @@ OmicsLab.Router = (function () {
     pathways: {
       label: 'Pathways',
       icon: 'git-branch',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'KEGG disease pathway maps + Reactome browser — Africa disease focus, gene overlay, keyword search',
       sections: ['pathways-section'],
     },
@@ -319,7 +319,7 @@ OmicsLab.Router = (function () {
     bionlp: {
       label: 'BioNLP',
       icon: 'brain',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Offline biomedical entity recognition — genes, diseases, variants, drugs, Africa terms — fully browser-side, no API',
       sections: ['bionlp-section'],
     },
@@ -334,7 +334,7 @@ OmicsLab.Router = (function () {
     nanopore: {
       label: 'Nanopore QC',
       icon: 'activity',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Oxford Nanopore sequencing QC — paste NanoStat output or enter metrics to get PASS/WARN/FAIL thresholds for field sequencing',
       sections: ['nanopore-section'],
     },
@@ -421,7 +421,7 @@ OmicsLab.Router = (function () {
     labnotebook: {
       label: 'Lab Notebook',
       icon: 'clipboard',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Digital lab notebook — structured entries for experiments, analyses, protocols, and results, stored offline',
       sections: ['labnotebook-section'],
     },
@@ -464,7 +464,7 @@ OmicsLab.Router = (function () {
     'one-health': {
       label: 'One Health',
       icon: 'globe',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'One Health surveillance dashboard — human-animal-environment disease nexus across Africa, 15 zoonotic diseases, climate & genomic drivers',
       sections: ['one-health-section'],
     },
@@ -478,7 +478,7 @@ OmicsLab.Router = (function () {
     pricing: {
       label: 'Plans & Pricing',
       icon: 'trending-up',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'OmicsLab licensing tiers — Community (free), Campus, and Enterprise. Bring structured bioinformatics training to your institution.',
       sections: ['pricing-section'],
     },
@@ -501,7 +501,7 @@ OmicsLab.Router = (function () {
     impact: {
       label: 'Impact',
       icon: 'globe',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Impact Observatory — OmicsLab\'s reach across Africa: users, countries, analyses, and tool usage metrics',
       sections: ['impact-section'],
     },
@@ -529,7 +529,7 @@ OmicsLab.Router = (function () {
     'virtual-lab': {
       label: 'Virtual Lab',
       icon: 'microscope',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: '360° virtual genomics laboratory — explore real instruments, understand how they are used in African genomics research',
       sections: ['virtual-lab-section'],
     },
@@ -550,7 +550,7 @@ OmicsLab.Router = (function () {
     'network-hub': {
       label: 'Genomics Network',
       icon: 'globe',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'African Genomics Network — H3Africa, AWI-Gen, KEMRI, SANBI, AHRI, PANDORA, Africa CDC and 18 major research institutions across 55 countries',
       sections: ['network-hub-section'],
     },
@@ -564,7 +564,7 @@ OmicsLab.Router = (function () {
     fastqc: {
       label: 'Read QC (FastQC)',
       icon: 'activity',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'FastQC-style read quality metrics — per-base quality boxplots, GC distribution, module PASS/WARN/FAIL — illustrated with African disease sequencing data',
       sections: ['fastqc-section'],
     },
@@ -606,7 +606,7 @@ OmicsLab.Router = (function () {
     'pipeline-visual': {
       label: 'Pipeline Visualiser',
       icon: 'git-branch',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Interactive bioinformatics pipeline builder — explore WGS, RNA-seq, metagenomics, and Nanopore ARTIC workflows node-by-node with African genomics context',
       sections: ['pipeline-visual-section'],
     },
@@ -634,14 +634,14 @@ OmicsLab.Router = (function () {
     'seq-align': {
       label: 'Sequence Alignment',
       icon: 'layers',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Animated Needleman-Wunsch & Smith-Waterman with DP table visualisation — HBB, rpoB, kelch13, CYP2B6 African disease presets, scoring matrices, MSA theory',
       sections: ['seq-align-section'],
     },
     epigenomics: {
       label: 'Epigenomics Explorer',
       icon: 'layers',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'DNA methylation, histone modifications, chromatin accessibility (ATAC-seq), and epigenetic regulation of African disease genes — malaria, TB, sickle cell',
       sections: ['epigenomics-section'],
     },
@@ -690,7 +690,7 @@ OmicsLab.Router = (function () {
     social: {
       label: 'Social Hub',
       icon: 'users',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Connect with other OmicsLab researchers — see who is online, add friends by code, and chat directly in the platform',
       sections: ['social-section'],
     },
@@ -718,7 +718,7 @@ OmicsLab.Router = (function () {
     'output-tracker': {
       label: 'Output Tracker',
       icon: 'clipboard',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Track your publications, datasets, talks, posters, and grants — CSV and BibTeX export',
       sections: ['output-tracker-section'],
     },
@@ -921,7 +921,7 @@ OmicsLab.Router = (function () {
       try {
         const p = PAGES[page];
         localStorage.setItem('omicslab_last_page', JSON.stringify({
-          page, label: p?.label || page, color: p?.color || '#3fb950',
+          page, label: p?.label || page, color: p?.color || '#00C4A0',
           tagline: p?.tagline || '', ts: Date.now(),
         }));
       } catch {}
@@ -956,9 +956,9 @@ OmicsLab.Router = (function () {
           OmicsLab.Error.renderPageError(sec, name, e);
         } else {
           const el = document.getElementById(sec);
-          if (el) el.innerHTML = `<div style="padding:2rem;text-align:center;color:#7d8590">
-            <p style="margin-bottom:1rem;font-size:0.9rem">Failed to load <strong style="color:#e6edf3">${name}</strong>.</p>
-            <button onclick="location.reload()" style="background:#3fb950;color:#0d1117;border:none;border-radius:6px;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer">Reload</button>
+          if (el) el.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-muted)">
+            <p style="margin-bottom:1rem;font-size:0.9rem">Failed to load <strong style="color:var(--text-primary)">${name}</strong>.</p>
+            <button onclick="location.reload()" style="background:#00C4A0;color:#060A14;border:none;border-radius:6px;padding:0.5rem 1.2rem;font-weight:700;cursor:pointer">Reload</button>
           </div>`;
         }
         console.error('[OmicsLab] module init failed:', name, e);
@@ -1245,7 +1245,7 @@ OmicsLab.Router = (function () {
       {
         name: 'Whole Genome Sequencing',
         domain: 'Genomics',
-        color: '#3fb950',
+        color: '#00C4A0',
         desc: 'From blood tube to variant calls — DNA extraction, library prep, Illumina sequencing, BWA-MEM2 alignment, GATK HaplotypeCaller, and VEP annotation.',
         tools: ['BWA-MEM2', 'samtools', 'Picard', 'GATK4', 'VEP'],
         difficulty: 'Advanced',
@@ -1281,7 +1281,7 @@ OmicsLab.Router = (function () {
         role: 'Genomics Training Lecturer · Nairobi, Kenya',
         avatar: '👩🏿‍',
         flag: '🇰🇪',
-        color: '#3fb950',
+        color: '#00C4A0',
       },
       {
         quote: 'As a PhD student with no wet-lab access, this platform let me simulate an entire WGS pipeline before touching a single sample. My supervisor was impressed by how prepared I was.',
@@ -1302,7 +1302,7 @@ OmicsLab.Router = (function () {
     ];
 
     const PARTNERS = [
-      { mark: 'H3', name: 'H3Africa\nInspiration', color: '#3fb950', bg: 'rgba(63,185,80,0.1)' },
+      { mark: 'H3', name: 'H3Africa\nInspiration', color: '#00C4A0', bg: 'rgba(0,196,160,0.1)' },
       { mark: 'GE', name: 'MalariaGEN\nOpen Data', color: '#58a6ff', bg: 'rgba(88,166,255,0.1)' },
       { mark: 'AW', name: 'AWI-Gen\nDataset', color: '#f97316', bg: 'rgba(249,115,22,0.1)' },
       { mark: 'EN', name: 'Ensembl\nGenome', color: '#bc8cff', bg: 'rgba(188,140,255,0.1)' },
@@ -1312,8 +1312,8 @@ OmicsLab.Router = (function () {
 
     /* ── Today's Focus data (from Study Pack categories) ── */
     const FOCUS_ITEMS = [
-      { title:'DNA Extraction & QC', why:'The quality of your DNA determines every downstream result — degradation and inhibitors cause silent failures.', page:'lab', color:'#3fb950' },
-      { title:'FASTQ Quality Control', why:'Phred scores below Q30 introduce systematic errors that propagate through alignment and variant calling.', page:'fastqc', color:'#3fb950' },
+      { title:'DNA Extraction & QC', why:'The quality of your DNA determines every downstream result — degradation and inhibitors cause silent failures.', page:'lab', color:'#00C4A0' },
+      { title:'FASTQ Quality Control', why:'Phred scores below Q30 introduce systematic errors that propagate through alignment and variant calling.', page:'fastqc', color:'#00C4A0' },
       { title:'Reference Genome Bias', why:'Most reference panels are European-derived — understanding this bias is essential for African genomics research.', page:'learn', color:'#f97316' },
       { title:'ACMG/AMP Variant Classification', why:'Getting classification right matters clinically — a VUS in a European database may be Pathogenic in an African cohort.', page:'variantinterp', color:'#bc8cff' },
       { title:'Phylogenetic Tree Interpretation', why:'Reading a phylo tree correctly lets you trace pathogen transmission chains and identify the index case.', page:'outbreak', color:'#f97316' },
@@ -1322,10 +1322,10 @@ OmicsLab.Router = (function () {
       { title:'Antimicrobial Resistance Genomics', why:'rpoB S450L is the most important TB resistance mutation globally — every clinical microbiologist must know it.', page:'amr', color:'#f97316' },
       { title:'Population Structure & PCA', why:'Failing to correct for population structure inflates GWAS false positives by orders of magnitude.', page:'gwas', color:'#e3b341' },
       { title:'G6PD Deficiency Screening', why:'Prescribing primaquine to a G6PD-deficient patient can trigger life-threatening haemolysis.', page:'pharmacogenomics', color:'#e3b341' },
-      { title:'Nanopore Sequencing QC', why:'Long-read accuracy metrics differ fundamentally from Illumina — N50 read length and basecall accuracy drive pipeline choice.', page:'nanopore', color:'#3fb950' },
+      { title:'Nanopore Sequencing QC', why:'Long-read accuracy metrics differ fundamentally from Illumina — N50 read length and basecall accuracy drive pipeline choice.', page:'nanopore', color:'#00C4A0' },
       { title:'CRISPR Guide Design', why:'Off-target scores and PAM site selection determine whether your edit is a clean knockout or a mosaic disaster.', page:'crispr', color:'#bc8cff' },
       { title:'scRNA-seq Clustering', why:'Choosing the wrong resolution parameter merges cell types or splits one type into artefactual clusters.', page:'single-cell', color:'#58a6ff' },
-      { title:'Epigenomics & DNA Methylation', why:'African populations show distinct methylation patterns that alter gene expression and disease susceptibility.', page:'epigenomics', color:'#3fb950' },
+      { title:'Epigenomics & DNA Methylation', why:'African populations show distinct methylation patterns that alter gene expression and disease susceptibility.', page:'epigenomics', color:'#00C4A0' },
     ];
     const dayIdx = Math.floor(Date.now() / 86400000) % FOCUS_ITEMS.length;
     const focus  = FOCUS_ITEMS[dayIdx];
@@ -1340,7 +1340,7 @@ OmicsLab.Router = (function () {
         continueHtml = `
         <div class="home-continue-banner" onclick="OmicsLab.Router.navigate('${lp.page}')" role="button" tabindex="0"
              onkeydown="if(event.key==='Enter')OmicsLab.Router.navigate('${lp.page}')"
-             style="--cont-color:${lp.color || '#3fb950'}">
+             style="--cont-color:${lp.color || '#00C4A0'}">
           <div class="home-continue-dot"></div>
           <div class="home-continue-body">
             <span class="home-continue-label">Continue where you left off</span>
