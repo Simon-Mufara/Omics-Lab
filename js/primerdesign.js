@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Primer Design & Validation Tool (Prompt 21)
    Wallace rule Tm, GC%, self-complementarity, hairpin, dimer checks.
    Visual binding alignment SVG. Africa-pathogen gene templates.
@@ -197,19 +197,19 @@ OmicsLab.PrimerDesign = (function () {
 
     return `<svg viewBox="0 0 ${W} ${H}" class="pd-align-svg">
       <!-- Template backbone -->
-      <line x1="${PAD}" y1="40" x2="${W-PAD}" y2="40" stroke="#30363d" stroke-width="2"/>
-      <text x="${PAD}" y="55" font-size="9" fill="#6e7681">5′</text>
-      <text x="${W-PAD-8}" y="55" font-size="9" fill="#6e7681">3′</text>
+      <line x1="${PAD}" y1="40" x2="${W-PAD}" y2="40" stroke="#243048" stroke-width="2"/>
+      <text x="${PAD}" y="55" font-size="9" fill="#6E6860">5′</text>
+      <text x="${W-PAD-8}" y="55" font-size="9" fill="#6E6860">3′</text>
       <!-- Product region -->
-      <rect x="${fx1}" y="35" width="${rx2-fx1}" height="10" fill="rgba(63,185,80,0.1)" rx="2"/>
+      <rect x="${fx1}" y="35" width="${rx2-fx1}" height="10" fill="rgba(0,196,160,0.1)" rx="2"/>
       <!-- Forward primer -->
-      <rect x="${fx1}" y="20" width="${fx2-fx1}" height="10" fill="#3fb950" rx="2" opacity="0.85"/>
+      <rect x="${fx1}" y="20" width="${fx2-fx1}" height="10" fill="#00C4A0" rx="2" opacity="0.85"/>
       <text x="${fx1+2}" y="29" font-size="7" fill="#fff">→ FWD</text>
       <!-- Reverse primer -->
       <rect x="${rx1}" y="50" width="${rx2-rx1}" height="10" fill="#ff6b6b" rx="2" opacity="0.85"/>
       <text x="${rx1+2}" y="59" font-size="7" fill="#fff">← REV</text>
       <!-- Product size label -->
-      <text x="${midX}" y="14" font-size="9" fill="#3fb950" text-anchor="middle">${productSize} bp product</text>
+      <text x="${midX}" y="14" font-size="9" fill="#00C4A0" text-anchor="middle">${productSize} bp product</text>
     </svg>`;
   }
 
@@ -240,7 +240,7 @@ OmicsLab.PrimerDesign = (function () {
         return;
       }
 
-      const statusColor = s => s >= 80 ? '#3fb950' : s >= 60 ? '#e3b341' : '#ff6b6b';
+      const statusColor = s => s >= 80 ? '#00C4A0' : s >= 60 ? '#e3b341' : '#ff6b6b';
 
       out.innerHTML = `
         <div class="pd-result-header">
@@ -260,9 +260,9 @@ OmicsLab.PrimerDesign = (function () {
               <div class="pd-stat"><div class="pd-stat-label">Tm REV</div><div class="pd-stat-val">${p.tmR}°C</div></div>
               <div class="pd-stat"><div class="pd-stat-label">GC FWD</div><div class="pd-stat-val">${p.gcF}%</div></div>
               <div class="pd-stat"><div class="pd-stat-label">GC REV</div><div class="pd-stat-val">${p.gcR}%</div></div>
-              <div class="pd-stat"><div class="pd-stat-label">Dimer</div><div class="pd-stat-val" style="color:${p.dimer>4?'#ff6b6b':'#3fb950'}">${p.dimer} bp</div></div>
-              <div class="pd-stat"><div class="pd-stat-label">Self-comp F</div><div class="pd-stat-val" style="color:${p.selfF>4?'#ff6b6b':'#3fb950'}">${p.selfF} bp</div></div>
-              <div class="pd-stat"><div class="pd-stat-label">3′ GC F</div><div class="pd-stat-val" style="color:${p.gc3F>3?'#e3b341':'#3fb950'}">${p.gc3F}/5</div></div>
+              <div class="pd-stat"><div class="pd-stat-label">Dimer</div><div class="pd-stat-val" style="color:${p.dimer>4?'#ff6b6b':'#00C4A0'}">${p.dimer} bp</div></div>
+              <div class="pd-stat"><div class="pd-stat-label">Self-comp F</div><div class="pd-stat-val" style="color:${p.selfF>4?'#ff6b6b':'#00C4A0'}">${p.selfF} bp</div></div>
+              <div class="pd-stat"><div class="pd-stat-label">3′ GC F</div><div class="pd-stat-val" style="color:${p.gc3F>3?'#e3b341':'#00C4A0'}">${p.gc3F}/5</div></div>
             </div>
             ${_svgAlignment(seq, p.fwdStart, p.revEnd, p.productSize)}
           </div>`).join('')}
@@ -275,13 +275,13 @@ OmicsLab.PrimerDesign = (function () {
       if (!fwd || !rev) { out.innerHTML = '<div class="pd-error">Enter both primer sequences.</div>'; return; }
 
       const r = _validatePair(fwd, rev);
-      const verdictColor = r.pass ? '#3fb950' : '#ff6b6b';
+      const verdictColor = r.pass ? '#00C4A0' : '#ff6b6b';
 
       out.innerHTML = `
         <div class="pd-result-header">
           <div class="pd-result-title" style="color:${verdictColor}">
             ${r.pass
-              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Primer pair looks OK'
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Primer pair looks OK'
               : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Issues detected'}
           </div>
         </div>
@@ -295,9 +295,9 @@ OmicsLab.PrimerDesign = (function () {
             <div class="pd-stat"><div class="pd-stat-label">Tm REV</div><div class="pd-stat-val">${r.tmR}°C</div></div>
             <div class="pd-stat"><div class="pd-stat-label">GC FWD</div><div class="pd-stat-val">${r.gcF}%</div></div>
             <div class="pd-stat"><div class="pd-stat-label">GC REV</div><div class="pd-stat-val">${r.gcR}%</div></div>
-            <div class="pd-stat"><div class="pd-stat-label">Self-comp F</div><div class="pd-stat-val" style="color:${r.selfF>5?'#ff6b6b':'#3fb950'}">${r.selfF} bp</div></div>
-            <div class="pd-stat"><div class="pd-stat-label">Self-comp R</div><div class="pd-stat-val" style="color:${r.selfR>5?'#ff6b6b':'#3fb950'}">${r.selfR} bp</div></div>
-            <div class="pd-stat"><div class="pd-stat-label">Dimer</div><div class="pd-stat-val" style="color:${r.dimer>5?'#ff6b6b':'#3fb950'}">${r.dimer} bp</div></div>
+            <div class="pd-stat"><div class="pd-stat-label">Self-comp F</div><div class="pd-stat-val" style="color:${r.selfF>5?'#ff6b6b':'#00C4A0'}">${r.selfF} bp</div></div>
+            <div class="pd-stat"><div class="pd-stat-label">Self-comp R</div><div class="pd-stat-val" style="color:${r.selfR>5?'#ff6b6b':'#00C4A0'}">${r.selfR} bp</div></div>
+            <div class="pd-stat"><div class="pd-stat-label">Dimer</div><div class="pd-stat-val" style="color:${r.dimer>5?'#ff6b6b':'#00C4A0'}">${r.dimer} bp</div></div>
           </div>
           ${r.issues.length ? `<div class="pd-issues">
             ${r.issues.map(iss => `<div class="pd-issue pd-issue-${iss.type}">${iss.type === 'error' ? '[FAIL]' : '[!]'} ${iss.text}</div>`).join('')}

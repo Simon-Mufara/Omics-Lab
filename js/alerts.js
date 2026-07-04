@@ -326,7 +326,7 @@ OmicsLab.Alerts = (function () {
   }
 
   /* ─── Severity colour ─── */
-  const SEV_COLOR = { critical: '#ff6b6b', warning: '#f97316', info: '#58a6ff', 'monitoring': '#bc8cff', 'contained': '#3fb950', 'endemic': '#e3b341', 'active': '#ff6b6b', 'seasonal-surge': '#f97316', 'endemic-peak': '#e3b341' };
+  const SEV_COLOR = { critical: '#ff6b6b', warning: '#f97316', info: '#58a6ff', 'monitoring': '#bc8cff', 'contained': '#00C4A0', 'endemic': '#e3b341', 'active': '#ff6b6b', 'seasonal-surge': '#f97316', 'endemic-peak': '#e3b341' };
   const STATUS_LABEL = { active: 'ACTIVE', critical: 'CRITICAL', warning: 'WARNING', contained: 'CONTAINED', monitoring: 'MONITORING', info: 'MONITORING', 'seasonal-surge': 'SEASONAL SURGE', 'endemic': 'ENDEMIC', 'endemic-peak': 'ENDEMIC PEAK' };
 
   /* ─── Render ticker ─── */
@@ -350,7 +350,7 @@ OmicsLab.Alerts = (function () {
   /* ─── Render outbreak card ─── */
   function _renderCard(o) {
     const readiness = READINESS[o.country] || { score: '?', tier: 4, seqCap: 'Unknown', labs: 0 };
-    const tierColor = ['', '#3fb950', '#e3b341', '#f97316', '#ff6b6b'][readiness.tier] || '#6e7681';
+    const tierColor = ['', '#00C4A0', '#e3b341', '#f97316', '#ff6b6b'][readiness.tier] || '#6E6860';
     const statusLabel = STATUS_LABEL[o.status] || STATUS_LABEL[o.severity] || o.status;
     return `
       <div class="alt-card" style="--alt-color:${o.color || SEV_COLOR[o.severity]}">
@@ -393,7 +393,7 @@ OmicsLab.Alerts = (function () {
   function _renderReadinessTable() {
     const sorted = Object.entries(READINESS).sort((a,b) => b[1].score - a[1].score);
     const tierLabel = ['', 'Tier 1 — High capacity', 'Tier 2 — Medium capacity', 'Tier 3 — Limited capacity', 'Tier 4 — Minimal capacity'];
-    const tierColor = ['', '#3fb950', '#e3b341', '#f97316', '#ff6b6b'];
+    const tierColor = ['', '#00C4A0', '#e3b341', '#f97316', '#ff6b6b'];
     let rows = sorted.map(([country, r]) => `
       <tr class="alt-rt-row">
         <td class="alt-rt-country">${country}</td>
@@ -436,11 +436,11 @@ OmicsLab.Alerts = (function () {
       .then(() => {
         _lastFetch = new Date().toLocaleString();
         if (ts) ts.textContent = 'WHO AFRO feed checked — curated data shown (live parsing not available in static PWA)';
-        if (btn) { btn.textContent = 'Online — using curated data'; btn.style.color = '#3fb950'; }
+        if (btn) { btn.textContent = 'Online — using curated data'; btn.style.color = '#00C4A0'; }
       })
       .catch(() => {
         if (ts) ts.textContent = 'Offline — showing bundled outbreak data';
-        if (btn) { btn.textContent = 'Offline'; btn.style.color = '#8b949e'; }
+        if (btn) { btn.textContent = 'Offline'; btn.style.color = '#A8A098'; }
       })
       .finally(() => { if (btn) btn.disabled = false; });
   }

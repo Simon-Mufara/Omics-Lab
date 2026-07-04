@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Citation & Reference Manager (Prompt 17)
    DOI/manual entry → localStorage library → APA/Vancouver/Nature
    export. Fully offline. No API required for manual entries.
@@ -101,7 +101,7 @@ OmicsLab.Citations = (function () {
     });
 
     const s = document.getElementById('cit-add-status');
-    if (s) { s.textContent = `[OK] Added: ${title.slice(0,50)}`; s.style.color = '#3fb950'; setTimeout(() => { s.textContent=''; }, 3000); }
+    if (s) { s.textContent = `[OK] Added: ${title.slice(0,50)}`; s.style.color = '#00C4A0'; setTimeout(() => { s.textContent=''; }, 3000); }
 
     _refreshLibrary();
   }

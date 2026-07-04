@@ -16,7 +16,7 @@ OmicsLab.CRISPR = (function () {
 
   const OUTCOMES = [
     { name:'NHEJ — Knockout', freq:'60–90%', color:'#f85149', desc:'Error-prone end-joining creates random indels → frameshift → premature stop codon → protein loss-of-function. Fast and efficient but unpredictable sequence outcome.', use:'Disrupting repressors (BCL11A → HbF reactivation), disabling viral receptors (CCR5 for HIV resistance), functional genomic screens' },
-    { name:'HDR — Precise Edit', freq:'1–10%', color:'#3fb950', desc:'Homology-directed repair copies sequence from a donor template (ssODN or AAV6) to make exact changes. Requires S/G2 phase. Enriched by small molecule cell cycle synchronisation (nocodazole) or HDR enhancers (RS-1, M3814).', use:'Correcting point mutations (HBB E6V), knock-in reporters, adding protein tags, creating disease models' },
+    { name:'HDR — Precise Edit', freq:'1–10%', color:'#00C4A0', desc:'Homology-directed repair copies sequence from a donor template (ssODN or AAV6) to make exact changes. Requires S/G2 phase. Enriched by small molecule cell cycle synchronisation (nocodazole) or HDR enhancers (RS-1, M3814).', use:'Correcting point mutations (HBB E6V), knock-in reporters, adding protein tags, creating disease models' },
     { name:'Base Editing (CBE/ABE)', freq:'20–80%', color:'#e3b341', desc:'A catalytically impaired Cas9 nickase tethered to a deaminase enzyme edits single bases within a 4–8 nt activity window without creating a DSB. CBE: C→T; ABE: A→G. No donor template needed — dramatically simpler delivery.', use:'All single-nucleotide corrections approachable as C→T or A→G. HBB E6V (A→T in coding strand) correctable by ABE8e targeting non-template strand' },
     { name:'Prime Editing', freq:'5–50%', color:'#bc8cff', desc:'A PEgRNA encodes both the spacer and a reverse transcriptase template. PE2 (Cas9-H840A + MLV-RT) nicks the non-target strand and synthesises a DNA flap from the RT template. Enables all 12 point mutations and small indels (inserts ≤44 bp, deletions ≤80 bp) without DSB.', use:'Complex corrections unreachable by CBE/ABE, insertions/deletions, therapeutic corrections where bystander edits are problematic' },
     { name:'CRISPRi / CRISPRa', freq:'50–99% modulation', color:'#58a6ff', desc:'Dead Cas9 (dCas9) fused to KRAB repressor (CRISPRi) silences target genes transcriptionally without cutting DNA. dCas9-VP64/p65/Rta (CRISPRa) activates gene expression. Reversible — ideal for functional studies without permanent genome alteration.', use:'Essential gene studies, drug target validation, genome-wide screens (Perturb-seq), reactivating silenced tumour suppressors or HbF' },
@@ -27,7 +27,7 @@ OmicsLab.CRISPR = (function () {
     { disease:'Sickle Cell Disease',    gene:'HBB / BCL11A', color:'#f85149', strategy:'ABE8e base editing of HBB E6V codon (A→T on non-template strand) OR Cas9 disruption of BCL11A +62 kb erythroid enhancer to reactivate fetal hemoglobin (HbF). Both achieve >80% HbF in CD34+ HSC models.', status:'Phase III trial (CLIMB-SCD-121, Casgevy) — first African patients enrolled at WITS/Charlotte Maxeke Hospital, Johannesburg 2024. FDA/EMA approved November 2023.' },
     { disease:'Malaria (P. falciparum)', gene:'PfCRT / kelch13 / gene drive', color:'#e3b341', strategy:'Cas12a (preferred over SpCas9 for AT-rich P. falciparum genome, ~80% AT) used for drug resistance gene characterisation. Split gene drives targeting Anopheles gambiae fertility genes (AGAP005958) under field evaluation.', status:'Gene drive field biosafety evaluation ongoing. Phase I contained release planned in Mali and Burkina Faso through Target Malaria consortium (Bill & Melinda Gates funded).' },
     { disease:'HIV-1',                  gene:'CCR5 / CXCR4 / integrated provirus', color:'#bc8cff', strategy:'CCR5Δ32 mimicry in autologous CD34+ HSCs using SpCas9 + AAV6 HDR donor. Dual sgRNA excision of integrated HIV-1 provirus from CD4+ T cells. Functional cure aim — eliminate latent reservoir.', status:'Phase I trial at Johannesburg Wits HIV clinic — 6/12 patients showed sustained CCR5 disruption at 24 weeks with preserved CD4 counts. Scale-up manufacturing challenge for Africa.' },
-    { disease:'Cassava Brown Streak',   gene:'eIF4E alleles', color:'#3fb950', strategy:'Knockout of eIF4E susceptibility gene in cassava using SpCas9 — confers broad resistance to CBSV without introducing foreign DNA (regulatory-compliant). Staple food for 800M Africans in sub-Saharan Africa.', status:'Uganda contained field trial 2023: 100% CBSV resistance in T0 knock-out plants. National Biosafety Authority (NBA Uganda) approval pending regulatory review. Kenya and Tanzania trial sites queued.' },
+    { disease:'Cassava Brown Streak',   gene:'eIF4E alleles', color:'#00C4A0', strategy:'Knockout of eIF4E susceptibility gene in cassava using SpCas9 — confers broad resistance to CBSV without introducing foreign DNA (regulatory-compliant). Staple food for 800M Africans in sub-Saharan Africa.', status:'Uganda contained field trial 2023: 100% CBSV resistance in T0 knock-out plants. National Biosafety Authority (NBA Uganda) approval pending regulatory review. Kenya and Tanzania trial sites queued.' },
     { disease:'Sleeping Sickness (HAT)',gene:'VSG loci / bloodstream essential genes', color:'#58a6ff', strategy:'DiCre-based conditional knockouts and CRISPR screens in Trypanosoma brucei bloodstream forms for drug target validation. 420 essential genes identified; 3 compounds in hit-to-lead phase for neglected tropical disease pipeline.', status:'Target validation complete (Alsford lab / LSTM / Wellcome). Drug-like hits advancing through DNDI pipeline with African site co-investigators in Uganda and DRC.' },
   ];
 
@@ -101,11 +101,11 @@ OmicsLab.CRISPR = (function () {
     }
     if (!guides.length) { out.innerHTML = '<div class="crispr-err">No NGG PAM sites found. Try a longer sequence or different region.</div>'; return; }
     const rows = guides.slice(0,10).map(g => {
-      const c = g.score>=70?'#3fb950':g.score>=50?'#e3b341':'#f85149';
+      const c = g.score>=70?'#00C4A0':g.score>=50?'#e3b341':'#f85149';
       const v = g.score>=70?'Recommended':g.score>=50?'Acceptable':'Poor';
       return `<tr>
         <td>${g.pos}</td>
-        <td><code style="color:#c9d1d9">${g.sp}</code> <code style="color:#58a6ff">${g.pam}</code></td>
+        <td><code style="color:#A8A098">${g.sp}</code> <code style="color:#58a6ff">${g.pam}</code></td>
         <td>${g.gc}%</td>
         <td style="color:${c};font-weight:700">${g.score}</td>
         <td style="color:${c}">${v}</td>
@@ -122,12 +122,12 @@ OmicsLab.CRISPR = (function () {
   function _mechPanel() {
     const svgW = 580, svgH = 155;
     const svg = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;max-width:${svgW}px;display:block;margin:0 auto" aria-label="Cas9 cleavage schematic">
-      <text x="14" y="57" fill="#6e7681" font-size="9">5'</text>
-      <line x1="28" y1="54" x2="375" y2="54" stroke="#3fb950" stroke-width="2"/>
-      <text x="378" y="57" fill="#6e7681" font-size="9">3'</text>
-      <text x="14" y="80" fill="#6e7681" font-size="9">3'</text>
-      <line x1="28" y1="77" x2="375" y2="77" stroke="#3fb950" stroke-width="2"/>
-      <text x="378" y="80" fill="#6e7681" font-size="9">5'</text>
+      <text x="14" y="57" fill="#6E6860" font-size="9">5'</text>
+      <line x1="28" y1="54" x2="375" y2="54" stroke="#00C4A0" stroke-width="2"/>
+      <text x="378" y="57" fill="#6E6860" font-size="9">3'</text>
+      <text x="14" y="80" fill="#6E6860" font-size="9">3'</text>
+      <line x1="28" y1="77" x2="375" y2="77" stroke="#00C4A0" stroke-width="2"/>
+      <text x="378" y="80" fill="#6E6860" font-size="9">5'</text>
       <rect x="115" y="44" width="138" height="42" rx="3" fill="rgba(88,166,255,.1)" stroke="#58a6ff" stroke-width="1" stroke-dasharray="4,2"/>
       <text x="184" y="40" text-anchor="middle" fill="#58a6ff" font-size="9">20-nt spacer target</text>
       <rect x="253" y="44" width="34" height="42" rx="3" fill="rgba(249,115,22,.18)" stroke="#f97316" stroke-width="1"/>
@@ -137,7 +137,7 @@ OmicsLab.CRISPR = (function () {
       <text x="251" y="108" text-anchor="middle" fill="#f85149" font-size="8">DSB (−3 bp)</text>
       <ellipse cx="455" cy="65" rx="76" ry="46" fill="rgba(188,140,255,.12)" stroke="#bc8cff" stroke-width="1.5"/>
       <text x="455" y="63" text-anchor="middle" fill="#bc8cff" font-size="10" font-weight="700">Cas9</text>
-      <text x="455" y="76" text-anchor="middle" fill="#6e7681" font-size="8">HNH · RuvC</text>
+      <text x="455" y="76" text-anchor="middle" fill="#6E6860" font-size="8">HNH · RuvC</text>
       <path d="M455,19 Q390,8 295,47" fill="none" stroke="#e3b341" stroke-width="2" stroke-dasharray="6,3"/>
       <text x="430" y="14" fill="#e3b341" font-size="9">sgRNA scaffold</text>
     </svg>`;
@@ -199,11 +199,11 @@ OmicsLab.CRISPR = (function () {
 
   function _systemsPanel() {
     const rows = SYSTEMS.map(s => `<tr>
-      <td style="font-weight:700;color:#c9d1d9;font-family:monospace">${s.name}</td>
+      <td style="font-weight:700;color:#A8A098;font-family:monospace">${s.name}</td>
       <td><code style="color:#e3b341">${s.pam}</code></td>
       <td>${s.kb} kb</td>
       <td>${s.spec}</td>
-      <td style="font-size:0.72rem;color:#8b949e">${s.use}</td>
+      <td style="font-size:0.72rem;color:#A8A098">${s.use}</td>
       <td style="font-size:0.68rem;color:#f97316">${s.africa}</td>
     </tr>`).join('');
 

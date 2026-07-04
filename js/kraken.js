@@ -14,17 +14,17 @@ OmicsLab.Kraken = (function () {
       label: 'Human stool — healthy adult (East Africa)',
       taxa: [
         { name:'Prevotella copri', rank:'S', pct:22.1, color:'#58a6ff' },
-        { name:'Faecalibacterium prausnitzii', rank:'S', pct:14.8, color:'#3fb950' },
+        { name:'Faecalibacterium prausnitzii', rank:'S', pct:14.8, color:'#00C4A0' },
         { name:'Ruminococcus bromii', rank:'S', pct:9.4, color:'#bc8cff' },
         { name:'Bacteroides fragilis', rank:'S', pct:8.2, color:'#e3b341' },
         { name:'Bifidobacterium longum', rank:'S', pct:6.1, color:'#f97316' },
         { name:'Lactobacillus sp.', rank:'S', pct:4.8, color:'#58a6ff' },
         { name:'Eubacterium rectale', rank:'S', pct:4.5, color:'#ff6b6b' },
-        { name:'Blautia obeum', rank:'S', pct:3.9, color:'#3fb950' },
+        { name:'Blautia obeum', rank:'S', pct:3.9, color:'#00C4A0' },
         { name:'Roseburia intestinalis', rank:'S', pct:3.2, color:'#bc8cff' },
-        { name:'Unclassified Firmicutes', rank:'P', pct:11.4, color:'#484f58' },
-        { name:'Unclassified Bacteroidetes', rank:'P', pct:7.3, color:'#30363d' },
-        { name:'Other', rank:'X', pct:4.3, color:'#21262d' },
+        { name:'Unclassified Firmicutes', rank:'P', pct:11.4, color:'#354060' },
+        { name:'Unclassified Bacteroidetes', rank:'P', pct:7.3, color:'#243048' },
+        { name:'Other', rank:'X', pct:4.3, color:'#182236' },
       ],
       reads: 4250000, classified: 96.2,
       note:'High Prevotella typical of plant-rich East African diet. Compare to Western stool where Bacteroides dominates.'
@@ -34,15 +34,15 @@ OmicsLab.Kraken = (function () {
       taxa: [
         { name:'Prevotella copri', rank:'S', pct:18.4, color:'#58a6ff' },
         { name:'Plasmodium falciparum', rank:'S', pct:0.08, color:'#ff6b6b' },
-        { name:'Faecalibacterium prausnitzii', rank:'S', pct:8.2, color:'#3fb950' },
+        { name:'Faecalibacterium prausnitzii', rank:'S', pct:8.2, color:'#00C4A0' },
         { name:'Bacteroides fragilis', rank:'S', pct:9.1, color:'#e3b341' },
         { name:'Ruminococcus gnavus', rank:'S', pct:7.8, color:'#bc8cff' },
         { name:'Escherichia coli', rank:'S', pct:6.2, color:'#f97316' },
         { name:'Streptococcus salivarius', rank:'S', pct:4.1, color:'#ff6b6b' },
         { name:'Lactobacillus sp.', rank:'S', pct:3.3, color:'#58a6ff' },
-        { name:'Unclassified Firmicutes', rank:'P', pct:19.2, color:'#484f58' },
-        { name:'Unclassified Bacteroidetes', rank:'P', pct:11.6, color:'#30363d' },
-        { name:'Other', rank:'X', pct:12.0, color:'#21262d' },
+        { name:'Unclassified Firmicutes', rank:'P', pct:19.2, color:'#354060' },
+        { name:'Unclassified Bacteroidetes', rank:'P', pct:11.6, color:'#243048' },
+        { name:'Other', rank:'X', pct:12.0, color:'#182236' },
       ],
       reads: 3890000, classified: 93.8,
       note:'P. falciparum reads low but detectable in stool. Altered microbiome diversity during acute malaria.'
@@ -55,9 +55,9 @@ OmicsLab.Kraken = (function () {
         { name:'Haemophilus influenzae', rank:'S', pct:12.3, color:'#e3b341' },
         { name:'Moraxella catarrhalis', rank:'S', pct:8.9, color:'#bc8cff' },
         { name:'Staphylococcus aureus', rank:'S', pct:5.2, color:'#58a6ff' },
-        { name:'Rhinovirus A', rank:'S', pct:2.1, color:'#3fb950' },
-        { name:'Human respiratory reads', rank:'X', pct:7.4, color:'#484f58' },
-        { name:'Other', rank:'X', pct:3.6, color:'#30363d' },
+        { name:'Rhinovirus A', rank:'S', pct:2.1, color:'#00C4A0' },
+        { name:'Human respiratory reads', rank:'X', pct:7.4, color:'#354060' },
+        { name:'Other', rank:'X', pct:3.6, color:'#243048' },
       ],
       reads: 2150000, classified: 91.5,
       note:'High SARS-CoV-2 abundance (Ct ~18). Secondary bacterial co-infection pattern typical of severe COVID-19.'
@@ -65,18 +65,18 @@ OmicsLab.Kraken = (function () {
     soil_agricultural: {
       label: 'Agricultural soil — East Africa (rhizosphere)',
       taxa: [
-        { name:'Bacillus subtilis complex', rank:'S', pct:9.8, color:'#3fb950' },
+        { name:'Bacillus subtilis complex', rank:'S', pct:9.8, color:'#00C4A0' },
         { name:'Pseudomonas fluorescens', rank:'S', pct:7.4, color:'#58a6ff' },
         { name:'Streptomyces sp.', rank:'G', pct:11.2, color:'#e3b341' },
         { name:'Actinomycetes (mixed)', rank:'C', pct:14.6, color:'#bc8cff' },
-        { name:'Nitrobacter sp.', rank:'G', pct:4.3, color:'#3fb950' },
+        { name:'Nitrobacter sp.', rank:'G', pct:4.3, color:'#00C4A0' },
         { name:'Rhizobium leguminosarum', rank:'S', pct:6.1, color:'#f97316' },
         { name:'Fusarium oxysporum (fungal)', rank:'S', pct:3.2, color:'#ff6b6b' },
         { name:'Glomus irregulare (AMF)', rank:'S', pct:2.8, color:'#bc8cff' },
-        { name:'Unclassified Proteobacteria', rank:'P', pct:18.4, color:'#484f58' },
-        { name:'Unclassified Actinobacteria', rank:'P', pct:10.2, color:'#30363d' },
+        { name:'Unclassified Proteobacteria', rank:'P', pct:18.4, color:'#354060' },
+        { name:'Unclassified Actinobacteria', rank:'P', pct:10.2, color:'#243048' },
         { name:'Archaea (methanogenic)', rank:'D', pct:5.1, color:'#e3b341' },
-        { name:'Other', rank:'X', pct:6.9, color:'#21262d' },
+        { name:'Other', rank:'X', pct:6.9, color:'#182236' },
       ],
       reads: 8100000, classified: 88.4,
       note:'Rich microbial diversity typical of African agricultural soil. High Actinobacteria = antibiotic producers.'
@@ -89,8 +89,8 @@ OmicsLab.Kraken = (function () {
         { name:'Klebsiella pneumoniae', rank:'S', pct:14.8, color:'#e3b341' },
         { name:'Staphylococcus aureus (MRSA)', rank:'S', pct:9.3, color:'#bc8cff' },
         { name:'Escherichia coli', rank:'S', pct:6.7, color:'#58a6ff' },
-        { name:'Human reads (host)', rank:'X', pct:4.2, color:'#484f58' },
-        { name:'Other', rank:'X', pct:4.7, color:'#30363d' },
+        { name:'Human reads (host)', rank:'X', pct:4.2, color:'#354060' },
+        { name:'Other', rank:'X', pct:4.7, color:'#243048' },
       ],
       reads: 1850000, classified: 95.8,
       note:'iNTS (Salmonella Typhimurium ST313) is the second most common bloodstream pathogen in SSA children.'
@@ -103,10 +103,10 @@ OmicsLab.Kraken = (function () {
         { name:'Cryptosporidium parvum', rank:'S', pct:3.1, color:'#e3b341' },
         { name:'Aeromonas hydrophila', rank:'S', pct:12.6, color:'#bc8cff' },
         { name:'Enterococcus faecalis', rank:'S', pct:9.8, color:'#58a6ff' },
-        { name:'Pseudomonas aeruginosa', rank:'S', pct:7.3, color:'#3fb950' },
+        { name:'Pseudomonas aeruginosa', rank:'S', pct:7.3, color:'#00C4A0' },
         { name:'Legionella pneumophila', rank:'S', pct:2.8, color:'#ff6b6b' },
-        { name:'Environmental bacteria (non-pathogenic)', rank:'X', pct:21.8, color:'#484f58' },
-        { name:'Other', rank:'X', pct:10.0, color:'#30363d' },
+        { name:'Environmental bacteria (non-pathogenic)', rank:'X', pct:21.8, color:'#354060' },
+        { name:'Other', rank:'X', pct:10.0, color:'#243048' },
       ],
       reads: 920000, classified: 83.1,
       note:'V. cholerae detected — consistent with contaminated water. E. coli >1% indicates significant fecal contamination.'
@@ -170,7 +170,7 @@ OmicsLab.Kraken = (function () {
       angle += sweep;
       return `<path d="${path}" fill="${t.color}" opacity="0.9"/>`;
     }).join('');
-    return `<svg class="krk-donut" viewBox="0 0 160 160" width="160" height="160">${paths}<circle cx="80" cy="80" r="32" fill="#0d1117"/><text x="80" y="83" text-anchor="middle" font-size="9" fill="#8b949e">${taxa.length} taxa</text></svg>`;
+    return `<svg class="krk-donut" viewBox="0 0 160 160" width="160" height="160">${paths}<circle cx="80" cy="80" r="32" fill="#0D1524"/><text x="80" y="83" text-anchor="middle" font-size="9" fill="#A8A098">${taxa.length} taxa</text></svg>`;
   }
 
   function _exportTsv() {

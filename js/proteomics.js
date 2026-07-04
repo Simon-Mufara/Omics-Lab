@@ -13,7 +13,7 @@ OmicsLab.Proteomics = (function () {
   ];
 
   const QUANT_METHODS = [
-    { name:'Label-Free Quantification (LFQ)', type:'Label-Free', color:'#3fb950', desc:'Peptide peak areas compared across LC-MS runs without chemical labels. Simplest and cheapest — no labelling reagent cost. Requires excellent chromatographic reproducibility (CV <5%) and alignment algorithms (MaxQuant LFQ or FlashLFQ).', use:'Discovery proteomics · serum biomarkers · clinical sample series · >12 conditions', limit:'Run-to-run variation · missing values · requires more replicates' },
+    { name:'Label-Free Quantification (LFQ)', type:'Label-Free', color:'#00C4A0', desc:'Peptide peak areas compared across LC-MS runs without chemical labels. Simplest and cheapest — no labelling reagent cost. Requires excellent chromatographic reproducibility (CV <5%) and alignment algorithms (MaxQuant LFQ or FlashLFQ).', use:'Discovery proteomics · serum biomarkers · clinical sample series · >12 conditions', limit:'Run-to-run variation · missing values · requires more replicates' },
     { name:'TMT (Tandem Mass Tags)', type:'Isobaric Labels', color:'#58a6ff', desc:'Chemical tags of identical mass label peptides from different samples. Mixed in equal amounts, co-isolated for fragmentation. Tag reporter ions (126–135 Da) quantified in MS3 or MS2. Up to 18-plex (TMTpro 18) enables very high sample throughput.', use:'Time-course · drug response · large clinical cohorts · phosphoproteomics', limit:'Co-isolation interference (ratio compression) · high reagent cost' },
     { name:'SILAC (Stable Isotope Labelling)', type:'Metabolic Labels', color:'#e3b341', desc:'Cells grown in ¹³C/¹⁵N-labelled amino acids (heavy Lys/Arg) — label incorporated into all newly synthesised proteins. Heavy and light samples mixed 1:1, measured in MS1. Gold standard for cell culture proteomics.', use:'Cell biology · signalling · protein turnover · SILAC mouse', limit:'Not applicable to primary patient samples or tissues · expensive heavy amino acids' },
     { name:'Targeted MRM/PRM', type:'Targeted', color:'#bc8cff', desc:'Pre-selected peptide transitions monitored in multiple reaction monitoring (triple-quadrupole) or parallel reaction monitoring (high-res Orbitrap). Extremely high sensitivity and reproducibility (CV 2–5%). Ideal for biomarker verification.', use:'Biomarker validation · clinical diagnostics · drug PK/PD · specific protein quantification in complex matrices', limit:'Low multiplexing (30–200 peptides) · requires prior knowledge of targets' },
@@ -103,7 +103,7 @@ OmicsLab.Proteomics = (function () {
       {mz:387,int:0.55,ion:'y3',col:'#f97316'},{mz:458,int:0.88,ion:'y4',col:'#f97316'},
       {mz:129,int:0.6, ion:'b1',col:'#58a6ff'},{mz:242,int:0.45,ion:'b2',col:'#58a6ff'},
       {mz:355,int:0.78,ion:'b3',col:'#58a6ff'},{mz:468,int:0.5, ion:'b4',col:'#58a6ff'},
-      {mz:576,int:0.35,ion:'b5',col:'#58a6ff'},{mz:620,int:0.25,ion:'',col:'#6e7681'},
+      {mz:576,int:0.35,ion:'b5',col:'#58a6ff'},{mz:620,int:0.25,ion:'',col:'#6E6860'},
     ];
     const maxMZ = 680, pad = { l:30, r:10, t:20, b:30 };
     const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
@@ -117,14 +117,14 @@ OmicsLab.Proteomics = (function () {
     }).join('');
 
     const xLabels = [100,200,300,400,500,600].map(v =>
-      `<text x="${xs(v)}" y="${H - pad.b + 12}" text-anchor="middle" fill="#6e7681" font-size="8">${v}</text>`
+      `<text x="${xs(v)}" y="${H - pad.b + 12}" text-anchor="middle" fill="#6E6860" font-size="8">${v}</text>`
     ).join('');
 
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto" aria-label="Simulated MS/MS spectrum">
-      <line x1="${pad.l}" y1="${ys(0)}" x2="${W-pad.r}" y2="${ys(0)}" stroke="#21262d" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${ys(0)}" x2="${W-pad.r}" y2="${ys(0)}" stroke="#182236" stroke-width="1"/>
       ${lines}${xLabels}
-      <text x="${W/2}" y="${H}" text-anchor="middle" fill="#6e7681" font-size="9">m/z</text>
-      <text x="8" y="${H/2}" text-anchor="middle" fill="#6e7681" font-size="9" transform="rotate(-90,8,${H/2})">Intensity</text>
+      <text x="${W/2}" y="${H}" text-anchor="middle" fill="#6E6860" font-size="9">m/z</text>
+      <text x="8" y="${H/2}" text-anchor="middle" fill="#6E6860" font-size="9" transform="rotate(-90,8,${H/2})">Intensity</text>
       <rect x="${W-90}" y="4" width="8" height="8" fill="#58a6ff"/><text x="${W-78}" y="12" fill="#58a6ff" font-size="8">b-ions</text>
       <rect x="${W-90}" y="16" width="8" height="8" fill="#f97316"/><text x="${W-78}" y="24" fill="#f97316" font-size="8">y-ions</text>
     </svg>`;
@@ -132,7 +132,7 @@ OmicsLab.Proteomics = (function () {
 
   function _workflowPanel() {
     const steps = [
-      { n:'1', title:'Sample Preparation', col:'#3fb950', body:'Cell lysis (RIPA/SDS), protein extraction, quantification (BCA/Bradford). Critical: consistent lysis conditions across samples. Filter-aided sample preparation (FASP) or S-trap columns remove detergents and concentrate proteins.' },
+      { n:'1', title:'Sample Preparation', col:'#00C4A0', body:'Cell lysis (RIPA/SDS), protein extraction, quantification (BCA/Bradford). Critical: consistent lysis conditions across samples. Filter-aided sample preparation (FASP) or S-trap columns remove detergents and concentrate proteins.' },
       { n:'2', title:'Protein Digestion', col:'#58a6ff', body:'Trypsin cleaves after Lys/Arg (not before Pro) producing peptides 7–25 AA — ideal for LC-MS. Reduction (DTT 10 mM) + alkylation (iodoacetamide 55 mM) before digestion prevents cysteine re-bridging. LysC + Trypsin sequential digest improves missed cleavage rate.' },
       { n:'3', title:'Peptide Desalting &amp; Fractionation', col:'#e3b341', body:'C18 StageTips or Sep-Pak cartridges remove salts and detergents. High-pH reverse-phase fractionation (HPRP) or strong cation exchange (SCX) pre-fractionation increases proteome depth 3–5× by reducing sample complexity per LC-MS run.' },
       { n:'4', title:'nanoLC Separation', col:'#bc8cff', body:'75 µm ID reverse-phase C18 column (50 cm EASY-Spray), 300 nL/min flow, 2–95% acetonitrile gradient over 60–240 min. Peptides elute by hydrophobicity. Column temperature 50°C for reproducibility. DIA: all peptides fragmented; DDA: top-N most intense precursors selected.' },

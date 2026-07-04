@@ -47,7 +47,7 @@ OmicsLab.PathogenTracker = (function () {
     },
     {
       id:'pfalc', name:'P. falciparum', class:'Parasite', priority:'high',
-      color:'#3fb950',
+      color:'#00C4A0',
       summary:'MalariaGEN-led genomic surveillance of P. falciparum drug resistance markers across the continent.',
       countries: [
         { name:'Ghana', sequences:9800, variants:['kelch13 R622I','pfhrp2 del'], status:'active', capacity:'high' },
@@ -108,8 +108,8 @@ OmicsLab.PathogenTracker = (function () {
     const p = PATHOGENS.find(x => x.id === _activePath);
     const el = document.getElementById('pt-detail');
     if (!el || !p) return;
-    const capacityColor = { high:'#3fb950', med:'#e3b341', low:'#ff6b6b' };
-    const statusColor = { active:'#3fb950', outbreak:'#ff6b6b', surveillance:'#58a6ff' };
+    const capacityColor = { high:'#00C4A0', med:'#e3b341', low:'#ff6b6b' };
+    const statusColor = { active:'#00C4A0', outbreak:'#ff6b6b', surveillance:'#58a6ff' };
     el.innerHTML = `
       <div class="pt-detail-hdr" style="border-left-color:${p.color}">
         <div>
@@ -136,10 +136,10 @@ OmicsLab.PathogenTracker = (function () {
         ${p.countries.map(c => `<div class="pt-country-card">
           <div class="pt-cc-hdr">
             <span class="pt-cc-name">${c.name}</span>
-            <span class="pt-cc-status" style="color:${statusColor[c.status]||'#8b949e'}">${c.status}</span>
+            <span class="pt-cc-status" style="color:${statusColor[c.status]||'#A8A098'}">${c.status}</span>
           </div>
           <div class="pt-cc-seqs">${c.sequences.toLocaleString()} seqs</div>
-          <div class="pt-cc-cap" style="color:${capacityColor[c.capacity]||'#8b949e'}">Capacity: ${c.capacity}</div>
+          <div class="pt-cc-cap" style="color:${capacityColor[c.capacity]||'#A8A098'}">Capacity: ${c.capacity}</div>
           <div class="pt-cc-vars">${c.variants.join(' · ')}</div>
         </div>`).join('')}
       </div>`;

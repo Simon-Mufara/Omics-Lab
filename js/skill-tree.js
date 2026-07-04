@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Adaptive Skill Tree & XP Engine (Prompt 41)
    ─ Persistent skill tree with XP, prerequisites, unlocks
    ─ SVG canvas rendered on Profile page
@@ -16,27 +16,27 @@ OmicsLab.SkillTree = (function () {
   /* ─── Skill definitions ─── */
   const SKILLS = [
     /* ── Tier 0: Foundation ── */
-    { id:'lab-basics',      label:'Lab Basics',          tier:0, x:300, y:60,  xpCost:0,   prereqs:[],                          icon:'flask',       color:'#3fb950', desc:'Core wet-lab safety, equipment, and contamination control.' },
+    { id:'lab-basics',      label:'Lab Basics',          tier:0, x:300, y:60,  xpCost:0,   prereqs:[],                          icon:'flask',       color:'#00C4A0', desc:'Core wet-lab safety, equipment, and contamination control.' },
     { id:'seq-concepts',    label:'Seq Concepts',         tier:0, x:560, y:60,  xpCost:0,   prereqs:[],                          icon:'dna',         color:'#58a6ff', desc:'Illumina, Nanopore, and PacBio sequencing principles.' },
     { id:'bioinf-intro',    label:'Bioinf Intro',         tier:0, x:820, y:60,  xpCost:0,   prereqs:[],                          icon:'cpu',         color:'#bc8cff', desc:'Linux, conda, and bioinformatics environment basics.' },
 
     /* ── Tier 1: Core Tools ── */
-    { id:'dna-extraction',  label:'DNA Extraction',       tier:1, x:180, y:180, xpCost:30,  prereqs:['lab-basics'],              icon:'droplet',     color:'#3fb950', desc:'Buffer chemistry, yield, and purity metrics for DNA.' },
-    { id:'library-prep',    label:'Library Prep',         tier:1, x:360, y:180, xpCost:40,  prereqs:['lab-basics'],              icon:'scissors',    color:'#3fb950', desc:'End-repair, A-tailing, adapter ligation, size selection.' },
+    { id:'dna-extraction',  label:'DNA Extraction',       tier:1, x:180, y:180, xpCost:30,  prereqs:['lab-basics'],              icon:'droplet',     color:'#00C4A0', desc:'Buffer chemistry, yield, and purity metrics for DNA.' },
+    { id:'library-prep',    label:'Library Prep',         tier:1, x:360, y:180, xpCost:40,  prereqs:['lab-basics'],              icon:'scissors',    color:'#00C4A0', desc:'End-repair, A-tailing, adapter ligation, size selection.' },
     { id:'fastq-qc',        label:'FASTQ QC',             tier:1, x:540, y:180, xpCost:35,  prereqs:['seq-concepts'],            icon:'check-circle',color:'#58a6ff', desc:'FastQC, MultiQC, Phred scores, adapter trimming.' },
     { id:'alignment',       label:'Read Alignment',       tier:1, x:720, y:180, xpCost:40,  prereqs:['seq-concepts'],            icon:'git-branch',  color:'#58a6ff', desc:'BWA-MEM2, samtools, flagstat, MAPQ scores.' },
     { id:'cli-basics',      label:'CLI Basics',           tier:1, x:900, y:180, xpCost:25,  prereqs:['bioinf-intro'],            icon:'cpu',         color:'#bc8cff', desc:'Bash, pipes, sed, awk, grep for bioinformatics.' },
 
     /* ── Tier 2: Analysis ── */
-    { id:'variant-calling', label:'Variant Calling',      tier:2, x:270, y:300, xpCost:60,  prereqs:['library-prep','alignment'],icon:'dna',         color:'#3fb950', desc:'GATK HaplotypeCaller, joint genotyping, GVCF workflow.' },
+    { id:'variant-calling', label:'Variant Calling',      tier:2, x:270, y:300, xpCost:60,  prereqs:['library-prep','alignment'],icon:'dna',         color:'#00C4A0', desc:'GATK HaplotypeCaller, joint genotyping, GVCF workflow.' },
     { id:'qc-gatk',         label:'QC & Filtering',       tier:2, x:450, y:300, xpCost:50,  prereqs:['fastq-qc','alignment'],    icon:'check-circle',color:'#58a6ff', desc:'VQSR, hard filtering, H3Africa QC thresholds.' },
     { id:'rnaseq',          label:'RNA-seq Analysis',      tier:2, x:630, y:300, xpCost:55,  prereqs:['fastq-qc','alignment'],    icon:'activity',    color:'#58a6ff', desc:'STAR alignment, featureCounts, DESeq2 DE testing.' },
     { id:'scripting',       label:'Python/R Scripting',   tier:2, x:810, y:300, xpCost:50,  prereqs:['cli-basics'],              icon:'code',        color:'#bc8cff', desc:'Biopython, pandas, ggplot2, Bioconductor basics.' },
     { id:'nanopore',        label:'Nanopore QC',          tier:2, x:990, y:300, xpCost:45,  prereqs:['cli-basics','fastq-qc'],   icon:'zap',         color:'#bc8cff', desc:'NanoStat, Filtlong, medaka variant calling.' },
 
     /* ── Tier 3: Specialisations ── */
-    { id:'acmg-interp',     label:'ACMG Interpretation',  tier:3, x:180, y:420, xpCost:80,  prereqs:['variant-calling'],         icon:'shield',      color:'#3fb950', desc:'ACMG/AMP 2015 criteria, ClinVar, African AF context.' },
-    { id:'pop-genomics',    label:'Population Genomics',  tier:3, x:360, y:420, xpCost:75,  prereqs:['variant-calling','qc-gatk'],icon:'globe',      color:'#3fb950', desc:'PCA, ADMIXTURE, FST, African population structure.' },
+    { id:'acmg-interp',     label:'ACMG Interpretation',  tier:3, x:180, y:420, xpCost:80,  prereqs:['variant-calling'],         icon:'shield',      color:'#00C4A0', desc:'ACMG/AMP 2015 criteria, ClinVar, African AF context.' },
+    { id:'pop-genomics',    label:'Population Genomics',  tier:3, x:360, y:420, xpCost:75,  prereqs:['variant-calling','qc-gatk'],icon:'globe',      color:'#00C4A0', desc:'PCA, ADMIXTURE, FST, African population structure.' },
     { id:'phylogenomics',   label:'Phylogenomics',         tier:3, x:540, y:420, xpCost:80,  prereqs:['qc-gatk','rnaseq'],        icon:'git-branch',  color:'#58a6ff', desc:'IQ-TREE2, NJ, UPGMA, bootstrap, outbreak reconstruction.' },
     { id:'metagenomics',    label:'Metagenomics',          tier:3, x:720, y:420, xpCost:70,  prereqs:['rnaseq','scripting'],      icon:'virus',       color:'#58a6ff', desc:'Kraken2, Bracken, HUMAnN3, diversity metrics.' },
     { id:'long-read',       label:'Long-read Assembly',    tier:3, x:900, y:420, xpCost:65,  prereqs:['nanopore','scripting'],    icon:'layers',      color:'#bc8cff', desc:'Flye, Medaka, Bandage — complete genome assembly.' },
@@ -245,7 +245,7 @@ OmicsLab.SkillTree = (function () {
                 <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               <marker id="st-arrow" viewBox="0 0 10 10" refX="9" refY="5"
                 markerWidth="5" markerHeight="5" orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="#30363d"/>
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#243048"/>
               </marker>
             </defs>
 
@@ -255,7 +255,7 @@ OmicsLab.SkillTree = (function () {
               if (!par) return '';
               const active = unlocked.has(sk.id);
               return `<line x1="${par.x}" y1="${par.y + 28}" x2="${sk.x}" y2="${sk.y - 28}"
-                stroke="${active ? sk.color : '#30363d'}" stroke-width="${active ? 1.5 : 1}"
+                stroke="${active ? sk.color : '#243048'}" stroke-width="${active ? 1.5 : 1}"
                 stroke-dasharray="${active ? 'none' : '4 3'}" opacity="${active ? 0.7 : 0.4}"
                 marker-end="url(#st-arrow)"/>`;
             })).join('')}
@@ -290,7 +290,7 @@ OmicsLab.SkillTree = (function () {
             }).join('')}
 
             <!-- Tier labels -->
-            ${[0,1,2,3,4,5].map(t => `<text x="20" y="${60 + t * 120}" fill="#8b949e" font-size="9" font-family="Inter,sans-serif" opacity="0.6">Tier ${t}</text>`).join('')}
+            ${[0,1,2,3,4,5].map(t => `<text x="20" y="${60 + t * 120}" fill="#A8A098" font-size="9" font-family="Inter,sans-serif" opacity="0.6">Tier ${t}</text>`).join('')}
           </svg>
         </div>
 
@@ -302,7 +302,7 @@ OmicsLab.SkillTree = (function () {
         </div>
 
         <div class="st-legend">
-          <span class="st-leg-item"><span class="st-leg-dot" style="background:#3fb950;opacity:.9"></span> Lab & Wet</span>
+          <span class="st-leg-item"><span class="st-leg-dot" style="background:#00C4A0;opacity:.9"></span> Lab & Wet</span>
           <span class="st-leg-item"><span class="st-leg-dot" style="background:#58a6ff;opacity:.9"></span> Sequencing</span>
           <span class="st-leg-item"><span class="st-leg-dot" style="background:#bc8cff;opacity:.9"></span> Computation</span>
           <span class="st-leg-item"><span class="st-leg-dot" style="background:#e3b341;opacity:.9"></span> Advanced</span>

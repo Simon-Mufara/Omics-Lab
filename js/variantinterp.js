@@ -86,10 +86,10 @@ OmicsLab.VariantInterp = (function () {
     missense_variant: '#e3b341',
     inframe_deletion: '#bc8cff',
     inframe_insertion: '#bc8cff',
-    synonymous_variant: '#3fb950',
+    synonymous_variant: '#00C4A0',
     regulatory_region_variant: '#58a6ff',
     'Drug Resistance': '#ff6b6b',
-    default: '#8b949e',
+    default: '#A8A098',
   };
 
   let _lastResult = null;
@@ -164,7 +164,7 @@ OmicsLab.VariantInterp = (function () {
 
     let classification = 'Uncertain Significance (VUS)';
     let classColor = '#e3b341';
-    if (benScore >= 16)     { classification = 'Benign'; classColor = '#3fb950'; }
+    if (benScore >= 16)     { classification = 'Benign'; classColor = '#00C4A0'; }
     else if (benScore >= 4) { classification = 'Likely Benign'; classColor = '#58a6ff'; }
     else if (pathScore >= 8 || (pathScore >= 4 && unique.includes('PVS1'))) { classification = 'Pathogenic'; classColor = '#ff6b6b'; }
     else if (pathScore >= 5) { classification = 'Likely Pathogenic'; classColor = '#f97316'; }
@@ -229,9 +229,9 @@ OmicsLab.VariantInterp = (function () {
     const criteriaHtml = acmg.applied.length ? acmg.applied.map(c => {
       const cr = ACMG_CRITERIA[c];
       const isPath = cr?.pathWeight;
-      const chipColor = isPath ? '#ff6b6b' : '#3fb950';
+      const chipColor = isPath ? '#ff6b6b' : '#00C4A0';
       return `<span class="vi-criterion-chip" style="--cc:${chipColor}" title="${cr?.desc || ''}">${c}</span>`;
-    }).join('') : '<span class="vi-criterion-chip" style="--cc:#6e7681">None auto-applied</span>';
+    }).join('') : '<span class="vi-criterion-chip" style="--cc:#6E6860">None auto-applied</span>';
 
     _lastResult = { variantLabel, d, acmg, afrAf, parsed };
 
@@ -266,7 +266,7 @@ OmicsLab.VariantInterp = (function () {
                 <span class="vi-af-val">${afrAf.toPrecision(2)}</span>
               </div>
               <div class="vi-af-bar-wrap">
-                <div class="vi-af-bar" style="width:${Math.min(afrPct*5,100)}%;background:${afrPct > 5 ? '#3fb950' : '#58a6ff'}"></div>
+                <div class="vi-af-bar" style="width:${Math.min(afrPct*5,100)}%;background:${afrPct > 5 ? '#00C4A0' : '#58a6ff'}"></div>
               </div>
             ` : '<div class="vi-af-na">AF not available — novel or pathogen variant</div>'}
             ${globalAf !== null && globalAf !== undefined ? `
@@ -297,14 +297,14 @@ OmicsLab.VariantInterp = (function () {
             <div class="vi-criteria-chips">${criteriaHtml}</div>
             <div class="vi-acmg-scores">
               <span>Pathogenic score: <strong style="color:#ff6b6b">${acmg.pathScore}</strong></span>
-              <span>Benign score: <strong style="color:#3fb950">${acmg.benScore}</strong></span>
+              <span>Benign score: <strong style="color:#00C4A0">${acmg.benScore}</strong></span>
             </div>
             <div class="vi-acmg-legend">
               ${acmg.applied.map(c => {
                 const cr = ACMG_CRITERIA[c];
                 if (!cr) return '';
                 const isPath = cr.pathWeight;
-                return `<div class="vi-acmg-legend-row"><span class="vi-criterion-chip" style="--cc:${isPath?'#ff6b6b':'#3fb950'};font-size:.65rem">${c}</span><span>${cr.desc}</span></div>`;
+                return `<div class="vi-acmg-legend-row"><span class="vi-criterion-chip" style="--cc:${isPath?'#ff6b6b':'#00C4A0'};font-size:.65rem">${c}</span><span>${cr.desc}</span></div>`;
               }).join('')}
             </div>
             <div class="vi-acmg-disclaimer">Classification is automated and not a clinical report. Confirm with a certified clinical laboratory before any medical decision.</div>
@@ -321,7 +321,7 @@ OmicsLab.VariantInterp = (function () {
             </button>
             <button class="vi-ai-btn" id="vi-ai-report-btn" onclick="OmicsLab.VariantInterp._generateReport()" style="--vab-color:#bc8cff">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-              Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #30363d;border-radius:3px;padding:0 .25rem;background:#21262d">Ctrl R</kbd>
+              Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #243048;border-radius:3px;padding:0 .25rem;background:#182236">Ctrl R</kbd>
             </button>
           </div>
         </div>
@@ -379,14 +379,14 @@ OmicsLab.VariantInterp = (function () {
 
       /* Population bar chart */
       const POP_ORDER = [
-        { id: 'afr', label: 'AFR', color: '#3fb950' },
+        { id: 'afr', label: 'AFR', color: '#00C4A0' },
         { id: 'sas', label: 'SAS', color: '#58a6ff' },
         { id: 'eas', label: 'EAS', color: '#bc8cff' },
         { id: 'eur', label: 'EUR', color: '#e3b341' },
         { id: 'amr', label: 'AMR', color: '#f97316' },
         { id: 'mid', label: 'MID', color: '#ff7b93' },
         { id: 'asj', label: 'ASJ', color: '#79c0ff' },
-        { id: 'oth', label: 'OTH', color: '#484f58' },
+        { id: 'oth', label: 'OTH', color: '#354060' },
       ];
 
       const chartRows = POP_ORDER.map(p => {
@@ -520,10 +520,10 @@ OmicsLab.VariantInterp = (function () {
     if (!panel) {
       panel = document.createElement('div');
       panel.id = 'vi-report-panel';
-      panel.style.cssText = 'margin:1rem;padding:1rem;background:#0d1117;border:1px solid #30363d;border-radius:8px;font-size:.8rem;line-height:1.7;color:#c9d1d9';
+      panel.style.cssText = 'margin:1rem;padding:1rem;background:#0D1524;border:1px solid #243048;border-radius:8px;font-size:.8rem;line-height:1.7;color:#A8A098';
       document.getElementById('vi-output')?.appendChild(panel);
     }
-    panel.innerHTML = '<em style="color:#8b949e">Generating clinical report with Fable 5…</em>';
+    panel.innerHTML = '<em style="color:#A8A098">Generating clinical report with Fable 5…</em>';
     panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
     try {
@@ -545,24 +545,24 @@ OmicsLab.VariantInterp = (function () {
       const text = data?.content?.[0]?.text || 'No response received.';
       const html = text
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/^#{1,3}\s+(.+)$/gm, '<h4 style="color:#e6edf3;margin:.75rem 0 .25rem">$1</h4>')
+        .replace(/^#{1,3}\s+(.+)$/gm, '<h4 style="color:#E4DDD2;margin:.75rem 0 .25rem">$1</h4>')
         .replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>')
         .replace(/\n\n/g, '<br>')
         .replace(/(<li>.*?<\/li>)/gs, '<ul style="padding-left:1.25rem;margin:.3rem 0">$1</ul>');
       panel.innerHTML = `
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;border-bottom:1px solid #21262d;padding-bottom:.5rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem;border-bottom:1px solid #182236;padding-bottom:.5rem">
           <strong style="color:#bc8cff;font-size:.82rem">AI Clinical Report — ${variantLabel}</strong>
-          <button onclick="this.closest('#vi-report-panel').remove()" style="background:none;border:none;color:#484f58;cursor:pointer;font-size:.75rem">dismiss</button>
+          <button onclick="this.closest('#vi-report-panel').remove()" style="background:none;border:none;color:#354060;cursor:pointer;font-size:.75rem">dismiss</button>
         </div>
         ${html}
-        <div style="margin-top:.75rem;font-size:.68rem;color:#484f58;border-top:1px solid #21262d;padding-top:.5rem">
+        <div style="margin-top:.75rem;font-size:.68rem;color:#354060;border-top:1px solid #182236;padding-top:.5rem">
           Generated by Claude Fable 5. Not a clinical diagnostic report. Validate with a certified clinical genetics laboratory.
         </div>`;
     } catch (err) {
       panel.innerHTML = `<span style="color:#f85149">Error: ${err.message || 'Request failed'}</span>`;
     }
 
-    if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #30363d;border-radius:3px;padding:0 .25rem;background:#21262d">Ctrl R</kbd>`; }
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #243048;border-radius:3px;padding:0 .25rem;background:#182236">Ctrl R</kbd>`; }
   }
 
   /* ─── Init ─── */
@@ -610,9 +610,9 @@ OmicsLab.VariantInterp = (function () {
                   `).join('')}
                 </div>
                 <div class="vi-acmg-ref-group">
-                  <div class="vi-acmg-ref-head" style="color:#3fb950">Benign Evidence</div>
+                  <div class="vi-acmg-ref-head" style="color:#00C4A0">Benign Evidence</div>
                   ${Object.entries(ACMG_CRITERIA).filter(([,c]) => c.benWeight).map(([k,c]) => `
-                    <div class="vi-acmg-ref-row"><span class="vi-criterion-chip" style="--cc:#3fb950;font-size:.62rem">${k}</span><span class="vi-acmg-ref-desc">${c.desc}</span></div>
+                    <div class="vi-acmg-ref-row"><span class="vi-criterion-chip" style="--cc:#00C4A0;font-size:.62rem">${k}</span><span class="vi-acmg-ref-desc">${c.desc}</span></div>
                   `).join('')}
                 </div>
               </div>

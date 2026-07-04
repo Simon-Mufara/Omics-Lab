@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Research Metadata & Reproducibility Hub
    Collaborative repository for reproducible omics science.
    Stores submissions in localStorage; no server required.
@@ -130,7 +130,7 @@ OmicsLab.ReproHub = (function () {
   }
 
   function _scoreColor(n) {
-    if (n >= 80) return '#3fb950';
+    if (n >= 80) return '#00C4A0';
     if (n >= 50) return '#d29922';
     return '#f85149';
   }
@@ -284,8 +284,8 @@ OmicsLab.ReproHub = (function () {
   function _buildBrowsePanel(submissions) {
     const cards = submissions.map(s => {
       const scores = _computeScores(s);
-      const statusColors = { 'community-validated': '#3fb950', 'peer-reviewed': '#58a6ff', 'submitted': '#d29922' };
-      const statusColor = statusColors[s.status] || '#8b949e';
+      const statusColors = { 'community-validated': '#00C4A0', 'peer-reviewed': '#58a6ff', 'submitted': '#d29922' };
+      const statusColor = statusColors[s.status] || '#A8A098';
       return `
       <div class="rh-browse-card" onclick="OmicsLab.ReproHub.viewSubmission('${s.id}')">
         <div class="rh-browse-head">
@@ -348,7 +348,7 @@ OmicsLab.ReproHub = (function () {
           <div class="rh-scores-title">What is FAIR?</div>
           ${[
             ['Findable',     '#58a6ff', 'Data has a globally unique identifier, rich metadata, and is registered in a searchable resource.'],
-            ['Accessible',   '#3fb950', 'Data can be retrieved using open, free, and universally implementable protocols.'],
+            ['Accessible',   '#00C4A0', 'Data can be retrieved using open, free, and universally implementable protocols.'],
             ['Interoperable','#d29922', 'Data uses formal, accessible, shared, and broadly applicable language for knowledge representation.'],
             ['Reusable',     '#d2a8ff', 'Data is richly described with provenance, meets community standards, and has a clear usage license.']
           ].map(([p,c,d]) => `
@@ -366,7 +366,7 @@ OmicsLab.ReproHub = (function () {
     const all = _getAll();
     const mine = all.filter(s => !s.id.startsWith('seed-'));
     if (!mine.length) {
-      return `<div class="rh-empty"><div style="display:flex;align-items:center;justify-content:center;color:#8b949e;margin-bottom:0.5rem">${OmicsLab.Icons?.svg('clipboard',32)||''}</div>
+      return `<div class="rh-empty"><div style="display:flex;align-items:center;justify-content:center;color:#A8A098;margin-bottom:0.5rem">${OmicsLab.Icons?.svg('clipboard',32)||''}</div>
         <div>No submissions yet. Use the <strong>Submit</strong> tab to add your first study.</div></div>`;
     }
     return `<div class="rh-browse-grid">${mine.map(s => {
@@ -407,7 +407,7 @@ OmicsLab.ReproHub = (function () {
 
     const checklistHtml = checklist.map(c => `
       <div class="rh-fair-check-group">
-        <div class="rh-fair-check-title" style="color:${c.passed===c.total?'#3fb950':c.passed>0?'#d29922':'#f85149'}">
+        <div class="rh-fair-check-title" style="color:${c.passed===c.total?'#00C4A0':c.passed>0?'#d29922':'#f85149'}">
           ${c.principle} — ${c.passed}/${c.total}
         </div>
         ${c.items.map(f => `
@@ -483,7 +483,7 @@ OmicsLab.ReproHub = (function () {
     if (cl) {
       cl.innerHTML = checklist.map(c => {
         const pct = Math.round(c.passed / c.total * 100);
-        const col = pct === 100 ? '#3fb950' : pct > 0 ? '#d29922' : '#f85149';
+        const col = pct === 100 ? '#00C4A0' : pct > 0 ? '#d29922' : '#f85149';
         return `<div class="rh-cl-row">
           <span class="rh-cl-label" style="color:${col}">${c.principle[0]} — ${c.principle}</span>
           <div class="rh-cl-bar"><div class="rh-cl-fill" style="width:${pct}%;background:${col}"></div></div>

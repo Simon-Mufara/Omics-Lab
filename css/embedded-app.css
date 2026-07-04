@@ -17,8 +17,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: .65rem 1.25rem;
-  background: #161b22;
-  border-bottom: 1px solid #30363d;
+  background: #111B2E;
+  border-bottom: 1px solid #243048;
   flex-shrink: 0;
   flex-wrap: wrap;
 }
@@ -28,24 +28,24 @@
   border: 1px solid; border-radius: 99px; padding: .18rem .55rem;
   white-space: nowrap; flex-shrink: 0;
 }
-.ea-app-name { font-size: .9rem; font-weight: 700; color: #e6edf3; line-height: 1.2; }
-.ea-app-desc { font-size: .75rem; color: #8b949e; line-height: 1.4; margin-top: .15rem;
+.ea-app-name { font-size: .9rem; font-weight: 700; color: #E4DDD2; line-height: 1.2; }
+.ea-app-desc { font-size: .75rem; color: #A8A098; line-height: 1.4; margin-top: .15rem;
   max-width: 640px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
 .ea-topbar-right { flex-shrink: 0; }
 .ea-open-btn {
   display: inline-flex; align-items: center; gap: .35rem;
   font-size: .78rem; font-weight: 600;
-  background: #21262d; border: 1px solid #30363d; border-radius: 6px;
-  color: #c9d1d9; padding: .35rem .8rem; text-decoration: none; white-space: nowrap;
+  background: #182236; border: 1px solid #243048; border-radius: 6px;
+  color: #A8A098; padding: .35rem .8rem; text-decoration: none; white-space: nowrap;
 }
-.ea-open-btn:hover { background: #30363d; color: #e6edf3; }
+.ea-open-btn:hover { background: #243048; color: #E4DDD2; }
 
 /* ── Feature chips bar ── */
 .ea-features-bar {
   display: flex; gap: .35rem; flex-wrap: wrap;
   padding: .5rem 1.25rem;
-  background: #0d1117;
-  border-bottom: 1px solid #21262d;
+  background: #0D1524;
+  border-bottom: 1px solid #182236;
   flex-shrink: 0;
 }
 .ea-feature-chip {
@@ -58,7 +58,7 @@
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: #0d1117;
+  background: #0D1524;
 }
 
 /* ── Loading spinner ── */
@@ -66,7 +66,7 @@
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 1rem; background: #0d1117; z-index: 2;
+  gap: 1rem; background: #0D1524; z-index: 2;
 }
 .ea-spinner {
   width: 36px; height: 36px; border-radius: 50%;
@@ -75,22 +75,22 @@
   animation: ea-spin .8s linear infinite;
 }
 @keyframes ea-spin { to { transform: rotate(360deg); } }
-.ea-loading-msg { font-size: .82rem; color: #6e7681; }
+.ea-loading-msg { font-size: .82rem; color: #6E6860; }
 
 /* ── Fallback state (iframe blocked) ── */
 .ea-fallback {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  gap: 1rem; background: #0d1117; z-index: 2; padding: 2rem;
+  gap: 1rem; background: #0D1524; z-index: 2; padding: 2rem;
   text-align: center;
 }
 .ea-fallback-icon {
   width: 64px; height: 64px; border-radius: 50%;
   border: 1px solid; display: flex; align-items: center; justify-content: center;
 }
-.ea-fallback-title { font-size: 1rem; font-weight: 700; color: #e6edf3; }
-.ea-fallback-msg { font-size: .82rem; color: #8b949e; max-width: 380px; line-height: 1.6; }
+.ea-fallback-title { font-size: 1rem; font-weight: 700; color: #E4DDD2; }
+.ea-fallback-msg { font-size: .82rem; color: #A8A098; max-width: 380px; line-height: 1.6; }
 .ea-fallback-btn {
   display: inline-flex; align-items: center; gap: .45rem;
   font-size: .84rem; font-weight: 700;

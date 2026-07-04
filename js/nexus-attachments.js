@@ -334,20 +334,20 @@ OmicsLab.NexusAttachments = (function () {
     const s = document.createElement('style');
     s.id = 'nx-attach-styles';
     s.textContent = `
-      .nx-attach-preview{display:flex;align-items:center;gap:.5rem;padding:.4rem .65rem;background:var(--bg-overlay,#21262d);border-bottom:1px solid var(--border-default,#21262d);font-size:.75rem;color:var(--text-secondary,#c9d1d9)}
+      .nx-attach-preview{display:flex;align-items:center;gap:.5rem;padding:.4rem .65rem;background:var(--bg-overlay,#182236);border-bottom:1px solid var(--border-default,#182236);font-size:.75rem;color:var(--text-secondary,#A8A098)}
       .nx-attach-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
-      .nx-attach-size{color:var(--text-muted,#8b949e);flex-shrink:0}
-      .nx-attach-remove{background:none;border:none;cursor:pointer;color:var(--text-muted,#8b949e);display:flex;padding:2px}
-      .nx-drop-active{outline:2px dashed var(--green,#3fb950) !important;outline-offset:-4px}
+      .nx-attach-size{color:var(--text-muted,#A8A098);flex-shrink:0}
+      .nx-attach-remove{background:none;border:none;cursor:pointer;color:var(--text-muted,#A8A098);display:flex;padding:2px}
+      .nx-drop-active{outline:2px dashed var(--green,#00C4A0) !important;outline-offset:-4px}
       .nx-attachment{margin-top:.3rem}
-      .nx-attach-file{display:flex;align-items:center;gap:.4rem;padding:.4rem .55rem;background:var(--bg-overlay,#21262d);border:1px solid var(--border-default,#21262d);border-radius:6px;font-size:.75rem}
-      .nx-attach-fname,.nx-code-fname{font-weight:600;color:var(--text-primary,#e6edf3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      .nx-attach-sz,.nx-code-sz{color:var(--text-muted,#8b949e);font-size:.68rem;flex-shrink:0}
+      .nx-attach-file{display:flex;align-items:center;gap:.4rem;padding:.4rem .55rem;background:var(--bg-overlay,#182236);border:1px solid var(--border-default,#182236);border-radius:6px;font-size:.75rem}
+      .nx-attach-fname,.nx-code-fname{font-weight:600;color:var(--text-primary,#E4DDD2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .nx-attach-sz,.nx-code-sz{color:var(--text-muted,#A8A098);font-size:.68rem;flex-shrink:0}
       .nx-attach-download{padding:.15rem .35rem !important;font-size:.68rem !important;min-height:auto !important}
-      .nx-code-wrap{border:1px solid var(--border-default,#21262d);border-radius:6px;overflow:hidden;margin-top:.35rem;font-size:.72rem}
-      .nx-code-header{display:flex;align-items:center;gap:.35rem;padding:.3rem .5rem;background:var(--bg-overlay,#21262d);border-bottom:1px solid var(--border-default,#21262d)}
+      .nx-code-wrap{border:1px solid var(--border-default,#182236);border-radius:6px;overflow:hidden;margin-top:.35rem;font-size:.72rem}
+      .nx-code-header{display:flex;align-items:center;gap:.35rem;padding:.3rem .5rem;background:var(--bg-overlay,#182236);border-bottom:1px solid var(--border-default,#182236)}
       .nx-code-copy,.nx-code-toggle{font-size:.65rem !important;padding:.1rem .3rem !important;min-height:auto !important}
-      .nx-code-pre{margin:0;padding:.55rem .65rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-secondary,#c9d1d9);background:var(--bg-canvas,#0d1117);white-space:pre-wrap;word-break:break-word}
+      .nx-code-pre{margin:0;padding:.55rem .65rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-secondary,#A8A098);background:var(--bg-canvas,#0D1524);white-space:pre-wrap;word-break:break-word}
     `;
     document.head.appendChild(s);
   }

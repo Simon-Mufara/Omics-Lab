@@ -104,14 +104,14 @@ OmicsLab.ProteinViewer = (function () {
 
     const yLabels = [0, 25, 50, 70, 90, 100].map(v => {
       const y = PADDING.top + cH - (v / 100) * cH;
-      return `<text x="${PADDING.left - 4}" y="${(y + 3).toFixed(1)}" fill="#8b949e" font-size="8" text-anchor="end">${v}</text>
-              <line x1="${PADDING.left}" y1="${y.toFixed(1)}" x2="${W - PADDING.right}" y2="${y.toFixed(1)}" stroke="#21262d" stroke-width="0.5"/>`;
+      return `<text x="${PADDING.left - 4}" y="${(y + 3).toFixed(1)}" fill="#A8A098" font-size="8" text-anchor="end">${v}</text>
+              <line x1="${PADDING.left}" y1="${y.toFixed(1)}" x2="${W - PADDING.right}" y2="${y.toFixed(1)}" stroke="#182236" stroke-width="0.5"/>`;
     }).join('');
 
     const avgScore = (scores.reduce((a, b) => a + b.plddt, 0) / scores.length).toFixed(1);
 
     const legend = TIERS.map(t =>
-      `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#8b949e">
+      `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#A8A098">
         <span style="width:10px;height:10px;border-radius:2px;background:${t.color};display:inline-block;flex-shrink:0"></span>${t.label}</span>`
     ).join('');
 
@@ -122,10 +122,10 @@ OmicsLab.ProteinViewer = (function () {
           <span class="pv-avg-score">Mean: <strong>${avgScore}</strong> / 100 · ${scores.length} residues</span>
         </div>
         <svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="pv-chart-svg" aria-label="pLDDT confidence chart">
-          <rect x="${PADDING.left}" y="${PADDING.top}" width="${cW}" height="${cH}" fill="#161b22"/>
+          <rect x="${PADDING.left}" y="${PADDING.top}" width="${cW}" height="${cH}" fill="#111B2E"/>
           ${yLabels}
           ${bars}
-          <text x="${W/2}" y="${H - 4}" fill="#484f58" font-size="8" text-anchor="middle">Residue (1–${maxRes})</text>
+          <text x="${W/2}" y="${H - 4}" fill="#354060" font-size="8" text-anchor="middle">Residue (1–${maxRes})</text>
         </svg>
         <div class="pv-legend">${legend}</div>
       </div>`;
@@ -290,7 +290,7 @@ OmicsLab.ProteinViewer = (function () {
 
         <div id="pv-result" class="pv-result">
           <div class="pv-empty">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg>
             <div>Enter a UniProt accession or gene symbol, or select an African disease protein above</div>
           </div>
         </div>

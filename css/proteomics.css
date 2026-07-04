@@ -3,63 +3,63 @@
    ═══════════════════════════════════════════════════════════════ */
 .prot-page { max-width:1200px; margin:0 auto; padding:2.5rem 1.5rem 5rem; }
 .prot-header { text-align:center; margin-bottom:2rem; }
-.prot-title { font-size:clamp(1.6rem,3.2vw,2.3rem); font-weight:800; margin:0 0 0.5rem; background:linear-gradient(135deg,#bc8cff,#58a6ff,#3fb950); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.prot-sub { font-size:0.86rem; color:#8b949e; max-width:720px; margin:0 auto; line-height:1.65; }
-.prot-tabs { display:flex; gap:0.35rem; background:#0d1117; border:1px solid #21262d; border-radius:10px; padding:0.35rem; flex-wrap:wrap; margin-bottom:2rem; }
-.prot-tab { flex:1; min-width:120px; padding:0.55rem 0.75rem; background:none; border:none; border-radius:7px; color:#6e7681; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all 0.18s; }
-.prot-tab:hover { color:#c9d1d9; background:rgba(255,255,255,0.04); }
-.prot-tab.active { background:#161b22; color:#c9d1d9; box-shadow:0 1px 4px rgba(0,0,0,.4); }
-.prot-sb-title { font-size:0.63rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#6e7681; margin-bottom:0.6rem; }
+.prot-title { font-size:clamp(1.6rem,3.2vw,2.3rem); font-weight:800; margin:0 0 0.5rem; background:linear-gradient(135deg,#bc8cff,#58a6ff,#00C4A0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.prot-sub { font-size:0.86rem; color:#A8A098; max-width:720px; margin:0 auto; line-height:1.65; }
+.prot-tabs { display:flex; gap:0.35rem; background:#0D1524; border:1px solid #182236; border-radius:10px; padding:0.35rem; flex-wrap:wrap; margin-bottom:2rem; }
+.prot-tab { flex:1; min-width:120px; padding:0.55rem 0.75rem; background:none; border:none; border-radius:7px; color:#6E6860; font-size:0.78rem; font-weight:600; cursor:pointer; transition:all 0.18s; }
+.prot-tab:hover { color:#A8A098; background:rgba(255,255,255,0.04); }
+.prot-tab.active { background:#111B2E; color:#A8A098; box-shadow:0 1px 4px rgba(0,0,0,.4); }
+.prot-sb-title { font-size:0.63rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#6E6860; margin-bottom:0.6rem; }
 .prot-concept-box { padding:1rem 1.25rem; background:rgba(188,140,255,0.05); border:1px solid rgba(188,140,255,0.2); border-left:3px solid #bc8cff; border-radius:0 8px 8px 0; margin-bottom:1.5rem; }
 .prot-concept-title { font-size:0.9rem; font-weight:800; color:#bc8cff; margin-bottom:0.4rem; }
-.prot-concept-body { font-size:0.8rem; color:#c9d1d9; line-height:1.72; margin:0; }
+.prot-concept-body { font-size:0.8rem; color:#A8A098; line-height:1.72; margin:0; }
 /* MS Basics */
 .prot-ionization-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.85rem; margin-bottom:1.5rem; }
-.prot-ion-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
-.prot-ion-name { font-size:0.86rem; font-weight:800; color:#c9d1d9; margin-bottom:0.15rem; }
+.prot-ion-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1rem; }
+.prot-ion-name { font-size:0.86rem; font-weight:800; color:#A8A098; margin-bottom:0.15rem; }
 .prot-ion-type { font-size:0.65rem; text-transform:uppercase; color:#bc8cff; letter-spacing:0.06em; margin-bottom:0.6rem; }
-.prot-ion-row,.prot-ion-africa { font-size:0.74rem; color:#8b949e; margin-bottom:0.4rem; line-height:1.6; }
+.prot-ion-row,.prot-ion-africa { font-size:0.74rem; color:#A8A098; margin-bottom:0.4rem; line-height:1.6; }
 .prot-ion-africa { color:#f97316; padding:0.3rem 0.5rem; background:rgba(249,115,22,0.05); border-left:2px solid rgba(249,115,22,0.3); border-radius:0 4px 4px 0; }
-.prot-il { display:inline-block; font-size:0.6rem; font-weight:700; text-transform:uppercase; color:#6e7681; margin-right:0.4em; }
-.prot-spectrum-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1.1rem; margin-bottom:1.25rem; }
-.prot-spec-note { font-size:0.72rem; color:#6e7681; line-height:1.6; margin-top:0.5rem; }
-.prot-analyser-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
+.prot-il { display:inline-block; font-size:0.6rem; font-weight:700; text-transform:uppercase; color:#6E6860; margin-right:0.4em; }
+.prot-spectrum-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1.1rem; margin-bottom:1.25rem; }
+.prot-spec-note { font-size:0.72rem; color:#6E6860; line-height:1.6; margin-top:0.5rem; }
+.prot-analyser-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1rem; }
 .prot-analyser-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:0.55rem; margin-top:0.6rem; }
-.prot-an-item { background:#0d1117; border-radius:8px; padding:0.65rem 0.85rem; }
+.prot-an-item { background:#0D1524; border-radius:8px; padding:0.65rem 0.85rem; }
 .prot-an-name { font-family:monospace; font-size:0.84rem; font-weight:800; color:#bc8cff; display:block; }
-.prot-an-res { font-size:0.65rem; font-family:monospace; color:#6e7681; display:block; margin:0.15rem 0; }
-.prot-an-use { font-size:0.73rem; color:#8b949e; line-height:1.55; }
+.prot-an-res { font-size:0.65rem; font-family:monospace; color:#6E6860; display:block; margin:0.15rem 0; }
+.prot-an-use { font-size:0.73rem; color:#A8A098; line-height:1.55; }
 /* Workflow */
 .prot-workflow-steps { display:flex; flex-direction:column; gap:1rem; }
-.prot-wf-step { display:flex; gap:1rem; align-items:flex-start; padding:0.85rem; background:#161b22; border:1px solid #21262d; border-radius:10px; }
+.prot-wf-step { display:flex; gap:1rem; align-items:flex-start; padding:0.85rem; background:#111B2E; border:1px solid #182236; border-radius:10px; }
 .prot-wf-num { flex-shrink:0; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:900; border:2px solid; }
 .prot-wf-title { font-size:0.88rem; font-weight:800; margin-bottom:0.3rem; }
-.prot-wf-body { font-size:0.77rem; color:#8b949e; line-height:1.68; margin:0; }
+.prot-wf-body { font-size:0.77rem; color:#A8A098; line-height:1.68; margin:0; }
 /* Quantification */
 .prot-quant-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:0.9rem; margin-bottom:1.5rem; }
-.prot-quant-card { background:#161b22; border:1px solid #21262d; border-top:3px solid; border-radius:10px; padding:1rem; }
+.prot-quant-card { background:#111B2E; border:1px solid #182236; border-top:3px solid; border-radius:10px; padding:1rem; }
 .prot-qc-name { font-size:0.9rem; font-weight:800; margin-bottom:0.15rem; }
-.prot-qc-type { font-size:0.65rem; text-transform:uppercase; color:#6e7681; letter-spacing:0.06em; margin-bottom:0.5rem; }
-.prot-qc-desc { font-size:0.76rem; color:#8b949e; line-height:1.65; margin:0 0 0.6rem; }
-.prot-qc-use,.prot-qc-limit { font-size:0.72rem; color:#c9d1d9; padding:0.35rem 0.6rem; border-radius:5px; margin-bottom:0.35rem; line-height:1.55; }
-.prot-qc-use { background:rgba(63,185,80,0.05); }
+.prot-qc-type { font-size:0.65rem; text-transform:uppercase; color:#6E6860; letter-spacing:0.06em; margin-bottom:0.5rem; }
+.prot-qc-desc { font-size:0.76rem; color:#A8A098; line-height:1.65; margin:0 0 0.6rem; }
+.prot-qc-use,.prot-qc-limit { font-size:0.72rem; color:#A8A098; padding:0.35rem 0.6rem; border-radius:5px; margin-bottom:0.35rem; line-height:1.55; }
+.prot-qc-use { background:rgba(0,196,160,0.05); }
 .prot-qc-limit { background:rgba(248,81,73,0.05); }
 .prot-qc-lbl { display:block; font-size:0.58rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.2rem; }
-.prot-qc-use .prot-qc-lbl { color:#3fb950; }
+.prot-qc-use .prot-qc-lbl { color:#00C4A0; }
 .prot-qc-limit .prot-qc-lbl { color:#f85149; }
-.prot-fdr-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
+.prot-fdr-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1rem; }
 .prot-fdr-steps { display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem; }
-.prot-fd-step { display:flex; gap:0.7rem; align-items:flex-start; font-size:0.77rem; color:#8b949e; }
+.prot-fd-step { display:flex; gap:0.7rem; align-items:flex-start; font-size:0.77rem; color:#A8A098; }
 .prot-fd-n { flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#bc8cff22; color:#bc8cff; font-size:0.68rem; font-weight:800; display:flex; align-items:center; justify-content:center; border:1px solid #bc8cff44; }
 /* Africa */
 .prot-africa-grid { display:flex; flex-direction:column; gap:0.85rem; margin-bottom:1.5rem; }
-.prot-africa-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
-.prot-af-study { font-size:0.88rem; font-weight:800; color:#c9d1d9; margin-bottom:0.4rem; }
-.prot-af-finding { font-size:0.77rem; color:#8b949e; line-height:1.65; margin:0 0 0.5rem; }
+.prot-africa-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1rem; }
+.prot-af-study { font-size:0.88rem; font-weight:800; color:#A8A098; margin-bottom:0.4rem; }
+.prot-af-finding { font-size:0.77rem; color:#A8A098; line-height:1.65; margin:0 0 0.5rem; }
 .prot-af-doi { font-size:0.68rem; font-family:monospace; color:#58a6ff; }
-.prot-tools-card { background:#161b22; border:1px solid #21262d; border-radius:10px; padding:1rem; }
+.prot-tools-card { background:#111B2E; border:1px solid #182236; border-radius:10px; padding:1rem; }
 .prot-tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:0.5rem; margin-top:0.6rem; }
-.prot-tool { display:flex; flex-direction:column; padding:0.55rem 0.75rem; background:#0d1117; border-radius:7px; }
-.prot-tn { font-family:monospace; font-size:0.8rem; font-weight:700; color:#c9d1d9; }
-.prot-tu { font-size:0.7rem; color:#6e7681; margin-top:0.2rem; }
+.prot-tool { display:flex; flex-direction:column; padding:0.55rem 0.75rem; background:#0D1524; border-radius:7px; }
+.prot-tn { font-family:monospace; font-size:0.8rem; font-weight:700; color:#A8A098; }
+.prot-tu { font-size:0.7rem; color:#6E6860; margin-top:0.2rem; }
 @media (max-width:640px) { .prot-page { padding:1.5rem 0.75rem 3rem; } .prot-tab { min-width:80px; font-size:0.68rem; } }

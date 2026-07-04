@@ -45,7 +45,7 @@ OmicsLab.Analysis = (function () {
 
   /* Quality color (green→yellow→red by Phred score) */
   function _qualColor(q) {
-    if (q >= 30) return '#3fb950';
+    if (q >= 30) return '#00C4A0';
     if (q >= 20) return '#e3b341';
     return '#f85149';
   }
@@ -211,7 +211,7 @@ OmicsLab.Analysis = (function () {
           <div class="az-chart-row">
             <div class="az-chart-box">
               <div class="az-chart-title">Per-Base Sequence Quality
-                <span class="az-legend"><span class="az-dot" style="background:#3fb950"></span>Q≥30</span>
+                <span class="az-legend"><span class="az-dot" style="background:#00C4A0"></span>Q≥30</span>
                 <span class="az-legend"><span class="az-dot" style="background:#e3b341"></span>Q≥20</span>
                 <span class="az-legend"><span class="az-dot" style="background:#f85149"></span>Q&lt;20</span>
               </div>
@@ -512,7 +512,7 @@ OmicsLab.Analysis = (function () {
       const qdBars = qualDist.filter(q=>q.count>0).map(q => `
         <div class="az-qd-row">
           <span class="az-qd-label">Q${q.label}</span>
-          <div class="az-chrom-bar-track"><div class="az-chrom-bar" style="width:${(q.count/maxQD*100).toFixed(0)}%;background:#3fb950"></div></div>
+          <div class="az-chrom-bar-track"><div class="az-chrom-bar" style="width:${(q.count/maxQD*100).toFixed(0)}%;background:#00C4A0"></div></div>
           <span class="az-chrom-count">${q.count}</span>
         </div>`).join('');
 
@@ -674,12 +674,12 @@ OmicsLab.Analysis = (function () {
   const Alignment = {
     COLORS: {
       /* DNA */
-      A:'#3fb950',G:'#58a6ff',C:'#f97316',T:'#f85149',U:'#f85149',N:'#8b949e','-':'#1c2128',
+      A:'#00C4A0',G:'#58a6ff',C:'#f97316',T:'#f85149',U:'#f85149',N:'#A8A098','-':'#1c2128',
       /* Amino acids by property */
       R:'#58a6ff',K:'#58a6ff',H:'#58a6ff',             /* positive */
       D:'#f85149',E:'#f85149',                          /* negative */
       S:'#e3b341',T:'#e3b341',N:'#e3b341',Q:'#e3b341', /* polar */
-      A:'#3fb950',V:'#3fb950',I:'#3fb950',L:'#3fb950',M:'#3fb950',F:'#bc8cff',W:'#bc8cff',P:'#bc8cff',Y:'#bc8cff',G:'#8b949e',C:'#f97316',
+      A:'#00C4A0',V:'#00C4A0',I:'#00C4A0',L:'#00C4A0',M:'#00C4A0',F:'#bc8cff',W:'#bc8cff',P:'#bc8cff',Y:'#bc8cff',G:'#A8A098',C:'#f97316',
       '*':'#1c2128',
     },
 
@@ -726,7 +726,7 @@ OmicsLab.Analysis = (function () {
         result.forEach(r => {
           const slice = r.seq.slice(start, end);
           const colored = [...slice].map(b => {
-            const col = this.COLORS[b.toUpperCase()] || '#8b949e';
+            const col = this.COLORS[b.toUpperCase()] || '#A8A098';
             return `<span class="az-base" style="background:${col}22;color:${col}">${_esc(b)}</span>`;
           }).join('');
           html += `<div class="az-aln-row"><span class="az-aln-name" title="${_esc(r.name)}">${_esc(r.name.slice(0,18))}${r.name.length>18?'…':''}</span><span class="az-aln-seq">${colored}</span></div>`;
@@ -734,7 +734,7 @@ OmicsLab.Analysis = (function () {
         /* Consensus row */
         const consSlice = consensus.slice(start, end);
         const consColored = consSlice.map(c => {
-          const col = c.pct >= 80 ? '#3fb950' : c.pct >= 50 ? '#e3b341' : '#8b949e';
+          const col = c.pct >= 80 ? '#00C4A0' : c.pct >= 50 ? '#e3b341' : '#A8A098';
           return `<span class="az-base az-cons-base" style="color:${col}">${c.pct>=80?'*':c.pct>=50?'+':'.'}</span>`;
         }).join('');
         html += `<div class="az-aln-row az-cons-row"><span class="az-aln-name">Consensus</span><span class="az-aln-seq">${consColored}</span></div>`;

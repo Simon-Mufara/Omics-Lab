@@ -97,8 +97,8 @@ OmicsLab.SeqAlign = (function () {
       <div class="sa-theory-section">
         <div class="sa-sb-title">Algorithm Comparison</div>
         <div class="sa-algo-compare">
-          <div class="sa-algo-card" style="border-top-color:#3fb950">
-            <div class="sa-algo-name" style="color:#3fb950">Needleman-Wunsch (Global)</div>
+          <div class="sa-algo-card" style="border-top-color:#00C4A0">
+            <div class="sa-algo-name" style="color:#00C4A0">Needleman-Wunsch (Global)</div>
             <div class="sa-algo-type">Dynamic Programming — O(mn) time & space</div>
             <p class="sa-algo-desc">Aligns the <em>entire length</em> of both sequences. Best for: closely related sequences of similar length (e.g., orthologous genes, variant comparison). Initialises first row/column with gap penalties.</p>
             <div class="sa-algo-eg">HBB WT vs HbS — identify exact position of Glu6Val substitution</div>
@@ -246,9 +246,9 @@ OmicsLab.SeqAlign = (function () {
         const max=res.dp.flat().reduce((a,b)=>Math.max(a,b),0);
         const intensity=max>0?Math.max(0,v/max):0;
         const bg=_state.mode==='local'
-          ? (v===res.score&&v>0?'#3fb950':v>0?`rgba(63,185,80,${(intensity*0.7).toFixed(2)})`:'#0d1117')
-          : (v===res.dp[s1.length][s2.length]?'#58a6ff':v>0?`rgba(88,166,255,${(intensity*0.5).toFixed(2)})`:'#0d1117');
-        table+=`<td style="background:${bg};color:${v<0?'#6e7681':'#c9d1d9'}">${v}</td>`;
+          ? (v===res.score&&v>0?'#00C4A0':v>0?`rgba(0,196,160,${(intensity*0.7).toFixed(2)})`:'#0D1524')
+          : (v===res.dp[s1.length][s2.length]?'#58a6ff':v>0?`rgba(88,166,255,${(intensity*0.5).toFixed(2)})`:'#0D1524');
+        table+=`<td style="background:${bg};color:${v<0?'#6E6860':'#A8A098'}">${v}</td>`;
       }
       table+=`</tr>`;
     }
@@ -291,7 +291,7 @@ OmicsLab.SeqAlign = (function () {
       </div>
       <div class="sa-result-body">
         <div class="sa-dp-section">
-          <div class="sa-sb-title">Dynamic Programming Matrix <span style="color:#6e7681;font-weight:400;font-size:0.7rem">(highlighted: optimal path / maximum score)</span></div>
+          <div class="sa-sb-title">Dynamic Programming Matrix <span style="color:#6E6860;font-weight:400;font-size:0.7rem">(highlighted: optimal path / maximum score)</span></div>
           <div class="sa-dp-wrap">${table}</div>
         </div>
         <div class="sa-aln-section">
@@ -304,8 +304,8 @@ OmicsLab.SeqAlign = (function () {
 
   function _colorAln(seq) {
     return seq.split('').map(c=>{
-      const colors = {A:'#3fb950',T:'#58a6ff',G:'#e3b341',C:'#f97316',U:'#bc8cff','-':'#f85149'};
-      const col = colors[c] || '#c9d1d9';
+      const colors = {A:'#00C4A0',T:'#58a6ff',G:'#e3b341',C:'#f97316',U:'#bc8cff','-':'#f85149'};
+      const col = colors[c] || '#A8A098';
       return `<span style="color:${col}">${c}</span>`;
     }).join('');
   }

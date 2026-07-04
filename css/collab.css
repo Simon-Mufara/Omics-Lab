@@ -2,123 +2,123 @@
    OmicsLab — Live Collaboration (redesigned)
    ═══════════════════════════════════════════════════ */
 
-.collab-wrap { max-width:960px;margin:0 auto;padding:2rem 1.25rem 4rem;color:#e6edf3; }
+.collab-wrap { max-width:960px;margin:0 auto;padding:2rem 1.25rem 4rem;color:#E4DDD2; }
 
 /* Header */
 .collab-header{display:flex;align-items:flex-start;justify-content:space-between;gap:1.5rem;margin-bottom:1.75rem;flex-wrap:wrap}
 .collab-badge-label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.12em;color:#58a6ff;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:4px;padding:.2rem .55rem;margin-bottom:.5rem}
-.collab-title{font-size:1.8rem;font-weight:700;color:#e6edf3;margin:0 0 .35rem}
-.collab-subtitle{font-size:.875rem;color:#8b949e;max-width:600px;line-height:1.5}
+.collab-title{font-size:1.8rem;font-weight:700;color:#E4DDD2;margin:0 0 .35rem}
+.collab-subtitle{font-size:.875rem;color:#A8A098;max-width:600px;line-height:1.5}
 
 /* Status */
-.collab-conn-status{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:#8b949e;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:.5rem .85rem;white-space:nowrap;flex-wrap:wrap}
-.collab-status-dot{width:8px;height:8px;border-radius:50%;background:#30363d;transition:background .3s;flex-shrink:0}
-.collab-status-dot.connected{background:#3fb950;box-shadow:0 0 6px #3fb95060;animation:c-pulse 1.8s ease-in-out infinite}
-@keyframes c-pulse{0%,100%{box-shadow:0 0 4px #3fb95040}50%{box-shadow:0 0 12px #3fb95090}}
-.collab-mode-badge{font-size:.65rem;font-weight:700;letter-spacing:.1em;color:#3fb950;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.25);border-radius:4px;padding:.15rem .4rem}
+.collab-conn-status{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:#A8A098;background:#111B2E;border:1px solid #243048;border-radius:8px;padding:.5rem .85rem;white-space:nowrap;flex-wrap:wrap}
+.collab-status-dot{width:8px;height:8px;border-radius:50%;background:#243048;transition:background .3s;flex-shrink:0}
+.collab-status-dot.connected{background:#00C4A0;box-shadow:0 0 6px #00C4A060;animation:c-pulse 1.8s ease-in-out infinite}
+@keyframes c-pulse{0%,100%{box-shadow:0 0 4px #00C4A040}50%{box-shadow:0 0 12px #00C4A090}}
+.collab-mode-badge{font-size:.65rem;font-weight:700;letter-spacing:.1em;color:#00C4A0;background:rgba(0,196,160,.1);border:1px solid rgba(0,196,160,.25);border-radius:4px;padding:.15rem .4rem}
 
 /* Name row */
-.collab-name-row{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem}
-.collab-label{display:block;font-size:.72rem;font-weight:700;color:#8b949e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
-.collab-input{background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:.875rem;padding:.55rem .75rem;transition:border-color .2s;font-family:inherit;width:100%;box-sizing:border-box}
+.collab-name-row{background:#111B2E;border:1px solid #243048;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.collab-label{display:block;font-size:.72rem;font-weight:700;color:#A8A098;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.collab-input{background:#0D1524;border:1px solid #243048;border-radius:6px;color:#E4DDD2;font-size:.875rem;padding:.55rem .75rem;transition:border-color .2s;font-family:inherit;width:100%;box-sizing:border-box}
 .collab-input:focus{outline:none;border-color:#58a6ff}
-.collab-btn-go{background:linear-gradient(135deg,#238636,#2ea043);border:none;border-radius:6px;color:#fff;font-size:.83rem;font-weight:600;padding:.5rem 1rem;cursor:pointer;font-family:inherit;transition:opacity .2s}
+.collab-btn-go{background:linear-gradient(135deg,#007A6A,#007A6A);border:none;border-radius:6px;color:#fff;font-size:.83rem;font-weight:600;padding:.5rem 1rem;cursor:pointer;font-family:inherit;transition:opacity .2s}
 .collab-btn-go:hover{opacity:.88}
 
 /* Mode cards */
-.collab-mode-card{background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
-.collab-mode-a{border-color:rgba(63,185,80,.3)}
+.collab-mode-card{background:#111B2E;border:1px solid #243048;border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.collab-mode-a{border-color:rgba(0,196,160,.3)}
 .collab-mode-b{border-color:rgba(88,166,255,.3)}
 .collab-mode-c{border-color:rgba(188,140,255,.3)}
 .collab-mode-head{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.1rem}
 .collab-mode-icon-wrap{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.collab-mode-name{font-size:1rem;font-weight:700;color:#e6edf3;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
-.collab-mode-desc{font-size:.8rem;color:#8b949e;line-height:1.5}
+.collab-mode-name{font-size:1rem;font-weight:700;color:#E4DDD2;margin-bottom:.3rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.collab-mode-desc{font-size:.8rem;color:#A8A098;line-height:1.5}
 .collab-mode-tag{font-size:.62rem;font-weight:700;letter-spacing:.07em;border-radius:4px;padding:.15rem .4rem;flex-shrink:0}
-.collab-tag-green{color:#3fb950;background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.25)}
+.collab-tag-green{color:#00C4A0;background:rgba(0,196,160,.12);border:1px solid rgba(0,196,160,.25)}
 .collab-tag-blue{color:#58a6ff;background:rgba(88,166,255,.12);border:1px solid rgba(88,166,255,.25)}
 .collab-tag-purple{color:#bc8cff;background:rgba(188,140,255,.12);border:1px solid rgba(188,140,255,.25)}
 
 /* Mode A - BC grid */
 .collab-bc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.collab-bc-col{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:1rem}
+.collab-bc-col{background:#0D1524;border:1px solid #182236;border-radius:8px;padding:1rem}
 .collab-step-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem}
-.collab-step-num{width:24px;height:24px;border-radius:50%;background:#58a6ff;color:#0d1117;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.collab-mode-a .collab-step-num{background:#3fb950}
+.collab-step-num{width:24px;height:24px;border-radius:50%;background:#58a6ff;color:#0D1524;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.collab-mode-a .collab-step-num{background:#00C4A0}
 .collab-mode-c .collab-step-num{background:#bc8cff}
-.collab-code-display{font-size:1.6rem;font-weight:900;letter-spacing:.2em;color:#3fb950;font-family:'JetBrains Mono',monospace;margin-top:.5rem;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:6px;padding:.5rem 1rem;text-align:center}
+.collab-code-display{font-size:1.6rem;font-weight:900;letter-spacing:.2em;color:#00C4A0;font-family:'JetBrains Mono',monospace;margin-top:.5rem;background:rgba(0,196,160,.08);border:1px solid rgba(0,196,160,.2);border-radius:6px;padding:.5rem 1rem;text-align:center}
 
 /* Buttons */
-.collab-btn-primary{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1rem;border-radius:6px;border:none;font-size:.83rem;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .2s,transform .15s;background:#21262d;color:#e6edf3;border:1px solid #30363d}
+.collab-btn-primary{display:inline-flex;align-items:center;gap:.35rem;padding:.5rem 1rem;border-radius:6px;border:none;font-size:.83rem;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .2s,transform .15s;background:#182236;color:#E4DDD2;border:1px solid #243048}
 .collab-btn-primary:hover{opacity:.88;transform:translateY(-1px)}
-.collab-mode-a .collab-btn-primary{background:rgba(63,185,80,.15);border-color:rgba(63,185,80,.4);color:#3fb950}
+.collab-mode-a .collab-btn-primary{background:rgba(0,196,160,.15);border-color:rgba(0,196,160,.4);color:#00C4A0}
 .collab-mode-b .collab-btn-primary{background:rgba(88,166,255,.15);border-color:rgba(88,166,255,.4);color:#58a6ff}
 
 /* Video link */
 .collab-video-link-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;font-size:.82rem;color:#58a6ff}
-.collab-video-link-text{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#e6edf3}
-.collab-copy-tiny{background:#21262d;border:1px solid #30363d;border-radius:4px;color:#8b949e;font-size:.7rem;padding:.15rem .45rem;cursor:pointer;font-family:inherit;transition:color .15s}
-.collab-copy-tiny:hover{color:#e6edf3}
+.collab-video-link-text{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#E4DDD2}
+.collab-copy-tiny{background:#182236;border:1px solid #243048;border-radius:4px;color:#A8A098;font-size:.7rem;padding:.15rem .45rem;cursor:pointer;font-family:inherit;transition:color .15s}
+.collab-copy-tiny:hover{color:#E4DDD2}
 
 /* RTC section */
 .collab-rtc-mode-btns{display:flex;gap:.5rem;margin-bottom:1rem}
-.collab-btn-mode{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:6px;border:1px solid #30363d;background:#21262d;color:#8b949e;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.collab-btn-mode{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:6px;border:1px solid #243048;background:#182236;color:#A8A098;font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
 .collab-btn-mode:hover,.collab-btn-mode.active{background:rgba(188,140,255,.12);border-color:rgba(188,140,255,.4);color:#bc8cff}
-.collab-rtc-step{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:.9rem 1rem;margin-bottom:.65rem}
-.collab-sdp-box{width:100%;box-sizing:border-box;background:#0d1117;border:1px solid #30363d;border-radius:6px;color:#3fb950;font-family:'Courier New',monospace;font-size:.7rem;padding:.6rem;resize:none;margin:.5rem 0;line-height:1.4}
+.collab-rtc-step{background:#0D1524;border:1px solid #182236;border-radius:8px;padding:.9rem 1rem;margin-bottom:.65rem}
+.collab-sdp-box{width:100%;box-sizing:border-box;background:#0D1524;border:1px solid #243048;border-radius:6px;color:#00C4A0;font-family:'Courier New',monospace;font-size:.7rem;padding:.6rem;resize:none;margin:.5rem 0;line-height:1.4}
 .collab-sdp-box:focus{outline:none;border-color:#58a6ff}
 .collab-copy-btn,.collab-accept-btn{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .85rem;border-radius:6px;border:none;font-size:.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .2s}
-.collab-copy-btn{background:#21262d;color:#e6edf3;border:1px solid #30363d}
-.collab-copy-btn:hover{background:#30363d}
-.collab-accept-btn{background:linear-gradient(135deg,#238636,#2ea043);color:#fff}
+.collab-copy-btn{background:#182236;color:#E4DDD2;border:1px solid #243048}
+.collab-copy-btn:hover{background:#243048}
+.collab-accept-btn{background:linear-gradient(135deg,#007A6A,#007A6A);color:#fff}
 .collab-accept-btn:hover{opacity:.88}
 .collab-rtc-progress-wrap{margin-bottom:1rem}
-.collab-rtc-progress-bar{height:5px;background:#21262d;border-radius:3px;overflow:hidden;margin-bottom:.35rem}
+.collab-rtc-progress-bar{height:5px;background:#182236;border-radius:3px;overflow:hidden;margin-bottom:.35rem}
 .collab-rtc-progress-fill{height:100%;border-radius:3px;transition:width .5s ease,background .5s ease;width:0%}
-.collab-rtc-progress-label{font-size:.75rem;color:#8b949e}
-.collab-rtc-wait{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:#8b949e;margin-top:.5rem}
-.collab-spin{width:14px;height:14px;border:2px solid #30363d;border-top-color:#58a6ff;border-radius:50%;animation:collab-spin .8s linear infinite;flex-shrink:0}
+.collab-rtc-progress-label{font-size:.75rem;color:#A8A098}
+.collab-rtc-wait{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:#A8A098;margin-top:.5rem}
+.collab-spin{width:14px;height:14px;border:2px solid #243048;border-top-color:#58a6ff;border-radius:50%;animation:collab-spin .8s linear infinite;flex-shrink:0}
 @keyframes collab-spin{to{transform:rotate(360deg)}}
-.collab-rtc-hint{font-size:.73rem;color:#6e7681;margin-top:.5rem;line-height:1.5}
+.collab-rtc-hint{font-size:.73rem;color:#6E6860;margin-top:.5rem;line-height:1.5}
 
 /* Live panel */
-.collab-live-panel{margin-top:1.5rem;background:#161b22;border:1px solid #30363d;border-radius:12px;padding:1.25rem}
+.collab-live-panel{margin-top:1.5rem;background:#111B2E;border:1px solid #243048;border-radius:12px;padding:1.25rem}
 .collab-live-grid{display:grid;grid-template-columns:1.1fr 1fr 1.4fr;gap:1rem}
-.collab-panel-box{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:.85rem;display:flex;flex-direction:column;gap:.5rem}
-.collab-panel-label{font-size:.68rem;font-weight:700;color:#58a6ff;text-transform:uppercase;letter-spacing:.1em;padding-bottom:.4rem;border-bottom:1px solid #21262d}
+.collab-panel-box{background:#0D1524;border:1px solid #182236;border-radius:8px;padding:.85rem;display:flex;flex-direction:column;gap:.5rem}
+.collab-panel-label{font-size:.68rem;font-weight:700;color:#58a6ff;text-transform:uppercase;letter-spacing:.1em;padding-bottom:.4rem;border-bottom:1px solid #182236}
 
 /* Members */
 .collab-members-list{display:flex;flex-direction:column;gap:.4rem}
 .collab-member{display:flex;align-items:center;gap:.5rem}
-.collab-member-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#58a6ff,#bc8cff);color:#0d1117;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.collab-member-name{font-size:.83rem;color:#e6edf3;display:flex;align-items:center;gap:.35rem;flex:1}
-.collab-me-tag{font-size:.62rem;color:#8b949e;background:#21262d;border-radius:3px;padding:.05rem .3rem}
+.collab-member-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#58a6ff,#bc8cff);color:#0D1524;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.collab-member-name{font-size:.83rem;color:#E4DDD2;display:flex;align-items:center;gap:.35rem;flex:1}
+.collab-me-tag{font-size:.62rem;color:#A8A098;background:#182236;border-radius:3px;padding:.05rem .3rem}
 
 /* Shared tools */
-.collab-shared-tools{margin-top:.75rem;padding-top:.75rem;border-top:1px solid #21262d}
+.collab-shared-tools{margin-top:.75rem;padding-top:.75rem;border-top:1px solid #182236}
 .collab-tools-row{display:flex;gap:.4rem;flex-wrap:wrap}
-.collab-tool-btn{display:inline-flex;align-items:center;gap:.3rem;background:#161b22;border:1px solid #30363d;border-radius:6px;color:#e6edf3;font-size:.75rem;padding:.4rem .7rem;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s}
+.collab-tool-btn{display:inline-flex;align-items:center;gap:.3rem;background:#111B2E;border:1px solid #243048;border-radius:6px;color:#E4DDD2;font-size:.75rem;padding:.4rem .7rem;cursor:pointer;font-family:inherit;transition:background .15s,border-color .15s}
 .collab-tool-btn:hover{background:rgba(88,166,255,.1);border-color:#58a6ff}
 
 /* Activity */
 .collab-activity-feed{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:.3rem}
 .collab-act-item{display:flex;gap:.35rem;font-size:.73rem;align-items:baseline}
-.collab-act-time{color:#6e7681}
+.collab-act-time{color:#6E6860}
 .collab-act-who{color:#bc8cff;font-weight:600}
-.collab-act-what{color:#8b949e}
+.collab-act-what{color:#A8A098}
 
 /* Chat */
 .collab-chat-feed{min-height:80px;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:.35rem}
 .collab-chat-msg{display:flex;flex-direction:column;align-items:flex-start;max-width:90%}
 .collab-chat-msg.mine{align-self:flex-end;align-items:flex-end}
 .collab-chat-name{font-size:.65rem;font-weight:600;color:#58a6ff;margin-bottom:.12rem}
-.collab-chat-msg.mine .collab-chat-name{color:#3fb950}
-.collab-chat-text{font-size:.8rem;background:#21262d;border:1px solid #30363d;border-radius:8px;padding:.3rem .55rem;line-height:1.4;word-break:break-word}
-.collab-chat-msg.mine .collab-chat-text{background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.2)}
-.collab-sys-msg{font-size:.72rem;color:#6e7681;text-align:center;font-style:italic;padding:.2rem 0}
+.collab-chat-msg.mine .collab-chat-name{color:#00C4A0}
+.collab-chat-text{font-size:.8rem;background:#182236;border:1px solid #243048;border-radius:8px;padding:.3rem .55rem;line-height:1.4;word-break:break-word}
+.collab-chat-msg.mine .collab-chat-text{background:rgba(0,196,160,.1);border-color:rgba(0,196,160,.2)}
+.collab-sys-msg{font-size:.72rem;color:#6E6860;text-align:center;font-style:italic;padding:.2rem 0}
 .collab-chat-row{display:flex;gap:.4rem;margin-top:auto}
 .collab-chat-row .collab-input{flex:1}
-.collab-send-btn{background:#238636;border:none;border-radius:6px;padding:.5rem .65rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+.collab-send-btn{background:#007A6A;border:none;border-radius:6px;padding:.5rem .65rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .2s}
 .collab-send-btn:hover{opacity:.85}
 
 /* Responsive */

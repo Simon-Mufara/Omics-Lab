@@ -308,7 +308,7 @@ OmicsLab.ClinicalDecision = (function () {
     const topTest = dx.tests[0];
     const testInfo = TEST_INFO[topTest] || {};
     const relevance = rank === 0 ? 'Highest match' : rank === 1 ? 'Strong match' : rank < 4 ? 'Moderate match' : 'Possible match';
-    const relColor  = rank === 0 ? '#3fb950' : rank < 2 ? '#58a6ff' : rank < 4 ? '#e3b341' : '#8b949e';
+    const relColor  = rank === 0 ? '#00C4A0' : rank < 2 ? '#58a6ff' : rank < 4 ? '#e3b341' : '#A8A098';
     return `
       <div class="cd-dx-card">
         <div class="cd-dx-card-header">
@@ -355,7 +355,7 @@ OmicsLab.ClinicalDecision = (function () {
     if (!dx) return;
     const win = window.open('', '_blank');
     if (!win) return;
-    win.document.write(`<pre style="font-family:monospace;padding:2rem;background:#0d1117;color:#e6edf3">
+    win.document.write(`<pre style="font-family:monospace;padding:2rem;background:#0D1524;color:#E4DDD2">
 === ${dx.disease} — OmicsLab Clinical Guide ===
 
 Genes:  ${dx.genes.join(', ')}

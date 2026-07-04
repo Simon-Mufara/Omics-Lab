@@ -86,23 +86,23 @@ OmicsLab.Enrichment = (function () {
     const maxScore = Math.max(...terms.map(t => -Math.log10(t.padj)));
     const xs = v => ml + (v / maxScore) * pw;
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
-    svg += `<text x="${ml + pw/2}" y="${mt-8}" text-anchor="middle" fill="#8b949e" font-size="10">-log10(adjusted p-value)</text>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
+    svg += `<text x="${ml + pw/2}" y="${mt-8}" text-anchor="middle" fill="#A8A098" font-size="10">-log10(adjusted p-value)</text>`;
 
     terms.forEach((t, i) => {
       const y = mt + i * 28;
       const score = -Math.log10(t.padj);
       const barW = (score / maxScore) * pw;
       const col = t.db === 'KEGG' ? '#f97316' : _dataset.color;
-      svg += `<text x="${ml-6}" y="${y+9}" text-anchor="end" fill="#c9d1d9" font-size="9" font-family="Inter,sans-serif">${t.name.length > 32 ? t.name.slice(0,30)+'…' : t.name}</text>`;
+      svg += `<text x="${ml-6}" y="${y+9}" text-anchor="end" fill="#A8A098" font-size="9" font-family="Inter,sans-serif">${t.name.length > 32 ? t.name.slice(0,30)+'…' : t.name}</text>`;
       svg += `<rect x="${ml}" y="${y}" width="${barW}" height="18" fill="${col}" opacity="0.75" rx="3"/>`;
-      svg += `<text x="${ml + barW + 4}" y="${y+11}" fill="#8b949e" font-size="8.5" font-family="monospace">${_fmtP(t.padj)}</text>`;
-      const gCol = t.db === 'KEGG' ? '#f97316' : '#6e7681';
+      svg += `<text x="${ml + barW + 4}" y="${y+11}" fill="#A8A098" font-size="8.5" font-family="monospace">${_fmtP(t.padj)}</text>`;
+      const gCol = t.db === 'KEGG' ? '#f97316' : '#6E6860';
       svg += `<text x="${W - mr + 4}" y="${y+11}" fill="${gCol}" font-size="8.5" font-family="monospace">${t.genes}/${t.total}</text>`;
     });
 
-    svg += `<text x="${W-mr+4}" y="${mt-8}" fill="#6e7681" font-size="8.5">n/total</text>`;
-    svg += `<line x1="${ml}" y1="${mt-14}" x2="${ml}" y2="${H-mb}" stroke="#21262d" stroke-width="1"/>`;
+    svg += `<text x="${W-mr+4}" y="${mt-8}" fill="#6E6860" font-size="8.5">n/total</text>`;
+    svg += `<line x1="${ml}" y1="${mt-14}" x2="${ml}" y2="${H-mb}" stroke="#182236" stroke-width="1"/>`;
     svg += '</svg>';
     return svg;
   }
@@ -118,12 +118,12 @@ OmicsLab.Enrichment = (function () {
     const sz = n => Math.max(5, Math.min(20, 4 + n * 0.8));
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
 
     [0.1, 0.2, 0.3, 0.4, 0.5].filter(v => v <= maxGR).forEach(v => {
       const x = xs(v);
-      svg += `<line x1="${x}" y1="${mt}" x2="${x}" y2="${mt+ph}" stroke="#21262d" stroke-width="1"/>`;
-      svg += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6e7681" font-size="8.5">${v}</text>`;
+      svg += `<line x1="${x}" y1="${mt}" x2="${x}" y2="${mt+ph}" stroke="#182236" stroke-width="1"/>`;
+      svg += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6E6860" font-size="8.5">${v}</text>`;
     });
 
     terms.forEach(t => {
@@ -132,11 +132,11 @@ OmicsLab.Enrichment = (function () {
       svg += `<circle cx="${x}" cy="${y}" r="${r}" fill="${col}" opacity="0.7"><title>${t.name}\npadj: ${_fmtP(t.padj)}\ngenes: ${t.genes}</title></circle>`;
     });
 
-    svg += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="10">Gene Ratio</text>`;
-    svg += `<text x="10" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="10" transform="rotate(-90 10 ${mt+ph/2})">-log10(padj) →</text>`;
+    svg += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="10">Gene Ratio</text>`;
+    svg += `<text x="10" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="10" transform="rotate(-90 10 ${mt+ph/2})">-log10(padj) →</text>`;
 
-    svg += `<circle cx="${W-mr-60}" cy="${mt+12}" r="4" fill="${_dataset.color}"/><text x="${W-mr-52}" y="${mt+16}" fill="#6e7681" font-size="8.5">GO</text>`;
-    svg += `<circle cx="${W-mr-30}" cy="${mt+12}" r="4" fill="#f97316"/><text x="${W-mr-22}" y="${mt+16}" fill="#6e7681" font-size="8.5">KEGG</text>`;
+    svg += `<circle cx="${W-mr-60}" cy="${mt+12}" r="4" fill="${_dataset.color}"/><text x="${W-mr-52}" y="${mt+16}" fill="#6E6860" font-size="8.5">GO</text>`;
+    svg += `<circle cx="${W-mr-30}" cy="${mt+12}" r="4" fill="#f97316"/><text x="${W-mr-22}" y="${mt+16}" fill="#6E6860" font-size="8.5">KEGG</text>`;
     svg += '</svg>';
     return svg;
   }

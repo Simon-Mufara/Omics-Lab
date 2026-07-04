@@ -9,7 +9,7 @@ OmicsLab.Pricing = (function () {
   const TIERS = [
     {
       id:'community', name:'Community', price:'Free', priceSub:'forever — no card needed',
-      color:'#3fb950', badge:null,
+      color:'#00C4A0', badge:null,
       desc:'Every individual researcher, student, and self-directed learner. No account. No install. No expiry.',
       cta:'Start Learning Free', ctaStyle:'outline',
       ctaAction:"OmicsLab.Router.navigate('lab')",
@@ -126,7 +126,7 @@ OmicsLab.Pricing = (function () {
     },
     {
       icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.36 9.8 19.79 19.79 0 0 1 1.27 1.22 2 2 0 0 1 3.26 0h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 7.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 14.92l.92 2z"/></svg>',
-      color:'#3fb950', title:'Zero Connectivity Required',
+      color:'#00C4A0', title:'Zero Connectivity Required',
       desc:'Full PWA with Service Worker caching. Every module, tool, and dataset works offline after the first load — critical for African field settings and institutions with inconsistent bandwidth.',
     },
     {
@@ -205,7 +205,7 @@ OmicsLab.Pricing = (function () {
             <textarea class="prc-input prc-textarea" id="prc-msg" placeholder="e.g. We run an annual 3-month bioinformatics bootcamp for MSc students across East Africa. We need cohort tracking and branded certificates…"></textarea>
           </div>
           <div class="prc-discount-note">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
             African academic institutions &amp; NGOs qualify for a <strong>60% discount</strong>. Mention your organisation type above.
           </div>
           <button class="prc-submit-btn" onclick="OmicsLab.Pricing._sendInquiry('${tier}')">Send Enquiry via Email</button>
@@ -340,7 +340,7 @@ OmicsLab.Pricing = (function () {
             <p class="prc-card-desc">${t.desc}</p>
             <button class="prc-card-btn"
               style="${t.ctaStyle==='solid'
-                ? `background:${t.color};border-color:${t.color};color:#0d1117`
+                ? `background:${t.color};border-color:${t.color};color:#0D1524`
                 : `background:transparent;border-color:${t.color};color:${t.color}`}"
               onclick="${t.ctaAction}">${t.cta}</button>
             <div class="prc2-feat-section">
@@ -391,7 +391,7 @@ OmicsLab.Pricing = (function () {
             <thead>
               <tr>
                 <th class="prc-th-feat">Feature</th>
-                <th class="prc-th-tier" style="color:#3fb950">Community</th>
+                <th class="prc-th-tier" style="color:#00C4A0">Community</th>
                 <th class="prc-th-tier prc-th-mid" style="color:#58a6ff">Campus</th>
                 <th class="prc-th-tier" style="color:#bc8cff">Enterprise</th>
               </tr>

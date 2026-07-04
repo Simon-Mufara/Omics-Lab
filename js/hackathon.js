@@ -37,7 +37,7 @@ OmicsLab.Hackathon = (function () {
       id:'h3', status:'upcoming',
       title:'Machine Learning for Malaria Drug Resistance Prediction',
       theme:'Computational Genomics / ML',
-      color:'#3fb950',
+      color:'#00C4A0',
       deadline:'2026-11-30',
       description:'Build an ML model to predict artemisinin partial resistance in P. falciparum isolates from WGS data. Input: VCF-derived feature matrix. Output: binary classification (sensitive/resistant) with AUC >0.85 target.',
       datasets:[{label:'MalariaGEN Pf7 dataset',url:'https://www.malariagen.net/data/pf7'},{label:'WHO validated kelch13 markers',url:'https://www.who.int/docs/default-source/malaria/artemisinin-resistance/artemisinin-resistance-markers.pdf'}],
@@ -174,7 +174,7 @@ OmicsLab.Hackathon = (function () {
         <div class="hk-section-label" style="margin-top:2rem">Leaderboard</div>
         <div class="hk-leaderboard">
           ${lb.slice(0,10).map((t, i) => `<div class="hk-lb-row">
-            <span class="hk-lb-rank" style="color:${['#e3b341','#8b949e','#f97316'][i]||'#484f58'}">#${i+1}</span>
+            <span class="hk-lb-rank" style="color:${['#e3b341','#A8A098','#f97316'][i]||'#354060'}">#${i+1}</span>
             <span class="hk-lb-team">${t.team}</span>
             <span class="hk-lb-country">${t.country}</span>
             <span class="hk-lb-score">${t.score || '—'}</span>

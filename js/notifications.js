@@ -117,7 +117,7 @@ OmicsLab.Notifications = (function () {
   function _renderList() {
     const items = _load();
     const unread = items.filter(n => !n.read).length;
-    const CAT_COLOR = { system:'#58a6ff', badge:'#e3b341', research:'#3fb950', outbreak:'#ff6b6b', update:'#bc8cff' };
+    const CAT_COLOR = { system:'#58a6ff', badge:'#e3b341', research:'#00C4A0', outbreak:'#ff6b6b', update:'#bc8cff' };
     const CAT_ICON = {
       system:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
       badge:    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
@@ -143,7 +143,7 @@ OmicsLab.Notifications = (function () {
       <div class="nt-panel-list">
         ${items.length === 0 ? '<div class="nt-panel-empty">No notifications yet</div>' :
           items.map(n => {
-            const col = CAT_COLOR[n.cat] || '#8b949e';
+            const col = CAT_COLOR[n.cat] || '#A8A098';
             const icon = CAT_ICON[n.cat] || CAT_ICON.system;
             const ago = _timeAgo(n.ts);
             return `
@@ -215,32 +215,32 @@ OmicsLab.Notifications = (function () {
     const s = document.createElement('style');
     s.id = 'nt-notif-styles';
     s.textContent = `
-      .nav-notif-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:1px solid transparent;border-radius:7px;color:#6e7681;cursor:pointer;position:relative;transition:background .12s,color .12s,border-color .12s}
-      .nav-notif-btn:hover{background:rgba(255,255,255,.06);color:#c9d1d9;border-color:#30363d}
+      .nav-notif-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:none;border:1px solid transparent;border-radius:7px;color:#6E6860;cursor:pointer;position:relative;transition:background .12s,color .12s,border-color .12s}
+      .nav-notif-btn:hover{background:rgba(255,255,255,.06);color:#A8A098;border-color:#243048}
       .nt-bell-badge{position:absolute;top:2px;right:2px;background:#ff6b6b;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:0 3px;min-width:14px;height:14px;line-height:14px;text-align:center;pointer-events:none}
-      .nt-panel{position:fixed;top:58px;right:1rem;width:340px;max-height:calc(100vh - 80px);background:#161b22;border:1px solid #21262d;border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.6);z-index:4500;display:flex;flex-direction:column;overflow:hidden;transform:translateY(-6px) scale(.97);opacity:0;pointer-events:none;transition:transform .2s cubic-bezier(.16,1,.3,1),opacity .2s}
+      .nt-panel{position:fixed;top:58px;right:1rem;width:340px;max-height:calc(100vh - 80px);background:#111B2E;border:1px solid #182236;border-radius:12px;box-shadow:0 16px 40px rgba(0,0,0,.6);z-index:4500;display:flex;flex-direction:column;overflow:hidden;transform:translateY(-6px) scale(.97);opacity:0;pointer-events:none;transition:transform .2s cubic-bezier(.16,1,.3,1),opacity .2s}
       .nt-panel-open{transform:none;opacity:1;pointer-events:all}
-      .nt-panel-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem .9rem;border-bottom:1px solid #21262d;flex-shrink:0}
-      .nt-panel-title{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:700;color:#e6edf3}
+      .nt-panel-header{display:flex;align-items:center;justify-content:space-between;padding:.7rem .9rem;border-bottom:1px solid #182236;flex-shrink:0}
+      .nt-panel-title{display:flex;align-items:center;gap:.4rem;font-size:.85rem;font-weight:700;color:#E4DDD2}
       .nt-panel-count{background:#ff6b6b;color:#fff;font-size:.65rem;font-weight:700;border-radius:99px;padding:.05rem .38rem}
       .nt-panel-actions{display:flex;align-items:center;gap:.3rem}
-      .nt-panel-btn{background:none;border:none;font-size:.72rem;color:#8b949e;cursor:pointer;padding:.2rem .4rem;border-radius:5px}
-      .nt-panel-btn:hover{background:#21262d;color:#e6edf3}
+      .nt-panel-btn{background:none;border:none;font-size:.72rem;color:#A8A098;cursor:pointer;padding:.2rem .4rem;border-radius:5px}
+      .nt-panel-btn:hover{background:#182236;color:#E4DDD2}
       .nt-panel-close{display:flex;align-items:center;justify-content:center;width:24px;height:24px;padding:0}
       .nt-panel-list{overflow-y:auto;flex:1}
-      .nt-panel-empty{text-align:center;padding:2.5rem 1rem;font-size:.8rem;color:#484f58}
-      .nt-panel-item{display:flex;align-items:flex-start;gap:.55rem;padding:.65rem .9rem;cursor:pointer;border-bottom:1px solid #21262d;transition:background .1s;position:relative}
-      .nt-panel-item:hover{background:#0d1117}
+      .nt-panel-empty{text-align:center;padding:2.5rem 1rem;font-size:.8rem;color:#354060}
+      .nt-panel-item{display:flex;align-items:flex-start;gap:.55rem;padding:.65rem .9rem;cursor:pointer;border-bottom:1px solid #182236;transition:background .1s;position:relative}
+      .nt-panel-item:hover{background:#0D1524}
       .nt-panel-item:last-child{border-bottom:none}
       .nt-unread{background:rgba(88,166,255,.03)}
       .nt-item-icon{flex-shrink:0;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center}
       .nt-item-body{flex:1;min-width:0}
-      .nt-item-title{font-size:.8rem;font-weight:600;color:#e6edf3;line-height:1.35;margin-bottom:.15rem}
-      .nt-item-body-text{font-size:.73rem;color:#8b949e;line-height:1.5;margin-bottom:.25rem}
+      .nt-item-title{font-size:.8rem;font-weight:600;color:#E4DDD2;line-height:1.35;margin-bottom:.15rem}
+      .nt-item-body-text{font-size:.73rem;color:#A8A098;line-height:1.5;margin-bottom:.25rem}
       .nt-item-meta{display:flex;align-items:center;gap:.4rem}
       .nt-item-cat{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-      .nt-item-ago{font-size:.65rem;color:#484f58}
-      .nt-item-dot{width:7px;height:7px;border-radius:50%;background:#3fb950;flex-shrink:0;margin-top:.35rem}
+      .nt-item-ago{font-size:.65rem;color:#354060}
+      .nt-item-dot{width:7px;height:7px;border-radius:50%;background:#00C4A0;flex-shrink:0;margin-top:.35rem}
     `;
     document.head.appendChild(s);
   }

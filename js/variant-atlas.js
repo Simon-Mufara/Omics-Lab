@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — African Genomics Variant Atlas (Prompt 45)
    ─ 200+ clinically significant variants prevalent in Africa
    ─ Searchable/filterable table · ACMG badges
@@ -97,7 +97,7 @@ OmicsLab.VariantAtlas = (function () {
     'VUS':                 { color:'#e3b341', bg:'rgba(227,179,65,.12)' },
     'Risk Allele':         { color:'#bc8cff', bg:'rgba(188,140,255,.12)' },
     'Likely Benign':       { color:'#58a6ff', bg:'rgba(88,166,255,.12)' },
-    'Benign':              { color:'#3fb950', bg:'rgba(63,185,80,.12)' },
+    'Benign':              { color:'#00C4A0', bg:'rgba(0,196,160,.12)' },
     'Likely Pathogenic':   { color:'#f97316', bg:'rgba(249,115,22,.12)' },
   };
 

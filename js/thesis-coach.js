@@ -169,7 +169,7 @@ OmicsLab.ThesisCoach = (function () {
     return `<div class="tc-chapter-grid">
       ${_project.chapters.map(ch => {
         const pct = ch.target ? Math.min(Math.round(((ch.words || 0) / ch.target) * 100), 100) : 0;
-        const col  = pct >= 80 ? '#3fb950' : pct >= 40 ? '#e3b341' : '#58a6ff';
+        const col  = pct >= 80 ? '#00C4A0' : pct >= 40 ? '#e3b341' : '#58a6ff';
         return `
           <div class="tc-chapter-card">
             <div class="tc-ch-title">${_esc(ch.title)}</div>

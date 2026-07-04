@@ -52,7 +52,7 @@ OmicsLab.GenomeBrowser = (function () {
       gene: { name:'CYP2D6', strand:'-', exons:[[42522500,42522700],[42523300,42523500],[42524000,42524300],[42524800,42525100],[42525600,42525800],[42526000,42526300]] },
       variants: [
         { pos:42523803, ref:'C', alt:'A', id:'rs1065852', type:'missense', label:'CYP2D6*10 c.100C>T', color:'#e3b341' },
-        { pos:42524244, ref:'G', alt:'A', id:'rs16947', type:'missense', label:'CYP2D6*2 c.2850C>T', color:'#3fb950' },
+        { pos:42524244, ref:'G', alt:'A', id:'rs16947', type:'missense', label:'CYP2D6*2 c.2850C>T', color:'#00C4A0' },
       ],
       depth_profile: 'cnv_dip',
       note: 'CYP2D6 metabolises ~25% of drugs including codeine, tamoxifen, and many psychotropics. African populations have unique CYP2D6 allele distributions affecting drug dosing.'
@@ -118,11 +118,11 @@ OmicsLab.GenomeBrowser = (function () {
     for (let i = 0; i <= ticks; i++) {
       const pos = locus.start + i * step;
       const x = toX(pos);
-      lines += `<line x1="${x}" y1="12" x2="${x}" y2="18" stroke="#30363d" stroke-width="1"/>
-        <text x="${x}" y="10" text-anchor="middle" font-size="8" fill="#484f58">${(pos/1000).toFixed(1)}k</text>`;
+      lines += `<line x1="${x}" y1="12" x2="${x}" y2="18" stroke="#243048" stroke-width="1"/>
+        <text x="${x}" y="10" text-anchor="middle" font-size="8" fill="#354060">${(pos/1000).toFixed(1)}k</text>`;
     }
     return `<svg width="100%" height="22" viewBox="0 0 ${W} 22">
-      <line x1="40" y1="16" x2="${W-40}" y2="16" stroke="#30363d" stroke-width="1"/>
+      <line x1="40" y1="16" x2="${W-40}" y2="16" stroke="#243048" stroke-width="1"/>
       ${lines}
     </svg>`;
   }
@@ -142,7 +142,7 @@ OmicsLab.GenomeBrowser = (function () {
     const points = vals.map((v, i) => `${(40 + i * xScale).toFixed(1)},${(H - 4 - (v / maxD) * (H - 8)).toFixed(1)}`).join(' ');
     return `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">
       <polyline points="${points}" fill="none" stroke="#58a6ff" stroke-width="1.2" opacity="0.7"/>
-      <text x="${W - 36}" y="12" font-size="8" fill="#484f58">max:${Math.round(maxD)}×</text>
+      <text x="${W - 36}" y="12" font-size="8" fill="#354060">max:${Math.round(maxD)}×</text>
     </svg>`;
   }
 
@@ -150,12 +150,12 @@ OmicsLab.GenomeBrowser = (function () {
     const H = 36, gene = locus.gene;
     const y = H / 2;
     const x1 = toX(locus.start + 200), x2 = toX(locus.end - 200);
-    let svg = `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#3fb950" stroke-width="2" opacity="0.5"/>`;
+    let svg = `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="#00C4A0" stroke-width="2" opacity="0.5"/>`;
     gene.exons.forEach(([es, ee]) => {
       const ex = toX(es), ew = Math.max(toX(ee) - toX(es), 4);
-      svg += `<rect x="${ex}" y="${y - 7}" width="${ew}" height="14" fill="#3fb950" rx="2"/>`;
+      svg += `<rect x="${ex}" y="${y - 7}" width="${ew}" height="14" fill="#00C4A0" rx="2"/>`;
     });
-    svg += `<text x="${(x1 + x2) / 2}" y="${H - 4}" text-anchor="middle" font-size="9" fill="#3fb950">${gene.name} (${gene.strand})</text>`;
+    svg += `<text x="${(x1 + x2) / 2}" y="${H - 4}" text-anchor="middle" font-size="9" fill="#00C4A0">${gene.name} (${gene.strand})</text>`;
     return `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${svg}</svg>`;
   }
 
@@ -179,7 +179,7 @@ OmicsLab.GenomeBrowser = (function () {
       <div class="gb-wrap">
         <div class="gb-header">
           <div class="gb-header-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
             Genome Browser
           </div>
           <div class="gb-header-sub">IGV-style locus viewer — African disease genes, variant tracks, simulated read depth</div>

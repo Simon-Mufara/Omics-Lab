@@ -141,38 +141,38 @@ OmicsLab.MetaAnalysis = (function () {
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" class="ma-forest-svg" style="width:100%;max-width:${W}px">`;
     /* Grid line at 0 */
-    svg += `<line x1="${zeroX}" y1="${margin.t - 10}" x2="${zeroX}" y2="${H - margin.b + 10}" stroke="#30363d" stroke-dasharray="4 3"/>`;
+    svg += `<line x1="${zeroX}" y1="${margin.t - 10}" x2="${zeroX}" y2="${H - margin.b + 10}" stroke="#243048" stroke-dasharray="4 3"/>`;
     /* X axis ticks */
     const ticks = 5;
     for (let i = 0; i <= ticks; i++) {
       const v = xmin + (xmax - xmin) * (i / ticks);
       const x = xScale(v);
-      svg += `<line x1="${x}" y1="${H - margin.b}" x2="${x}" y2="${H - margin.b + 4}" stroke="#8b949e" stroke-width="1"/>`;
-      svg += `<text x="${x}" y="${H - margin.b + 16}" text-anchor="middle" font-size="10" fill="#8b949e">${v.toFixed(2)}</text>`;
+      svg += `<line x1="${x}" y1="${H - margin.b}" x2="${x}" y2="${H - margin.b + 4}" stroke="#A8A098" stroke-width="1"/>`;
+      svg += `<text x="${x}" y="${H - margin.b + 16}" text-anchor="middle" font-size="10" fill="#A8A098">${v.toFixed(2)}</text>`;
     }
-    svg += `<text x="${W/2}" y="${H - 10}" text-anchor="middle" font-size="11" fill="#8b949e">Effect size (β)</text>`;
+    svg += `<text x="${W/2}" y="${H - 10}" text-anchor="middle" font-size="11" fill="#A8A098">Effect size (β)</text>`;
     /* Study rows */
     studies.forEach((s, i) => {
       const y = yRow(i);
       const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
       const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
       const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
-      svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#c9d1d9">${s.name}</text>`;
+      svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
       svg += `<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#58a6ff" stroke-width="1.5"/>`;
       svg += `<line x1="${x0}" y1="${y - 3}" x2="${x0}" y2="${y + 3}" stroke="#58a6ff"/>`;
       svg += `<line x1="${x1}" y1="${y - 3}" x2="${x1}" y2="${y + 3}" stroke="#58a6ff"/>`;
       svg += `<rect x="${xc - sqSz/2}" y="${y - sqSz/2}" width="${sqSz}" height="${sqSz}" fill="#58a6ff"/>`;
-      svg += `<text x="${xScale(xmax) + 5}" y="${y + 4}" font-size="10" fill="#8b949e">${s.beta.toFixed(2)} [${s.ci95lo.toFixed(2)}, ${s.ci95hi.toFixed(2)}]</text>`;
+      svg += `<text x="${xScale(xmax) + 5}" y="${y + 4}" font-size="10" fill="#A8A098">${s.beta.toFixed(2)} [${s.ci95lo.toFixed(2)}, ${s.ci95hi.toFixed(2)}]</text>`;
     });
     /* Pooled diamond */
     const pi = studies.length + 1;
     const y = yRow(pi);
     const dx = xScale(pooled.betaPool), dl = xScale(pooled.ci95lo), dr = xScale(pooled.ci95hi);
     const sep = yRow(pi) - yRow(pi - 1);
-    svg += `<line x1="${labelW}" y1="${y - sep / 2 + 5}" x2="${W - margin.r}" y2="${y - sep / 2 + 5}" stroke="#21262d"/>`;
-    svg += `<polygon points="${dl},${y} ${dx},${y - 10} ${dr},${y} ${dx},${y + 10}" fill="#3fb950" opacity=".85"/>`;
-    svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" font-weight="bold" fill="#3fb950">Pooled (${pooled.model})</text>`;
-    svg += `<text x="${xScale(xmax) + 5}" y="${y + 4}" font-size="10" fill="#3fb950">${pooled.betaPool.toFixed(2)} [${pooled.ci95lo.toFixed(2)}, ${pooled.ci95hi.toFixed(2)}]</text>`;
+    svg += `<line x1="${labelW}" y1="${y - sep / 2 + 5}" x2="${W - margin.r}" y2="${y - sep / 2 + 5}" stroke="#182236"/>`;
+    svg += `<polygon points="${dl},${y} ${dx},${y - 10} ${dr},${y} ${dx},${y + 10}" fill="#00C4A0" opacity=".85"/>`;
+    svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" font-weight="bold" fill="#00C4A0">Pooled (${pooled.model})</text>`;
+    svg += `<text x="${xScale(xmax) + 5}" y="${y + 4}" font-size="10" fill="#00C4A0">${pooled.betaPool.toFixed(2)} [${pooled.ci95lo.toFixed(2)}, ${pooled.ci95hi.toFixed(2)}]</text>`;
     svg += '</svg>';
 
     const wrap = document.getElementById('ma-result');
@@ -183,7 +183,7 @@ OmicsLab.MetaAnalysis = (function () {
     const el = document.getElementById('ma-stats');
     if (!el) return;
     const fmtP = p => p < 0.0001 ? '<0.0001' : p.toFixed(4);
-    const hetColor = s.I2 > 75 ? '#ff6b6b' : s.I2 > 50 ? '#e3b341' : '#3fb950';
+    const hetColor = s.I2 > 75 ? '#ff6b6b' : s.I2 > 50 ? '#e3b341' : '#00C4A0';
     el.innerHTML = `
       <div class="ma-stat-row"><span class="ma-stat-label">Pooled β</span><span class="ma-stat-val">${s.betaPool.toFixed(4)}</span></div>
       <div class="ma-stat-row"><span class="ma-stat-label">SE</span><span class="ma-stat-val">${s.sePool.toFixed(4)}</span></div>
@@ -244,7 +244,7 @@ OmicsLab.MetaAnalysis = (function () {
               </div>
             </div>
             <div id="ma-placeholder" class="ma-placeholder">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#30363d" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#243048" stroke-width="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
               <div>Load an example or add studies,<br>then click Run.</div>
             </div>
           </div>

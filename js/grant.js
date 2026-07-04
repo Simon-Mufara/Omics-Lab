@@ -275,7 +275,7 @@ A proportion of any intellectual property generated from this work will be held 
     if (!el || !el.textContent) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
       const btn = document.getElementById('gr-copy-btn');
-      if (btn) { const o = btn.textContent; btn.textContent = 'Copied!'; btn.style.color = '#3fb950'; setTimeout(() => { btn.textContent = o; btn.style.color = ''; }, 2000); }
+      if (btn) { const o = btn.textContent; btn.textContent = 'Copied!'; btn.style.color = '#00C4A0'; setTimeout(() => { btn.textContent = o; btn.style.color = ''; }, 2000); }
     });
   }
 
@@ -582,7 +582,7 @@ A proportion of any intellectual property generated from this work will be held 
       return (!q || txt.includes(q)) && (!typeFilter || g.type === typeFilter);
     });
     if (!matches.length) { list.innerHTML = '<div class="grant-db-empty">No grants match your search.</div>'; return; }
-    const typeColor = { Research:'#58a6ff', 'Capacity Building':'#3fb950', 'Early Career':'#bc8cff', Infrastructure:'#e3b341' };
+    const typeColor = { Research:'#58a6ff', 'Capacity Building':'#00C4A0', 'Early Career':'#bc8cff', Infrastructure:'#e3b341' };
     list.innerHTML = matches.map(g => `
       <div class="grant-db-card">
         <div class="grant-db-card-hdr">
@@ -590,7 +590,7 @@ A proportion of any intellectual property generated from this work will be held 
             <div class="grant-db-funder">${g.funder}</div>
             <div class="grant-db-name">${g.name}</div>
           </div>
-          <span class="grant-db-type-badge" style="color:${typeColor[g.type]||'#8b949e'};border-color:${typeColor[g.type]||'#30363d'}">${g.type}</span>
+          <span class="grant-db-type-badge" style="color:${typeColor[g.type]||'#A8A098'};border-color:${typeColor[g.type]||'#243048'}">${g.type}</span>
         </div>
         <div class="grant-db-meta">
           <span class="grant-db-amount">${g.amount}</span>

@@ -199,7 +199,7 @@ OmicsLab.CaseFiles = (function () {
       title: 'The Missing Heritability',
       subtitle: 'Type 2 diabetes GWAS, AWI-Gen cohort',
       specialty: 'Population Genomics',
-      color: '#3fb950',
+      color: '#00C4A0',
       location: 'AWI-Gen Collaborative Centre, South Africa',
       difficulty: 'Advanced',
       duration: '18 min',
@@ -470,7 +470,7 @@ OmicsLab.CaseFiles = (function () {
       feedbackEl.className = `cf-feedback cf-feedback-${opt.correct ? 'correct' : 'incorrect'}`;
       feedbackEl.innerHTML = `
         <div class="cf-feedback-header">
-          ${opt.correct ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Correct' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f85149" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Incorrect'}
+          ${opt.correct ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Correct' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f85149" stroke-width="3"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg> Incorrect'}
           ${opt.xp > 0 && addScore ? `<span class="cf-xp-earn">+${opt.xp} XP</span>` : ''}
         </div>
         <p class="cf-feedback-text">${opt.explanation}</p>`;
@@ -495,7 +495,7 @@ OmicsLab.CaseFiles = (function () {
     const max = _totalXP(c);
     const pct = Math.round(earned / max * 100);
     const grade = pct >= 90 ? 'Excellent' : pct >= 70 ? 'Good' : pct >= 50 ? 'Satisfactory' : 'Needs Review';
-    const gradeColor = pct >= 90 ? '#3fb950' : pct >= 70 ? '#58a6ff' : pct >= 50 ? '#e3b341' : '#f85149';
+    const gradeColor = pct >= 90 ? '#00C4A0' : pct >= 70 ? '#58a6ff' : pct >= 50 ? '#e3b341' : '#f85149';
 
     document.getElementById('cf-case-view').innerHTML = `
       <div class="cf-complete">

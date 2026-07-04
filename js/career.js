@@ -49,7 +49,7 @@ OmicsLab.Career = (function () {
       id: 'wet_lab_scientist',
       title: 'Wet Lab Genomics Scientist',
       icon: 'flask',
-      color: '#3fb950',
+      color: '#00C4A0',
       tagline: 'Extract DNA/RNA, build libraries, operate sequencers, interpret QC',
       demand: 'High',
       salaryRange: 'USD 15k–60k (Africa-wide)',

@@ -18,13 +18,13 @@
   gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .gl-header-sub {
   margin-top: 0.25rem;
   font-size: 0.8rem;
-  color: #8b949e;
+  color: #A8A098;
 }
 
 /* ── Search ── */
@@ -37,10 +37,10 @@
 .gl-search-input {
   flex: 1;
   padding: 0.55rem 0.85rem;
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: #111B2E;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #e6edf3;
+  color: #E4DDD2;
   font-size: 0.85rem;
   font-family: inherit;
   outline: none;
@@ -52,12 +52,12 @@
 }
 
 .gl-search-input::placeholder {
-  color: #484f58;
+  color: #354060;
 }
 
 .gl-search-btn {
   padding: 0.55rem 1.1rem;
-  background: #238636;
+  background: #007A6A;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -69,7 +69,7 @@
 }
 
 .gl-search-btn:hover {
-  background: #2ea043;
+  background: #007A6A;
 }
 
 /* ── Africa gene chips ── */
@@ -83,7 +83,7 @@
 
 .gl-africa-label {
   font-size: 0.75rem;
-  color: #484f58;
+  color: #354060;
   margin-right: 0.25rem;
 }
 
@@ -92,7 +92,7 @@
   background: rgba(63, 185, 80, 0.08);
   border: 1px solid rgba(63, 185, 80, 0.25);
   border-radius: 20px;
-  color: #3fb950;
+  color: #00C4A0;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
@@ -102,13 +102,13 @@
 
 .gl-gene-chip:hover {
   background: rgba(63, 185, 80, 0.18);
-  border-color: #3fb950;
+  border-color: #00C4A0;
 }
 
 /* ── Gene card ── */
 .gl-gene-card {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: #111B2E;
+  border: 1px solid #243048;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -118,19 +118,19 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 1.25rem 1.25rem 1rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 
 .gl-gene-symbol {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #e6edf3;
+  color: #E4DDD2;
   letter-spacing: -0.02em;
 }
 
 .gl-gene-name {
   font-size: 0.82rem;
-  color: #8b949e;
+  color: #A8A098;
   margin-top: 0.2rem;
   max-width: 560px;
 }
@@ -153,7 +153,7 @@
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 
 .gl-coord-item {
@@ -164,14 +164,14 @@
 
 .gl-coord-label {
   font-size: 0.68rem;
-  color: #484f58;
+  color: #354060;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .gl-coord-value {
   font-size: 0.82rem;
-  color: #c9d1d9;
+  color: #A8A098;
   font-weight: 600;
 }
 
@@ -186,16 +186,16 @@
   flex-wrap: wrap;
   gap: 0.4rem;
   padding: 0.75rem 1.25rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 
 .gl-ext-link {
   padding: 0.28rem 0.65rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 5px;
   font-size: 0.72rem;
-  color: #8b949e;
+  color: #A8A098;
   text-decoration: none;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
   cursor: pointer;
@@ -203,7 +203,7 @@
 }
 
 .gl-ext-link:hover {
-  color: #e6edf3;
+  color: #E4DDD2;
   border-color: #58a6ff;
   background: rgba(88, 166, 255, 0.07);
 }
@@ -217,7 +217,7 @@
 /* ── Sections ── */
 .gl-section {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 
 .gl-section:last-child {
@@ -227,7 +227,7 @@
 .gl-section-title {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.75rem;
@@ -250,20 +250,20 @@
 .gl-mono {
   font-family: 'Cascadia Code', 'Fira Mono', monospace;
   font-size: 0.75rem;
-  color: #c9d1d9;
+  color: #A8A098;
 }
 
 .gl-biotype-tag {
   padding: 0.1rem 0.45rem;
-  background: #21262d;
+  background: #182236;
   border-radius: 4px;
   font-size: 0.68rem;
-  color: #8b949e;
+  color: #A8A098;
 }
 
 .gl-tx-len {
   font-size: 0.72rem;
-  color: #484f58;
+  color: #354060;
   margin-left: auto;
 }
 
@@ -282,13 +282,13 @@
 }
 
 .gl-phen-name {
-  color: #c9d1d9;
+  color: #A8A098;
   flex: 1;
 }
 
 .gl-phen-source {
   font-size: 0.68rem;
-  color: #484f58;
+  color: #354060;
   flex-shrink: 0;
 }
 
@@ -306,18 +306,18 @@
 .gl-variant-table th {
   text-align: left;
   padding: 0.4rem 0.6rem;
-  color: #484f58;
+  color: #354060;
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
   white-space: nowrap;
 }
 
 .gl-variant-table td {
   padding: 0.35rem 0.6rem;
-  color: #c9d1d9;
-  border-bottom: 1px solid #161b22;
+  color: #A8A098;
+  border-bottom: 1px solid #111B2E;
 }
 
 .gl-snp-link {
@@ -339,7 +339,7 @@
   gap: 0.75rem;
   padding: 3rem 1rem;
   font-size: 0.85rem;
-  color: #484f58;
+  color: #354060;
 }
 
 .gl-error {
@@ -350,8 +350,8 @@
 .gl-spinner {
   width: 22px;
   height: 22px;
-  border: 2px solid #30363d;
-  border-top-color: #3fb950;
+  border: 2px solid #243048;
+  border-top-color: #00C4A0;
   border-radius: 50%;
   animation: gl-spin 0.7s linear infinite;
   flex-shrink: 0;
@@ -384,23 +384,23 @@
 
 /* DisGeNET panel */
 .gl-dgn-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
-.gl-dgn-table th { text-align: left; padding: .3rem .5rem; color: #8b949e; font-weight: 600; font-size: .68rem; text-transform: uppercase; border-bottom: 1px solid #21262d; }
-.gl-dgn-table td { padding: .35rem .5rem; border-bottom: 1px solid #161b22; color: #c9d1d9; vertical-align: middle; }
+.gl-dgn-table th { text-align: left; padding: .3rem .5rem; color: #A8A098; font-weight: 600; font-size: .68rem; text-transform: uppercase; border-bottom: 1px solid #182236; }
+.gl-dgn-table td { padding: .35rem .5rem; border-bottom: 1px solid #111B2E; color: #A8A098; vertical-align: middle; }
 .gl-dgn-afr-row td { background: rgba(249,115,22,.04); }
-.gl-dgn-dis-link { color: #c9d1d9; text-decoration: none; }
+.gl-dgn-dis-link { color: #A8A098; text-decoration: none; }
 .gl-dgn-dis-link:hover { color: #58a6ff; text-decoration: underline; }
 .gl-dgn-score-row { display: flex; align-items: center; gap: .4rem; }
-.gl-dgn-score-val { font-family: monospace; font-size: .75rem; color: #e6edf3; min-width: 3rem; }
-.gl-dgn-score-bar { flex: 1; height: 5px; background: #21262d; border-radius: 3px; overflow: hidden; }
-.gl-dgn-score-fill { height: 100%; background: #3fb950; border-radius: 3px; }
-.gl-dgn-src { font-size: .68rem; color: #8b949e; }
+.gl-dgn-score-val { font-family: monospace; font-size: .75rem; color: #E4DDD2; min-width: 3rem; }
+.gl-dgn-score-bar { flex: 1; height: 5px; background: #182236; border-radius: 3px; overflow: hidden; }
+.gl-dgn-score-fill { height: 100%; background: #00C4A0; border-radius: 3px; }
+.gl-dgn-src { font-size: .68rem; color: #A8A098; }
 .gl-dgn-footer { display: flex; align-items: center; gap: .75rem; margin-top: .6rem; flex-wrap: wrap; }
-.gl-dgn-curated-note { font-size: .68rem; color: #484f58; }
+.gl-dgn-curated-note { font-size: .68rem; color: #354060; }
 .gl-dgn-source-badge { display: inline-block; font-size: .6rem; font-weight: 700; padding: .08rem .38rem; background: rgba(88,166,255,.1); color: #58a6ff; border-radius: 10px; margin-left: .4rem; vertical-align: middle; }
 .gl-dgn-nokey { background: rgba(88,166,255,.04); border: 1px solid rgba(88,166,255,.12); border-radius: 8px; padding: .8rem .9rem; margin-top: .6rem; }
-.gl-dgn-nokey-title { font-size: .82rem; font-weight: 700; color: #e6edf3; margin-bottom: .35rem; }
-.gl-dgn-nokey-msg { font-size: .78rem; color: #8b949e; line-height: 1.7; margin-bottom: .4rem; }
+.gl-dgn-nokey-title { font-size: .82rem; font-weight: 700; color: #E4DDD2; margin-bottom: .35rem; }
+.gl-dgn-nokey-msg { font-size: .78rem; color: #A8A098; line-height: 1.7; margin-bottom: .4rem; }
 .gl-dgn-search-link { font-size: .78rem; color: #58a6ff; text-decoration: none; }
 .gl-dgn-search-link:hover { text-decoration: underline; }
-.gl-dgn-empty { font-size: .78rem; color: #8b949e; padding: .4rem; }
+.gl-dgn-empty { font-size: .78rem; color: #A8A098; padding: .4rem; }
 .gl-link-btn { background: none; border: none; color: #58a6ff; cursor: pointer; font-size: .78rem; padding: 0; text-decoration: underline; }

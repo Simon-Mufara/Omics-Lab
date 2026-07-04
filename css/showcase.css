@@ -8,8 +8,8 @@
   gap: 0;
   width: 100%;
   min-height: 360px;
-  background: #0d1117;
-  border: 1px solid rgba(48,54,61,0.8);
+  background: #0D1524;
+  border: 1px solid rgba(36,48,72,0.8);
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 2.5rem;
@@ -21,8 +21,8 @@
   flex-direction: column;
   justify-content: center;
   padding: 2.5rem 2rem 2.5rem 2.5rem;
-  background: linear-gradient(135deg, rgba(22,27,34,0.95) 0%, rgba(13,17,23,0.98) 100%);
-  border-right: 1px solid rgba(48,54,61,0.7);
+  background: linear-gradient(135deg, rgba(17,27,46,0.95) 0%, rgba(13,21,36,0.98) 100%);
+  border-right: 1px solid rgba(36,48,72,0.7);
 }
 
 .sc-tag {
@@ -41,7 +41,7 @@
 .sc-title {
   font-size: clamp(1.15rem, 2vw, 1.55rem);
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
   line-height: 1.3;
   margin-bottom: 0.85rem;
   min-height: 2.6em;
@@ -50,7 +50,7 @@
 
 .sc-sub {
   font-size: 0.84rem;
-  color: #7d8590;
+  color: #6E6860;
   line-height: 1.7;
   margin-bottom: 1.5rem;
   min-height: 3.4em;
@@ -84,7 +84,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(48,54,61,0.9);
+  background: rgba(36,48,72,0.9);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -97,7 +97,7 @@
 .sc-prog-wrap {
   width: 100%;
   height: 2px;
-  background: rgba(48,54,61,0.8);
+  background: rgba(36,48,72,0.8);
   border-radius: 2px;
   overflow: hidden;
 }
@@ -112,7 +112,7 @@
 /* ── Right: canvas ── */
 .sc-right {
   position: relative;
-  background: #0d1117;
+  background: #0D1524;
   min-height: 300px;
 }
 
@@ -132,7 +132,7 @@
   }
   .sc-left {
     border-right: none;
-    border-bottom: 1px solid rgba(48,54,61,0.7);
+    border-bottom: 1px solid rgba(36,48,72,0.7);
     padding: 1.75rem 1.25rem;
   }
   .sc-right {

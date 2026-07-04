@@ -13,7 +13,7 @@ OmicsLab.Badges = (function () {
     /* Curriculum */
     { id: 'wetlab-certified',   icon: 'microscope',   title: 'Wet-Lab Certified',
       desc: 'Completed the Wet-Lab Scientist learning track.',
-      color: '#3fb950', category: 'Curriculum', earnedBy: 'Complete all 5 wet-lab lessons' },
+      color: '#00C4A0', category: 'Curriculum', earnedBy: 'Complete all 5 wet-lab lessons' },
     { id: 'bioinfo-certified',  icon: 'cpu',          title: 'Bioinformatics Certified',
       desc: 'Completed the Bioinformatician learning track.',
       color: '#58a6ff', category: 'Curriculum', earnedBy: 'Complete all 5 bioinformatics lessons' },
@@ -27,7 +27,7 @@ OmicsLab.Badges = (function () {
     /* Lab simulation */
     { id: 'first-workflow',     icon: 'flask',        title: 'First Experiment',
       desc: 'Completed your first omics workflow simulation.',
-      color: '#3fb950', category: 'Lab', earnedBy: 'Run any workflow to completion' },
+      color: '#00C4A0', category: 'Lab', earnedBy: 'Run any workflow to completion' },
     { id: 'pipeline-pro',       icon: 'dna',          title: 'Pipeline Pro',
       desc: 'Followed the complete bioinformatics pipeline guide.',
       color: '#58a6ff', category: 'Lab', earnedBy: 'View the Pipeline Guide section' },
@@ -44,7 +44,7 @@ OmicsLab.Badges = (function () {
       color: '#58a6ff', category: 'Research', earnedBy: 'Submit to Repro Hub with FAIR ≥ 80' },
     { id: 'peer-validator',     icon: 'check-circle', title: 'Peer Validator',
       desc: 'Validated another researcher\'s submission in the Reproducibility Hub.',
-      color: '#3fb950', category: 'Research', earnedBy: 'Validate a community submission' },
+      color: '#00C4A0', category: 'Research', earnedBy: 'Validate a community submission' },
     { id: 'repro-score-90',     icon: 'award',        title: 'Reproducibility Star',
       desc: 'Achieved a reproducibility score of 90 or above.',
       color: '#f7c948', category: 'Research', earnedBy: 'Submit with Reproducibility score ≥ 90' },
@@ -55,7 +55,7 @@ OmicsLab.Badges = (function () {
       color: '#d2a8ff', category: 'Knowledge', earnedBy: 'Open 10 disease profiles' },
     { id: 'africa-explorer',    icon: 'map-pin',      title: 'Africa Explorer',
       desc: 'Visited all genomics laboratory locations on the Africa Map.',
-      color: '#3fb950', category: 'Knowledge', earnedBy: 'Click all centres on the Africa Map' },
+      color: '#00C4A0', category: 'Knowledge', earnedBy: 'Click all centres on the Africa Map' },
     { id: 'quiz-ace',           icon: 'target',       title: 'Quiz Ace',
       desc: 'Scored 80% or above in a workflow quiz.',
       color: '#58a6ff', category: 'Knowledge', earnedBy: 'Score ≥ 80% in the quiz' },
@@ -192,9 +192,9 @@ OmicsLab.Badges = (function () {
     win.document.write(`<!DOCTYPE html><html><head><title>OmicsLab Certificate</title>
       <style>
         body { margin:0; background:#fff; font-family: Georgia, serif; }
-        .cert-paper { max-width:700px; margin:2rem auto; padding:3rem; border:3px solid #3fb950;
+        .cert-paper { max-width:700px; margin:2rem auto; padding:3rem; border:3px solid #00C4A0;
           border-radius:12px; text-align:center; }
-        .cert-logo { font-size:1.8rem; font-weight:900; color:#3fb950; margin-bottom:0.3rem; }
+        .cert-logo { font-size:1.8rem; font-weight:900; color:#00C4A0; margin-bottom:0.3rem; }
         .cert-issuer { font-size:0.85rem; color:#666; margin-bottom:1.5rem; }
         .cert-divider { border-top:1px solid #ccc; margin:1.2rem 0; }
         .cert-presents { color:#888; font-size:0.9rem; margin-bottom:0.5rem; }

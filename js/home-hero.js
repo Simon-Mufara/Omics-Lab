@@ -11,7 +11,7 @@ OmicsLab.HomeHero = (function () {
 
   /* ── Nucleotide palette (A T G C) ── */
   const BASES = [
-    { label:'A', full:'Adenine',  c:'#3fb950', r:[63,185,80]  },
+    { label:'A', full:'Adenine',  c:'#00C4A0', r:[63,185,80]  },
     { label:'T', full:'Thymine',  c:'#58a6ff', r:[88,166,255] },
     { label:'G', full:'Guanine',  c:'#bc8cff', r:[188,140,255]},
     { label:'C', full:'Cytosine', c:'#f97316', r:[249,115,22] },
@@ -204,9 +204,9 @@ OmicsLab.HomeHero = (function () {
       <div class="hv-d-node">
         <div class="hv-d-icon hv-d-icon-dna">
           <svg viewBox="0 0 64 72" fill="none" width="52" height="58">
-            <path d="M32 4 C44 18 44 36 32 50 C20 36 20 18 32 4Z" stroke="#3fb950" stroke-width="1.5" fill="rgba(63,185,80,0.06)"/>
+            <path d="M32 4 C44 18 44 36 32 50 C20 36 20 18 32 4Z" stroke="#00C4A0" stroke-width="1.5" fill="rgba(0,196,160,0.06)"/>
             <path d="M32 4 C20 18 20 36 32 50 C44 36 44 18 32 4Z" stroke="#58a6ff" stroke-width="1.5" fill="rgba(88,166,255,0.06)"/>
-            <line x1="17" y1="20" x2="47" y2="20" stroke="#3fb950"  stroke-width="1.2" opacity="0.45"/>
+            <line x1="17" y1="20" x2="47" y2="20" stroke="#00C4A0"  stroke-width="1.2" opacity="0.45"/>
             <line x1="13" y1="30" x2="51" y2="30" stroke="#58a6ff"  stroke-width="1.2" opacity="0.45"/>
             <line x1="13" y1="40" x2="51" y2="40" stroke="#bc8cff" stroke-width="1.2" opacity="0.45"/>
             <line x1="17" y1="50" x2="47" y2="50" stroke="#f97316"  stroke-width="1.2" opacity="0.45"/>
@@ -223,8 +223,8 @@ OmicsLab.HomeHero = (function () {
           <div class="hv-d-particle hv-dp-b"></div>
           <div class="hv-d-particle hv-dp-c"></div>
           <svg viewBox="0 0 100 14" class="hv-d-arr-svg" preserveAspectRatio="none">
-            <line x1="2" y1="7" x2="88" y2="7" stroke="#3fb950" stroke-width="1.8" stroke-dasharray="5 3"/>
-            <polygon points="88,3 98,7 88,11" fill="#3fb950"/>
+            <line x1="2" y1="7" x2="88" y2="7" stroke="#00C4A0" stroke-width="1.8" stroke-dasharray="5 3"/>
+            <polygon points="88,3 98,7 88,11" fill="#00C4A0"/>
           </svg>
         </div>
         <span class="hv-d-arr-label">Transcription</span>
@@ -234,12 +234,12 @@ OmicsLab.HomeHero = (function () {
       <div class="hv-d-node">
         <div class="hv-d-icon hv-d-icon-mrna">
           <svg viewBox="0 0 72 56" fill="none" width="58" height="44">
-            <path d="M4 28 Q14 12 24 28 Q34 44 44 28 Q54 12 64 28" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <circle cx="4"  cy="28" r="4" fill="#3fb950"  opacity="0.8"/>
+            <path d="M4 28 Q14 12 24 28 Q34 44 44 28 Q54 12 64 28" stroke="#00C4A0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="4"  cy="28" r="4" fill="#00C4A0"  opacity="0.8"/>
             <circle cx="14" cy="14" r="3.5" fill="#58a6ff"  opacity="0.8"/>
             <circle cx="24" cy="28" r="4" fill="#bc8cff" opacity="0.8"/>
             <circle cx="34" cy="42" r="3.5" fill="#f97316"  opacity="0.8"/>
-            <circle cx="44" cy="28" r="4" fill="#3fb950"  opacity="0.8"/>
+            <circle cx="44" cy="28" r="4" fill="#00C4A0"  opacity="0.8"/>
             <circle cx="54" cy="14" r="3.5" fill="#58a6ff"  opacity="0.8"/>
             <circle cx="64" cy="28" r="4" fill="#bc8cff" opacity="0.8"/>
           </svg>
@@ -296,8 +296,8 @@ OmicsLab.HomeHero = (function () {
             <path d="M16 38 Q22 18 30 30" stroke="#e3b341" stroke-width="1.5" stroke-linecap="round" fill="none"/>
             <circle cx="30" cy="30" r="6"  fill="rgba(188,140,255,0.2)" stroke="#bc8cff" stroke-width="1.5"/>
             <path d="M36 30 Q42 46 50 32" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-            <circle cx="50" cy="30" r="6"  fill="rgba(63,185,80,0.2)" stroke="#3fb950" stroke-width="1.5"/>
-            <path d="M56 30 Q62 18 66 26" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <circle cx="50" cy="30" r="6"  fill="rgba(0,196,160,0.2)" stroke="#00C4A0" stroke-width="1.5"/>
+            <path d="M56 30 Q62 18 66 26" stroke="#00C4A0" stroke-width="1.5" stroke-linecap="round" fill="none"/>
             <circle cx="66" cy="24" r="5"  fill="rgba(88,166,255,0.2)" stroke="#58a6ff" stroke-width="1.5"/>
           </svg>
         </div>
@@ -326,14 +326,14 @@ OmicsLab.HomeHero = (function () {
   /* ── Platform categories grid ── */
   function _catsHtml() {
     const CATS = [
-      { name:'Lab Simulations',          n:14, c:'#3fb950', p:'lab',            ic:'flask',        d:'14 wet-lab protocols · live QC · error cascade' },
+      { name:'Lab Simulations',          n:14, c:'#00C4A0', p:'lab',            ic:'flask',        d:'14 wet-lab protocols · live QC · error cascade' },
       { name:'Genomics & Sequencing',    n:12, c:'#58a6ff', p:'analysis',       ic:'layers',       d:'FASTQ QC · alignment · variant calling · assembly' },
       { name:'Variant & Clinical',       n:7,  c:'#bc8cff', p:'variantinterp',  ic:'dna',          d:'ACMG classification · GWAS · pharmacogenomics' },
       { name:'Expression & Proteomics',  n:6,  c:'#f85149', p:'heatmap',        ic:'activity',     d:'Heatmaps · RNA atlas · single-cell · mass-spec' },
       { name:'Bioinformatics Pipelines', n:8,  c:'#e3b341', p:'pipeline-visual',ic:'git-branch',   d:'Pipeline builder · terminal · script generator' },
       { name:'African Genomics',         n:10, c:'#f97316', p:'africa',         ic:'globe',        d:'Africa Hub · H3Africa · population structure' },
       { name:'Research & Writing',       n:8,  c:'#58a6ff', p:'grant',          ic:'file-text',    d:'Lab notebook · grant writer · thesis coach' },
-      { name:'Training & Community',     n:10, c:'#3fb950', p:'certification',  ic:'award',        d:'Certification · quiz battle · case files · social' },
+      { name:'Training & Community',     n:10, c:'#00C4A0', p:'certification',  ic:'award',        d:'Certification · quiz battle · case files · social' },
     ];
 
     return `
@@ -387,7 +387,7 @@ OmicsLab.HomeHero = (function () {
         </p>
         <ul class="hv-feat-list">
           <li class="hv-feat-item">
-            <span class="hv-feat-dot" style="background:#3fb950"></span>
+            <span class="hv-feat-dot" style="background:#00C4A0"></span>
             Real African disease datasets (TB, malaria, sickle cell, COVID-19)
           </li>
           <li class="hv-feat-item">

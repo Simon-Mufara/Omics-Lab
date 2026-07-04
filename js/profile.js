@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Profile & First-Visit Setup
    Stores profile in localStorage as 'omicslab_profile'
    Time spent in 'omicslab_time_spent' (minutes)
@@ -83,12 +83,12 @@ OmicsLab.Profile = (function () {
 
   const ROLE_RECS = {
     Student: [
-      { page:'lab',      icon:'flask',      color:'rgba(63,185,80,0.12)',   name:'WGS Simulation',        desc:'Build wet-lab fundamentals step by step' },
+      { page:'lab',      icon:'flask',      color:'rgba(0,196,160,0.12)',   name:'WGS Simulation',        desc:'Build wet-lab fundamentals step by step' },
       { page:'learn',    icon:'virus',      color:'rgba(88,166,255,0.12)',  name:'Disease Explorer',       desc:'Study 40+ Africa-relevant diseases' },
       { page:'learn',    icon:'award',      color:'rgba(188,140,255,0.12)', name:'Curriculum Tracks',      desc:'Follow a structured path, earn certificates' },
     ],
     Researcher: [
-      { page:'lab',      icon:'dna',        color:'rgba(63,185,80,0.12)',   name:'Advanced WGS / GATK4',   desc:'Full variant calling pipeline' },
+      { page:'lab',      icon:'dna',        color:'rgba(0,196,160,0.12)',   name:'Advanced WGS / GATK4',   desc:'Full variant calling pipeline' },
       { page:'research', icon:'search',     color:'rgba(188,140,255,0.12)', name:'Research Mode',          desc:'Design reproducible FAIR studies' },
       { page:'terminal', icon:'cpu',        color:'rgba(88,166,255,0.12)',  name:'Pipeline Terminal',      desc:'Run Snakemake & Nextflow workflows' },
     ],
@@ -100,12 +100,12 @@ OmicsLab.Profile = (function () {
     Clinician: [
       { page:'learn',    icon:'heart-pulse',color:'rgba(255,107,107,0.12)', name:'Clinical Disease Profiles', desc:'Genomics of 22 diseases' },
       { page:'africa',   icon:'globe',      color:'rgba(249,115,22,0.12)',  name:'Africa Hub',             desc:'One Health · H3Africa governance' },
-      { page:'learn',    icon:'cpu',        color:'rgba(63,185,80,0.12)',   name:'Clinical Tools',         desc:'Bioinformatics for the clinic' },
+      { page:'learn',    icon:'cpu',        color:'rgba(0,196,160,0.12)',   name:'Clinical Tools',         desc:'Bioinformatics for the clinic' },
     ],
   };
 
   const TRACKS = [
-    { id:'wgs',      name:'WGS Foundation',     icon:'dna',        color:'#3fb950', bg:'rgba(63,185,80,0.1)',   desc:'DNA extraction → GATK4 variant annotation',  steps:8,  page:'lab' },
+    { id:'wgs',      name:'WGS Foundation',     icon:'dna',        color:'#00C4A0', bg:'rgba(0,196,160,0.1)',   desc:'DNA extraction → GATK4 variant annotation',  steps:8,  page:'lab' },
     { id:'rnaseq',   name:'RNA-seq Essentials',  icon:'microscope', color:'#58a6ff', bg:'rgba(88,166,255,0.1)', desc:'FastQC → STAR → DESeq2 differential expression', steps:6, page:'lab' },
     { id:'africa',   name:'Africa Omics',        icon:'globe',      color:'#f97316', bg:'rgba(249,115,22,0.1)', desc:'H3Africa, AWI-Gen, population genomics',     steps:5,  page:'africa' },
     { id:'meta',     name:'Metagenomics Intro',  icon:'virus',      color:'#bc8cff', bg:'rgba(188,140,255,0.1)',desc:'Kraken2 · Bracken · community profiling',      steps:5,  page:'lab' },

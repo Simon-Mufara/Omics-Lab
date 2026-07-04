@@ -144,15 +144,15 @@ OmicsLab.SRABrowser = (function () {
         <div class="sra-title">${_esc(d.title)}</div>
         <div class="sra-meta-row">
           <span class="sra-meta-item">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2"><ellipse cx="12" cy="12" rx="10" ry="4"/><path d="M2 12c0 4.418 4.477 8 10 8s10-3.582 10-8"/><path d="M2 12c0-4.418 4.477-8 10-8s10 3.582 10 8"/></ellipse></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="2"><ellipse cx="12" cy="12" rx="10" ry="4"/><path d="M2 12c0 4.418 4.477 8 10 8s10-3.582 10-8"/><path d="M2 12c0-4.418 4.477-8 10-8s10 3.582 10 8"/></ellipse></svg>
             ${_esc(d.org)}
           </span>
           <span class="sra-meta-item">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/></svg>
             ${_esc(d.platform)}
           </span>
-          <span class="sra-meta-item"><strong style="color:#e6edf3">${d.samples.toLocaleString()}</strong> samples</span>
-          <span class="sra-meta-item"><strong style="color:#e6edf3">${typeof d.bases === 'string' ? d.bases : _fmtBases(d.bases)}</strong></span>
+          <span class="sra-meta-item"><strong style="color:#E4DDD2">${d.samples.toLocaleString()}</strong> samples</span>
+          <span class="sra-meta-item"><strong style="color:#E4DDD2">${typeof d.bases === 'string' ? d.bases : _fmtBases(d.bases)}</strong></span>
         </div>
         <div class="sra-countries">${d.countries.map(c => `<span class="sra-country-chip">${_esc(c)}</span>`).join('')}</div>
         <div class="sra-disease">${_esc(d.disease)}</div>
@@ -176,7 +176,7 @@ OmicsLab.SRABrowser = (function () {
         <div class="sra-meta-row">
           <span class="sra-meta-item">${_esc(study.org || 'Unknown organism')}</span>
           <span class="sra-meta-item">${_esc(study.platform || 'Unknown platform')}</span>
-          ${study.runs ? `<span class="sra-meta-item"><strong style="color:#e6edf3">${study.runs}</strong> runs</span>` : ''}
+          ${study.runs ? `<span class="sra-meta-item"><strong style="color:#E4DDD2">${study.runs}</strong> runs</span>` : ''}
         </div>
         <div class="sra-card-actions">
           <a class="sra-action-btn sra-action-primary" href="https://www.ncbi.nlm.nih.gov/sra/${_esc(study.acc)}" target="_blank" rel="noopener">View on NCBI</a>
@@ -308,7 +308,7 @@ aws s3 sync s3://sra-pub-run-odp/sra/${acc}/ ./ --no-sign-request</pre>
         <!-- Search bar -->
         <div class="sra-search-row">
           <div class="sra-search-wrap">
-            <svg class="sra-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg class="sra-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input class="sra-search-input" id="sra-search-input" placeholder="Search SRA (e.g. Africa malaria WGS, SARS-CoV-2 Nigeria…)"
               oninput="OmicsLab.SRABrowser._debounceSearch(this.value)" autocomplete="off">
           </div>

@@ -35,7 +35,7 @@ OmicsLab.StudyPack = (function () {
   const MODULES = [
 
     /* ── SIMULATION ── */
-    { id:'lab-sim',    cat:'simulation', page:'lab',         color:'#3fb950', time:'3h',
+    { id:'lab-sim',    cat:'simulation', page:'lab',         color:'#00C4A0', time:'3h',
       name:'Lab Simulations',
       why:'Builds protocol intuition without consuming reagents — the fastest path from theory to technique.',
       objectives:[
@@ -102,7 +102,7 @@ OmicsLab.StudyPack = (function () {
         ['Corrective Action','Protocol or analysis change that resolves the root cause.'],
       ],
     },
-    { id:'virtual-lab',cat:'simulation', page:'virtual-lab', color:'#3fb950', time:'1h',
+    { id:'virtual-lab',cat:'simulation', page:'virtual-lab', color:'#00C4A0', time:'1h',
       name:'Virtual Lab Tour',
       why:'Instrument familiarity reduces errors; knowing what a machine looks like makes manuals make sense.',
       objectives:[
@@ -121,7 +121,7 @@ OmicsLab.StudyPack = (function () {
     },
 
     /* ── GENOMICS ── */
-    { id:'fastqc',     cat:'genomics',   page:'fastqc',      color:'#3fb950', time:'1.5h',
+    { id:'fastqc',     cat:'genomics',   page:'fastqc',      color:'#00C4A0', time:'1.5h',
       name:'Read QC (FastQC)',
       why:'Raw data quality sets the ceiling for your analysis — poor reads cannot be rescued downstream.',
       objectives:[
@@ -138,7 +138,7 @@ OmicsLab.StudyPack = (function () {
         ['N Content','Bases the sequencer could not call; high N% indicates low-quality cycles.'],
       ],
     },
-    { id:'seq-align',  cat:'genomics',   page:'seq-align',   color:'#3fb950', time:'2h',
+    { id:'seq-align',  cat:'genomics',   page:'seq-align',   color:'#00C4A0', time:'2h',
       name:'Sequence Alignment',
       why:'All variant calling, gene annotation, and evolutionary analysis depends on correct sequence alignment.',
       objectives:[
@@ -189,7 +189,7 @@ OmicsLab.StudyPack = (function () {
         ['Hybrid Assembly','Combining Illumina short reads with Nanopore long reads for optimal quality.'],
       ],
     },
-    { id:'nanopore',   cat:'genomics',   page:'nanopore',    color:'#3fb950', time:'1.5h',
+    { id:'nanopore',   cat:'genomics',   page:'nanopore',    color:'#00C4A0', time:'1.5h',
       name:'Nanopore QC',
       why:'ONT sequencing is transforming African genomics surveillance; its QC metrics differ from Illumina.',
       objectives:[
@@ -329,7 +329,7 @@ OmicsLab.StudyPack = (function () {
         ['iTRAQ','Isobaric Tag for Relative and Absolute Quantification; 8-plex multiplexing reagent.'],
       ],
     },
-    { id:'epigenomics',cat:'expression', page:'epigenomics', color:'#3fb950', time:'2h',
+    { id:'epigenomics',cat:'expression', page:'epigenomics', color:'#00C4A0', time:'2h',
       name:'Epigenomics Explorer',
       why:'Epigenetic marks explain why identical genomes produce different cell types and disease risks.',
       objectives:[
@@ -365,7 +365,7 @@ OmicsLab.StudyPack = (function () {
         ['Nextflow/Snakemake','Workflow languages for reproducible, scalable bioinformatics pipelines.'],
       ],
     },
-    { id:'terminal',   cat:'pipelines', page:'terminal',     color:'#3fb950', time:'2h',
+    { id:'terminal',   cat:'pipelines', page:'terminal',     color:'#00C4A0', time:'2h',
       name:'Terminal Simulator',
       why:'Command-line fluency is non-negotiable for bioinformatics — all production pipelines run at the terminal.',
       objectives:[
@@ -902,12 +902,12 @@ OmicsLab.StudyPack = (function () {
       document.body.appendChild(overlay);
     }
     overlay.innerHTML = `
-      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.5rem;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6)">
+      <div style="background:#111B2E;border:1px solid #243048;border-radius:14px;padding:1.5rem;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
           <strong style="color:#bc8cff;font-size:.95rem">AI Study Quiz</strong>
-          <button onclick="document.getElementById('sp-quiz-overlay').remove()" style="background:none;border:none;color:#8b949e;cursor:pointer;font-size:1.2rem">×</button>
+          <button onclick="document.getElementById('sp-quiz-overlay').remove()" style="background:none;border:none;color:#A8A098;cursor:pointer;font-size:1.2rem">×</button>
         </div>
-        <div id="sp-quiz-body" style="color:#8b949e;font-style:italic;font-size:.82rem">Generating quiz questions with Fable 5…</div>
+        <div id="sp-quiz-body" style="color:#A8A098;font-style:italic;font-size:.82rem">Generating quiz questions with Fable 5…</div>
       </div>`;
 
     try {
@@ -936,7 +936,7 @@ OmicsLab.StudyPack = (function () {
 
       let score = 0; let answered = 0;
       body.innerHTML = `
-        <div style="margin-bottom:1rem;font-size:.75rem;color:#8b949e">Topics: ${sample.map(m=>m.title).join(' · ')}</div>
+        <div style="margin-bottom:1rem;font-size:.75rem;color:#A8A098">Topics: ${sample.map(m=>m.title).join(' · ')}</div>
         ${qBlocks.map((block, qi) => {
           const lines = block.trim().split('\n').filter(l => l.trim());
           const qText = (lines[0] || '').replace(/^Q\d+\.\s*/, '');
@@ -945,20 +945,20 @@ OmicsLab.StudyPack = (function () {
           const ansLetter = (ansLine.match(/Answer:\s*([A-D])/i) || [])[1] || '';
           const ansExp = ansLine.replace(/^Answer:\s*[A-D]\)\s*/i, '');
           return `
-            <div class="sp-quiz-q" id="sp-q-${qi}" style="margin-bottom:1.25rem;padding:1rem;background:#0d1117;border-radius:8px;border:1px solid #21262d">
-              <div style="font-size:.85rem;font-weight:700;color:#e6edf3;margin-bottom:.75rem">${qi+1}. ${qText}</div>
+            <div class="sp-quiz-q" id="sp-q-${qi}" style="margin-bottom:1.25rem;padding:1rem;background:#0D1524;border-radius:8px;border:1px solid #182236">
+              <div style="font-size:.85rem;font-weight:700;color:#E4DDD2;margin-bottom:.75rem">${qi+1}. ${qText}</div>
               ${opts.map(opt => {
                 const letter = (opt.match(/^([A-D])\)/)||[])[1];
                 return `<button onclick="OmicsLab.StudyPack._checkAnswer(${qi},'${letter}','${ansLetter}','${encodeURIComponent(ansExp)}')"
                   class="sp-quiz-opt" data-qi="${qi}" data-opt="${letter}"
-                  style="display:block;width:100%;text-align:left;background:#161b22;border:1px solid #30363d;border-radius:6px;padding:.45rem .75rem;font-size:.8rem;color:#c9d1d9;cursor:pointer;margin:.25rem 0;transition:background .1s">
+                  style="display:block;width:100%;text-align:left;background:#111B2E;border:1px solid #243048;border-radius:6px;padding:.45rem .75rem;font-size:.8rem;color:#A8A098;cursor:pointer;margin:.25rem 0;transition:background .1s">
                   ${opt.trim()}
                 </button>`;
               }).join('')}
               <div id="sp-q-${qi}-exp" style="display:none;margin-top:.5rem;font-size:.75rem;padding:.5rem;border-radius:6px;line-height:1.55"></div>
             </div>`;
         }).join('')}
-        <div id="sp-quiz-score" style="display:none;margin-top:1rem;padding:1rem;background:#161b22;border-radius:8px;text-align:center;font-weight:700;font-size:1.1rem"></div>`;
+        <div id="sp-quiz-score" style="display:none;margin-top:1rem;padding:1rem;background:#111B2E;border-radius:8px;text-align:center;font-weight:700;font-size:1.1rem"></div>`;
 
       /* Store answer tracking */
       window._spQuizState = { total: qBlocks.length, answered: 0, score: 0 };
@@ -976,14 +976,14 @@ OmicsLab.StudyPack = (function () {
 
     opts.forEach(btn => {
       btn.disabled = true;
-      if (btn.dataset.opt === correct) btn.style.background = '#2ea04322';
+      if (btn.dataset.opt === correct) btn.style.background = '#007A6A22';
       if (btn.dataset.opt === chosen && chosen !== correct) btn.style.background = '#f8514922';
     });
     if (exp) {
       const isRight = chosen === correct;
       exp.style.display = 'block';
-      exp.style.background = isRight ? '#2ea04311' : '#f8514911';
-      exp.style.color = isRight ? '#3fb950' : '#f85149';
+      exp.style.background = isRight ? '#007A6A11' : '#f8514911';
+      exp.style.color = isRight ? '#00C4A0' : '#f85149';
       exp.textContent = (isRight ? '✓ Correct. ' : `✗ Correct answer: ${correct}. `) + decodeURIComponent(expEncoded);
     }
     if (state) {
@@ -994,7 +994,7 @@ OmicsLab.StudyPack = (function () {
         if (scoreEl) {
           scoreEl.style.display = 'block';
           const pct = Math.round((state.score / state.total) * 100);
-          scoreEl.style.color = pct >= 80 ? '#3fb950' : pct >= 60 ? '#e3b341' : '#f85149';
+          scoreEl.style.color = pct >= 80 ? '#00C4A0' : pct >= 60 ? '#e3b341' : '#f85149';
           scoreEl.innerHTML = `${state.score}/${state.total} — ${pct}% ${pct >= 80 ? '— Excellent!' : pct >= 60 ? '— Good effort!' : '— Review these topics.'}`;
         }
       }

@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Workshop / Instructor Mode
    Create session codes, track cohort progress, export attendance
    reports, and manage workshop delivery.
@@ -142,7 +142,7 @@ OmicsLab.Workshop = (function () {
 
     const studentRows = session.students.map(s => {
       const pct = Math.round(s.completed.length / MODULES.length * 100);
-      const color = pct >= 80 ? '#3fb950' : pct >= 50 ? '#d29922' : '#8b949e';
+      const color = pct >= 80 ? '#00C4A0' : pct >= 50 ? '#d29922' : '#A8A098';
       return `<tr>
         <td>${s.name}</td>
         <td>${s.joined.slice(0,10)}</td>

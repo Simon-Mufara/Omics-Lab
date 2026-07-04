@@ -10,7 +10,7 @@ OmicsLab.AIMLBio = (function () {
   const MODELS = [
     {
       id: 'nucleotide-transformer', name: 'Nucleotide Transformer', org: 'InstaDeep + H3Africa',
-      type: 'DNA LLM', color: '#3fb950',
+      type: 'DNA LLM', color: '#00C4A0',
       params: '500M – 2.5B', trained: '3,202 diverse genomes · NCBI RefSeq',
       tasks: ['Splice site prediction', 'Promoter detection', 'Chromatin accessibility', 'Variant effect scoring'],
       africa: 'Developed with H3Africa data — explicitly trained on African genomic diversity to reduce ancestral bias in variant interpretation.',
@@ -69,12 +69,12 @@ OmicsLab.AIMLBio = (function () {
     { name: 'Input', nodes: 4, labels: ['GC%', 'Length', 'Q-score', 'Coverage'], color: '#58a6ff' },
     { name: 'Hidden 1', nodes: 6, labels: [], color: '#bc8cff' },
     { name: 'Hidden 2', nodes: 4, labels: [], color: '#e3b341' },
-    { name: 'Output', nodes: 2, labels: ['Pathogenic', 'Benign'], color: '#3fb950' },
+    { name: 'Output', nodes: 2, labels: ['Pathogenic', 'Benign'], color: '#00C4A0' },
   ];
 
   /* ─── Classical ML algorithms ─── */
   const ML_ALGOS = [
-    { name: 'Random Forest', icon: 'bar-chart', color: '#3fb950', use: 'AMR prediction · Variant pathogenicity · Gene expression classification', pro: 'Handles mixed data; interpretable feature importance; no scaling needed', con: 'Slow on very large datasets; black-box individual trees', example: 'Predict MDR-TB resistance from 20 M. tuberculosis SNPs (97% accuracy)' },
+    { name: 'Random Forest', icon: 'bar-chart', color: '#00C4A0', use: 'AMR prediction · Variant pathogenicity · Gene expression classification', pro: 'Handles mixed data; interpretable feature importance; no scaling needed', con: 'Slow on very large datasets; black-box individual trees', example: 'Predict MDR-TB resistance from 20 M. tuberculosis SNPs (97% accuracy)' },
     { name: 'Support Vector Machine', icon: 'activity', color: '#58a6ff', use: 'Protein subcellular localization · Splice site prediction · Enhancer classification', pro: 'Effective in high-dimensional spaces; robust to outliers', con: 'Slow to train on large datasets; kernel choice is critical', example: 'Classify P. falciparum protein subcellular location from sequence features' },
     { name: 'Logistic Regression', icon: 'trending-up', color: '#e3b341', use: 'GWAS case-control · Binary phenotype · Treatment response prediction', pro: 'Interpretable odds ratios; fast; probabilistic output', con: 'Assumes linearity; struggles with non-linear interactions', example: 'Association of HBB rs334 with sickle cell trait across AWI-Gen cohort' },
     { name: 'k-Means Clustering', icon: 'layers', color: '#bc8cff', use: 'Transcriptomic subtypes · Patient stratification · Variant co-occurrence patterns', pro: 'Simple; scales well; interpretable cluster centroids', con: 'Requires k choice; sensitive to initialization; spherical assumption', example: 'Identify TB patient endotypes from whole-blood RNA-seq (H3Africa)' },
@@ -239,7 +239,7 @@ OmicsLab.AIMLBio = (function () {
             { name: 'Convolutional Neural Network (CNN)', color: '#58a6ff', use: 'Sequence motif detection', how: 'Sliding filters detect local patterns (e.g., TATA box, splice donor) across DNA/protein sequences. Each filter learns a different motif.', apps: ['Splicing prediction (SpliceAI)', 'TF binding site detection (DeepBind)', 'Chromatin accessibility (Basset)'] },
             { name: 'Transformer', color: '#bc8cff', use: 'Long-range sequence dependencies', how: 'Self-attention mechanism captures relationships between distant positions in a sequence — essential for protein folding where distant residues interact.', apps: ['AlphaFold2 structure prediction', 'Nucleotide Transformer variant effect', 'ESM-2 protein embeddings'] },
             { name: 'Graph Neural Network (GNN)', color: '#e3b341', use: 'Molecular & network data', how: 'Treats atoms, residues, or genes as nodes with edges for bonds/interactions. Message-passing updates each node using its neighbours.', apps: ['Drug-target interaction (GraphDTA)', 'PPI network link prediction', 'Protein side-chain packing'] },
-            { name: 'Variational Autoencoder (VAE)', color: '#3fb950', use: 'Latent representation learning', how: 'Encodes high-dimensional data (e.g., 20,000-gene expression) into a low-dimensional latent space and reconstructs it — learns the underlying data distribution.', apps: ['scVI single-cell batch correction', 'scVAE trajectory inference', 'Protein sequence generation'] },
+            { name: 'Variational Autoencoder (VAE)', color: '#00C4A0', use: 'Latent representation learning', how: 'Encodes high-dimensional data (e.g., 20,000-gene expression) into a low-dimensional latent space and reconstructs it — learns the underlying data distribution.', apps: ['scVI single-cell batch correction', 'scVAE trajectory inference', 'Protein sequence generation'] },
           ].map(a => `
             <div class="aml-arch-card" style="border-top-color:${a.color}">
               <div class="aml-arch-name" style="color:${a.color}">${a.name}</div>
@@ -286,7 +286,7 @@ OmicsLab.AIMLBio = (function () {
           const act = activations[li];
           const w = rng() * 0.8 + 0.2;
           const alpha = act > 0 ? Math.min(1, act * w * 1.2) : 0.1;
-          const stroke = act > 0 ? `rgba(88,166,255,${alpha.toFixed(2)})` : '#21262d';
+          const stroke = act > 0 ? `rgba(88,166,255,${alpha.toFixed(2)})` : '#182236';
           const sw = act > 0 ? 1.5 * alpha : 0.6;
           html += `<line x1="${fp.x}" y1="${fp.y}" x2="${tp.x}" y2="${tp.y}" stroke="${stroke}" stroke-width="${sw.toFixed(1)}"/>`;
         });
@@ -297,20 +297,20 @@ OmicsLab.AIMLBio = (function () {
     NN_LAYERS.forEach((layer, li) => {
       const act = activations[li];
       positions[li].forEach((pos, ni) => {
-        const fill = act > 0 ? layer.color : '#21262d';
+        const fill = act > 0 ? layer.color : '#182236';
         const r = act > 0 ? 14 : 12;
         const filter = act > 0 ? 'filter="url(#aml-glow)"' : '';
         html += `<circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="${fill}" stroke="${layer.color}" stroke-width="1.5" opacity="${act > 0 ? 0.9 : 0.5}" ${filter}/>`;
         if (layer.labels[ni]) {
           const anchor = li === 0 ? 'end' : 'start';
           const dx = li === 0 ? -20 : 20;
-          html += `<text x="${pos.x + dx}" y="${pos.y + 5}" text-anchor="${anchor}" fill="#8b949e" font-size="10" font-family="monospace">${_esc(layer.labels[ni])}</text>`;
+          html += `<text x="${pos.x + dx}" y="${pos.y + 5}" text-anchor="${anchor}" fill="#A8A098" font-size="10" font-family="monospace">${_esc(layer.labels[ni])}</text>`;
         }
       });
       /* Layer label */
       const lx = layerX[li];
       html += `<text x="${lx}" y="246" text-anchor="middle" fill="${layer.color}" font-size="10" font-weight="700">${layer.name}</text>`;
-      html += `<text x="${lx}" y="258" text-anchor="middle" fill="#6e7681" font-size="9">${layer.nodes} nodes</text>`;
+      html += `<text x="${lx}" y="258" text-anchor="middle" fill="#6E6860" font-size="9">${layer.nodes} nodes</text>`;
     });
 
     svg.innerHTML = html;
@@ -359,7 +359,7 @@ OmicsLab.AIMLBio = (function () {
           <div class="aml-algo-use">${a.use}</div>
           <div class="aml-algo-pros-cons">
             <div>
-              <div class="aml-pro-con-label" style="color:#3fb950">Advantages</div>
+              <div class="aml-pro-con-label" style="color:#00C4A0">Advantages</div>
               <p class="aml-pro-con-text">${a.pro}</p>
             </div>
             <div>
@@ -377,7 +377,7 @@ OmicsLab.AIMLBio = (function () {
       <div class="aml-sb-title" style="margin-bottom:0.75rem">Which algorithm should I use?</div>
       <div class="aml-chooser-grid">
         ${[
-          { q: 'Predict a binary label (disease/control)', ans: 'Logistic Regression → Random Forest → XGBoost', color: '#3fb950' },
+          { q: 'Predict a binary label (disease/control)', ans: 'Logistic Regression → Random Forest → XGBoost', color: '#00C4A0' },
           { q: 'Find groups in expression data', ans: 'k-Means → Hierarchical Clustering → VAE (scVI)', color: '#58a6ff' },
           { q: 'Classify DNA/protein sequences', ans: 'CNN → Transformer (fine-tuned LLM)', color: '#bc8cff' },
           { q: 'Predict protein 3D structure', ans: 'AlphaFold2 (ESMFold for fast inference)', color: '#e3b341' },
@@ -423,7 +423,7 @@ OmicsLab.AIMLBio = (function () {
         },
         {
           title: 'Drug-Resistance AMR Prediction (Random Forest)',
-          color: '#3fb950', steps: 3,
+          color: '#00C4A0', steps: 3,
           desc: 'Predict rifampicin resistance in M. tuberculosis from SNP profiles — replicates WHO AMR catalogue logic with ML interpretability.',
           pipeline: [
             { step: 1, name: 'SNP profile', tool: 'GATK HaplotypeCaller → VCF', output: 'Binary 0/1 vector across 20 known AMR loci (rpoB, katG, etc.)' },
@@ -465,7 +465,7 @@ OmicsLab.AIMLBio = (function () {
       </div>
       <div class="aml-africa-cards">
         ${[
-          { org: 'InstaDeep × H3Africa', color: '#3fb950', icon: 'dna',
+          { org: 'InstaDeep × H3Africa', color: '#00C4A0', icon: 'dna',
             title: 'Nucleotide Transformer with African Data',
             body: 'InstaDeep partnered with H3Africa to include 3,202 diverse genomes — including African populations — in the Nucleotide Transformer pretraining corpus. This directly reduces reference bias when predicting variant effects in African cohorts.',
             impact: 'Improves splice site prediction for variants specific to African haplotypes (e.g., common HBB haplotypes in West Africa)',
@@ -620,7 +620,7 @@ OmicsLab.AIMLBio = (function () {
                     <span>${s}</span>
                   </div>`;
                 }).join('')}
-                ${_px.pipeBuilt.length === 0 ? '<div style="font-size:.76rem;color:#484f58;padding:.5rem">Click steps on the left to build your pipeline</div>' : ''}
+                ${_px.pipeBuilt.length === 0 ? '<div style="font-size:.76rem;color:#354060;padding:.5rem">Click steps on the left to build your pipeline</div>' : ''}
               </div>
               ${_px.pipeBuilt.length > 0 ? `<button class="aml-reset-btn" onclick="OmicsLab.AIMLBio._resetPipe()">Reset pipeline</button>` : ''}
             </div>
@@ -654,7 +654,7 @@ OmicsLab.AIMLBio = (function () {
                   <tr><td><strong>Actual −</strong></td><td class="aml-cm-fp">FP = ${cm.fp}</td><td class="aml-cm-tn">TN = ${cm.tn}</td></tr>
                 </tbody>
               </table>
-              <div style="font-size:.68rem;color:#6e7681;margin-top:.4rem">+ = MDR-TB resistant &nbsp;|&nbsp; − = susceptible</div>
+              <div style="font-size:.68rem;color:#6E6860;margin-top:.4rem">+ = MDR-TB resistant &nbsp;|&nbsp; − = susceptible</div>
             </div>
             <div>
               <div class="aml-ex-section-label" style="margin-bottom:.5rem">Your calculations (enter % rounded to nearest whole number)</div>

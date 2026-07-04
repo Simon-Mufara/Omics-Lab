@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Multiplayer Quiz Battle (Prompt 18)
    Two players compete via BroadcastChannel (same device) or
    single-player mode. 10-question timed rounds, 100+ question bank.
@@ -152,7 +152,7 @@ OmicsLab.QuizBattle = (function () {
     if (numEl) numEl.textContent = `Question ${_state.currentQ + 1} / ${N_QUESTIONS}`;
     if (catEl) catEl.textContent = q.cat;
     if (qEl)  qEl.textContent = q.q;
-    if (timerEl) { timerEl.textContent = _state.timeLeft; timerEl.style.color = _state.timeLeft <= 5 ? '#ff6b6b' : '#e6edf3'; }
+    if (timerEl) { timerEl.textContent = _state.timeLeft; timerEl.style.color = _state.timeLeft <= 5 ? '#ff6b6b' : '#E4DDD2'; }
 
     if (optEl) {
       optEl.innerHTML = q.options.map((opt, i) => `
@@ -177,7 +177,7 @@ OmicsLab.QuizBattle = (function () {
     _state.timer = setInterval(() => {
       _state.timeLeft--;
       const te = document.getElementById('qb-timer');
-      if (te) { te.textContent = _state.timeLeft; te.style.color = _state.timeLeft <= 5 ? '#ff6b6b' : '#e6edf3'; }
+      if (te) { te.textContent = _state.timeLeft; te.style.color = _state.timeLeft <= 5 ? '#ff6b6b' : '#E4DDD2'; }
       if (_state.timeLeft <= 0) {
         clearInterval(_state.timer);
         if (!_state.answered) _revealAnswer(-1);
@@ -222,7 +222,7 @@ OmicsLab.QuizBattle = (function () {
     if (fb) {
       const correct = chosen === q.answer;
       fb.textContent = chosen === -1 ? `⏱ Time up! Answer: ${q.options[q.answer]}` : correct ? `[OK] Correct! +${q.pts} pts` : `[FAIL] Wrong. Answer: ${q.options[q.answer]}`;
-      fb.style.color = chosen === -1 ? '#e3b341' : correct ? '#3fb950' : '#ff6b6b';
+      fb.style.color = chosen === -1 ? '#e3b341' : correct ? '#00C4A0' : '#ff6b6b';
     }
 
     _updateScoreboard();
@@ -265,7 +265,7 @@ OmicsLab.QuizBattle = (function () {
         ${solo ? `
           <div class="qb-end-score">${p1} <span class="qb-end-max">/ ${N_QUESTIONS * 15} pts</span></div>
           <div class="qb-end-pct">${pct}% correct</div>
-          <div class="qb-end-grade" style="color:${pct>=80?'#3fb950':pct>=60?'#e3b341':'#ff6b6b'}">${pct>=80?'Excellent — Expert level!':pct>=60?'Good — Keep practising!':'Needs work — Try again!'}</div>
+          <div class="qb-end-grade" style="color:${pct>=80?'#00C4A0':pct>=60?'#e3b341':'#ff6b6b'}">${pct>=80?'Excellent — Expert level!':pct>=60?'Good — Keep practising!':'Needs work — Try again!'}</div>
         ` : `
           <div class="qb-end-dual">
             <div class="qb-end-player ${p1>p2?'qb-end-winner':''}"><div>${_state.names.p1}</div><div class="qb-end-pscore">${p1}</div></div>

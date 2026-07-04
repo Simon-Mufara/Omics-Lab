@@ -26,3 +26,6 @@ Thumbs.db
 *.png
 !og-image.svg
 !og-image.png
+
+.vercel
+.env*

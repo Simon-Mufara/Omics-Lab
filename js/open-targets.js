@@ -37,7 +37,7 @@ OmicsLab.OpenTargets = (function () {
   const DATATYPE_COLOR = {
     genetic_association:   '#bc8cff',
     somatic_mutation:      '#ff6b6b',
-    known_drug:            '#3fb950',
+    known_drug:            '#00C4A0',
     literature:            '#58a6ff',
     rna_expression:        '#e3b341',
     animal_model:          '#f97316',
@@ -158,7 +158,7 @@ OmicsLab.OpenTargets = (function () {
 
   function _scoreBar(score) {
     const pct = (score * 100).toFixed(0);
-    const col = score > 0.7 ? '#3fb950' : score > 0.4 ? '#e3b341' : '#58a6ff';
+    const col = score > 0.7 ? '#00C4A0' : score > 0.4 ? '#e3b341' : '#58a6ff';
     return `<div class="ot-score-bar-wrap"><div class="ot-score-bar" style="width:${pct}%;background:${col}"></div></div><span class="ot-score-num">${score.toFixed(3)}</span>`;
   }
 
@@ -167,7 +167,7 @@ OmicsLab.OpenTargets = (function () {
       .filter(d => d.score > 0.01)
       .sort((a, b) => b.score - a.score)
       .map(d => {
-        const col = DATATYPE_COLOR[d.componentId] || '#6e7681';
+        const col = DATATYPE_COLOR[d.componentId] || '#6E6860';
         const label = d.componentId.replace(/_/g, ' ');
         return `<span class="ot-dt-chip" style="border-color:${col};color:${col}" title="Score: ${d.score.toFixed(3)}">${label}</span>`;
       }).join('');

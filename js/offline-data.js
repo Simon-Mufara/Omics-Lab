@@ -27,7 +27,7 @@ OmicsLab.OfflineData = (function () {
       name:'Malaria Genomics Reference Pack',
       tag:'Malaria',
       size:'~380 MB',
-      color:'#3fb950',
+      color:'#00C4A0',
       desc:'P. falciparum 3D7 reference genome, resistance marker VCF, and Anopheles gambiae genome for Africa-focused malaria genomics work.',
       contents:['Pf3D7 genome GRCh38-compatible (FASTA)','kelch13 / pfhrp2/3 known variants (VCF)','Pf7 sample metadata (TSV)','A. gambiae PEST genome (FASTA)'],
       formats:['FASTA','VCF','TSV'],
@@ -127,7 +127,7 @@ OmicsLab.OfflineData = (function () {
             <div class="od-pkg-desc">${p.desc}</div>
             <div class="od-pkg-contents">
               ${p.contents.map(c => `<div class="od-content-item">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                 ${c}
               </div>`).join('')}
             </div>
@@ -139,7 +139,7 @@ OmicsLab.OfflineData = (function () {
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 Access Data
               </a>` : `<span class="od-bundled-label">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 Already bundled
               </span>`}
             </div>

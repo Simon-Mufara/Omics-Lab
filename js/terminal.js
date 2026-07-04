@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Bioinformatics Terminal Simulator
    Simulates a real Linux bioinformatics environment in the browser.
 
@@ -1440,11 +1440,11 @@ print("█=West African  ▓=East African  ░=Non-African")`
     const el = document.getElementById('nb-kernel-status');
     if (!el) return;
     const labels = { loading:'Python kernel loading (first time may take ~20s)…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
-    const colors = { loading:'#e3b341', ready:'#3fb950', error:'#f85149' };
+    const colors = { loading:'#e3b341', ready:'#00C4A0', error:'#f85149' };
     el.textContent = msg || labels[state] || state;
-    el.style.color = colors[state] || '#8b949e';
+    el.style.color = colors[state] || '#A8A098';
     const dot = document.getElementById('nb-kernel-dot');
-    if (dot) { dot.style.background = colors[state] || '#8b949e'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
+    if (dot) { dot.style.background = colors[state] || '#A8A098'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
   }
 
   function _renderNotebook(nbId) {
@@ -1813,10 +1813,10 @@ print("█=West African  ▓=East African  ░=Non-African")`
     } catch(err) {
       container.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#f85149;font-family:monospace">
         <div style="font-size:1.4rem;font-weight:700;margin-bottom:1rem">Terminal failed to load</div>
-        <div style="font-size:0.9rem;color:#8b949e;max-width:480px;margin:0 auto">${String(err)}</div>
+        <div style="font-size:0.9rem;color:#A8A098;max-width:480px;margin:0 auto">${String(err)}</div>
         <div style="margin-top:2rem">
           <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener"
-             style="display:inline-block;padding:0.6rem 1.5rem;background:#238636;color:#fff;text-decoration:none;border-radius:6px;font-size:0.88rem">
+             style="display:inline-block;padding:0.6rem 1.5rem;background:#007A6A;color:#fff;text-decoration:none;border-radius:6px;font-size:0.88rem">
             Open in GitHub Codespaces instead
           </a>
         </div>

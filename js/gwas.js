@@ -90,15 +90,15 @@ OmicsLab.GWAS = (function () {
     let chrLabels = '';
     CHR_SIZES.forEach((sz, ci) => {
       const midX = xScale(offsets[ci] + sz / 2);
-      if (ci < 22) chrLabels += `<text x="${midX.toFixed(1)}" y="${H - 6}" font-size="7.5" fill="#8b949e" text-anchor="middle" font-family="monospace">${ci + 1}</text>`;
+      if (ci < 22) chrLabels += `<text x="${midX.toFixed(1)}" y="${H - 6}" font-size="7.5" fill="#A8A098" text-anchor="middle" font-family="monospace">${ci + 1}</text>`;
     });
 
     /* Y-axis labels */
     let yLabels = '';
     [0, 5, 10, 15, 20].forEach(v => {
       const y = yScale(v);
-      yLabels += `<text x="${PAD.l - 6}" y="${y.toFixed(1)}" font-size="8" fill="#8b949e" text-anchor="end" dominant-baseline="middle" font-family="monospace">${v}</text>`;
-      yLabels += `<line x1="${PAD.l}" y1="${y.toFixed(1)}" x2="${W - PAD.r}" y2="${y.toFixed(1)}" stroke="#21262d" stroke-width="0.5"/>`;
+      yLabels += `<text x="${PAD.l - 6}" y="${y.toFixed(1)}" font-size="8" fill="#A8A098" text-anchor="end" dominant-baseline="middle" font-family="monospace">${v}</text>`;
+      yLabels += `<line x1="${PAD.l}" y1="${y.toFixed(1)}" x2="${W - PAD.r}" y2="${y.toFixed(1)}" stroke="#182236" stroke-width="0.5"/>`;
     });
 
     /* Genome-wide significance line (p=5e-8, logp≈7.3) */
@@ -121,10 +121,10 @@ OmicsLab.GWAS = (function () {
       <line x1="${PAD.l}" y1="${sugY.toFixed(1)}" x2="${W - PAD.r}" y2="${sugY.toFixed(1)}" stroke="#e3b341" stroke-width="0.8" stroke-dasharray="3,3"/>
       ${circlesSVG}
       ${geneLabels}
-      <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${H - PAD.b}" stroke="#30363d" stroke-width="1"/>
-      <line x1="${PAD.l}" y1="${H - PAD.b}" x2="${W - PAD.r}" y2="${H - PAD.b}" stroke="#30363d" stroke-width="1"/>
+      <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${H - PAD.b}" stroke="#243048" stroke-width="1"/>
+      <line x1="${PAD.l}" y1="${H - PAD.b}" x2="${W - PAD.r}" y2="${H - PAD.b}" stroke="#243048" stroke-width="1"/>
       ${chrLabels}
-      <text x="${PAD.l / 2}" y="${H / 2}" font-size="9" fill="#8b949e" text-anchor="middle" font-family="monospace" transform="rotate(-90,${PAD.l / 2},${H / 2})">-log₁₀(p)</text>
+      <text x="${PAD.l / 2}" y="${H / 2}" font-size="9" fill="#A8A098" text-anchor="middle" font-family="monospace" transform="rotate(-90,${PAD.l / 2},${H / 2})">-log₁₀(p)</text>
     </svg>`;
   }
 
@@ -155,22 +155,22 @@ OmicsLab.GWAS = (function () {
       dots += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${o > 5 ? 2.5 : 1.5}" fill="${col}" opacity="0.75"/>`;
     });
 
-    const diag = `<line x1="${xs(0).toFixed(1)}" y1="${ys(0).toFixed(1)}" x2="${xs(maxV).toFixed(1)}" y2="${ys(maxV).toFixed(1)}" stroke="#3fb950" stroke-width="1" stroke-dasharray="3,2"/>`;
+    const diag = `<line x1="${xs(0).toFixed(1)}" y1="${ys(0).toFixed(1)}" x2="${xs(maxV).toFixed(1)}" y2="${ys(maxV).toFixed(1)}" stroke="#00C4A0" stroke-width="1" stroke-dasharray="3,2"/>`;
 
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
       ${[0,5,10,15].map(v => v <= maxV ? `
-        <text x="${xs(v).toFixed(1)}" y="${H - 14}" font-size="7.5" fill="#8b949e" text-anchor="middle" font-family="monospace">${v}</text>
-        <text x="${PAD - 5}" y="${ys(v).toFixed(1)}" font-size="7.5" fill="#8b949e" text-anchor="end" dominant-baseline="middle" font-family="monospace">${v}</text>
-        <line x1="${xs(v).toFixed(1)}" y1="${H - PAD - 10}" x2="${xs(v).toFixed(1)}" y2="${PAD - 10}" stroke="#21262d" stroke-width="0.4"/>
-        <line x1="${PAD}" y1="${ys(v).toFixed(1)}" x2="${W - 20}" y2="${ys(v).toFixed(1)}" stroke="#21262d" stroke-width="0.4"/>
+        <text x="${xs(v).toFixed(1)}" y="${H - 14}" font-size="7.5" fill="#A8A098" text-anchor="middle" font-family="monospace">${v}</text>
+        <text x="${PAD - 5}" y="${ys(v).toFixed(1)}" font-size="7.5" fill="#A8A098" text-anchor="end" dominant-baseline="middle" font-family="monospace">${v}</text>
+        <line x1="${xs(v).toFixed(1)}" y1="${H - PAD - 10}" x2="${xs(v).toFixed(1)}" y2="${PAD - 10}" stroke="#182236" stroke-width="0.4"/>
+        <line x1="${PAD}" y1="${ys(v).toFixed(1)}" x2="${W - 20}" y2="${ys(v).toFixed(1)}" stroke="#182236" stroke-width="0.4"/>
       ` : '').join('')}
       ${diag}
       ${dots}
-      <line x1="${PAD}" y1="${H - PAD - 10}" x2="${W - 20}" y2="${H - PAD - 10}" stroke="#30363d"/>
-      <line x1="${PAD}" y1="${PAD - 10}" x2="${PAD}" y2="${H - PAD - 10}" stroke="#30363d"/>
-      <text x="${W / 2}" y="${H - 2}" font-size="8" fill="#8b949e" text-anchor="middle" font-family="monospace">Expected -log₁₀(p)</text>
-      <text x="10" y="${H / 2}" font-size="8" fill="#8b949e" text-anchor="middle" transform="rotate(-90,10,${H / 2})" font-family="monospace">Observed -log₁₀(p)</text>
-      <text x="${W / 2}" y="10" font-size="9" fill="#c9d1d9" text-anchor="middle" font-weight="600" font-family="monospace">QQ Plot (λGC = 1.02)</text>
+      <line x1="${PAD}" y1="${H - PAD - 10}" x2="${W - 20}" y2="${H - PAD - 10}" stroke="#243048"/>
+      <line x1="${PAD}" y1="${PAD - 10}" x2="${PAD}" y2="${H - PAD - 10}" stroke="#243048"/>
+      <text x="${W / 2}" y="${H - 2}" font-size="8" fill="#A8A098" text-anchor="middle" font-family="monospace">Expected -log₁₀(p)</text>
+      <text x="10" y="${H / 2}" font-size="8" fill="#A8A098" text-anchor="middle" transform="rotate(-90,10,${H / 2})" font-family="monospace">Observed -log₁₀(p)</text>
+      <text x="${W / 2}" y="10" font-size="9" fill="#A8A098" text-anchor="middle" font-weight="600" font-family="monospace">QQ Plot (λGC = 1.02)</text>
     </svg>`;
   }
 
@@ -267,7 +267,7 @@ plink2 --bfile cohort_qc \\
     const pops = [
       { id:'YRI', label:'Yoruba (NG)',   color:'#f97316', pc1:[-1.8,-1.0], pc2:[ 0.5, 1.5] },
       { id:'LWK', label:'Luhya (KE)',    color:'#e3b341', pc1:[-1.5,-0.8], pc2:[ 0.3, 1.3] },
-      { id:'GWD', label:'Mandinka (GM)', color:'#3fb950', pc1:[-2.0,-1.2], pc2:[-0.5, 0.8] },
+      { id:'GWD', label:'Mandinka (GM)', color:'#00C4A0', pc1:[-2.0,-1.2], pc2:[-0.5, 0.8] },
       { id:'MSL', label:'Mende (SL)',    color:'#58a6ff', pc1:[-1.9,-1.1], pc2:[-0.8, 0.5] },
       { id:'ESN', label:'Esan (NG)',     color:'#bc8cff', pc1:[-1.7,-0.9], pc2:[ 0.2, 1.2] },
     ];
@@ -287,17 +287,17 @@ plink2 --bfile cohort_qc \\
 
     const legend = pops.map((p, i) =>
       `<rect x="${W - 58}" y="${PAD - 5 + i * 14}" width="7" height="7" rx="3" fill="${p.color}"/>
-       <text x="${W - 48}" y="${PAD + 2 + i * 14}" font-size="6.5" fill="#8b949e" font-family="monospace">${p.label}</text>`
+       <text x="${W - 48}" y="${PAD + 2 + i * 14}" font-size="6.5" fill="#A8A098" font-family="monospace">${p.label}</text>`
     ).join('');
 
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
-      <line x1="${PAD}" y1="${H-PAD}" x2="${W-16}" y2="${H-PAD}" stroke="#30363d"/>
-      <line x1="${PAD}" y1="${PAD-10}" x2="${PAD}" y2="${H-PAD}" stroke="#30363d"/>
+      <line x1="${PAD}" y1="${H-PAD}" x2="${W-16}" y2="${H-PAD}" stroke="#243048"/>
+      <line x1="${PAD}" y1="${PAD-10}" x2="${PAD}" y2="${H-PAD}" stroke="#243048"/>
       ${dots}
       ${legend}
-      <text x="${W/2}" y="${H-4}" font-size="7.5" fill="#8b949e" text-anchor="middle" font-family="monospace">PC1 (4.2%)</text>
-      <text x="10" y="${H/2}" font-size="7.5" fill="#8b949e" text-anchor="middle" transform="rotate(-90,10,${H/2})" font-family="monospace">PC2 (3.1%)</text>
-      <text x="${W/2}" y="10" font-size="9" fill="#c9d1d9" text-anchor="middle" font-weight="600" font-family="monospace">PCA — African Populations</text>
+      <text x="${W/2}" y="${H-4}" font-size="7.5" fill="#A8A098" text-anchor="middle" font-family="monospace">PC1 (4.2%)</text>
+      <text x="10" y="${H/2}" font-size="7.5" fill="#A8A098" text-anchor="middle" transform="rotate(-90,10,${H/2})" font-family="monospace">PC2 (3.1%)</text>
+      <text x="${W/2}" y="10" font-size="9" fill="#A8A098" text-anchor="middle" font-weight="600" font-family="monospace">PCA — African Populations</text>
     </svg>`;
   }
 
@@ -332,12 +332,12 @@ plink2 --bfile cohort_qc \\
     const lociRows = AFRICAN_LOCI.map(l => `
       <tr onclick="OmicsLab.GWAS.highlightLocus('${l.rsid}')" style="cursor:pointer">
         <td><span class="gwas-rsid">${l.rsid}</span></td>
-        <td><b style="color:#3fb950">${l.gene}</b></td>
+        <td><b style="color:#00C4A0">${l.gene}</b></td>
         <td>${l.chr === 23 ? 'X' : l.chr}</td>
         <td>${(l.pos / 1e6).toFixed(2)} Mb</td>
         <td style="color:#f85149">${l.p < 1e-100 ? '<10⁻¹⁰⁰' : l.p.toExponential(1)}</td>
         <td>${l.eaf_afr.toFixed(2)}</td>
-        <td style="color:${l.eaf_afr > l.eaf_eur + 0.1 ? '#3fb950' : l.eaf_afr < l.eaf_eur - 0.1 ? '#f85149' : '#8b949e'}">${l.eaf_eur.toFixed(3)}</td>
+        <td style="color:${l.eaf_afr > l.eaf_eur + 0.1 ? '#00C4A0' : l.eaf_afr < l.eaf_eur - 0.1 ? '#f85149' : '#A8A098'}">${l.eaf_eur.toFixed(3)}</td>
         <td style="color:#e3b341">${l.trait}</td>
         <td style="color:#58a6ff;font-size:0.72rem">${l.ref}</td>
       </tr>

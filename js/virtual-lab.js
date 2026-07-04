@@ -34,7 +34,7 @@ OmicsLab.VirtualLab = (function () {
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <!-- LED strip lights -->
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="40" y="8" width="300" height="12" rx="2" fill="none"/>
@@ -151,7 +151,7 @@ ${Array.from({length:18}, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" 
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#ffe8cc" opacity="0.7"/>
 <!-- Wall -->
 <rect x="0" y="20" width="380" height="290" fill="#111419"/>
@@ -263,7 +263,7 @@ ${[0,1,2,3,4].map(i => {
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#ffe8cc" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -338,7 +338,7 @@ ${Array.from({length:12}, (_,i) => {
       id: 'pcr-thermocycler',
       name: 'PCR Thermocycler',
       category: 'DNA Amplification',
-      color: '#3fb950',
+      color: '#00C4A0',
       desc: 'The polymerase chain reaction (PCR) machine amplifies specific DNA sequences using temperature cycling. Essential for library preparation, TB/malaria/COVID diagnostics, genotyping, and as the first step in nearly every NGS workflow.',
       specs: ['96-well or 384-well block options', 'Temperature range: 4–99°C', 'Ramp rate: up to 6°C/second', 'Gradient capability: ±20°C across block', 'Applications: diagnostic PCR, genotyping, LAMP, RT-PCR, library prep'],
       usage: 'Every African genomics lab has at least one thermocycler. Used for TB GeneXpert prep, malaria diagnostic PCR, SARS-CoV-2 RT-PCR, and library amplification before sequencing.',
@@ -354,7 +354,7 @@ ${Array.from({length:12}, (_,i) => {
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -408,10 +408,10 @@ ${Array.from({length:12}, (_,i) =>
 <rect x="102" y="226" width="112" height="68" rx="4" fill="#0a0d10" stroke="#1e2226"/>
 <!-- Display screen showing PCR program -->
 <rect x="104" y="228" width="108" height="64" rx="3" fill="#060a0e"/>
-<text x="158" y="242" fill="#3fb950" font-size="7" font-family="monospace" text-anchor="middle" font-weight="700">RUNNING</text>
-<text x="158" y="253" fill="#8b949e" font-size="5.5" font-family="monospace" text-anchor="middle">Step 3: Extension</text>
-<text x="158" y="263" fill="#3fb950" font-size="9" font-family="monospace" text-anchor="middle">72.0°C</text>
-<text x="158" y="274" fill="#8b949e" font-size="5.5" font-family="monospace" text-anchor="middle">Cycle 24 / 35</text>
+<text x="158" y="242" fill="#00C4A0" font-size="7" font-family="monospace" text-anchor="middle" font-weight="700">RUNNING</text>
+<text x="158" y="253" fill="#A8A098" font-size="5.5" font-family="monospace" text-anchor="middle">Step 3: Extension</text>
+<text x="158" y="263" fill="#00C4A0" font-size="9" font-family="monospace" text-anchor="middle">72.0°C</text>
+<text x="158" y="274" fill="#A8A098" font-size="5.5" font-family="monospace" text-anchor="middle">Cycle 24 / 35</text>
 <text x="158" y="284" fill="#5a8a7a" font-size="5" font-family="monospace" text-anchor="middle">Time left: 01:22:44</text>
 
 <!-- Touch buttons (right of display) -->
@@ -431,9 +431,9 @@ ${Array.from({length:12}, (_,i) =>
 <!-- Component labels -->
 <text x="25" y="115" fill="#1a1a1a" font-size="5.5" font-family="Arial">Heated lid</text>
 <line x1="65" y1="112" x2="95" y2="105" stroke="#888" stroke-width="0.6"/>
-<text x="25" y="145" fill="#3fb950" font-size="5.5" font-family="Arial">96-well</text>
-<text x="25" y="153" fill="#3fb950" font-size="5.5" font-family="Arial">plate</text>
-<line x1="65" y1="147" x2="102" y2="147" stroke="#3fb950" stroke-width="0.6"/>
+<text x="25" y="145" fill="#00C4A0" font-size="5.5" font-family="Arial">96-well</text>
+<text x="25" y="153" fill="#00C4A0" font-size="5.5" font-family="Arial">plate</text>
+<line x1="65" y1="147" x2="102" y2="147" stroke="#00C4A0" stroke-width="0.6"/>
       `
     },
 
@@ -458,7 +458,7 @@ ${Array.from({length:12}, (_,i) =>
   </radialGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -496,7 +496,7 @@ ${Array.from({length:12}, (_,i) =>
 <!-- Display content -->
 <text x="190" y="193" fill="#bc8cff" font-size="6.5" font-family="monospace" text-anchor="middle" font-weight="700">CENTRIFUGE</text>
 <text x="190" y="207" fill="#26c45a" font-size="7" font-family="monospace" text-anchor="middle">14,000 RPM</text>
-<text x="190" y="220" fill="#8b949e" font-size="5.5" font-family="monospace" text-anchor="middle">Time: 09:52 / 10:00</text>
+<text x="190" y="220" fill="#A8A098" font-size="5.5" font-family="monospace" text-anchor="middle">Time: 09:52 / 10:00</text>
 <!-- Time progress bar -->
 <rect x="142" y="224" width="96" height="4" rx="2" fill="#1a1a2a"/>
 <rect x="142" y="224" width="95" height="4" rx="2" fill="#bc8cff"/>
@@ -539,7 +539,7 @@ ${Array.from({length:12}, (_,i) =>
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -602,7 +602,7 @@ ${[
   ['S4_RNA', '5.8', '#f85149'],
   ['S5_RNA', '9.0', '#26c45a'],
 ].map(([s,r,c], i) =>
-  `<text x="267" y="${132+i*10}" fill="#8b949e" font-size="4.5" font-family="monospace">${s}</text>
+  `<text x="267" y="${132+i*10}" fill="#A8A098" font-size="4.5" font-family="monospace">${s}</text>
    <text x="330" y="${132+i*10}" fill="${c}" font-size="4.5" font-family="monospace" text-anchor="end">RIN: ${r}</text>`
 ).join('')}
 <text x="314" y="182" fill="#666" font-size="5" font-family="monospace" text-anchor="middle">5/5 samples analyzed</text>
@@ -637,7 +637,7 @@ ${[
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -689,7 +689,7 @@ ${Array.from({length:6}, (_,i) =>
 
 <!-- Reagent bottles -->
 <rect x="158" y="158" width="18" height="42" rx="3" fill="#0a1a0a" stroke="#1a3a1a"/>
-<text x="167" y="202" fill="#3fb950" font-size="4.5" font-family="Arial" text-anchor="middle" transform="rotate(-90,167,202)">TE buffer</text>
+<text x="167" y="202" fill="#00C4A0" font-size="4.5" font-family="Arial" text-anchor="middle" transform="rotate(-90,167,202)">TE buffer</text>
 <rect x="180" y="158" width="18" height="42" rx="3" fill="#0a0a1a" stroke="#1a1a3a"/>
 <text x="189" y="202" fill="#5a5aff" font-size="4.5" font-family="Arial" text-anchor="middle" transform="rotate(-90,189,202)">ProtK</text>
 <rect x="202" y="158" width="18" height="42" rx="3" fill="#1a0a0a" stroke="#3a1a1a"/>
@@ -713,7 +713,7 @@ ${Array.from({length:6}, (_,i) =>
 <!-- Display -->
 <rect x="138" y="233" width="112" height="38" rx="3" fill="#0a0d10" stroke="#1a1c20"/>
 <text x="194" y="248" fill="#26c45a" font-size="6" font-family="monospace" text-anchor="middle">PROTECTION ACTIVE</text>
-<text x="194" y="260" fill="#8b949e" font-size="5" font-family="monospace" text-anchor="middle">Inflow: 0.53 m/s · Downflow: 0.25 m/s</text>
+<text x="194" y="260" fill="#A8A098" font-size="5" font-family="monospace" text-anchor="middle">Inflow: 0.53 m/s · Downflow: 0.25 m/s</text>
 <text x="194" y="270" fill="#5a7aaa" font-size="5" font-family="monospace" text-anchor="middle">UV cycle due: 04:00 AM</text>
 
 <!-- Brand label -->
@@ -751,7 +751,7 @@ ${Array.from({length:6}, (_,i) =>
   </linearGradient>
 </defs>
 <!-- Lab ceiling -->
-<rect x="0" y="0" width="380" height="480" fill="#0d1117"/>
+<rect x="0" y="0" width="380" height="480" fill="#0D1524"/>
 <rect x="40" y="8" width="300" height="4" rx="2" fill="#e0ecff" opacity="0.7"/>
 <rect x="0" y="20" width="380" height="285" fill="#111419"/>
 <rect x="0" y="305" width="380" height="175" fill="#181c22"/>
@@ -797,7 +797,7 @@ ${Array.from({length:6}, (_,i) =>
 <text x="122" y="196" fill="#fff" font-size="4" font-family="monospace" text-anchor="middle" transform="rotate(-90,122,196)">100×</text>
 <rect x="130" y="188" width="7" height="20" rx="2" fill="#58a6ff" opacity="0.8"/>
 <text x="133" y="198" fill="#fff" font-size="4" font-family="monospace" text-anchor="middle" transform="rotate(-90,133,198)">40×</text>
-<rect x="140" y="192" width="7" height="16" rx="2" fill="#3fb950" opacity="0.8"/>
+<rect x="140" y="192" width="7" height="16" rx="2" fill="#00C4A0" opacity="0.8"/>
 <text x="144" y="200" fill="#fff" font-size="4" font-family="monospace" text-anchor="middle" transform="rotate(-90,144,200)">10×</text>
 
 <!-- BODY (main microscope head area) -->
@@ -859,8 +859,8 @@ ${Array.from({length:20}, (_,i) => {
 <!-- Component labels -->
 <text x="30" y="72" fill="#a371f7" font-size="5.5" font-family="Arial">Eyepieces</text>
 <line x1="75" y1="72" x2="110" y2="72" stroke="#a371f7" stroke-width="0.6"/>
-<text x="30" y="200" fill="#3fb950" font-size="5.5" font-family="Arial">Objectives</text>
-<line x1="75" y1="198" x2="104" y2="200" stroke="#3fb950" stroke-width="0.6"/>
+<text x="30" y="200" fill="#00C4A0" font-size="5.5" font-family="Arial">Objectives</text>
+<line x1="75" y1="198" x2="104" y2="200" stroke="#00C4A0" stroke-width="0.6"/>
 <text x="30" y="215" fill="#888" font-size="5.5" font-family="Arial">Slide stage</text>
 <line x1="75" y1="213" x2="88" y2="213" stroke="#888" stroke-width="0.6"/>
       `
@@ -1068,7 +1068,7 @@ ${Array.from({length:20}, (_,i) => {
           <!-- Info panel -->
           <div class="vl-info-panel" id="vl-info">
             <div class="vl-info-empty">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.2">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="1.2">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
                 <line x1="12" y1="16" x2="12.01" y2="16"/>
               </svg>

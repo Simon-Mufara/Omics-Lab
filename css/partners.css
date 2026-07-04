@@ -1,41 +1,41 @@
 /* Partners & Foundation */
 .pr-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .pr-header { margin-bottom: 1.25rem; }
-.pr-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.pr-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
-.pr-foundation-card { background: linear-gradient(135deg,rgba(88,166,255,.05),rgba(63,185,80,.04)); border: 1px solid rgba(88,166,255,.2); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
+.pr-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.pr-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
+.pr-foundation-card { background: linear-gradient(135deg,rgba(88,166,255,.05),rgba(0,196,160,.04)); border: 1px solid rgba(88,166,255,.2); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; }
 .pr-foundation-name { font-size: 1rem; font-weight: 800; color: #58a6ff; margin-bottom: .45rem; }
-.pr-foundation-mission { font-size: .85rem; color: #c9d1d9; line-height: 1.75; margin-bottom: 1rem; }
+.pr-foundation-mission { font-size: .85rem; color: #A8A098; line-height: 1.75; margin-bottom: 1rem; }
 .pr-pillars { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .6rem; margin-bottom: 1rem; }
-.pr-pillar { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: .7rem .85rem; }
-.pr-pillar-title { font-size: .82rem; font-weight: 700; color: #e6edf3; margin-bottom: .2rem; }
-.pr-pillar-desc { font-size: .72rem; color: #8b949e; line-height: 1.6; }
+.pr-pillar { background: #111B2E; border: 1px solid #182236; border-radius: 8px; padding: .7rem .85rem; }
+.pr-pillar-title { font-size: .82rem; font-weight: 700; color: #E4DDD2; margin-bottom: .2rem; }
+.pr-pillar-desc { font-size: .72rem; color: #A8A098; line-height: 1.6; }
 .pr-foundation-links { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-.pr-gh-link { display: flex; align-items: center; gap: .35rem; color: #c9d1d9; font-size: .82rem; text-decoration: none; }
+.pr-gh-link { display: flex; align-items: center; gap: .35rem; color: #A8A098; font-size: .82rem; text-decoration: none; }
 .pr-gh-link:hover { color: #58a6ff; }
 .pr-email-link { color: #58a6ff; font-size: .82rem; text-decoration: none; }
 .pr-email-link:hover { text-decoration: underline; }
-.pr-section-label { font-size: .72rem; color: #8b949e; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; margin-top: 1.25rem; }
+.pr-section-label { font-size: .72rem; color: #A8A098; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; margin-top: 1.25rem; }
 .pr-partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .7rem; margin-bottom: 1rem; }
-.pr-partner-card { background: #161b22; border: 1px solid #21262d; border-radius: 9px; padding: .85rem; display: flex; flex-direction: column; gap: .35rem; }
+.pr-partner-card { background: #111B2E; border: 1px solid #182236; border-radius: 9px; padding: .85rem; display: flex; flex-direction: column; gap: .35rem; }
 .pr-partner-hdr { display: flex; justify-content: space-between; align-items: flex-start; gap: .4rem; flex-wrap: wrap; }
-.pr-partner-name { font-size: .85rem; font-weight: 700; color: #e6edf3; }
+.pr-partner-name { font-size: .85rem; font-weight: 700; color: #E4DDD2; }
 .pr-partner-type { font-size: .62rem; font-weight: 700; padding: .08rem .38rem; border: 1px solid; border-radius: 20px; flex-shrink: 0; }
-.pr-partner-region { font-size: .68rem; color: #484f58; }
-.pr-partner-desc { font-size: .75rem; color: #8b949e; line-height: 1.6; flex: 1; }
+.pr-partner-region { font-size: .68rem; color: #354060; }
+.pr-partner-desc { font-size: .75rem; color: #A8A098; line-height: 1.6; flex: 1; }
 .pr-partner-link { font-size: .72rem; color: #58a6ff; text-decoration: none; margin-top: auto; }
 .pr-partner-link:hover { text-decoration: underline; }
 .pr-contributors { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.pr-contrib-card { background: #161b22; border: 1px solid #21262d; border-radius: 9px; padding: .75rem .9rem; min-width: 200px; }
-.pr-contrib-name { font-size: .88rem; font-weight: 700; color: #e6edf3; margin-bottom: .1rem; }
-.pr-contrib-role { font-size: .72rem; color: #8b949e; line-height: 1.5; margin-bottom: .2rem; }
-.pr-contrib-country { font-size: .68rem; color: #484f58; margin-bottom: .3rem; }
+.pr-contrib-card { background: #111B2E; border: 1px solid #182236; border-radius: 9px; padding: .75rem .9rem; min-width: 200px; }
+.pr-contrib-name { font-size: .88rem; font-weight: 700; color: #E4DDD2; margin-bottom: .1rem; }
+.pr-contrib-role { font-size: .72rem; color: #A8A098; line-height: 1.5; margin-bottom: .2rem; }
+.pr-contrib-country { font-size: .68rem; color: #354060; margin-bottom: .3rem; }
 .pr-contrib-gh { font-size: .72rem; color: #58a6ff; text-decoration: none; }
 .pr-contrib-gh:hover { text-decoration: underline; }
 /* Developer spotlight card */
 .pr-dev-card {
   display: flex; gap: 2rem; align-items: stretch;
-  background: linear-gradient(135deg, #161b22 60%, rgba(88,166,255,.06));
+  background: linear-gradient(135deg, #111B2E 60%, rgba(88,166,255,.06));
   border: 1px solid rgba(88,166,255,.3);
   border-radius: 14px; overflow: hidden;
   margin-bottom: 1.5rem;
@@ -43,7 +43,7 @@
 }
 .pr-dev-photo-wrap {
   flex-shrink: 0; width: 200px;
-  background: #0d1117;
+  background: #0D1524;
   overflow: hidden;
 }
 .pr-dev-photo {
@@ -61,9 +61,9 @@
   font-size: .65rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
   color: #58a6ff; margin-bottom: .45rem;
 }
-.pr-dev-name { font-size: 1.45rem; font-weight: 900; color: #e6edf3; line-height: 1.1; margin-bottom: .3rem; }
-.pr-dev-role { font-size: .8rem; color: #8b949e; margin-bottom: .85rem; }
-.pr-dev-bio { font-size: .82rem; color: #c9d1d9; line-height: 1.75; margin-bottom: .9rem; }
+.pr-dev-name { font-size: 1.45rem; font-weight: 900; color: #E4DDD2; line-height: 1.1; margin-bottom: .3rem; }
+.pr-dev-role { font-size: .8rem; color: #A8A098; margin-bottom: .85rem; }
+.pr-dev-bio { font-size: .82rem; color: #A8A098; line-height: 1.75; margin-bottom: .9rem; }
 .pr-dev-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .9rem; }
 .pr-dev-tag {
   font-size: .65rem; font-weight: 700; letter-spacing: .04em;
@@ -74,11 +74,11 @@
 .pr-dev-link {
   display: inline-flex; align-items: center; gap: .35rem;
   font-size: .78rem; font-weight: 600; text-decoration: none;
-  background: #21262d; border: 1px solid #30363d;
-  color: #c9d1d9; border-radius: 7px; padding: .35rem .8rem;
+  background: #182236; border: 1px solid #243048;
+  color: #A8A098; border-radius: 7px; padding: .35rem .8rem;
   transition: background .15s, color .15s;
 }
-.pr-dev-link:hover { background: #30363d; color: #e6edf3; }
+.pr-dev-link:hover { background: #243048; color: #E4DDD2; }
 .pr-dev-link-primary {
   background: #1f6feb; border-color: #388bfd40; color: #fff;
 }
@@ -90,8 +90,8 @@
   .pr-dev-info { padding: 1.25rem; }
 }
 
-.pr-cta { background: rgba(63,185,80,.06); border: 1px solid rgba(63,185,80,.18); border-radius: 10px; padding: 1.25rem; margin-top: 1.5rem; }
-.pr-cta-title { font-size: .95rem; font-weight: 700; color: #3fb950; margin-bottom: .4rem; }
-.pr-cta-desc { font-size: .8rem; color: #8b949e; line-height: 1.7; margin-bottom: .85rem; }
-.pr-cta-btn { display: inline-block; padding: .45rem 1.1rem; background: #238636; color: #fff; border-radius: 7px; text-decoration: none; font-size: .82rem; font-weight: 700; }
-.pr-cta-btn:hover { background: #2ea043; }
+.pr-cta { background: rgba(0,196,160,.06); border: 1px solid rgba(0,196,160,.18); border-radius: 10px; padding: 1.25rem; margin-top: 1.5rem; }
+.pr-cta-title { font-size: .95rem; font-weight: 700; color: #00C4A0; margin-bottom: .4rem; }
+.pr-cta-desc { font-size: .8rem; color: #A8A098; line-height: 1.7; margin-bottom: .85rem; }
+.pr-cta-btn { display: inline-block; padding: .45rem 1.1rem; background: #007A6A; color: #fff; border-radius: 7px; text-decoration: none; font-size: .82rem; font-weight: 700; }
+.pr-cta-btn:hover { background: #007A6A; }

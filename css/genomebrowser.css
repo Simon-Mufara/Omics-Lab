@@ -1,23 +1,23 @@
 /* Genome Browser */
 .gb-wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .gb-header { margin-bottom: 1.25rem; }
-.gb-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.gb-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.gb-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.gb-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
 .gb-controls { display: flex; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap; }
-.gb-locus-select { flex: 1; min-width: 260px; padding: .42rem .7rem; background: #161b22; border: 1px solid #30363d; border-radius: 7px; color: #c9d1d9; font-size: .85rem; font-family: inherit; outline: none; }
-.gb-view-btn { padding: .42rem .9rem; background: #238636; color: #fff; border: none; border-radius: 7px; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
-.gb-view-btn:hover { background: #2ea043; }
-.gb-canvas { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1rem; min-height: 200px; }
-.gb-empty { padding: 3rem 1rem; text-align: center; color: #484f58; font-size: .85rem; }
-.gb-locus-label { font-size: .78rem; font-family: 'Cascadia Code','Fira Mono',monospace; color: #8b949e; margin-bottom: .4rem; }
-.gb-note { font-size: .74rem; color: #8b949e; background: rgba(63,185,80,.04); border: 1px solid rgba(63,185,80,.12); border-radius: 6px; padding: .45rem .7rem; margin-bottom: .75rem; line-height: 1.5; }
+.gb-locus-select { flex: 1; min-width: 260px; padding: .42rem .7rem; background: #111B2E; border: 1px solid #243048; border-radius: 7px; color: #A8A098; font-size: .85rem; font-family: inherit; outline: none; }
+.gb-view-btn { padding: .42rem .9rem; background: #007A6A; color: #fff; border: none; border-radius: 7px; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.gb-view-btn:hover { background: #007A6A; }
+.gb-canvas { background: #111B2E; border: 1px solid #182236; border-radius: 10px; padding: 1rem; min-height: 200px; }
+.gb-empty { padding: 3rem 1rem; text-align: center; color: #354060; font-size: .85rem; }
+.gb-locus-label { font-size: .78rem; font-family: 'Cascadia Code','Fira Mono',monospace; color: #A8A098; margin-bottom: .4rem; }
+.gb-note { font-size: .74rem; color: #A8A098; background: rgba(0,196,160,.04); border: 1px solid rgba(0,196,160,.12); border-radius: 6px; padding: .45rem .7rem; margin-bottom: .75rem; line-height: 1.5; }
 .gb-tracks { display: flex; flex-direction: column; gap: 2px; }
 .gb-track-row { display: grid; grid-template-columns: 80px 1fr; align-items: center; gap: .5rem; }
-.gb-track-label { font-size: .65rem; color: #484f58; text-align: right; line-height: 1.3; }
-.gb-track-sublbl { font-size: .58rem; color: #30363d; }
+.gb-track-label { font-size: .65rem; color: #354060; text-align: right; line-height: 1.3; }
+.gb-track-sublbl { font-size: .58rem; color: #243048; }
 .gb-track-svg { overflow: hidden; }
 .gb-variant-legend { margin-top: .75rem; display: flex; flex-direction: column; gap: .3rem; }
 .gb-var-row { display: flex; align-items: center; gap: .5rem; font-size: .72rem; }
 .gb-var-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .gb-var-id { font-family: 'Cascadia Code','Fira Mono',monospace; color: #58a6ff; min-width: 70px; }
-.gb-var-label { color: #8b949e; }
+.gb-var-label { color: #A8A098; }

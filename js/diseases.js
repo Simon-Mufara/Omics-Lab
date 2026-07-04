@@ -493,7 +493,7 @@ OmicsLab.DISEASES = {
 
   'rabies': {
     name: 'Rabies Lyssavirus (RABV)', category: 'Encephalitis Viruses', icon: 'brain',
-    color: '#8b949e',
+    color: '#A8A098',
     stats: { global: '59,000 deaths/yr (99% dog-mediated)', africa: '36% of global deaths — highest burden in Africa & Asia', daly: '3.7M DALYs/yr' },
     sampleTypes: ['Brain tissue (post-mortem — gold standard)','Nuchal skin biopsy (antemortem)','CSF','Saliva (RT-PCR)','Serum (virus-neutralising antibody titre)'],
     description: 'Rabies is caused by Rabies lyssavirus (Rhabdoviridae, genus Lyssavirus), one of 16 lyssavirus species that collectively cause rabies encephalitis. Once clinical symptoms appear, rabies is virtually 100% fatal. Dogs are responsible for 99% of human deaths globally. Lyssavirus species 2–16 include bat-associated viruses: European Bat Lyssavirus (EBLV) 1&2, Duvenhage (Africa), Lagos Bat Virus (West Africa), Mokola (Africa), and Australian Bat Lyssavirus.',
@@ -526,7 +526,7 @@ OmicsLab.DISEASES = {
 
   'rsv': {
     name: 'Respiratory Syncytial Virus (RSV A & B)', category: 'Respiratory Viruses', icon: 'activity',
-    color: '#3fb950',
+    color: '#00C4A0',
     stats: { global: '33M lower respiratory infections in children < 5/yr · 100K deaths', africa: 'Highest infant mortality from RSV globally', daly: '2.6M DALYs/yr' },
     sampleTypes: ['Nasopharyngeal swab','Nasal wash','BAL (ICU)','Serum (serology)'],
     description: 'RSV (Pneumoviridae) is the leading cause of bronchiolitis and viral pneumonia in infants and young children globally — the single most important cause of paediatric hospitalisation in the first 2 years of life. Two antigenic groups (A and B) co-circulate with alternating dominance. Major recent advance: RSVpreF vaccine (Pfizer Abrysvo) and RSVpreF3 (GSK Arexvy) approved 2023 for adults ≥60 years and maternal vaccination (protecting infants via transferred antibodies). Nirsevimab (Sanofi/AZ) monoclonal antibody approved for infants.',

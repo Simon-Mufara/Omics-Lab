@@ -126,9 +126,9 @@ OmicsLab.Engine = (function() {
 
   function qualityColor(v, inverse) {
     if (inverse) {
-      return v <= 10 ? '#3fb950' : v <= 30 ? '#d29922' : '#e5534b';
+      return v <= 10 ? '#00C4A0' : v <= 30 ? '#d29922' : '#e5534b';
     }
-    return v >= 80 ? '#3fb950' : v >= 55 ? '#d29922' : '#e5534b';
+    return v >= 80 ? '#00C4A0' : v >= 55 ? '#d29922' : '#e5534b';
   }
 
   function getGrade(score) {

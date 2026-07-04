@@ -136,7 +136,7 @@ OmicsLab.A11y = (function () {
         border-radius: var(--radius-sm, 4px) !important;
       }
 
-      /* ── Muted text contrast fix: #8b949e on #161b22 = 3.7:1 (fails AA) ──
+      /* ── Muted text contrast fix: #A8A098 on #111B2E = 3.7:1 (fails AA) ──
          Use #a0a8b3 which is 4.7:1 */
       .nx-msg-time, .nx-msg-role, .db-inst,
       .cal-strip-room, .ot-item-year,
@@ -150,7 +150,7 @@ OmicsLab.A11y = (function () {
         top: -40px;
         left: 8px;
         z-index: 10000;
-        background: var(--bg-canvas, #0d1117);
+        background: var(--bg-canvas, #0D1524);
         color: var(--blue, #58a6ff);
         padding: .4rem .8rem;
         border-radius: 4px;

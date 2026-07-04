@@ -41,12 +41,12 @@ OmicsLab.MobileNav = (function () {
     { id: 'analysis',        label: 'Analysis Suite',      color: '#e3b341' },
     { id: 'variantinterp',   label: 'Variant Interpreter', color: '#bc8cff' },
     { id: 'study',           label: 'Study Pack',          color: '#58a6ff' },
-    { id: 'terminal',        label: 'Terminal',            color: '#3fb950' },
-    { id: 'primerdesign',    label: 'Primer Design',       color: '#3fb950' },
-    { id: 'phylo',           label: 'Phylo Tree',          color: '#3fb950' },
+    { id: 'terminal',        label: 'Terminal',            color: '#00C4A0' },
+    { id: 'primerdesign',    label: 'Primer Design',       color: '#00C4A0' },
+    { id: 'phylo',           label: 'Phylo Tree',          color: '#00C4A0' },
     { id: 'heatmap',         label: 'Expression Viewer',   color: '#e3b341' },
-    { id: 'qualitypredictor',label: 'Quality Predictor',   color: '#3fb950' },
-    { id: 'gene-lookup',     label: 'Gene Lookup',         color: '#3fb950' },
+    { id: 'qualitypredictor',label: 'Quality Predictor',   color: '#00C4A0' },
+    { id: 'gene-lookup',     label: 'Gene Lookup',         color: '#00C4A0' },
     { id: 'pubmed',          label: 'PubMed',              color: '#58a6ff' },
     { id: 'gatk',            label: 'GATK Builder',        color: '#e3b341' },
   ];
@@ -159,17 +159,17 @@ OmicsLab.MobileNav = (function () {
     s.textContent = `
       .mob-tool-item{
         display:flex;align-items:center;gap:.45rem;
-        background:var(--bg-surface,#161b22);
-        border:1px solid var(--border-default,#21262d);
+        background:var(--bg-surface,#111B2E);
+        border:1px solid var(--border-default,#182236);
         border-radius:8px;padding:.55rem .65rem;
         font-size:.78rem;font-weight:600;
-        color:var(--text-secondary,#c9d1d9);
+        color:var(--text-secondary,#A8A098);
         cursor:pointer;text-align:left;
         min-height:44px;
         transition:background .1s,border-color .1s;
         -webkit-tap-highlight-color:transparent;
       }
-      .mob-tool-item:active{background:var(--bg-overlay,#21262d)}
+      .mob-tool-item:active{background:var(--bg-overlay,#182236)}
       .mob-tool-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
     `;
     document.head.appendChild(s);

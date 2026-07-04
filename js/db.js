@@ -16,21 +16,38 @@ OmicsLab.DB = (function () {
     const cfg = window.OMICSLAB_CONFIG;
     if (!cfg?.supabaseUrl || !cfg?.supabaseAnonKey) return;
 
-    /* Supabase CDN must be loaded before this runs */
-    const { createClient } = window.supabase || {};
-    if (!createClient) {
-      console.warn('[OmicsLab DB] Supabase CDN not loaded.');
-      return;
+    /* Supabase CDN may still be loading — poll until available (max 8 s) */
+    if (window.supabase?.createClient) {
+      _boot(cfg);
+    } else {
+      let attempts = 0;
+      const poll = setInterval(() => {
+        attempts++;
+        if (window.supabase?.createClient) {
+          clearInterval(poll);
+          _boot(cfg);
+        } else if (attempts > 40) {
+          clearInterval(poll);
+          console.warn('[OmicsLab DB] Supabase CDN did not load within 8 s — cloud sync disabled.');
+        }
+      }, 200);
     }
-
-    _client = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
-    _ready  = true;
   }
 
-  /* ── Auth token: set when Clerk signs in ─────────────────────── */
+  function _boot(cfg) {
+    _client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+    _ready  = true;
+    console.log('[OmicsLab DB] Ready ✓');
+  }
+
+  /* ── Auth token: set when Clerk signs in (Clerk manages refresh) */
   async function setSession(clerkJwt) {
     if (!_client) return;
-    await _client.auth.setSession({ access_token: clerkJwt, refresh_token: clerkJwt });
+    /* Supabase session is externally managed by Clerk — pass a stable
+       placeholder as refresh_token so Supabase does not attempt its own
+       refresh cycle with the same JWT. Real token refresh happens when
+       auth-clerk.js calls setSession() again after Clerk rotates. */
+    await _client.auth.setSession({ access_token: clerkJwt, refresh_token: 'clerk-managed' });
   }
 
   /* ── Generic error logger ────────────────────────────────────── */

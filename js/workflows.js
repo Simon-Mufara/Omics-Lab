@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Workflow Definitions
    All 14 workflows across 8 omics domains
    ═══════════════════════════════════════════════════════════════ */
@@ -255,7 +255,7 @@ OmicsLab.Workflows['wes'] = {
 OmicsLab.Workflows['rna-seq'] = {
   id:'rna-seq', domain:'transcriptomics', domainLabel:'Transcriptomics',
   name:'Bulk RNA-seq', difficulty:'beginner', icon:'activity',
-  color:'var(--transcripto)', colorHex:'#3fb950',
+  color:'var(--transcripto)', colorHex:'#00C4A0',
   desc:'Quantify genome-wide gene expression by sequencing poly-A selected or rRNA-depleted RNA from tissue or cell populations.',
   pipeline:['RNA Extraction','QC','rRNA Depletion','Library Prep','Sequencing','STAR Align','featureCounts','DESeq2'],
   steps:[
@@ -328,7 +328,7 @@ OmicsLab.Workflows['rna-seq'] = {
 OmicsLab.Workflows['scrna-seq'] = {
   id:'scrna-seq', domain:'transcriptomics', domainLabel:'Transcriptomics',
   name:'scRNA-seq (10x Chromium)', difficulty:'intermediate', icon:'hexagon',
-  color:'var(--transcripto)', colorHex:'#3fb950',
+  color:'var(--transcripto)', colorHex:'#00C4A0',
   desc:'Resolve the transcriptome of thousands of individual cells using GEM-based barcoding and UMI counting.',
   pipeline:['Dissociation','Viability Check','10x GEM','cDNA Amp','Library Prep','Cell Ranger','Seurat/Scanpy','UMAP'],
   steps:[
@@ -841,7 +841,7 @@ OmicsLab.Workflows['cite-seq'] = {
 OmicsLab.Workflows['rt-qpcr'] = {
   id:'rt-qpcr', domain:'transcriptomics', domainLabel:'Transcriptomics',
   name:'RT-qPCR Gene Expression', difficulty:'beginner', icon:'activity',
-  color:'var(--transcripto)', colorHex:'#3fb950',
+  color:'var(--transcripto)', colorHex:'#00C4A0',
   desc:'Quantify specific gene expression by reverse-transcribing RNA to cDNA and amplifying with gene-specific primers on a QuantStudio or RotorGene Q. The gold standard for validating RNA-seq hits in clinical and research settings.',
   pipeline:['RNA Extraction','RNA QC','cDNA Synthesis','Primer Design','qPCR Run','ΔΔCt Analysis','Normalisation'],
   steps:[
@@ -973,7 +973,7 @@ OmicsLab.DOMAINS = [
   { id:'genomics',       label:'Genomics',        icon:'dna',        color:'var(--genomics)',    colorHex:'#58a6ff', rgb:'88,166,255', badge:'badge-blue',
     desc:'Map the complete DNA sequence of an organism or characterise variants linked to disease.',
     workflows:['wgs','wes','ampli-seq'] },
-  { id:'transcriptomics',label:'Transcriptomics', icon:'activity',   color:'var(--transcripto)', colorHex:'#3fb950', rgb:'63,185,80',  badge:'badge-green',
+  { id:'transcriptomics',label:'Transcriptomics', icon:'activity',   color:'var(--transcripto)', colorHex:'#00C4A0', rgb:'63,185,80',  badge:'badge-green',
     desc:'Quantify gene expression at population (bulk) or single-cell resolution.',
     workflows:['rna-seq','scrna-seq','rt-qpcr'] },
   { id:'epigenomics',    label:'Epigenomics',     icon:'lock-open',  color:'var(--epigenomics)', colorHex:'#d2a8ff', rgb:'210,168,255',badge:'badge-blue',

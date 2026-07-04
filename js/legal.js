@@ -205,21 +205,21 @@ OmicsLab.Legal = (function () {
       .legal-page{max-width:760px;margin:0 auto;padding:1.5rem 1rem 4rem}
       .legal-header{margin-bottom:1.75rem}
       .legal-chip{display:inline-flex;padding:.18rem .6rem;background:rgba(88,166,255,.1);border:1px solid rgba(88,166,255,.25);border-radius:20px;font-size:.7rem;font-weight:700;color:#58a6ff;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.65rem}
-      .legal-title{font-size:1.6rem;font-weight:800;color:#e6edf3;margin:0 0 .35rem}
-      .legal-sub{font-size:.78rem;color:#8b949e;margin:0}
+      .legal-title{font-size:1.6rem;font-weight:800;color:#E4DDD2;margin:0 0 .35rem}
+      .legal-sub{font-size:.78rem;color:#A8A098;margin:0}
       .legal-link{color:#58a6ff;text-decoration:none}.legal-link:hover{text-decoration:underline}
       .legal-callout{display:flex;gap:.7rem;padding:.85rem 1rem;border-radius:8px;font-size:.82rem;line-height:1.55;margin-bottom:1.5rem;align-items:flex-start}
       .legal-callout svg{flex-shrink:0;margin-top:.1rem}
-      .legal-callout-green{background:rgba(63,185,80,.07);border:1px solid rgba(63,185,80,.25);color:#c8e6c9}.legal-callout-green svg{stroke:#3fb950}
+      .legal-callout-green{background:rgba(0,196,160,.07);border:1px solid rgba(0,196,160,.25);color:#c8e6c9}.legal-callout-green svg{stroke:#00C4A0}
       .legal-callout-blue{background:rgba(88,166,255,.07);border:1px solid rgba(88,166,255,.25);color:#bbdefb}.legal-callout-blue svg{stroke:#58a6ff}
-      .legal-section{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #21262d}
+      .legal-section{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #182236}
       .legal-section:last-child{border-bottom:none}
-      .legal-h2{font-size:1rem;font-weight:700;color:#e6edf3;margin:0 0 .6rem}
-      .legal-page p{font-size:.84rem;color:#8b949e;line-height:1.65;margin:.5rem 0}
-      .legal-ul{margin:.4rem 0 .4rem 1.2rem;padding:0;font-size:.84rem;color:#8b949e;line-height:1.7}
+      .legal-h2{font-size:1rem;font-weight:700;color:#E4DDD2;margin:0 0 .6rem}
+      .legal-page p{font-size:.84rem;color:#A8A098;line-height:1.65;margin:.5rem 0}
+      .legal-ul{margin:.4rem 0 .4rem 1.2rem;padding:0;font-size:.84rem;color:#A8A098;line-height:1.7}
       .legal-ul li{margin:.2rem 0}
-      .legal-code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:#21262d;padding:.05rem .3rem;border-radius:3px;color:#e3b341}
-      .legal-cite-block{background:#161b22;border-left:3px solid #58a6ff;padding:.65rem 1rem;border-radius:0 6px 6px 0;font-size:.82rem;color:#8b949e;margin:.5rem 0;font-style:italic}
+      .legal-code{font-family:'JetBrains Mono',monospace;font-size:.78rem;background:#182236;padding:.05rem .3rem;border-radius:3px;color:#e3b341}
+      .legal-cite-block{background:#111B2E;border-left:3px solid #58a6ff;padding:.65rem 1rem;border-radius:0 6px 6px 0;font-size:.82rem;color:#A8A098;margin:.5rem 0;font-style:italic}
     `;
     document.head.appendChild(s);
   }

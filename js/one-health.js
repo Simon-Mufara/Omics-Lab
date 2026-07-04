@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — One Health Surveillance Dashboard (Prompt 56)
    ─ Human–Animal–Environment disease nexus in Africa
    ─ Interactive SVG concentric circles + zoonotic data
@@ -14,9 +14,9 @@ OmicsLab.OneHealth = (function () {
     { id:'mpox',        name:'Mpox (Monkeypox)',  humanCases:15000, reservoirs:['Rodents','Squirrels','Non-human primates'], environment:['Deforestation','Human encroachment'], regions:['Central Africa','West Africa','East Africa'], season:['year-round'], genomicMarkers:'Clade I (DRC) · Clade IIb (global 2022)', climate:0.7, genomicsPage:'outbreak', color:'#f97316', icon:'virus', acuteRisk:0.8 },
     { id:'ebola',       name:'Ebola Virus Disease',humanCases:500,  reservoirs:['Fruit bats (Pteropodidae)','Non-human primates'], environment:['Forest clearance','Bushmeat'], regions:['Central Africa','West Africa'], season:['year-round'], genomicMarkers:'EBOV GP · NP sequencing for clade assignment', climate:0.5, genomicsPage:'outbreak', color:'#ff6b6b', icon:'alert-triangle', acuteRisk:0.9 },
     { id:'rift-valley', name:'Rift Valley Fever', humanCases:2000, reservoirs:['Cattle','Sheep','Goats','Camels'], environment:['Flooding','Irrigation','Heavy rainfall'], regions:['East Africa','North Africa','West Africa'], season:['rainy'], genomicMarkers:'Phlebovirus RNA segments (L/M/S)', climate:0.9, genomicsPage:'outbreak', color:'#e3b341', icon:'droplet', acuteRisk:0.6 },
-    { id:'anthrax',     name:'Anthrax',           humanCases:300,  reservoirs:['Cattle','Goats','Sheep','Wildlife'], environment:['Alkaline soil','Drought','Flooding'], regions:['East Africa','West Africa','Southern Africa'], season:['dry'], genomicMarkers:'B. anthracis MLVA/MLST genotyping', climate:0.6, genomicsPage:'alerts', color:'#8b949e', icon:'shield', acuteRisk:0.7 },
+    { id:'anthrax',     name:'Anthrax',           humanCases:300,  reservoirs:['Cattle','Goats','Sheep','Wildlife'], environment:['Alkaline soil','Drought','Flooding'], regions:['East Africa','West Africa','Southern Africa'], season:['dry'], genomicMarkers:'B. anthracis MLVA/MLST genotyping', climate:0.6, genomicsPage:'alerts', color:'#A8A098', icon:'shield', acuteRisk:0.7 },
     { id:'brucellosis', name:'Brucellosis',        humanCases:12000,reservoirs:['Cattle','Goats','Sheep','Camels'], environment:['Livestock husbandry','Unpasteurised dairy'], regions:['East Africa','North Africa','West Africa'], season:['year-round'], genomicMarkers:'Brucella MLVA15 for outbreak tracing', climate:0.3, genomicsPage:'alerts', color:'#58a6ff', icon:'activity', acuteRisk:0.4 },
-    { id:'leptospirosis',name:'Leptospirosis',     humanCases:8000, reservoirs:['Rodents','Cattle','Dogs','Wildlife'], environment:['Flooding','Urban slums','Agricultural land'], regions:['East Africa','West Africa','Southern Africa'], season:['rainy'], genomicMarkers:'Leptospira MLST · serogrouping', climate:0.8, genomicsPage:'alerts', color:'#3fb950', icon:'droplet', acuteRisk:0.5 },
+    { id:'leptospirosis',name:'Leptospirosis',     humanCases:8000, reservoirs:['Rodents','Cattle','Dogs','Wildlife'], environment:['Flooding','Urban slums','Agricultural land'], regions:['East Africa','West Africa','Southern Africa'], season:['rainy'], genomicMarkers:'Leptospira MLST · serogrouping', climate:0.8, genomicsPage:'alerts', color:'#00C4A0', icon:'droplet', acuteRisk:0.5 },
     { id:'rabies',      name:'Rabies',             humanCases:24000,reservoirs:['Dogs (primary)','Bats','Jackals'], environment:['Dog vaccination gap','Wildlife corridors'], regions:['All Africa'], season:['year-round'], genomicMarkers:'Rabies virus N gene phylogeny — lineage tracking', climate:0.2, genomicsPage:'outbreak', color:'#bc8cff', icon:'zap', acuteRisk:0.95 },
     { id:'hmpv',        name:'Human Metapneumovirus', humanCases:45000, reservoirs:['Birds (HMPV ancestor)'], environment:['Urban crowding','Poultry markets'], regions:['All Africa'], season:['cool-dry'], genomicMarkers:'HMPV F gene phylogeny · genotype A/B', climate:0.4, genomicsPage:'outbreak', color:'#79c0ff', icon:'activity', acuteRisk:0.3 },
     { id:'trypanosomiasis',name:'African Sleeping Sickness', humanCases:1000, reservoirs:['Cattle','Wildlife (buffalo,warthog)'], environment:['Savanna','Riverine woodland','Tsetse habitat'], regions:['Central Africa','East Africa','West Africa'], season:['year-round'], genomicMarkers:'T. brucei MLST · VSG gene switching analysis', climate:0.4, genomicsPage:'alerts', color:'#f97316', icon:'virus', acuteRisk:0.8 },
@@ -24,8 +24,8 @@ OmicsLab.OneHealth = (function () {
     { id:'hanta',       name:'Hantavirus',          humanCases:200,  reservoirs:['Rodents (Mastomys,Rattus)'], environment:['Rodent-human contact','Urban agriculture'], regions:['Southern Africa','East Africa'], season:['year-round'], genomicMarkers:'Hantavirus M and S segment sequencing', climate:0.5, genomicsPage:'outbreak', color:'#ff6b6b', icon:'thermometer', acuteRisk:0.65 },
     { id:'salmonella',  name:'Non-typhoidal Salmonella', humanCases:680000,reservoirs:['Poultry','Cattle','Reptiles'], environment:['Food systems','Water contamination'], regions:['All Africa'], season:['year-round'], genomicMarkers:'Salmonella Typhimurium/Enteritidis WGS for outbreak attribution', climate:0.3, genomicsPage:'alerts', color:'#58a6ff', icon:'activity', acuteRisk:0.4 },
     { id:'avian-flu',   name:'Avian Influenza H5N1',humanCases:8,   reservoirs:['Wild birds (Anatidae)','Poultry'], environment:['Migratory flyways','Poultry markets','Wetlands'], regions:['North Africa','East Africa','West Africa'], season:['migration'], genomicMarkers:'IAV HA/NA segment surveillance — H5 clade 2.3.4.4b', climate:0.6, genomicsPage:'outbreak', color:'#bc8cff', icon:'wind', acuteRisk:0.6 },
-    { id:'plague',      name:'Bubonic Plague',       humanCases:500,  reservoirs:['Rodents (Rattus)','Fleas (Xenopsylla)'], environment:['Highland rodent habitat','Climate warming'], regions:['East Africa','Madagascar','DRC'], season:['cool'], genomicMarkers:'Yersinia pestis MLVA · wgSNP outbreak cluster', climate:0.7, genomicsPage:'outbreak', color:'#8b949e', icon:'alert-triangle', acuteRisk:0.85 },
-    { id:'leishmaniasis',name:'Leishmaniasis',       humanCases:50000,reservoirs:['Sandflies','Dogs','Rodents','Hyraxes'], environment:['Sandfly habitat expansion','Deforestation'], regions:['East Africa','North Africa','West Africa'], season:['dry'], genomicMarkers:'Leishmania ITS1/Hsp70 species typing', climate:0.8, genomicsPage:'alerts', color:'#3fb950', icon:'map-pin', acuteRisk:0.5 },
+    { id:'plague',      name:'Bubonic Plague',       humanCases:500,  reservoirs:['Rodents (Rattus)','Fleas (Xenopsylla)'], environment:['Highland rodent habitat','Climate warming'], regions:['East Africa','Madagascar','DRC'], season:['cool'], genomicMarkers:'Yersinia pestis MLVA · wgSNP outbreak cluster', climate:0.7, genomicsPage:'outbreak', color:'#A8A098', icon:'alert-triangle', acuteRisk:0.85 },
+    { id:'leishmaniasis',name:'Leishmaniasis',       humanCases:50000,reservoirs:['Sandflies','Dogs','Rodents','Hyraxes'], environment:['Sandfly habitat expansion','Deforestation'], regions:['East Africa','North Africa','West Africa'], season:['dry'], genomicMarkers:'Leishmania ITS1/Hsp70 species typing', climate:0.8, genomicsPage:'alerts', color:'#00C4A0', icon:'map-pin', acuteRisk:0.5 },
   ];
 
   /* ─── Environmental drivers ─── */
@@ -34,7 +34,7 @@ OmicsLab.OneHealth = (function () {
     { id:'flooding',      label:'Flooding',            color:'#58a6ff', diseases:['rift-valley','leptospirosis','hanta','salmonella'] },
     { id:'drought',       label:'Drought & Heat',      color:'#e3b341', diseases:['anthrax','q-fever','plague','leishmaniasis'] },
     { id:'urbanisation',  label:'Rapid Urbanisation',  color:'#bc8cff', diseases:['rabies','salmonella','hmpv','leptospirosis'] },
-    { id:'livestock',     label:'Livestock Expansion', color:'#3fb950', diseases:['rift-valley','brucellosis','q-fever','anthrax','avian-flu'] },
+    { id:'livestock',     label:'Livestock Expansion', color:'#00C4A0', diseases:['rift-valley','brucellosis','q-fever','anthrax','avian-flu'] },
     { id:'wildlife',      label:'Wildlife-Livestock Interface', color:'#79c0ff', diseases:['ebola','mpox','trypanosomiasis','anthrax'] },
   ];
 
@@ -75,7 +75,7 @@ OmicsLab.OneHealth = (function () {
             ${_renderNexusDiagram()}
             <div class="oh-diagram-legend">
               <span class="oh-leg"><span class="oh-leg-dot" style="background:#ff6b6b"></span>Human diseases</span>
-              <span class="oh-leg"><span class="oh-leg-dot" style="background:#3fb950"></span>Animal reservoirs</span>
+              <span class="oh-leg"><span class="oh-leg-dot" style="background:#00C4A0"></span>Animal reservoirs</span>
               <span class="oh-leg"><span class="oh-leg-dot" style="background:#58a6ff"></span>Environment</span>
             </div>
           </div>
@@ -135,7 +135,7 @@ OmicsLab.OneHealth = (function () {
     const W = 520, H = 380, cx = 260, cy = 190;
     const rings = [
       { r:60,  fill:'rgba(255,107,107,.06)', stroke:'#ff6b6b', label:'Human' },
-      { r:120, fill:'rgba(63,185,80,.04)',   stroke:'#3fb950', label:'Animal' },
+      { r:120, fill:'rgba(0,196,160,.04)',   stroke:'#00C4A0', label:'Animal' },
       { r:180, fill:'rgba(88,166,255,.03)',  stroke:'#58a6ff', label:'Environment' },
     ];
 
@@ -151,9 +151,9 @@ OmicsLab.OneHealth = (function () {
       `).join('')}
 
       <!-- Center label -->
-      <text x="${cx}" y="${cy - 8}" text-anchor="middle" fill="#8b949e" font-size="9" font-family="Inter,sans-serif">ONE</text>
-      <text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="#8b949e" font-size="9" font-family="Inter,sans-serif">HEALTH</text>
-      <text x="${cx}" y="${cy + 17}" text-anchor="middle" fill="#8b949e" font-size="7" font-family="Inter,sans-serif">15 diseases</text>
+      <text x="${cx}" y="${cy - 8}" text-anchor="middle" fill="#A8A098" font-size="9" font-family="Inter,sans-serif">ONE</text>
+      <text x="${cx}" y="${cy + 5}" text-anchor="middle" fill="#A8A098" font-size="9" font-family="Inter,sans-serif">HEALTH</text>
+      <text x="${cx}" y="${cy + 17}" text-anchor="middle" fill="#A8A098" font-size="7" font-family="Inter,sans-serif">15 diseases</text>
 
       <!-- Disease nodes -->
       ${diseaseAngles.map(d => {

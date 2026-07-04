@@ -154,7 +154,7 @@ OmicsLab.Leaderboard = (function () {
       </div>` : `
       <div class="lb-my-rank lb-my-rank-empty">
         <div class="lb-my-rank-label">Complete a lab experiment to enter the leaderboard</div>
-        <div style="font-size:.8rem;color:#8b949e;margin-top:.35rem">Your best score will appear here automatically</div>
+        <div style="font-size:.8rem;color:#A8A098;margin-top:.35rem">Your best score will appear here automatically</div>
       </div>`}
 
       <div class="lb-table-wrap">
@@ -205,9 +205,9 @@ OmicsLab.Leaderboard = (function () {
       const x = toX(e.lng).toFixed(1);
       const y = toY(e.lat).toFixed(1);
       const r = e.isMe ? 7 : e.rank <= 3 ? 6 : 4;
-      const fill = e.isMe ? '#e3b341' : e.rank <= 10 ? '#3fb950' : '#58a6ff';
+      const fill = e.isMe ? '#e3b341' : e.rank <= 10 ? '#00C4A0' : '#58a6ff';
       const opacity = e.isMe ? 1 : Math.max(0.4, 1 - (e.rank - 1) / 80);
-      return `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" opacity="${opacity}" stroke="#0d1117" stroke-width="1">
+      return `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" opacity="${opacity}" stroke="#0D1524" stroke-width="1">
         <title>${e.name} — ${e.city}, ${e.country} · Score: ${e.score}</title>
       </circle>`;
     }).join('');
@@ -234,13 +234,13 @@ OmicsLab.Leaderboard = (function () {
         </div>
         <div class="lb-map-legend">
           <span class="lb-legend-item"><span class="lb-legend-dot" style="background:#e3b341"></span>You</span>
-          <span class="lb-legend-item"><span class="lb-legend-dot" style="background:#3fb950"></span>Top 10</span>
+          <span class="lb-legend-item"><span class="lb-legend-dot" style="background:#00C4A0"></span>Top 10</span>
           <span class="lb-legend-item"><span class="lb-legend-dot" style="background:#58a6ff"></span>Others</span>
         </div>
         <div class="lb-map-container">
           <svg viewBox="0 0 ${W} ${H}" class="lb-map-svg" xmlns="http://www.w3.org/2000/svg" aria-label="Global learner map">
             <!-- Simple land background using rectangles (offline, no tile server) -->
-            <rect width="${W}" height="${H}" fill="#0d1117"/>
+            <rect width="${W}" height="${H}" fill="#0D1524"/>
             <!-- Simplified continent outlines as background -->
             <text x="${toX(20)}" y="${toY(10)}" class="lb-map-label" fill="rgba(255,255,255,.12)" font-size="10" text-anchor="middle">AFRICA</text>
             <text x="${toX(80)}" y="${toY(40)}" class="lb-map-label" fill="rgba(255,255,255,.10)" font-size="9" text-anchor="middle">ASIA</text>

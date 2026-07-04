@@ -150,14 +150,14 @@ OmicsLab.CodonUsage = (function () {
       const freq = r.total > 0 ? (cnt / r.total * 1000).toFixed(1) : '0.0';
       const refVal = refRscu[codon];
       const diff = refVal !== undefined ? (rscuVal - refVal).toFixed(2) : '—';
-      const diffColor = refVal !== undefined ? (rscuVal > refVal ? '#ff6b6b' : '#3fb950') : '#484f58';
+      const diffColor = refVal !== undefined ? (rscuVal > refVal ? '#ff6b6b' : '#00C4A0') : '#354060';
       const bar = Math.min(rscuVal / 2 * 100, 100);
       return `<tr>
         <td class="cu-codon">${codon}</td>
         <td class="cu-aa">${aa}</td>
         <td class="cu-count">${cnt}</td>
         <td class="cu-freq">${freq}</td>
-        <td><div class="cu-rscu-cell"><div class="cu-rscu-bar-wrap"><div class="cu-rscu-bar" style="width:${bar}%;background:${rscuVal > 1 ? '#58a6ff' : '#30363d'}"></div></div><span class="cu-rscu-val">${rscuVal.toFixed(2)}</span></div></td>
+        <td><div class="cu-rscu-cell"><div class="cu-rscu-bar-wrap"><div class="cu-rscu-bar" style="width:${bar}%;background:${rscuVal > 1 ? '#58a6ff' : '#243048'}"></div></div><span class="cu-rscu-val">${rscuVal.toFixed(2)}</span></div></td>
         <td style="color:${diffColor};font-size:.75rem">${diff}</td>
       </tr>`;
     }).join('');
@@ -207,7 +207,7 @@ OmicsLab.CodonUsage = (function () {
       <div class="cu-wrap">
         <div class="cu-header">
           <div class="cu-header-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             Codon Usage Analyser
           </div>
           <div class="cu-header-sub">RSCU analysis, GC content, per-organism comparison — fully offline</div>

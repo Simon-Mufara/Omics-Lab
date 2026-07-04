@@ -18,19 +18,19 @@
   gap: 0.5rem;
   font-size: 1.15rem;
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .pm-header-sub {
   margin-top: 0.25rem;
   font-size: 0.8rem;
-  color: #8b949e;
+  color: #A8A098;
 }
 
 /* ── Search bar ── */
 .pm-search-bar {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: #111B2E;
+  border: 1px solid #243048;
   border-radius: 10px;
   padding: 1rem;
   margin-bottom: 0.75rem;
@@ -51,17 +51,17 @@
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  color: #484f58;
+  color: #354060;
   pointer-events: none;
 }
 
 .pm-search-input {
   width: 100%;
   padding: 0.55rem 0.75rem 0.55rem 2.1rem;
-  background: #0d1117;
-  border: 1px solid #30363d;
+  background: #0D1524;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #e6edf3;
+  color: #E4DDD2;
   font-size: 0.85rem;
   font-family: inherit;
   outline: none;
@@ -74,12 +74,12 @@
 }
 
 .pm-search-input::placeholder {
-  color: #484f58;
+  color: #354060;
 }
 
 .pm-search-btn {
   padding: 0.55rem 1.1rem;
-  background: #238636;
+  background: #007A6A;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -91,7 +91,7 @@
 }
 
 .pm-search-btn:hover {
-  background: #2ea043;
+  background: #007A6A;
 }
 
 /* ── Filters ── */
@@ -104,10 +104,10 @@
 
 .pm-filter-btn {
   padding: 0.3rem 0.75rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 20px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.75rem;
   font-family: inherit;
   cursor: pointer;
@@ -122,10 +122,10 @@
 
 .pm-filter-select {
   padding: 0.3rem 0.6rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.75rem;
   font-family: inherit;
   cursor: pointer;
@@ -134,7 +134,7 @@
 
 .pm-filter-select:focus {
   border-color: #58a6ff;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 /* ── Quick searches ── */
@@ -148,16 +148,16 @@
 
 .pm-quick-label {
   font-size: 0.75rem;
-  color: #484f58;
+  color: #354060;
   margin-right: 0.25rem;
 }
 
 .pm-quick-btn {
   padding: 0.25rem 0.65rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 20px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.72rem;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -179,7 +179,7 @@
 
 .pm-count {
   font-size: 0.8rem;
-  color: #8b949e;
+  color: #A8A098;
 }
 
 .pm-export-btn {
@@ -187,17 +187,17 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.3rem 0.7rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.75rem;
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
 
 .pm-export-btn:hover {
-  color: #e6edf3;
+  color: #E4DDD2;
   border-color: #58a6ff;
 }
 
@@ -208,15 +208,15 @@
 }
 
 .pm-article-card {
-  background: #161b22;
-  border: 1px solid #21262d;
+  background: #111B2E;
+  border: 1px solid #182236;
   border-radius: 8px;
   padding: 1rem;
   transition: border-color 0.15s;
 }
 
 .pm-article-card:hover {
-  border-color: #30363d;
+  border-color: #243048;
 }
 
 .pm-article-meta {
@@ -228,14 +228,14 @@
 
 .pm-journal {
   font-size: 0.75rem;
-  color: #3fb950;
+  color: #00C4A0;
   font-weight: 600;
 }
 
 .pm-year,
 .pm-pmid {
   font-size: 0.72rem;
-  color: #484f58;
+  color: #354060;
 }
 
 .pm-article-title {
@@ -256,13 +256,13 @@
 
 .pm-authors {
   font-size: 0.75rem;
-  color: #8b949e;
+  color: #A8A098;
   margin-bottom: 0.35rem;
 }
 
 .pm-abstract {
   font-size: 0.78rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
@@ -280,11 +280,11 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.22rem 0.6rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 5px;
   font-size: 0.72rem;
-  color: #8b949e;
+  color: #A8A098;
   text-decoration: none;
   cursor: pointer;
   font-family: inherit;
@@ -293,7 +293,7 @@
 
 .pm-action-link:hover,
 .pm-action-btn:hover {
-  color: #e6edf3;
+  color: #E4DDD2;
   border-color: #58a6ff;
   background: rgba(88, 166, 255, 0.07);
 }
@@ -306,7 +306,7 @@
   gap: 1rem;
   margin-top: 1.5rem;
   padding-top: 1rem;
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
 }
 
 .pm-page-btn {
@@ -314,10 +314,10 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.4rem 0.9rem;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.8rem;
   cursor: pointer;
   font-family: inherit;
@@ -330,13 +330,13 @@
 }
 
 .pm-page-btn:not(:disabled):hover {
-  color: #e6edf3;
+  color: #E4DDD2;
   border-color: #58a6ff;
 }
 
 .pm-page-info {
   font-size: 0.8rem;
-  color: #8b949e;
+  color: #A8A098;
 }
 
 /* ── States ── */
@@ -349,7 +349,7 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 3rem 1rem;
-  color: #484f58;
+  color: #354060;
   font-size: 0.85rem;
   text-align: center;
 }
@@ -363,7 +363,7 @@
 .pm-spinner {
   width: 22px;
   height: 22px;
-  border: 2px solid #30363d;
+  border: 2px solid #243048;
   border-top-color: #58a6ff;
   border-radius: 50%;
   animation: pm-spin 0.7s linear infinite;

@@ -87,7 +87,7 @@ OmicsLab.Directory = (function () {
     const list = document.getElementById('dir-list');
     if (!list) return;
     if (!profiles.length) { list.innerHTML = '<div class="dir-empty">No researchers match your search.</div>'; return; }
-    const focusColors = ['#3fb950','#58a6ff','#bc8cff','#e3b341','#f97316'];
+    const focusColors = ['#00C4A0','#58a6ff','#bc8cff','#e3b341','#f97316'];
     list.innerHTML = profiles.map(p => `
       <div class="dir-card">
         <div class="dir-card-hdr">

@@ -17,7 +17,7 @@ OmicsLab.Testimonials = (function () {
       country: 'Kenya',
       flag:  '🇰🇪',
       init:  'AO',
-      color: '#3fb950',
+      color: '#00C4A0',
     },
     {
       quote: 'As a PhD student with limited wet-lab access, OmicsLab let me simulate a complete WGS pipeline before touching a single sample. When I finally ran the real protocol, I knew exactly what I was doing.',
@@ -74,10 +74,10 @@ OmicsLab.Testimonials = (function () {
   /* ── Partner logos (SVG text placeholders) ──────────────────── */
   const PARTNERS = [
     {
-      name: 'H3Africa', sub: 'Inspiration', color: '#3fb950', bg: 'rgba(63,185,80,0.08)',
+      name: 'H3Africa', sub: 'Inspiration', color: '#00C4A0', bg: 'rgba(0,196,160,0.08)',
       svg: `<svg viewBox="0 0 80 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="H3Africa (inspiration)">
-        <text x="4" y="28" font-family="Sora,Inter,system-ui" font-weight="800" font-size="22" fill="#3fb950">H3</text>
-        <text x="36" y="26" font-family="Inter,system-ui" font-weight="600" font-size="13" fill="#3fb950">Africa</text>
+        <text x="4" y="28" font-family="Sora,Inter,system-ui" font-weight="800" font-size="22" fill="#00C4A0">H3</text>
+        <text x="36" y="26" font-family="Inter,system-ui" font-weight="600" font-size="13" fill="#00C4A0">Africa</text>
       </svg>`,
     },
     {

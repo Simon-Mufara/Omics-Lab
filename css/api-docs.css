@@ -1,18 +1,18 @@
 /* Developer API Documentation */
 .ad-wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .ad-header { margin-bottom: 1.25rem; }
-.ad-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.ad-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.ad-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.ad-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
 .ad-layout { display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; }
 @media(max-width:640px) { .ad-layout { grid-template-columns: 1fr; } }
 .ad-nav { display: flex; flex-direction: column; gap: .2rem; }
-.ad-nav-item { text-align: left; padding: .38rem .65rem; background: none; border: 1px solid transparent; border-radius: 6px; color: #8b949e; font-size: .82rem; cursor: pointer; font-family: inherit; transition: all .15s; }
-.ad-nav-item:hover { color: #c9d1d9; background: #161b22; }
+.ad-nav-item { text-align: left; padding: .38rem .65rem; background: none; border: 1px solid transparent; border-radius: 6px; color: #A8A098; font-size: .82rem; cursor: pointer; font-family: inherit; transition: all .15s; }
+.ad-nav-item:hover { color: #A8A098; background: #111B2E; }
 .ad-nav-active { color: #58a6ff; background: rgba(88,166,255,.08); border-color: rgba(88,166,255,.2); }
 .ad-content { min-width: 0; }
-.ad-content-title { font-size: 1.05rem; font-weight: 800; color: #e6edf3; margin: 0 0 1rem 0; padding-bottom: .65rem; border-bottom: 1px solid #21262d; }
-.ad-content-body { font-size: .82rem; color: #c9d1d9; line-height: 1.75; }
+.ad-content-title { font-size: 1.05rem; font-weight: 800; color: #E4DDD2; margin: 0 0 1rem 0; padding-bottom: .65rem; border-bottom: 1px solid #182236; }
+.ad-content-body { font-size: .82rem; color: #A8A098; line-height: 1.75; }
 .ad-p { margin: .65rem 0; }
-.ad-h3 { font-size: .9rem; font-weight: 700; color: #e6edf3; margin: 1.1rem 0 .4rem; }
-.ad-code-block { display: block; background: #0d1117; border: 1px solid #21262d; border-radius: 8px; padding: .9rem 1.1rem; font-family: 'Cascadia Code','Fira Mono',monospace; font-size: .78rem; color: #e6edf3; line-height: 1.7; overflow-x: auto; white-space: pre; margin: .75rem 0; }
+.ad-h3 { font-size: .9rem; font-weight: 700; color: #E4DDD2; margin: 1.1rem 0 .4rem; }
+.ad-code-block { display: block; background: #0D1524; border: 1px solid #182236; border-radius: 8px; padding: .9rem 1.1rem; font-family: 'Cascadia Code','Fira Mono',monospace; font-size: .78rem; color: #E4DDD2; line-height: 1.7; overflow-x: auto; white-space: pre; margin: .75rem 0; }
 .ad-inline-code { background: rgba(88,166,255,.1); color: #79c0ff; padding: .05rem .32rem; border-radius: 4px; font-family: 'Cascadia Code','Fira Mono',monospace; font-size: .85em; }

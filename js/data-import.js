@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Data Import (Prompt 37)
    ─ Drag-drop zone for FASTQ / VCF / expression matrix files
    ─ Web Worker parsing (non-blocking) with progress bar
@@ -171,7 +171,7 @@ OmicsLab.DataImport = (function () {
 
   /* ─── FASTQ result cards ─── */
   function _fastqCards(r) {
-    const passColor = r.pass ? '#3fb950' : '#f97316';
+    const passColor = r.pass ? '#00C4A0' : '#f97316';
     const passLabel = r.pass ? 'PASS' : 'REVIEW';
 
     const metrics = [
@@ -188,8 +188,8 @@ OmicsLab.DataImport = (function () {
     const metricHtml = metrics.map(m => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
-        <div class="di-metric-value" style="color:${m.ok ? '#3fb950' : '#f97316'}">${m.value}</div>
-        <div class="di-metric-dot" style="background:${m.ok ? '#3fb950' : '#f97316'}"></div>
+        <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
+        <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
       </div>`).join('');
 
     /* Per-base quality miniature bar chart */
@@ -198,7 +198,7 @@ OmicsLab.DataImport = (function () {
       <div class="di-bar-chart" aria-label="Per-base quality score bar chart">
         ${r.perBaseQ.map((q, i) => {
           const h = Math.round(q / 40 * 40);
-          const c = q >= 30 ? '#3fb950' : q >= 20 ? '#e3b341' : '#ff6b6b';
+          const c = q >= 30 ? '#00C4A0' : q >= 20 ? '#e3b341' : '#ff6b6b';
           return `<div class="di-bar" style="height:${h}px;background:${c}" title="Pos ${i+1}: Q${q}"></div>`;
         }).join('')}
       </div>
@@ -238,8 +238,8 @@ OmicsLab.DataImport = (function () {
     const metricHtml = metrics.map(m => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
-        <div class="di-metric-value" style="color:${m.ok ? '#3fb950' : '#f97316'}">${m.value}</div>
-        <div class="di-metric-dot" style="background:${m.ok ? '#3fb950' : '#f97316'}"></div>
+        <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
+        <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
       </div>`).join('');
 
     /* Chrom distribution bar chart */
@@ -269,7 +269,7 @@ OmicsLab.DataImport = (function () {
               <td class="di-base-ref">${v.ref}</td>
               <td class="di-base-alt">${v.alt}</td>
               <td>${v.qual != null && !isNaN(v.qual) ? v.qual.toFixed(1) : '.'}</td>
-              <td style="color:${v.filter==='PASS'?'#3fb950':'#8b949e'}">${v.filter}</td>
+              <td style="color:${v.filter==='PASS'?'#00C4A0':'#A8A098'}">${v.filter}</td>
             </tr>`).join('')}
           </tbody>
         </table>
@@ -301,8 +301,8 @@ OmicsLab.DataImport = (function () {
     const metricHtml = metrics.map(m => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
-        <div class="di-metric-value" style="color:${m.ok ? '#3fb950' : '#f97316'}">${m.value}</div>
-        <div class="di-metric-dot" style="background:${m.ok ? '#3fb950' : '#f97316'}"></div>
+        <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
+        <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
       </div>`).join('');
 
     /* Top genes table */
@@ -380,7 +380,7 @@ OmicsLab.DataImport = (function () {
 
       <div class="di-zones-row">
         ${[
-          { id:'fastq', icon:'bar-chart', label:'FASTQ File', hint:'.fastq  .fq', color:'#3fb950', accept:'.fastq,.fq,.fastq.gz,.fq.gz,.txt' },
+          { id:'fastq', icon:'bar-chart', label:'FASTQ File', hint:'.fastq  .fq', color:'#00C4A0', accept:'.fastq,.fq,.fastq.gz,.fq.gz,.txt' },
           { id:'vcf',   icon:'microscope', label:'VCF File',   hint:'.vcf  .vcf.gz', color:'#bc8cff', accept:'.vcf,.vcf.gz,.txt' },
           { id:'matrix',icon:'trending-up', label:'Expression Matrix', hint:'.csv  .tsv', color:'#58a6ff', accept:'.csv,.tsv,.txt' },
         ].map(z => `
@@ -512,55 +512,55 @@ OmicsLab.DataImport = (function () {
     const s = document.createElement('style');
     s.id = 'di-styles';
     s.textContent = `
-      .di-panel{padding:1.25rem;border:1px solid #21262d;border-radius:10px;background:#0d1117;margin-top:1rem}
+      .di-panel{padding:1.25rem;border:1px solid #182236;border-radius:10px;background:#0D1524;margin-top:1rem}
       .di-panel-header{margin-bottom:1rem}
-      .di-panel-title{font-size:.95rem;font-weight:700;color:#e6edf3;display:flex;align-items:center;gap:.4rem}
-      .di-panel-sub{display:block;font-size:.72rem;color:#8b949e;margin-top:.2rem}
+      .di-panel-title{font-size:.95rem;font-weight:700;color:#E4DDD2;display:flex;align-items:center;gap:.4rem}
+      .di-panel-sub{display:block;font-size:.72rem;color:#A8A098;margin-top:.2rem}
       .di-zones-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
       @media(max-width:700px){.di-zones-row{grid-template-columns:1fr}}
-      .di-zone{background:#161b22;border:1.5px dashed #30363d;border-radius:9px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
+      .di-zone{background:#111B2E;border:1.5px dashed #243048;border-radius:9px;padding:1.25rem 1rem;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;transition:border-color .15s,background .15s;position:relative}
       .di-zone:hover,.di-zone:focus{border-color:var(--di-color,#58a6ff);background:rgba(88,166,255,.04);outline:none}
       .di-zone.di-zone-over{border-color:var(--di-color,#58a6ff);background:rgba(88,166,255,.08);border-style:solid}
       .di-zone-icon{display:flex;align-items:center;justify-content:center;color:var(--di-color,#58a6ff)}
-      .di-zone-label{font-size:.82rem;font-weight:600;color:#e6edf3}
-      .di-zone-hint{font-size:.68rem;color:#8b949e;font-family:'JetBrains Mono',monospace}
-      .di-file-btn{font-size:.72rem;padding:.22rem .65rem;background:#21262d;border:1px solid #30363d;border-radius:5px;cursor:pointer;color:#8b949e;margin-top:.2rem;transition:background .15s}
-      .di-file-btn:hover{background:#30363d}
+      .di-zone-label{font-size:.82rem;font-weight:600;color:#E4DDD2}
+      .di-zone-hint{font-size:.68rem;color:#A8A098;font-family:'JetBrains Mono',monospace}
+      .di-file-btn{font-size:.72rem;padding:.22rem .65rem;background:#182236;border:1px solid #243048;border-radius:5px;cursor:pointer;color:#A8A098;margin-top:.2rem;transition:background .15s}
+      .di-file-btn:hover{background:#243048}
       .di-progress-wrap{width:100%;margin-top:.5rem}
-      .di-progress-bar{background:#21262d;border-radius:3px;height:5px;overflow:hidden}
+      .di-progress-bar{background:#182236;border-radius:3px;height:5px;overflow:hidden}
       .di-progress-bar-fill{height:100%;background:var(--di-color,#58a6ff);width:0;transition:width .4s}
-      .di-progress-label{font-size:.65rem;color:#8b949e;text-align:center;margin-top:.2rem}
+      .di-progress-label{font-size:.65rem;color:#A8A098;text-align:center;margin-top:.2rem}
       .di-result-area{width:100%;margin-top:.6rem}
-      .di-result-header{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:#8b949e;padding:.4rem .5rem;background:#161b22;border-radius:5px;margin-bottom:.5rem;overflow:hidden}
-      .di-result-filename{color:#e6edf3;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-      .di-result-size{flex-shrink:0;color:#8b949e}
+      .di-result-header{display:flex;align-items:center;gap:.4rem;font-size:.72rem;color:#A8A098;padding:.4rem .5rem;background:#111B2E;border-radius:5px;margin-bottom:.5rem;overflow:hidden}
+      .di-result-filename{color:#E4DDD2;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+      .di-result-size{flex-shrink:0;color:#A8A098}
       .di-status-badge{display:inline-flex;padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:.5rem}
       .di-metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;margin-bottom:.5rem}
-      .di-metric{background:#0d1117;border:1px solid #21262d;border-radius:5px;padding:.3rem .45rem;display:grid;grid-template-columns:1fr auto 8px;align-items:center;gap:.25rem}
-      .di-metric-label{font-size:.66rem;color:#8b949e}
+      .di-metric{background:#0D1524;border:1px solid #182236;border-radius:5px;padding:.3rem .45rem;display:grid;grid-template-columns:1fr auto 8px;align-items:center;gap:.25rem}
+      .di-metric-label{font-size:.66rem;color:#A8A098}
       .di-metric-value{font-size:.72rem;font-weight:700;text-align:right}
       .di-metric-dot{width:6px;height:6px;border-radius:50%}
-      .di-chart-title{font-size:.7rem;font-weight:600;color:#8b949e;margin:.5rem 0 .25rem;text-transform:uppercase;letter-spacing:.05em}
-      .di-bar-chart{display:flex;align-items:flex-end;gap:1px;height:42px;background:#161b22;border-radius:4px;padding:3px 3px 0;overflow:hidden}
+      .di-chart-title{font-size:.7rem;font-weight:600;color:#A8A098;margin:.5rem 0 .25rem;text-transform:uppercase;letter-spacing:.05em}
+      .di-bar-chart{display:flex;align-items:flex-end;gap:1px;height:42px;background:#111B2E;border-radius:4px;padding:3px 3px 0;overflow:hidden}
       .di-bar{flex:1;min-width:1px;border-radius:1px 1px 0 0;transition:height .3s}
-      .di-chart-axis{display:flex;justify-content:space-between;font-size:.6rem;color:#8b949e;margin-top:.1rem}
+      .di-chart-axis{display:flex;justify-content:space-between;font-size:.6rem;color:#A8A098;margin-top:.1rem}
       .di-chrom-chart{display:flex;flex-direction:column;gap:.2rem}
       .di-chrom-row{display:grid;grid-template-columns:60px 1fr 50px;align-items:center;gap:.3rem;font-size:.66rem}
-      .di-chrom-label{color:#8b949e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace}
-      .di-chrom-bar-wrap{background:#21262d;border-radius:2px;height:10px;overflow:hidden}
+      .di-chrom-label{color:#A8A098;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'JetBrains Mono',monospace}
+      .di-chrom-bar-wrap{background:#182236;border-radius:2px;height:10px;overflow:hidden}
       .di-chrom-bar{height:100%;background:#bc8cff;border-radius:2px;transition:width .4s}
-      .di-chrom-count{text-align:right;color:#8b949e}
+      .di-chrom-count{text-align:right;color:#A8A098}
       .di-vcf-preview-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
       .di-vcf-table{width:100%;border-collapse:collapse;font-size:.66rem}
-      .di-vcf-table th{color:#8b949e;font-weight:600;padding:.25rem .35rem;border-bottom:1px solid #21262d;text-align:left;white-space:nowrap}
-      .di-vcf-table td{padding:.22rem .35rem;border-bottom:1px solid #161b22;color:#e6edf3;white-space:nowrap}
-      .di-vcf-table tr:hover td{background:#161b22}
+      .di-vcf-table th{color:#A8A098;font-weight:600;padding:.25rem .35rem;border-bottom:1px solid #182236;text-align:left;white-space:nowrap}
+      .di-vcf-table td{padding:.22rem .35rem;border-bottom:1px solid #111B2E;color:#E4DDD2;white-space:nowrap}
+      .di-vcf-table tr:hover td{background:#111B2E}
       .di-base-ref{color:#ff6b6b;font-family:'JetBrains Mono',monospace}
-      .di-base-alt{color:#3fb950;font-family:'JetBrains Mono',monospace}
+      .di-base-alt{color:#00C4A0;font-family:'JetBrains Mono',monospace}
       .di-issues-list{margin:.3rem 0;display:flex;flex-direction:column;gap:.25rem}
       .di-issue{display:flex;align-items:flex-start;gap:.35rem;font-size:.68rem;color:#f97316;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-radius:5px;padding:.3rem .45rem}
       .di-error-card{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);border-radius:6px;padding:.5rem;font-size:.72rem;color:#ff6b6b}
-      .di-global-drop-hint{text-align:center;font-size:.66rem;color:#8b949e;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.3rem}
+      .di-global-drop-hint{text-align:center;font-size:.66rem;color:#A8A098;margin-top:.5rem;display:flex;align-items:center;justify-content:center;gap:.3rem}
     `;
     document.head.appendChild(s);
   }

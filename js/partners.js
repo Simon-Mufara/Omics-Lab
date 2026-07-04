@@ -39,7 +39,7 @@ OmicsLab.Partners = (function () {
     const section = document.getElementById('partners-section');
     if (!section || section.dataset.prReady) return;
     section.dataset.prReady = '1';
-    const typeColor = { Academic:'#58a6ff', Infrastructure:'#3fb950', 'Public Health':'#f97316', Research:'#bc8cff', Technology:'#e3b341', Global:'#79c0ff' };
+    const typeColor = { Academic:'#58a6ff', Infrastructure:'#00C4A0', 'Public Health':'#f97316', Research:'#bc8cff', Technology:'#e3b341', Global:'#79c0ff' };
     section.innerHTML = `
       <div class="pr-wrap">
         <div class="pr-header">
@@ -73,7 +73,7 @@ OmicsLab.Partners = (function () {
           ${PARTNERS.map(p => `<div class="pr-partner-card">
             <div class="pr-partner-hdr">
               <span class="pr-partner-name">${p.name}</span>
-              <span class="pr-partner-type" style="color:${typeColor[p.type]||'#8b949e'};border-color:${typeColor[p.type]||'#8b949e'}30">${p.type}</span>
+              <span class="pr-partner-type" style="color:${typeColor[p.type]||'#A8A098'};border-color:${typeColor[p.type]||'#A8A098'}30">${p.type}</span>
             </div>
             <div class="pr-partner-region">${p.region}</div>
             <div class="pr-partner-desc">${p.desc}</div>

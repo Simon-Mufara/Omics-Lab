@@ -123,9 +123,9 @@ OmicsLab.QualityPredictor = (function () {
     const out = document.getElementById('qp-output');
     if (!out) return;
 
-    const verdictColor = pass ? '#3fb950' : '#ff6b6b';
+    const verdictColor = pass ? '#00C4A0' : '#ff6b6b';
     const verdictIcon  = pass
-      ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
+      ? '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>'
       : '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
     const verdict      = pass ? 'PASS' : 'FAIL';
     const confLabel    = confidence > 0.7 ? 'High confidence' : confidence > 0.4 ? 'Moderate confidence' : 'Low confidence — borderline sample';
@@ -137,7 +137,7 @@ OmicsLab.QualityPredictor = (function () {
       const ok = score !== undefined && score >= 0.6;
       const warn = score !== undefined && score >= 0.3 && score < 0.6;
       const fail = score !== undefined && score < 0.3;
-      const statusColor = ok ? '#3fb950' : warn ? '#e3b341' : '#ff6b6b';
+      const statusColor = ok ? '#00C4A0' : warn ? '#e3b341' : '#ff6b6b';
       const statusLabel = ok ? 'PASS' : warn ? 'WARN' : 'FAIL';
       const advice = val !== null && val !== undefined ? _getAdvice(key, val) : 'Not entered';
 

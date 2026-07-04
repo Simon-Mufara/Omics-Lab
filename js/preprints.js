@@ -127,7 +127,7 @@ OmicsLab.Preprints = (function () {
 
   function _renderEmpty(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pp-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>${msg}</div></div>`;
+    if (el) el.innerHTML = `<div class="pp-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
@@ -171,7 +171,7 @@ OmicsLab.Preprints = (function () {
 
   function _cardHtml(p, idx) {
     const serverLabel = p.ismedRxiv ? 'medRxiv' : 'bioRxiv';
-    const serverColor = p.ismedRxiv ? '#e3b341' : '#3fb950';
+    const serverColor = p.ismedRxiv ? '#e3b341' : '#00C4A0';
     const absShort = p.abs
       ? p.abs.replace(/<[^>]+>/g, '').slice(0, 320) + (p.abs.length > 320 ? '…' : '')
       : '';
@@ -311,7 +311,7 @@ OmicsLab.Preprints = (function () {
 
         <div id="pp-results" class="pp-results">
           <div class="pp-empty">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             <div>Enter a search term or choose a quick search above</div>
           </div>
         </div>

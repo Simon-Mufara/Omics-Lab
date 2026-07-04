@@ -28,7 +28,7 @@ OmicsLab.ResearchWizard = (function () {
 
   /* ─── Study type catalogue ─── */
   const STUDY_TYPES = [
-    { id: 'gwas', name: 'GWAS / Population Genetics', color: '#3fb950',
+    { id: 'gwas', name: 'GWAS / Population Genetics', color: '#00C4A0',
       desc: 'Genome-wide association: identify SNPs linked to a phenotype across a large population.',
       sampleHint: 'Minimum: 1,000 cases + 1,000 controls for common variants (MAF > 5%)',
       pipeline: ['WGS or high-density SNP array genotyping','PLINK/REGENIE variant QC (call rate, HWE, MAF filters)','Population stratification via PCA (remove outliers)','GWAS association testing (logistic/linear regression)','LD clumping & fine-mapping (FINEMAP/SuSiE)','Functional annotation (VEP, GTEx eQTL lookup)','GWAS catalog comparison & meta-analysis'],
@@ -70,7 +70,7 @@ OmicsLab.ResearchWizard = (function () {
       analysis: 'Linear model with limma or MSstats; minimum 2 unique peptides per protein',
       correction: 'FDR q < 0.01 for discovery; Bonferroni for validation set',
     },
-    { id: 'metagenomics', name: 'Metagenomics / Microbiome', color: '#3fb950',
+    { id: 'metagenomics', name: 'Metagenomics / Microbiome', color: '#00C4A0',
       desc: 'Characterise microbial communities from environmental or clinical samples using 16S or shotgun WGS.',
       sampleHint: 'Alpha diversity: ≥ 20 samples; differential abundance: ≥ 50 per group',
       pipeline: ['Bead-beating DNA extraction (PowerSoil for stool)','16S rRNA V3-V4 amplicon OR shotgun WGS sequencing','DADA2 (16S) or Kraken2/MetaPhlAn4 (WGS) classification','QIIME2 / Phyloseq diversity analysis (alpha, beta)','UniFrac PCoA ordination for beta-diversity','ANCOM-BC or MaAsLin2 differential abundance','Functional prediction (PICRUSt2 for 16S; HUMAnN3 for WGS)'],
@@ -84,7 +84,7 @@ OmicsLab.ResearchWizard = (function () {
       analysis: 'edgeR / DESeq2 for peak counts (ATAC); beta-binomial for methylation (DSS)',
       correction: 'FDR q < 0.05; minimum 2× fold change in peak signal',
     },
-    { id: 'computational', name: 'Computational / In Silico', color: '#8b949e',
+    { id: 'computational', name: 'Computational / In Silico', color: '#A8A098',
       desc: 'Analysis of public datasets — re-analysis, benchmarking, method development, or integrative multi-omics.',
       sampleHint: 'Validate on ≥ 2 independent cohorts; use benchmarking datasets (CAMDA, DREAM challenges)',
       pipeline: ['Identify & download public datasets (GEO, SRA, TCGA, ENCODE)','Data harmonisation, batch correction (ComBat-seq)','Exploratory analysis & dimensionality reduction','Method application and cross-validation (5-fold)','Comparison with published methods (AUC, MCC, F1)','Sensitivity analysis: remove individual cohorts'],
@@ -195,8 +195,8 @@ OmicsLab.ResearchWizard = (function () {
     <div class="rwiz-step-title">What is your research question?</div>
     <p class="rwiz-step-desc">Use the PICO framework to structure your hypothesis clearly. This shapes everything downstream — study design, sample size, and analysis plan.</p>
     <div class="rwiz-pico-grid">
-      <div class="rwiz-pico-card" style="border-color:#3fb950">
-        <div class="rwiz-pico-label" style="color:#3fb950">P — Population</div>
+      <div class="rwiz-pico-card" style="border-color:#00C4A0">
+        <div class="rwiz-pico-label" style="color:#00C4A0">P — Population</div>
         <div class="rwiz-pico-hint">Who are you studying? Be specific: age group, disease status, ancestry, geography.</div>
         <input class="rwiz-input" id="rwiz-population" value="${_e(_d.population)}"
           placeholder="e.g. HIV-positive adults in sub-Saharan Africa aged 18–50"/>

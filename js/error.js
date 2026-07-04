@@ -64,22 +64,22 @@ OmicsLab.Error = (function () {
     s.id = 'er-styles';
     s.textContent = `
       .er-wrap{display:flex;align-items:center;justify-content:center;min-height:60vh;padding:2rem 1rem}
-      .er-card{background:#161b22;border:1px solid #21262d;border-radius:14px;padding:2rem 2.25rem;max-width:440px;width:100%;text-align:center}
+      .er-card{background:#111B2E;border:1px solid #182236;border-radius:14px;padding:2rem 2.25rem;max-width:440px;width:100%;text-align:center}
       .er-icon-row{margin-bottom:.9rem}
-      .er-title{font-size:1.05rem;font-weight:700;color:#e6edf3;margin-bottom:.35rem}
-      .er-module{font-size:.78rem;color:#58a6ff;font-family:monospace;background:#0d1117;border-radius:5px;padding:.2rem .55rem;display:inline-block;margin-bottom:.5rem}
-      .er-msg{font-size:.8rem;color:#8b949e;line-height:1.6;margin-bottom:1.2rem}
-      .er-code{background:#0d1117;border-radius:4px;padding:.1rem .35rem;font-family:monospace;color:#e3b341}
+      .er-title{font-size:1.05rem;font-weight:700;color:#E4DDD2;margin-bottom:.35rem}
+      .er-module{font-size:.78rem;color:#58a6ff;font-family:monospace;background:#0D1524;border-radius:5px;padding:.2rem .55rem;display:inline-block;margin-bottom:.5rem}
+      .er-msg{font-size:.8rem;color:#A8A098;line-height:1.6;margin-bottom:1.2rem}
+      .er-code{background:#0D1524;border-radius:4px;padding:.1rem .35rem;font-family:monospace;color:#e3b341}
       .er-actions{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
       .er-btn{display:inline-block;padding:.42rem 1rem;border-radius:7px;font-size:.82rem;font-weight:600;cursor:pointer;text-decoration:none}
-      .er-btn-primary{background:#238636;border:1px solid #3fb950;color:#fff}
-      .er-btn-primary:hover{background:#2ea043}
-      .er-btn-ghost{background:#21262d;border:1px solid #30363d;color:#c9d1d9}
+      .er-btn-primary{background:#007A6A;border:1px solid #00C4A0;color:#fff}
+      .er-btn-primary:hover{background:#007A6A}
+      .er-btn-ghost{background:#182236;border:1px solid #243048;color:#A8A098}
       .er-btn-ghost:hover{background:#2d333b}
-      .er-404-num{font-size:5rem;font-weight:800;color:#21262d;line-height:1;margin-bottom:.5rem}
-      .er-suggest-label{font-size:.72rem;color:#8b949e;margin:1rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em}
+      .er-404-num{font-size:5rem;font-weight:800;color:#182236;line-height:1;margin-bottom:.5rem}
+      .er-suggest-label{font-size:.72rem;color:#A8A098;margin:1rem 0 .5rem;text-transform:uppercase;letter-spacing:.05em}
       .er-suggest-grid{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
-      .er-suggest-btn{background:#21262d;border:1px solid #30363d;border-radius:6px;padding:.32rem .75rem;font-size:.78rem;color:#c9d1d9;cursor:pointer}
+      .er-suggest-btn{background:#182236;border:1px solid #243048;border-radius:6px;padding:.32rem .75rem;font-size:.78rem;color:#A8A098;cursor:pointer}
       .er-suggest-btn:hover{background:#2d333b;border-color:#58a6ff;color:#58a6ff}
     `;
     document.head.appendChild(s);

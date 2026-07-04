@@ -47,7 +47,7 @@ OmicsLab.AfricaMap = (function() {
   }
 
   const TYPE_COLOR = {
-    'sequencing':  '#3fb950',
+    'sequencing':  '#00C4A0',
     'surveillance':'#e3b341',
     'research':    '#58a6ff'
   };
@@ -64,7 +64,7 @@ OmicsLab.AfricaMap = (function() {
       const { x, y } = _project(c.lat, c.lon);
       const col = TYPE_COLOR[c.type] || '#aaa';
       return `<circle class="amap-dot" cx="${x}" cy="${y}" r="7"
-               fill="${col}" stroke="#0d1117" stroke-width="2"
+               fill="${col}" stroke="#0D1524" stroke-width="2"
                data-id="${c.id}" tabindex="0" role="button"
                aria-label="${c.name}"/>
               <circle class="amap-pulse" cx="${x}" cy="${y}" r="7"
@@ -79,7 +79,7 @@ OmicsLab.AfricaMap = (function() {
             ${dots}
           </svg>
           <div class="amap-legend">
-            <div class="amap-leg-item"><span class="amap-leg-dot" style="background:#3fb950"></span>Sequencing centre</div>
+            <div class="amap-leg-item"><span class="amap-leg-dot" style="background:#00C4A0"></span>Sequencing centre</div>
             <div class="amap-leg-item"><span class="amap-leg-dot" style="background:#e3b341"></span>Surveillance hub</div>
             <div class="amap-leg-item"><span class="amap-leg-dot" style="background:#58a6ff"></span>Research institute</div>
           </div>
@@ -124,7 +124,7 @@ OmicsLab.AfricaMap = (function() {
 
     /* Highlight selected dot */
     document.querySelectorAll('.amap-dot').forEach(d => {
-      d.setAttribute('stroke', d.dataset.id === id ? '#fff' : '#0d1117');
+      d.setAttribute('stroke', d.dataset.id === id ? '#fff' : '#0D1524');
       d.setAttribute('stroke-width', d.dataset.id === id ? '3' : '2');
     });
   }
@@ -135,12 +135,12 @@ OmicsLab.AfricaMap = (function() {
     return `
     <defs>
       <radialGradient id="amap-bg" cx="50%" cy="50%" r="70%">
-        <stop offset="0%" stop-color="#161b22"/>
-        <stop offset="100%" stop-color="#0d1117"/>
+        <stop offset="0%" stop-color="#111B2E"/>
+        <stop offset="100%" stop-color="#0D1524"/>
       </radialGradient>
     </defs>
     <rect width="520" height="480" fill="url(#amap-bg)" rx="12"/>
-    <g fill="#1c2430" stroke="#30363d" stroke-width="0.8" opacity="0.9">
+    <g fill="#1c2430" stroke="#243048" stroke-width="0.8" opacity="0.9">
     <!--
       Points traced clockwise from Morocco NW.
       Each comment shows approx lat,lon reference.
@@ -175,7 +175,7 @@ OmicsLab.AfricaMap = (function() {
     <ellipse cx="487" cy="375" rx="13" ry="40" transform="rotate(-12 487 375)"/>
     </g>
     <!-- Equator line -->
-    <line x1="0" y1="${_project(0,0).y}" x2="520" y2="${_project(0,0).y}" stroke="#30363d" stroke-width="0.5" stroke-dasharray="4,4"/>
+    <line x1="0" y1="${_project(0,0).y}" x2="520" y2="${_project(0,0).y}" stroke="#243048" stroke-width="0.5" stroke-dasharray="4,4"/>
     <text x="8" y="${_project(0,0).y - 3}" fill="#4a5568" font-size="9" font-family="monospace">Equator</text>
     `;
   }

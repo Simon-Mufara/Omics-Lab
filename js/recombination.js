@@ -19,7 +19,7 @@ OmicsLab.Recombination = (function () {
 
   let _methods = { simplot: true, bootscan: true, maxchi: true, siscan: true, threeseq: true };
 
-  const _plotColors = ['#58a6ff','#3fb950','#e3b341','#f97316','#bc8cff','#ff6b6b','#06b6d4','#a3e635'];
+  const _plotColors = ['#58a6ff','#00C4A0','#e3b341','#f97316','#bc8cff','#ff6b6b','#06b6d4','#a3e635'];
 
   const DEMO = `>HIV1_ZA_CRF02_Query
 ATGGAGCCAGTAGATCCTAGACTAGAGCCCTGGAAGCATCCAGGAAGTCAGCCTAAAACTGCTTGTACCAATTGCTATTGTAAAAAGTGTTGCTTTCATTGCCAAGTTTGTTTCATAACAAAAGCCTTAGGCATCTCCTATGGCAGGAAGAAGCGGAGACAGCGACGAAGAGCTCATCAGAACAGTCAGACTCATCAAGCTTCTCTATCAAAGCAATAAGTAGTAATATGTAATGCAACCTATAGAAATAGTGGCAATAGTAGCATTAGTAGTAGCAATAATAGTAATAGTTGTGTGGACCATAGTATTCATAGAATATAGGAAAATATTAAGACAAAGAAAAATA
@@ -80,7 +80,7 @@ ATGGAGCCAGTAGATCCTAAATTAGAGCCCTGGAAGCATCCAGGAAGTCAGCCTAAAACTGCTTGTACCAATTGCTATTG
   function _renderMethodPanel() {
     const methodDefs = [
       { key: 'simplot',   label: 'SimPlot',   color: '#58a6ff', desc: 'Sliding-window similarity between query and each reference. The original RDP4 visualisation.' },
-      { key: 'bootscan',  label: 'Bootscan',  color: '#3fb950', desc: 'Bootstrap-supported similarity plot. Adds confidence bands by resampling sites within each window.' },
+      { key: 'bootscan',  label: 'Bootscan',  color: '#00C4A0', desc: 'Bootstrap-supported similarity plot. Adds confidence bands by resampling sites within each window.' },
       { key: 'maxchi',    label: 'MaxChi',    color: '#e3b341', desc: 'Maximum chi-square test. Scans all positions for a 2×2 contingency table that best separates query into two parental blocks.' },
       { key: 'siscan',    label: 'SiScan',    color: '#bc8cff', desc: 'Informative site scan. Counts sites uniquely shared between query and each parent across a sliding window.' },
       { key: 'threeseq',  label: '3Seq',      color: '#f97316', desc: 'Three-sequence test. Evaluates whether any triplet (query, A, B) shows significantly more incompatible sites than expected.' },
@@ -169,29 +169,29 @@ ATGGAGCCAGTAGATCCTAAATTAGAGCCCTGGAAGCATCCAGGAAGTCAGCCTAAAACTGCTTGTACCAATTGCTATTG
 
   /* ─── Shared SVG line plot (SimPlot + Bootscan) ─── */
   function _renderSimPlot(data, title, isBoot) {
-    if (!data.length) return `<div class="rc-plot-wrap"><div class="rc-plot-title">${title}</div><div style="color:#6e7681;font-size:.8rem;padding:1rem">No data. Run analysis first.</div></div>`;
+    if (!data.length) return `<div class="rc-plot-wrap"><div class="rc-plot-title">${title}</div><div style="color:#6E6860;font-size:.8rem;padding:1rem">No data. Run analysis first.</div></div>`;
     const refLen = _seqs[0].seq.length;
     const W = 900, H = 280, PAD = { l: 52, r: 24, t: 24, b: 50 };
     const iW = W - PAD.l - PAD.r, iH = H - PAD.t - PAD.b;
     const x = pos => PAD.l + (pos / refLen) * iW;
     const y = pct => PAD.t + iH - (pct / 100) * iH;
 
-    let svg = `<line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t+iH}" stroke="#30363d" stroke-width="1"/>
-               <line x1="${PAD.l}" y1="${PAD.t+iH}" x2="${PAD.l+iW}" y2="${PAD.t+iH}" stroke="#30363d" stroke-width="1"/>`;
+    let svg = `<line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1"/>
+               <line x1="${PAD.l}" y1="${PAD.t+iH}" x2="${PAD.l+iW}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1"/>`;
     [25,50,75,100].forEach(pct => {
       const yy = y(pct);
-      svg += `<line x1="${PAD.l}" y1="${yy}" x2="${PAD.l+iW}" y2="${yy}" stroke="#21262d" stroke-width="1" stroke-dasharray="4,3"/>
-              <text x="${PAD.l-6}" y="${yy+4}" fill="#6e7681" font-size="10" text-anchor="end">${pct}%</text>`;
+      svg += `<line x1="${PAD.l}" y1="${yy}" x2="${PAD.l+iW}" y2="${yy}" stroke="#182236" stroke-width="1" stroke-dasharray="4,3"/>
+              <text x="${PAD.l-6}" y="${yy+4}" fill="#6E6860" font-size="10" text-anchor="end">${pct}%</text>`;
     });
     const tickN = Math.min(10, Math.floor(refLen / 50));
     for (let i = 0; i <= tickN; i++) {
       const pos = Math.round((i / tickN) * refLen);
       const xx = x(pos);
-      svg += `<line x1="${xx}" y1="${PAD.t+iH}" x2="${xx}" y2="${PAD.t+iH+4}" stroke="#30363d" stroke-width="1"/>
-              <text x="${xx}" y="${PAD.t+iH+16}" fill="#6e7681" font-size="10" text-anchor="middle">${pos}</text>`;
+      svg += `<line x1="${xx}" y1="${PAD.t+iH}" x2="${xx}" y2="${PAD.t+iH+4}" stroke="#243048" stroke-width="1"/>
+              <text x="${xx}" y="${PAD.t+iH+16}" fill="#6E6860" font-size="10" text-anchor="middle">${pos}</text>`;
     }
-    svg += `<text x="${PAD.l+iW/2}" y="${H-4}" fill="#8b949e" font-size="11" text-anchor="middle">Alignment position (bp)</text>`;
-    svg += `<text x="13" y="${PAD.t+iH/2}" fill="#8b949e" font-size="11" text-anchor="middle" transform="rotate(-90,13,${PAD.t+iH/2})">Similarity (%)</text>`;
+    svg += `<text x="${PAD.l+iW/2}" y="${H-4}" fill="#A8A098" font-size="11" text-anchor="middle">Alignment position (bp)</text>`;
+    svg += `<text x="13" y="${PAD.t+iH/2}" fill="#A8A098" font-size="11" text-anchor="middle" transform="rotate(-90,13,${PAD.t+iH/2})">Similarity (%)</text>`;
 
     /* MaxChi breakpoints */
     const allBPs = [...(_methodResults.maxchi || []), ...(_methodResults.siscan || [])];
@@ -252,7 +252,7 @@ ATGGAGCCAGTAGATCCTAAATTAGAGCCCTGGAAGCATCCAGGAAGTCAGCCTAAAACTGCTTGTACCAATTGCTATTG
     if (!rows.length) {
       return `<div class="rc-plot-wrap">
         <div class="rc-plot-title">Results Table</div>
-        <div style="color:#6e7681;font-size:.8rem;padding:1rem">No statistical method results yet. Enable MaxChi, SiScan, or 3Seq and run analysis.</div>
+        <div style="color:#6E6860;font-size:.8rem;padding:1rem">No statistical method results yet. Enable MaxChi, SiScan, or 3Seq and run analysis.</div>
       </div>`;
     }
 
@@ -274,11 +274,11 @@ ATGGAGCCAGTAGATCCTAAATTAGAGCCCTGGAAGCATCCAGGAAGTCAGCCTAAAACTGCTTGTACCAATTGCTATTG
               <tr>
                 <td><span class="rc-method-badge" style="color:${r.color};border-color:${r.color}40">${r.method}</span></td>
                 <td class="rc-is-pos">${r.pos}</td>
-                <td style="font-size:.74rem;color:#8b949e">${r.seqA || '—'}</td>
-                <td style="font-size:.74rem;color:#8b949e">${r.seqB || '—'}</td>
+                <td style="font-size:.74rem;color:#A8A098">${r.seqA || '—'}</td>
+                <td style="font-size:.74rem;color:#A8A098">${r.seqB || '—'}</td>
                 <td style="font-family:monospace;font-size:.76rem">${typeof r.stat === 'number' ? r.stat.toFixed(3) : r.stat}</td>
-                <td style="font-family:monospace;font-size:.76rem;color:${r.p < 0.001 ? '#f85149' : r.p < 0.05 ? '#f97316' : '#6e7681'}">${r.p < 0.001 ? '<0.001' : r.p.toFixed(3)}</td>
-                <td style="text-align:center;font-size:.8rem;color:${r.sig?'#3fb950':'#484f58'}">${r.sig?'*':'ns'}</td>
+                <td style="font-family:monospace;font-size:.76rem;color:${r.p < 0.001 ? '#f85149' : r.p < 0.05 ? '#f97316' : '#6E6860'}">${r.p < 0.001 ? '<0.001' : r.p.toFixed(3)}</td>
+                <td style="text-align:center;font-size:.8rem;color:${r.sig?'#00C4A0':'#354060'}">${r.sig?'*':'ns'}</td>
               </tr>`).join('')}
           </tbody>
         </table>

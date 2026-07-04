@@ -152,17 +152,17 @@ OmicsLab.Shortcuts = (function () {
     overlay.innerHTML = `
       <style>
         @keyframes sc-fade { from{opacity:0;transform:scale(.97)} to{opacity:1;transform:none} }
-        .sc-sheet { background:#161b22;border:1px solid #30363d;border-radius:14px;padding:1.5rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6) }
+        .sc-sheet { background:#111B2E;border:1px solid #243048;border-radius:14px;padding:1.5rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.6) }
         .sc-sheet-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem }
-        .sc-sheet-title { font-size:1rem;font-weight:700;color:#e6edf3 }
-        .sc-sheet-close { background:none;border:none;color:#8b949e;cursor:pointer;padding:.25rem;border-radius:4px;display:flex;align-items:center }
-        .sc-sheet-close:hover{color:#e6edf3;background:#21262d}
+        .sc-sheet-title { font-size:1rem;font-weight:700;color:#E4DDD2 }
+        .sc-sheet-close { background:none;border:none;color:#A8A098;cursor:pointer;padding:.25rem;border-radius:4px;display:flex;align-items:center }
+        .sc-sheet-close:hover{color:#E4DDD2;background:#182236}
         .sc-group { margin-bottom:1.25rem }
-        .sc-group-label { font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8b949e;margin-bottom:.6rem;border-bottom:1px solid #21262d;padding-bottom:.3rem }
+        .sc-group-label { font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#A8A098;margin-bottom:.6rem;border-bottom:1px solid #182236;padding-bottom:.3rem }
         .sc-item { display:flex;align-items:center;gap:.75rem;padding:.3rem 0 }
         .sc-key { display:inline-flex;gap:.2rem;flex-shrink:0 }
-        .sc-kbd { display:inline-block;background:#21262d;border:1px solid #30363d;border-radius:4px;padding:.1rem .4rem;font-family:monospace;font-size:.72rem;color:#c9d1d9;box-shadow:0 1px 0 rgba(0,0,0,.4) }
-        .sc-desc { font-size:.8rem;color:#8b949e }
+        .sc-kbd { display:inline-block;background:#182236;border:1px solid #243048;border-radius:4px;padding:.1rem .4rem;font-family:monospace;font-size:.72rem;color:#A8A098;box-shadow:0 1px 0 rgba(0,0,0,.4) }
+        .sc-desc { font-size:.8rem;color:#A8A098 }
         @media(max-width:540px){.sc-sheet{border-radius:10px 10px 0 0;margin-bottom:0;max-height:80vh}}
       </style>
       <div class="sc-sheet" role="dialog" aria-label="Keyboard shortcuts">
@@ -181,7 +181,7 @@ OmicsLab.Shortcuts = (function () {
                 <span class="sc-desc">${i.desc}</span>
               </div>`).join('')}
           </div>`).join('')}
-        <div style="margin-top:.5rem;font-size:.68rem;color:#484f58;border-top:1px solid #21262d;padding-top:.75rem">
+        <div style="margin-top:.5rem;font-size:.68rem;color:#354060;border-top:1px solid #182236;padding-top:.75rem">
           Tip: Shortcuts are disabled while typing in a text field.
         </div>
       </div>`;

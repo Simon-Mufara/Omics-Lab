@@ -22,9 +22,9 @@
 .mentor-badge {
   display: inline-flex;
   align-items: center;
-  background: rgba(63,185,80,0.12);
-  border: 1px solid rgba(63,185,80,0.3);
-  color: #3fb950;
+  background: rgba(0,196,160,0.12);
+  border: 1px solid rgba(0,196,160,0.3);
+  color: #00C4A0;
   border-radius: 100px;
   padding: 3px 12px;
   font-size: 0.7rem;
@@ -35,24 +35,24 @@
 .mentor-title {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #e6edf3;
+  color: #E4DDD2;
   margin: 0 0 0.4rem;
 }
 .mentor-subtitle {
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.88rem;
   line-height: 1.5;
 }
 .mentor-corpus-stat {
-  background: rgba(63,185,80,0.08);
-  border: 1px solid rgba(63,185,80,0.2);
+  background: rgba(0,196,160,0.08);
+  border: 1px solid rgba(0,196,160,0.2);
   border-radius: 12px;
   padding: 0.75rem 1.25rem;
   text-align: center;
   flex-shrink: 0;
 }
-.mentor-stat-n { display: block; font-size: 2rem; font-weight: 800; color: #3fb950; }
-.mentor-stat-l { font-size: 0.68rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.06em; }
+.mentor-stat-n { display: block; font-size: 2rem; font-weight: 800; color: #00C4A0; }
+.mentor-stat-l { font-size: 0.68rem; color: #A8A098; text-transform: uppercase; letter-spacing: 0.06em; }
 
 /* ─── Category chips ─── */
 .mentor-cats {
@@ -66,7 +66,7 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 100px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.72rem;
   font-weight: 500;
   padding: 0.25rem 0.8rem;
@@ -74,9 +74,9 @@
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 .mentor-cat-chip:hover {
-  background: rgba(63,185,80,0.1);
-  border-color: rgba(63,185,80,0.3);
-  color: #3fb950;
+  background: rgba(0,196,160,0.1);
+  border-color: rgba(0,196,160,0.3);
+  color: #00C4A0;
 }
 
 /* ─── Chat feed ─── */
@@ -89,11 +89,11 @@
   gap: 1rem;
   padding: 1rem 0;
   scrollbar-width: thin;
-  scrollbar-color: #30363d transparent;
+  scrollbar-color: #243048 transparent;
 }
 .mentor-feed::-webkit-scrollbar { width: 4px; }
 .mentor-feed::-webkit-scrollbar-track { background: transparent; }
-.mentor-feed::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+.mentor-feed::-webkit-scrollbar-thumb { background: #243048; border-radius: 2px; }
 
 /* ─── Messages ─── */
 .mentor-msg { display: flex; }
@@ -101,9 +101,9 @@
 .mentor-msg-bot  { justify-content: flex-start; }
 
 .mentor-user-bubble {
-  background: rgba(63,185,80,0.12);
-  border: 1px solid rgba(63,185,80,0.25);
-  color: #e6edf3;
+  background: rgba(0,196,160,0.12);
+  border: 1px solid rgba(0,196,160,0.25);
+  color: #E4DDD2;
   border-radius: 14px 14px 2px 14px;
   padding: 0.65rem 1rem;
   font-size: 0.875rem;
@@ -120,8 +120,8 @@
 .mentor-bot-avatar {
   width: 36px;
   height: 36px;
-  background: rgba(63,185,80,0.1);
-  border: 1px solid rgba(63,185,80,0.25);
+  background: rgba(0,196,160,0.1);
+  border: 1px solid rgba(0,196,160,0.25);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -130,7 +130,7 @@
   flex-shrink: 0;
 }
 .mentor-bot-bubble {
-  background: #0d1117;
+  background: #0D1524;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 2px 14px 14px 14px;
   padding: 0.875rem 1rem;
@@ -142,19 +142,19 @@
 .mentor-welcome-title {
   font-size: 1rem;
   font-weight: 800;
-  color: #e6edf3;
+  color: #E4DDD2;
   margin-bottom: 0.4rem;
 }
 .mentor-welcome-sub {
   font-size: 0.82rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.5;
   margin: 0 0 1rem;
 }
 .mentor-starter-label {
   font-size: 0.7rem;
   font-weight: 600;
-  color: #6e7681;
+  color: #6E6860;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   margin-bottom: 0.6rem;
@@ -168,7 +168,7 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 8px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.78rem;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
@@ -176,17 +176,17 @@
   transition: background 0.12s, color 0.12s, border-color 0.12s;
 }
 .mentor-starter-btn:hover {
-  background: rgba(63,185,80,0.08);
-  border-color: rgba(63,185,80,0.25);
-  color: #c9d1d9;
+  background: rgba(0,196,160,0.08);
+  border-color: rgba(0,196,160,0.25);
+  color: #A8A098;
 }
 
 /* Answer content */
 .mentor-category-tag {
   display: inline-block;
-  background: rgba(63,185,80,0.1);
-  border: 1px solid rgba(63,185,80,0.2);
-  color: #3fb950;
+  background: rgba(0,196,160,0.1);
+  border: 1px solid rgba(0,196,160,0.2);
+  color: #00C4A0;
   border-radius: 4px;
   font-size: 0.65rem;
   font-weight: 700;
@@ -198,15 +198,15 @@
 .mentor-answer-q {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
   margin: 0 0 0.5rem;
 }
 .mentor-answer-body {
   font-size: 0.82rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.65;
 }
-.mentor-answer-body strong { color: #c9d1d9; }
+.mentor-answer-body strong { color: #A8A098; }
 .mentor-answer-body code {
   background: rgba(255,255,255,0.07);
   border-radius: 4px;
@@ -227,7 +227,7 @@
 .mentor-follow-label {
   font-size: 0.68rem;
   font-weight: 600;
-  color: #6e7681;
+  color: #6E6860;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   margin-bottom: 0.5rem;
@@ -238,7 +238,7 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 100px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.72rem;
   padding: 0.25rem 0.7rem;
   cursor: pointer;
@@ -257,15 +257,15 @@
   background: rgba(255,255,255,0.03);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 7px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.78rem;
   padding: 0.45rem 0.7rem;
   cursor: pointer;
   text-align: left;
   transition: background 0.12s, color 0.12s;
 }
-.mentor-browse-q:hover { background: rgba(255,255,255,0.07); color: #c9d1d9; }
-.mentor-browse-more { font-size: 0.7rem; color: #6e7681; margin-top: 0.5rem; }
+.mentor-browse-q:hover { background: rgba(255,255,255,0.07); color: #A8A098; }
+.mentor-browse-more { font-size: 0.7rem; color: #6E6860; margin-top: 0.5rem; }
 
 /* ─── Input area ─── */
 .mentor-input-area {
@@ -278,30 +278,30 @@
 .mentor-input-wrap {
   display: flex;
   align-items: center;
-  background: #0d1117;
+  background: #0D1524;
   border: 1.5px solid rgba(255,255,255,0.1);
   border-radius: 12px;
   gap: 0.5rem;
   padding: 0 0.5rem 0 0.875rem;
   transition: border-color 0.15s;
 }
-.mentor-input-wrap:focus-within { border-color: #3fb950; }
-.mentor-input-icon { color: #6e7681; flex-shrink: 0; }
+.mentor-input-wrap:focus-within { border-color: #00C4A0; }
+.mentor-input-icon { color: #6E6860; flex-shrink: 0; }
 .mentor-input {
   flex: 1;
   background: none;
   border: none;
-  color: #c9d1d9;
+  color: #A8A098;
   font-size: 0.875rem;
   padding: 0.7rem 0;
   outline: none;
 }
-.mentor-input::placeholder { color: #6e7681; }
+.mentor-input::placeholder { color: #6E6860; }
 .mentor-send-btn {
-  background: #3fb950;
+  background: #00C4A0;
   border: none;
   border-radius: 8px;
-  color: #0d1117;
+  color: #0D1524;
   width: 32px;
   height: 32px;
   display: flex;
@@ -314,7 +314,7 @@
 .mentor-send-btn:hover { background: #3dae4a; transform: scale(1.05); }
 .mentor-input-hint {
   font-size: 0.68rem;
-  color: #6e7681;
+  color: #6E6860;
   margin-top: 0.4rem;
   text-align: center;
 }

@@ -109,8 +109,8 @@ OmicsLab.StatsGenomics = (function () {
             <div class="sg-legend-row">
               <span class="sg-leg-dot" style="background:#f85149"></span><span class="sg-leg-label">Fails all corrections</span>
               <span class="sg-leg-dot" style="background:#e3b341"></span><span class="sg-leg-label">Survives Bonferroni only</span>
-              <span class="sg-leg-dot" style="background:#3fb950"></span><span class="sg-leg-label">Survives both (FDR 5%)</span>
-              <span class="sg-leg-dot" style="background:#6e7681"></span><span class="sg-leg-label">Not significant</span>
+              <span class="sg-leg-dot" style="background:#00C4A0"></span><span class="sg-leg-label">Survives both (FDR 5%)</span>
+              <span class="sg-leg-dot" style="background:#6E6860"></span><span class="sg-leg-label">Not significant</span>
             </div>
           </div>
         </div>
@@ -121,7 +121,7 @@ OmicsLab.StatsGenomics = (function () {
               pro: 'Strict family-wise error rate (FWER) control; widely accepted',
               con: 'Overly conservative with correlated tests (LD in GWAS)',
               gwas: 'p < 5×10⁻⁸ for ~1M independent tests (α=0.05/1,000,000)' },
-            { name: 'Benjamini-Hochberg FDR', formula: 'Q-value method', color: '#3fb950',
+            { name: 'Benjamini-Hochberg FDR', formula: 'Q-value method', color: '#00C4A0',
               when: 'Exploratory analyses; RNA-seq DEG; correlated tests acceptable',
               pro: 'Controls expected proportion of false discoveries; more power',
               con: 'Some false positives allowed by design; interpretation requires care',
@@ -136,7 +136,7 @@ OmicsLab.StatsGenomics = (function () {
               <div class="sg-corr-name" style="color:${c.color}">${c.name}</div>
               <div class="sg-corr-formula">${c.formula}</div>
               <div class="sg-corr-row"><span class="sg-corr-label">Use when</span>${c.when}</div>
-              <div class="sg-corr-row"><span class="sg-corr-label" style="color:#3fb950">Advantage</span>${c.pro}</div>
+              <div class="sg-corr-row"><span class="sg-corr-label" style="color:#00C4A0">Advantage</span>${c.pro}</div>
               <div class="sg-corr-row"><span class="sg-corr-label" style="color:#f85149">Limitation</span>${c.con}</div>
               <div class="sg-corr-example">${c.gwas}</div>
             </div>`).join('')}
@@ -160,8 +160,8 @@ OmicsLab.StatsGenomics = (function () {
         const p = base < 0.93 ? rng()*0.05+0.01 : rng()*1e-5;
         const logp = -Math.log10(p);
         const y = padT + (H-padT-padB) - Math.min(logp/12,1)*(H-padT-padB);
-        let col = '#6e7681';
-        if(logp>7.3) col='#3fb950';
+        let col = '#6E6860';
+        if(logp>7.3) col='#00C4A0';
         else if(logp>5) col='#e3b341';
         else if(logp>3) col='#f85149';
         pts.push({x,y,col,logp,chr});
@@ -173,20 +173,20 @@ OmicsLab.StatsGenomics = (function () {
     /* grid */
     [0,2,4,6,8,10,12].forEach(v=>{
       const y=padT+(H-padT-padB)-(v/12)*(H-padT-padB);
-      html+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#21262d" stroke-width="0.5"/>`;
-      html+=`<text x="${padL-4}" y="${y+4}" text-anchor="end" fill="#6e7681" font-size="9">${v}</text>`;
+      html+=`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#182236" stroke-width="0.5"/>`;
+      html+=`<text x="${padL-4}" y="${y+4}" text-anchor="end" fill="#6E6860" font-size="9">${v}</text>`;
     });
     /* threshold lines */
     html+=`<line x1="${padL}" y1="${bonf}" x2="${W-padR}" y2="${bonf}" stroke="#e3b341" stroke-width="1" stroke-dasharray="4,3"/>`;
     html+=`<text x="${W-padR-2}" y="${bonf-3}" text-anchor="end" fill="#e3b341" font-size="8">Bonferroni (5×10⁻⁸)</text>`;
-    html+=`<line x1="${padL}" y1="${fdr}" x2="${W-padR}" y2="${fdr}" stroke="#3fb950" stroke-width="1" stroke-dasharray="4,3"/>`;
-    html+=`<text x="${W-padR-2}" y="${fdr-3}" text-anchor="end" fill="#3fb950" font-size="8">FDR 5% (p≈10⁻⁵)</text>`;
+    html+=`<line x1="${padL}" y1="${fdr}" x2="${W-padR}" y2="${fdr}" stroke="#00C4A0" stroke-width="1" stroke-dasharray="4,3"/>`;
+    html+=`<text x="${W-padR-2}" y="${fdr-3}" text-anchor="end" fill="#00C4A0" font-size="8">FDR 5% (p≈10⁻⁵)</text>`;
     /* points */
     pts.forEach(p=>{ html+=`<circle cx="${p.x}" cy="${p.y}" r="2.5" fill="${p.col}" opacity="0.85"/>`; });
     /* axis */
-    html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#30363d" stroke-width="1"/>`;
-    html+=`<text x="12" y="${H/2+20}" fill="#6e7681" font-size="10" transform="rotate(-90,12,${H/2})" text-anchor="middle">−log₁₀(p)</text>`;
-    html+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="10">Chromosomal position</text>`;
+    html+=`<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${H-padB}" stroke="#243048" stroke-width="1"/>`;
+    html+=`<text x="12" y="${H/2+20}" fill="#6E6860" font-size="10" transform="rotate(-90,12,${H/2})" text-anchor="middle">−log₁₀(p)</text>`;
+    html+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="10">Chromosomal position</text>`;
     svg.innerHTML = html;
   }
 
@@ -255,7 +255,7 @@ OmicsLab.StatsGenomics = (function () {
 
     const res=document.getElementById('sg-power-result');
     if(res){
-      const col=powerPct>=80?'#3fb950':powerPct>=50?'#e3b341':'#f85149';
+      const col=powerPct>=80?'#00C4A0':powerPct>=50?'#e3b341':'#f85149';
       res.innerHTML=`
         <div class="sg-power-num" style="color:${col}">${powerPct.toFixed(1)}%</div>
         <div class="sg-power-label">Statistical Power</div>
@@ -280,19 +280,19 @@ OmicsLab.StatsGenomics = (function () {
     /* grid */
     [0,20,40,60,80,100].forEach(v=>{
       const y=pT+(H-pT-pB)*(1-v/100);
-      html+=`<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="#21262d" stroke-width="0.5"/>`;
-      html+=`<text x="${pL-4}" y="${y+4}" text-anchor="end" fill="#6e7681" font-size="9">${v}%</text>`;
+      html+=`<line x1="${pL}" y1="${y}" x2="${W-pR}" y2="${y}" stroke="#182236" stroke-width="0.5"/>`;
+      html+=`<text x="${pL-4}" y="${y+4}" text-anchor="end" fill="#6E6860" font-size="9">${v}%</text>`;
     });
     /* 80% power line */
     const y80=pT+(H-pT-pB)*0.2;
-    html+=`<line x1="${pL}" y1="${y80}" x2="${W-pR}" y2="${y80}" stroke="#3fb950" stroke-width="0.8" stroke-dasharray="3,3"/>`;
-    html+=`<text x="${pL+3}" y="${y80-3}" fill="#3fb950" font-size="8">80% target</text>`;
+    html+=`<line x1="${pL}" y1="${y80}" x2="${W-pR}" y2="${y80}" stroke="#00C4A0" stroke-width="0.8" stroke-dasharray="3,3"/>`;
+    html+=`<text x="${pL+3}" y="${y80-3}" fill="#00C4A0" font-size="8">80% target</text>`;
     /* curves: different sample sizes */
     const curves=[
       {n:500,  col:'#f85149', label:'n=500'},
       {n:2000, col:'#e3b341', label:'n=2,000'},
       {n:5000, col:'#58a6ff', label:'n=5,000'},
-      {n:11000,col:'#3fb950', label:'n=11,000 (AWI-Gen)'},
+      {n:11000,col:'#00C4A0', label:'n=11,000 (AWI-Gen)'},
     ];
     const nVals=40;
     curves.forEach(({n,col,label})=>{
@@ -312,15 +312,15 @@ OmicsLab.StatsGenomics = (function () {
       const pw=Math.max(0,Math.min(1,1-_normCDF(zAlpha-ncp)+_normCDF(-zAlpha-ncp)));
       html+=`<text x="${W-pR+2}" y="${pT+(H-pT-pB)*(1-pw)+4}" fill="${col}" font-size="8" font-weight="700">${label}</text>`;
     });
-    html+=`<line x1="${pL}" y1="${pT}" x2="${pL}" y2="${H-pB}" stroke="#30363d" stroke-width="1"/>`;
-    html+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="9">Odds Ratio</text>`;
-    html+=`<text x="10" y="${H/2}" fill="#6e7681" font-size="9" transform="rotate(-90,10,${H/2})" text-anchor="middle">Power</text>`;
+    html+=`<line x1="${pL}" y1="${pT}" x2="${pL}" y2="${H-pB}" stroke="#243048" stroke-width="1"/>`;
+    html+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="9">Odds Ratio</text>`;
+    html+=`<text x="10" y="${H/2}" fill="#6E6860" font-size="9" transform="rotate(-90,10,${H/2})" text-anchor="middle">Power</text>`;
     /* x axis labels */
     [1,1.5,2,2.5,3,3.5].forEach(or=>{
       const x=pL+(or-1)*2.5/2.5*(W-pL-pR)/2.5*(2.5/(3.5-1));
       /* recompute x: OR ranges 1–3.5 */
       const xx=pL+(or-1)/(3.5-1)*(W-pL-pR);
-      html+=`<text x="${xx}" y="${H-pB+10}" text-anchor="middle" fill="#6e7681" font-size="8">${or}</text>`;
+      html+=`<text x="${xx}" y="${H-pB+10}" text-anchor="middle" fill="#6E6860" font-size="8">${or}</text>`;
     });
     svg.innerHTML=html;
   }
@@ -335,7 +335,7 @@ OmicsLab.StatsGenomics = (function () {
       </div>
       <div class="sg-effect-grid">
         ${[
-          { name: 'Odds Ratio (OR)', color: '#3fb950', formula: 'OR = (cases with allele / controls with allele)',
+          { name: 'Odds Ratio (OR)', color: '#00C4A0', formula: 'OR = (cases with allele / controls with allele)',
             range: 'OR=1 no effect; OR>1 risk; OR<1 protective', interp: 'OR=1.5: allele carriers are 50% more likely to develop disease (on the odds scale).',
             gwas: 'Most GWAS report OR. HBB rs334 (sickle cell) OR≈50 in homozygotes. Most common variants OR 1.05–1.30.',
             pitfall: 'OR overestimates relative risk when disease is common (>10%). Use RR or RD for common diseases.' },
@@ -383,7 +383,7 @@ OmicsLab.StatsGenomics = (function () {
       <div class="sg-bayes-layout">
         <div class="sg-bayes-demo">
           <div class="sg-sb-title">Interactive Prior → Posterior</div>
-          <p style="font-size:0.78rem;color:#8b949e;margin-bottom:1rem">Scenario: What is the probability that a new variant is pathogenic, given it's observed in a patient with a rare disease? Adjust the prior and likelihood to see the posterior update.</p>
+          <p style="font-size:0.78rem;color:#A8A098;margin-bottom:1rem">Scenario: What is the probability that a new variant is pathogenic, given it's observed in a patient with a rare disease? Adjust the prior and likelihood to see the posterior update.</p>
           <div class="sg-bayes-card">
             <div class="sg-calc-row">
               <label class="sg-calc-label">Prior probability of pathogenicity <span id="sg-prior-val">5%</span></label>
@@ -400,7 +400,7 @@ OmicsLab.StatsGenomics = (function () {
         <div class="sg-bayes-apps">
           <div class="sg-sb-title">Bayesian Methods in Genomics</div>
           ${[
-            { name: 'ACMG Variant Classification', color: '#3fb950',
+            { name: 'ACMG Variant Classification', color: '#00C4A0',
               body: 'The ACMG/AMP 2015 framework is implicitly Bayesian: PVS1+PS1 evidence "updates" the prior probability that a variant is pathogenic. Tavtigian et al. 2020 made this explicit with a quantitative Bayesian framework (0.10 prior pathogenic probability).' },
             { name: 'Polygenic Risk Scores (Bayesian shrinkage)', color: '#58a6ff',
               body: 'LDpred2 and PRSice use Bayesian ridge regression to shrink SNP effect estimates toward zero based on LD and expected number of causal variants — critical for African populations where LD patterns differ from European training data.' },
@@ -429,9 +429,9 @@ OmicsLab.StatsGenomics = (function () {
     const post=postOdds/(1+postOdds);
     const res=document.getElementById('sg-bayes-result');
     if(res){
-      const col=post>0.9?'#3fb950':post>0.5?'#e3b341':'#f85149';
+      const col=post>0.9?'#00C4A0':post>0.5?'#e3b341':'#f85149';
       res.innerHTML=`<div class="sg-bayes-nums">
-        <div class="sg-bayes-num-box"><div class="sg-bayes-n" style="color:#6e7681">${(prior*100).toFixed(1)}%</div><div class="sg-bayes-nl">Prior</div></div>
+        <div class="sg-bayes-num-box"><div class="sg-bayes-n" style="color:#6E6860">${(prior*100).toFixed(1)}%</div><div class="sg-bayes-nl">Prior</div></div>
         <div class="sg-bayes-arrow">×LR ${lr}</div>
         <div class="sg-bayes-num-box"><div class="sg-bayes-n" style="color:${col}">${(post*100).toFixed(1)}%</div><div class="sg-bayes-nl">Posterior</div></div>
       </div>
@@ -443,22 +443,22 @@ OmicsLab.StatsGenomics = (function () {
   function _drawBayesBar(prior, post) {
     const svg=document.getElementById('sg-bayes-svg'); if(!svg)return;
     const W=440,H=130;
-    const col=post>0.9?'#3fb950':post>0.5?'#e3b341':'#f85149';
+    const col=post>0.9?'#00C4A0':post>0.5?'#e3b341':'#f85149';
     let html='';
     /* Prior bar */
-    html+=`<text x="10" y="25" fill="#6e7681" font-size="11" font-weight="700">Prior</text>`;
-    html+=`<rect x="80" y="10" width="${(W-90)*prior}" height="24" rx="4" fill="#6e7681" opacity="0.6"/>`;
-    html+=`<rect x="80" y="10" width="${W-90}" height="24" rx="4" fill="none" stroke="#21262d"/>`;
-    html+=`<text x="${80+(W-90)*prior+6}" y="27" fill="#6e7681" font-size="11">${(prior*100).toFixed(1)}%</text>`;
+    html+=`<text x="10" y="25" fill="#6E6860" font-size="11" font-weight="700">Prior</text>`;
+    html+=`<rect x="80" y="10" width="${(W-90)*prior}" height="24" rx="4" fill="#6E6860" opacity="0.6"/>`;
+    html+=`<rect x="80" y="10" width="${W-90}" height="24" rx="4" fill="none" stroke="#182236"/>`;
+    html+=`<text x="${80+(W-90)*prior+6}" y="27" fill="#6E6860" font-size="11">${(prior*100).toFixed(1)}%</text>`;
     /* Posterior bar */
     html+=`<text x="10" y="75" fill="${col}" font-size="11" font-weight="700">Posterior</text>`;
     html+=`<rect x="80" y="60" width="${(W-90)*post}" height="24" rx="4" fill="${col}" opacity="0.8"/>`;
-    html+=`<rect x="80" y="60" width="${W-90}" height="24" rx="4" fill="none" stroke="#21262d"/>`;
+    html+=`<rect x="80" y="60" width="${W-90}" height="24" rx="4" fill="none" stroke="#182236"/>`;
     html+=`<text x="${80+(W-90)*post+6}" y="77" fill="${col}" font-size="11" font-weight="700">${(post*100).toFixed(1)}%</text>`;
     /* thresholds */
     const x90=80+(W-90)*0.9, x99=80+(W-90)*0.99;
-    html+=`<line x1="${x90}" y1="55" x2="${x90}" y2="90" stroke="#3fb950" stroke-width="1" stroke-dasharray="2,2"/>`;
-    html+=`<text x="${x90}" y="100" text-anchor="middle" fill="#3fb950" font-size="8">90% (Likely Path.)</text>`;
+    html+=`<line x1="${x90}" y1="55" x2="${x90}" y2="90" stroke="#00C4A0" stroke-width="1" stroke-dasharray="2,2"/>`;
+    html+=`<text x="${x90}" y="100" text-anchor="middle" fill="#00C4A0" font-size="8">90% (Likely Path.)</text>`;
     html+=`<line x1="${x99}" y1="55" x2="${x99}" y2="90" stroke="#bc8cff" stroke-width="1" stroke-dasharray="2,2"/>`;
     html+=`<text x="${x99}" y="115" text-anchor="middle" fill="#bc8cff" font-size="8">99% (Pathogenic)</text>`;
     svg.innerHTML=html;

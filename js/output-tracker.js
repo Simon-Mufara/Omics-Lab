@@ -10,8 +10,8 @@ OmicsLab.OutputTracker = (function () {
   const STORE_KEY = 'omicslab_outputs';
   const TYPES = ['publication','preprint','dataset','talk','poster','grant','award','other'];
   const TYPE_COLOR = {
-    publication:'#3fb950', preprint:'#58a6ff', dataset:'#e3b341',
-    talk:'#f97316', poster:'#bc8cff', grant:'#ff6b6b', award:'#e3b341', other:'#8b949e',
+    publication:'#00C4A0', preprint:'#58a6ff', dataset:'#e3b341',
+    talk:'#f97316', poster:'#bc8cff', grant:'#ff6b6b', award:'#e3b341', other:'#A8A098',
   };
   const TYPE_ICON = {
     publication:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>',
@@ -64,7 +64,7 @@ OmicsLab.OutputTracker = (function () {
       <div class="ot-wrap">
         <div class="ot-header">
           <div class="ot-header-left">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
             Research Output Tracker
           </div>
           <div class="ot-header-actions">

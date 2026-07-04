@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Bench Renderer + Drag-and-Drop System
    ═══════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
@@ -102,7 +102,7 @@ OmicsLab.QC = (function() {
     const el = document.getElementById(`gauge-${key}`);
     if (!el) return;
     el.style.transition = 'none';
-    el.style.background = direction === 'up' ? 'rgba(63,185,80,0.1)' : 'rgba(229,83,75,0.1)';
+    el.style.background = direction === 'up' ? 'rgba(0,196,160,0.1)' : 'rgba(229,83,75,0.1)';
     setTimeout(() => { el.style.transition = 'background 0.8s'; el.style.background = ''; }, 50);
   }
 
@@ -339,8 +339,8 @@ OmicsLab.DragDrop = (function() {
   }
 
   function spawnBubbles(zone, impact) {
-    const colors = { good:'#3fb950', bad:'#e5534b', warn:'#d29922' };
-    const color  = colors[impact] || '#8b949e';
+    const colors = { good:'#00C4A0', bad:'#e5534b', warn:'#d29922' };
+    const color  = colors[impact] || '#A8A098';
     const overlay = document.getElementById('reaction-overlay');
     if (!overlay) return;
     for (let i = 0; i < 8; i++) {
@@ -632,7 +632,7 @@ OmicsLab.Renderer = (function() {
       valBox.textContent = `${v} ${step.unit}`;
       const d = Math.abs(v - step.optimal);
       const range = step.max - step.min;
-      const color = d > range*0.3 ? '#e5534b' : d > range*0.12 ? '#d29922' : '#3fb950';
+      const color = d > range*0.3 ? '#e5534b' : d > range*0.12 ? '#d29922' : '#00C4A0';
       valBox.style.color = color;
     });
 
@@ -743,7 +743,7 @@ OmicsLab.Renderer = (function() {
       transition: all 0.2s; display: flex; flex-direction: column; gap: 0.25rem;
     }
     .choice-btn:hover:not(.cb-locked) { border-color: var(--info); background: rgba(88,166,255,0.07); }
-    .choice-btn.cb-selected { border-color: var(--success); background: rgba(63,185,80,0.08); }
+    .choice-btn.cb-selected { border-color: var(--success); background: rgba(0,196,160,0.08); }
     .choice-btn.cb-wrong    { border-color: var(--danger);  background: rgba(229,83,75,0.08); animation: shake 0.35s; }
     .choice-btn.cb-locked   { opacity: 0.5; cursor: not-allowed; }
     .cb-title { font-weight: 700; font-size: 0.88rem; }

@@ -26,7 +26,7 @@ OmicsLab.StringNet = (function () {
 
   /* Subscore labels */
   const SUBSCORES = [
-    { key: 'escore', label: 'Experimental',    color: '#3fb950' },
+    { key: 'escore', label: 'Experimental',    color: '#00C4A0' },
     { key: 'dscore', label: 'Database',         color: '#58a6ff' },
     { key: 'tscore', label: 'Text mining',      color: '#e3b341' },
     { key: 'ascore', label: 'Coexpression',     color: '#bc8cff' },
@@ -155,7 +155,7 @@ OmicsLab.StringNet = (function () {
     const partner = r.preferredName_B || r.stringId_B || '—';
     const score   = r.score || 0;
     const pct     = Math.min(score * 100, 100);
-    const col     = score > 0.7 ? '#3fb950' : score > 0.4 ? '#e3b341' : '#58a6ff';
+    const col     = score > 0.7 ? '#00C4A0' : score > 0.4 ? '#e3b341' : '#58a6ff';
 
     const subscoreCells = SUBSCORES.map(s => {
       const v = r[s.key] || 0;
@@ -258,7 +258,7 @@ OmicsLab.StringNet = (function () {
 
         <div id="sn-results" class="sn-results">
           <div class="sn-empty">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             <div>Enter a protein name or choose one above</div>
           </div>
         </div>

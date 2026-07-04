@@ -21,16 +21,16 @@ OmicsLab.KnowledgeGraph = (function () {
     { id:'cholera',   label:'Cholera',             type:'disease',    color:'#ff6b6b', desc:'Vibrio cholerae O1 — 2022–2024 global surge driven by East/Southern Africa outbreaks.' },
     { id:'ebola',     label:'Ebola',               type:'disease',    color:'#ff6b6b', desc:'EBOV — largest epidemic: West Africa 2014-2016 (28,600 cases).' },
     /* Genes */
-    { id:'hbb',       label:'HBB',                 type:'gene',       color:'#3fb950', desc:'Haemoglobin subunit beta — HBB c.20A>T causes sickle cell anaemia. Chr 11p15.' },
-    { id:'g6pd',      label:'G6PD',                type:'gene',       color:'#3fb950', desc:'Glucose-6-phosphate dehydrogenase — X-linked. 202A (African) and 376G variants most common in Africa.' },
-    { id:'apol1',     label:'APOL1',               type:'gene',       color:'#3fb950', desc:'Apolipoprotein L1 — G1 (S342G+I384M) and G2 (del388-389) confer both CKD risk and trypanosome resistance.' },
-    { id:'kelch13',   label:'kelch13',             type:'gene',       color:'#3fb950', desc:'P. falciparum kelch13 — R539T, Y493H, M476I variants linked to artemisinin partial resistance.' },
-    { id:'rpob',      label:'rpoB',                type:'gene',       color:'#3fb950', desc:'MTB RNA polymerase beta — >95% of rifampicin resistance in MTB is rpoB mutation.' },
-    { id:'ccr5',      label:'CCR5',                type:'gene',       color:'#3fb950', desc:'C-C chemokine receptor 5 — HIV co-receptor. CCR5Δ32 protective allele nearly absent in African populations.' },
-    { id:'hlab',      label:'HLA-B*57:01',         type:'gene',       color:'#3fb950', desc:'HLA allele — abacavir hypersensitivity. Pre-treatment screening now required by WHO HIV guidelines.' },
-    { id:'cyp2d6',    label:'CYP2D6',              type:'gene',       color:'#3fb950', desc:'Cytochrome P450 — drug metaboliser. Ultra-rapid (*17) and poor metaboliser variants differ in Africa vs Europe.' },
-    { id:'tlr4',      label:'TLR4',                type:'gene',       color:'#3fb950', desc:'Toll-like receptor 4 — Asp299Gly at ~10% in West/East Africa; alters sepsis/malaria susceptibility.' },
-    { id:'brca1',     label:'BRCA1',               type:'gene',       color:'#3fb950', desc:'Breast cancer susceptibility — South African Afrikaner founder mutation c.1374delC (185delAG equivalent).' },
+    { id:'hbb',       label:'HBB',                 type:'gene',       color:'#00C4A0', desc:'Haemoglobin subunit beta — HBB c.20A>T causes sickle cell anaemia. Chr 11p15.' },
+    { id:'g6pd',      label:'G6PD',                type:'gene',       color:'#00C4A0', desc:'Glucose-6-phosphate dehydrogenase — X-linked. 202A (African) and 376G variants most common in Africa.' },
+    { id:'apol1',     label:'APOL1',               type:'gene',       color:'#00C4A0', desc:'Apolipoprotein L1 — G1 (S342G+I384M) and G2 (del388-389) confer both CKD risk and trypanosome resistance.' },
+    { id:'kelch13',   label:'kelch13',             type:'gene',       color:'#00C4A0', desc:'P. falciparum kelch13 — R539T, Y493H, M476I variants linked to artemisinin partial resistance.' },
+    { id:'rpob',      label:'rpoB',                type:'gene',       color:'#00C4A0', desc:'MTB RNA polymerase beta — >95% of rifampicin resistance in MTB is rpoB mutation.' },
+    { id:'ccr5',      label:'CCR5',                type:'gene',       color:'#00C4A0', desc:'C-C chemokine receptor 5 — HIV co-receptor. CCR5Δ32 protective allele nearly absent in African populations.' },
+    { id:'hlab',      label:'HLA-B*57:01',         type:'gene',       color:'#00C4A0', desc:'HLA allele — abacavir hypersensitivity. Pre-treatment screening now required by WHO HIV guidelines.' },
+    { id:'cyp2d6',    label:'CYP2D6',              type:'gene',       color:'#00C4A0', desc:'Cytochrome P450 — drug metaboliser. Ultra-rapid (*17) and poor metaboliser variants differ in Africa vs Europe.' },
+    { id:'tlr4',      label:'TLR4',                type:'gene',       color:'#00C4A0', desc:'Toll-like receptor 4 — Asp299Gly at ~10% in West/East Africa; alters sepsis/malaria susceptibility.' },
+    { id:'brca1',     label:'BRCA1',               type:'gene',       color:'#00C4A0', desc:'Breast cancer susceptibility — South African Afrikaner founder mutation c.1374delC (185delAG equivalent).' },
     /* Tools */
     { id:'gatk',      label:'GATK',                type:'tool',       color:'#58a6ff', desc:'Genome Analysis Toolkit — gold standard for germline SNP/indel calling. HaplotypeCaller used in H3Africa.' },
     { id:'bwa',       label:'BWA-MEM2',            type:'tool',       color:'#58a6ff', desc:'Burrows-Wheeler Aligner — read mapping. BWA-MEM2 is the current recommended version.' },
@@ -224,7 +224,7 @@ OmicsLab.KnowledgeGraph = (function () {
       return { node: other, rel: e.rel, isOut: e.s === id };
     }).filter(c => c.node);
 
-    const typeColor = { disease:'#ff6b6b', gene:'#3fb950', tool:'#58a6ff', population:'#f97316', country:'#bc8cff' };
+    const typeColor = { disease:'#ff6b6b', gene:'#00C4A0', tool:'#58a6ff', population:'#f97316', country:'#bc8cff' };
     el.innerHTML = `
       <div class="kg-detail-card">
         <div class="kg-detail-header">
@@ -290,7 +290,7 @@ OmicsLab.KnowledgeGraph = (function () {
             <input class="kg-search" placeholder="Search nodes…" oninput="OmicsLab.KnowledgeGraph._onSearch(this.value)">
           </div>
           <div class="kg-legend">
-            ${[['disease','#ff6b6b'],['gene','#3fb950'],['tool','#58a6ff'],['population','#f97316'],['country','#bc8cff']].map(([t,c]) =>
+            ${[['disease','#ff6b6b'],['gene','#00C4A0'],['tool','#58a6ff'],['population','#f97316'],['country','#bc8cff']].map(([t,c]) =>
               `<span class="kg-legend-item"><span class="kg-legend-dot" style="background:${c}"></span>${t}</span>`).join('')}
           </div>
           <div class="kg-zoom-btns">

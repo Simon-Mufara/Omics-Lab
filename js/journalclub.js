@@ -398,7 +398,7 @@ OmicsLab.JournalClub = (function () {
 
   /* ─── Render paper card ─── */
   function _cardHtml(p) {
-    const impactColor = { Foundational: '#e3b341', High: '#3fb950', Emerging: '#58a6ff' }[p.impact] || '#8b949e';
+    const impactColor = { Foundational: '#e3b341', High: '#00C4A0', Emerging: '#58a6ff' }[p.impact] || '#A8A098';
     return `
       <div class="jc-card" data-id="${p.id}" onclick="OmicsLab.JournalClub._open('${p.id}')">
         <div class="jc-card-top">

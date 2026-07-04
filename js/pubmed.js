@@ -140,7 +140,7 @@ OmicsLab.PubMed = (function () {
 
   function _renderEmpty(msg) {
     const el = _resultsEl();
-    if (el) el.innerHTML = `<div class="pm-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
+    if (el) el.innerHTML = `<div class="pm-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
@@ -355,7 +355,7 @@ OmicsLab.PubMed = (function () {
         <div class="pm-body">
           <div id="pm-results" class="pm-results">
             <div class="pm-empty">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
               <div>Enter a search term or choose a quick search above</div>
             </div>
           </div>

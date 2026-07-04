@@ -66,7 +66,7 @@ OmicsLab.Mentorship = (function () {
     if (!all.length) { el.innerHTML = '<div class="ms-empty">No mentors found.</div>'; return; }
     el.innerHTML = all.map(m => {
       const conn = conns.find(c => c.mid === m.id);
-      const slotColor = m.openSlots > 2 ? '#3fb950' : m.openSlots === 1 ? '#e3b341' : '#58a6ff';
+      const slotColor = m.openSlots > 2 ? '#00C4A0' : m.openSlots === 1 ? '#e3b341' : '#58a6ff';
       return `<div class="ms-card">
         <div class="ms-card-hdr">
           <div class="ms-avatar">${m.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
@@ -216,14 +216,14 @@ OmicsLab.Mentorship = (function () {
     const overlay = document.createElement('div');
     overlay.style.cssText = `position:fixed;inset:0;z-index:7000;background:rgba(8,12,16,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)`;
     overlay.innerHTML = `
-      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;padding:2rem;max-width:380px;width:92%;text-align:center">
-        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary,#e6edf3);margin:0 0 1rem">Share Your Mentor Profile</h3>
+      <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:12px;padding:2rem;max-width:380px;width:92%;text-align:center">
+        <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 1rem">Share Your Mentor Profile</h3>
         <img src="${qrApiUrl}" alt="QR code for mentor profile" width="180" height="180" style="border-radius:8px;margin:0 auto .75rem;display:block;background:#fff;padding:8px" loading="lazy">
-        <p style="color:var(--text-muted,#8b949e);font-size:.78rem;margin:0 0 1rem">Scan to view your mentor profile, or copy the link below</p>
-        <input type="text" value="${shareUrl}" readonly style="width:100%;background:var(--bg-overlay,#21262d);border:1px solid var(--border,#30363d);border-radius:6px;color:var(--text-secondary,#c9d1d9);font-size:.72rem;padding:.4rem .6rem;font-family:monospace;box-sizing:border-box" onclick="this.select()">
+        <p style="color:var(--text-muted,#A8A098);font-size:.78rem;margin:0 0 1rem">Scan to view your mentor profile, or copy the link below</p>
+        <input type="text" value="${shareUrl}" readonly style="width:100%;background:var(--bg-overlay,#182236);border:1px solid var(--border,#243048);border-radius:6px;color:var(--text-secondary,#A8A098);font-size:.72rem;padding:.4rem .6rem;font-family:monospace;box-sizing:border-box" onclick="this.select()">
         <div style="display:flex;gap:.6rem;justify-content:center;margin-top:1rem">
-          <button onclick="navigator.clipboard?.writeText('${shareUrl.replace(/'/g,"\\'")}').then(()=>OmicsLab.Toast?.show('Link copied','success'))" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:7px;padding:.4rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">Copy Link</button>
-          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:var(--bg-overlay,#21262d);color:var(--text-primary,#e6edf3);border:1px solid var(--border,#30363d);border-radius:7px;padding:.4rem 1rem;font-size:.82rem;cursor:pointer">Close</button>
+          <button onclick="navigator.clipboard?.writeText('${shareUrl.replace(/'/g,"\\'")}').then(()=>OmicsLab.Toast?.show('Link copied','success'))" style="background:var(--green,#00C4A0);color:#000;border:none;border-radius:7px;padding:.4rem 1rem;font-size:.82rem;font-weight:700;cursor:pointer">Copy Link</button>
+          <button onclick="this.closest('div[style*=fixed]').remove()" style="background:var(--bg-overlay,#182236);color:var(--text-primary,#E4DDD2);border:1px solid var(--border,#243048);border-radius:7px;padding:.4rem 1rem;font-size:.82rem;cursor:pointer">Close</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);

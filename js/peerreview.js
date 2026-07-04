@@ -28,7 +28,7 @@ OmicsLab.PeerReview = (function () {
       avatar: 'KM',
       flag: '🇿🇦',
       focus: 'Wet-lab reproducibility · QC thresholds · bioinformatics pipeline documentation',
-      color: '#3fb950',
+      color: '#00C4A0',
       personality: 'Practical and protocol-obsessed. Demands exact reagent lots, software versions, and parameter settings. Reviewer #2 energy — thorough but fair.',
     },
     {
@@ -181,7 +181,7 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
 
   /* ─── Verdict label ─── */
   function _verdict(score) {
-    if (score >= 80) return { label: 'Accept', color: '#3fb950', icon: OmicsLab.Icons?.svg('check-circle',14)||'' };
+    if (score >= 80) return { label: 'Accept', color: '#00C4A0', icon: OmicsLab.Icons?.svg('check-circle',14)||'' };
     if (score >= 65) return { label: 'Minor Revision', color: '#e3b341', icon: OmicsLab.Icons?.svg('rotate-cw',14)||'' };
     if (score >= 45) return { label: 'Major Revision', color: '#f97316', icon: OmicsLab.Icons?.svg('alert-triangle',14)||'' };
     return { label: 'Reject', color: '#ff6b6b', icon: OmicsLab.Icons?.svg('x-circle',14)||'' };
@@ -248,7 +248,7 @@ Conclusions: snRNA-seq reveals a HAND-specific microglial activation state with 
 
     const rubricHtml = RUBRIC.map(r => {
       const s = rubricScores[r.id];
-      const col = s >= 70 ? '#3fb950' : s >= 45 ? '#e3b341' : '#ff6b6b';
+      const col = s >= 70 ? '#00C4A0' : s >= 45 ? '#e3b341' : '#ff6b6b';
       return `
         <div class="pr-rubric-row">
           <div class="pr-rubric-label">${r.label}</div>

@@ -192,34 +192,34 @@ OmicsLab.RNAAtlas = (function () {
 
     /* Axis ticks */
     const xTicks = [-6,-4,-2,0,2,4,6].map(v =>
-      `<line x1="${xScale(v).toFixed(1)}" y1="${mt+ph}" x2="${xScale(v).toFixed(1)}" y2="${mt+ph+4}" stroke="#30363d"/>
-       <text x="${xScale(v).toFixed(1)}" y="${mt+ph+14}" fill="#8b949e" font-size="8" text-anchor="middle">${v}</text>`
+      `<line x1="${xScale(v).toFixed(1)}" y1="${mt+ph}" x2="${xScale(v).toFixed(1)}" y2="${mt+ph+4}" stroke="#243048"/>
+       <text x="${xScale(v).toFixed(1)}" y="${mt+ph+14}" fill="#A8A098" font-size="8" text-anchor="middle">${v}</text>`
     ).join('');
 
     const yTicks = [0,5,10,15,20,30,40].filter(v => v <= maxNP).map(v =>
-      `<line x1="${ml-4}" y1="${yScale(v).toFixed(1)}" x2="${ml}" y2="${yScale(v).toFixed(1)}" stroke="#30363d"/>
-       <text x="${ml-7}" y="${(yScale(v)+3).toFixed(1)}" fill="#8b949e" font-size="8" text-anchor="end">${v}</text>`
+      `<line x1="${ml-4}" y1="${yScale(v).toFixed(1)}" x2="${ml}" y2="${yScale(v).toFixed(1)}" stroke="#243048"/>
+       <text x="${ml-7}" y="${(yScale(v)+3).toFixed(1)}" fill="#A8A098" font-size="8" text-anchor="end">${v}</text>`
     ).join('');
 
     return `
     <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="${W}" height="${H}" fill="#0d1117" rx="6"/>
+      <rect width="${W}" height="${H}" fill="#0D1524" rx="6"/>
       <!-- Grid -->
       ${[-6,-4,-2,0,2,4,6].map(v =>
-        `<line x1="${xScale(v).toFixed(1)}" y1="${mt}" x2="${xScale(v).toFixed(1)}" y2="${mt+ph}" stroke="#161b22"/>`
+        `<line x1="${xScale(v).toFixed(1)}" y1="${mt}" x2="${xScale(v).toFixed(1)}" y2="${mt+ph}" stroke="#111B2E"/>`
       ).join('')}
       <!-- Threshold lines -->
       <line x1="${ml}" y1="${yLine.toFixed(1)}" x2="${ml+pw}" y2="${yLine.toFixed(1)}" stroke="#e3b341" stroke-width="1" stroke-dasharray="4,3"/>
       <line x1="${xLineL.toFixed(1)}" y1="${mt}" x2="${xLineL.toFixed(1)}" y2="${mt+ph}" stroke="#e3b341" stroke-width="1" stroke-dasharray="4,3"/>
       <line x1="${xLineR.toFixed(1)}" y1="${mt}" x2="${xLineR.toFixed(1)}" y2="${mt+ph}" stroke="#e3b341" stroke-width="1" stroke-dasharray="4,3"/>
       <!-- Axes -->
-      <line x1="${ml}" y1="${mt}" x2="${ml}" y2="${mt+ph}" stroke="#30363d"/>
-      <line x1="${ml}" y1="${mt+ph}" x2="${ml+pw}" y2="${mt+ph}" stroke="#30363d"/>
+      <line x1="${ml}" y1="${mt}" x2="${ml}" y2="${mt+ph}" stroke="#243048"/>
+      <line x1="${ml}" y1="${mt+ph}" x2="${ml+pw}" y2="${mt+ph}" stroke="#243048"/>
       <!-- Ticks -->
       ${xTicks}${yTicks}
       <!-- Axis labels -->
-      <text x="${ml+pw/2}" y="${H-4}" fill="#8b949e" font-size="9" text-anchor="middle" font-family="Arial">log₂ fold change (${study.condition_a} vs ${study.condition_b})</text>
-      <text x="${8}" y="${mt+ph/2}" fill="#8b949e" font-size="9" text-anchor="middle" font-family="Arial" transform="rotate(-90,8,${mt+ph/2})">-log₁₀(padj)</text>
+      <text x="${ml+pw/2}" y="${H-4}" fill="#A8A098" font-size="9" text-anchor="middle" font-family="Arial">log₂ fold change (${study.condition_a} vs ${study.condition_b})</text>
+      <text x="${8}" y="${mt+ph/2}" fill="#A8A098" font-size="9" text-anchor="middle" font-family="Arial" transform="rotate(-90,8,${mt+ph/2})">-log₁₀(padj)</text>
       <!-- Threshold labels -->
       <text x="${xLineR+3}" y="${mt+8}" fill="#e3b341" font-size="6.5" font-family="Arial">FC=${_fc_cut}</text>
       <text x="${ml+pw-2}" y="${yLine-3}" fill="#e3b341" font-size="6.5" text-anchor="end" font-family="Arial">padj=${_padj_cut}</text>
@@ -227,11 +227,11 @@ OmicsLab.RNAAtlas = (function () {
       ${dots}
       <!-- Legend -->
       <circle cx="${ml+8}" cy="${mt+8}" r="4" fill="${study.color}"/>
-      <text x="${ml+15}" y="${mt+12}" fill="#c9d1d9" font-size="7.5" font-family="Arial">Up in ${study.condition_a.split(' ')[0]}</text>
+      <text x="${ml+15}" y="${mt+12}" fill="#A8A098" font-size="7.5" font-family="Arial">Up in ${study.condition_a.split(' ')[0]}</text>
       <circle cx="${ml+8}" cy="${mt+20}" r="4" fill="#58a6ff"/>
-      <text x="${ml+15}" y="${mt+24}" fill="#c9d1d9" font-size="7.5" font-family="Arial">Down / Up in ${study.condition_b.split(' ')[0]}</text>
+      <text x="${ml+15}" y="${mt+24}" fill="#A8A098" font-size="7.5" font-family="Arial">Down / Up in ${study.condition_b.split(' ')[0]}</text>
       <circle cx="${ml+8}" cy="${mt+32}" r="3" fill="#404550"/>
-      <text x="${ml+15}" y="${mt+36}" fill="#8b949e" font-size="7.5" font-family="Arial">Not significant</text>
+      <text x="${ml+15}" y="${mt+36}" fill="#A8A098" font-size="7.5" font-family="Arial">Not significant</text>
     </svg>`;
   }
 
@@ -276,7 +276,7 @@ OmicsLab.RNAAtlas = (function () {
 
     const colLabels = samples.map((s, ci) => {
       const x = leftPad + labelW + ci * colW + colW / 2;
-      const col = s.isCase ? study.color : '#8b949e';
+      const col = s.isCase ? study.color : '#A8A098';
       return `<text x="${x}" y="${topPad - 6}" fill="${col}" font-size="7.5" font-family="Arial" text-anchor="middle"
         transform="rotate(-45,${x},${topPad-6})">${s.label}</text>`;
     }).join('');
@@ -293,13 +293,13 @@ OmicsLab.RNAAtlas = (function () {
 
     return `
     <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="${W}" height="${H}" fill="#0d1117" rx="6"/>
+      <rect width="${W}" height="${H}" fill="#0D1524" rx="6"/>
       <!-- Colour scale -->
       ${legendCells}
-      <text x="${lx}" y="${ly+18}" fill="#8b949e" font-size="7" text-anchor="middle">-4</text>
-      <text x="${lx+30}" y="${ly+18}" fill="#8b949e" font-size="7" text-anchor="middle">0</text>
-      <text x="${lx+60}" y="${ly+18}" fill="#8b949e" font-size="7" text-anchor="middle">+4</text>
-      <text x="${lx+30}" y="${ly+26}" fill="#8b949e" font-size="7" text-anchor="middle">log2FC</text>
+      <text x="${lx}" y="${ly+18}" fill="#A8A098" font-size="7" text-anchor="middle">-4</text>
+      <text x="${lx+30}" y="${ly+18}" fill="#A8A098" font-size="7" text-anchor="middle">0</text>
+      <text x="${lx+60}" y="${ly+18}" fill="#A8A098" font-size="7" text-anchor="middle">+4</text>
+      <text x="${lx+30}" y="${ly+26}" fill="#A8A098" font-size="7" text-anchor="middle">log2FC</text>
       <!-- Heatmap cells -->
       ${cells}
       <!-- Row labels -->
@@ -308,9 +308,9 @@ OmicsLab.RNAAtlas = (function () {
       ${colLabels}
       <!-- Group separator line -->
       <line x1="${leftPad+labelW+4*colW}" y1="${topPad-2}" x2="${leftPad+labelW+4*colW}" y2="${topPad+topGenes.length*rowH}"
-        stroke="#c9d1d9" stroke-width="1.5"/>
+        stroke="#A8A098" stroke-width="1.5"/>
       <!-- Group labels -->
-      <text x="${leftPad+labelW+2*colW}" y="${topPad-32}" fill="#8b949e" font-size="8.5" text-anchor="middle" font-family="Arial">${study.condition_b.split('(')[0].trim()}</text>
+      <text x="${leftPad+labelW+2*colW}" y="${topPad-32}" fill="#A8A098" font-size="8.5" text-anchor="middle" font-family="Arial">${study.condition_b.split('(')[0].trim()}</text>
       <text x="${leftPad+labelW+6*colW}" y="${topPad-32}" fill="${study.color}" font-size="8.5" text-anchor="middle" font-family="Arial">${study.condition_a.split('(')[0].trim()}</text>
     </svg>`;
   }
@@ -383,7 +383,7 @@ OmicsLab.RNAAtlas = (function () {
             <span class="ra-count-l">Downregulated</span>
           </div>
           <div class="ra-count-box">
-            <span class="ra-count-n" style="color:#8b949e">${c.ns}</span>
+            <span class="ra-count-n" style="color:#A8A098">${c.ns}</span>
             <span class="ra-count-l">Not significant</span>
           </div>
           <div class="ra-count-box" style="border-color:#e3b34140">
@@ -459,7 +459,7 @@ OmicsLab.RNAAtlas = (function () {
         <div><span class="ra-meta-label">-log10(padj)</span><span>${_nl10(g.padj).toFixed(1)}</span></div>
         <div><span class="ra-meta-label">baseMean</span><span>${g.baseMean.toLocaleString()} counts</span></div>
       </div>
-      <p style="font-size:0.8rem;color:#8b949e;line-height:1.6;margin:0.75rem 0 0">${g.note}</p>
+      <p style="font-size:0.8rem;color:#A8A098;line-height:1.6;margin:0.75rem 0 0">${g.note}</p>
     `;
   }
 

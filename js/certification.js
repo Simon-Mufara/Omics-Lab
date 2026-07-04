@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
    OmicsLab — Certification Program (Part 8)
    Track learning progress across OmicsLab modules,
    earn badges, and generate a verifiable certificate.
@@ -55,7 +55,7 @@ OmicsLab.Certification = (function () {
       id: 'research-skills',
       title: 'Research & Communication',
       level: 'Advanced',
-      color: '#3fb950',
+      color: '#00C4A0',
       badge: 'RS',
       desc: 'Scientific writing, grant applications, meta-analysis, and lab documentation.',
       modules: [
@@ -119,20 +119,20 @@ OmicsLab.Certification = (function () {
     }
     const today = new Date().toISOString().slice(0,10);
     const certId = 'OL-' + Date.now().toString(36).toUpperCase();
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" style="font-family:Georgia,serif;background:#0d1117">
-      <rect width="800" height="560" fill="#0d1117"/>
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" style="font-family:Georgia,serif;background:#0D1524">
+      <rect width="800" height="560" fill="#0D1524"/>
       <rect x="20" y="20" width="760" height="520" fill="none" stroke="#e3b341" stroke-width="2" rx="12"/>
       <rect x="28" y="28" width="744" height="504" fill="none" stroke="#e3b341" stroke-width="0.5" rx="10"/>
       <text x="400" y="80" text-anchor="middle" font-size="13" fill="#e3b341" font-family="Georgia,serif" letter-spacing="4">CERTIFICATE OF COMPLETION</text>
-      <text x="400" y="120" text-anchor="middle" font-size="28" fill="#e6edf3" font-weight="bold">OmicsLab Bioinformatics Platform</text>
-      <text x="400" y="165" text-anchor="middle" font-size="15" fill="#8b949e">This certifies that</text>
+      <text x="400" y="120" text-anchor="middle" font-size="28" fill="#E4DDD2" font-weight="bold">OmicsLab Bioinformatics Platform</text>
+      <text x="400" y="165" text-anchor="middle" font-size="15" fill="#A8A098">This certifies that</text>
       <text x="400" y="215" text-anchor="middle" font-size="34" fill="#58a6ff" font-style="italic">${name}</text>
       <line x1="160" y1="230" x2="640" y2="230" stroke="#e3b341" stroke-width="0.5"/>
-      <text x="400" y="265" text-anchor="middle" font-size="14" fill="#8b949e">has successfully completed the following tracks:</text>
+      <text x="400" y="265" text-anchor="middle" font-size="14" fill="#A8A098">has successfully completed the following tracks:</text>
       ${completedTracks.map((t, i) => `<text x="400" y="${300 + i * 28}" text-anchor="middle" font-size="15" fill="${t.color}" font-weight="bold">${t.badge} · ${t.title} (${t.level})</text>`).join('')}
-      <text x="400" y="${300 + completedTracks.length * 28 + 30}" text-anchor="middle" font-size="12" fill="#484f58">Total points earned: ${_totalPoints()}</text>
-      <text x="400" y="${300 + completedTracks.length * 28 + 60}" text-anchor="middle" font-size="12" fill="#484f58">Issued: ${today} · Certificate ID: ${certId}</text>
-      <text x="400" y="${300 + completedTracks.length * 28 + 90}" text-anchor="middle" font-size="11" fill="#30363d">omicslab.africa · Built for Africa's bioinformatics community</text>
+      <text x="400" y="${300 + completedTracks.length * 28 + 30}" text-anchor="middle" font-size="12" fill="#354060">Total points earned: ${_totalPoints()}</text>
+      <text x="400" y="${300 + completedTracks.length * 28 + 60}" text-anchor="middle" font-size="12" fill="#354060">Issued: ${today} · Certificate ID: ${certId}</text>
+      <text x="400" y="${300 + completedTracks.length * 28 + 90}" text-anchor="middle" font-size="11" fill="#243048">omicslab.africa · Built for Africa's bioinformatics community</text>
     </svg>`;
     const blob = new Blob([svg], { type:'image/svg+xml' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `omicslab-certificate-${name.replace(/\s+/g,'-')}.svg`; a.click();
@@ -188,21 +188,21 @@ OmicsLab.Certification = (function () {
               <span class="ct-track-title">${t.title}</span>
               <span class="ct-track-level">${t.level}</span>
             </div>
-            <span class="ct-track-pct" style="color:${prog.pct===100?'#3fb950':t.color}">${prog.pct}%</span>
+            <span class="ct-track-pct" style="color:${prog.pct===100?'#00C4A0':t.color}">${prog.pct}%</span>
           </div>
           <div class="ct-track-desc">${t.desc}</div>
           <div class="ct-prog-bar-wrap"><div class="ct-prog-bar" style="width:${prog.pct}%;background:${t.color}"></div></div>
           <div class="ct-module-list">
             ${t.modules.map(m => `<div class="ct-module-row">
               <button class="ct-check-btn ct-check-${s.completed[m.id]?'done':''}" onclick="OmicsLab.Certification._toggleModule('${m.id}')">
-                ${s.completed[m.id] ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
+                ${s.completed[m.id] ? `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>` : ''}
               </button>
               <span class="ct-module-title ${s.completed[m.id]?'ct-module-done':''}">${m.title}</span>
               <button class="ct-goto-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('${m.page}')">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
                 Go
               </button>
-              <span class="ct-module-pts" style="color:${s.completed[m.id]?t.color:'#484f58'}">${s.completed[m.id]?'+':''}${m.points}pts</span>
+              <span class="ct-module-pts" style="color:${s.completed[m.id]?t.color:'#354060'}">${s.completed[m.id]?'+':''}${m.points}pts</span>
             </div>`).join('')}
           </div>
         </div>`;

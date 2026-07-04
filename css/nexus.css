@@ -25,8 +25,8 @@
 
 /* ── Sidebar ── */
 .nx-sidebar {
-  background: #0d1117;
-  border-right: 1px solid #21262d;
+  background: #0D1524;
+  border-right: 1px solid #182236;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -34,7 +34,7 @@
 
 .nx-sidebar-header {
   padding: 1rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 
 .nx-workspace-name {
@@ -43,13 +43,13 @@
   gap: 0.4rem;
   font-weight: 700;
   font-size: 0.85rem;
-  color: #e6edf3;
+  color: #E4DDD2;
   letter-spacing: 0.01em;
 }
 
 .nx-workspace-sub {
   font-size: 0.7rem;
-  color: #8b949e;
+  color: #A8A098;
   margin-top: 0.2rem;
   padding-left: 1.2rem;
 }
@@ -65,7 +65,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8b949e;
+  color: #A8A098;
   padding: 0 1rem 0.4rem;
 }
 
@@ -81,7 +81,7 @@
   gap: 0.4rem;
   padding: 0.3rem 0.75rem;
   font-size: 0.8rem;
-  color: #8b949e;
+  color: #A8A098;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -94,13 +94,13 @@
 }
 
 .nx-ch-item:hover {
-  background: #161b22;
-  color: #e6edf3;
+  background: #111B2E;
+  color: #E4DDD2;
 }
 
 .nx-ch-active {
   background: #1f2a3a;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .nx-ch-icon {
@@ -118,7 +118,7 @@
 
 .nx-ch-badge {
   background: #58a6ff;
-  color: #0d1117;
+  color: #0D1524;
   font-size: 0.6rem;
   font-weight: 700;
   padding: 0 0.3rem;
@@ -128,7 +128,7 @@
 }
 
 .nx-sidebar-footer {
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
   padding: 0.75rem 1rem;
 }
 
@@ -143,7 +143,7 @@
 .nx-profile-name {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #e6edf3;
+  color: #E4DDD2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -151,7 +151,7 @@
 
 .nx-profile-status {
   font-size: 0.65rem;
-  color: #3fb950;
+  color: #00C4A0;
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -162,7 +162,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #3fb950;
+  background: #00C4A0;
 }
 
 /* ── Avatar ── */
@@ -175,7 +175,7 @@
   justify-content: center;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #0d1117;
+  color: #0D1524;
   flex-shrink: 0;
   letter-spacing: 0.01em;
 }
@@ -185,13 +185,13 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #161b22;
+  background: #111B2E;
 }
 
 .nx-channel-header {
   padding: 0.9rem 1.25rem 0.6rem;
-  border-bottom: 1px solid #21262d;
-  background: #161b22;
+  border-bottom: 1px solid #182236;
+  background: #111B2E;
   flex-shrink: 0;
 }
 
@@ -201,7 +201,7 @@
   gap: 0.35rem;
   font-weight: 700;
   font-size: 0.95rem;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .nx-ch-hash {
@@ -211,7 +211,7 @@
 
 .nx-ch-header-desc {
   font-size: 0.73rem;
-  color: #8b949e;
+  color: #A8A098;
   margin-top: 0.25rem;
 }
 
@@ -238,7 +238,7 @@
 
 .nx-empty-ch {
   text-align: center;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.8rem;
   padding: 3rem 1rem;
 }
@@ -279,12 +279,12 @@
 .nx-msg-author {
   font-weight: 700;
   font-size: 0.82rem;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .nx-msg-role {
   font-size: 0.68rem;
-  color: #8b949e;
+  color: #A8A098;
   background: rgba(139, 148, 158, 0.12);
   padding: 0.05rem 0.35rem;
   border-radius: 3px;
@@ -292,7 +292,7 @@
 
 .nx-msg-time {
   font-size: 0.68rem;
-  color: #8b949e;
+  color: #A8A098;
   margin-left: auto;
 }
 
@@ -306,7 +306,7 @@
 
 .nx-msg-text {
   font-size: 0.82rem;
-  color: #c9d1d9;
+  color: #A8A098;
   line-height: 1.55;
   word-break: break-word;
 }
@@ -322,11 +322,11 @@
 .nx-code {
   font-family: 'Cascadia Code', 'Fira Code', monospace;
   font-size: 0.78rem;
-  background: #0d1117;
+  background: #0D1524;
   color: #f0883e;
   padding: 0.05rem 0.3rem;
   border-radius: 3px;
-  border: 1px solid #21262d;
+  border: 1px solid #182236;
 }
 
 /* ── Reactions ── */
@@ -342,7 +342,7 @@
   align-items: center;
   gap: 0.2rem;
   font-size: 0.7rem;
-  color: #8b949e;
+  color: #A8A098;
   background: rgba(139, 148, 158, 0.1);
   border: 1px solid rgba(139, 148, 158, 0.2);
   border-radius: 10px;
@@ -382,8 +382,8 @@
   display: flex;
   gap: 0.2rem;
   opacity: 0;
-  background: #161b22;
-  border: 1px solid #21262d;
+  background: #111B2E;
+  border: 1px solid #182236;
   border-radius: 6px;
   padding: 0.15rem;
   transition: opacity 0.15s;
@@ -398,30 +398,30 @@
   border: none;
   background: transparent;
   cursor: pointer;
-  color: #8b949e;
+  color: #A8A098;
   border-radius: 4px;
   transition: background 0.1s, color 0.1s;
 }
 
-.nx-msg-action:hover { background: #21262d; color: #e6edf3; }
+.nx-msg-action:hover { background: #182236; color: #E4DDD2; }
 
 /* ── Composer ── */
 .nx-composer {
   padding: 0.75rem 1rem;
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
   flex-shrink: 0;
   display: flex;
   align-items: flex-end;
   gap: 0.5rem;
-  background: #161b22;
+  background: #111B2E;
 }
 
 .nx-composer-input {
   flex: 1;
-  background: #0d1117;
-  border: 1px solid #30363d;
+  background: #0D1524;
+  border: 1px solid #243048;
   border-radius: 8px;
-  color: #e6edf3;
+  color: #E4DDD2;
   font-size: 0.82rem;
   padding: 0.6rem 0.8rem;
   resize: none;
@@ -438,7 +438,7 @@
   border-color: #58a6ff;
 }
 
-.nx-composer-input::placeholder { color: #8b949e; }
+.nx-composer-input::placeholder { color: #A8A098; }
 
 .nx-composer-actions { display: flex; align-items: flex-end; }
 
@@ -448,7 +448,7 @@
   justify-content: center;
   width: 34px;
   height: 34px;
-  background: #238636;
+  background: #007A6A;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -457,12 +457,12 @@
   flex-shrink: 0;
 }
 
-.nx-send-btn:hover { background: #2ea043; }
+.nx-send-btn:hover { background: #007A6A; }
 
 /* ── Thread panel ── */
 .nx-thread {
-  background: #0d1117;
-  border-left: 1px solid #21262d;
+  background: #0D1524;
+  border-left: 1px solid #182236;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -481,20 +481,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.9rem 1rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
   flex-shrink: 0;
 }
 
 .nx-thread-title {
   font-weight: 700;
   font-size: 0.85rem;
-  color: #e6edf3;
+  color: #E4DDD2;
 }
 
 .nx-thread-close {
   background: transparent;
   border: none;
-  color: #8b949e;
+  color: #A8A098;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -503,17 +503,17 @@
   transition: color 0.15s, background 0.15s;
 }
 
-.nx-thread-close:hover { color: #e6edf3; background: #21262d; }
+.nx-thread-close:hover { color: #E4DDD2; background: #182236; }
 
 .nx-thread-parent {
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
   padding: 0.25rem 0;
   flex-shrink: 0;
 }
 
 .nx-thread-divider {
   font-size: 0.68rem;
-  color: #8b949e;
+  color: #A8A098;
   padding: 0.5rem 1rem;
   text-align: center;
   flex-shrink: 0;
@@ -529,7 +529,7 @@
   display: flex;
   gap: 0.4rem;
   padding: 0.6rem 0.75rem;
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
   flex-shrink: 0;
   align-items: flex-end;
 }
@@ -556,7 +556,7 @@
 /* ── Realtime: online count in sidebar ── */
 #nx-online-count {
   font-size: 0.65rem;
-  color: #3fb950;
+  color: #00C4A0;
   margin-left: 0.25rem;
   transition: opacity 0.2s;
 }
@@ -567,7 +567,7 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: #3fb950;
+  background: #00C4A0;
   border-radius: 50%;
   margin-right: 0.25rem;
   vertical-align: middle;
@@ -580,7 +580,7 @@
   display: inline-block;
   width: 6px;
   height: 6px;
-  background: #8b949e;
+  background: #A8A098;
   border-radius: 50%;
   margin-right: 0.25rem;
   vertical-align: middle;

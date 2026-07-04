@@ -4,73 +4,73 @@
 .phylo-wrap { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
 
 .phylo-header { margin-bottom: 1.5rem; }
-.phylo-badge { font-size: .65rem; font-weight: 700; letter-spacing: .12em; color: #3fb950; background: rgba(63,185,80,.1); border: 1px solid rgba(63,185,80,.25); border-radius: 20px; padding: .25rem .7rem; display: inline-block; margin-bottom: .5rem; }
+.phylo-badge { font-size: .65rem; font-weight: 700; letter-spacing: .12em; color: #00C4A0; background: rgba(0,196,160,.1); border: 1px solid rgba(0,196,160,.25); border-radius: 20px; padding: .25rem .7rem; display: inline-block; margin-bottom: .5rem; }
 .phylo-title { font-size: 1.9rem; font-weight: 700; margin: 0 0 .4rem; }
-.phylo-subtitle { color: #8b949e; font-size: .92rem; max-width: 600px; margin: 0; }
+.phylo-subtitle { color: #A8A098; font-size: .92rem; max-width: 600px; margin: 0; }
 
 /* ── Layout ── */
 .phylo-main { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; margin-bottom: 2rem; }
 @media (max-width: 900px) { .phylo-main { grid-template-columns: 1fr; } }
 
 /* ── Cards ── */
-.phylo-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.1rem; margin-bottom: 1rem; }
-.phylo-card-title { font-size: .85rem; font-weight: 700; color: #e6edf3; margin-bottom: .75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .4rem; }
+.phylo-card { background: #111B2E; border: 1px solid #182236; border-radius: 10px; padding: 1.1rem; margin-bottom: 1rem; }
+.phylo-card-title { font-size: .85rem; font-weight: 700; color: #E4DDD2; margin-bottom: .75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .4rem; }
 
 /* ── Examples row ── */
 .phylo-examples-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .6rem; }
-.phylo-examples-label { font-size: .72rem; color: #6e7681; }
-.phylo-ex-btn { font-size: .72rem; padding: .2rem .5rem; border: 1px solid #30363d; border-radius: 5px; background: transparent; color: #8b949e; cursor: pointer; transition: all .12s; }
-.phylo-ex-btn:hover { border-color: #3fb950; color: #3fb950; }
+.phylo-examples-label { font-size: .72rem; color: #6E6860; }
+.phylo-ex-btn { font-size: .72rem; padding: .2rem .5rem; border: 1px solid #243048; border-radius: 5px; background: transparent; color: #A8A098; cursor: pointer; transition: all .12s; }
+.phylo-ex-btn:hover { border-color: #00C4A0; color: #00C4A0; }
 
 /* ── Textarea ── */
-.phylo-textarea { width: 100%; box-sizing: border-box; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e6edf3; font-family: 'JetBrains Mono', monospace; font-size: .78rem; padding: .65rem .8rem; resize: vertical; line-height: 1.5; }
-.phylo-textarea:focus { outline: none; border-color: #3fb950; }
+.phylo-textarea { width: 100%; box-sizing: border-box; background: #0D1524; border: 1px solid #243048; border-radius: 6px; color: #E4DDD2; font-family: 'JetBrains Mono', monospace; font-size: .78rem; padding: .65rem .8rem; resize: vertical; line-height: 1.5; }
+.phylo-textarea:focus { outline: none; border-color: #00C4A0; }
 
 /* ── Algorithm row ── */
 .phylo-algo-row { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; margin: .6rem 0; }
-.phylo-algo-label { font-size: .78rem; color: #8b949e; }
-.phylo-algo-opt { font-size: .8rem; color: #e6edf3; cursor: pointer; display: flex; align-items: center; gap: .3rem; }
-.phylo-algo-opt input { accent-color: #3fb950; }
+.phylo-algo-label { font-size: .78rem; color: #A8A098; }
+.phylo-algo-opt { font-size: .8rem; color: #E4DDD2; cursor: pointer; display: flex; align-items: center; gap: .3rem; }
+.phylo-algo-opt input { accent-color: #00C4A0; }
 
 /* ── Build button ── */
-.phylo-build-btn { display: flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; padding: .6rem; background: linear-gradient(90deg, #1e3a2a, #16301f); border: 1px solid #3fb950; border-radius: 8px; color: #3fb950; font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .15s; margin-top: .2rem; }
-.phylo-build-btn:hover { background: rgba(63,185,80,.12); box-shadow: 0 0 12px rgba(63,185,80,.2); }
+.phylo-build-btn { display: flex; align-items: center; gap: .5rem; width: 100%; justify-content: center; padding: .6rem; background: linear-gradient(90deg, #1e3a2a, #16301f); border: 1px solid #00C4A0; border-radius: 8px; color: #00C4A0; font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .15s; margin-top: .2rem; }
+.phylo-build-btn:hover { background: rgba(0,196,160,.12); box-shadow: 0 0 12px rgba(0,196,160,.2); }
 
-.phylo-status { font-size: .78rem; color: #8b949e; margin-top: .5rem; min-height: 1.2rem; }
+.phylo-status { font-size: .78rem; color: #A8A098; margin-top: .5rem; min-height: 1.2rem; }
 
 /* ── Info cards ── */
 .phylo-info-cards { display: flex; flex-direction: column; gap: .75rem; }
-.phylo-info-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: .8rem; }
+.phylo-info-card { background: #111B2E; border: 1px solid #182236; border-radius: 8px; padding: .8rem; }
 .phylo-info-name { font-size: .82rem; font-weight: 700; margin-bottom: .3rem; }
-.phylo-info-desc { font-size: .78rem; color: #8b949e; line-height: 1.55; margin-bottom: .3rem; }
-.phylo-info-use { font-size: .72rem; color: #6e7681; font-style: italic; }
+.phylo-info-desc { font-size: .78rem; color: #A8A098; line-height: 1.55; margin-bottom: .3rem; }
+.phylo-info-use { font-size: .72rem; color: #6E6860; font-style: italic; }
 
 /* ── Tree canvas ── */
 .phylo-card-tree { }
 .phylo-tree-canvas { overflow-x: auto; min-height: 180px; display: flex; align-items: center; justify-content: center; }
 .phylo-tree-actions { display: flex; gap: .4rem; }
-.phylo-act-btn { display: flex; align-items: center; gap: .3rem; font-size: .72rem; padding: .22rem .55rem; border: 1px solid #30363d; border-radius: 5px; background: transparent; color: #8b949e; cursor: pointer; transition: all .12s; }
-.phylo-act-btn:hover { border-color: #3fb950; color: #3fb950; }
+.phylo-act-btn { display: flex; align-items: center; gap: .3rem; font-size: .72rem; padding: .22rem .55rem; border: 1px solid #243048; border-radius: 5px; background: transparent; color: #A8A098; cursor: pointer; transition: all .12s; }
+.phylo-act-btn:hover { border-color: #00C4A0; color: #00C4A0; }
 
 .phylo-empty-state { text-align: center; padding: 2.5rem 1rem; }
-.phylo-empty-icon { display: flex; align-items: center; justify-content: center; color: var(--text-muted,#8b949e); opacity: .5; margin-bottom: .5rem; }
-.phylo-empty-text { font-size: .85rem; color: #6e7681; }
-.phylo-empty-state-sm { font-size: .8rem; color: #6e7681; text-align: center; padding: 1rem; }
+.phylo-empty-icon { display: flex; align-items: center; justify-content: center; color: var(--text-muted,#A8A098); opacity: .5; margin-bottom: .5rem; }
+.phylo-empty-text { font-size: .85rem; color: #6E6860; }
+.phylo-empty-state-sm { font-size: .8rem; color: #6E6860; text-align: center; padding: 1rem; }
 
 /* ── Newick pre ── */
-.phylo-newick { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: #3fb950; background: #0d1117; border-radius: 5px; padding: .65rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; min-height: 2.5rem; max-height: 120px; margin: 0; }
+.phylo-newick { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: #00C4A0; background: #0D1524; border-radius: 5px; padding: .65rem; overflow-x: auto; white-space: pre-wrap; word-break: break-all; min-height: 2.5rem; max-height: 120px; margin: 0; }
 
 /* ── Distance matrix ── */
 .phylo-dist-wrap { overflow-x: auto; }
 .phylo-dist-table { border-collapse: collapse; font-size: .7rem; font-family: 'JetBrains Mono', monospace; }
-.phylo-dist-table th { padding: .25rem .4rem; color: #8b949e; text-align: center; font-weight: 600; border-bottom: 1px solid #21262d; }
+.phylo-dist-table th { padding: .25rem .4rem; color: #A8A098; text-align: center; font-weight: 600; border-bottom: 1px solid #182236; }
 .phylo-dist-table td { padding: .22rem .35rem; text-align: center; font-size: .68rem; }
-.phylo-dist-name { color: #8b949e !important; text-align: left !important; white-space: nowrap; font-weight: 600; }
+.phylo-dist-name { color: #A8A098 !important; text-align: left !important; white-space: nowrap; font-weight: 600; }
 
 /* ── Concepts section ── */
-.phylo-concepts { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.25rem; }
-.phylo-section-title { font-size: 1rem; font-weight: 700; color: #e6edf3; margin-bottom: .9rem; }
+.phylo-concepts { background: #111B2E; border: 1px solid #182236; border-radius: 10px; padding: 1.25rem; }
+.phylo-section-title { font-size: 1rem; font-weight: 700; color: #E4DDD2; margin-bottom: .9rem; }
 .phylo-concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .75rem; }
-.phylo-concept-card { background: #0d1117; border: 1px solid #21262d; border-radius: 7px; padding: .7rem .85rem; }
-.phylo-concept-t { font-size: .8rem; font-weight: 700; color: #3fb950; margin-bottom: .25rem; }
-.phylo-concept-d { font-size: .75rem; color: #8b949e; line-height: 1.5; }
+.phylo-concept-card { background: #0D1524; border: 1px solid #182236; border-radius: 7px; padding: .7rem .85rem; }
+.phylo-concept-t { font-size: .8rem; font-weight: 700; color: #00C4A0; margin-bottom: .25rem; }
+.phylo-concept-d { font-size: .75rem; color: #A8A098; line-height: 1.5; }

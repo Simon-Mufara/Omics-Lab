@@ -100,9 +100,9 @@ OmicsLab.Showcase = (function () {
 
     /* Reference genome bar */
     const refGrad = ctx.createLinearGradient(startX, 0, startX + refW, 0);
-    refGrad.addColorStop(0,   'rgba(63,185,80,0.12)');
+    refGrad.addColorStop(0,   'rgba(0,196,160,0.12)');
     refGrad.addColorStop(0.5, 'rgba(88,166,255,0.18)');
-    refGrad.addColorStop(1,   'rgba(63,185,80,0.12)');
+    refGrad.addColorStop(1,   'rgba(0,196,160,0.12)');
     ctx.fillStyle = refGrad;
     ctx.beginPath(); ctx.roundRect(startX, refY - 6, refW, 12, 3); ctx.fill();
 
@@ -137,7 +137,7 @@ OmicsLab.Showcase = (function () {
 
       /* Alignment dash when landed */
       if (frac > 0.9) {
-        ctx.strokeStyle = `rgba(63,185,80,${(frac - 0.9) * 6})`;
+        ctx.strokeStyle = `rgba(0,196,160,${(frac - 0.9) * 6})`;
         ctx.lineWidth = 1;
         ctx.setLineDash([2,2]);
         ctx.beginPath();
@@ -150,7 +150,7 @@ OmicsLab.Showcase = (function () {
 
     /* Quality score sparkline */
     const qY = H * 0.78;
-    ctx.strokeStyle = 'rgba(63,185,80,0.5)';
+    ctx.strokeStyle = 'rgba(0,196,160,0.5)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     for (let x = 0; x < refW; x += 3) {
@@ -160,7 +160,7 @@ OmicsLab.Showcase = (function () {
     }
     ctx.stroke();
 
-    ctx.fillStyle = 'rgba(63,185,80,0.5)';
+    ctx.fillStyle = 'rgba(0,196,160,0.5)';
     ctx.font = '10px monospace';
     ctx.fillText('Per-base quality (Phred)', startX, qY - H * 0.13 - 4);
   }
@@ -291,7 +291,7 @@ OmicsLab.Showcase = (function () {
       const lx = x1 + (x2 - x1) * bProg;
       const ly = y1 + (y2 - y1) * bProg;
       ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(lx, ly);
-      ctx.strokeStyle = 'rgba(63,185,80,0.55)'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,196,160,0.55)'; ctx.lineWidth = 1.5; ctx.stroke();
     });
 
     LEAVES.forEach((l, i) => {
@@ -327,7 +327,7 @@ OmicsLab.Showcase = (function () {
     const cy = (H - cardH) / 2;
 
     /* Card */
-    ctx.fillStyle = 'rgba(22,27,34,0.92)';
+    ctx.fillStyle = 'rgba(17,27,46,0.92)';
     ctx.beginPath(); ctx.roundRect(cx, cy, cardW, cardH, 10); ctx.fill();
     ctx.strokeStyle = 'rgba(188,140,255,0.25)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect(cx, cy, cardW, cardH, 10); ctx.stroke();
@@ -347,7 +347,7 @@ OmicsLab.Showcase = (function () {
 
     /* Divider */
     ctx.globalAlpha = Math.min((prog - 0.12) * 8, 1);
-    ctx.fillStyle = 'rgba(48,54,61,1)';
+    ctx.fillStyle = 'rgba(36,48,72,1)';
     ctx.fillRect(p, top + 42, cardW - 40, 1);
 
     /* ACMG criteria pills */
@@ -413,8 +413,8 @@ OmicsLab.Showcase = (function () {
     ctx.bezierCurveTo(65, -70, 50, -90, 30, -90);
     ctx.bezierCurveTo(15, -105, -10, -100, -30, -95);
     ctx.closePath();
-    ctx.fillStyle   = 'rgba(63,185,80,0.06)';
-    ctx.strokeStyle = 'rgba(63,185,80,0.22)';
+    ctx.fillStyle   = 'rgba(0,196,160,0.06)';
+    ctx.strokeStyle = 'rgba(0,196,160,0.22)';
     ctx.lineWidth   = 1.5 / (scale / 100);
     ctx.fill();
     ctx.stroke();

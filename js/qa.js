@@ -514,9 +514,9 @@ OmicsLab.QAEngine = (function() {
 
   function _catColor(cat) {
     return {
-      'Basics':          '#8b949e',
+      'Basics':          '#A8A098',
       'Genomics':        '#58a6ff',
-      'Transcriptomics': '#3fb950',
+      'Transcriptomics': '#00C4A0',
       'Epigenomics':     '#d2a8ff',
       'Metagenomics':    '#ffa657',
       'Proteomics':      '#79c0ff',
@@ -524,13 +524,13 @@ OmicsLab.QAEngine = (function() {
       'Virology':        '#ff7b72',
       'QC Metrics':      '#e3b341',
       'Tools':           '#58a6ff',
-      'Workflows':       '#3fb950',
+      'Workflows':       '#00C4A0',
       'Diseases':        '#f78166',
       'Databases':       '#d2a8ff',
       'Bioinformatics':  '#ffa657',
-      'African Context': '#3fb950',
-      'Ethics & Career': '#8b949e',
-    }[cat] || '#8b949e';
+      'African Context': '#00C4A0',
+      'Ethics & Career': '#A8A098',
+    }[cat] || '#A8A098';
   }
 
   function clear() {

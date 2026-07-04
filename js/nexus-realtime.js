@@ -126,7 +126,7 @@ OmicsLab.NexusRealtime = (function () {
         author:    row.author_meta?.name   || 'Community Member',
         role:      row.author_meta?.role   || '',
         avatar:    row.author_meta?.avatar || '??',
-        color:     row.author_meta?.color  || '#3fb950',
+        color:     row.author_meta?.color  || '#00C4A0',
         ts:        new Date(row.created_at).getTime(),
         text:      row.content,
         reactions: row.reactions || {},
@@ -222,10 +222,10 @@ OmicsLab.NexusRealtime = (function () {
       return {
         name:   p.name   || 'OmicsLab User',
         avatar: p.name   ? p.name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase() : 'OU',
-        color:  '#3fb950',
+        color:  '#00C4A0',
         role:   p.role   || 'student',
       };
-    } catch { return { name: 'OmicsLab User', avatar: 'OU', color: '#3fb950', role: 'student' }; }
+    } catch { return { name: 'OmicsLab User', avatar: 'OU', color: '#00C4A0', role: 'student' }; }
   }
 
   function _getDbUserId() {

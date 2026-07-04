@@ -15,7 +15,7 @@ OmicsLab.Whiteboard = (function () {
   let _canvas    = null;
   let _ctx       = null;
   let _tool      = 'pen';
-  let _color     = '#3fb950';
+  let _color     = '#00C4A0';
   let _width     = 3;
   let _drawing   = false;
   let _startX    = 0;
@@ -25,7 +25,7 @@ OmicsLab.Whiteboard = (function () {
   let _commands  = [];     /* all drawing commands */
 
   const TOOLS   = ['pen', 'line', 'rect', 'circle', 'arrow', 'text', 'eraser'];
-  const COLORS  = ['#3fb950','#58a6ff','#bc8cff','#f97316','#ff6b6b','#e3b341','#ffffff','#8b949e','#000000'];
+  const COLORS  = ['#00C4A0','#58a6ff','#bc8cff','#f97316','#ff6b6b','#e3b341','#ffffff','#A8A098','#000000'];
   const WIDTHS  = [1, 3, 6, 12];
 
   const TEMPLATES = {
@@ -52,7 +52,7 @@ OmicsLab.Whiteboard = (function () {
           <div class="wb-tool-group">
             ${COLORS.map(c => `
               <button class="wb-color-btn${c===_color?' active':''}" data-color="${c}"
-                style="background:${c};border-color:${c===_color?'var(--text-primary,#e6edf3)':'transparent'}"
+                style="background:${c};border-color:${c===_color?'var(--text-primary,#E4DDD2)':'transparent'}"
                 title="${c}" type="button" onclick="OmicsLab.Whiteboard._setColor('${c}')"></button>`).join('')}
           </div>
           <div class="wb-tool-group">
@@ -150,7 +150,7 @@ OmicsLab.Whiteboard = (function () {
       const { x, y } = getPos(e);
       if (_tool === 'pen' || _tool === 'eraser') {
         _ctx.lineWidth  = _tool === 'eraser' ? _width * 4 : _width;
-        _ctx.strokeStyle = _tool === 'eraser' ? '#0d1117' : _color;
+        _ctx.strokeStyle = _tool === 'eraser' ? '#0D1524' : _color;
         _ctx.lineTo(x, y);
         _ctx.stroke();
       } else {
@@ -233,7 +233,7 @@ OmicsLab.Whiteboard = (function () {
         /* Pen commands stored as points arrays */
         if (cmd.pts?.length) {
           _ctx.beginPath();
-          _ctx.strokeStyle = cmd.tool === 'eraser' ? '#0d1117' : cmd.color;
+          _ctx.strokeStyle = cmd.tool === 'eraser' ? '#0D1524' : cmd.color;
           _ctx.lineWidth   = cmd.tool === 'eraser' ? cmd.width * 4 : cmd.width;
           _ctx.moveTo(cmd.pts[0].x, cmd.pts[0].y);
           cmd.pts.forEach(p => _ctx.lineTo(p.x, p.y));
@@ -258,7 +258,7 @@ OmicsLab.Whiteboard = (function () {
     document.querySelectorAll('.wb-color-btn').forEach(b => {
       const active = b.dataset.color === _color;
       b.classList.toggle('active', active);
-      b.style.borderColor = active ? 'var(--text-primary,#e6edf3)' : 'transparent';
+      b.style.borderColor = active ? 'var(--text-primary,#E4DDD2)' : 'transparent';
     });
     document.querySelectorAll('.wb-width-btn').forEach(b => b.classList.toggle('active', +b.dataset.width === _width));
   }
@@ -302,10 +302,10 @@ OmicsLab.Whiteboard = (function () {
     if (!_ctx || !_canvas) return;
     const dpr = window.devicePixelRatio || 1;
     const w = _canvas.width / dpr; const h = _canvas.height / dpr;
-    _ctx.strokeStyle = '#30363d'; _ctx.lineWidth = 1;
+    _ctx.strokeStyle = '#243048'; _ctx.lineWidth = 1;
     for (let x = 40; x < w; x += 40) { _ctx.beginPath(); _ctx.moveTo(x,0); _ctx.lineTo(x,h); _ctx.stroke(); }
     for (let y = 40; y < h; y += 40) { _ctx.beginPath(); _ctx.moveTo(0,y); _ctx.lineTo(w,y); _ctx.stroke(); }
-    _ctx.font = '13px Inter,sans-serif'; _ctx.fillStyle = '#484f58';
+    _ctx.font = '13px Inter,sans-serif'; _ctx.fillStyle = '#354060';
     ['Condition A','Condition B','Replicate 1','Replicate 2','Replicate 3'].forEach((l,i) => {
       _ctx.fillText(l, 8, 40 + i * 40 + 14);
     });
@@ -313,7 +313,7 @@ OmicsLab.Whiteboard = (function () {
 
   function _drawTreeTemplate() {
     if (!_ctx) return;
-    _ctx.strokeStyle = '#3fb950'; _ctx.lineWidth = 2;
+    _ctx.strokeStyle = '#00C4A0'; _ctx.lineWidth = 2;
     const pts = [[200,280],[200,160],[200,160],[120,100],[120,100],[80,60],[120,100],[160,60],
                  [200,160],[280,100],[280,100],[240,60],[280,100],[320,60]];
     for (let i = 0; i < pts.length; i += 2) {
@@ -334,11 +334,11 @@ OmicsLab.Whiteboard = (function () {
     _ctx.beginPath();
     for (let y = 20; y < 460; y += 2) { _ctx.lineTo(cx + amp * Math.sin(freq * y), y); }
     _ctx.stroke();
-    _ctx.strokeStyle = '#3fb950'; _ctx.beginPath();
+    _ctx.strokeStyle = '#00C4A0'; _ctx.beginPath();
     for (let y = 20; y < 460; y += 2) { _ctx.lineTo(cx - amp * Math.sin(freq * y), y); }
     _ctx.stroke();
     /* Base pair rungs */
-    _ctx.strokeStyle = '#484f58'; _ctx.lineWidth = 1;
+    _ctx.strokeStyle = '#354060'; _ctx.lineWidth = 1;
     for (let y = 20; y < 460; y += 18) {
       const x1 = cx + amp * Math.sin(freq * y);
       const x2 = cx - amp * Math.sin(freq * y);
@@ -386,22 +386,22 @@ OmicsLab.Whiteboard = (function () {
     const s = document.createElement('style');
     s.id = 'wb-styles';
     s.textContent = `
-      .wb-wrap{display:flex;flex-direction:column;height:100%;background:var(--bg-canvas,#0d1117)}
-      .wb-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem;padding:.5rem .65rem;border-bottom:1px solid var(--border-default,#21262d);background:var(--bg-surface,#161b22)}
+      .wb-wrap{display:flex;flex-direction:column;height:100%;background:var(--bg-canvas,#0D1524)}
+      .wb-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem;padding:.5rem .65rem;border-bottom:1px solid var(--border-default,#182236);background:var(--bg-surface,#111B2E)}
       .wb-tool-group{display:flex;align-items:center;gap:.25rem}
-      .wb-tool-group+.wb-tool-group::before{content:'';width:1px;height:20px;background:var(--border-default,#21262d);margin:0 .2rem}
-      .wb-tool-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:none;border:1px solid transparent;border-radius:5px;cursor:pointer;color:var(--text-muted,#8b949e);transition:background .1s,color .1s,border-color .1s}
-      .wb-tool-btn:hover,.wb-tool-btn.active{background:var(--bg-overlay,#21262d);border-color:var(--border-muted,#30363d);color:var(--text-primary,#e6edf3)}
-      .wb-tool-btn.active{border-color:var(--green,#3fb950);color:var(--green,#3fb950)}
+      .wb-tool-group+.wb-tool-group::before{content:'';width:1px;height:20px;background:var(--border-default,#182236);margin:0 .2rem}
+      .wb-tool-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;background:none;border:1px solid transparent;border-radius:5px;cursor:pointer;color:var(--text-muted,#A8A098);transition:background .1s,color .1s,border-color .1s}
+      .wb-tool-btn:hover,.wb-tool-btn.active{background:var(--bg-overlay,#182236);border-color:var(--border-muted,#243048);color:var(--text-primary,#E4DDD2)}
+      .wb-tool-btn.active{border-color:var(--green,#00C4A0);color:var(--green,#00C4A0)}
       .wb-color-btn{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .1s,transform .1s}
       .wb-color-btn:hover{transform:scale(1.15)}
-      .wb-width-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:none;border:1px solid transparent;border-radius:4px;cursor:pointer;color:var(--text-muted,#8b949e)}
-      .wb-width-btn:hover,.wb-width-btn.active{background:var(--bg-overlay,#21262d);border-color:var(--border-muted,#30363d);color:var(--text-primary,#e6edf3)}
+      .wb-width-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;background:none;border:1px solid transparent;border-radius:4px;cursor:pointer;color:var(--text-muted,#A8A098)}
+      .wb-width-btn:hover,.wb-width-btn.active{background:var(--bg-overlay,#182236);border-color:var(--border-muted,#243048);color:var(--text-primary,#E4DDD2)}
       .wb-template-select{font-size:.72rem;padding:.2rem .4rem;max-width:160px}
       .wb-actions{margin-left:auto}
       .wb-canvas-wrap{flex:1;position:relative;overflow:hidden}
-      .wb-canvas{display:block;cursor:crosshair;touch-action:none;background:#0d1117}
-      .wb-bc-badge{position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;gap:.3rem;background:rgba(63,185,80,.15);border:1px solid rgba(63,185,80,.3);border-radius:99px;padding:.15rem .5rem;font-size:.65rem;font-weight:700;color:var(--green,#3fb950)}
+      .wb-canvas{display:block;cursor:crosshair;touch-action:none;background:#0D1524}
+      .wb-bc-badge{position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;gap:.3rem;background:rgba(0,196,160,.15);border:1px solid rgba(0,196,160,.3);border-radius:99px;padding:.15rem .5rem;font-size:.65rem;font-weight:700;color:var(--green,#00C4A0)}
     `;
     document.head.appendChild(s);
   }
@@ -427,7 +427,7 @@ OmicsLab.Whiteboard = (function () {
           if (!panel) {
             const wrap = document.createElement('div');
             wrap.id = 'wb-panel-wrap';
-            wrap.style.cssText = 'height:540px;border-top:1px solid var(--border-default,#21262d);margin-top:.5rem';
+            wrap.style.cssText = 'height:540px;border-top:1px solid var(--border-default,#182236);margin-top:.5rem';
             section.appendChild(wrap);
             render(wrap);
             toggle.setAttribute('aria-expanded', 'true');

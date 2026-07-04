@@ -11,7 +11,7 @@ OmicsLab.PipelineVisual = (function () {
       description: 'GATK4 Best Practices pipeline for human whole-genome sequencing. Used by H3Africa, AWI-Gen, and most African WGS cohorts.',
       organism: 'Human (GRCh38)', reference: 'GATK4 Best Practices',
       nodes: [
-        { id: 'fastqc', name: 'FastQC', version: 'v0.12.1', color: '#3fb950', type: 'QC',
+        { id: 'fastqc', name: 'FastQC', version: 'v0.12.1', color: '#00C4A0', type: 'QC',
           inputs: ['FASTQ R1', 'FASTQ R2'], outputs: ['HTML Report', 'ZIP Archive'],
           purpose: 'Assess raw sequencing quality before any processing. Detects adapter contamination, GC bias, per-base quality drops, and overrepresented sequences.',
           params: [{ k: '-t', v: '4', d: 'CPU threads' }, { k: '--extract', v: '', d: 'Unzip output directory' }],
@@ -60,7 +60,7 @@ OmicsLab.PipelineVisual = (function () {
       description: 'Differential gene expression pipeline using STAR and DESeq2. Standard for African infectious disease transcriptomics studies.',
       organism: 'Human or pathogen', reference: 'Bioconductor DESeq2 workflow',
       nodes: [
-        { id: 'fq-qc', name: 'FastQC', version: 'v0.12.1', color: '#3fb950', type: 'QC', inputs: ['FASTQ R1/R2'], outputs: ['QC Report'],
+        { id: 'fq-qc', name: 'FastQC', version: 'v0.12.1', color: '#00C4A0', type: 'QC', inputs: ['FASTQ R1/R2'], outputs: ['QC Report'],
           purpose: 'Assess RNA-seq read quality. RNA-seq often shows higher duplication (normal from amplification) and polyA contamination.', params: [{ k: '-t', v: '4', d: 'Threads' }], time: '4 min', cpu: '4 cores', memory: '256 MB',
           tips: ['High duplication in RNA-seq is expected — do NOT filter duplicates for DEG analysis', 'rRNA contamination shows as GC-content spike', 'Check overrepresented sequences for polyA tails'], afrContext: 'AHRI South Africa routinely QCs RNA-seq from TB patient blood before STAR alignment.' },
         { id: 'star', name: 'STAR', version: 'v2.7.11', color: '#58a6ff', type: 'Align', inputs: ['FASTQ R1/R2', 'Genome Index'], outputs: ['Sorted BAM', 'Log files'],
@@ -112,7 +112,7 @@ OmicsLab.PipelineVisual = (function () {
           time: '2 min', cpu: '1 core', memory: '512 MB',
           tips: ['Always use Bracken after Kraken2 for abundance — Kraken2 alone underestimates true abundance', 'Compare samples with Bray-Curtis dissimilarity for community analysis'],
           afrContext: 'Bracken is used in the AWI-Gen microbiome sub-study for gut community profiling in Southern African populations.' },
-        { id: 'krona', name: 'KronaTools', version: 'v2.8.1', color: '#3fb950', type: 'Visualise', inputs: ['Bracken report'], outputs: ['Interactive Krona HTML'],
+        { id: 'krona', name: 'KronaTools', version: 'v2.8.1', color: '#00C4A0', type: 'Visualise', inputs: ['Bracken report'], outputs: ['Interactive Krona HTML'],
           purpose: 'Interactive radial tree visualization of taxonomic composition. Multi-level zoomable chart from kingdom down to species. Essential for presenting metagenomic community structure.',
           params: [{ k: 'ktImportTaxonomy', v: '', d: 'Import taxonomy classification' }, { k: '-t', v: '3', d: 'Taxonomy column' }, { k: '-s', v: '4', d: 'Score column' }],
           time: '1 min', cpu: '1 core', memory: '256 MB',
@@ -121,7 +121,7 @@ OmicsLab.PipelineVisual = (function () {
       ],
     },
     nanopore: {
-      name: 'Nanopore ARTIC (COVID)', abbr: 'ONT', color: '#3fb950',
+      name: 'Nanopore ARTIC (COVID)', abbr: 'ONT', color: '#00C4A0',
       description: 'Oxford Nanopore ARTIC amplicon sequencing pipeline for SARS-CoV-2 variant calling and lineage assignment. Used by Africa CDC and 15+ African SARS-CoV-2 surveillance programs.',
       organism: 'SARS-CoV-2', reference: 'ARTIC v4 / ARTIC Network',
       nodes: [
@@ -131,7 +131,7 @@ OmicsLab.PipelineVisual = (function () {
           time: '20 min', cpu: 'GPU required', memory: '8 GB VRAM',
           tips: ['HAC model is 5× slower than FAST but needed for clinical accuracy', 'Without GPU, use Dorado basecaller on CPU (very slow, only for small datasets)', 'R10.4.1 flowcell + v4.3 config improves accuracy to >99%'],
           afrContext: 'KRISP (KwaZulu-Natal) ran real-time Guppy basecalling on GPU workstations to identify Beta, Delta, and Omicron variants days before global detection.' },
-        { id: 'artic', name: 'ARTIC medaka', version: 'v1.6.0', color: '#3fb950', type: 'Variant Call', inputs: ['FASTQ reads', 'Primer scheme'], outputs: ['Consensus FASTA', 'VCF'],
+        { id: 'artic', name: 'ARTIC medaka', version: 'v1.6.0', color: '#00C4A0', type: 'Variant Call', inputs: ['FASTQ reads', 'Primer scheme'], outputs: ['Consensus FASTA', 'VCF'],
           purpose: 'ARTIC pipeline: demultiplexes amplicons, trims primers, aligns reads, and calls variants using medaka consensus. Produces reference-quality consensus genome.',
           params: [{ k: '--medaka', v: '', d: 'Use medaka variant caller' }, { k: '--scheme-directory', v: 'artic/primer-schemes', d: 'Primer scheme location' }, { k: '--min-length', v: '400', d: 'Min amplicon length' }, { k: '--normalise', v: '200', d: 'Normalise coverage to 200×' }],
           time: '15 min', cpu: '8 cores', memory: '4 GB',
@@ -159,10 +159,10 @@ OmicsLab.PipelineVisual = (function () {
   let _runProgress = [];
 
   function _nodeColor(node, done, running) {
-    if (done) return { fill: 'rgba(63,185,80,0.15)', stroke: '#3fb950', text: '#3fb950' };
+    if (done) return { fill: 'rgba(0,196,160,0.15)', stroke: '#00C4A0', text: '#00C4A0' };
     if (running) return { fill: 'rgba(227,179,65,0.15)', stroke: '#e3b341', text: '#e3b341' };
     if (_selectedNode && _selectedNode.id === node.id) return { fill: `rgba(${_hexToRgb(node.color)},0.15)`, stroke: node.color, text: node.color };
-    return { fill: 'rgba(255,255,255,0.03)', stroke: '#30363d', text: '#c9d1d9' };
+    return { fill: 'rgba(255,255,255,0.03)', stroke: '#243048', text: '#A8A098' };
   }
 
   function _hexToRgb(hex) {
@@ -179,7 +179,7 @@ OmicsLab.PipelineVisual = (function () {
     const ROW1 = Math.ceil(N / 2), ROW2 = Math.floor(N / 2);
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:${W}px;display:block">`;
-    svg += `<defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#30363d"/></marker></defs>`;
+    svg += `<defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#243048"/></marker></defs>`;
 
     // Layout: 1 or 2 rows
     const positions = nodes.map((node, i) => {
@@ -201,7 +201,7 @@ OmicsLab.PipelineVisual = (function () {
       if (i === nodes.length - 1) return;
       const from = positions[i], to = positions[i + 1];
       const done = _runProgress[i];
-      const lineColor = done ? '#3fb950' : '#30363d';
+      const lineColor = done ? '#00C4A0' : '#243048';
 
       if (from.y === to.y) {
         // Horizontal connection
@@ -230,9 +230,9 @@ OmicsLab.PipelineVisual = (function () {
       // Tool name
       svg += `<text x="${nx+NW/2}" y="${ny+36}" text-anchor="middle" fill="${c.text}" font-size="11.5" font-weight="800" font-family="Sora,Inter,sans-serif">${node.name}</text>`;
       // Version
-      svg += `<text x="${nx+NW/2}" y="${ny+50}" text-anchor="middle" fill="#6e7681" font-size="9" font-family="monospace">${node.version}</text>`;
+      svg += `<text x="${nx+NW/2}" y="${ny+50}" text-anchor="middle" fill="#6E6860" font-size="9" font-family="monospace">${node.version}</text>`;
       // Done checkmark
-      if (done) svg += `<text x="${nx+NW-10}" y="${ny+14}" fill="#3fb950" font-size="13">✓</text>`;
+      if (done) svg += `<text x="${nx+NW-10}" y="${ny+14}" fill="#00C4A0" font-size="13">✓</text>`;
       if (running) svg += `<text x="${nx+NW-10}" y="${ny+14}" fill="#e3b341" font-size="11">▶</text>`;
       svg += '</g>';
     });
@@ -313,7 +313,7 @@ OmicsLab.PipelineVisual = (function () {
     const statusEl = document.getElementById('pvl-run-status');
     if (statusEl) {
       statusEl.textContent = `Pipeline complete — ${nodes.length} tools executed successfully`;
-      statusEl.style.color = '#3fb950';
+      statusEl.style.color = '#00C4A0';
       setTimeout(() => { if (statusEl) { statusEl.textContent = ''; _runProgress = []; _refreshSVG(); } }, 4000);
     }
   }

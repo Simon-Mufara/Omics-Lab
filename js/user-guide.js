@@ -25,7 +25,7 @@ OmicsLab.UserGuide = (function () {
   const MODULES = [
     /* ═══ Getting Started ═══ */
     {
-      id:'lab', cat:'start', page:'lab', color:'#3fb950',
+      id:'lab', cat:'start', page:'lab', color:'#00C4A0',
       name:'Lab Simulations',
       tagline:'14 interactive wet-lab protocols',
       desc:'The heart of OmicsLab. Run realistic omics experiments end-to-end — from sample collection through sequencing to data output. Every decision ripples into your QC metrics, just like a real bench.',
@@ -34,7 +34,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Core','Beginner–Advanced','Offline'],
     },
     {
-      id:'virtual-lab', cat:'start', page:'virtual-lab', color:'#3fb950',
+      id:'virtual-lab', cat:'start', page:'virtual-lab', color:'#00C4A0',
       name:'Virtual Lab',
       tagline:'360° genomics instrument tour',
       desc:'Walk through a virtual genomics laboratory. Explore 20+ real instruments — Illumina sequencers, PacBio Revio, MinION, ABI 3730, thermocyclers — and understand how each fits into African research workflows.',
@@ -72,7 +72,7 @@ OmicsLab.UserGuide = (function () {
 
     /* ═══ Genomics & Sequencing ═══ */
     {
-      id:'fastqc', cat:'genomics', page:'fastqc', color:'#3fb950',
+      id:'fastqc', cat:'genomics', page:'fastqc', color:'#00C4A0',
       name:'Read QC (FastQC)',
       tagline:'Per-base quality metrics for raw reads',
       desc:'FastQC-style read quality analysis in your browser. Input sequencing metrics to get per-base quality boxplots, GC-content distribution, adapter contamination flags, and PASS/WARN/FAIL assessments calibrated for African disease sequencing data.',
@@ -81,7 +81,7 @@ OmicsLab.UserGuide = (function () {
       tags:['QC','Beginner','Offline'],
     },
     {
-      id:'qualitypredictor', cat:'genomics', page:'qualitypredictor', color:'#3fb950',
+      id:'qualitypredictor', cat:'genomics', page:'qualitypredictor', color:'#00C4A0',
       name:'Quality Predictor',
       tagline:'PASS/FAIL prediction from QC metrics',
       desc:'Enter your QC metrics — coverage, duplication rate, read length, GC bias — and a logistic regression model trained on GATK, ENCODE, and H3Africa thresholds returns a PASS/FAIL verdict with per-metric root-cause advice.',
@@ -117,7 +117,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Assembly','Advanced','Offline'],
     },
     {
-      id:'nanopore', cat:'genomics', page:'nanopore', color:'#3fb950',
+      id:'nanopore', cat:'genomics', page:'nanopore', color:'#00C4A0',
       name:'Nanopore QC',
       tagline:'Oxford Nanopore sequencing QC for field use',
       desc:'Paste NanoStat output or enter read-length/quality metrics to get PASS/WARN/FAIL thresholds specifically calibrated for field-deployed MinION sequencing of African pathogens (TB, SARS-CoV-2, mpox, malaria).',
@@ -126,7 +126,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Nanopore','Intermediate','Offline'],
     },
     {
-      id:'seq-align', cat:'genomics', page:'seq-align', color:'#3fb950',
+      id:'seq-align', cat:'genomics', page:'seq-align', color:'#00C4A0',
       name:'Sequence Alignment',
       tagline:'Animated Needleman-Wunsch & Smith-Waterman',
       desc:'Watch global (NW) and local (SW) sequence alignment unfold step by step with a live DP table visualisation. Pre-loaded presets include HBB, rpoB, kelch13, and CYP2B6 — key genes in African disease research.',
@@ -135,7 +135,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Algorithm','Beginner','Visual'],
     },
     {
-      id:'primerdesign', cat:'genomics', page:'primerdesign', color:'#3fb950',
+      id:'primerdesign', cat:'genomics', page:'primerdesign', color:'#00C4A0',
       name:'Primer Design',
       tagline:'PCR primer validation with 6 African pathogen templates',
       desc:'Auto-design or validate PCR primer pairs — Wallace melting temperature, GC%, self-complementarity check, dimer risk, and a SVG alignment diagram. Six presets cover TB rpoB, malaria pfkelch13, HIV pol, HBB, COVID-19 ORF1ab, and SARS spike.',
@@ -229,7 +229,7 @@ OmicsLab.UserGuide = (function () {
       tags:['scRNA-seq','Advanced','Africa'],
     },
     {
-      id:'pathways', cat:'expression', page:'pathways', color:'#3fb950',
+      id:'pathways', cat:'expression', page:'pathways', color:'#00C4A0',
       name:'Pathways',
       tagline:'KEGG + Reactome pathway browser',
       desc:'Browse KEGG disease pathway maps and Reactome pathway diagrams with an Africa-disease focus. Overlay your own gene lists, search by keyword, and navigate between pathways with linked gene annotations.',
@@ -258,7 +258,7 @@ OmicsLab.UserGuide = (function () {
 
     /* ═══ Pipelines & Tools ═══ */
     {
-      id:'pipeline-visual', cat:'pipelines', page:'pipeline-visual', color:'#3fb950',
+      id:'pipeline-visual', cat:'pipelines', page:'pipeline-visual', color:'#00C4A0',
       name:'Pipeline Visualiser',
       tagline:'Node-by-node pipeline explorer',
       desc:'Explore WGS, RNA-seq, metagenomics, and Nanopore ARTIC bioinformatics pipelines as interactive node graphs. Click any step to see the tool, its parameters, expected outputs, and common failure modes.',
@@ -276,7 +276,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Pipeline','Intermediate','Offline'],
     },
     {
-      id:'terminal', cat:'pipelines', page:'terminal', color:'#3fb950',
+      id:'terminal', cat:'pipelines', page:'terminal', color:'#00C4A0',
       name:'Terminal',
       tagline:'Simulated CLI for real pipeline commands',
       desc:'A browser-based terminal environment where you practice real bioinformatics commands — BWA, samtools, GATK, bcftools, featureCounts — with simulated outputs that mirror what you would see on an actual HPC cluster.',
@@ -312,7 +312,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Debugging','All Levels','Offline'],
     },
     {
-      id:'bionlp', cat:'pipelines', page:'bionlp', color:'#3fb950',
+      id:'bionlp', cat:'pipelines', page:'bionlp', color:'#00C4A0',
       name:'BioNLP',
       tagline:'Offline biomedical entity recognition',
       desc:'Browser-side named entity recognition for biomedical text — extract genes, diseases, variants, drugs, organisms, and Africa-specific terms from abstracts or notes without sending data to any server.',
@@ -368,7 +368,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Surveillance','Africa','Online'],
     },
     {
-      id:'one-health', cat:'africa', page:'one-health', color:'#3fb950',
+      id:'one-health', cat:'africa', page:'one-health', color:'#00C4A0',
       name:'One Health',
       tagline:'Human-animal-environment disease nexus',
       desc:'A One Health surveillance dashboard covering 15 zoonotic diseases across Africa — rabies, brucellosis, Rift Valley fever, mpox, COVID-19, and more — with genomic, climate, and land-use drivers visualised together.',
@@ -397,7 +397,7 @@ OmicsLab.UserGuide = (function () {
 
     /* ═══ Research & Writing ═══ */
     {
-      id:'labnotebook', cat:'research', page:'labnotebook', color:'#3fb950',
+      id:'labnotebook', cat:'research', page:'labnotebook', color:'#00C4A0',
       name:'Lab Notebook',
       tagline:'Digital research records — stored offline',
       desc:'A structured digital lab notebook for recording experiments, analyses, protocols, hypotheses, and results. Entries are timestamped, taggable by project, searchable, and exportable to Markdown or PDF.',
@@ -451,7 +451,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Collaboration','Intermediate','Offline'],
     },
     {
-      id:'output-tracker', cat:'research', page:'output-tracker', color:'#3fb950',
+      id:'output-tracker', cat:'research', page:'output-tracker', color:'#00C4A0',
       name:'Output Tracker',
       tagline:'Publications · datasets · talks · grants',
       desc:'Track your research outputs across publications, datasets, conference talks, posters, and grants. Add DOIs, dates, co-authors, and links. Export as CSV or BibTeX for use in funding reports and CVs.',
@@ -480,7 +480,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Quiz','All Levels','Offline'],
     },
     {
-      id:'journalclub', cat:'training', page:'journalclub', color:'#3fb950',
+      id:'journalclub', cat:'training', page:'journalclub', color:'#00C4A0',
       name:'Journal Club',
       tagline:'20+ landmark African genomics papers',
       desc:'Read plain-language summaries of landmark African genomics papers — H3Africa consortium outputs, AWI-Gen GWAS, MalariaGEN reports, African COVID-19 lineages, sickle cell genomics. Each has key findings, Africa context, and discussion questions.',
@@ -498,7 +498,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Community','All Levels','Online'],
     },
     {
-      id:'social', cat:'training', page:'social', color:'#3fb950',
+      id:'social', cat:'training', page:'social', color:'#00C4A0',
       name:'Social Hub',
       tagline:'Peer learning · friend codes · in-app chat',
       desc:'Connect with other OmicsLab researchers. See who is online, add friends by sharing codes, and chat directly inside the platform. Shared session notifications so you can jump into a colleague\'s analysis.',
@@ -516,7 +516,7 @@ OmicsLab.UserGuide = (function () {
       tags:['AI/ML','Advanced','Offline'],
     },
     {
-      id:'epigenomics', cat:'training', page:'epigenomics', color:'#3fb950',
+      id:'epigenomics', cat:'training', page:'epigenomics', color:'#00C4A0',
       name:'Epigenomics Explorer',
       tagline:'Methylation · histone marks · ATAC-seq',
       desc:'Explore DNA methylation patterns, histone modification landscapes, and chromatin accessibility through ATAC-seq — applied to the epigenetic regulation of malaria, TB, and sickle cell disease genes in African populations.',
@@ -536,7 +536,7 @@ OmicsLab.UserGuide = (function () {
       tags:['Institutional','Offline','Admin'],
     },
     {
-      id:'pricing', cat:'platform', page:'pricing', color:'#3fb950',
+      id:'pricing', cat:'platform', page:'pricing', color:'#00C4A0',
       name:'Plans & Pricing',
       tagline:'Community · Campus · Enterprise tiers',
       desc:'OmicsLab is free for individual learners forever. Institutions can add cohort management, admin dashboards, priority support, and custom curriculum branding under Campus or Enterprise licensing. 60% discount for African academic and NGO institutions.',
@@ -641,7 +641,7 @@ OmicsLab.UserGuide = (function () {
     const results = _filtered();
     if (results.length === 0) {
       grid.innerHTML = `<div class="ug-empty">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.5">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.5">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
         <p>No modules match "<strong>${_searchQ}</strong>"</p>

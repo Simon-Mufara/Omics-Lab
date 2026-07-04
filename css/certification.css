@@ -1,37 +1,37 @@
 /* Certification Program */
 .ct-wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .ct-header { margin-bottom: 1.25rem; }
-.ct-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.ct-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
-.ct-profile-card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
-.ct-profile-title { font-size: .75rem; color: #8b949e; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .65rem; }
+.ct-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.ct-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
+.ct-profile-card { background: #111B2E; border: 1px solid #182236; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
+.ct-profile-title { font-size: .75rem; color: #A8A098; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .65rem; }
 .ct-profile-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .9rem; }
-.ct-input { flex: 1; min-width: 150px; padding: .38rem .65rem; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; color: #e6edf3; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
+.ct-input { flex: 1; min-width: 150px; padding: .38rem .65rem; background: #0D1524; border: 1px solid #243048; border-radius: 6px; color: #E4DDD2; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
 .ct-input:focus { border-color: #e3b341; }
-.ct-save-profile-btn { padding: .38rem .85rem; background: #21262d; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; font-size: .8rem; cursor: pointer; font-family: inherit; }
+.ct-save-profile-btn { padding: .38rem .85rem; background: #182236; border: 1px solid #243048; border-radius: 6px; color: #A8A098; font-size: .8rem; cursor: pointer; font-family: inherit; }
 .ct-totals { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: .85rem; }
-.ct-total-chip { background: #0d1117; border: 1px solid #21262d; border-radius: 7px; padding: .5rem .85rem; text-align: center; min-width: 85px; }
+.ct-total-chip { background: #0D1524; border: 1px solid #182236; border-radius: 7px; padding: .5rem .85rem; text-align: center; min-width: 85px; }
 .ct-total-n { display: block; font-size: 1.25rem; font-weight: 800; color: #e3b341; line-height: 1.1; }
-.ct-total-l { display: block; font-size: .62rem; color: #8b949e; margin-top: .1rem; }
+.ct-total-l { display: block; font-size: .62rem; color: #A8A098; margin-top: .1rem; }
 .ct-cert-btn { display: inline-flex; align-items: center; gap: .4rem; padding: .42rem 1rem; background: rgba(227,179,65,.1); border: 1px solid rgba(227,179,65,.3); border-radius: 7px; color: #e3b341; font-size: .82rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
 .ct-cert-btn:hover { background: rgba(227,179,65,.2); }
-.ct-track-card { background: #161b22; border: 1px solid #21262d; border-left: 3px solid; border-radius: 9px; padding: .9rem 1rem; margin-bottom: .75rem; }
+.ct-track-card { background: #111B2E; border: 1px solid #182236; border-left: 3px solid; border-radius: 9px; padding: .9rem 1rem; margin-bottom: .75rem; }
 .ct-track-hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .25rem; }
 .ct-track-badge { font-size: .7rem; font-weight: 800; padding: .15rem .45rem; border-radius: 4px; margin-right: .4rem; font-family: 'Cascadia Code','Fira Mono',monospace; }
-.ct-track-title { font-size: .92rem; font-weight: 700; color: #e6edf3; }
-.ct-track-level { font-size: .65rem; color: #8b949e; margin-left: .5rem; }
+.ct-track-title { font-size: .92rem; font-weight: 700; color: #E4DDD2; }
+.ct-track-level { font-size: .65rem; color: #A8A098; margin-left: .5rem; }
 .ct-track-pct { font-size: .88rem; font-weight: 800; }
-.ct-track-desc { font-size: .75rem; color: #8b949e; line-height: 1.6; margin-bottom: .5rem; }
-.ct-prog-bar-wrap { height: 4px; background: #21262d; border-radius: 2px; margin-bottom: .65rem; overflow: hidden; }
+.ct-track-desc { font-size: .75rem; color: #A8A098; line-height: 1.6; margin-bottom: .5rem; }
+.ct-prog-bar-wrap { height: 4px; background: #182236; border-radius: 2px; margin-bottom: .65rem; overflow: hidden; }
 .ct-prog-bar { height: 100%; border-radius: 2px; transition: width .4s ease; }
 .ct-module-list { display: flex; flex-direction: column; gap: .3rem; }
 .ct-module-row { display: flex; align-items: center; gap: .5rem; }
-.ct-check-btn { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #30363d; background: #0d1117; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color .15s; }
-.ct-check-btn:hover { border-color: #3fb950; }
-.ct-check-done { border-color: #3fb950; background: rgba(63,185,80,.08); }
-.ct-module-title { flex: 1; font-size: .8rem; color: #c9d1d9; }
-.ct-module-done { text-decoration: line-through; color: #484f58; }
-.ct-goto-btn { padding: .18rem .45rem; background: #21262d; border: 1px solid #30363d; border-radius: 4px; color: #8b949e; font-size: .68rem; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: .25rem; }
+.ct-check-btn { width: 18px; height: 18px; border-radius: 4px; border: 1px solid #243048; background: #0D1524; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: border-color .15s; }
+.ct-check-btn:hover { border-color: #00C4A0; }
+.ct-check-done { border-color: #00C4A0; background: rgba(0,196,160,.08); }
+.ct-module-title { flex: 1; font-size: .8rem; color: #A8A098; }
+.ct-module-done { text-decoration: line-through; color: #354060; }
+.ct-goto-btn { padding: .18rem .45rem; background: #182236; border: 1px solid #243048; border-radius: 4px; color: #A8A098; font-size: .68rem; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: .25rem; }
 .ct-goto-btn:hover { color: #58a6ff; border-color: rgba(88,166,255,.3); }
 .ct-module-pts { font-size: .7rem; font-weight: 700; min-width: 45px; text-align: right; font-family: 'Cascadia Code','Fira Mono',monospace; }
 
@@ -47,8 +47,8 @@
   padding: 1rem;
 }
 .ct-modal {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   width: 100%;
   max-width: 520px;
@@ -61,16 +61,16 @@
   align-items: center;
   justify-content: space-between;
   padding: .9rem 1.1rem;
-  border-bottom: 1px solid var(--border, #30363d);
+  border-bottom: 1px solid var(--border, #243048);
   font-weight: 700;
-  color: var(--text-primary, #e6edf3);
+  color: var(--text-primary, #E4DDD2);
   gap: .5rem;
 }
-.ct-modal-header button { background: none; border: none; cursor: pointer; color: var(--text-muted, #8b949e); display: flex; padding: .2rem; }
+.ct-modal-header button { background: none; border: none; cursor: pointer; color: var(--text-muted, #A8A098); display: flex; padding: .2rem; }
 .ct-modal-body { padding: 1.1rem; display: flex; flex-direction: column; gap: .75rem; }
-.ct-cred-note  { font-size: .78rem; color: var(--text-secondary, #8b949e); margin: 0; line-height: 1.55; }
-.ct-cred-id    { font-size: .65rem; color: var(--text-muted, #8b949e); font-family: 'JetBrains Mono', monospace; word-break: break-all; }
-.ct-cred-id code { color: var(--accent, #3fb950); }
+.ct-cred-note  { font-size: .78rem; color: var(--text-secondary, #A8A098); margin: 0; line-height: 1.55; }
+.ct-cred-id    { font-size: .65rem; color: var(--text-muted, #A8A098); font-family: 'JetBrains Mono', monospace; word-break: break-all; }
+.ct-cred-id code { color: var(--accent, #00C4A0); }
 .ct-cred-tracks { display: flex; flex-direction: column; gap: .35rem; }
-.ct-cred-track-row { display: flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--text-primary, #e6edf3); }
+.ct-cred-track-row { display: flex; align-items: center; gap: .4rem; font-size: .8rem; color: var(--text-primary, #E4DDD2); }
 .ct-copy-cred  { align-self: flex-start; }

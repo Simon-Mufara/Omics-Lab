@@ -15,17 +15,17 @@ OmicsLab.OfflineIndicator = (function () {
     s.id = 'oi-styles';
     s.textContent = `
       #oi-bar{position:fixed;top:56px;left:0;right:0;z-index:4999;
-        background:#1c1f23;border-bottom:1px solid #30363d;
+        background:#1c1f23;border-bottom:1px solid #243048;
         padding:.38rem 1rem;display:flex;align-items:center;gap:.55rem;
-        font-size:.78rem;color:#c9d1d9;
+        font-size:.78rem;color:#A8A098;
         transform:translateY(-100%);transition:transform .25s ease;pointer-events:none}
       #oi-bar.oi-show{transform:none;pointer-events:all}
       .oi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:#ff6b6b}
-      .oi-dot.oi-online{background:#3fb950;animation:oi-pulse 1.5s ease-in-out 3}
+      .oi-dot.oi-online{background:#00C4A0;animation:oi-pulse 1.5s ease-in-out 3}
       .oi-msg{flex:1}
-      .oi-detail{font-size:.7rem;color:#8b949e}
-      .oi-close{background:none;border:none;color:#8b949e;cursor:pointer;padding:.1rem .3rem;border-radius:4px;pointer-events:all}
-      .oi-close:hover{background:#21262d;color:#e6edf3}
+      .oi-detail{font-size:.7rem;color:#A8A098}
+      .oi-close{background:none;border:none;color:#A8A098;cursor:pointer;padding:.1rem .3rem;border-radius:4px;pointer-events:all}
+      .oi-close:hover{background:#182236;color:#E4DDD2}
       @keyframes oi-pulse{0%,100%{opacity:1}50%{opacity:.4}}
     `;
     document.head.appendChild(s);

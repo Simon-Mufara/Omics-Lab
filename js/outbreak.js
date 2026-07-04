@@ -1,4 +1,4 @@
-﻿/* OmicsLab — Genomic Outbreak Simulator v1
+/* OmicsLab — Genomic Outbreak Simulator v1
    Simulates a real-time pathogen outbreak across Africa.
    Users collect samples, trigger sequencing, build a phylogenetic tree,
    and identify the index case cluster. */
@@ -20,7 +20,7 @@ OmicsLab.Outbreak = (function () {
     { id:'tb',     name:'M. tuberculosis (XDR-TB)',color:'#e3b341',
       r0:2.5, cfr:0.15, genome:'dsDNA', genomeLen:4411532, incubation:42,
       desc:'Airborne bacterial infection; extensively drug-resistant strains increasing.' },
-    { id:'covid',  name:'SARS-CoV-2 (novel var.)', color:'#3fb950',
+    { id:'covid',  name:'SARS-CoV-2 (novel var.)', color:'#00C4A0',
       r0:5.5, cfr:0.015, genome:'ssRNA', genomeLen:29903,  incubation:5,
       desc:'Betacoronavirus; novel variant with heightened immune evasion detected.' },
   ];
@@ -112,7 +112,7 @@ OmicsLab.Outbreak = (function () {
           <!-- Africa simplified outline -->
           <defs>
             <radialGradient id="obBg" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#0d1117"/>
+              <stop offset="0%" stop-color="#0D1524"/>
               <stop offset="100%" stop-color="#080c10"/>
             </radialGradient>
             <filter id="obGlow">
@@ -137,7 +137,7 @@ OmicsLab.Outbreak = (function () {
         <div class="ob-map-legend">
           <span class="ob-leg-item"><span class="ob-leg-dot" style="background:#444"></span>Unaffected</span>
           <span class="ob-leg-item"><span class="ob-leg-dot ob-leg-pulse" id="ob-leg-color"></span>Active cases</span>
-          <span class="ob-leg-item"><span class="ob-leg-dot" style="background:#3fb950"></span>Sequenced</span>
+          <span class="ob-leg-item"><span class="ob-leg-dot" style="background:#00C4A0"></span>Sequenced</span>
           <span class="ob-leg-item"><span class="ob-leg-dot" style="background:#58a6ff"></span>Index case</span>
         </div>
       </div>
@@ -328,7 +328,7 @@ OmicsLab.Outbreak = (function () {
       const hasCase  = site.cases > 0;
       const isSeq    = site.sequenced;
       const r = hasCase ? Math.min(4, 1.2 + Math.log1p(site.cases) * 0.5) : 1.2;
-      const fill = isSeq ? '#3fb950' : (isSource ? '#58a6ff' : (hasCase ? p.color : '#2d333b'));
+      const fill = isSeq ? '#00C4A0' : (isSource ? '#58a6ff' : (hasCase ? p.color : '#2d333b'));
       const cls  = hasCase && !isSeq ? 'ob-dot-pulse' : '';
       return `<g class="ob-city-group" onclick="OmicsLab.Outbreak._collectSample(${i})"
                 style="cursor:${hasCase&&!isSeq?'pointer':'default'}">
@@ -415,7 +415,7 @@ OmicsLab.Outbreak = (function () {
     if (status) {
       if (pct >= 100 && mutations !== null) {
         status.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Complete — ${mutations.length} SNPs detected`;
-        status.style.color = '#3fb950';
+        status.style.color = '#00C4A0';
         document.getElementById(`bar-${seqId}`)?.parentElement?.parentElement?.classList.add('done');
       } else {
         status.textContent = `Sequencing… ${pct}%`;
@@ -428,7 +428,7 @@ OmicsLab.Outbreak = (function () {
     const done = _sim?.sequences.length || 0;
     const badge = document.getElementById('ob-seq-count-badge');
     if (badge) badge.textContent = done < 5 ? `${done} / 5 needed` : `${done} sequences [OK]`;
-    if (badge && done >= 5) badge.style.color = '#3fb950';
+    if (badge && done >= 5) badge.style.color = '#00C4A0';
   }
 
   /* ─── Check if phylo tree can be built ─── */
@@ -621,7 +621,7 @@ OmicsLab.Outbreak = (function () {
 
   const MP_ROLES = {
     commander: { label: 'Commander', color: '#58a6ff', desc: 'Set containment strategy, allocate resources' },
-    field:     { label: 'Field Epidemiologist', color: '#3fb950', desc: 'Collect samples, run genomics, identify source' },
+    field:     { label: 'Field Epidemiologist', color: '#00C4A0', desc: 'Collect samples, run genomics, identify source' },
   };
 
   function _mpInit(role) {
@@ -662,23 +662,23 @@ OmicsLab.Outbreak = (function () {
     if (!panel) {
       panel = document.createElement('div');
       panel.id = 'ob-mp-panel';
-      panel.style.cssText = `position:fixed;bottom:80px;right:16px;width:260px;background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:10px;padding:.75rem;z-index:500;font-size:.78rem`;
+      panel.style.cssText = `position:fixed;bottom:80px;right:16px;width:260px;background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:10px;padding:.75rem;z-index:500;font-size:.78rem`;
       document.body.appendChild(panel);
     }
-    const roleColor = MP_ROLES[_MP.role]?.color || '#8b949e';
+    const roleColor = MP_ROLES[_MP.role]?.color || '#A8A098';
     panel.innerHTML = `
       <div style="font-weight:700;color:${roleColor};margin-bottom:.4rem">${MP_ROLES[_MP.role]?.label || _MP.role} — Co-op Mode</div>
       ${_MP.role === 'commander' ? `
         <button onclick="OmicsLab.Outbreak._mpSend('strategy_lockdown','Region A')" style="background:#58a6ff;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem .2rem 0 0">Order Lockdown</button>
         <button onclick="OmicsLab.Outbreak._mpSend('strategy_trace','all contacts')" style="background:#58a6ff;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem 0 0 0">Contact Trace</button>
       ` : `
-        <button onclick="OmicsLab.Outbreak._mpSend('action_collect','sample from index case')" style="background:#3fb950;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem .2rem 0 0">Collect Sample</button>
-        <button onclick="OmicsLab.Outbreak._mpSend('action_sequence','WGS')" style="background:#3fb950;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem 0 0 0">Run WGS</button>
+        <button onclick="OmicsLab.Outbreak._mpSend('action_collect','sample from index case')" style="background:#00C4A0;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem .2rem 0 0">Collect Sample</button>
+        <button onclick="OmicsLab.Outbreak._mpSend('action_sequence','WGS')" style="background:#00C4A0;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem 0 0 0">Run WGS</button>
       `}
-      <div style="margin-top:.6rem;max-height:110px;overflow-y:auto;border-top:1px solid var(--border,#30363d);padding-top:.4rem;color:var(--text-muted,#8b949e)">
+      <div style="margin-top:.6rem;max-height:110px;overflow-y:auto;border-top:1px solid var(--border,#243048);padding-top:.4rem;color:var(--text-muted,#A8A098)">
         ${_MP.log.map(l => `<div style="margin-bottom:.2rem">${l}</div>`).join('') || '<div>No events yet</div>'}
       </div>
-      <button onclick="document.getElementById('ob-mp-panel').remove()" style="margin-top:.5rem;background:none;border:none;color:var(--text-muted,#6e7681);font-size:.7rem;cursor:pointer">Close panel</button>`;
+      <button onclick="document.getElementById('ob-mp-panel').remove()" style="margin-top:.5rem;background:none;border:none;color:var(--text-muted,#6E6860);font-size:.7rem;cursor:pointer">Close panel</button>`;
   }
 
   function _mpShowSetup() {
@@ -686,16 +686,16 @@ OmicsLab.Outbreak = (function () {
     const overlay = document.createElement('div');
     overlay.style.cssText = `position:fixed;inset:0;z-index:6000;background:rgba(8,12,16,.85);display:flex;align-items:center;justify-content:center`;
     overlay.innerHTML = `
-      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;padding:2rem;max-width:400px;width:92%;text-align:center">
-        <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-primary,#e6edf3);margin:0 0 .5rem">Co-op Outbreak Mode</h3>
-        <p style="color:var(--text-muted,#8b949e);font-size:.85rem;margin:0 0 1.25rem">Open this page in two browser tabs. Each player picks a role — Commander coordinates strategy, Field Epidemiologist handles genomics sampling.</p>
+      <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:12px;padding:2rem;max-width:400px;width:92%;text-align:center">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 .5rem">Co-op Outbreak Mode</h3>
+        <p style="color:var(--text-muted,#A8A098);font-size:.85rem;margin:0 0 1.25rem">Open this page in two browser tabs. Each player picks a role — Commander coordinates strategy, Field Epidemiologist handles genomics sampling.</p>
         <div style="display:flex;gap:.75rem;justify-content:center">
           ${Object.entries(MP_ROLES).map(([k, r]) => `
             <button onclick="OmicsLab.Outbreak._mpInit('${k}');this.closest('div[style*=fixed]').remove()" style="background:${r.color};color:#000;border:none;border-radius:8px;padding:.6rem 1.2rem;font-size:.85rem;font-weight:700;cursor:pointer">
               ${r.label}
             </button>`).join('')}
         </div>
-        <button onclick="this.closest('div[style*=fixed]').remove()" style="margin-top:1rem;background:none;border:none;color:var(--text-muted,#6e7681);font-size:.78rem;cursor:pointer">Cancel</button>
+        <button onclick="this.closest('div[style*=fixed]').remove()" style="margin-top:1rem;background:none;border:none;color:var(--text-muted,#6E6860);font-size:.78rem;cursor:pointer">Cancel</button>
       </div>`;
     document.body.appendChild(overlay);
     overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };

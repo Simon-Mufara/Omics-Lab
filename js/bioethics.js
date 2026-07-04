@@ -6,7 +6,7 @@ window.OmicsLab = window.OmicsLab || {};
 OmicsLab.Bioethics = (function () {
 
   const CONTEST = [
-    { letter: 'C', word: 'Community Engagement', color: '#3fb950', icon: 'users',
+    { letter: 'C', word: 'Community Engagement', color: '#00C4A0', icon: 'users',
       summary: 'Genomics research must engage communities before, during, and after the study — not merely recruit participants.',
       detail: 'African genomics often involves populations with historically exploitative research experiences. Community Advisory Boards (CABs), community meetings, and vernacular-language consent must be part of the study design, not afterthoughts. H3Africa requires documented community engagement plans for all funded projects.',
       example: 'The MalariaGEN consortium conducted village-level meetings in rural Kenya before sample collection, explaining how genetic data would be used and ensuring community leaders understood the study goals.',
@@ -45,7 +45,7 @@ OmicsLab.Bioethics = (function () {
 
   const CONSENT_TYPES = [
     {
-      type: 'Specific Consent', color: '#3fb950',
+      type: 'Specific Consent', color: '#00C4A0',
       description: 'Participant consents to a defined, specific study only.',
       when: 'Clinical trial with clear outcomes',
       advantages: 'Most protective; clear expectations',
@@ -266,7 +266,7 @@ OmicsLab.Bioethics = (function () {
     const pct = done / CHECKLIST_ITEMS.length * 100;
     const fill = document.getElementById('be-cl-prog-fill');
     const label = document.getElementById('be-cl-prog-label');
-    if (fill) { fill.style.width = pct + '%'; fill.style.background = pct >= 100 ? '#3fb950' : pct >= 60 ? '#e3b341' : '#f85149'; }
+    if (fill) { fill.style.width = pct + '%'; fill.style.background = pct >= 100 ? '#00C4A0' : pct >= 60 ? '#e3b341' : '#f85149'; }
     if (label) label.textContent = `${done} / ${CHECKLIST_ITEMS.length} complete`;
   }
 

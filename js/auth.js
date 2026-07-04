@@ -280,7 +280,7 @@ OmicsLab.Auth = (function () {
 
   /* ─── Modal HTML ─── */
   function _modalHtml(tab) {
-    if (tab === 'loading') return `<div class="auth-modal"><div class="auth-spinner"></div><p style="color:#8b949e;text-align:center;margin-top:1rem">Signing in…</p></div>`;
+    if (tab === 'loading') return `<div class="auth-modal"><div class="auth-spinner"></div><p style="color:#A8A098;text-align:center;margin-top:1rem">Signing in…</p></div>`;
     if (tab === 'oauth-setup') return _oauthSetupHtml();
     if (tab === 'account') return _accountHtml();
     return _authFormHtml(tab);
@@ -292,7 +292,7 @@ OmicsLab.Auth = (function () {
       <div class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
         <div class="auth-modal-header">
           <div class="auth-brand">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg>
             OmicsLab
           </div>
           <button class="auth-close" onclick="OmicsLab.Auth.closeModal()" aria-label="Close">
@@ -356,9 +356,9 @@ OmicsLab.Auth = (function () {
           <div style="width:52px;height:52px;border-radius:50%;background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <div style="font-size:0.95rem;font-weight:700;color:#e6edf3;margin-bottom:0.5rem">Social sign-in coming soon</div>
-          <p style="color:#8b949e;font-size:0.82rem;line-height:1.6;margin-bottom:1.5rem">
-            Sign-in via <strong style="color:#c9d1d9" id="auth-oauth-provider"></strong> is being integrated into OmicsLab.<br>
+          <div style="font-size:0.95rem;font-weight:700;color:#E4DDD2;margin-bottom:0.5rem">Social sign-in coming soon</div>
+          <p style="color:#A8A098;font-size:0.82rem;line-height:1.6;margin-bottom:1.5rem">
+            Sign-in via <strong style="color:#A8A098" id="auth-oauth-provider"></strong> is being integrated into OmicsLab.<br>
             In the meantime, use your email and password — your account and all research data sync across devices.
           </p>
           <button class="auth-submit-btn" onclick="OmicsLab.Auth.openModal('signin')">
@@ -392,7 +392,7 @@ OmicsLab.Auth = (function () {
             <div>
               <input type="file" id="auth-av-input" accept="image/*" style="display:none" onchange="OmicsLab.Auth._uploadAvatar(this)"/>
               <button class="auth-link-btn" onclick="document.getElementById('auth-av-input').click()">Change photo</button>
-              <div style="font-size:0.68rem;color:#8b949e;margin-top:0.2rem">PNG, JPG, max 1MB</div>
+              <div style="font-size:0.68rem;color:#A8A098;margin-top:0.2rem">PNG, JPG, max 1MB</div>
             </div>
           </div>
 
@@ -510,12 +510,12 @@ OmicsLab.Auth = (function () {
     if (!overlay) return;
     overlay.innerHTML = `
       <div class="auth-modal" role="dialog" style="text-align:center;padding:2rem 1.5rem">
-        <div style="width:56px;height:56px;border-radius:50%;background:rgba(63,185,80,0.12);border:1.5px solid rgba(63,185,80,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(0,196,160,0.12);border:1.5px solid rgba(0,196,160,0.4);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <div style="font-size:1.1rem;font-weight:700;color:#e6edf3;margin-bottom:.4rem">Account created!</div>
-        <div style="font-size:.85rem;color:#3fb950;font-weight:600;margin-bottom:.9rem">You are now signed in as ${_esc(user.name.split(' ')[0])}</div>
-        <p style="font-size:.78rem;color:#8b949e;line-height:1.65;max-width:300px;margin:0 auto 1.5rem">
+        <div style="font-size:1.1rem;font-weight:700;color:#E4DDD2;margin-bottom:.4rem">Account created!</div>
+        <div style="font-size:.85rem;color:#00C4A0;font-weight:600;margin-bottom:.9rem">You are now signed in as ${_esc(user.name.split(' ')[0])}</div>
+        <p style="font-size:.78rem;color:#A8A098;line-height:1.65;max-width:300px;margin:0 auto 1.5rem">
           Your account is saved in this browser — no email verification needed. To access OmicsLab on another device, create an account there too.
         </p>
         <button class="auth-submit-btn" onclick="OmicsLab.Auth.closeModal()">Continue to OmicsLab</button>

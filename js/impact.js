@@ -20,7 +20,7 @@ OmicsLab.Impact = (function () {
     certifications: 3200,
     languages: 21,
     topCountries: [
-      { name:'Nigeria', count:3200, color:'#3fb950' },
+      { name:'Nigeria', count:3200, color:'#00C4A0' },
       { name:'South Africa', count:2800, color:'#58a6ff' },
       { name:'Kenya', count:2100, color:'#e3b341' },
       { name:'Ethiopia', count:1500, color:'#f97316' },
@@ -28,13 +28,13 @@ OmicsLab.Impact = (function () {
       { name:'Cameroon', count:780, color:'#79c0ff' },
       { name:'Uganda', count:720, color:'#ff6b6b' },
       { name:'Tanzania', count:650, color:'#58a6ff' },
-      { name:'Senegal', count:540, color:'#3fb950' },
+      { name:'Senegal', count:540, color:'#00C4A0' },
       { name:'Rwanda', count:410, color:'#e3b341' },
     ],
     toolUsage: [
       { tool:'Variant Interpreter', uses:51200, color:'#ff6b6b' },
       { tool:'AI Assistant', uses:38900, color:'#58a6ff' },
-      { tool:'Grant Generator', uses:22400, color:'#3fb950' },
+      { tool:'Grant Generator', uses:22400, color:'#00C4A0' },
       { tool:'Thesis Coach', uses:19100, color:'#bc8cff' },
       { tool:'Genome Browser', uses:17800, color:'#e3b341' },
       { tool:'Population Structure', uses:14600, color:'#f97316' },
@@ -121,9 +121,9 @@ OmicsLab.Impact = (function () {
     data.forEach((d, i) => {
       const [x, y] = pts[i].split(',').map(Number);
       svg += `<circle cx="${x}" cy="${y}" r="3" fill="#58a6ff"/>`;
-      svg += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#8b949e">${d.month.split(' ')[0]}</text>`;
+      svg += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#A8A098">${d.month.split(' ')[0]}</text>`;
     });
-    svg += `<text x="${pad.l - 4}" y="${pad.t + 4}" text-anchor="end" font-size="9" fill="#8b949e">${(maxU/1000).toFixed(0)}k</text>`;
+    svg += `<text x="${pad.l - 4}" y="${pad.t + 4}" text-anchor="end" font-size="9" fill="#A8A098">${(maxU/1000).toFixed(0)}k</text>`;
     svg += '</svg>';
     return svg;
   }
@@ -140,7 +140,7 @@ OmicsLab.Impact = (function () {
       <div class="im-wrap">
         <div class="im-header">
           <div class="im-header-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
             Impact Observatory
           </div>
           <div class="im-header-sub">OmicsLab's reach across Africa — illustrative aggregate platform metrics</div>
@@ -153,7 +153,7 @@ OmicsLab.Impact = (function () {
           <div class="im-hero-card"><span class="im-hero-n" style="color:#bc8cff">${(A.variants/1000).toFixed(0)}k</span><span class="im-hero-l">Variants interpreted</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#e3b341">${A.grants.toLocaleString()}</span><span class="im-hero-l">Grants drafted</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#ff6b6b">${A.certifications.toLocaleString()}</span><span class="im-hero-l">Certificates issued</span></div>
-          <div class="im-hero-card"><span class="im-hero-n" style="color:#3fb950">${A.mentorConnections.toLocaleString()}</span><span class="im-hero-l">Mentor connections</span></div>
+          <div class="im-hero-card"><span class="im-hero-n" style="color:#00C4A0">${A.mentorConnections.toLocaleString()}</span><span class="im-hero-l">Mentor connections</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#79c0ff">${A.languages}</span><span class="im-hero-l">Languages supported</span></div>
         </div>
         <!-- Local stats -->
@@ -196,7 +196,7 @@ OmicsLab.Impact = (function () {
         <!-- Sustainability -->
         <div class="im-section-label" style="margin-top:2rem">Sustainability &amp; Support</div>
         <div class="im-card im-sustain-card">
-          <p style="color:var(--text-secondary,#c9d1d9);font-size:.9rem;margin:0 0 1rem">OmicsLab is maintained by <strong>Simon Mufara</strong>, a computational biologist at UCT, with the mission to make world-class omics training free and accessible across Africa. It has no institutional funding — it exists through community support.</p>
+          <p style="color:var(--text-secondary,#A8A098);font-size:.9rem;margin:0 0 1rem">OmicsLab is maintained by <strong>Simon Mufara</strong>, a computational biologist at UCT, with the mission to make world-class omics training free and accessible across Africa. It has no institutional funding — it exists through community support.</p>
           <div class="im-sustain-actions">
             <a href="https://github.com/Simon-Mufara/Omics-Lab" target="_blank" rel="noopener" class="im-sustain-btn">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.419 2.865 8.17 6.839 9.49.5.09.682-.217.682-.482 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .267.18.578.688.48A10.019 10.019 0 0 0 22 12c0-5.523-4.477-10-10-10z"/></svg>
@@ -207,7 +207,7 @@ OmicsLab.Impact = (function () {
               Add Locale Translation
             </button>
           </div>
-          <p style="color:var(--text-muted,#6e7681);font-size:.78rem;margin:1rem 0 0">If OmicsLab helped your research or teaching, consider sharing it with your network or citing it in your publications using the citation generator above.</p>
+          <p style="color:var(--text-muted,#6E6860);font-size:.78rem;margin:1rem 0 0">If OmicsLab helped your research or teaching, consider sharing it with your network or citing it in your publications using the citation generator above.</p>
         </div>
       </div>`;
   }

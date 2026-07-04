@@ -141,8 +141,8 @@ OmicsLab.PWA = (function () {
       .pwa-banner{
         position:fixed;bottom:0;left:0;right:0;
         z-index:var(--z-fixed,500);
-        background:var(--bg-surface,#161b22);
-        border-top:1px solid var(--green,#3fb950);
+        background:var(--bg-surface,#111B2E);
+        border-top:1px solid var(--green,#00C4A0);
         transform:translateY(0);
         animation:pwa-slide-up .3s var(--ease-out,ease) both;
       }
@@ -151,7 +151,7 @@ OmicsLab.PWA = (function () {
         max-width:900px;margin:0 auto;
         display:flex;align-items:center;gap:.75rem;
         padding:.65rem 1rem;
-        color:var(--text-secondary,#c9d1d9);
+        color:var(--text-secondary,#A8A098);
         font-size:.82rem;
       }
       .pwa-banner-text{flex:1;line-height:1.4}
@@ -160,10 +160,10 @@ OmicsLab.PWA = (function () {
         display:flex;align-items:center;justify-content:center;
         width:28px;height:28px;
         background:none;border:none;cursor:pointer;
-        color:var(--text-muted,#8b949e);border-radius:4px;
+        color:var(--text-muted,#A8A098);border-radius:4px;
         flex-shrink:0;
       }
-      .pwa-banner-close:hover{background:var(--bg-overlay,#21262d)}
+      .pwa-banner-close:hover{background:var(--bg-overlay,#182236)}
       @media(max-width:700px){
         .pwa-banner{bottom:56px} /* above mobile tab bar */
         .pwa-banner-text{font-size:.75rem}
@@ -229,12 +229,12 @@ OmicsLab.PWA = (function () {
     if (document.getElementById('pwa-update-banner')) return;
     const div = document.createElement('div');
     div.id = 'pwa-update-banner';
-    div.style.cssText = `position:fixed;top:56px;left:0;right:0;z-index:6000;background:#1a4731;border-bottom:1px solid var(--green,#3fb950);padding:.5rem 1rem;display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--text-primary,#e6edf3)`;
+    div.style.cssText = `position:fixed;top:56px;left:0;right:0;z-index:6000;background:#1a4731;border-bottom:1px solid var(--green,#00C4A0);padding:.5rem 1rem;display:flex;align-items:center;gap:.75rem;font-size:.8rem;color:var(--text-primary,#E4DDD2)`;
     div.innerHTML = `
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
       <span style="flex:1">OmicsLab has been updated.</span>
-      <button onclick="window.location.reload()" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:5px;padding:.25rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer">Reload</button>
-      <button onclick="this.closest('#pwa-update-banner').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#8b949e);padding:0 4px;display:flex;align-items:center" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+      <button onclick="window.location.reload()" style="background:var(--green,#00C4A0);color:#000;border:none;border-radius:5px;padding:.25rem .65rem;font-size:.75rem;font-weight:700;cursor:pointer">Reload</button>
+      <button onclick="this.closest('#pwa-update-banner').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#A8A098);padding:0 4px;display:flex;align-items:center" aria-label="Dismiss"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
     document.body.appendChild(div);
   }
 
@@ -270,17 +270,17 @@ OmicsLab.PWA = (function () {
 
     const xp = (() => { try { const s = JSON.parse(localStorage.getItem('omicslab_xp_v1')||'{}'); return s.total||0; } catch { return 0; } })();
     overlay.innerHTML = `
-      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;padding:2rem;max-width:420px;width:92%;text-align:center">
+      <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:12px;padding:2rem;max-width:420px;width:92%;text-align:center">
         <div style="font-size:2.4rem;margin-bottom:.75rem">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
-        <h2 style="font-size:1.25rem;font-weight:700;color:var(--text-primary,#e6edf3);margin:0 0 .5rem">Welcome back!</h2>
-        <p style="color:var(--text-secondary,#8b949e);font-size:.9rem;margin:0 0 1rem">You've been away for <strong style="color:var(--text-primary)">${days} day${days !== 1 ? 's' : ''}</strong>. Your XP total: <strong style="color:#e3b341">${xp} XP</strong>.</p>
-        <p style="color:var(--text-muted,#6e7681);font-size:.8rem;margin:0 0 1.5rem">Ready to pick up where you left off?</p>
+        <h2 style="font-size:1.25rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 .5rem">Welcome back!</h2>
+        <p style="color:var(--text-secondary,#A8A098);font-size:.9rem;margin:0 0 1rem">You've been away for <strong style="color:var(--text-primary)">${days} day${days !== 1 ? 's' : ''}</strong>. Your XP total: <strong style="color:#e3b341">${xp} XP</strong>.</p>
+        <p style="color:var(--text-muted,#6E6860);font-size:.8rem;margin:0 0 1.5rem">Ready to pick up where you left off?</p>
         <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
-          <button onclick="OmicsLab.Router?.navigate('skill-tree');document.getElementById('pwa-reengage').remove()" style="background:var(--green,#3fb950);color:#000;border:none;border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;font-weight:700;cursor:pointer">View Skill Tree</button>
-          <button onclick="OmicsLab.Router?.navigate('lab');document.getElementById('pwa-reengage').remove()" style="background:var(--bg-overlay,#21262d);color:var(--text-primary,#e6edf3);border:1px solid var(--border,#30363d);border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;cursor:pointer">Go to Lab</button>
-          <button onclick="document.getElementById('pwa-reengage').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#6e7681);font-size:.78rem;text-decoration:underline">Dismiss</button>
+          <button onclick="OmicsLab.Router?.navigate('skill-tree');document.getElementById('pwa-reengage').remove()" style="background:var(--green,#00C4A0);color:#000;border:none;border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;font-weight:700;cursor:pointer">View Skill Tree</button>
+          <button onclick="OmicsLab.Router?.navigate('lab');document.getElementById('pwa-reengage').remove()" style="background:var(--bg-overlay,#182236);color:var(--text-primary,#E4DDD2);border:1px solid var(--border,#243048);border-radius:7px;padding:.5rem 1.25rem;font-size:.85rem;cursor:pointer">Go to Lab</button>
+          <button onclick="document.getElementById('pwa-reengage').remove()" style="background:none;border:none;cursor:pointer;color:var(--text-muted,#6E6860);font-size:.78rem;text-decoration:underline">Dismiss</button>
         </div>
       </div>`;
     document.body.appendChild(overlay);
@@ -320,11 +320,11 @@ OmicsLab.PWA = (function () {
     overlay.setAttribute('aria-label', 'Command palette');
     overlay.style.cssText = `position:fixed;inset:0;z-index:8000;background:rgba(8,12,16,.8);backdrop-filter:blur(4px);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh`;
     overlay.innerHTML = `
-      <div style="background:var(--bg-surface,#161b22);border:1px solid var(--border,#30363d);border-radius:12px;width:min(560px,94vw);overflow:hidden;box-shadow:0 24px 60px #000a">
-        <div style="display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;border-bottom:1px solid var(--border,#30363d)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted,#8b949e)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="pwa-cp-input" type="text" placeholder="Navigate to..." autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:var(--text-primary,#e6edf3);font-size:.95rem" autofocus>
-          <kbd style="background:var(--bg-overlay,#21262d);border:1px solid var(--border,#30363d);border-radius:4px;padding:.1rem .35rem;font-size:.7rem;color:var(--text-muted,#8b949e)">Esc</kbd>
+      <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:12px;width:min(560px,94vw);overflow:hidden;box-shadow:0 24px 60px #000a">
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.75rem 1rem;border-bottom:1px solid var(--border,#243048)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted,#A8A098)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="pwa-cp-input" type="text" placeholder="Navigate to..." autocomplete="off" style="flex:1;background:none;border:none;outline:none;color:var(--text-primary,#E4DDD2);font-size:.95rem" autofocus>
+          <kbd style="background:var(--bg-overlay,#182236);border:1px solid var(--border,#243048);border-radius:4px;padding:.1rem .35rem;font-size:.7rem;color:var(--text-muted,#A8A098)">Esc</kbd>
         </div>
         <ul id="pwa-cp-list" role="listbox" style="list-style:none;margin:0;padding:.4rem 0;max-height:360px;overflow-y:auto"></ul>
       </div>`;
@@ -339,8 +339,8 @@ OmicsLab.PWA = (function () {
       const filtered = _CP_PAGES.filter(p => p.label.toLowerCase().includes(q));
       list.innerHTML = filtered.map((p, i) => `
         <li role="option" aria-selected="${i === _sel}" data-page="${p.page}"
-          style="padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;font-size:.9rem;color:var(--text-${i===_sel?'primary':'secondary'},${i===_sel?'#e6edf3':'#8b949e'});background:${i===_sel?'var(--bg-overlay,#21262d)':'transparent'}">
-          <span style="color:var(--text-muted,#6e7681);font-size:.75rem">${p.label}</span>
+          style="padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;font-size:.9rem;color:var(--text-${i===_sel?'primary':'secondary'},${i===_sel?'#E4DDD2':'#A8A098'});background:${i===_sel?'var(--bg-overlay,#182236)':'transparent'}">
+          <span style="color:var(--text-muted,#6E6860);font-size:.75rem">${p.label}</span>
         </li>`).join('');
       list.querySelectorAll('li').forEach(li => {
         li.onmouseenter = () => { _sel = [...list.children].indexOf(li); _render(input.value); };

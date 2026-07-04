@@ -86,7 +86,7 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const sig = row.padj < pa;
     const up   = row.log2fc >=  fc;
     const down = row.log2fc <= -fc;
-    if (!sig) return '#30363d';
+    if (!sig) return '#243048';
     if (up)   return '#ff6b6b';
     if (down) return '#58a6ff';
     return '#e3b341';
@@ -141,15 +141,15 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const xTicks = [];
     for (let v = Math.ceil(xMin); v <= Math.floor(xMax); v++) {
       const x = toX(v);
-      xTicks.push(`<line x1="${x}" y1="${PAD.t + iH}" x2="${x}" y2="${PAD.t + iH + 4}" stroke="#30363d" stroke-width="1"/>`);
-      xTicks.push(`<text x="${x}" y="${PAD.t + iH + 14}" fill="#6e7681" font-size="9" text-anchor="middle">${v}</text>`);
+      xTicks.push(`<line x1="${x}" y1="${PAD.t + iH}" x2="${x}" y2="${PAD.t + iH + 4}" stroke="#243048" stroke-width="1"/>`);
+      xTicks.push(`<text x="${x}" y="${PAD.t + iH + 14}" fill="#6E6860" font-size="9" text-anchor="middle">${v}</text>`);
     }
     /* Y-axis ticks */
     const yTicks = [];
     for (let v = 0; v <= Math.floor(yMax); v += 5) {
       const y = toY(v);
-      yTicks.push(`<line x1="${PAD.l - 4}" y1="${y}" x2="${PAD.l}" y2="${y}" stroke="#30363d" stroke-width="1"/>`);
-      yTicks.push(`<text x="${PAD.l - 7}" y="${y + 3}" fill="#6e7681" font-size="9" text-anchor="end">${v}</text>`);
+      yTicks.push(`<line x1="${PAD.l - 4}" y1="${y}" x2="${PAD.l}" y2="${y}" stroke="#243048" stroke-width="1"/>`);
+      yTicks.push(`<text x="${PAD.l - 7}" y="${y + 3}" fill="#6E6860" font-size="9" text-anchor="end">${v}</text>`);
     }
 
     /* Counts */
@@ -159,14 +159,14 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
 
     return `<div class="hm-volcano-wrap">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%">
-        <rect width="${W}" height="${H}" fill="#0d1117" rx="8"/>
+        <rect width="${W}" height="${H}" fill="#0D1524" rx="8"/>
         <!-- Grid -->
-        <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t+iH}" stroke="#21262d" stroke-width="1"/>
-        <line x1="${PAD.l}" y1="${PAD.t+iH}" x2="${PAD.l+iW}" y2="${PAD.t+iH}" stroke="#21262d" stroke-width="1"/>
+        <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t+iH}" stroke="#182236" stroke-width="1"/>
+        <line x1="${PAD.l}" y1="${PAD.t+iH}" x2="${PAD.l+iW}" y2="${PAD.t+iH}" stroke="#182236" stroke-width="1"/>
         <!-- Threshold lines -->
-        <line x1="${vLine1.toFixed(1)}" y1="${PAD.t}" x2="${vLine1.toFixed(1)}" y2="${PAD.t+iH}" stroke="#30363d" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="${vLine2.toFixed(1)}" y1="${PAD.t}" x2="${vLine2.toFixed(1)}" y2="${PAD.t+iH}" stroke="#30363d" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="${PAD.l}" y1="${hLine.toFixed(1)}" x2="${PAD.l+iW}" y2="${hLine.toFixed(1)}" stroke="#30363d" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${vLine1.toFixed(1)}" y1="${PAD.t}" x2="${vLine1.toFixed(1)}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${vLine2.toFixed(1)}" y1="${PAD.t}" x2="${vLine2.toFixed(1)}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${PAD.l}" y1="${hLine.toFixed(1)}" x2="${PAD.l+iW}" y2="${hLine.toFixed(1)}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
         <!-- Ticks -->
         ${xTicks.join('')}${yTicks.join('')}
         <!-- Dots -->
@@ -174,17 +174,17 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
         <!-- Labels -->
         ${labelEls.join('')}
         <!-- Axis labels -->
-        <text x="${PAD.l + iW/2}" y="${H - 6}" fill="#8b949e" font-size="10" text-anchor="middle">log₂ Fold Change</text>
-        <text x="10" y="${PAD.t + iH/2}" fill="#8b949e" font-size="10" text-anchor="middle" transform="rotate(-90,10,${PAD.t + iH/2})">–log₁₀ (p-adj)</text>
+        <text x="${PAD.l + iW/2}" y="${H - 6}" fill="#A8A098" font-size="10" text-anchor="middle">log₂ Fold Change</text>
+        <text x="10" y="${PAD.t + iH/2}" fill="#A8A098" font-size="10" text-anchor="middle" transform="rotate(-90,10,${PAD.t + iH/2})">–log₁₀ (p-adj)</text>
         <!-- Title -->
-        <text x="${W/2}" y="18" fill="#e6edf3" font-size="11" font-weight="600" text-anchor="middle">Volcano Plot</text>
+        <text x="${W/2}" y="18" fill="#E4DDD2" font-size="11" font-weight="600" text-anchor="middle">Volcano Plot</text>
         <!-- Legend -->
         <circle cx="${PAD.l + 10}" cy="${PAD.t + 12}" r="4" fill="#ff6b6b"/>
         <text x="${PAD.l + 17}" y="${PAD.t + 16}" fill="#ff6b6b" font-size="8">Up (${up})</text>
         <circle cx="${PAD.l + 70}" cy="${PAD.t + 12}" r="4" fill="#58a6ff"/>
         <text x="${PAD.l + 77}" y="${PAD.t + 16}" fill="#58a6ff" font-size="8">Down (${down})</text>
-        <circle cx="${PAD.l + 130}" cy="${PAD.t + 12}" r="4" fill="#30363d"/>
-        <text x="${PAD.l + 137}" y="${PAD.t + 16}" fill="#6e7681" font-size="8">NS (${ns})</text>
+        <circle cx="${PAD.l + 130}" cy="${PAD.t + 12}" r="4" fill="#243048"/>
+        <text x="${PAD.l + 137}" y="${PAD.t + 16}" fill="#6E6860" font-size="8">NS (${ns})</text>
       </svg>
     </div>`;
   }
@@ -220,12 +220,12 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const rows = sig.map((g, i) => {
       const y = 30 + i * ROW_H;
       const col = colorScale(g.log2fc);
-      const textCol = Math.abs(g.log2fc) > maxFC * 0.6 ? '#fff' : '#e6edf3';
+      const textCol = Math.abs(g.log2fc) > maxFC * 0.6 ? '#fff' : '#E4DDD2';
       return `
         <text x="${LABEL_W - 4}" y="${y + 15}" fill="${g.log2fc > 0 ? '#ff9090' : '#90b8ff'}" font-size="10" text-anchor="end" font-family="JetBrains Mono, monospace">${g.gene}</text>
         <rect x="${LABEL_W}" y="${y}" width="${COL_W}" height="${ROW_H - 2}" fill="${col}" rx="2"/>
         <text x="${LABEL_W + COL_W/2}" y="${y + 14}" fill="${textCol}" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">${g.log2fc.toFixed(2)}</text>
-        <text x="${LABEL_W + COL_W + 5}" y="${y + 14}" fill="#6e7681" font-size="8">${g.padj.toExponential(1)}</text>`;
+        <text x="${LABEL_W + COL_W + 5}" y="${y + 14}" fill="#6E6860" font-size="8">${g.padj.toExponential(1)}</text>`;
     });
 
     /* Colour bar */
@@ -237,15 +237,15 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
 
     return `<div class="hm-heatmap-wrap">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H + 40}" width="${W}" height="${H + 40}" style="max-width:100%;min-width:280px">
-        <rect width="${W}" height="${H + 40}" fill="#0d1117" rx="8"/>
+        <rect width="${W}" height="${H + 40}" fill="#0D1524" rx="8"/>
         ${barGrad}
-        <text x="${LABEL_W + COL_W/2}" y="18" fill="#e6edf3" font-size="10" font-weight="600" text-anchor="middle">log₂FC</text>
+        <text x="${LABEL_W + COL_W/2}" y="18" fill="#E4DDD2" font-size="10" font-weight="600" text-anchor="middle">log₂FC</text>
         ${rows.join('')}
         <!-- Colour scale bar -->
         <rect x="${LABEL_W}" y="${H + 5}" width="${COL_W}" height="8" fill="url(#fc-grad)" rx="3"/>
-        <text x="${LABEL_W}" y="${H + 26}" fill="#6e7681" font-size="8" text-anchor="middle">${(-maxFC).toFixed(1)}</text>
-        <text x="${LABEL_W + COL_W/2}" y="${H + 26}" fill="#6e7681" font-size="8" text-anchor="middle">0</text>
-        <text x="${LABEL_W + COL_W}" y="${H + 26}" fill="#6e7681" font-size="8" text-anchor="middle">${maxFC.toFixed(1)}</text>
+        <text x="${LABEL_W}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">${(-maxFC).toFixed(1)}</text>
+        <text x="${LABEL_W + COL_W/2}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">0</text>
+        <text x="${LABEL_W + COL_W}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">${maxFC.toFixed(1)}</text>
       </svg>
     </div>`;
   }

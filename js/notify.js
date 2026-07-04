@@ -20,11 +20,11 @@ OmicsLab.Notify = (function () {
   };
 
   const COLORS = {
-    success: '#3fb950',
+    success: '#00C4A0',
     error:   '#ff6b6b',
     warning: '#e3b341',
     info:    '#58a6ff',
-    loading: '#8b949e',
+    loading: '#A8A098',
   };
 
   function _ensure() {
@@ -39,16 +39,16 @@ OmicsLab.Notify = (function () {
     style.textContent = `
       #nt-container{position:fixed;top:3.75rem;right:1rem;z-index:8000;display:flex;flex-direction:column;gap:.45rem;pointer-events:none;max-width:340px;width:calc(100vw - 2rem)}
       @media(max-width:600px){#nt-container{right:50%;transform:translateX(50%)}}
-      .nt-toast{pointer-events:all;background:#161b22;border:1px solid #30363d;border-left:3px solid var(--nt-c);border-radius:9px;padding:.65rem .9rem;display:flex;align-items:flex-start;gap:.55rem;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:nt-in .22s cubic-bezier(.16,1,.3,1) both;position:relative;overflow:hidden}
+      .nt-toast{pointer-events:all;background:#111B2E;border:1px solid #243048;border-left:3px solid var(--nt-c);border-radius:9px;padding:.65rem .9rem;display:flex;align-items:flex-start;gap:.55rem;box-shadow:0 8px 24px rgba(0,0,0,.5);animation:nt-in .22s cubic-bezier(.16,1,.3,1) both;position:relative;overflow:hidden}
       .nt-toast.nt-out{animation:nt-out .18s ease-in forwards}
       .nt-icon{flex-shrink:0;color:var(--nt-c);margin-top:.1rem}
       .nt-body{flex:1;min-width:0}
-      .nt-msg{font-size:.82rem;color:#e6edf3;line-height:1.45;word-break:break-word}
+      .nt-msg{font-size:.82rem;color:#E4DDD2;line-height:1.45;word-break:break-word}
       .nt-actions{display:flex;gap:.4rem;margin-top:.35rem;flex-wrap:wrap}
-      .nt-action-btn{background:none;border:1px solid #30363d;border-radius:5px;padding:.18rem .55rem;font-size:.72rem;color:#c9d1d9;cursor:pointer}
-      .nt-action-btn:hover{background:#21262d}
-      .nt-close{background:none;border:none;color:#8b949e;cursor:pointer;padding:.15rem;flex-shrink:0;margin-top:-.05rem}
-      .nt-close:hover{color:#e6edf3}
+      .nt-action-btn{background:none;border:1px solid #243048;border-radius:5px;padding:.18rem .55rem;font-size:.72rem;color:#A8A098;cursor:pointer}
+      .nt-action-btn:hover{background:#182236}
+      .nt-close{background:none;border:none;color:#A8A098;cursor:pointer;padding:.15rem;flex-shrink:0;margin-top:-.05rem}
+      .nt-close:hover{color:#E4DDD2}
       .nt-progress{position:absolute;bottom:0;left:0;height:2px;background:var(--nt-c);opacity:.4;animation:nt-progress var(--nt-dur,4000ms) linear forwards}
       @keyframes nt-in{from{opacity:0;transform:translateY(-6px) scale(.97)}to{opacity:1;transform:none}}
       @keyframes nt-out{to{opacity:0;transform:translateX(8px) scale(.96)}}

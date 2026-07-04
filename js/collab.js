@@ -97,9 +97,9 @@ OmicsLab.Collab = (function () {
     embedEl.style.marginTop = '1rem';
     embedEl.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;flex-wrap:wrap;gap:.35rem">
-        <span style="font-size:.78rem;color:#8b949e">
+        <span style="font-size:.78rem;color:#A8A098">
           Session active — share code
-          <strong style="color:#c9d1d9;font-family:monospace">${code}</strong>
+          <strong style="color:#A8A098;font-family:monospace">${code}</strong>
           with collaborators on any device
         </span>
         <div style="display:flex;gap:.4rem">
@@ -111,7 +111,7 @@ OmicsLab.Collab = (function () {
         src="${jitsiUrl}"
         allow="camera *; microphone *; fullscreen *; display-capture *; autoplay *"
         allowfullscreen
-        style="width:100%;height:500px;border:none;border-radius:12px;background:#0d1117"
+        style="width:100%;height:500px;border:none;border-radius:12px;background:#0D1524"
         title="OmicsLab Video Session">
       </iframe>`;
     embedEl.style.display = '';
@@ -295,7 +295,7 @@ OmicsLab.Collab = (function () {
       'offer-ready':{ w:'65%',  text:'Offer ready — share it with your partner', color:'#58a6ff' },
       'answer-ready':{ w:'65%', text:'Answer ready — send it back to the host', color:'#58a6ff' },
       connecting:   { w:'85%',  text:'Connecting to peer…', color:'#f97316' },
-      connected:    { w:'100%', text:'Connected!', color:'#3fb950' },
+      connected:    { w:'100%', text:'Connected!', color:'#00C4A0' },
     };
     const s = MAP[state] || {};
     bar.style.width = s.w || '0%';
@@ -309,7 +309,7 @@ OmicsLab.Collab = (function () {
     navigator.clipboard.writeText(el.value).then(() => {
       const orig = btn.innerHTML;
       btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
-      btn.style.color = '#3fb950';
+      btn.style.color = '#00C4A0';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
     });
   }
@@ -364,7 +364,7 @@ OmicsLab.Collab = (function () {
         <!-- ══ MODE A: Same-Device BroadcastChannel ══ -->
         <div class="collab-mode-card collab-mode-a">
           <div class="collab-mode-head">
-            <div class="collab-mode-icon-wrap" style="background:rgba(63,185,80,.12);color:#3fb950">${OmicsLab.Icons?.svg('zap', 20) || ''}</div>
+            <div class="collab-mode-icon-wrap" style="background:rgba(0,196,160,.12);color:#00C4A0">${OmicsLab.Icons?.svg('zap', 20) || ''}</div>
             <div>
               <div class="collab-mode-name">Quick Sync <span class="collab-mode-tag collab-tag-green">SAME DEVICE</span></div>
               <div class="collab-mode-desc">All browser tabs on this device share a session code — instant sync, no copy-paste required. Perfect for instructor + student setups on one computer.</div>
@@ -379,7 +379,7 @@ OmicsLab.Collab = (function () {
               <button class="collab-btn-primary" onclick="OmicsLab.Collab._bcCreate()">Create Quick Session</button>
               <div id="collab-bc-code-row" style="display:none">
                 <div class="collab-code-display" id="collab-bc-code-display">——</div>
-                <div style="font-size:.75rem;color:#8b949e;margin-top:.35rem">Share this code with collaborators on this device</div>
+                <div style="font-size:.75rem;color:#A8A098;margin-top:.35rem">Share this code with collaborators on this device</div>
               </div>
             </div>
             <div class="collab-bc-col">
@@ -414,7 +414,7 @@ OmicsLab.Collab = (function () {
               Share: <span id="collab-video-link" class="collab-video-link-text"></span>
               <button class="collab-copy-tiny" onclick="navigator.clipboard.writeText('https://'+document.getElementById('collab-video-link').textContent).then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)})">Copy</button>
             </div>
-            <div style="font-size:.73rem;color:#8b949e;margin-top:.3rem">Send this link to anyone — no account or install needed</div>
+            <div style="font-size:.73rem;color:#A8A098;margin-top:.3rem">Send this link to anyone — no account or install needed</div>
           </div>
         </div>
 
@@ -425,23 +425,23 @@ OmicsLab.Collab = (function () {
             <div>
               <div class="collab-mode-name">How cross-device collaboration works</div>
               <div class="collab-mode-desc">
-                Use <strong style="color:#c9d1d9">Video Session</strong> above for real-time collaboration across different computers and phones.
+                Use <strong style="color:#A8A098">Video Session</strong> above for real-time collaboration across different computers and phones.
                 One person generates a room code — everyone who enters the same code joins the same call automatically, with no account or installation needed.
                 The same-device Quick Sync is ideal for instructor + student setups on one computer.
               </div>
             </div>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.35rem">
-            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#A8A098;padding:.4rem .75rem;background:#0D1524;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               Works on any device, anywhere in the world
             </div>
-            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#A8A098;padding:.4rem .75rem;background:#0D1524;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               No sign-up, no installation
             </div>
-            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#8b949e;padding:.4rem .75rem;background:#0d1117;border-radius:7px">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <div style="display:flex;align-items:center;gap:.4rem;font-size:.76rem;color:#A8A098;padding:.4rem .75rem;background:#0D1524;border-radius:7px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
               Video, audio, and screen sharing included
             </div>
           </div>
@@ -458,7 +458,7 @@ OmicsLab.Collab = (function () {
             <div class="collab-panel-label">Session Members</div>
             <div id="collab-members" class="collab-members-list"></div>
             <div class="collab-shared-tools">
-              <div style="font-size:.72rem;font-weight:600;color:#8b949e;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Broadcast lab events</div>
+              <div style="font-size:.72rem;font-weight:600;color:#A8A098;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Broadcast lab events</div>
               <div class="collab-tools-row">
                 <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'DNA Extraction',status:'started'})">${OmicsLab.Icons?.svg('flask',12)||''} DNA Extraction</button>
                 <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Library Prep',status:'started'})">${OmicsLab.Icons?.svg('package',12)||''} Library Prep</button>
@@ -466,7 +466,7 @@ OmicsLab.Collab = (function () {
                 <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'QC',status:'started'})">${OmicsLab.Icons?.svg('bar-chart',12)||''} Run QC</button>
               </div>
               <div class="collab-tools-row" style="margin-top:.3rem">
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('lab')" style="color:#3fb950">${OmicsLab.Icons?.svg('flask',12)||''} Send to Lab</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('lab')" style="color:#00C4A0">${OmicsLab.Icons?.svg('flask',12)||''} Send to Lab</button>
                 <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('africa')" style="color:#f97316">${OmicsLab.Icons?.svg('globe',12)||''} Send to Africa Hub</button>
                 <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('analysis')" style="color:#e3b341">${OmicsLab.Icons?.svg('bar-chart',12)||''} Send to Analysis</button>
               </div>
@@ -508,9 +508,9 @@ OmicsLab.Collab = (function () {
     if (!name) { OmicsLab.Notify.error('Please enter your display name'); return; }
     _myName = name;
     document.getElementById('collab-name-row').innerHTML = `
-      <div style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#8b949e">
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#A8A098">
         <div class="collab-member-av" style="width:28px;height:28px;font-size:.75rem">${name.charAt(0).toUpperCase()}</div>
-        Signed in as <strong style="color:#e6edf3">${_esc(name)}</strong>
+        Signed in as <strong style="color:#E4DDD2">${_esc(name)}</strong>
         <button class="collab-copy-tiny" onclick="OmicsLab.Collab._resetName()" style="margin-left:.25rem">Change</button>
       </div>`;
     document.getElementById('collab-modes-wrap').style.display = '';
@@ -589,7 +589,7 @@ OmicsLab.Collab = (function () {
     navigator.clipboard.writeText(el.value).then(() => {
       const orig = btn.innerHTML;
       btn.innerHTML = `${OmicsLab.Icons?.svg('check',12)||''} Copied!`;
-      btn.style.color = '#3fb950';
+      btn.style.color = '#00C4A0';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
     }).catch(() => {
       el.select();

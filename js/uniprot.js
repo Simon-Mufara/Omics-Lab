@@ -137,7 +137,7 @@ OmicsLab.UniProt = (function () {
 
   function _renderEmpty(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="up-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
+    if (el) el.innerHTML = `<div class="up-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
@@ -314,7 +314,7 @@ OmicsLab.UniProt = (function () {
 
         <div id="up-results" class="up-results">
           <div class="up-empty">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <div>Search UniProt or choose an Africa quick search above</div>
           </div>
         </div>

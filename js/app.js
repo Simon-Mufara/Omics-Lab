@@ -494,9 +494,9 @@ OmicsLab.App = (function() {
       <title>OmicsLab Lab Report — ${wf ? wf.name : ''}</title>
       <style>
         body{font-family:Georgia,serif;max-width:750px;margin:2cm auto;color:#1a1a2e;line-height:1.6}
-        h1{font-size:1.4rem;border-bottom:2px solid #3fb950;padding-bottom:0.5rem}
+        h1{font-size:1.4rem;border-bottom:2px solid #00C4A0;padding-bottom:0.5rem}
         h2{font-size:1.1rem;color:#1a3a5c;margin-top:1.5rem}
-        .grade{display:inline-block;font-size:2.5rem;font-weight:bold;color:${grade.cls==='grade-A'?'#3fb950':grade.cls==='grade-B'?'#58a6ff':grade.cls==='grade-C'?'#d29922':'#e5534b'};margin-right:1rem}
+        .grade{display:inline-block;font-size:2.5rem;font-weight:bold;color:${grade.cls==='grade-A'?'#00C4A0':grade.cls==='grade-B'?'#58a6ff':grade.cls==='grade-C'?'#d29922':'#e5534b'};margin-right:1rem}
         table{width:100%;border-collapse:collapse;margin:1rem 0}
         th{background:#1a3a5c;color:#fff;padding:0.4rem 0.6rem;text-align:left;font-size:0.85rem}
         td{padding:0.35rem 0.6rem;border-bottom:1px solid #ddd;font-size:0.85rem}
@@ -952,14 +952,14 @@ OmicsLab.App = (function() {
 
         const catColor = {
           'Short-Read Sequencers':'#58a6ff',
-          'Long-Read Sequencers': '#3fb950',
+          'Long-Read Sequencers': '#00C4A0',
           'QC Instruments':       '#d2a8ff',
           'Sample Preparation':   '#ffa657',
           'PCR Instruments':      '#f78166',
           'Single-Cell Platforms':'#79c0ff',
           'Mass Spectrometers':   '#e3b341',
           'Automation':           '#79c0ff',
-        }[eq.category] || '#8b949e';
+        }[eq.category] || '#A8A098';
 
         return `<div class="equip-gallery-card" style="--eg-color:${catColor}" onclick="OmicsLab.App._openEquipmentModal('${eq.id}')">
           <div class="egc-preview">${preview}</div>
@@ -1026,14 +1026,14 @@ OmicsLab.App = (function() {
 
     const catColor = {
       'Short-Read Sequencers':'#58a6ff',
-      'Long-Read Sequencers': '#3fb950',
+      'Long-Read Sequencers': '#00C4A0',
       'QC Instruments':       '#d2a8ff',
       'Sample Preparation':   '#ffa657',
       'PCR Instruments':      '#f78166',
       'Single-Cell Platforms':'#79c0ff',
       'Mass Spectrometers':   '#e3b341',
       'Automation':           '#79c0ff',
-    }[eq.category] || '#8b949e';
+    }[eq.category] || '#A8A098';
 
     const cssAnim = OmicsLab.Equipment
       ? OmicsLab.Equipment.render(eq.equipType, eq.equipParams || {})
@@ -1550,25 +1550,25 @@ function _showSwBanner() {
   banner.style.cssText = [
     'position:fixed;bottom:0;left:0;right:0;z-index:9999',
     'display:flex;align-items:center;justify-content:space-between;gap:.75rem',
-    'background:#1c2128;border-top:1px solid #30363d',
+    'background:#1c2128;border-top:1px solid #243048',
     'padding:.65rem 1.25rem calc(.65rem + env(safe-area-inset-bottom,0px))',
-    'font-size:.82rem;color:#c9d1d9;font-family:inherit',
+    'font-size:.82rem;color:#A8A098;font-family:inherit',
     'animation:sw-slide .25s ease',
   ].join(';');
   banner.innerHTML = `
     <style>@keyframes sw-slide{from{transform:translateY(100%)}to{transform:none}}</style>
     <span>
-      <strong style="color:#3fb950">Update available</strong>
+      <strong style="color:#00C4A0">Update available</strong>
       — A new version of OmicsLab is ready.
     </span>
     <div style="display:flex;gap:.5rem;flex-shrink:0">
       <button onclick="window.location.reload()" style="
-        background:#3fb950;color:#0d1117;border:none;border-radius:6px;
+        background:#00C4A0;color:#0D1524;border:none;border-radius:6px;
         padding:.3rem .75rem;font-size:.78rem;font-weight:700;cursor:pointer">
         Reload
       </button>
       <button onclick="this.closest('#sw-update-banner').remove()" style="
-        background:none;border:1px solid #30363d;color:#8b949e;
+        background:none;border:1px solid #243048;color:#A8A098;
         border-radius:6px;padding:.3rem .6rem;font-size:.78rem;cursor:pointer">
         Later
       </button>

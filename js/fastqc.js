@@ -60,20 +60,20 @@ OmicsLab.FastQC = (function () {
     const xs = pos => ml + ((pos - 1) / (sample.length - 1)) * pw;
     const ys = q => mt + ph - (q / 40) * ph;
     let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    s += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
-    s += `<rect x="${ml}" y="${ys(40)}" width="${pw}" height="${ys(28)-ys(40)}" fill="rgba(63,185,80,0.07)"/>`;
+    s += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
+    s += `<rect x="${ml}" y="${ys(40)}" width="${pw}" height="${ys(28)-ys(40)}" fill="rgba(0,196,160,0.07)"/>`;
     s += `<rect x="${ml}" y="${ys(28)}" width="${pw}" height="${ys(20)-ys(28)}" fill="rgba(227,179,65,0.07)"/>`;
     s += `<rect x="${ml}" y="${ys(20)}" width="${pw}" height="${ys(0)-ys(20)}" fill="rgba(248,81,73,0.07)"/>`;
     [10, 20, 28, 30, 40].forEach(q => {
       const y = ys(q);
-      s += `<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#21262d" stroke-width="1"/>`;
-      s += `<text x="${ml-4}" y="${y+4}" text-anchor="end" fill="#6e7681" font-size="9" font-family="monospace">${q}</text>`;
+      s += `<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#182236" stroke-width="1"/>`;
+      s += `<text x="${ml-4}" y="${y+4}" text-anchor="end" fill="#6E6860" font-size="9" font-family="monospace">${q}</text>`;
     });
     const tk = sample.length <= 75 ? 5 : 10;
     for (let i = tk; i <= sample.length; i += tk) {
       const x = xs(Math.min(i, sample.length));
-      s += `<line x1="${x}" y1="${mt+ph}" x2="${x}" y2="${mt+ph+4}" stroke="#30363d" stroke-width="1"/>`;
-      s += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6e7681" font-size="9" font-family="monospace">${i}</text>`;
+      s += `<line x1="${x}" y1="${mt+ph}" x2="${x}" y2="${mt+ph+4}" stroke="#243048" stroke-width="1"/>`;
+      s += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6E6860" font-size="9" font-family="monospace">${i}</text>`;
     }
     const step = sample.length > 100 ? 3 : 2;
     const bw = Math.max(2, pw / sample.length * step * 0.75);
@@ -86,8 +86,8 @@ OmicsLab.FastQC = (function () {
     });
     const mp = data.map((d, i) => `${i===0?'M':'L'} ${xs(d.pos)} ${ys(d.mean)}`).join(' ');
     s += `<path d="${mp}" fill="none" stroke="#58a6ff" stroke-width="1.5" opacity="0.85"/>`;
-    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="10">Position in read (bp)</text>`;
-    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Phred Score</text>`;
+    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="10">Position in read (bp)</text>`;
+    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Phred Score</text>`;
     s += '</svg>';
     return s;
   }
@@ -103,11 +103,11 @@ OmicsLab.FastQC = (function () {
     const xs = gc => ml + (gc / 100) * pw;
     const ys = v => mt + ph - (v / mx) * ph;
     let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    s += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    s += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
     [0,25,50,75,100].forEach(gc => {
       const x = xs(gc);
-      s += `<line x1="${x}" y1="${mt}" x2="${x}" y2="${mt+ph}" stroke="#21262d" stroke-width="1"/>`;
-      s += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6e7681" font-size="9" font-family="monospace">${gc}%</text>`;
+      s += `<line x1="${x}" y1="${mt}" x2="${x}" y2="${mt+ph}" stroke="#182236" stroke-width="1"/>`;
+      s += `<text x="${x}" y="${mt+ph+14}" text-anchor="middle" fill="#6E6860" font-size="9" font-family="monospace">${gc}%</text>`;
     });
     const area = obs.map((d,i) => `${i===0?'M':'L'} ${xs(d.gc)} ${ys(d.v)}`).join(' ') + ` L ${xs(100)} ${ys(0)} L ${xs(0)} ${ys(0)} Z`;
     s += `<path d="${area}" fill="rgba(88,166,255,0.12)" stroke="#58a6ff" stroke-width="1.5"/>`;
@@ -121,10 +121,10 @@ OmicsLab.FastQC = (function () {
     const expX = xs(gcExp);
     s += `<line x1="${expX}" y1="${mt}" x2="${expX}" y2="${mt+ph}" stroke="#e3b341" stroke-width="1" stroke-dasharray="3,2"/>`;
     s += `<text x="${expX+3}" y="${mt+14}" fill="#e3b341" font-size="9">exp ${gcExp}%</text>`;
-    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="10">GC Content (%)</text>`;
-    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Count</text>`;
-    s += `<line x1="${W-mr-100}" y1="${mt+10}" x2="${W-mr-80}" y2="${mt+10}" stroke="#58a6ff" stroke-width="1.5"/><text x="${W-mr-75}" y="${mt+14}" fill="#6e7681" font-size="9">Observed</text>`;
-    s += `<line x1="${W-mr-100}" y1="${mt+24}" x2="${W-mr-80}" y2="${mt+24}" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,3"/><text x="${W-mr-75}" y="${mt+28}" fill="#6e7681" font-size="9">Theoretical</text>`;
+    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="10">GC Content (%)</text>`;
+    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Count</text>`;
+    s += `<line x1="${W-mr-100}" y1="${mt+10}" x2="${W-mr-80}" y2="${mt+10}" stroke="#58a6ff" stroke-width="1.5"/><text x="${W-mr-75}" y="${mt+14}" fill="#6E6860" font-size="9">Observed</text>`;
+    s += `<line x1="${W-mr-100}" y1="${mt+24}" x2="${W-mr-80}" y2="${mt+24}" stroke="#f85149" stroke-width="1.5" stroke-dasharray="4,3"/><text x="${W-mr-75}" y="${mt+28}" fill="#6E6860" font-size="9">Theoretical</text>`;
     s += '</svg>';
     return s;
   }
@@ -140,25 +140,25 @@ OmicsLab.FastQC = (function () {
     const xs = q => ml + (q / 40) * pw;
     const ys = v => mt + ph - (v / mx) * ph;
     let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    s += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    s += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
     s += `<rect x="${xs(0)}" y="${mt}" width="${xs(20)-xs(0)}" height="${ph}" fill="rgba(248,81,73,0.07)"/>`;
     s += `<rect x="${xs(20)}" y="${mt}" width="${xs(28)-xs(20)}" height="${ph}" fill="rgba(227,179,65,0.07)"/>`;
-    s += `<rect x="${xs(28)}" y="${mt}" width="${xs(40)-xs(28)}" height="${ph}" fill="rgba(63,185,80,0.07)"/>`;
+    s += `<rect x="${xs(28)}" y="${mt}" width="${xs(40)-xs(28)}" height="${ph}" fill="rgba(0,196,160,0.07)"/>`;
     data.forEach(d => {
       const x = xs(d.q); const bw = pw / 41 * 0.8;
-      const col = d.q >= 28 ? '#3fb950' : d.q >= 20 ? '#e3b341' : '#f85149';
+      const col = d.q >= 28 ? '#00C4A0' : d.q >= 20 ? '#e3b341' : '#f85149';
       s += `<rect x="${x}" y="${ys(d.v)}" width="${bw}" height="${mt+ph-ys(d.v)}" fill="${col}" opacity="0.7"/>`;
     });
     [0,10,20,28,30,40].forEach(q => {
-      s += `<text x="${xs(q)}" y="${mt+ph+14}" text-anchor="middle" fill="#6e7681" font-size="9" font-family="monospace">${q}</text>`;
+      s += `<text x="${xs(q)}" y="${mt+ph+14}" text-anchor="middle" fill="#6E6860" font-size="9" font-family="monospace">${q}</text>`;
     });
-    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="10">Mean Sequence Quality (Phred)</text>`;
-    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Reads</text>`;
+    s += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="10">Mean Sequence Quality (Phred)</text>`;
+    s += `<text x="9" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="10" transform="rotate(-90 9 ${mt+ph/2})">Reads</text>`;
     s += '</svg>';
     return s;
   }
 
-  function _statusColor(s) { return s === 'PASS' ? '#3fb950' : s === 'WARN' ? '#e3b341' : '#f85149'; }
+  function _statusColor(s) { return s === 'PASS' ? '#00C4A0' : s === 'WARN' ? '#e3b341' : '#f85149'; }
   function _statusIcon(s) {
     if (s === 'PASS') return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`;
     if (s === 'WARN') return `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
@@ -215,7 +215,7 @@ OmicsLab.FastQC = (function () {
     ondragover="event.preventDefault();this.classList.add('fqc-drop-active')"
     ondragleave="this.classList.remove('fqc-drop-active')"
     ondrop="OmicsLab.FastQC._onDrop(event)">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="1.5" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     <span class="fqc-drop-text">Drop a real .fastq / .fastq.gz file here to parse basic QC stats</span>
     <label class="fqc-browse-btn">
       Browse
@@ -249,7 +249,7 @@ OmicsLab.FastQC = (function () {
       </div>
       <div class="fqc-viz-box"><div id="fqc-viz"></div></div>
       <div class="fqc-legend">
-        <span><span class="fqc-dot" style="background:#3fb950"></span>Very Good (Q≥28)</span>
+        <span><span class="fqc-dot" style="background:#00C4A0"></span>Very Good (Q≥28)</span>
         <span><span class="fqc-dot" style="background:#e3b341"></span>Acceptable (Q20–28)</span>
         <span><span class="fqc-dot" style="background:#f85149"></span>Poor (Q&lt;20)</span>
         <span><span class="fqc-line" style="background:#58a6ff"></span>Mean quality</span>
@@ -364,15 +364,15 @@ OmicsLab.FastQC = (function () {
       res.innerHTML = `
         <div class="fqc-file-card">
           <div class="fqc-file-name">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
             ${file.name} <span class="fqc-file-size">(${(file.size/1048576).toFixed(1)} MB${isTruncated?' — sampled first 512 KB':''})</span>
           </div>
           <div class="fqc-file-stats">
             <div class="fqc-file-stat"><span class="fqc-fstat-label">Reads parsed</span><span class="fqc-fstat-val">${reads.toLocaleString()}</span></div>
             <div class="fqc-file-stat"><span class="fqc-fstat-label">Mean read length</span><span class="fqc-fstat-val">${meanLen} bp</span></div>
-            <div class="fqc-file-stat"><span class="fqc-fstat-label">Mean Phred quality</span><span class="fqc-fstat-val" style="color:${meanQ>=30?'#3fb950':meanQ>=20?'#e3b341':'#f85149'}">${meanQ}</span></div>
-            <div class="fqc-file-stat"><span class="fqc-fstat-label">%Q≥20 bases</span><span class="fqc-fstat-val" style="color:${q20pct>=90?'#3fb950':q20pct>=70?'#e3b341':'#f85149'}">${q20pct}%</span></div>
-            <div class="fqc-file-stat"><span class="fqc-fstat-label">GC content</span><span class="fqc-fstat-val" style="color:${gcPct>=40&&gcPct<=60?'#3fb950':'#e3b341'}">${gcPct}%</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">Mean Phred quality</span><span class="fqc-fstat-val" style="color:${meanQ>=30?'#00C4A0':meanQ>=20?'#e3b341':'#f85149'}">${meanQ}</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">%Q≥20 bases</span><span class="fqc-fstat-val" style="color:${q20pct>=90?'#00C4A0':q20pct>=70?'#e3b341':'#f85149'}">${q20pct}%</span></div>
+            <div class="fqc-file-stat"><span class="fqc-fstat-label">GC content</span><span class="fqc-fstat-val" style="color:${gcPct>=40&&gcPct<=60?'#00C4A0':'#e3b341'}">${gcPct}%</span></div>
           </div>
           <div class="fqc-file-verdict ${meanQ>=28&&q20pct>=90?'fqc-verdict-pass':meanQ>=20?'fqc-verdict-warn':'fqc-verdict-fail'}">
             ${meanQ>=28&&q20pct>=90

@@ -145,7 +145,7 @@ OmicsLab.AMR = (function () {
         ${Object.entries(results).map(([drug, r]) => {
           const isRes = r.status === 'Resistant';
           const isTested = r.status !== 'Not tested';
-          const color = isRes ? '#ff6b6b' : isTested ? '#3fb950' : '#484f58';
+          const color = isRes ? '#ff6b6b' : isTested ? '#00C4A0' : '#354060';
           return `<div class="amr-drug-card">
             <div class="amr-drug-card-hdr">
               <span class="amr-drug-card-name">${drug}</span>
@@ -240,7 +240,7 @@ OmicsLab.AMR = (function () {
                 <option value="eco">E. coli (ESBL)</option>
                 <option value="pfa">P. falciparum (artemisinin-R)</option>
               </select>
-              <div style="font-size:.72rem;color:#484f58">Hover over chart for details</div>
+              <div style="font-size:.72rem;color:#354060">Hover over chart for details</div>
             </div>
             <canvas id="amr-surv-canvas" class="amr-surv-canvas" width="900" height="320"></canvas>
             <div id="amr-surv-legend" class="amr-surv-legend"></div>
@@ -268,7 +268,7 @@ OmicsLab.AMR = (function () {
       label: 'M. tuberculosis — MDR-TB rate (%)',
       color: '#ff6b6b',
       series: [
-        { name: 'South Africa', color: '#3fb950', data: [12.4,13.1,14.2,15.0,16.3,15.9,16.8,17.2,18.1,17.8] },
+        { name: 'South Africa', color: '#00C4A0', data: [12.4,13.1,14.2,15.0,16.3,15.9,16.8,17.2,18.1,17.8] },
         { name: 'Nigeria', color: '#58a6ff', data: [8.2,8.9,9.4,10.1,10.8,11.2,11.9,12.3,13.0,12.7] },
         { name: 'Ethiopia', color: '#e3b341', data: [5.1,5.4,5.9,6.2,6.8,7.1,7.5,8.0,8.3,8.7] },
         { name: 'Kenya', color: '#bc8cff', data: [3.2,3.5,3.9,4.1,4.7,5.0,5.4,5.8,6.1,6.4] },
@@ -278,7 +278,7 @@ OmicsLab.AMR = (function () {
       label: 'K. pneumoniae — Carbapenem resistance (%)',
       color: '#e3b341',
       series: [
-        { name: 'Egypt', color: '#3fb950', data: [18.0,20.1,23.4,27.2,31.0,35.6,39.1,43.2,46.8,49.3] },
+        { name: 'Egypt', color: '#00C4A0', data: [18.0,20.1,23.4,27.2,31.0,35.6,39.1,43.2,46.8,49.3] },
         { name: 'South Africa', color: '#58a6ff', data: [8.4,9.2,11.0,13.5,16.2,18.9,21.4,24.0,26.3,28.1] },
         { name: 'Tunisia', color: '#e3b341', data: [12.1,14.3,17.0,19.8,22.4,25.1,27.8,30.2,32.5,34.7] },
         { name: 'Nigeria', color: '#bc8cff', data: [4.2,5.0,6.1,7.5,9.2,11.0,13.1,15.3,17.2,18.9] },
@@ -288,7 +288,7 @@ OmicsLab.AMR = (function () {
       label: 'S. aureus — MRSA rate (%)',
       color: '#f97316',
       series: [
-        { name: 'Nigeria', color: '#3fb950', data: [39.2,40.1,41.5,43.2,44.8,46.1,47.5,48.9,50.2,51.3] },
+        { name: 'Nigeria', color: '#00C4A0', data: [39.2,40.1,41.5,43.2,44.8,46.1,47.5,48.9,50.2,51.3] },
         { name: 'South Africa', color: '#58a6ff', data: [25.1,24.8,25.5,26.2,25.9,26.7,27.4,28.0,27.8,28.5] },
         { name: 'Kenya', color: '#e3b341', data: [18.4,19.2,20.1,21.5,22.8,24.0,25.3,26.7,27.9,29.1] },
         { name: 'Ghana', color: '#bc8cff', data: [22.1,23.4,24.8,25.9,27.2,28.4,29.6,30.8,32.0,33.1] },
@@ -298,7 +298,7 @@ OmicsLab.AMR = (function () {
       label: 'E. coli — ESBL rate (%)',
       color: '#58a6ff',
       series: [
-        { name: 'Egypt', color: '#3fb950', data: [45.2,47.8,51.2,54.6,58.1,61.3,64.7,67.9,70.2,72.5] },
+        { name: 'Egypt', color: '#00C4A0', data: [45.2,47.8,51.2,54.6,58.1,61.3,64.7,67.9,70.2,72.5] },
         { name: 'Cameroon', color: '#58a6ff', data: [28.4,31.2,34.6,37.9,41.2,44.5,47.8,51.0,54.2,57.1] },
         { name: 'South Africa', color: '#e3b341', data: [20.1,22.4,25.0,27.8,30.5,33.2,35.8,38.4,41.0,43.4] },
         { name: 'Tanzania', color: '#bc8cff', data: [15.3,17.8,20.4,23.1,25.9,28.6,31.4,34.2,37.0,39.7] },
@@ -308,7 +308,7 @@ OmicsLab.AMR = (function () {
       label: 'P. falciparum — Artemisinin partial resistance (%)',
       color: '#bc8cff',
       series: [
-        { name: 'Uganda', color: '#3fb950', data: [0.2,0.3,0.5,0.8,1.2,2.1,3.5,5.8,8.9,12.4] },
+        { name: 'Uganda', color: '#00C4A0', data: [0.2,0.3,0.5,0.8,1.2,2.1,3.5,5.8,8.9,12.4] },
         { name: 'DRC', color: '#58a6ff', data: [0.1,0.2,0.3,0.5,0.8,1.5,2.7,4.2,6.5,9.1] },
         { name: 'Rwanda', color: '#e3b341', data: [0.3,0.5,0.8,1.4,2.3,4.1,7.2,11.8,17.3,23.6] },
         { name: 'Tanzania', color: '#bc8cff', data: [0.0,0.1,0.2,0.3,0.5,0.9,1.7,2.9,4.5,6.8] },
@@ -347,18 +347,18 @@ OmicsLab.AMR = (function () {
     const yScale = v => pad.top + cH - ((v - minVal) / (maxVal - minVal)) * cH;
 
     /* Grid */
-    ctx.strokeStyle = '#21262d'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#182236'; ctx.lineWidth = 1;
     const yTicks = 5;
     for (let i = 0; i <= yTicks; i++) {
       const v = minVal + ((maxVal - minVal) / yTicks) * i;
       const y = yScale(v);
       ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
-      ctx.fillStyle = '#484f58'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'right';
+      ctx.fillStyle = '#354060'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'right';
       ctx.fillText(v.toFixed(1) + '%', pad.left - 6, y + 4);
     }
 
     /* X axis ticks */
-    ctx.fillStyle = '#484f58'; ctx.textAlign = 'center'; ctx.font = '11px Inter, sans-serif';
+    ctx.fillStyle = '#354060'; ctx.textAlign = 'center'; ctx.font = '11px Inter, sans-serif';
     YEARS.forEach((yr, i) => {
       ctx.fillText(yr, xScale(i), H - pad.bottom + 18);
     });
@@ -383,7 +383,7 @@ OmicsLab.AMR = (function () {
     ctx.save();
     ctx.translate(12, pad.top + cH / 2);
     ctx.rotate(-Math.PI / 2);
-    ctx.fillStyle = '#8b949e'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillStyle = '#A8A098'; ctx.font = '11px Inter, sans-serif'; ctx.textAlign = 'center';
     ctx.fillText(d.label, 0, 0);
     ctx.restore();
 

@@ -1,26 +1,26 @@
 /* Multilingual Bioinformatics Glossary */
 .gl-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .gl-header { margin-bottom: 1.25rem; }
-.gl-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.gl-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.gl-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.gl-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
 .gl-controls { display: flex; gap: .5rem; margin-bottom: .75rem; flex-wrap: wrap; }
-.gl-search { flex: 1; min-width: 200px; padding: .4rem .7rem; background: #161b22; border: 1px solid #30363d; border-radius: 7px; color: #c9d1d9; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
+.gl-search { flex: 1; min-width: 200px; padding: .4rem .7rem; background: #111B2E; border: 1px solid #243048; border-radius: 7px; color: #A8A098; font-size: .82rem; font-family: inherit; outline: none; transition: border-color .15s; }
 .gl-search:focus { border-color: #e3b341; }
-.gl-cat-filter { padding: .4rem .6rem; background: #161b22; border: 1px solid #30363d; border-radius: 7px; color: #c9d1d9; font-size: .82rem; font-family: inherit; outline: none; }
+.gl-cat-filter { padding: .4rem .6rem; background: #111B2E; border: 1px solid #243048; border-radius: 7px; color: #A8A098; font-size: .82rem; font-family: inherit; outline: none; }
 .gl-flashcard-btn { display:inline-flex;align-items:center;gap:.35rem;padding:.4rem .75rem;background:#e3b34122;border:1px solid #e3b34155;color:#e3b341;border-radius:7px;font-size:.78rem;font-weight:700;cursor:pointer;transition:background .12s;white-space:nowrap; }
 .gl-flashcard-btn:hover { background:#e3b34133; }
 .gl-lang-row { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
-.gl-lang-label { font-size: .72rem; color: #8b949e; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-.gl-lang-opt { display: flex; align-items: center; gap: .3rem; font-size: .78rem; color: #c9d1d9; cursor: pointer; }
+.gl-lang-label { font-size: .72rem; color: #A8A098; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.gl-lang-opt { display: flex; align-items: center; gap: .3rem; font-size: .78rem; color: #A8A098; cursor: pointer; }
 .gl-lang-opt input { accent-color: #e3b341; cursor: pointer; }
 .gl-list { display: flex; flex-direction: column; gap: .65rem; }
-.gl-empty { color: #484f58; text-align: center; padding: 2rem; font-size: .85rem; }
-.gl-card { background: #161b22; border: 1px solid #21262d; border-radius: 9px; padding: .85rem 1rem; }
+.gl-empty { color: #354060; text-align: center; padding: 2rem; font-size: .85rem; }
+.gl-card { background: #111B2E; border: 1px solid #182236; border-radius: 9px; padding: .85rem 1rem; }
 .gl-card:hover { border-color: rgba(227,179,65,.2); }
 .gl-card-hdr { display: flex; justify-content: space-between; align-items: flex-start; gap: .5rem; margin-bottom: .4rem; flex-wrap: wrap; }
-.gl-term { font-size: .95rem; font-weight: 700; color: #e6edf3; }
+.gl-term { font-size: .95rem; font-weight: 700; color: #E4DDD2; }
 .gl-cat-badge { font-size: .65rem; font-weight: 700; padding: .1rem .45rem; border: 1px solid; border-radius: 20px; text-transform: uppercase; letter-spacing: .04em; }
-.gl-definition { font-size: .8rem; color: #8b949e; line-height: 1.65; margin-bottom: .5rem; }
+.gl-definition { font-size: .8rem; color: #A8A098; line-height: 1.65; margin-bottom: .5rem; }
 .gl-translation { display: flex; gap: .5rem; align-items: flex-start; margin-top: .2rem; }
 .gl-lang-badge { font-size: .65rem; font-weight: 700; color: #e3b341; min-width: 52px; padding-top: .05rem; }
-.gl-trans-text { font-size: .78rem; color: #c9d1d9; line-height: 1.55; }
+.gl-trans-text { font-size: .78rem; color: #A8A098; line-height: 1.55; }

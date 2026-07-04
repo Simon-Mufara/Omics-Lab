@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Learning Path Visualiser (Prompt 17)
    ─ SVG horizontal roadmap on Profile page
    ─ 4 tracks × nodes: complete / in-progress / locked
@@ -15,7 +15,7 @@ OmicsLab.LearningPath = (function () {
     {
       id: 'wgs',
       label: 'WGS Foundations',
-      color: '#3fb950',
+      color: '#00C4A0',
       description: 'Whole-genome sequencing from sample to variant calls',
       cert: 'WGS Fundamentals Certificate',
       nodes: [
@@ -187,23 +187,23 @@ OmicsLab.LearningPath = (function () {
       if (i < total - 1) {
         const nextCx = (i + 1) * W + CX;
         const nextState = _nodeState(nodes[i+1].id, nodes, progress);
-        const lineColor = (state === 'complete') ? 'var(--track-color,#3fb950)' : '#30363d';
+        const lineColor = (state === 'complete') ? 'var(--track-color,#00C4A0)' : '#243048';
         lines += `<line x1="${cx + R}" y1="${Y}" x2="${nextCx - R}" y2="${Y}" stroke="${lineColor}" stroke-width="2" stroke-dasharray="${nextState==='locked'?'4,3':'none'}"/>`;
       }
 
       /* Node circle */
       if (state === 'complete') {
         circles += `
-          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--track-color,#3fb950)" stroke="var(--track-color,#3fb950)" stroke-width="2"/>
+          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--track-color,#00C4A0)" stroke="var(--track-color,#00C4A0)" stroke-width="2"/>
           <path d="M${cx-7} ${Y} l5 5 9-9" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
       } else if (state === 'available') {
         circles += `
-          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#161b22)" stroke="var(--track-color,#3fb950)" stroke-width="2.5"/>
-          <circle cx="${cx}" cy="${Y}" r="6" fill="var(--track-color,#3fb950)"/>`;
+          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#111B2E)" stroke="var(--track-color,#00C4A0)" stroke-width="2.5"/>
+          <circle cx="${cx}" cy="${Y}" r="6" fill="var(--track-color,#00C4A0)"/>`;
       } else {
         circles += `
-          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#161b22)" stroke="#30363d" stroke-width="2"/>
-          <path d="M${cx-5} ${Y-2} a5 5 0 0 1 10 0 v3 H${cx-5}z M${cx-7} ${Y+1} h14 v6 a2 2 0 0 1-2 2 H${cx-5} a2 2 0 0 1-2-2z" fill="#484f58"/>`;
+          <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#111B2E)" stroke="#243048" stroke-width="2"/>
+          <path d="M${cx-5} ${Y-2} a5 5 0 0 1 10 0 v3 H${cx-5}z M${cx-7} ${Y+1} h14 v6 a2 2 0 0 1-2 2 H${cx-5} a2 2 0 0 1-2-2z" fill="#354060"/>`;
       }
     });
 
@@ -280,18 +280,18 @@ OmicsLab.LearningPath = (function () {
     s.textContent = `
       .lp-wrap{padding:1.25rem 1.5rem}
       .lp-header{margin-bottom:1.5rem}
-      .lp-title{font-size:1.05rem;font-weight:700;color:var(--text-primary,#e6edf3);margin-bottom:.25rem}
-      .lp-sub{font-size:.78rem;color:var(--text-muted,#8b949e)}
-      .lp-track{background:var(--bg-surface,#161b22);border:1px solid var(--border-default,#21262d);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1rem;--track-color:#3fb950}
+      .lp-title{font-size:1.05rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin-bottom:.25rem}
+      .lp-sub{font-size:.78rem;color:var(--text-muted,#A8A098)}
+      .lp-track{background:var(--bg-surface,#111B2E);border:1px solid var(--border-default,#182236);border-radius:10px;padding:1rem 1.1rem;margin-bottom:1rem;--track-color:#00C4A0}
       .lp-track-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.6rem;flex-wrap:wrap}
       .lp-track-info{flex:1}
-      .lp-track-name{font-size:.88rem;font-weight:700;color:var(--track-color,#3fb950);display:block;margin-bottom:.15rem}
-      .lp-track-desc{font-size:.72rem;color:var(--text-muted,#8b949e)}
+      .lp-track-name{font-size:.88rem;font-weight:700;color:var(--track-color,#00C4A0);display:block;margin-bottom:.15rem}
+      .lp-track-desc{font-size:.72rem;color:var(--text-muted,#A8A098)}
       .lp-track-meta{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
-      .lp-track-progress{font-size:.72rem;font-weight:600;color:var(--text-faint,#484f58)}
+      .lp-track-progress{font-size:.72rem;font-weight:600;color:var(--text-faint,#354060)}
       .lp-cert-btn{font-size:.7rem !important;padding:.25rem .5rem !important}
-      .lp-progress-bar{height:3px;background:var(--bg-overlay,#21262d);border-radius:2px;margin-bottom:.85rem;overflow:hidden}
-      .lp-progress-fill{height:100%;background:var(--track-color,#3fb950);border-radius:2px;transition:width .4s var(--ease-out,ease)}
+      .lp-progress-bar{height:3px;background:var(--bg-overlay,#182236);border-radius:2px;margin-bottom:.85rem;overflow:hidden}
+      .lp-progress-fill{height:100%;background:var(--track-color,#00C4A0);border-radius:2px;transition:width .4s var(--ease-out,ease)}
       .lp-svg-track-wrap{margin-bottom:.65rem}
       .lp-nodes-labels{display:flex;gap:0}
       .lp-node-label{
@@ -302,11 +302,11 @@ OmicsLab.LearningPath = (function () {
         transition:background .1s,border-color .1s;
         text-align:center;
       }
-      .lp-node-label:hover:not(.lp-node-label-locked){background:var(--bg-overlay,#21262d);border-color:var(--border-muted,#30363d)}
+      .lp-node-label:hover:not(.lp-node-label-locked){background:var(--bg-overlay,#182236);border-color:var(--border-muted,#243048)}
       .lp-node-label-locked{cursor:not-allowed;opacity:.5}
-      .lp-node-label-text{font-size:.65rem;font-weight:600;color:var(--text-secondary,#c9d1d9);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-      .lp-node-label-complete .lp-node-label-text{color:var(--track-color,#3fb950)}
-      .lp-node-label-time{font-size:.58rem;color:var(--text-faint,#484f58)}
+      .lp-node-label-text{font-size:.65rem;font-weight:600;color:var(--text-secondary,#A8A098);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+      .lp-node-label-complete .lp-node-label-text{color:var(--track-color,#00C4A0)}
+      .lp-node-label-time{font-size:.58rem;color:var(--text-faint,#354060)}
     `;
     document.head.appendChild(s);
   }

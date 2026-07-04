@@ -47,8 +47,8 @@
   animation: spotPulse 2.5s ease-in-out infinite;
 }
 @keyframes spotPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(63,185,80,0.5), 0 0 0 9999px rgba(4,7,12,0.80); }
-  50%       { box-shadow: 0 0 0 5px rgba(63,185,80,0.7), 0 0 0 9999px rgba(4,7,12,0.80); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(0,196,160,0.5), 0 0 0 9999px rgba(4,7,12,0.80); }
+  50%       { box-shadow: 0 0 0 5px rgba(0,196,160,0.7), 0 0 0 9999px rgba(4,7,12,0.80); }
 }
 
 /* ── Tooltip card ── */
@@ -57,8 +57,8 @@
   z-index: 8002;
   width: 340px;
   max-width: calc(100vw - 32px);
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: #111B2E;
+  border: 1px solid #243048;
   border-radius: 16px;
   padding: 1.4rem 1.5rem 1.3rem;
   box-shadow:
@@ -94,27 +94,27 @@
   width: 6px;
   height: 6px;
   border-radius: 3px;
-  background: #30363d;
+  background: #243048;
   transition: background 0.2s, width 0.2s;
 }
 .tour-dot.done   { background: rgba(63, 185, 80, 0.45); }
-.tour-dot.active { background: #3fb950; width: 20px; }
+.tour-dot.active { background: #00C4A0; width: 20px; }
 
 .tour-close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 26px; height: 26px;
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 7px;
-  color: #6e7681;
+  color: #6E6860;
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.12s, color 0.12s;
   padding: 0;
 }
-.tour-close-btn:hover { background: #30363d; color: #c9d1d9; }
+.tour-close-btn:hover { background: #243048; color: #A8A098; }
 
 /* Step label */
 .tour-step-label {
@@ -122,7 +122,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #3fb950;
+  color: #00C4A0;
   margin-bottom: 0.35rem;
   font-family: 'Inter', system-ui, sans-serif;
 }
@@ -131,7 +131,7 @@
 .tour-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #e6edf3;
+  color: #E4DDD2;
   font-family: 'Sora', system-ui, sans-serif;
   letter-spacing: -0.015em;
   line-height: 1.2;
@@ -141,7 +141,7 @@
 /* Body */
 .tour-body {
   font-size: 0.85rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.65;
   font-family: 'Inter', system-ui, sans-serif;
   margin: 0 0 1.2rem;
@@ -158,7 +158,7 @@
 .tour-skip-btn {
   background: none;
   border: none;
-  color: #484f58;
+  color: #354060;
   font-size: 0.78rem;
   cursor: pointer;
   font-family: 'Inter', system-ui, sans-serif;
@@ -166,17 +166,17 @@
   transition: color 0.15s;
   flex-shrink: 0;
 }
-.tour-skip-btn:hover { color: #8b949e; }
+.tour-skip-btn:hover { color: #A8A098; }
 
 .tour-next-btn {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.6rem 1.1rem;
-  background: #3fb950;
+  background: #00C4A0;
   border: none;
   border-radius: 9px;
-  color: #0d1117;
+  color: #0D1524;
   font-size: 0.84rem;
   font-weight: 800;
   cursor: pointer;
@@ -185,7 +185,7 @@
   margin-left: auto;
 }
 .tour-next-btn:hover {
-  background: #4ac95e;
+  background: #00DDB6;
   transform: translateY(-1px);
 }
 
@@ -200,26 +200,26 @@
 /* Arrow pointing UP (tooltip is below spotlight) */
 .tour-arrow-up {
   top: -17px;
-  border-bottom-color: #30363d;
+  border-bottom-color: #243048;
 }
 .tour-arrow-up::after {
   content: '';
   position: absolute;
   top: -7px; left: -7px;
   border: 7px solid transparent;
-  border-bottom-color: #161b22;
+  border-bottom-color: #111B2E;
 }
 /* Arrow pointing DOWN (tooltip is above spotlight) */
 .tour-arrow-down {
   bottom: -17px;
-  border-top-color: #30363d;
+  border-top-color: #243048;
 }
 .tour-arrow-down::after {
   content: '';
   position: absolute;
   bottom: -7px; left: -7px;
   border: 7px solid transparent;
-  border-top-color: #161b22;
+  border-top-color: #111B2E;
 }
 
 /* ── Responsive ── */

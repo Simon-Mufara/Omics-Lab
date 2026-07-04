@@ -12,7 +12,7 @@ OmicsLab.AfricaHub = (function () {
 
   const DATA_GOVERNANCE = {
     principles: [
-      { letter: 'C', color: '#3fb950', title: 'Community Engagement',
+      { letter: 'C', color: '#00C4A0', title: 'Community Engagement',
         body: 'Research must be conducted with and for African communities — not on them. Free, prior, and informed consent is required at individual and community level. Results must be returned to communities in accessible formats.' },
       { letter: 'O', color: '#58a6ff', title: 'Open Science by Default',
         body: 'Data should be shared under the most permissive licence the community permits. Raw sequence data should be deposited in ENA/SRA within 6 months. Analysis code and workflows must be publicly available.' },
@@ -44,7 +44,7 @@ OmicsLab.AfricaHub = (function () {
     initiatives: [
       { name: 'H3Africa', icon: 'globe', size: '53+ cohorts · 500K+ samples',
         desc: 'The Human Heredity and Health in Africa consortium — the largest African genomics programme. Covers 30+ countries, 53+ cohorts spanning CVD, kidney disease, T2D, HIV, malaria, and mental health.',
-        url: 'h3africa.org', colour: '#3fb950' },
+        url: 'h3africa.org', colour: '#00C4A0' },
       { name: 'AWI-Gen', icon: 'dna', size: '12,000 participants · 6 African sites',
         desc: 'Africa-Wits INDEPTH partnership for genomic studies. Six sites across sub-Saharan Africa studying cardiometabolic disease, body composition, and genetic ancestry.',
         url: 'awigen.org', colour: '#58a6ff' },
@@ -62,7 +62,7 @@ OmicsLab.AfricaHub = (function () {
         url: 'pandora-id.net', colour: '#f85149' }
     ],
     diversity: [
-      { label: 'Distinct ethnic groups in Africa', value: '3,000+', color: '#3fb950' },
+      { label: 'Distinct ethnic groups in Africa', value: '3,000+', color: '#00C4A0' },
       { label: 'Languages spoken on the continent', value: '2,000+', color: '#58a6ff' },
       { label: 'Of global genetic variation found in Africa', value: '90%', color: '#d29922' },
       { label: 'GWAS participants of African ancestry (2021)', value: '<3%', color: '#f85149' },
@@ -76,7 +76,7 @@ OmicsLab.AfricaHub = (function () {
     domains: [
       { icon: 'heart-pulse', title: 'Human Health', color: '#58a6ff',
         points: ['Clinical surveillance networks (WHO GOARN)', 'SARS-CoV-2, Mpox, Ebola sequencing', 'Antimicrobial resistance monitoring', 'H3Africa cohort studies'] },
-      { icon: 'tag', title: 'Animal Health', color: '#3fb950',
+      { icon: 'tag', title: 'Animal Health', color: '#00C4A0',
         points: ['Zoonotic spillover surveillance (bats, rodents)', 'Livestock pathogen genomics (ILRI)', 'Rift Valley Fever, Brucellosis, Leptospirosis', 'Wildlife-domestic animal interface'] },
       { icon: 'mountain', title: 'Environmental Health', color: '#d29922',
         points: ['Environmental DNA (eDNA) surveillance', 'Water-borne pathogen monitoring', 'Antimicrobial residues in soil/water', 'Climate change & vector range expansion'] }
@@ -212,7 +212,7 @@ OmicsLab.AfricaHub = (function () {
       <div class="ah-oh-platform"><strong>${p.name}</strong> — ${p.scope}</div>`).join('');
 
     return `
-      <div class="ah-why-box" style="border-left-color:#3fb950">
+      <div class="ah-why-box" style="border-left-color:#00C4A0">
         <div class="ah-why-icon">${OmicsLab.Icons?.svg('link', 22) || ''}</div>
         <div class="ah-why-text">${ONE_HEALTH.intro}</div>
       </div>

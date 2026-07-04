@@ -13,13 +13,13 @@ OmicsLab.Nexus = (function () {
 
   /* ─── Default channels ─── */
   const DEFAULT_CHANNELS = [
-    { id: 'general',        name: 'general',         icon: 'hash', desc: 'General discussion for the OmicsLab community', color: '#3fb950', pinned: [] },
+    { id: 'general',        name: 'general',         icon: 'hash', desc: 'General discussion for the OmicsLab community', color: '#00C4A0', pinned: [] },
     { id: 'announcements',  name: 'announcements',   icon: 'bell', desc: 'Platform updates and new feature releases', color: '#58a6ff', pinned: [] },
     { id: 'wgs-genomics',   name: 'wgs-genomics',    icon: 'dna',  desc: 'Whole Genome Sequencing — methods, QC, GATK, variant calling', color: '#bc8cff', pinned: [] },
     { id: 'rna-seq',        name: 'rna-seq',          icon: 'activity', desc: 'Bulk RNA-seq, differential expression, DESeq2, edgeR', color: '#e3b341', pinned: [] },
     { id: 'africa-science', name: 'africa-science',  icon: 'globe', desc: 'H3Africa, AWI-Gen, APCDR, African genomics initiatives', color: '#f97316', pinned: [] },
     { id: 'outbreaks',      name: 'outbreak-response',icon: 'alert-triangle', desc: 'Epidemics, surveillance, One Health, genomic epidemiology', color: '#ff6b6b', pinned: [] },
-    { id: 'bioinformatics', name: 'bioinformatics',  icon: 'terminal', desc: 'Tools, pipelines, HPC, cloud computing, reproducibility', color: '#3fb950', pinned: [] },
+    { id: 'bioinformatics', name: 'bioinformatics',  icon: 'terminal', desc: 'Tools, pipelines, HPC, cloud computing, reproducibility', color: '#00C4A0', pinned: [] },
     { id: 'papers',         name: 'paper-discussion', icon: 'file-text', desc: 'Discuss recent publications in African genomics', color: '#58a6ff', pinned: [] },
     { id: 'help',           name: 'help',             icon: 'message-circle', desc: 'Ask questions, get support from the community', color: '#bc8cff', pinned: [] },
   ];
@@ -27,8 +27,8 @@ OmicsLab.Nexus = (function () {
   /* ─── Seed messages ─── */
   const SEED_MESSAGES = {
     'general': [
-      { id: 'gm1', author: 'Dr. Amara Osei', role: 'KEMRI · Kenya', avatar: 'AO', color: '#3fb950', ts: Date.now() - 86400000*3, text: 'Welcome to OmicsLab Nexus! This is the community hub for African genomics researchers, students, and instructors. Introduce yourself below.', reactions: { '+1': 12, 'check-circle': 5 }, pinned: false, thread: [] },
-      { id: 'gm2', author: 'Sipho Dlamini', role: 'UCT · South Africa', avatar: 'SD', color: '#58a6ff', ts: Date.now() - 86400000*2, text: 'Just completed the WGS curriculum track — the error propagation simulation in the DNA extraction step was incredibly realistic. Lost 40% of my reads because of a mis-calibrated bead ratio. Lesson learned!', reactions: { 'zap': 8 }, pinned: false, thread: [{ id: 'gm2r1', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#3fb950', ts: Date.now() - 86400000*2 + 3600000, text: 'That is exactly the kind of mistake that costs real experiments. The bead ratio step has a 15% pass rate on first attempt.', reactions: {}, pinned: false }] },
+      { id: 'gm1', author: 'Dr. Amara Osei', role: 'KEMRI · Kenya', avatar: 'AO', color: '#00C4A0', ts: Date.now() - 86400000*3, text: 'Welcome to OmicsLab Nexus! This is the community hub for African genomics researchers, students, and instructors. Introduce yourself below.', reactions: { '+1': 12, 'check-circle': 5 }, pinned: false, thread: [] },
+      { id: 'gm2', author: 'Sipho Dlamini', role: 'UCT · South Africa', avatar: 'SD', color: '#58a6ff', ts: Date.now() - 86400000*2, text: 'Just completed the WGS curriculum track — the error propagation simulation in the DNA extraction step was incredibly realistic. Lost 40% of my reads because of a mis-calibrated bead ratio. Lesson learned!', reactions: { 'zap': 8 }, pinned: false, thread: [{ id: 'gm2r1', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#00C4A0', ts: Date.now() - 86400000*2 + 3600000, text: 'That is exactly the kind of mistake that costs real experiments. The bead ratio step has a 15% pass rate on first attempt.', reactions: {}, pinned: false }] },
       { id: 'gm3', author: 'Fatima Al-Rashidi', role: 'APCDR · Uganda', avatar: 'FA', color: '#bc8cff', ts: Date.now() - 86400000, text: 'Anyone working on APOL1 kidney disease variants in Ugandan cohorts? Looking to compare gnomAD AFR frequencies with local data.', reactions: { 'heart-pulse': 4 }, pinned: false, thread: [] },
     ],
     'announcements': [
@@ -41,7 +41,7 @@ OmicsLab.Nexus = (function () {
     ],
     'outbreaks': [
       { id: 'ob1', author: 'Dr. Yewande Adeyemi', role: 'IHVN · Nigeria', avatar: 'YA', color: '#ff6b6b', ts: Date.now() - 86400000*6, text: 'Mpox clade Ib update: 847 confirmed cases in DRC this week. Genome sequences now available on GISAID. The phylo clustering suggests two distinct transmission chains — one linked to the healthcare setting, one community-acquired. Real-time tree is in the OmicsLab Journal Club.', reactions: { 'alert-triangle': 14, '+1': 8 }, pinned: false, thread: [] },
-      { id: 'ob2', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#3fb950', ts: Date.now() - 86400000*3, text: 'Outbreak Alert feed updated: Marburg Rwanda (active · 28 cases), XDR-TB South Africa (ongoing), Oropouche West Africa (new · 14 cases). Use the Outbreak Alerts section for genomic readiness scores per country.', reactions: {}, pinned: false, thread: [] },
+      { id: 'ob2', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#00C4A0', ts: Date.now() - 86400000*3, text: 'Outbreak Alert feed updated: Marburg Rwanda (active · 28 cases), XDR-TB South Africa (ongoing), Oropouche West Africa (new · 14 cases). Use the Outbreak Alerts section for genomic readiness scores per country.', reactions: {}, pinned: false, thread: [] },
     ],
   };
 
@@ -60,7 +60,7 @@ OmicsLab.Nexus = (function () {
         messages: SEED_MESSAGES[c.id] || [],
       }));
     }
-    _state.profile = _state.profile || { name: 'You', role: 'OmicsLab User', avatar: 'YO', color: '#3fb950' };
+    _state.profile = _state.profile || { name: 'You', role: 'OmicsLab User', avatar: 'YO', color: '#00C4A0' };
   }
 
   function _save() {

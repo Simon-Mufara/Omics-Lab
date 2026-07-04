@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Page Router
    Pages: home · lab · learn · research · africa · analysis · terminal · ask
 
@@ -711,7 +711,7 @@ OmicsLab.Router = (function () {
     settings: {
       label: 'Settings',
       icon: 'cpu',
-      color: '#8b949e',
+      color: '#A8A098',
       tagline: 'Platform preferences — appearance, language, API keys, data privacy, and about',
       sections: ['settings-section'],
     },
@@ -725,14 +725,14 @@ OmicsLab.Router = (function () {
     privacy: {
       label: 'Privacy Policy',
       icon: 'lock-open',
-      color: '#8b949e',
+      color: '#A8A098',
       tagline: 'How OmicsLab handles your data — fully local, never shared',
       sections: ['privacy-section'],
     },
     terms: {
       label: 'Terms of Use',
       icon: 'file-text',
-      color: '#8b949e',
+      color: '#A8A098',
       tagline: 'Terms and conditions for using the OmicsLab platform — free for education and research',
       sections: ['terms-section'],
     },
@@ -981,7 +981,7 @@ OmicsLab.Router = (function () {
                  style="color:#58a6ff">Open in GitHub Codespaces</a></div>`;
           }
         } else {
-          el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#8b949e;font-family:monospace">
+          el.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#A8A098;font-family:monospace">
             <b style="color:#f85149">Terminal module not loaded.</b><br><br>
             Check browser console for errors in terminal.js<br><br>
             <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener"
@@ -1621,7 +1621,7 @@ OmicsLab.Router = (function () {
     }
 
     result.style.display = 'block';
-    result.innerHTML = `<span style="color:#8b949e;font-style:italic">Analysing your data description…</span>`;
+    result.innerHTML = `<span style="color:#A8A098;font-style:italic">Analysing your data description…</span>`;
 
     try {
       const resp = await fetch('https://api.anthropic.com/v1/messages', {

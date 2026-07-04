@@ -498,7 +498,7 @@ OmicsLab.VoiceControl = (function () {
               : `<button class="vc-help-action-btn vc-start-btn" onclick="OmicsLab.VoiceControl.start();OmicsLab.VoiceControl._closeHelp()">Start Listening</button>`}
             <button class="vc-help-action-btn vc-stop-btn" style="font-size:.75rem" onclick="OmicsLab.VoiceControl.toggleAlwaysOn();OmicsLab.VoiceControl._closeHelp()">${_alwaysOn ? 'Disable' : 'Enable'} Always-On</button>
           </div>
-          <div style="font-size:.68rem;color:#6e7681;margin-top:.5rem">Always-On mode keeps the mic open and only responds after the wake word <em>"OmicsLab"</em>.</div>
+          <div style="font-size:.68rem;color:#6E6860;margin-top:.5rem">Always-On mode keeps the mic open and only responds after the wake word <em>"OmicsLab"</em>.</div>
         </div>
       </div>`;
 
@@ -535,9 +535,9 @@ OmicsLab.VoiceControl = (function () {
   align-items: center;
   gap: .35rem;
   background: transparent;
-  border: 1px solid #30363d;
+  border: 1px solid #243048;
   border-radius: 6px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: .75rem;
   font-weight: 500;
   padding: .35rem .65rem;
@@ -546,11 +546,11 @@ OmicsLab.VoiceControl = (function () {
   font-family: inherit;
   overflow: hidden;
 }
-.vc-mic-btn:hover { color: #e6edf3; border-color: #58a6ff; background: rgba(88,166,255,.06); }
+.vc-mic-btn:hover { color: #E4DDD2; border-color: #58a6ff; background: rgba(88,166,255,.06); }
 .vc-mic-btn.listening {
-  color: #3fb950;
-  border-color: #3fb950;
-  background: rgba(63,185,80,.08);
+  color: #00C4A0;
+  border-color: #00C4A0;
+  background: rgba(0,196,160,.08);
 }
 .vc-mic-label { display: none; }
 @media (min-width: 900px) { .vc-mic-label { display: inline; } }
@@ -566,11 +566,11 @@ OmicsLab.VoiceControl = (function () {
 .vc-mic-btn.listening .vc-mic-ring {
   opacity: 1;
   animation: vc-ring-pulse 1.4s ease-in-out infinite;
-  box-shadow: 0 0 0 2px rgba(63,185,80,.4);
+  box-shadow: 0 0 0 2px rgba(0,196,160,.4);
 }
 @keyframes vc-ring-pulse {
-  0%,100% { box-shadow: 0 0 0 2px rgba(63,185,80,.4); }
-  50%      { box-shadow: 0 0 0 5px rgba(63,185,80,.0); }
+  0%,100% { box-shadow: 0 0 0 2px rgba(0,196,160,.4); }
+  50%      { box-shadow: 0 0 0 5px rgba(0,196,160,.0); }
 }
 
 /* ─── Transcript bubble ─── */
@@ -579,10 +579,10 @@ OmicsLab.VoiceControl = (function () {
   bottom: 4.5rem;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(13,17,23,.92);
-  border: 1px solid #3fb950;
+  background: rgba(13,21,36,.92);
+  border: 1px solid #00C4A0;
   border-radius: 6px;
-  color: #3fb950;
+  color: #00C4A0;
   font-size: .8rem;
   font-style: italic;
   padding: .4rem .9rem;
@@ -609,8 +609,8 @@ OmicsLab.VoiceControl = (function () {
 }
 .vc-help-overlay.visible { opacity: 1; }
 .vc-help-panel {
-  background: #161b22;
-  border: 1px solid #30363d;
+  background: #111B2E;
+  border: 1px solid #243048;
   border-radius: 14px;
   width: 100%;
   max-width: 540px;
@@ -629,7 +629,7 @@ OmicsLab.VoiceControl = (function () {
 .vc-help-title {
   font-size: 1rem;
   font-weight: 700;
-  color: #e6edf3;
+  color: #E4DDD2;
   display: flex;
   align-items: center;
   gap: .45rem;
@@ -637,20 +637,20 @@ OmicsLab.VoiceControl = (function () {
 .vc-help-close {
   background: none;
   border: none;
-  color: #6e7681;
+  color: #6E6860;
   font-size: .9rem;
   cursor: pointer;
   padding: .2rem .4rem;
   border-radius: 4px;
 }
-.vc-help-close:hover { color: #e6edf3; background: #21262d; }
+.vc-help-close:hover { color: #E4DDD2; background: #182236; }
 .vc-help-desc {
   font-size: .78rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.5;
   margin-bottom: 1rem;
   padding-bottom: .75rem;
-  border-bottom: 1px solid #21262d;
+  border-bottom: 1px solid #182236;
 }
 .vc-help-group { margin-bottom: 1rem; }
 .vc-help-group-label {
@@ -668,15 +668,15 @@ OmicsLab.VoiceControl = (function () {
 }
 .vc-help-cmd {
   font-size: .8rem;
-  color: #8b949e;
-  background: #0d1117;
-  border: 1px solid #21262d;
+  color: #A8A098;
+  background: #0D1524;
+  border: 1px solid #182236;
   border-radius: 5px;
   padding: .3rem .6rem;
   font-family: 'JetBrains Mono', monospace;
 }
 .vc-help-footer {
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
   padding-top: .75rem;
   display: flex;
   align-items: center;
@@ -686,7 +686,7 @@ OmicsLab.VoiceControl = (function () {
 }
 .vc-help-compat {
   font-size: .72rem;
-  color: #6e7681;
+  color: #6E6860;
   display: flex;
   align-items: center;
   gap: .3rem;
@@ -703,13 +703,13 @@ OmicsLab.VoiceControl = (function () {
   transition: opacity .2s;
 }
 .vc-help-action-btn:hover { opacity: .85; }
-.vc-start-btn { background: #238636; color: #fff; }
-.vc-stop-btn  { background: #21262d; color: #f97316; border: 1px solid #f97316; }
+.vc-start-btn { background: #007A6A; color: #fff; }
+.vc-stop-btn  { background: #182236; color: #f97316; border: 1px solid #f97316; }
 .vc-kbd {
-  background: #21262d;
-  border: 1px solid #30363d;
+  background: #182236;
+  border: 1px solid #243048;
   border-radius: 4px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: .68rem;
   padding: .15rem .4rem;
   font-family: 'JetBrains Mono', monospace;

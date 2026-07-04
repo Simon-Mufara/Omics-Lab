@@ -332,7 +332,7 @@ OmicsLab.StudyMusic = (function () {
       #sm-panel {
         position: fixed; bottom: 72px; right: 16px; z-index: 4900;
         width: 280px;
-        background: #161b22; border: 1px solid #21262d; border-radius: 14px;
+        background: #111B2E; border: 1px solid #182236; border-radius: 14px;
         box-shadow: 0 8px 32px rgba(0,0,0,.5);
         padding: 1rem 1rem .85rem;
         animation: sm-pop .18s cubic-bezier(.16,1,.3,1) both;
@@ -346,69 +346,69 @@ OmicsLab.StudyMusic = (function () {
         margin-bottom: .75rem;
       }
       .sm-panel-title {
-        font-size: .82rem; font-weight: 700; color: #e6edf3;
+        font-size: .82rem; font-weight: 700; color: #E4DDD2;
         display: flex; align-items: center; gap: .4rem;
       }
       .sm-close-btn {
-        background: none; border: none; cursor: pointer; color: #484f58; padding: .15rem;
+        background: none; border: none; cursor: pointer; color: #354060; padding: .15rem;
         border-radius: 4px; line-height: 1;
       }
-      .sm-close-btn:hover { color: #8b949e; }
+      .sm-close-btn:hover { color: #A8A098; }
 
       /* Mode chips */
       .sm-modes {
         display: grid; grid-template-columns: 1fr 1fr; gap: .35rem; margin-bottom: .85rem;
       }
       .sm-mode-btn {
-        background: #0d1117; border: 1px solid #21262d; border-radius: 8px;
+        background: #0D1524; border: 1px solid #182236; border-radius: 8px;
         padding: .45rem .5rem; text-align: left; cursor: pointer;
         transition: border-color .1s, background .1s;
       }
-      .sm-mode-btn:hover { background: #21262d; border-color: #30363d; }
+      .sm-mode-btn:hover { background: #182236; border-color: #243048; }
       .sm-mode-btn.sm-mode-active {
-        border-color: rgba(63,185,80,.5); background: rgba(63,185,80,.07);
+        border-color: rgba(0,196,160,.5); background: rgba(0,196,160,.07);
       }
-      .sm-mode-name { font-size: .73rem; font-weight: 700; color: #e6edf3; display: block; }
-      .sm-mode-desc { font-size: .62rem; color: #8b949e; display: block; margin-top: .1rem; }
-      .sm-mode-btn.sm-mode-active .sm-mode-name { color: #3fb950; }
+      .sm-mode-name { font-size: .73rem; font-weight: 700; color: #E4DDD2; display: block; }
+      .sm-mode-desc { font-size: .62rem; color: #A8A098; display: block; margin-top: .1rem; }
+      .sm-mode-btn.sm-mode-active .sm-mode-name { color: #00C4A0; }
 
       /* Volume */
       .sm-vol-row {
         display: flex; align-items: center; gap: .55rem; margin-bottom: .75rem;
       }
-      .sm-vol-icon { color: #8b949e; flex-shrink: 0; }
+      .sm-vol-icon { color: #A8A098; flex-shrink: 0; }
       .sm-vol-slider {
         flex: 1; -webkit-appearance: none; appearance: none;
         height: 4px; border-radius: 2px;
-        background: linear-gradient(to right, #3fb950 var(--pct,35%), #30363d var(--pct,35%));
+        background: linear-gradient(to right, #00C4A0 var(--pct,35%), #243048 var(--pct,35%));
         cursor: pointer; outline: none;
       }
       .sm-vol-slider::-webkit-slider-thumb {
         -webkit-appearance: none; width: 14px; height: 14px;
-        border-radius: 50%; background: #3fb950; cursor: pointer;
-        border: 2px solid #161b22;
+        border-radius: 50%; background: #00C4A0; cursor: pointer;
+        border: 2px solid #111B2E;
       }
       .sm-vol-slider::-moz-range-thumb {
-        width: 14px; height: 14px; border-radius: 50%; background: #3fb950;
-        cursor: pointer; border: 2px solid #161b22;
+        width: 14px; height: 14px; border-radius: 50%; background: #00C4A0;
+        cursor: pointer; border: 2px solid #111B2E;
       }
-      .sm-vol-val { font-size: .68rem; color: #8b949e; min-width: 28px; text-align: right; }
+      .sm-vol-val { font-size: .68rem; color: #A8A098; min-width: 28px; text-align: right; }
 
       /* Play/stop */
       .sm-play-btn {
         width: 100%; padding: .42rem; border-radius: 8px;
-        background: #21262d; border: 1px solid #30363d;
-        color: #e6edf3; font-size: .78rem; font-weight: 700;
+        background: #182236; border: 1px solid #243048;
+        color: #E4DDD2; font-size: .78rem; font-weight: 700;
         cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .4rem;
         transition: background .12s, border-color .12s;
       }
       .sm-play-btn:hover { background: #2d333b; }
       .sm-play-btn.sm-btn-playing {
-        background: rgba(63,185,80,.12); border-color: rgba(63,185,80,.4); color: #3fb950;
+        background: rgba(0,196,160,.12); border-color: rgba(0,196,160,.4); color: #00C4A0;
       }
 
       .sm-note {
-        margin-top: .6rem; font-size: .62rem; color: #484f58; text-align: center; line-height: 1.4;
+        margin-top: .6rem; font-size: .62rem; color: #354060; text-align: center; line-height: 1.4;
       }
     `;
     document.head.appendChild(s);
@@ -431,7 +431,7 @@ OmicsLab.StudyMusic = (function () {
     panel.innerHTML = `
       <div class="sm-panel-header">
         <div class="sm-panel-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" aria-hidden="true">
             <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
           </svg>
           Study &amp; Focus Music

@@ -1,55 +1,55 @@
 /* AMR Resistance Profiler */
 .amr-wrap { max-width: 1050px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
 .amr-header { margin-bottom: 1.5rem; }
-.amr-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #e6edf3; }
-.amr-header-sub { font-size: .78rem; color: #8b949e; margin-top: .2rem; }
+.amr-header-title { display: flex; align-items: center; gap: .5rem; font-size: 1.1rem; font-weight: 700; color: #E4DDD2; }
+.amr-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
 .amr-layout { display: grid; grid-template-columns: 340px 1fr; gap: 1.25rem; }
-.amr-org-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: .85rem; margin-bottom: .75rem; }
-.amr-org-label { font-size: .72rem; color: #8b949e; font-weight: 600; margin-bottom: .4rem; }
-.amr-org-select { width: 100%; padding: .38rem .6rem; background: #0d1117; border: 1px solid #30363d; border-radius: 5px; color: #e6edf3; font-size: .83rem; font-family: inherit; outline: none; }
-.amr-mutation-panel { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: .85rem; display: flex; flex-direction: column; gap: .55rem; }
-.amr-panel-label { font-size: .72rem; color: #8b949e; font-weight: 600; }
+.amr-org-card { background: #111B2E; border: 1px solid #243048; border-radius: 8px; padding: .85rem; margin-bottom: .75rem; }
+.amr-org-label { font-size: .72rem; color: #A8A098; font-weight: 600; margin-bottom: .4rem; }
+.amr-org-select { width: 100%; padding: .38rem .6rem; background: #0D1524; border: 1px solid #243048; border-radius: 5px; color: #E4DDD2; font-size: .83rem; font-family: inherit; outline: none; }
+.amr-mutation-panel { background: #111B2E; border: 1px solid #182236; border-radius: 8px; padding: .85rem; display: flex; flex-direction: column; gap: .55rem; }
+.amr-panel-label { font-size: .72rem; color: #A8A098; font-weight: 600; }
 .amr-drug-row { display: flex; flex-direction: column; gap: .2rem; }
-.amr-drug-name { font-size: .8rem; font-weight: 700; color: #e6edf3; }
-.amr-drug-genes { font-size: .68rem; color: #484f58; }
-.amr-mut-input { padding: .3rem .6rem; background: #0d1117; border: 1px solid #30363d; border-radius: 5px; color: #c9d1d9; font-size: .75rem; font-family: 'Cascadia Code','Fira Mono',monospace; outline: none; transition: border-color .15s; }
+.amr-drug-name { font-size: .8rem; font-weight: 700; color: #E4DDD2; }
+.amr-drug-genes { font-size: .68rem; color: #354060; }
+.amr-mut-input { padding: .3rem .6rem; background: #0D1524; border: 1px solid #243048; border-radius: 5px; color: #A8A098; font-size: .75rem; font-family: 'Cascadia Code','Fira Mono',monospace; outline: none; transition: border-color .15s; }
 .amr-mut-input:focus { border-color: #ff6b6b; }
-.amr-quick-label { font-size: .7rem; color: #484f58; margin-top: .3rem; }
+.amr-quick-label { font-size: .7rem; color: #354060; margin-top: .3rem; }
 .amr-quick-btns { display: flex; flex-wrap: wrap; gap: .35rem; }
 .amr-quick-btn { padding: .25rem .6rem; background: rgba(255,107,107,.08); border: 1px solid rgba(255,107,107,.2); border-radius: 5px; color: #ff6b6b; font-size: .72rem; cursor: pointer; font-family: inherit; transition: background .15s; }
 .amr-quick-btn:hover { background: rgba(255,107,107,.18); }
-.amr-empty { padding: 3rem 1rem; text-align: center; color: #484f58; font-size: .85rem; }
-.amr-pattern-banner { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 1rem; }
-.amr-pattern-label { font-size: .72rem; color: #8b949e; font-weight: 600; }
+.amr-empty { padding: 3rem 1rem; text-align: center; color: #354060; font-size: .85rem; }
+.amr-pattern-banner { display: flex; align-items: center; justify-content: space-between; padding: .75rem 1rem; background: #111B2E; border: 1px solid #243048; border-radius: 8px; margin-bottom: 1rem; }
+.amr-pattern-label { font-size: .72rem; color: #A8A098; font-weight: 600; }
 .amr-pattern-val { font-size: .9rem; font-weight: 700; }
 .amr-resistant { color: #ff6b6b; }
-.amr-sensitive { color: #3fb950; }
+.amr-sensitive { color: #00C4A0; }
 .amr-results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .6rem; }
-.amr-drug-card { background: #161b22; border: 1px solid #21262d; border-radius: 7px; padding: .75rem; }
+.amr-drug-card { background: #111B2E; border: 1px solid #182236; border-radius: 7px; padding: .75rem; }
 .amr-drug-card-hdr { display: flex; justify-content: space-between; align-items: flex-start; gap: .4rem; margin-bottom: .3rem; }
-.amr-drug-card-name { font-size: .82rem; font-weight: 700; color: #e6edf3; }
+.amr-drug-card-name { font-size: .82rem; font-weight: 700; color: #E4DDD2; }
 .amr-drug-card-class { font-size: .72rem; font-weight: 700; }
 .amr-drug-card-meta { display: flex; gap: .5rem; font-size: .65rem; margin-bottom: .3rem; flex-wrap: wrap; }
-.amr-drug-class-badge { padding: .1rem .35rem; background: #21262d; border-radius: 4px; color: #8b949e; }
-.amr-drug-who { color: #484f58; }
+.amr-drug-class-badge { padding: .1rem .35rem; background: #182236; border-radius: 4px; color: #A8A098; }
+.amr-drug-who { color: #354060; }
 .amr-mut-found { font-size: .7rem; color: #ff6b6b; background: rgba(255,107,107,.06); border-radius: 4px; padding: .2rem .4rem; margin-bottom: .25rem; font-family: 'Cascadia Code','Fira Mono',monospace; }
-.amr-key-muts { font-size: .65rem; color: #484f58; line-height: 1.4; }
+.amr-key-muts { font-size: .65rem; color: #354060; line-height: 1.4; }
 @media (max-width: 720px) { .amr-layout { grid-template-columns: 1fr; } }
 
 /* ── AMR Tabs ── */
-.amr-tabs { display:flex;gap:.35rem;border-bottom:1px solid #21262d;margin-bottom:1.25rem;padding-bottom:0; }
-.amr-tab { padding:.5rem 1rem;background:none;border:none;border-bottom:2px solid transparent;font-size:.82rem;font-weight:600;color:#8b949e;cursor:pointer;margin-bottom:-1px;transition:color .12s,border-color .12s; }
-.amr-tab:hover { color:#e6edf3; }
+.amr-tabs { display:flex;gap:.35rem;border-bottom:1px solid #182236;margin-bottom:1.25rem;padding-bottom:0; }
+.amr-tab { padding:.5rem 1rem;background:none;border:none;border-bottom:2px solid transparent;font-size:.82rem;font-weight:600;color:#A8A098;cursor:pointer;margin-bottom:-1px;transition:color .12s,border-color .12s; }
+.amr-tab:hover { color:#E4DDD2; }
 .amr-tab-active { color:#ff6b6b !important;border-bottom-color:#ff6b6b !important; }
 .amr-tab-panel { }
 
 /* ── AMR Surveillance Dashboard ── */
 .amr-surv-wrap { padding: .5rem 0 2rem; }
 .amr-surv-head { margin-bottom:1rem; }
-.amr-surv-title { font-size:.95rem;font-weight:700;color:#e6edf3;margin-bottom:.25rem; }
-.amr-surv-sub { font-size:.75rem;color:#8b949e;line-height:1.5; }
+.amr-surv-title { font-size:.95rem;font-weight:700;color:#E4DDD2;margin-bottom:.25rem; }
+.amr-surv-sub { font-size:.75rem;color:#A8A098;line-height:1.5; }
 .amr-surv-controls { display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap; }
-.amr-surv-select { padding:.4rem .65rem;background:#161b22;border:1px solid #30363d;border-radius:7px;color:#c9d1d9;font-size:.82rem;font-family:inherit;outline:none; }
-.amr-surv-canvas { width:100%;border-radius:8px;background:#0d1117;border:1px solid #21262d;display:block; }
-.amr-surv-legend { display:flex;gap:1rem;flex-wrap:wrap;margin-top:.75rem;font-size:.75rem;color:#8b949e; }
+.amr-surv-select { padding:.4rem .65rem;background:#111B2E;border:1px solid #243048;border-radius:7px;color:#A8A098;font-size:.82rem;font-family:inherit;outline:none; }
+.amr-surv-canvas { width:100%;border-radius:8px;background:#0D1524;border:1px solid #182236;display:block; }
+.amr-surv-legend { display:flex;gap:1rem;flex-wrap:wrap;margin-top:.75rem;font-size:.75rem;color:#A8A098; }
 .amr-surv-leg-item { display:flex;align-items:center;gap:.35rem; }

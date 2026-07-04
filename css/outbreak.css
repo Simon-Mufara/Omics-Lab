@@ -43,11 +43,11 @@
 .ob-title {
   font-size: 1.8rem;
   font-weight: 800;
-  color: #e6edf3;
+  color: #E4DDD2;
   margin: 0 0 0.4rem;
 }
 .ob-subtitle {
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.9rem;
   max-width: 540px;
   line-height: 1.5;
@@ -60,7 +60,7 @@
   flex-shrink: 0;
 }
 .ob-stat {
-  background: #0d1117;
+  background: #0D1524;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
   padding: 0.6rem 1.1rem;
@@ -69,14 +69,14 @@
   align-items: center;
   min-width: 64px;
 }
-.ob-stat-n { font-size: 1.3rem; font-weight: 800; color: #e6edf3; }
-.ob-stat-l { font-size: 0.65rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+.ob-stat-n { font-size: 1.3rem; font-weight: 800; color: #E4DDD2; }
+.ob-stat-l { font-size: 0.65rem; color: #A8A098; text-transform: uppercase; letter-spacing: 0.05em; }
 
 /* ─── Pathogen picker ─── */
 .ob-picker-label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #8b949e;
+  color: #A8A098;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
@@ -88,7 +88,7 @@
   margin-bottom: 1rem;
 }
 .ob-pathogen-card {
-  background: #0d1117;
+  background: #0D1524;
   border: 1.5px solid rgba(255,255,255,0.07);
   border-radius: 12px;
   padding: 1rem;
@@ -101,29 +101,29 @@
 }
 .ob-pathogen-card:hover { border-color: rgba(255,255,255,0.18); transform: translateY(-2px); }
 .ob-pathogen-card.selected {
-  border-color: #3fb950;
-  box-shadow: 0 0 0 1px #3fb950, 0 4px 16px rgba(63,185,80,0.15);
+  border-color: #00C4A0;
+  box-shadow: 0 0 0 1px #00C4A0, 0 4px 16px rgba(0,196,160,0.15);
 }
 .ob-path-dot { display: inline-block; width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-bottom: 4px; }
 .ob-live-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f97316; animation: ob-blink 1.2s ease-in-out infinite; }
 @keyframes ob-blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.ob-path-name  { font-size: 0.82rem; font-weight: 700; color: #e6edf3; }
-.ob-path-stat  { font-size: 0.72rem; color: #8b949e; }
-.ob-path-desc  { font-size: 0.7rem; color: #6e7681; line-height: 1.4; margin-top: 4px; }
+.ob-path-name  { font-size: 0.82rem; font-weight: 700; color: #E4DDD2; }
+.ob-path-stat  { font-size: 0.72rem; color: #A8A098; }
+.ob-path-desc  { font-size: 0.7rem; color: #6E6860; line-height: 1.4; margin-top: 4px; }
 
 .ob-selected-info {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(63,185,80,0.06);
-  border: 1px solid rgba(63,185,80,0.2);
+  background: rgba(0,196,160,0.06);
+  border: 1px solid rgba(0,196,160,0.2);
   border-radius: 10px;
   padding: 0.75rem 1rem;
   gap: 1rem;
   flex-wrap: wrap;
 }
-.ob-sel-name   { font-size: 0.9rem; font-weight: 700; color: #e6edf3; }
-.ob-sel-genome { font-size: 0.72rem; color: #8b949e; display: block; margin-top: 2px; }
+.ob-sel-name   { font-size: 0.9rem; font-weight: 700; color: #E4DDD2; }
+.ob-sel-genome { font-size: 0.72rem; color: #A8A098; display: block; margin-top: 2px; }
 .ob-start-btn {
   background: #f97316;
   border: none;
@@ -151,7 +151,7 @@
 .ob-panel-label {
   font-size: 0.72rem;
   font-weight: 700;
-  color: #8b949e;
+  color: #A8A098;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   padding-bottom: 0.4rem;
@@ -161,7 +161,7 @@
   gap: 8px;
 }
 .ob-map-wrap {
-  background: #0d1117;
+  background: #0D1524;
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 14px;
   overflow: hidden;
@@ -189,13 +189,13 @@
   border-top: 1px solid rgba(255,255,255,0.06);
   flex-wrap: wrap;
 }
-.ob-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: #8b949e; }
+.ob-leg-item { display: flex; align-items: center; gap: 5px; font-size: 0.68rem; color: #A8A098; }
 .ob-leg-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .ob-leg-pulse { animation: obPulse 1.2s ease infinite; }
 
 /* ─── Right panel boxes ─── */
 .ob-timeline-box, .ob-seq-box, .ob-phylo-box, .ob-result-box {
-  background: #0d1117;
+  background: #0D1524;
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 12px;
   padding: 0.85rem 1rem;
@@ -207,17 +207,17 @@
   flex-direction: column;
   gap: 4px;
   scrollbar-width: thin;
-  scrollbar-color: #30363d transparent;
+  scrollbar-color: #243048 transparent;
 }
 .ob-tl-item {
   font-size: 0.72rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.4;
   padding: 3px 0;
   border-bottom: 1px solid rgba(255,255,255,0.04);
   transition: color 0.3s;
 }
-.ob-tl-new { color: #e6edf3; font-weight: 600; }
+.ob-tl-new { color: #E4DDD2; font-weight: 600; }
 
 /* Sequence list */
 .ob-seq-box { flex: 1; }
@@ -227,9 +227,9 @@
   padding: 1px 8px;
   font-size: 0.65rem;
   font-weight: 600;
-  color: #8b949e;
+  color: #A8A098;
 }
-.ob-seq-hint { font-size: 0.76rem; color: #6e7681; text-align: center; padding: 1rem 0; }
+.ob-seq-hint { font-size: 0.76rem; color: #6E6860; text-align: center; padding: 1rem 0; }
 .ob-seq-list {
   display: flex;
   flex-direction: column;
@@ -237,7 +237,7 @@
   max-height: 200px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #30363d transparent;
+  scrollbar-color: #243048 transparent;
 }
 .ob-seq-item {
   background: rgba(255,255,255,0.03);
@@ -246,13 +246,13 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.72rem;
 }
-.ob-seq-item.done { border-color: rgba(63,185,80,0.25); }
+.ob-seq-item.done { border-color: rgba(0,196,160,0.25); }
 .ob-seq-head { display: flex; justify-content: space-between; margin-bottom: 4px; }
 .ob-seq-id  { font-family: 'JetBrains Mono', monospace; color: #58a6ff; font-size: 0.7rem; }
-.ob-seq-loc { color: #8b949e; }
+.ob-seq-loc { color: #A8A098; }
 .ob-seq-bar-wrap { background: rgba(255,255,255,0.07); border-radius: 3px; height: 4px; margin-bottom: 4px; }
-.ob-seq-bar { height: 4px; border-radius: 3px; background: #3fb950; transition: width 0.2s; }
-.ob-seq-status { color: #6e7681; }
+.ob-seq-bar { height: 4px; border-radius: 3px; background: #00C4A0; transition: width 0.2s; }
+.ob-seq-status { color: #6E6860; }
 
 /* Phylo tree */
 .ob-phylo-box { overflow: hidden; }
@@ -261,12 +261,12 @@
   background: none;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 5px;
-  color: #8b949e;
+  color: #A8A098;
   font-size: 0.65rem;
   padding: 2px 8px;
   cursor: pointer;
 }
-.ob-phylo-rebuild:hover { color: #e6edf3; border-color: rgba(255,255,255,0.25); }
+.ob-phylo-rebuild:hover { color: #E4DDD2; border-color: rgba(255,255,255,0.25); }
 .ob-phylo-svg {
   width: 100%;
   height: auto;
@@ -317,18 +317,18 @@
   font-size: 0.76rem;
   align-items: baseline;
 }
-.ob-result-label { color: #8b949e; }
-.ob-result-val   { color: #e6edf3; font-weight: 600; text-align: right; }
+.ob-result-label { color: #A8A098; }
+.ob-result-val   { color: #E4DDD2; font-weight: 600; text-align: right; }
 .ob-result-insight {
-  background: rgba(63,185,80,0.06);
-  border: 1px solid rgba(63,185,80,0.15);
+  background: rgba(0,196,160,0.06);
+  border: 1px solid rgba(0,196,160,0.15);
   border-radius: 8px;
   padding: 0.75rem;
   font-size: 0.76rem;
-  color: #8b949e;
+  color: #A8A098;
   line-height: 1.5;
 }
-.ob-result-insight strong { color: #3fb950; }
+.ob-result-insight strong { color: #00C4A0; }
 
 /* ─── Controls bar ─── */
 .ob-controls {
@@ -342,21 +342,21 @@
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 8px;
-  color: #c9d1d9;
+  color: #A8A098;
   font-size: 0.8rem;
   font-weight: 600;
   padding: 0.45rem 0.9rem;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.ob-ctrl-btn:hover:not(:disabled) { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.2); color: #e6edf3; }
+.ob-ctrl-btn:hover:not(:disabled) { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.2); color: #E4DDD2; }
 .ob-ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .ob-ctrl-btn.ob-reset { color: #f85149; border-color: rgba(248,81,73,0.25); }
 .ob-ctrl-btn.ob-reset:hover { background: rgba(248,81,73,0.1); }
-.ob-speed-label { font-size: 0.72rem; color: #8b949e; margin-left: 0.5rem; }
-.ob-speed-slider { accent-color: #3fb950; width: 80px; cursor: pointer; }
+.ob-speed-label { font-size: 0.72rem; color: #A8A098; margin-left: 0.5rem; }
+.ob-speed-slider { accent-color: #00C4A0; width: 80px; cursor: pointer; }
 
 @keyframes obBtnPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(63,185,80,0.4); }
-  50%      { box-shadow: 0 0 0 5px rgba(63,185,80,0); }
+  0%,100% { box-shadow: 0 0 0 0 rgba(0,196,160,0.4); }
+  50%      { box-shadow: 0 0 0 5px rgba(0,196,160,0); }
 }

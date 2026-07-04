@@ -13,7 +13,7 @@ OmicsLab.PopStruct = (function () {
     awigen_k4: {
       label: 'AWI-Gen — 6 African populations (K=4)',
       pops: ['AGO (Angola)','BWA (Botswana)','GHA (Ghana)','KEN (Kenya)','NGR (Nigeria)','ZAF (South Africa)'],
-      colors: ['#3fb950','#58a6ff','#e3b341','#bc8cff'],
+      colors: ['#00C4A0','#58a6ff','#e3b341','#bc8cff'],
       /* Q values: each sub-array = [k1, k2, k3, k4] for representative individual in that population */
       samples: [
         /* AGO */ {pop:'AGO',q:[0.65,0.20,0.10,0.05]},{pop:'AGO',q:[0.70,0.15,0.10,0.05]},{pop:'AGO',q:[0.60,0.25,0.08,0.07]},
@@ -28,7 +28,7 @@ OmicsLab.PopStruct = (function () {
     kg_african_k3: {
       label: '1000 Genomes — 5 African populations (K=3)',
       pops: ['LWK (Luhya, Kenya)','YRI (Yoruba, Nigeria)','ESN (Esan, Nigeria)','GWD (Gambia)','MSL (Mende, Sierra Leone)'],
-      colors: ['#ff6b6b','#58a6ff','#3fb950'],
+      colors: ['#ff6b6b','#58a6ff','#00C4A0'],
       samples: [
         /* LWK */ {pop:'LWK',q:[0.78,0.14,0.08]},{pop:'LWK',q:[0.75,0.18,0.07]},{pop:'LWK',q:[0.80,0.12,0.08]},
         /* YRI */ {pop:'YRI',q:[0.10,0.82,0.08]},{pop:'YRI',q:[0.08,0.85,0.07]},{pop:'YRI',q:[0.12,0.80,0.08]},
@@ -105,7 +105,7 @@ OmicsLab.PopStruct = (function () {
     });
     Object.entries(popBounds).forEach(([pop, b]) => {
       const cx = (b.start + b.end) / 2;
-      labels += `<text x="${cx}" y="${H + LABH - 2}" text-anchor="middle" font-size="8" fill="#8b949e">${pop.split(' ')[0]}</text>`;
+      labels += `<text x="${cx}" y="${H + LABH - 2}" text-anchor="middle" font-size="8" fill="#A8A098">${pop.split(' ')[0]}</text>`;
     });
     const svg = `<svg viewBox="0 0 ${svgW} ${H + LABH}" width="100%" style="max-width:${Math.max(svgW, 400)}px;display:block">${bars}${labels}</svg>`;
     const el = document.getElementById('ps-admix');
@@ -128,13 +128,13 @@ OmicsLab.PopStruct = (function () {
     ds.pops.forEach((pop, i) => { const key = pop.split(' ')[0].replace(/[()]/g,''); popColorMap[key] = ds.colors[i % ds.colors.length]; });
     const circles = points.map(p => {
       const cx = scaleX(p.pc1).toFixed(1), cy = scaleY(p.pc2).toFixed(1);
-      const color = popColorMap[p.pop] || '#8b949e';
-      return `<circle cx="${cx}" cy="${cy}" r="5" fill="${color}" opacity="0.85" stroke="#0d1117" stroke-width="1"><title>${p.pop}</title></circle>`;
+      const color = popColorMap[p.pop] || '#A8A098';
+      return `<circle cx="${cx}" cy="${cy}" r="5" fill="${color}" opacity="0.85" stroke="#0D1524" stroke-width="1"><title>${p.pop}</title></circle>`;
     }).join('');
-    const axes = `<line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="#30363d" stroke-width="1"/>
-      <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H-PAD}" stroke="#30363d" stroke-width="1"/>
-      <text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="8" fill="#484f58">PC1</text>
-      <text x="8" y="${H/2}" text-anchor="middle" font-size="8" fill="#484f58" transform="rotate(-90,8,${H/2})">PC2</text>`;
+    const axes = `<line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="#243048" stroke-width="1"/>
+      <line x1="${PAD}" y1="${PAD}" x2="${PAD}" y2="${H-PAD}" stroke="#243048" stroke-width="1"/>
+      <text x="${W/2}" y="${H-4}" text-anchor="middle" font-size="8" fill="#354060">PC1</text>
+      <text x="8" y="${H/2}" text-anchor="middle" font-size="8" fill="#354060" transform="rotate(-90,8,${H/2})">PC2</text>`;
     el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:320px;display:block">${axes}${circles}</svg>`;
   }
 

@@ -53,7 +53,7 @@ OmicsLab.PGx = (function () {
       gene: 'CYP3A5',
       fullname: 'Cytochrome P450 3A5',
       function: 'Immunosuppressant & steroid metabolism',
-      color: '#3fb950',
+      color: '#00C4A0',
       summary: 'CYP3A5*1 (expressors) are ~70–80% in Africans vs 10–15% in Europeans. Tacrolimus (post-transplant) requires 2× higher doses in African expressors to achieve therapeutic concentrations — dramatically affects transplant outcomes.',
       alleles: [
         { name:'*1', function:'Expressor (high activity)', raf_afr:0.73, raf_eur:0.10, raf_eas:0.27 },
@@ -152,11 +152,11 @@ OmicsLab.PGx = (function () {
     const W = 120, H = 36, barH = 9, gap = 3;
     const labels = ['AFR','EUR','EAS'];
     const vals   = [afr, eur, eas];
-    const cols   = [color, '#8b949e', '#58a6ff'];
+    const cols   = [color, '#A8A098', '#58a6ff'];
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
       ${vals.map((v, i) => `
         <rect x="26" y="${i*(barH+gap)}" width="${v*80}" height="${barH}" rx="2" fill="${cols[i]}" opacity="0.85"/>
-        <text x="24" y="${i*(barH+gap)+barH-1}" font-size="6.5" fill="#8b949e" text-anchor="end" font-family="monospace">${labels[i]}</text>
+        <text x="24" y="${i*(barH+gap)+barH-1}" font-size="6.5" fill="#A8A098" text-anchor="end" font-family="monospace">${labels[i]}</text>
         <text x="${26+v*80+3}" y="${i*(barH+gap)+barH-1}" font-size="6.5" fill="${cols[i]}" font-family="monospace">${(v*100).toFixed(0)}%</text>
       `).join('')}
     </svg>`;
@@ -194,18 +194,18 @@ OmicsLab.PGx = (function () {
     const alleleRows = g.alleles.map(a => `
       <tr>
         <td><b style="color:${g.color}">${a.name}</b></td>
-        <td style="color:#c9d1d9">${a.function}</td>
+        <td style="color:#A8A098">${a.function}</td>
         <td>${_freqBar(a.raf_afr, a.raf_eur, a.raf_eas, g.color)}</td>
       </tr>
     `).join('');
 
     const drugRows = g.drugs.map(d => {
-      const catColors = { HIV:'#f97316', TB:'#e3b341', Malaria:'#58a6ff', Pain:'#bc8cff', Cancer:'#ff6b6b', Transplant:'#3fb950', Cardiovascular:'#58a6ff', Oncology:'#ff6b6b', Psychiatry:'#a371f7', Respiratory:'#3fb950', Diabetes:'#e3b341', Leprosy:'#8b949e' };
-      const catCol = catColors[d.category] || '#8b949e';
+      const catColors = { HIV:'#f97316', TB:'#e3b341', Malaria:'#58a6ff', Pain:'#bc8cff', Cancer:'#ff6b6b', Transplant:'#00C4A0', Cardiovascular:'#58a6ff', Oncology:'#ff6b6b', Psychiatry:'#a371f7', Respiratory:'#00C4A0', Diabetes:'#e3b341', Leprosy:'#A8A098' };
+      const catCol = catColors[d.category] || '#A8A098';
       return `<tr>
-        <td><b style="color:#c9d1d9">${d.name}</b></td>
+        <td><b style="color:#A8A098">${d.name}</b></td>
         <td><span class="pgx-cat-badge" style="background:${catCol}20;color:${catCol}">${d.category}</span></td>
-        <td style="font-size:0.77rem;color:#8b949e">${d.recommendation}</td>
+        <td style="font-size:0.77rem;color:#A8A098">${d.recommendation}</td>
         <td><span class="pgx-level" style="color:${d.level.startsWith('CPIC A') || d.level.startsWith('FDA') || d.level.startsWith('WHO') ? '#f85149' : '#e3b341'}">${d.level}</span></td>
       </tr>`;
     }).join('');
@@ -261,7 +261,7 @@ OmicsLab.PGx = (function () {
     ).join('');
 
     const summaryCards = [
-      { stat:'73%', label:'of Africans express CYP3A5', note:'2× higher tacrolimus dose needed', color:'#3fb950' },
+      { stat:'73%', label:'of Africans express CYP3A5', note:'2× higher tacrolimus dose needed', color:'#00C4A0' },
       { stat:'30%', label:'carry CYP2B6*6 (EFV toxicity)', note:'5× higher efavirenz plasma levels', color:'#f97316' },
       { stat:'15%', label:'G6PD A− deficiency (Sub-Saharan)', note:'Primaquine contraindicated', color:'#58a6ff' },
       { stat:'50%', label:'NAT2 slow acetylators', note:'INH peripheral neuropathy risk', color:'#e3b341' },

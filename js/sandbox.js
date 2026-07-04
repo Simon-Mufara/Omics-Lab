@@ -10,9 +10,9 @@ OmicsLab.Sandbox = (function() {
   const TOOLS = [
     { id:'fastqc',    label:'FastQC',          cat:'QC',          input:'FASTQ',   output:'HTML/QC',     color:'#58a6ff', desc:'Per-base quality, adapter content, GC distribution' },
     { id:'trimmomatic',label:'Trimmomatic',    cat:'QC',          input:'FASTQ',   output:'FASTQ(trim)', color:'#58a6ff', desc:'Adapter removal and quality trimming of paired-end reads' },
-    { id:'bwamem2',   label:'BWA-MEM2',        cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#3fb950', desc:'Short-read DNA alignment to reference genome' },
-    { id:'star',      label:'STAR',            cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#3fb950', desc:'RNA-seq splice-aware alignment; generates junction files' },
-    { id:'hisat2',    label:'HISAT2',          cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#3fb950', desc:'Fast splice-aware RNA-seq alignment with graph-based index' },
+    { id:'bwamem2',   label:'BWA-MEM2',        cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#00C4A0', desc:'Short-read DNA alignment to reference genome' },
+    { id:'star',      label:'STAR',            cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#00C4A0', desc:'RNA-seq splice-aware alignment; generates junction files' },
+    { id:'hisat2',    label:'HISAT2',          cat:'Alignment',   input:'FASTQ',   output:'BAM',         color:'#00C4A0', desc:'Fast splice-aware RNA-seq alignment with graph-based index' },
     { id:'samtools',  label:'SAMtools',        cat:'Processing',  input:'BAM',     output:'BAM(sort)',   color:'#e3b341', desc:'Sort, index, filter, and convert SAM/BAM/CRAM files' },
     { id:'picard',    label:'Picard MarkDups', cat:'Processing',  input:'BAM(sort)',output:'BAM(dedup)',  color:'#e3b341', desc:'Mark or remove PCR duplicates; collect library metrics' },
     { id:'gatk',      label:'GATK HaplotypeCaller',cat:'Variant', input:'BAM(dedup)',output:'GVCF',      color:'#a371f7', desc:'Germline SNP/indel calling with local re-assembly' },
@@ -22,16 +22,16 @@ OmicsLab.Sandbox = (function() {
     { id:'featurecounts',label:'featureCounts',cat:'Counting',    input:'BAM',     output:'Count matrix',color:'#e3b341', desc:'Count reads per gene from aligned BAM using GTF annotation' },
     { id:'deseq2',    label:'DESeq2',          cat:'DE Analysis', input:'Count matrix',output:'DE results',color:'#ff7b72',desc:'Negative binomial model for differential gene expression' },
     { id:'macs3',     label:'MACS3',           cat:'Peak Calling',input:'BAM',     output:'BED(peaks)', color:'#a371f7', desc:'Peak calling for ChIP-seq and ATAC-seq enriched regions' },
-    { id:'dada2',     label:'DADA2',           cat:'Metagenomics',input:'FASTQ',   output:'ASV table',  color:'#3fb950', desc:'Amplicon error correction and ASV generation for 16S data' },
-    { id:'kraken2',   label:'Kraken2',         cat:'Metagenomics',input:'FASTQ',   output:'Classification',color:'#3fb950',desc:'Taxonomic classification of shotgun metagenomic reads' },
+    { id:'dada2',     label:'DADA2',           cat:'Metagenomics',input:'FASTQ',   output:'ASV table',  color:'#00C4A0', desc:'Amplicon error correction and ASV generation for 16S data' },
+    { id:'kraken2',   label:'Kraken2',         cat:'Metagenomics',input:'FASTQ',   output:'Classification',color:'#00C4A0',desc:'Taxonomic classification of shotgun metagenomic reads' },
     { id:'nextclade', label:'Nextclade',       cat:'Virology',    input:'FASTA',   output:'Clade calls', color:'#58a6ff', desc:'Clade assignment and mutation calling for viral genomes' },
     { id:'medaka',    label:'Medaka',          cat:'Virology',    input:'FASTQ(ont)',output:'VCF',       color:'#58a6ff', desc:'Oxford Nanopore variant calling pipeline' },
   ];
 
   const CAT_COLORS = {
-    'QC':'#58a6ff','Alignment':'#3fb950','Processing':'#e3b341',
+    'QC':'#58a6ff','Alignment':'#00C4A0','Processing':'#e3b341',
     'Variant':'#a371f7','Annotation':'#ff7b72','Counting':'#e3b341',
-    'DE Analysis':'#ff7b72','Peak Calling':'#a371f7','Metagenomics':'#3fb950','Virology':'#58a6ff'
+    'DE Analysis':'#ff7b72','Peak Calling':'#a371f7','Metagenomics':'#00C4A0','Virology':'#58a6ff'
   };
 
   let _nodes = [];    /* { id, toolId, x, y, label, input, output, color } */
@@ -242,7 +242,7 @@ OmicsLab.Sandbox = (function() {
       const path = document.createElementNS('http://www.w3.org/2000/svg','path');
       path.setAttribute('d',`M${x1},${y1} C${cx1},${y1} ${cx2},${y2} ${x2},${y2}`);
       path.setAttribute('fill','none');
-      path.setAttribute('stroke', fromNode.color || '#3fb950');
+      path.setAttribute('stroke', fromNode.color || '#00C4A0');
       path.setAttribute('stroke-width','2');
       path.setAttribute('marker-end','url(#arrow)');
 
@@ -258,7 +258,7 @@ OmicsLab.Sandbox = (function() {
         marker.setAttribute('orient','auto');
         const arrowPath = document.createElementNS('http://www.w3.org/2000/svg','path');
         arrowPath.setAttribute('d','M0,0 L0,6 L9,3 z');
-        arrowPath.setAttribute('fill','#3fb950');
+        arrowPath.setAttribute('fill','#00C4A0');
         marker.appendChild(arrowPath);
         defs.appendChild(marker);
         svg.appendChild(defs);

@@ -309,7 +309,7 @@ OmicsLab.HPCTraining = (function () {
       <div class="hpc-concept-grid">${cards}</div>
       <div class="hpc-form-card" style="max-width:780px;margin-top:1.5rem">
         <h3>Common squeue Output Fields</h3>
-        <pre style="font-size:0.78rem;line-height:1.7;color:#e6edf3;overflow-x:auto">JOBID   PARTITION     NAME       USER  ST   TIME  NODES  NODELIST(REASON)
+        <pre style="font-size:0.78rem;line-height:1.7;color:#E4DDD2;overflow-x:auto">JOBID   PARTITION     NAME       USER  ST   TIME  NODES  NODELIST(REASON)
 10043   standard  omics_wgs   alice   R  0:04:13   1  compute-03
 10044   highmem   gatk_gvcf    bob  PD   0:00:00   1  (Priority)
 10045   standard  multiqc_qc  carol   R  0:01:05   1  compute-07

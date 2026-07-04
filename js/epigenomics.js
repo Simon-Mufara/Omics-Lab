@@ -6,12 +6,12 @@ window.OmicsLab = window.OmicsLab || {};
 OmicsLab.Epigenomics = (function () {
 
   const HISTONE_MARKS = [
-    { mark:'H3K4me3',  type:'Active Promoter',            color:'#3fb950', assoc:'RNA Pol II binding · TSS enrichment · high CpG density promoters', example:'BRCA1 promoter · HBB locus · rRNA genes' },
+    { mark:'H3K4me3',  type:'Active Promoter',            color:'#00C4A0', assoc:'RNA Pol II binding · TSS enrichment · high CpG density promoters', example:'BRCA1 promoter · HBB locus · rRNA genes' },
     { mark:'H3K4me1',  type:'Enhancer',                   color:'#e3b341', assoc:'Distal regulatory elements · poised or active enhancers · p300 co-factor binding', example:'Super-enhancers in T-cells · malaria invasion gene enhancers' },
     { mark:'H3K27ac',  type:'Active Enhancer',            color:'#58a6ff', assoc:'Active transcription · open chromatin · marks active over poised enhancers', example:'Active erythroid enhancers controlling HBB/HBG locus' },
     { mark:'H3K36me3', type:'Gene Body',                  color:'#bc8cff', assoc:'Transcribed gene bodies · splicing regulation · SETD2 writer · active elongation', example:'Highly expressed housekeeping genes · CYP2D6 in liver' },
     { mark:'H3K27me3', type:'Polycomb Repression',        color:'#f85149', assoc:'Gene silencing · developmental repression · PRC2 complex · bivalent in stem cells', example:'HOX genes in non-expressing tissues · tumour suppressor silencing' },
-    { mark:'H3K9me3',  type:'Constitutive Heterochromatin',color:'#8b949e',assoc:'Centromeres · telomeres · silenced transposons · HP1 protein binding', example:'Pericentromeric repeats · silenced transposable elements' },
+    { mark:'H3K9me3',  type:'Constitutive Heterochromatin',color:'#A8A098',assoc:'Centromeres · telomeres · silenced transposons · HP1 protein binding', example:'Pericentromeric repeats · silenced transposable elements' },
     { mark:'H3K9ac',   type:'Active Gene',                color:'#f97316', assoc:'Rapid gene activation · signal-responsive genes · early response loci', example:'Immune response genes in macrophages · IFN-stimulated genes' },
     { mark:'H3K4me2',  type:'Poised Enhancer',            color:'#79c0ff', assoc:'Primed but inactive enhancers · bivalent with H3K27me3 in pluripotent stem cells', example:'Developmental lineage enhancers in iPSCs and ES cells' },
   ];
@@ -68,7 +68,7 @@ OmicsLab.Epigenomics = (function () {
 
   function _buildMethPanel() {
     const bars = METH_CONTEXTS.map(c => {
-      const col = c.pct > 20 ? '#3fb950' : c.pct > 4 ? '#e3b341' : '#58a6ff';
+      const col = c.pct > 20 ? '#00C4A0' : c.pct > 4 ? '#e3b341' : '#58a6ff';
       return `<div class="epi-meth-row">
         <div class="epi-meth-ctx">${c.ctx}</div>
         <div class="epi-meth-bar-wrap"><div class="epi-meth-bar" style="width:${Math.min(100,c.pct*1.3)}%;background:${col}"></div></div>
@@ -139,13 +139,13 @@ OmicsLab.Epigenomics = (function () {
 
     const atacSvg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%;display:block" aria-label="ATAC-seq simulated peak track">
       <defs><linearGradient id="eg-atac" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#58a6ff" stop-opacity=".55"/><stop offset="100%" stop-color="#58a6ff" stop-opacity=".04"/></linearGradient></defs>
-      <line x1="0" y1="${H-22}" x2="${W}" y2="${H-22}" stroke="#21262d" stroke-width="1"/>
+      <line x1="0" y1="${H-22}" x2="${W}" y2="${H-22}" stroke="#182236" stroke-width="1"/>
       <path d="${fill}" fill="url(#eg-atac)"/>
       <path d="${path}" fill="none" stroke="#58a6ff" stroke-width="1.6"/>
       <text x="170" y="11" text-anchor="middle" fill="#58a6ff" font-size="9" font-family="monospace">NFR</text>
       <line x1="170" y1="14" x2="170" y2="42" stroke="#58a6ff" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="108" y="${H-6}" text-anchor="middle" fill="#6e7681" font-size="8" font-family="monospace">−1 nuc</text>
-      <text x="232" y="${H-6}" text-anchor="middle" fill="#6e7681" font-size="8" font-family="monospace">+1 nuc</text>
+      <text x="108" y="${H-6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">−1 nuc</text>
+      <text x="232" y="${H-6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">+1 nuc</text>
     </svg>`;
 
     return `

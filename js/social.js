@@ -173,7 +173,7 @@ OmicsLab.Social = (function () {
   function _renderSignInPrompt() {
     return `
     <div class="soc-signin-prompt">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <div class="soc-signin-msg">Sign in to connect with other OmicsLab researchers</div>
       <button class="soc-btn-primary" onclick="OmicsLab.Auth.openModal('signin')">Sign in or create account</button>
     </div>`;
@@ -345,7 +345,7 @@ OmicsLab.Social = (function () {
       </div>
       <div class="soc-profile-preview">
         <div class="soc-section-title" style="margin-bottom:.75rem">Your public profile</div>
-        <div class="soc-friend-row" style="background:#161b22;border-radius:8px;padding:.75rem">
+        <div class="soc-friend-row" style="background:#111B2E;border-radius:8px;padding:.75rem">
           <div class="soc-user-avatar">${_initials(u.name)}</div>
           <div class="soc-friend-info">
             <div class="soc-friend-name">${_esc(u.name)}</div>

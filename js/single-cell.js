@@ -12,7 +12,7 @@ OmicsLab.SingleCell = (function () {
       description: 'Peripheral blood mononuclear cells from Kenyan children with severe malaria (n=12) vs healthy controls (n=10). Identifies expanded erythrocyte progenitors and suppressed T-cell subsets.',
       cells: 565, genes: 18420, accession: 'GSE149161',
       clusters: [
-        { id: 0, name: 'CD4+ T', color: '#3fb950', cx: -5.5, cy: 2.8, n: 115, markers: ['CD3D','CD4','IL7R','TCF7','MAL'], biology: 'Helper T cells — coordinate adaptive immunity. Reduced in severe malaria due to T-cell exhaustion.' },
+        { id: 0, name: 'CD4+ T', color: '#00C4A0', cx: -5.5, cy: 2.8, n: 115, markers: ['CD3D','CD4','IL7R','TCF7','MAL'], biology: 'Helper T cells — coordinate adaptive immunity. Reduced in severe malaria due to T-cell exhaustion.' },
         { id: 1, name: 'CD8+ T', color: '#58a6ff', cx: -2.8, cy: 5.2, n: 78, markers: ['CD3D','CD8A','GZMB','PRF1','NKG7'], biology: 'Cytotoxic T cells — kill infected erythrocytes. GZMB+ subset expanded in acute malaria.' },
         { id: 2, name: 'NK cell', color: '#f97316', cx: 0.8, cy: 6.8, n: 55, markers: ['NCAM1','GNLY','NKG7','FCGR3A','KLRD1'], biology: 'Natural killer cells — rapid response to P. falciparum-infected erythrocytes. Elevated activation markers.' },
         { id: 3, name: 'B cell', color: '#bc8cff', cx: 4.8, cy: 3.6, n: 62, markers: ['CD79A','MS4A1','CD19','IGHM','IGHG1'], biology: 'B cells — produce malaria-specific antibodies. IGHG1+ plasma blasts increased in infection.' },
@@ -29,7 +29,7 @@ OmicsLab.SingleCell = (function () {
       cells: 482, genes: 16340, accession: 'GSE158055',
       clusters: [
         { id: 0, name: 'CD4+ T (exhausted)', color: '#58a6ff', cx: -4.8, cy: 3.2, n: 95, markers: ['CD3D','CD4','PDCD1','LAG3','HAVCR2'], biology: 'Exhausted CD4+ T cells — upregulate checkpoint molecules PD-1 (PDCD1), LAG-3, and TIM-3 in chronic TB.' },
-        { id: 1, name: 'CD8+ T (effector)', color: '#3fb950', cx: -2.2, cy: 5.5, n: 68, markers: ['CD3D','CD8A','GZMB','IFNG','TNF'], biology: 'Effector CD8+ T cells — GZMB+/IFNG+ cytotoxic activity targets Mtb-infected macrophages.' },
+        { id: 1, name: 'CD8+ T (effector)', color: '#00C4A0', cx: -2.2, cy: 5.5, n: 68, markers: ['CD3D','CD8A','GZMB','IFNG','TNF'], biology: 'Effector CD8+ T cells — GZMB+/IFNG+ cytotoxic activity targets Mtb-infected macrophages.' },
         { id: 2, name: 'Alveolar Macro', color: '#f97316', cx: 5.2, cy: 2.0, n: 88, markers: ['MRC1','CD163','APOE','MARCO','TREM2'], biology: 'Anti-inflammatory alveolar macrophages — TREM2+ subset accumulates in granulomas and supports Mtb persistence.' },
         { id: 3, name: 'Interstitial Macro', color: '#f85149', cx: 7.0, cy: -1.2, n: 72, markers: ['CD14','S100A8','FCN1','GBP5','BATF2'], biology: 'Pro-inflammatory macrophages — GBP5 and BATF2 are leading TB blood signatures used for diagnosis.' },
         { id: 4, name: 'B cell', color: '#bc8cff', cx: 3.5, cy: 5.5, n: 48, markers: ['CD79A','MS4A1','IGHM','JCHAIN','XBP1'], biology: 'B cell aggregates form tertiary lymphoid structures (TLS) at TB granuloma periphery.' },
@@ -68,7 +68,7 @@ OmicsLab.SingleCell = (function () {
     const ys = y => pad + (1 - (y - minY) / (maxY - minY)) * (H - 2*pad);
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
 
     cells.forEach(c => {
       const cl = study.clusters[c.cluster];
@@ -79,11 +79,11 @@ OmicsLab.SingleCell = (function () {
 
     /* Cluster labels */
     study.clusters.forEach(cl => {
-      svg += `<text x="${xs(cl.cx)}" y="${ys(cl.cy)-8}" text-anchor="middle" fill="#c9d1d9" font-size="8.5" font-weight="600" font-family="Inter,sans-serif" opacity="0.9">${cl.name}</text>`;
+      svg += `<text x="${xs(cl.cx)}" y="${ys(cl.cy)-8}" text-anchor="middle" fill="#A8A098" font-size="8.5" font-weight="600" font-family="Inter,sans-serif" opacity="0.9">${cl.name}</text>`;
     });
 
-    svg += `<text x="4" y="${H-4}" fill="#6e7681" font-size="9" font-family="Inter,sans-serif">UMAP 1</text>`;
-    svg += `<text x="4" y="14" fill="#6e7681" font-size="9" font-family="Inter,sans-serif" transform="rotate(-90 10 ${H/2}) translate(0 0)">UMAP 2</text>`;
+    svg += `<text x="4" y="${H-4}" fill="#6E6860" font-size="9" font-family="Inter,sans-serif">UMAP 1</text>`;
+    svg += `<text x="4" y="14" fill="#6E6860" font-size="9" font-family="Inter,sans-serif" transform="rotate(-90 10 ${H/2}) translate(0 0)">UMAP 2</text>`;
     svg += '</svg>';
     return svg;
   }
@@ -96,11 +96,11 @@ OmicsLab.SingleCell = (function () {
     const colW = allMarkers.length > 0 ? (W - ml - mr) / allMarkers.length : COL;
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
 
     allMarkers.forEach((gene, gi) => {
       const x = ml + gi * colW + colW / 2;
-      svg += `<text x="${x}" y="${mt-8}" text-anchor="middle" fill="#8b949e" font-size="9" font-family="monospace">${gene}</text>`;
+      svg += `<text x="${x}" y="${mt-8}" text-anchor="middle" fill="#A8A098" font-size="9" font-family="monospace">${gene}</text>`;
     });
 
     cl.forEach((c, ci) => {
@@ -117,7 +117,7 @@ OmicsLab.SingleCell = (function () {
       });
     });
 
-    svg += `<text x="${W/2}" y="${H-6}" text-anchor="middle" fill="#6e7681" font-size="9" font-family="Inter,sans-serif">Marker Genes — dot size = % expressing, opacity = mean expression</text>`;
+    svg += `<text x="${W/2}" y="${H-6}" text-anchor="middle" fill="#6E6860" font-size="9" font-family="Inter,sans-serif">Marker Genes — dot size = % expressing, opacity = mean expression</text>`;
     svg += '</svg>';
     return svg;
   }

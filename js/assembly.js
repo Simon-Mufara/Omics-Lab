@@ -52,12 +52,12 @@ OmicsLab.Assembly = (function () {
     const labels = ['N10','N20','N30','N40','N50','N60','N70','N80','N90','N99'];
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
 
     [0.25, 0.5, 0.75, 1.0].forEach(f => {
       const y = ys(data[0] * f);
-      svg += `<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#21262d" stroke-width="1"/>`;
-      svg += `<text x="${ml-4}" y="${y+4}" text-anchor="end" fill="#6e7681" font-size="8" font-family="monospace">${_fmtBp(Math.round(data[0]*f))}</text>`;
+      svg += `<line x1="${ml}" y1="${y}" x2="${W-mr}" y2="${y}" stroke="#182236" stroke-width="1"/>`;
+      svg += `<text x="${ml-4}" y="${y+4}" text-anchor="end" fill="#6E6860" font-size="8" font-family="monospace">${_fmtBp(Math.round(data[0]*f))}</text>`;
     });
 
     const path = data.map((v, i) => `${i===0?'M':'L'} ${xs(i)} ${ys(v)}`).join(' ');
@@ -72,11 +72,11 @@ OmicsLab.Assembly = (function () {
     svg += `<text x="${n50x+3}" y="${mt+14}" fill="#e3b341" font-size="8.5">N50=${_fmtBp(data[n50idx])}</text>`;
 
     labels.forEach((l, i) => {
-      svg += `<text x="${xs(i)}" y="${mt+ph+14}" text-anchor="middle" fill="#6e7681" font-size="8" font-family="monospace">${l}</text>`;
+      svg += `<text x="${xs(i)}" y="${mt+ph+14}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">${l}</text>`;
     });
 
-    svg += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6e7681" font-size="9">Assembly percentage</text>`;
-    svg += `<text x="10" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="9" transform="rotate(-90 10 ${mt+ph/2})">Contig length</text>`;
+    svg += `<text x="${ml+pw/2}" y="${H-4}" text-anchor="middle" fill="#6E6860" font-size="9">Assembly percentage</text>`;
+    svg += `<text x="10" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="9" transform="rotate(-90 10 ${mt+ph/2})">Contig length</text>`;
     svg += '</svg>';
     return svg;
   }
@@ -91,18 +91,18 @@ OmicsLab.Assembly = (function () {
     const ys = v => mt + ph - (v / mx) * ph;
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">`;
-    svg += `<rect width="${W}" height="${H}" fill="#0d1117"/>`;
+    svg += `<rect width="${W}" height="${H}" fill="#0D1524"/>`;
 
     data.forEach((v, i) => {
       if (v === 0) return;
       const x = ml + i * barW;
-      svg += `<rect x="${x+2}" y="${ys(v)}" width="${barW-4}" height="${mt+ph-ys(v)}" fill="#3fb950" opacity="0.7" rx="2"/>`;
-      if (v > 0) svg += `<text x="${x+barW/2}" y="${ys(v)-4}" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="600">${v}</text>`;
-      svg += `<text x="${x+barW/2}" y="${mt+ph+16}" text-anchor="middle" fill="#6e7681" font-size="7.5" transform="rotate(-35 ${x+barW/2} ${mt+ph+16})">${bins[i]}</text>`;
+      svg += `<rect x="${x+2}" y="${ys(v)}" width="${barW-4}" height="${mt+ph-ys(v)}" fill="#00C4A0" opacity="0.7" rx="2"/>`;
+      if (v > 0) svg += `<text x="${x+barW/2}" y="${ys(v)-4}" text-anchor="middle" fill="#00C4A0" font-size="9" font-weight="600">${v}</text>`;
+      svg += `<text x="${x+barW/2}" y="${mt+ph+16}" text-anchor="middle" fill="#6E6860" font-size="7.5" transform="rotate(-35 ${x+barW/2} ${mt+ph+16})">${bins[i]}</text>`;
     });
 
-    svg += `<text x="${ml+pw/2}" y="${H-2}" text-anchor="middle" fill="#6e7681" font-size="9">Contig Size</text>`;
-    svg += `<text x="8" y="${mt+ph/2}" text-anchor="middle" fill="#6e7681" font-size="9" transform="rotate(-90 8 ${mt+ph/2})">Count</text>`;
+    svg += `<text x="${ml+pw/2}" y="${H-2}" text-anchor="middle" fill="#6E6860" font-size="9">Contig Size</text>`;
+    svg += `<text x="8" y="${mt+ph/2}" text-anchor="middle" fill="#6E6860" font-size="9" transform="rotate(-90 8 ${mt+ph/2})">Count</text>`;
     svg += '</svg>';
     return svg;
   }

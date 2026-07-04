@@ -16,14 +16,14 @@ OmicsLab.LabNotebook = (function () {
 
   const ENTRY_TYPES = [
     { value:'experiment', label:'Experiment', color:'#58a6ff' },
-    { value:'analysis', label:'Analysis', color:'#3fb950' },
+    { value:'analysis', label:'Analysis', color:'#00C4A0' },
     { value:'result', label:'Result', color:'#e3b341' },
     { value:'protocol', label:'Protocol', color:'#bc8cff' },
     { value:'meeting', label:'Meeting', color:'#f97316' },
     { value:'idea', label:'Idea', color:'#79c0ff' },
   ];
 
-  function _typeColor(type) { return ENTRY_TYPES.find(t => t.value === type)?.color || '#8b949e'; }
+  function _typeColor(type) { return ENTRY_TYPES.find(t => t.value === type)?.color || '#A8A098'; }
 
   function _renderList(q = '', tag = '', type = '') {
     const entries = _getEntries().filter(e => {
@@ -199,7 +199,7 @@ OmicsLab.LabNotebook = (function () {
         <div class="ln-header">
           <div class="ln-header-left">
             <div class="ln-header-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               Digital Lab Notebook
             </div>
             <div class="ln-header-sub">Structured notes for experiments, analyses, results — stored offline in your browser</div>

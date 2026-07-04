@@ -17,7 +17,7 @@ OmicsLab.NetworkHub = (function () {
       pi:'Prof. Neil Hanchard / Secretariat Nairobi',
       tools:['PLINK2','GATK4','REGENIE','R/Bioconductor'],
       highlight:'The Human Heredity and Health in Africa consortium — largest coordinated genomics initiative on the continent. Covers sickle cell, TB, HIV, cancer, stroke, diabetes.',
-      color:'#3fb950',
+      color:'#00C4A0',
       website:'h3africa.org'
     },
     {
@@ -214,7 +214,7 @@ OmicsLab.NetworkHub = (function () {
     {
       name:'H3Africa Biorepository', type:'Biobank',
       desc:'Centralised biobank for H3Africa samples — 250,000+ biospecimens from 30 countries stored at -80°C. Governed by H3Africa ethics framework.',
-      link:'h3africa.org/resources/biorepository', color:'#3fb950'
+      link:'h3africa.org/resources/biorepository', color:'#00C4A0'
     },
     {
       name:'Africa PGI Sequencing Network', type:'Surveillance',
@@ -408,7 +408,7 @@ OmicsLab.NetworkHub = (function () {
               { name:'EMBL-EBI African Fellowship',   url:'ebi.ac.uk/training',      desc:'Annual research fellowships for African bioinformaticians at Hinxton', color:'#4a90e2' },
               { name:'Wellcome Genome Campus Africa', url:'wellcomeconnectingscience.org', desc:'Genomics and bioinformatics courses held in Africa', color:'#e3b341' },
               { name:'ASBCB Bioinformatics',          url:'asbcb.org',               desc:'African Society for Bioinformatics and Computational Biology', color:'#f97316' },
-              { name:'Galaxy Training Network',       url:'training.galaxyproject.org', desc:'Free Galaxy tutorials in genomics, proteomics, metabolomics', color:'#3fb950' },
+              { name:'Galaxy Training Network',       url:'training.galaxyproject.org', desc:'Free Galaxy tutorials in genomics, proteomics, metabolomics', color:'#00C4A0' },
             ].map(t => `
               <div class="nh-training-card" style="border-left-color:${t.color}">
                 <div class="nh-training-name" style="color:${t.color}">${t.name}</div>

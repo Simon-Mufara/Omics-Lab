@@ -9,13 +9,13 @@
   align-items: flex-start;
   gap: 1rem;
   padding: 1.25rem;
-  background: linear-gradient(135deg, rgba(63,185,80,.07), rgba(249,115,22,.05));
-  border: 1px solid var(--border, #30363d);
+  background: linear-gradient(135deg, rgba(0,196,160,.07), rgba(249,115,22,.05));
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
 }
-.oh-hero-icon  { color: var(--accent, #3fb950); flex-shrink: 0; }
-.oh-hero-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary, #e6edf3); margin: 0 0 .3rem; }
-.oh-hero-sub   { font-size: .78rem; color: var(--text-secondary, #8b949e); margin: 0; line-height: 1.55; }
+.oh-hero-icon  { color: var(--accent, #00C4A0); flex-shrink: 0; }
+.oh-hero-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary, #E4DDD2); margin: 0 0 .3rem; }
+.oh-hero-sub   { font-size: .78rem; color: var(--text-secondary, #A8A098); margin: 0; line-height: 1.55; }
 
 .oh-panel-title {
   display: flex;
@@ -23,7 +23,7 @@
   gap: .5rem;
   font-size: .88rem;
   font-weight: 700;
-  color: var(--text-primary, #e6edf3);
+  color: var(--text-primary, #E4DDD2);
   margin: 0 0 .75rem;
 }
 
@@ -37,12 +37,12 @@
 
 /* ── Diagram ── */
 .oh-diagram-wrap {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   padding: 1.1rem;
 }
-.oh-diagram-sub { font-size: .72rem; color: var(--text-muted, #8b949e); margin-bottom: .75rem; }
+.oh-diagram-sub { font-size: .72rem; color: var(--text-muted, #A8A098); margin-bottom: .75rem; }
 .oh-svg { width: 100%; height: auto; display: block; }
 .oh-node { transition: r .15s; }
 .oh-node:hover { filter: brightness(1.4); }
@@ -52,15 +52,15 @@
   margin-top: .75rem;
   flex-wrap: wrap;
   font-size: .7rem;
-  color: var(--text-muted, #8b949e);
+  color: var(--text-muted, #A8A098);
 }
 .oh-leg        { display: flex; align-items: center; gap: .4rem; }
 .oh-leg-dot    { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 /* ── Disease list ── */
 .oh-list-wrap {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   padding: 1rem;
   display: flex;
@@ -71,12 +71,12 @@
 }
 .oh-filters { display: flex; flex-direction: column; gap: .4rem; }
 .oh-select {
-  background: var(--surface-alt, #0d1117);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface-alt, #0D1524);
+  border: 1px solid var(--border, #243048);
   border-radius: .4rem;
   padding: .3rem .6rem;
   font-size: .75rem;
-  color: var(--text-primary, #e6edf3);
+  color: var(--text-primary, #E4DDD2);
   width: 100%;
 }
 .oh-disease-list {
@@ -87,7 +87,7 @@
   flex: 1;
 }
 .oh-disease-list::-webkit-scrollbar { width: 4px; }
-.oh-disease-list::-webkit-scrollbar-thumb { background: var(--border, #30363d); border-radius: 2px; }
+.oh-disease-list::-webkit-scrollbar-thumb { background: var(--border, #243048); border-radius: 2px; }
 
 .oh-disease-item {
   display: flex;
@@ -100,25 +100,25 @@
   border: 1px solid transparent;
 }
 .oh-disease-item:hover { background: rgba(255,255,255,.04); }
-.oh-disease-active { background: rgba(63,185,80,.06); border-color: rgba(63,185,80,.2); }
+.oh-disease-active { background: rgba(0,196,160,.06); border-color: rgba(0,196,160,.2); }
 .oh-disease-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .oh-disease-info { flex: 1; min-width: 0; }
-.oh-disease-name { font-size: .78rem; font-weight: 500; color: var(--text-primary, #e6edf3); }
-.oh-disease-meta { font-size: .65rem; color: var(--text-muted, #8b949e); margin-top: .1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.oh-disease-name { font-size: .78rem; font-weight: 500; color: var(--text-primary, #E4DDD2); }
+.oh-disease-meta { font-size: .65rem; color: var(--text-muted, #A8A098); margin-top: .1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .oh-risk-pill    { font-size: .68rem; font-weight: 700; padding: .1rem .35rem; border-radius: 99px; flex-shrink: 0; }
-.oh-no-results   { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-muted, #8b949e); padding: 1rem; }
+.oh-no-results   { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-muted, #A8A098); padding: 1rem; }
 
 /* ── Risk Radar ── */
 .oh-risk-section {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   padding: 1.1rem;
 }
 .oh-risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: .75rem; }
 .oh-risk-card {
-  background: var(--surface-alt, #0d1117);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface-alt, #0D1524);
+  border: 1px solid var(--border, #243048);
   border-radius: .5rem;
   padding: .75rem;
   display: flex;
@@ -126,24 +126,24 @@
   gap: .4rem;
 }
 .oh-risk-header { display: flex; align-items: center; justify-content: space-between; }
-.oh-risk-region { font-size: .78rem; font-weight: 600; color: var(--text-primary, #e6edf3); }
+.oh-risk-region { font-size: .78rem; font-weight: 600; color: var(--text-primary, #E4DDD2); }
 .oh-risk-score  { font-size: .85rem; font-weight: 800; }
-.oh-risk-bar-track { height: 5px; background: var(--border, #30363d); border-radius: 3px; overflow: hidden; }
+.oh-risk-bar-track { height: 5px; background: var(--border, #243048); border-radius: 3px; overflow: hidden; }
 .oh-risk-bar-fill  { height: 100%; border-radius: 3px; transition: width .5s ease; }
 .oh-risk-diseases  { display: flex; flex-wrap: wrap; gap: .25rem; }
 .oh-risk-tag       { font-size: .6rem; font-weight: 600; padding: .1rem .35rem; border-radius: 99px; }
 
 /* ── Environmental Drivers ── */
 .oh-env-section {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   padding: 1.1rem;
 }
 .oh-env-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .75rem; }
 .oh-env-card {
-  background: var(--surface-alt, #0d1117);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface-alt, #0D1524);
+  border: 1px solid var(--border, #243048);
   border-radius: .5rem;
   padding: .75rem;
   cursor: pointer;
@@ -152,15 +152,15 @@
   flex-direction: column;
   gap: .4rem;
 }
-.oh-env-card:hover { border-color: var(--accent, #3fb950); }
+.oh-env-card:hover { border-color: var(--accent, #00C4A0); }
 .oh-env-dot      { width: 14px; height: 14px; border-radius: 50%; }
-.oh-env-label    { font-weight: 600; font-size: .82rem; color: var(--text-primary, #e6edf3); }
-.oh-env-diseases { font-size: .68rem; color: var(--text-muted, #8b949e); line-height: 1.5; }
+.oh-env-label    { font-weight: 600; font-size: .82rem; color: var(--text-primary, #E4DDD2); }
+.oh-env-diseases { font-size: .68rem; color: var(--text-muted, #A8A098); line-height: 1.5; }
 
 /* ── Detail panel ── */
 .oh-detail {
-  background: var(--surface, #161b22);
-  border: 1px solid var(--border, #30363d);
+  background: var(--surface, #111B2E);
+  border: 1px solid var(--border, #243048);
   border-radius: .75rem;
   padding: 1.25rem;
   position: relative;
@@ -173,19 +173,19 @@
   right: .9rem;
   background: none;
   border: none;
-  color: var(--text-muted, #8b949e);
+  color: var(--text-muted, #A8A098);
   cursor: pointer;
   display: flex;
   padding: .2rem;
 }
 .oh-det-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .85rem; }
 .oh-det-dot    { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; }
-.oh-det-name   { font-size: 1rem; font-weight: 700; color: var(--text-primary, #e6edf3); margin: 0; }
-.oh-det-meta   { font-size: .72rem; color: var(--text-muted, #8b949e); }
+.oh-det-name   { font-size: 1rem; font-weight: 700; color: var(--text-primary, #E4DDD2); margin: 0; }
+.oh-det-meta   { font-size: .72rem; color: var(--text-muted, #A8A098); }
 .oh-det-risk   { font-size: .9rem; font-weight: 800; margin-left: auto; }
 
 .oh-det-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .85rem; }
-.oh-det-block { background: var(--surface-alt, #0d1117); border-radius: .4rem; padding: .65rem; }
+.oh-det-block { background: var(--surface-alt, #0D1524); border-radius: .4rem; padding: .65rem; }
 .oh-det-block-title {
   display: flex;
   align-items: center;
@@ -194,15 +194,15 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .04em;
-  color: var(--text-muted, #8b949e);
+  color: var(--text-muted, #A8A098);
   margin-bottom: .4rem;
 }
-.oh-det-list { margin: 0; padding-left: 1.1rem; font-size: .75rem; color: var(--text-secondary, #8b949e); line-height: 1.7; }
-.oh-det-genomic { font-size: .75rem; color: var(--text-secondary, #8b949e); line-height: 1.5; font-family: 'JetBrains Mono', monospace; }
+.oh-det-list { margin: 0; padding-left: 1.1rem; font-size: .75rem; color: var(--text-secondary, #A8A098); line-height: 1.7; }
+.oh-det-genomic { font-size: .75rem; color: var(--text-secondary, #A8A098); line-height: 1.5; font-family: 'JetBrains Mono', monospace; }
 
-.oh-det-climate { display: flex; align-items: center; gap: .75rem; font-size: .75rem; color: var(--text-muted, #8b949e); margin-bottom: .85rem; }
-.oh-climate-track { flex: 1; height: 6px; background: var(--border, #30363d); border-radius: 3px; overflow: hidden; }
-.oh-climate-fill  { height: 100%; background: linear-gradient(90deg, #3fb950, #f97316); border-radius: 3px; }
+.oh-det-climate { display: flex; align-items: center; gap: .75rem; font-size: .75rem; color: var(--text-muted, #A8A098); margin-bottom: .85rem; }
+.oh-climate-track { flex: 1; height: 6px; background: var(--border, #243048); border-radius: 3px; overflow: hidden; }
+.oh-climate-fill  { height: 100%; background: linear-gradient(90deg, #00C4A0, #f97316); border-radius: 3px; }
 
 .oh-det-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
 

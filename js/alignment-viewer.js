@@ -182,10 +182,10 @@ ATGCGTACGATTTTAGCCAT">${_seqs.length ? '>' + _seqs.map(s => s.id + '\n' + s.seq)
       for (let i = 0; i < seqLen; i++) {
         const pct = _conservationPct(i);
         const ch = pct === 100 ? '*' : pct >= 80 ? ':' : pct >= 60 ? '.' : ' ';
-        const col = pct === 100 ? '#3fb950' : pct >= 80 ? '#58a6ff' : pct >= 60 ? '#e3b341' : '#333';
+        const col = pct === 100 ? '#00C4A0' : pct >= 80 ? '#58a6ff' : pct >= 60 ? '#e3b341' : '#333';
         bars += `<span class="av-cell av-cons-cell" style="color:${col};background:transparent">${ch}</span>`;
       }
-      consRow = `<div class="av-row av-cons-row"><div class="av-seq-id" style="color:#6e7681">Conservation</div><div class="av-seq">${bars}</div></div>`;
+      consRow = `<div class="av-row av-cons-row"><div class="av-seq-id" style="color:#6E6860">Conservation</div><div class="av-seq">${bars}</div></div>`;
     }
 
     return `<div class="av-grid" style="font-size:${_fontSize}px">${rulerRow}${rows}${consRow}</div>`;
@@ -225,12 +225,12 @@ ATGCGTACGATTTTAGCCAT">${_seqs.length ? '>' + _seqs.map(s => s.id + '\n' + s.seq)
 
     const rects = bars.map((b, idx) => {
       const h = (b.pct / 100) * H;
-      const fill = b.pct === 100 ? '#3fb950' : b.pct >= 80 ? '#58a6ff' : b.pct >= 60 ? '#e3b341' : '#30363d';
+      const fill = b.pct === 100 ? '#00C4A0' : b.pct >= 80 ? '#58a6ff' : b.pct >= 60 ? '#e3b341' : '#243048';
       return `<rect x="${idx * barW}" y="${H - h}" width="${barW}" height="${h}" fill="${fill}" opacity="0.85"/>`;
     }).join('');
 
     return `<div class="av-cons-chart">
-      <div class="av-cc-title">Conservation profile <span class="av-cc-legend"><span style="background:#3fb950"></span>100% <span style="background:#58a6ff"></span>≥80% <span style="background:#e3b341"></span>≥60% <span style="background:#30363d"></span>&lt;60%</span></div>
+      <div class="av-cc-title">Conservation profile <span class="av-cc-legend"><span style="background:#00C4A0"></span>100% <span style="background:#58a6ff"></span>≥80% <span style="background:#e3b341"></span>≥60% <span style="background:#243048"></span>&lt;60%</span></div>
       <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" preserveAspectRatio="none">${rects}</svg>
     </div>`;
   }

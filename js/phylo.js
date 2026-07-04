@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Interactive Phylogenetic Tree Builder (Prompt 13)
    NJ (Neighbor-Joining) + UPGMA algorithms, pure JS, SVG output.
    Newick string export. Paste FASTA or distance matrix.
@@ -298,7 +298,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
   }
 
   /* ─── Draw to SVG string ─── */
-  const PALETTE = ['#3fb950', '#58a6ff', '#bc8cff', '#f97316', '#ff6b6b', '#e3b341', '#26a69a', '#ff8a65'];
+  const PALETTE = ['#00C4A0', '#58a6ff', '#bc8cff', '#f97316', '#ff6b6b', '#e3b341', '#26a69a', '#ff8a65'];
 
   function _svgTree(root) {
     _leafIndex = 0;
@@ -345,24 +345,24 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
         /* Vertical bar connecting children */
         const ly = yOf(node.left);
         const ry = yOf(node.right);
-        lines += `<line x1="${nx}" y1="${ly}" x2="${nx}" y2="${ry}" stroke="#30363d" stroke-width="1.5"/>`;
+        lines += `<line x1="${nx}" y1="${ly}" x2="${nx}" y2="${ry}" stroke="#243048" stroke-width="1.5"/>`;
 
         /* Horizontal lines to children */
         const lx = PAD_L + xOf(node.left);
         const rx = PAD_L + xOf(node.right);
-        lines += `<line x1="${nx}" y1="${ly}" x2="${lx}" y2="${ly}" stroke="#3fb950" stroke-width="1.5"/>`;
-        lines += `<line x1="${nx}" y1="${ry}" x2="${rx}" y2="${ry}" stroke="#3fb950" stroke-width="1.5"/>`;
+        lines += `<line x1="${nx}" y1="${ly}" x2="${lx}" y2="${ly}" stroke="#00C4A0" stroke-width="1.5"/>`;
+        lines += `<line x1="${nx}" y1="${ry}" x2="${rx}" y2="${ry}" stroke="#00C4A0" stroke-width="1.5"/>`;
 
         /* Bootstrap dot */
         const bl = (node.dist || 0).toFixed(4);
-        lines += `<circle cx="${nx}" cy="${ny}" r="3" fill="#21262d" stroke="#3fb950" stroke-width="1.5"/>`;
-        lines += `<text x="${nx - 5}" y="${ny - 5}" fill="#8b949e" font-size="8" text-anchor="end">${bl}</text>`;
+        lines += `<circle cx="${nx}" cy="${ny}" r="3" fill="#182236" stroke="#00C4A0" stroke-width="1.5"/>`;
+        lines += `<text x="${nx - 5}" y="${ny - 5}" fill="#A8A098" font-size="8" text-anchor="end">${bl}</text>`;
 
         drawNode(node.left);
         drawNode(node.right);
       } else {
         /* Tip node */
-        const col = leafCol[node.name] || '#8b949e';
+        const col = leafCol[node.name] || '#A8A098';
         lines += `<circle cx="${nx}" cy="${ny}" r="4" fill="${col}" stroke="${col}" stroke-width="1"/>`;
         labels += `<text x="${nx + 8}" y="${ny + 4}" fill="${col}" font-size="11" font-family="JetBrains Mono, monospace">${node.name}</text>`;
       }
@@ -371,7 +371,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     drawNode(root);
 
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%;overflow:visible">
-      <rect width="${W}" height="${H}" fill="#0d1117" rx="8"/>
+      <rect width="${W}" height="${H}" fill="#0D1524" rx="8"/>
       ${lines}${labels}
     </svg>`;
   }
@@ -384,8 +384,8 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
       h += `<tr><td class="phylo-dist-name">${names[i].slice(0,12)}</td>`;
       for (let j = 0; j < n; j++) {
         const v = mat[i][j];
-        const heat = i === j ? '#0d1117' : `hsl(${120 - v * 600},70%,30%)`;
-        h += `<td style="background:${heat};color:#e6edf3">${i === j ? '—' : v.toFixed(4)}</td>`;
+        const heat = i === j ? '#0D1524' : `hsl(${120 - v * 600},70%,30%)`;
+        h += `<td style="background:${heat};color:#E4DDD2">${i === j ? '—' : v.toFixed(4)}</td>`;
       }
       h += '</tr>';
     }
@@ -508,7 +508,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
             <!-- Algorithm info cards -->
             <div class="phylo-info-cards">
               <div class="phylo-info-card">
-                <div class="phylo-info-name" style="color:#3fb950">Neighbor-Joining (NJ)</div>
+                <div class="phylo-info-name" style="color:#00C4A0">Neighbor-Joining (NJ)</div>
                 <div class="phylo-info-desc">Saitou & Nei 1987. Builds unrooted tree by iteratively joining the pair of taxa that minimise the total tree length. Best for variable evolutionary rates. Most widely used method in molecular epidemiology.</div>
                 <div class="phylo-info-use">Use for: outbreak tracing, SNP-based phylogenies, MLST</div>
               </div>

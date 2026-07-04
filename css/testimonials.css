@@ -15,8 +15,8 @@
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
-  background: linear-gradient(135deg, rgba(63,185,80,0.07) 0%, rgba(88,166,255,0.05) 100%);
-  border: 1px solid rgba(63,185,80,0.18);
+  background: linear-gradient(135deg, rgba(0,196,160,0.07) 0%, rgba(88,166,255,0.05) 100%);
+  border: 1px solid rgba(0,196,160,0.18);
   border-radius: 9999px;
   padding: 0.7rem 1.6rem;
   margin: 0 auto 3rem;
@@ -24,17 +24,17 @@
   max-width: 90vw;
   font-family: 'Inter', system-ui, sans-serif;
 }
-.tst-globe { display: flex; align-items: center; color: #3fb950; }
+.tst-globe { display: flex; align-items: center; color: #00C4A0; }
 .tst-used-text {
   font-size: 0.9rem;
-  color: #8b949e;
+  color: #A8A098;
   font-weight: 500;
 }
 .tst-used-count {
   font-family: 'Sora', system-ui, sans-serif;
   font-size: 1.9rem;
   font-weight: 800;
-  color: #3fb950;
+  color: #00C4A0;
   letter-spacing: -0.04em;
   line-height: 1;
   min-width: 2ch;
@@ -52,7 +52,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #484f58;
+  color: #354060;
   margin-bottom: 1.5rem;
   font-family: 'Inter', system-ui, sans-serif;
 }
@@ -111,8 +111,8 @@
 
 /* ── Individual card ────────────────────────────────────────── */
 .tst-card {
-  background: #0d1117;
-  border: 1px solid #21262d;
+  background: #0D1524;
+  border: 1px solid #182236;
   border-radius: 18px;
   padding: 1.5rem;
   display: flex;
@@ -135,7 +135,7 @@
   position: absolute;
   inset: 0;
   border-radius: 18px;
-  border: 1px solid var(--tst-color, #3fb950);
+  border: 1px solid var(--tst-color, #00C4A0);
   opacity: 0;
   transition: opacity 0.25s;
   pointer-events: none;
@@ -149,7 +149,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: var(--tst-color, #3fb950);
+  background: var(--tst-color, #00C4A0);
   border-radius: 18px 18px 0 0;
   opacity: 0.6;
 }
@@ -165,7 +165,7 @@
 .tst-quote {
   font-size: 0.88rem;
   line-height: 1.7;
-  color: #8b949e;
+  color: #A8A098;
   font-family: 'Inter', system-ui, sans-serif;
   font-style: italic;
   margin: 0;
@@ -178,7 +178,7 @@
   align-items: center;
   gap: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid #21262d;
+  border-top: 1px solid #182236;
 }
 .tst-avatar {
   width: 36px;
@@ -197,7 +197,7 @@
 .tst-name {
   font-size: 0.82rem;
   font-weight: 700;
-  color: #c9d1d9;
+  color: #A8A098;
   font-family: 'Sora', system-ui, sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -206,7 +206,7 @@
 .tst-flag { font-size: 0.85rem; }
 .tst-role {
   font-size: 0.7rem;
-  color: #6e7681;
+  color: #6E6860;
   font-family: 'Inter', system-ui, sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -214,7 +214,7 @@
 }
 .tst-inst {
   font-size: 0.67rem;
-  color: var(--tst-color, #3fb950);
+  color: var(--tst-color, #00C4A0);
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 600;
   white-space: nowrap;

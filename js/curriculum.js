@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════
    OmicsLab — Curriculum Learning Paths
    Structured tracks with progress tracking, prerequisites,
    next-lesson flow, and completion triggers for the badge system.
@@ -16,7 +16,7 @@ OmicsLab.Curriculum = (function () {
       icon: 'microscope',
       title: 'Wet-Lab Scientist',
       subtitle: 'From sample to sequencer',
-      color: '#3fb950',
+      color: '#00C4A0',
       audience: 'Lab technicians, biomedical scientists, sample handlers',
       outcome: 'Understand every bench step of an omics experiment and how to maximise data quality before sequencing.',
       badge: 'wetlab-certified',

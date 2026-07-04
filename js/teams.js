@@ -13,7 +13,7 @@ OmicsLab.Teams = (function () {
 
   /* ─── Seed rooms ─── */
   const SEED_ROOMS = [
-    { id: 'rm-genomics',   name: 'African Genomics Lab Meeting', icon: 'dna', color: '#3fb950', desc: 'Weekly WGS pipeline review and data governance updates', scheduled: 'Mondays 10:00 WAT', participants: 4, locked: false },
+    { id: 'rm-genomics',   name: 'African Genomics Lab Meeting', icon: 'dna', color: '#00C4A0', desc: 'Weekly WGS pipeline review and data governance updates', scheduled: 'Mondays 10:00 WAT', participants: 4, locked: false },
     { id: 'rm-outbreak',   name: 'Outbreak Response Coordination', icon: 'alert-triangle', color: '#ff6b6b', desc: 'Real-time outbreak genomics coordination across APSED/WHO nodes', scheduled: 'On demand', participants: 7, locked: false },
     { id: 'rm-h3africa',   name: 'H3Africa Consortium Call', icon: 'globe', color: '#f97316', desc: 'Consortium-wide biannual review — data governance, ethics, publications', scheduled: 'Biannual', participants: 12, locked: true },
     { id: 'rm-training',   name: 'Bioinformatics Training Room', icon: 'book-open', color: '#58a6ff', desc: 'Live hands-on training sessions and student office hours', scheduled: 'Thursdays 14:00 EAT', participants: 0, locked: false },
@@ -410,7 +410,7 @@ OmicsLab.Teams = (function () {
               ondragover="event.preventDefault();this.classList.add('art-drop-hover')"
               ondragleave="this.classList.remove('art-drop-hover')"
               ondrop="OmicsLab.Teams._artDrop(event)">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               <div class="art-drop-label">Click to browse or drag a file here</div>
               <div class="art-drop-sub">.txt · .md · .csv — max 2 MB · PDF: copy-paste text instead</div>
               <input type="file" id="art-file-input" accept=".txt,.md,.csv,.text" style="display:none"
@@ -434,7 +434,7 @@ OmicsLab.Teams = (function () {
         <div class="art-result-panel" id="art-result-panel">
           ${saved?.result ? saved.result : `
             <div class="art-empty-state">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
               <div class="art-empty-title">Article analysis will appear here</div>
               <div class="art-empty-sub">Paste any research article — abstract, full text, or excerpt — to get study type detection, reproducibility steps, research opportunities, and a thesis outline.</div>
             </div>`}
@@ -493,7 +493,7 @@ OmicsLab.Teams = (function () {
     if (n) n.textContent = '0';
     document.getElementById('art-result-panel').innerHTML = `
       <div class="art-empty-state">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         <div class="art-empty-title">Article analysis will appear here</div>
         <div class="art-empty-sub">Paste any research article to get started.</div>
       </div>`;
@@ -545,7 +545,7 @@ OmicsLab.Teams = (function () {
         <!-- Study type -->
         <div class="art-section">
           <div class="art-section-head">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3fb950" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             Study Type Detected
           </div>
           <div class="art-tag-row">
@@ -644,7 +644,7 @@ OmicsLab.Teams = (function () {
         <!-- Search terms -->
         <div class="art-section">
           <div class="art-section-head">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8b949e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             Suggested Search Terms
           </div>
           <div class="art-tag-row art-search-row">
@@ -937,7 +937,7 @@ OmicsLab.Teams = (function () {
         </div>
         <div class="tm-jitsi-right">
           <div class="tm-jitsi-share-hint">
-            Room code: <strong style="font-family:monospace;color:#c9d1d9">${jitsiRoom}</strong>
+            Room code: <strong style="font-family:monospace;color:#A8A098">${jitsiRoom}</strong>
             <button class="tm-jitsi-copy-btn" onclick="navigator.clipboard.writeText('${jitsiRoom}').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy',1500)})">Copy</button>
           </div>
           <button class="tm-ctrl-btn tm-ctrl-leave" onclick="OmicsLab.Teams.leaveMeeting()">

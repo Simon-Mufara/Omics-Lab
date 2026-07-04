@@ -61,7 +61,7 @@ OmicsLab.Datasets = (function () {
       abstract: 'WGS of 543 M. tuberculosis clinical isolates from East Africa to characterise lineage distribution, drug-resistance mutations (rpoB, katG, inhA), and transmission clusters across the region.',
       citation: 'Coll F et al. (2018) Nat Commun 9:4254',
       doi: 'https://doi.org/10.1038/s41467-018-06811-z',
-      labWorkflow: 'WGS', color: '#3fb950',
+      labWorkflow: 'WGS', color: '#00C4A0',
     },
     {
       id: 'sars-cov2-sa',
@@ -223,7 +223,7 @@ OmicsLab.Datasets = (function () {
       abstract: 'Deep 30× WGS of 340 Yoruba Nigerians building a high-resolution haplotype reference panel for West African GWAS imputation, capturing variants absent from European reference populations.',
       citation: 'Bergström A et al. (2020) Science 369:eaay5012',
       doi: 'https://doi.org/10.1126/science.aay5012',
-      labWorkflow: 'WGS', color: '#3fb950',
+      labWorkflow: 'WGS', color: '#00C4A0',
     },
     {
       id: 'hiv-sa-rnaseq',
@@ -277,7 +277,7 @@ OmicsLab.Datasets = (function () {
       abstract: 'WGS of 1,169 M. tuberculosis isolates from the KwaZulu-Natal XDR-TB outbreak providing comprehensive drug-resistance characterisation across 9 first- and second-line drugs to guide precision treatment selection.',
       citation: 'Ghodousi A et al. (2019) Emerg Infect Dis 25:1519',
       doi: 'https://doi.org/10.3201/eid2508.181410',
-      labWorkflow: 'WGS', color: '#3fb950',
+      labWorkflow: 'WGS', color: '#00C4A0',
     },
     {
       id: 'placental-malaria',
@@ -674,7 +674,7 @@ OmicsLab.Datasets = (function () {
     navigator.clipboard.writeText(acc).then(() => {
       const orig = btn.innerHTML;
       btn.textContent = 'Copied!';
-      btn.style.color = '#3fb950';
+      btn.style.color = '#00C4A0';
       setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1800);
     }).catch(() => {
       btn.textContent = acc; /* fallback: show accession inline */
