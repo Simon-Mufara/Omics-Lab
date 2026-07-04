@@ -80,7 +80,7 @@ OmicsLab.Notifications = (function () {
 
     const btn = document.createElement('button');
     btn.id = 'nt-bell-btn';
-    btn.className = 'nav-notif-btn';
+    btn.className = 'nav-icon-btn nav-notif-btn';
     btn.setAttribute('aria-label', 'Notifications');
     btn.title = 'Notifications';
     btn.innerHTML = `

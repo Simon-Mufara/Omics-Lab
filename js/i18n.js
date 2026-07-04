@@ -228,12 +228,11 @@ OmicsLab.I18n = (function () {
     }).join('');
 
     wrap.innerHTML = `
-      <button class="i18n-current" aria-label="Language / Ulimi / Taal"
-              aria-haspopup="listbox"
+      <button class="i18n-current nav-icon-btn" aria-label="Language / Ulimi / Taal"
+              aria-haspopup="listbox" title="Language"
+              style="width:auto;padding:0 0.35rem;font-size:1rem;"
               onclick="this.closest('.i18n-toggle-wrap').classList.toggle('open')">
-        <span class="i18n-current-flag">${curMeta.flag}</span>
-        <span class="i18n-current-label">${curMeta.label}</span>
-        <svg class="i18n-caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        <span class="i18n-current-flag" aria-hidden="true">${curMeta.flag}</span>
       </button>
       <div class="i18n-dropdown" role="listbox" aria-label="Select language">
         <div class="i18n-search-wrap">

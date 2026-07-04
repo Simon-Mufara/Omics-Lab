@@ -71,7 +71,7 @@ OmicsLab.Theme = (function () {
     if (document.getElementById('theme-toggle-btn')) return;
     const btn = document.createElement('button');
     btn.id = 'theme-toggle-btn';
-    btn.className = 'nav-theme-btn';
+    btn.className = 'nav-icon-btn nav-theme-btn';
     btn.type = 'button';
     btn.onclick = cycle;
     const mode = getStored();

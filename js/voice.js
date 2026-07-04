@@ -238,18 +238,17 @@ OmicsLab.VoiceControl = (function () {
 
     const btn = document.createElement('button');
     btn.id = 'vc-mic-btn';
-    btn.className = 'vc-mic-btn';
-    btn.setAttribute('aria-label', 'Voice control');
+    btn.className = 'nav-icon-btn vc-mic-btn';
+    btn.setAttribute('aria-label', 'Voice control (Ctrl+Shift+V)');
     btn.setAttribute('aria-pressed', 'false');
-    btn.title = 'Voice control (click to start)';
+    btn.title = 'Voice control — Ctrl+Shift+V';
     btn.innerHTML = `
-      <svg class="vc-mic-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg class="vc-mic-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
         <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
         <line x1="12" y1="19" x2="12" y2="22"/>
         <line x1="8" y1="22" x2="16" y2="22"/>
       </svg>
-      <span class="vc-mic-label">Voice</span>
       <span class="vc-mic-ring" aria-hidden="true"></span>`;
 
     btn.onclick = () => _listening ? stop() : start();
@@ -369,8 +368,7 @@ OmicsLab.VoiceControl = (function () {
     _alwaysOn = !_alwaysOn;
     const btn = document.getElementById('vc-mic-btn');
     if (btn) {
-      const label = btn.querySelector('.vc-mic-label');
-      if (label) label.textContent = _alwaysOn ? 'Always-On' : 'Voice';
+      btn.title = _alwaysOn ? 'Voice control: Always-On — Ctrl+Shift+V' : 'Voice control — Ctrl+Shift+V';
     }
     if (_alwaysOn && !_listening) start();
     _toast(_alwaysOn ? 'Always-On: say "OmicsLab, [command]"' : 'Always-On disabled');
