@@ -31,7 +31,7 @@ OmicsLab.Showcase = (function () {
       sub: 'Simulate DNA extraction, library prep, and Illumina sequencing — with live QC metrics after every step.',
       cta: 'lab',
       ctaLabel: 'Try Lab Simulations',
-      color: '#3fb950',
+      color: '#00C4A0',
     },
     {
       id: 'expression',
@@ -92,7 +92,7 @@ OmicsLab.Showcase = (function () {
 
   /* Scene 0: DNA Sequencing — reads streaming onto a reference */
   function _drawSequencing(ctx, W, H, t) {
-    const BASES = ['#3fb950','#58a6ff','#bc8cff','#f97316'];
+    const BASES = ['#00C4A0','#58a6ff','#bc8cff','#f97316'];
     const reads  = 18, baseW = Math.max(6, W / 55), rowH = 18;
     const refY   = H * 0.35;
     const startX = W * 0.06;
@@ -424,9 +424,9 @@ OmicsLab.Showcase = (function () {
     const SPOTS = [
       { rx:-0.09, ry:-0.48, label:'Cairo',       col:'#e3b341', type:'GWAS'         },
       { rx:-0.24, ry:-0.06, label:'Dakar',        col:'#f97316', type:'Metagenomics' },
-      { rx: 0.04, ry: 0.06, label:'Nairobi',      col:'#3fb950', type:'WGS'          },
+      { rx: 0.04, ry: 0.06, label:'Nairobi',      col:'#00C4A0', type:'WGS'          },
       { rx:-0.10, ry: 0.12, label:'Kinshasa',     col:'#58a6ff', type:'RNA-seq'      },
-      { rx: 0.20, ry: 0.22, label:'Dar es Salaam',col:'#3fb950', type:'AMR'          },
+      { rx: 0.20, ry: 0.22, label:'Dar es Salaam',col:'#00C4A0', type:'AMR'          },
       { rx: 0.04, ry: 0.45, label:'Johannesburg', col:'#bc8cff', type:'scRNA-seq'    },
       { rx:-0.20, ry:-0.22, label:'Lagos',         col:'#f85149', type:'Variant'      },
       { rx: 0.22, ry:-0.28, label:'Addis Ababa',  col:'#58a6ff', type:'Phylo'        },
