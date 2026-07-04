@@ -216,7 +216,8 @@ OmicsLab.AuthClerk = (function () {
     const pill      = document.getElementById('nav-user-pill');
     const avatar    = document.getElementById('nav-user-avatar');
     const nameEl    = document.getElementById('nav-user-name');
-    const signinBtn = document.getElementById('nav-signin-btn');
+    const signinBtn  = document.getElementById('nav-signin-btn');
+    const startBtn   = document.getElementById('nav-start-btn');
     /* Mobile overlay */
     const mobSignin  = document.getElementById('mob-auth-signin');
     const mobAccount = document.getElementById('mob-auth-account');
@@ -225,6 +226,7 @@ OmicsLab.AuthClerk = (function () {
 
     if (user) {
       if (signinBtn) signinBtn.style.display = 'none';
+      if (startBtn)  startBtn.style.display  = 'none';
       if (pill) { pill.style.display = ''; pill.setAttribute('aria-label', `${user.name} — Account settings`); }
       if (avatar) {
         if (user.avatarUrl) { avatar.innerHTML = `<img src="${user.avatarUrl}" alt="${user.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`; }
@@ -239,6 +241,7 @@ OmicsLab.AuthClerk = (function () {
     } else {
       if (pill)      pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
+      if (startBtn)  startBtn.style.display  = '';
       if (avatar)    avatar.textContent = '';
       if (nameEl)    nameEl.textContent  = '';
       /* Mobile */

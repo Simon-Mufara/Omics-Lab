@@ -217,10 +217,10 @@
     <!-- Desktop primary nav — 4 items -->
     <nav class="nav-primary" id="nav-primary" aria-label="Primary navigation">
 
-      <!-- Train — tabbed mega-menu -->
+      <!-- Learn — tabbed mega-menu -->
       <div class="nav-group" id="ng-train">
         <button class="nav-group-btn" data-group="train" aria-haspopup="true">
-          Train
+          Learn
           <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="nav-mega-drop nmd-tabbed" role="menu">
@@ -713,8 +713,8 @@
         </div>
       </div>
 
-      <!-- Ask / Mentor (no dropdown) -->
-      <div class="nav-group" id="ng-ask">
+      <!-- Ask / Mentor (hidden — merged into Tools) -->
+      <div class="nav-group" id="ng-ask" style="display:none">
         <button class="nav-group-btn" data-group="ask" aria-haspopup="true">
           Ask
           <svg class="nav-caret-svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
@@ -742,8 +742,8 @@
         </div>
       </div>
 
-      <!-- Institutions direct tab -->
-      <div class="nav-group" id="ng-pricing">
+      <!-- Institutions tab — hidden; CTA moved to nav-right -->
+      <div class="nav-group" id="ng-pricing" style="display:none">
         <button class="nav-group-btn nav-pricing-btn" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('pricing')" aria-label="Plans and Pricing for institutions">
           For Institutions
         </button>
@@ -771,7 +771,12 @@
       <button class="nav-signin-btn" id="nav-signin-btn"
               onclick="OmicsLab.AuthClerk?OmicsLab.AuthClerk.signIn():OmicsLab.Auth&&OmicsLab.Auth.openModal('signin')"
               aria-label="Sign in to OmicsLab">
-        Sign In
+        Sign in
+      </button>
+      <button class="nav-start-btn" id="nav-start-btn"
+              onclick="OmicsLab.AuthClerk?OmicsLab.AuthClerk.signUp():OmicsLab.Auth&&OmicsLab.Auth.openModal('register')"
+              aria-label="Create a free account">
+        Start free
       </button>
       <button class="nav-user-pill" id="nav-user-pill"
               onclick="OmicsLab.Auth?OmicsLab.Auth.openModal('account'):OmicsLab.Router&&OmicsLab.Router.navigate('profile')"
@@ -979,30 +984,29 @@
   <div class="hero hero-new" id="hero-new">
     <div class="hero-new-inner">
 
-      <!-- Left: terminal context -->
+      <!-- Left: hero copy -->
       <div class="hero-new-left">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Live Platform Demo
-        </div>
         <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
-        <h2 class="hero-demohead">
-          Watch a real RNA-seq<br>
-          <span class="accent-line">pipeline running live</span>
-        </h2>
-        <p class="hero-demosub">
-          FastQC, STAR alignment, featureCounts, and DESeq2 — running step-by-step in your browser, exactly as they would on a real HPC cluster.
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+          Built for African genomics researchers
+        </div>
+        <h1 class="hero-headline">
+          Run real omics<br>workflows.<span class="hero-headline-accent">No lab required.</span>
+        </h1>
+        <p class="hero-body">
+          14 interactive protocols, 20 real instruments, 8 domains. Offline-first. Free. Built with H3ABioNet standards. From UCT to your browser.
         </p>
-        <ul class="hv-feat-list" style="margin-bottom:1.5rem">
-          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#00C4A0"></span>FastQC read quality control</li>
-          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#58a6ff"></span>STAR spliced alignment</li>
-          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#bc8cff"></span>featureCounts gene quantification</li>
-          <li class="hv-feat-item"><span class="hv-feat-dot" style="background:#f97316"></span>DESeq2 differential expression</li>
-        </ul>
-        <button class="hv-btn-p" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('terminal')">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-          Try the Terminal
-        </button>
+        <div class="hero-ctas">
+          <button class="hero-cta-primary" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
+            Launch the Lab
+          </button>
+          <button class="hero-cta-secondary" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('guide')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            See the workflows
+          </button>
+        </div>
         <div class="hero-trust-bar">
           <span class="hero-trust-item">Free &amp; offline</span>
           <span class="hero-trust-sep" aria-hidden="true">·</span>

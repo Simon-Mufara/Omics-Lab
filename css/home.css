@@ -83,6 +83,87 @@ h1, h2, h3, .section-title, .hero-title-new {
 
 /* ── Hero left copy ── */
 .hero-new-left { display: flex; flex-direction: column; gap: 0; }
+/* ── Redesign: new hero typography ── */
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+}
+.hero-eyebrow-dot {
+  width: 7px; height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.4rem;
+}
+.hero-headline-accent {
+  display: block;
+  color: var(--accent);
+}
+.hero-body {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0 0 1.75rem;
+  max-width: 440px;
+}
+.hero-ctas {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.hero-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.6rem;
+  background: var(--accent);
+  color: #060A14;
+  font-size: 0.92rem;
+  font-weight: 800;
+  font-family: inherit;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.12s;
+  letter-spacing: -0.01em;
+}
+.hero-cta-primary:hover { background: #00B390; transform: translateY(-1px); }
+.hero-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: inherit;
+  border: 1.5px solid var(--border-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.hero-cta-secondary:hover { border-color: var(--accent); background: rgba(0,196,160,0.06); }
+
+/* Keep legacy classes non-breaking */
 .hero-demohead { font-size: clamp(1.6rem,2.6vw,2.2rem); font-weight: 700; color: #e6edf3; line-height: 1.2; margin: 0.6rem 0 0.75rem; }
 .hero-demosub  { font-size: 1rem; color: #7d8590; line-height: 1.65; margin: 0 0 1.1rem; max-width: 420px; }
 

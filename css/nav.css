@@ -313,25 +313,44 @@
   border-color: rgba(0,196,160,0.5);
   box-shadow: 0 0 0 3px rgba(0,196,160,0.08);
 }
-/* Sign-in CTA button in nav (shown when logged out) */
-.nav-signin-btn {
+/* "Start free" primary CTA in nav */
+.nav-start-btn {
   display: flex;
   align-items: center;
   padding: .42rem 1rem;
-  background: rgba(0,196,160,0.12);
-  border: 1px solid rgba(0,196,160,0.4);
+  background: var(--accent);
+  color: #060A14;
+  border: 1px solid var(--accent);
   border-radius: 8px;
-  color: var(--accent);
-  font-size: 0.8rem;
+  font-size: .82rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .14s;
+  letter-spacing: -0.01em;
+}
+.nav-start-btn:hover { background: #00B390; }
+
+/* Sign-in button — ghost/text style */
+.nav-signin-btn {
+  display: flex;
+  align-items: center;
+  padding: .42rem .9rem;
+  background: transparent;
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background .14s, border-color .14s, color .14s;
 }
 .nav-signin-btn:hover {
-  background: rgba(0,196,160,0.22);
-  border-color: rgba(0,196,160,0.65);
-  color: #56d364;
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border-default);
+  color: var(--text-primary);
 }
 
 /* ── Mobile hamburger ── */
