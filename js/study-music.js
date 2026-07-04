@@ -323,21 +323,10 @@ OmicsLab.StudyMusic = (function () {
     const s = document.createElement('style');
     s.id = 'sm-styles';
     s.textContent = `
-      /* ── Topbar trigger button ── */
-      #sm-btn {
-        display: inline-flex; align-items: center; gap: .3rem;
-        background: none; border: 1px solid transparent;
-        border-radius: 8px; padding: .28rem .55rem;
-        font-size: .72rem; font-weight: 600; color: #8b949e;
-        cursor: pointer; transition: color .12s, border-color .12s, background .12s;
-        white-space: nowrap;
-      }
-      #sm-btn:hover { color: #e6edf3; border-color: #30363d; background: #21262d; }
+      /* ── Topbar trigger button — base handled by nav-icon-btn class ── */
       #sm-btn.sm-playing {
-        color: #3fb950; border-color: rgba(63,185,80,.35); background: rgba(63,185,80,.08);
+        color: #00C4A0; border-color: rgba(0,196,160,.4); background: rgba(0,196,160,.08);
       }
-      #sm-btn .sm-icon { display: flex; align-items: center; }
-      #sm-btn .sm-label { font-size: .68rem; }
 
       /* ── Floating panel ── */
       #sm-panel {
@@ -530,9 +519,8 @@ OmicsLab.StudyMusic = (function () {
 
     /* Topbar button state */
     _widget.btn.classList.toggle('sm-playing', _playing);
-    _widget.btn.querySelector('.sm-label').textContent = _playing
-      ? (MODES.find(m => m.id === _mode)?.label || 'Playing')
-      : 'Focus';
+    const smLabel = _widget.btn.querySelector('.sm-label');
+    if (smLabel) smLabel.textContent = _playing ? (MODES.find(m => m.id === _mode)?.label || 'Playing') : 'Focus';
 
     /* Play button */
     const playBtn   = _widget.panel.querySelector('#sm-play-btn');
