@@ -31,6 +31,24 @@ OmicsLab.AuthClerk = (function () {
     },
   };
 
+  /* Branded copy for Clerk modals — overrides Clerk's generic English strings */
+  const _localization = {
+    signIn: {
+      start: {
+        title:    'Welcome back',
+        subtitle: 'Sign in to continue your omics training',
+      },
+    },
+    signUp: {
+      start: {
+        title:      'Join OmicsLab — it\'s free',
+        subtitle:   'Build real genomics skills. No lab. No cost.',
+        actionText: 'Already training with us?',
+        actionLink: 'Sign in',
+      },
+    },
+  };
+
   /* ── Init ────────────────────────────────────────────────────── */
   function _showSkeleton() {
     const skel = document.getElementById('nav-auth-skeleton');
@@ -100,7 +118,7 @@ OmicsLab.AuthClerk = (function () {
       } else {
         throw new Error('Unexpected window.Clerk: ' + typeof C);
       }
-      await _clerk.load();
+      await _clerk.load({ captchaWidgetType: 'invisible' });
       _ready   = true;
       _loading = false;
       console.log('[AuthClerk] Ready ✓');
@@ -138,9 +156,9 @@ OmicsLab.AuthClerk = (function () {
         return;
       }
       if (tab === 'register') {
-        _clerk.openSignUp({ appearance: _appearance });
+        _clerk.openSignUp({ appearance: _appearance, localization: _localization });
       } else {
-        _clerk.openSignIn({ appearance: _appearance });
+        _clerk.openSignIn({ appearance: _appearance, localization: _localization });
       }
     };
 
@@ -359,7 +377,7 @@ OmicsLab.AuthClerk = (function () {
 
   /* signIn waits up to 6s for Clerk to load before giving up */
   function signIn() {
-    const opts = { appearance: _appearance };
+    const opts = { appearance: _appearance, localization: _localization };
     const email = _prevEmail();
     if (email) opts.initialValues = { emailAddress: email };
     if (_ready) { _clerk.openSignIn(opts); return; }
@@ -374,12 +392,13 @@ OmicsLab.AuthClerk = (function () {
   }
 
   function signUp() {
-    if (_ready) { _clerk.openSignUp({ appearance: _appearance }); return; }
+    const opts = { appearance: _appearance, localization: _localization };
+    if (_ready) { _clerk.openSignUp(opts); return; }
     if (!_loading) { OmicsLab.Auth?.openModal?.('register'); return; }
     let waited = 0;
     const poll = setInterval(() => {
       waited += 200;
-      if (_ready) { clearInterval(poll); _clerk.openSignUp({ appearance: _appearance }); }
+      if (_ready) { clearInterval(poll); _clerk.openSignUp(opts); }
       else if (!_loading || waited >= 6000) { clearInterval(poll); OmicsLab.Auth?.openModal?.('register'); }
     }, 200);
   }
@@ -394,7 +413,7 @@ OmicsLab.AuthClerk = (function () {
   function openAccount() {
     if (!_ready) { signIn(); return; }
     if (_clerk.user) _clerk.openUserProfile({ appearance: _appearance });
-    else _clerk.openSignIn({ appearance: _appearance });
+    else _clerk.openSignIn({ appearance: _appearance, localization: _localization });
   }
 
   function getUser()    { return _user; }
