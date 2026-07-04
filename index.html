@@ -669,7 +669,7 @@
       <button class="nav-start-btn" id="nav-start-btn"
               onclick="OmicsLab.AuthClerk?OmicsLab.AuthClerk.signUp():OmicsLab.Auth&&OmicsLab.Auth.openModal('register')"
               aria-label="Create a free account">
-        Start free
+        Get started free
       </button>
       <button class="nav-user-pill" id="nav-user-pill"
               onclick="OmicsLab.Auth?OmicsLab.Auth.openModal('account'):OmicsLab.Router&&OmicsLab.Router.navigate('profile')"
@@ -882,32 +882,58 @@
         <div class="hero-welcome" id="hero-welcome" style="display:none"></div>
         <div class="hero-eyebrow">
           <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-          Built for African genomics researchers
+          Africa's #1 free genomics training platform
         </div>
         <h1 class="hero-headline">
-          Run real omics<br>workflows.<span class="hero-headline-accent">No lab required.</span>
+          Master omics.<br><span class="hero-headline-accent">No lab. No cost. Offline.</span>
         </h1>
         <p class="hero-body">
-          14 interactive protocols, 20 real instruments, 8 domains. Offline-first. Free. Built with H3ABioNet standards. From UCT to your browser.
+          OmicsLab is a browser-based genomics simulator built for African researchers. Run real WGS, RNA-seq, and metagenomics pipelines with live QC — fully offline, on any device.
         </p>
+
+        <!-- Mini "how it works" — 3 steps -->
+        <div class="hero-steps" aria-label="How OmicsLab works">
+          <div class="hero-step">
+            <span class="hero-step-num" aria-hidden="true">1</span>
+            <span class="hero-step-text"><strong>Pick a workflow</strong> — WGS, RNA-seq, Nanopore, GWAS &amp; more</span>
+          </div>
+          <div class="hero-step">
+            <span class="hero-step-num" aria-hidden="true">2</span>
+            <span class="hero-step-text"><strong>Run the pipeline</strong> — live QC metrics, real tool commands, error propagation</span>
+          </div>
+          <div class="hero-step">
+            <span class="hero-step-num" aria-hidden="true">3</span>
+            <span class="hero-step-text"><strong>Earn your certificate</strong> — track progress, share on LinkedIn</span>
+          </div>
+        </div>
+
         <div class="hero-ctas">
           <button class="hero-cta-primary" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('lab')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/></svg>
-            Launch the Lab
+            Start for free
           </button>
           <button class="hero-cta-secondary" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('guide')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 8 16 12 12 16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            See the workflows
+            See all 87+ tools
           </button>
         </div>
         <div class="hero-trust-bar">
-          <span class="hero-trust-item">Free &amp; offline</span>
+          <span class="hero-trust-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Always free
+          </span>
+          <span class="hero-trust-sep" aria-hidden="true">·</span>
+          <span class="hero-trust-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Works offline
+          </span>
+          <span class="hero-trust-sep" aria-hidden="true">·</span>
+          <span class="hero-trust-item">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            54 African nations
+          </span>
           <span class="hero-trust-sep" aria-hidden="true">·</span>
           <span class="hero-trust-item">H3ABioNet aligned</span>
-          <span class="hero-trust-sep" aria-hidden="true">·</span>
-          <span class="hero-trust-item">CC BY 4.0</span>
-          <span class="hero-trust-sep" aria-hidden="true">·</span>
-          <span class="hero-trust-item">54 African nations</span>
         </div>
       </div>
 
@@ -2226,6 +2252,15 @@
 <script defer src="js/router.js"></script>
 <script defer src="js/app.js"></script>
 <style>
+  /* ── Hero "how it works" 3-step strip ── */
+  .hero-steps{display:flex;flex-direction:column;gap:.55rem;margin:.9rem 0 1.25rem}
+  .hero-step{display:flex;align-items:flex-start;gap:.65rem;font-size:.82rem;color:var(--text-secondary,#A8A098);line-height:1.5}
+  .hero-step strong{color:var(--text-primary,#E4DDD2)}
+  .hero-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(0,196,160,.15);border:1px solid rgba(0,196,160,.35);color:var(--accent,#00C4A0);font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:.05rem}
+  /* ── Trust bar icons ── */
+  .hero-trust-item{display:inline-flex;align-items:center;gap:.3rem}
+  .hero-trust-item svg{opacity:.65;flex-shrink:0}
+
   @keyframes shakeField {
     0%,100%{transform:translateX(0)}
     20%{transform:translateX(-6px)}
@@ -2320,6 +2355,26 @@
     });
 
     return { open, close, _tab };
+  })();
+
+  /* ── Welcome-back: personalise sign-in button before first paint ── */
+  (function() {
+    try {
+      var prev = JSON.parse(localStorage.getItem('omicslab_user_profile') || 'null');
+      if (prev && prev.name) {
+        var firstName = prev.name.trim().split(/\s+/)[0];
+        document.addEventListener('DOMContentLoaded', function() {
+          var btn = document.getElementById('nav-signin-btn');
+          if (btn) {
+            btn.textContent = 'Welcome back, ' + firstName;
+            btn.title = 'Sign in as ' + prev.name + (prev.email ? ' (' + prev.email + ')' : '');
+          }
+          /* Also update the hero CTA if visible */
+          var heroCtas = document.querySelector('.hero-cta-secondary');
+          /* no change needed — primary CTA text is fine */
+        });
+      }
+    } catch(e) {}
   })();
 
   /* ── Boot new modules after app.js initialises ── */

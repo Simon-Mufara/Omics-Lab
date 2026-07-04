@@ -4,8 +4,8 @@
         sign-out session clearing, SW comment sync
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v48';  /* js/ css/ images/ */
-const PAGES_CACHE   = 'ol-pages-v10';   /* index.html + offline.html */
+const STATIC_CACHE  = 'ol-static-v49';  /* js/ css/ images/ */
+const PAGES_CACHE   = 'ol-pages-v11';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
 /* Precache offline fallback on install */
@@ -65,9 +65,17 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  /* 5. JS / CSS / JSON → Stale-While-Revalidate */
+  /* 5. JS / CSS / JSON:
+     - Hard/regular refresh (cache mode 'reload' or 'no-cache') → Network-First so
+       the browser always gets fresh code, then caches it for offline use.
+     - Normal navigation → Stale-While-Revalidate (fast, background update). */
   if (path.match(/\.(js|css|json|webmanifest)(\?.*)?$/)) {
-    e.respondWith(_staleWhileRevalidate(e.request, STATIC_CACHE));
+    const cm = e.request.cache;
+    if (cm === 'reload' || cm === 'no-cache') {
+      e.respondWith(_networkFirst(e.request, STATIC_CACHE, 8000));
+    } else {
+      e.respondWith(_staleWhileRevalidate(e.request, STATIC_CACHE));
+    }
     return;
   }
 

@@ -14,6 +14,7 @@ OmicsLab.PWA = (function () {
 
   let _installPrompt = null;
   let _installed = false;
+  let _lastInteraction = Date.now();
 
   /* ─── Install banner ─── */
   function _buildBanner() {
@@ -217,10 +218,22 @@ OmicsLab.PWA = (function () {
     /* Register periodic sync */
     _registerPeriodicSync();
 
-    /* SW update message → show banner */
+    /* Track last user interaction so we know if it's safe to auto-reload */
+    const _touch = () => { _lastInteraction = Date.now(); };
+    ['click', 'keydown', 'scroll', 'touchstart', 'mousemove'].forEach(ev =>
+      document.addEventListener(ev, _touch, { passive: true, capture: true })
+    );
+
+    /* SW update message:
+       - Idle ≥ 4 s → auto-reload (user won't lose work)
+       - Active      → show banner so user can choose when */
     navigator.serviceWorker?.addEventListener('message', e => {
       if (e.data?.type === 'SW_UPDATED') {
-        _showUpdateBanner();
+        if (Date.now() - _lastInteraction >= 4000) {
+          window.location.reload();
+        } else {
+          _showUpdateBanner();
+        }
       }
     });
   }

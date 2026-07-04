@@ -12,8 +12,12 @@ OmicsLab.AuthClerk = (function () {
   let _user      = null;
   let _callbacks = [];
 
-  /* OmicsLab dark theme for Clerk modals — variables only (most stable API) */
+  /* OmicsLab dark theme for Clerk modals */
   const _appearance = {
+    layout: {
+      showOptionalFields: false,
+      socialButtonsVariant: 'blockButton',
+    },
     variables: {
       colorBackground:      '#0D1524',
       colorText:            '#E4DDD2',
@@ -158,6 +162,7 @@ OmicsLab.AuthClerk = (function () {
   function _syncUser(clerkUser) {
     if (!clerkUser) {
       _user = null;
+      _stopIdleGuard();
       try {
         localStorage.removeItem('omicslab_user_profile');
         localStorage.removeItem('omicslab_auth_token');
@@ -179,6 +184,7 @@ OmicsLab.AuthClerk = (function () {
       localStorage.setItem('omicslab_auth_token', 'clerk_managed');
     } catch {}
     _updateNav(_user);
+    _startIdleGuard();
 
     /* First-time sign-in → take user straight to the Guide */
     const isNewUser = !localStorage.getItem(`omicslab_guide_seen_${_user.id}`);
@@ -263,17 +269,106 @@ OmicsLab.AuthClerk = (function () {
     }
   }
 
+  /* ── Inactivity session guard ───────────────────────────────── */
+  /* Auto sign-out after 15 min of no user interaction.
+     Warning modal appears at 14 min; staying active resets the clock. */
+  const _IDLE_WARN_MS  = 14 * 60 * 1000;  /* show warning after 14 min */
+  const _IDLE_GRACE_MS =      60 * 1000;  /* sign out 60 s after warning */
+  let _idleTimer  = null;
+  let _graceTimer = null;
+  let _idleLastActivity = Date.now();
+
+  function _resetIdleTimer() {
+    if (!_user) return;
+    _idleLastActivity = Date.now();
+    clearTimeout(_idleTimer);
+    clearTimeout(_graceTimer);
+    _dismissIdleWarning();
+    _idleTimer = setTimeout(_onIdleWarn, _IDLE_WARN_MS);
+  }
+
+  function _onIdleWarn() {
+    if (!_user) return;
+    if (document.getElementById('ol-idle-modal')) return;
+
+    let secs = 60;
+    const overlay = document.createElement('div');
+    overlay.id = 'ol-idle-modal';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(6,10,20,.75);backdrop-filter:blur(4px)';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border-default,#182236);border-radius:14px;padding:2rem 2.25rem;max-width:380px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,.5);text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:rgba(227,179,65,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h2 style="font-size:1.05rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 .5rem">Still there?</h2>
+        <p style="font-size:.85rem;color:var(--text-secondary,#A8A098);margin:0 0 1.25rem;line-height:1.55">
+          You've been inactive for 14 minutes. For your security, you'll be signed out in <strong id="ol-idle-secs" style="color:#e3b341">60</strong> seconds.
+        </p>
+        <div style="display:flex;gap:.6rem;justify-content:center">
+          <button id="ol-idle-stay" style="flex:1;background:var(--accent,#00C4A0);color:#060A14;border:none;border-radius:8px;padding:.65rem 1rem;font-weight:700;font-size:.85rem;cursor:pointer">
+            Stay signed in
+          </button>
+          <button id="ol-idle-signout" style="flex:1;background:transparent;color:var(--text-secondary,#A8A098);border:1px solid var(--border-default,#182236);border-radius:8px;padding:.65rem 1rem;font-size:.85rem;cursor:pointer">
+            Sign out now
+          </button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(overlay);
+    overlay.querySelector('#ol-idle-stay').onclick    = _resetIdleTimer;
+    overlay.querySelector('#ol-idle-signout').onclick = () => { _dismissIdleWarning(); signOut(); };
+
+    const tick = setInterval(() => {
+      secs--;
+      const el = document.getElementById('ol-idle-secs');
+      if (el) el.textContent = secs;
+      if (secs <= 0) clearInterval(tick);
+    }, 1000);
+
+    _graceTimer = setTimeout(() => {
+      _dismissIdleWarning();
+      if (_user) signOut().then(() => {
+        OmicsLab.Toast?.show('Signed out after 15 minutes of inactivity', 'info');
+      });
+    }, _IDLE_GRACE_MS);
+  }
+
+  function _dismissIdleWarning() {
+    document.getElementById('ol-idle-modal')?.remove();
+  }
+
+  function _startIdleGuard() {
+    const events = ['click','keydown','mousemove','scroll','touchstart','pointerdown'];
+    events.forEach(ev => document.addEventListener(ev, _resetIdleTimer, { passive: true }));
+    _resetIdleTimer();
+  }
+
+  function _stopIdleGuard() {
+    clearTimeout(_idleTimer);
+    clearTimeout(_graceTimer);
+    _dismissIdleWarning();
+    _idleTimer = null;
+  }
+
   /* ── Public API ─────────────────────────────────────────────── */
+
+  /* Recover previous user email to pre-fill Clerk sign-in */
+  function _prevEmail() {
+    try { return JSON.parse(localStorage.getItem('omicslab_user_profile') || 'null')?.email || ''; } catch { return ''; }
+  }
 
   /* signIn waits up to 6s for Clerk to load before giving up */
   function signIn() {
-    if (_ready) { _clerk.openSignIn({ appearance: _appearance }); return; }
+    const opts = { appearance: _appearance };
+    const email = _prevEmail();
+    if (email) opts.initialValues = { emailAddress: email };
+    if (_ready) { _clerk.openSignIn(opts); return; }
     if (!_loading) { OmicsLab.Auth?.openModal?.('signin'); return; }
     console.log('[AuthClerk] Waiting for Clerk to load…');
     let waited = 0;
     const poll = setInterval(() => {
       waited += 200;
-      if (_ready) { clearInterval(poll); _clerk.openSignIn({ appearance: _appearance }); }
+      if (_ready) { clearInterval(poll); _clerk.openSignIn(opts); }
       else if (!_loading || waited >= 6000) { clearInterval(poll); OmicsLab.Auth?.openModal?.('signin'); }
     }, 200);
   }
