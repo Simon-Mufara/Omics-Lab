@@ -1555,7 +1555,6 @@ OmicsLab.Router = (function () {
     OmicsLab.Error?.init();
     OmicsLab.Notifications?.init();
     OmicsLab.OfflineIndicator?.init();
-    OmicsLab.Onboarding?.init();
     OmicsLab.MobileNav?.init();
     OmicsLab.PWA?.init();
     OmicsLab.A11y?.init();
