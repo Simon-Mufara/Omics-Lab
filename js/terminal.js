@@ -1442,11 +1442,17 @@ print("█=West African  ▓=East African  ░=Non-African")`
           s.onload = resolve;
           s.onerror = () => reject(new Error('Failed to load Pyodide from CDN'));
           document.head.appendChild(s);
-        }), 20000, 'Pyodide script load timed out — check your connection and retry');
+        }), 30000, 'Pyodide script load timed out — check your connection and retry');
       }
+      /* The runtime download (wasm + stdlib, several more MB on top of the
+         initial script) is the slow part on real low-bandwidth connections
+         — this platform's actual target audience. 45s was tuned against a
+         fast test connection and timed out on a genuinely slow-but-working
+         download; 3 minutes is still bounded (never hangs forever, the
+         original bug) but gives a real African connection room to finish. */
       _py = await _withTimeout(
         window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' }),
-        45000, 'Python kernel took too long to start — check your connection and retry'
+        180000, 'Python kernel took too long to start (over 3 minutes) — this may be a slow connection or a network/firewall blocking cdn.jsdelivr.net. Retry, or check your network.'
       );
       _pyLoading = false;
       _setKernelStatus('ready');
@@ -1461,7 +1467,7 @@ print("█=West African  ▓=East African  ░=Non-African")`
   function _setKernelStatus(state, msg) {
     const el = document.getElementById('nb-kernel-status');
     if (el) {
-      const labels = { loading:'Python kernel loading (first time may take ~20s)…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
+      const labels = { loading:'Python kernel loading — first time takes ~20s on fast connections, longer on slower ones…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
       const colors = { loading:'#e3b341', ready:'#00C4A0', error:'#f85149' };
       el.textContent = msg || labels[state] || state;
       el.style.color = colors[state] || '#A8A098';
