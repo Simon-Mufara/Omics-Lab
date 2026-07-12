@@ -9,12 +9,14 @@
   "scripts": {
     "validate": "node scripts/validate-html.js",
     "lint": "node scripts/validate-html.js && node -e \"require('fs').readdirSync('api').forEach(f=>require('child_process').execSync('node --check api/'+f,{stdio:'inherit'}))\"",
-    "check:console": "grep -rn 'console\\.log(' js/ --include='*.js' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0"
+    "check:console": "grep -rn 'console\\.log(' js/ --include='*.js' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0",
+    "build:hub": "npm --prefix hub install && npm --prefix hub run build"
   },
   "dependencies": {
     "@clerk/backend": "^3.11.2",
     "@pinecone-database/pinecone": "^2.2.2",
     "@upstash/redis": "^1.31.3",
+    "@vercel/analytics": "^2.0.1",
     "resend": "^3.2.0",
     "stripe": "^14.25.0"
   },

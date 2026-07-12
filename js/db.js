@@ -69,12 +69,18 @@ OmicsLab.DB = (function () {
     return { ok: true, source: 'cloud' };
   }
 
+  /* Explicit column list, NOT '*' — `email` has SELECT revoked for the
+     anon/authenticated roles (see db/schema.sql), so `select('*')`
+     would fail with a permission error for every caller, including
+     reading your own row. */
+  const USER_COLUMNS = 'id,clerk_id,name,avatar_url,institution,country,role,plan,username,display_name,github_username,bio,is_public,created_at,updated_at';
+
   async function getUser(clerkId) {
     if (!_ready) {
       const local = _localUser();
       return { ok: true, data: local, source: 'local' };
     }
-    const { data, error } = await _client.from('users').select('*').eq('clerk_id', clerkId).single();
+    const { data, error } = await _client.from('users').select(USER_COLUMNS).eq('clerk_id', clerkId).single();
     if (error) { _err('getUser', error); return { ok: false, error }; }
     return { ok: true, data, source: 'cloud' };
   }

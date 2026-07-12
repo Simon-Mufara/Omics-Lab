@@ -83,8 +83,8 @@ OmicsLab.Impact = (function () {
 
   function _getLocalStats() {
     const keys = ['omicslab_labnotebook_entries','omicslab_hackathon_teams','omicslab_certification','omicslab_my_dir_profile','omicslab_my_mentor_profile'];
-    const nbEntries = JSON.parse(localStorage.getItem('omicslab_labnotebook_entries') || '[]').length;
-    const certDone = Object.keys(JSON.parse(localStorage.getItem('omicslab_certification') || '{"completed":{}}').completed).length;
+    const nbEntries = (OmicsLab.Utils?.safeParse('omicslab_labnotebook_entries', []) || []).length;
+    const certDone = Object.keys((OmicsLab.Utils?.safeParse('omicslab_certification', {completed:{}}) || {completed:{}}).completed || {}).length;
     return { nbEntries, certDone };
   }
 

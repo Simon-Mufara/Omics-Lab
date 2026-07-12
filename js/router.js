@@ -973,7 +973,7 @@ OmicsLab.Router = (function () {
   }
 
   /* ─── Navigate to a page ─── */
-  function navigate(page) {
+  function _navigateInner(page) {
     if (!PAGES[page]) {
       OmicsLab.Error?.render404(page);
       return;
@@ -1344,6 +1344,33 @@ OmicsLab.Router = (function () {
     if (userPill) userPill.classList.toggle('active-pill', page === 'profile');
   }
 
+  /* ─── Navigate to a page (safe wrapper) ───
+     A throw anywhere inside _navigateInner (e.g. a page-specific render
+     hitting stale post-deploy localStorage data) used to leave the app
+     half-rendered with no recovery — this is the direct fix for "hard
+     refresh breaks the page and doesn't start fresh." One retry to
+     'home' covers the common case; if even that throws, fall back to a
+     raw DOM reveal of the landing screen so the user always sees
+     something rather than a blank page. */
+  function navigate(page) {
+    try {
+      _navigateInner(page);
+    } catch (e) {
+      console.error('[Router] navigate("' + page + '") failed', e);
+      try { window.Sentry?.captureException?.(e); } catch (e2) {}
+      if (page !== 'home') {
+        try {
+          _navigateInner('home');
+          return;
+        } catch (e3) {
+          console.error('[Router] fallback navigate("home") also failed', e3);
+        }
+      }
+      const landing = document.getElementById('screen-landing');
+      if (landing) landing.style.display = '';
+    }
+  }
+
   /* ─── Render the page sub-header ─── */
   function _renderPageHeader(page) {
     let header = document.getElementById('page-route-header');
@@ -1442,6 +1469,25 @@ OmicsLab.Router = (function () {
 
   /* ─── Init ─── */
   function init() {
+    /* Registered FIRST, before anything below that could throw — this
+       listener fixes the earlier "dashboard flash" bug (re-renders once
+       Clerk resolves auth ~1-3s after load). It used to be the LAST
+       statement in init(), so if navigate() (400+ lines, run further
+       down) threw on stale post-deploy localStorage data, this listener
+       never got wired up and the dashboard stayed stuck — one visible
+       symptom of the "hard refresh doesn't start fresh" bug. */
+    OmicsLab.AuthClerk?.onAuthChange?.(function(user) {
+      if (_currentPage !== 'home') return;
+      const dash = document.getElementById('home-dashboard');
+      if (!dash) return;
+      if (user) {
+        OmicsLab.Dashboard?.render(dash);
+        dash.style.display = '';
+      } else {
+        dash.style.display = 'none';
+      }
+    });
+
     OmicsLab.Theme?.init();
     OmicsLab.Error?.init();
     OmicsLab.Notifications?.init();
@@ -1492,19 +1538,6 @@ OmicsLab.Router = (function () {
         navigate('home');
       };
     }
-
-    /* Re-render dashboard when Clerk auth resolves (fires ~1-3s after page load) */
-    OmicsLab.AuthClerk?.onAuthChange?.(function(user) {
-      if (_currentPage !== 'home') return;
-      const dash = document.getElementById('home-dashboard');
-      if (!dash) return;
-      if (user) {
-        OmicsLab.Dashboard?.render(dash);
-        dash.style.display = '';
-      } else {
-        dash.style.display = 'none';
-      }
-    });
   }
 
   /* ─── AI Pipeline Recommender (mini widget on home) ─── */

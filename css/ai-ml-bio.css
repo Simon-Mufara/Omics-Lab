@@ -129,6 +129,8 @@
 .aml-ex-section-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6E6860; margin-bottom: 0.6rem; }
 
 .aml-scenario-box { padding: 0.85rem 1rem; background: #0D1524; border-left: 3px solid #e3b341; border-radius: 0 8px 8px 0; font-size: 0.8rem; color: #A8A098; line-height: 1.68; margin-bottom: 1rem; }
+.aml-ex-realworld { font-size: 0.74rem; color: #6E6860; font-style: italic; margin-bottom: 0.85rem; line-height: 1.55; }
+.aml-ex-realworld strong { color: #bc8cff; font-style: normal; }
 
 .aml-options-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
 .aml-option-btn { padding: 0.6rem 0.85rem; background: #0D1524; border: 1px solid #243048; border-radius: 8px; color: #A8A098; font-size: 0.78rem; text-align: left; cursor: pointer; transition: all 0.15s; line-height: 1.45; }
@@ -142,6 +144,32 @@
 .aml-feedback-box.fb-correct { background: rgba(0,196,160,0.07); border: 1px solid rgba(0,196,160,0.25); color: #A8A098; }
 .aml-feedback-box.fb-wrong { background: rgba(248,81,73,0.07); border: 1px solid rgba(248,81,73,0.25); color: #A8A098; }
 .aml-feedback-box strong { color: #00C4A0; }
+
+/* Generic labeled callout box — used by the Practice tab intro and the
+   Start Here primer tab. (Pre-existing class with no styles until now —
+   was rendering unstyled.) */
+.aml-concept-box { padding: 1rem 1.25rem; border: 1px solid #182236; border-radius: 12px; background: #111B2E; margin-bottom: 1.25rem; }
+.aml-concept-title { font-size: 0.82rem; font-weight: 800; margin-bottom: 0.5rem; }
+.aml-concept-body { font-size: 0.82rem; color: #A8A098; line-height: 1.7; }
+
+/* ── Start Here primer tab ── */
+.aml-start-page { display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px; margin: 0 auto; }
+.aml-start-section { background: #111B2E; border: 1px solid #182236; border-radius: 12px; padding: 1.25rem 1.5rem; }
+.aml-start-h { font-size: 0.95rem; font-weight: 800; color: #E4DDD2; margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem; }
+.aml-start-body { font-size: 0.85rem; color: #A8A098; line-height: 1.75; }
+.aml-start-concepts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.85rem; margin-top: 0.9rem; }
+.aml-start-concept { background: #0D1524; border: 1px solid #182236; border-radius: 10px; padding: 0.85rem 1rem; }
+.aml-start-concept-name { font-size: 0.8rem; font-weight: 700; color: #bc8cff; margin-bottom: 0.35rem; }
+.aml-start-concept-body { font-size: 0.78rem; color: #A8A098; line-height: 1.6; }
+.aml-start-concept-analogy { font-size: 0.75rem; color: #6E6860; font-style: italic; margin-top: 0.4rem; padding-top: 0.4rem; border-top: 1px dashed #243048; }
+.aml-start-misconceptions { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.9rem; }
+.aml-start-mis { padding: 0.7rem 0.9rem; border-radius: 8px; background: rgba(248,81,73,0.06); border: 1px solid rgba(248,81,73,0.2); font-size: 0.78rem; line-height: 1.6; }
+.aml-start-mis strong { color: #f85149; }
+.aml-start-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.9rem; }
+.aml-start-link-btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.9rem; border-radius: 8px; background: #0D1524; border: 1px solid #243048; color: #E4DDD2; font-size: 0.78rem; cursor: pointer; }
+.aml-start-link-btn:hover { border-color: #bc8cff; color: #bc8cff; }
+.aml-start-cta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; background: rgba(188,140,255,0.07); border: 1px solid rgba(188,140,255,0.25); }
+.aml-start-cta-btn { background: #bc8cff; color: #0D1524; border: none; border-radius: 8px; padding: 0.55rem 1rem; font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .aml-feedback-box.fb-wrong strong { color: #f85149; }
 
 .aml-next-btn { padding: 0.5rem 1.1rem; background: #e3b341; border: none; border-radius: 7px; color: #0D1524; font-size: 0.78rem; font-weight: 800; cursor: pointer; margin-top: 0.75rem; transition: background 0.15s; }

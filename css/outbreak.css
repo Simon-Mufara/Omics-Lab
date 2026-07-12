@@ -173,7 +173,14 @@
   display: block;
 }
 .ob-continent { pointer-events: none; }
+.ob-country { pointer-events: none; transition: fill 0.2s, stroke 0.2s; }
+.ob-country--focus { fill: rgba(0,196,160,0.10); stroke: rgba(0,196,160,0.4); stroke-width: 0.4; }
 .ob-city-group { transition: opacity 0.3s; }
+.ob-country-filter { display: flex; align-items: center; gap: 0.5rem; font-size: 0.76rem; color: #A8A098; margin-bottom: -0.25rem; }
+.ob-country-filter select {
+  background: #111B2E; border: 1px solid rgba(255,255,255,0.12); color: #E4DDD2;
+  border-radius: 7px; padding: 0.3rem 0.55rem; font-size: 0.76rem;
+}
 
 /* Pulsing dots */
 @keyframes obPulse {

@@ -6,14 +6,21 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Outbreak = (function () {
 
+  const MAP_W = 100, MAP_H = 110;
+
   /* ─── Pathogens ─── */
   const PATHOGENS = [
     { id:'ebola',  name:'Ebola Virus (EBOV)',      color:'#f97316',
       r0:2.0, cfr:0.50, genome:'RNA', genomeLen:18959,  incubation:8,
-      desc:'Filovirus — highly lethal haemorrhagic fever; spreads via direct contact.' },
+      desc:'Filovirus — highly lethal haemorrhagic fever; spreads via direct contact.',
+      /* Historical Ebola outbreaks cluster in these countries — the index
+         case shouldn't be able to "start" in e.g. Cairo. Ongoing spread
+         is left unconstrained (real outbreaks do cross borders once seeded). */
+      endemicCountries: ['DR Congo', 'Guinea', 'Sierra Leone', 'Uganda'] },
     { id:'mpox',   name:'Mpox (MPXV clade Ib)',    color:'#bc8cff',
       r0:1.4, cfr:0.04, genome:'dsDNA', genomeLen:197000, incubation:12,
-      desc:'Orthopoxvirus — zoonotic; resurging in DRC basin with human-to-human spread.' },
+      desc:'Orthopoxvirus — zoonotic; resurging in DRC basin with human-to-human spread.',
+      endemicCountries: ['DR Congo', 'Nigeria', 'Cameroon'] },
     { id:'cholera', name:'Vibrio cholerae O1',     color:'#58a6ff',
       r0:3.5, cfr:0.01, genome:'dsDNA', genomeLen:4033460, incubation:2,
       desc:'Waterborne diarrhoeal disease; linked to flooding and poor WASH infrastructure.' },
@@ -25,8 +32,10 @@ OmicsLab.Outbreak = (function () {
       desc:'Betacoronavirus; novel variant with heightened immune evasion detected.' },
   ];
 
-  /* ─── African cities (lat/lng → SVG x/y on 100×110 viewBox) ─── */
-  /* Projection: x=(lng+17)/68*100  y=(37-lat)/72*110  clamped [2,98] */
+  /* ─── African cities (lat/lng → SVG x/y on 100×110 viewBox) ───
+     Projection delegates to the shared real-geography module (js/africa-geo.js)
+     so city dots stay pixel-aligned with the real country polygons drawn
+     underneath them, instead of a separate hand-tuned linear formula. */
   const CITIES = [
     { id:'nga', name:'Lagos',        country:'Nigeria',       lng:3.4,   lat:6.5  },
     { id:'gin', name:'Conakry',      country:'Guinea',        lng:-13.7, lat:9.5  },
@@ -49,9 +58,8 @@ OmicsLab.Outbreak = (function () {
     { id:'egy', name:'Cairo',        country:'Egypt',         lng:31.2,  lat:30.1 },
     { id:'dkr', name:'Dakar',        country:'Senegal',       lng:-17.4, lat:14.7 },
   ].map(c => {
-    const x = Math.min(96, Math.max(4, ((c.lng + 17) / 68) * 100));
-    const y = Math.min(96, Math.max(4, ((37 - c.lat) / 72) * 110));
-    return { ...c, x, y };
+    const { x, y } = OmicsLab.AfricaGeo.project(c.lat, c.lng, MAP_W, MAP_H);
+    return { ...c, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
   });
 
   /* ─── State ─── */
@@ -106,6 +114,13 @@ OmicsLab.Outbreak = (function () {
     <!-- Africa map -->
     <div class="ob-map-panel">
       <div class="ob-panel-label">${OmicsLab.Icons?.svg('map-pin',13)||''} Live Case Map — Click outbreak sites to collect samples</div>
+      <div class="ob-country-filter">
+        <label for="ob-country-select">Focus on a country</label>
+        <select id="ob-country-select" onchange="OmicsLab.Outbreak._filterCountry(this.value)">
+          <option value="">All countries in this outbreak</option>
+          ${[...new Set(CITIES.map(c => c.country))].sort((a,b)=>a.localeCompare(b)).map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+      </div>
       <div class="ob-map-wrap">
         <svg id="ob-map-svg" viewBox="0 0 100 110" preserveAspectRatio="xMidYMid meet"
              class="ob-map-svg" aria-label="Africa outbreak map">
@@ -121,14 +136,8 @@ OmicsLab.Outbreak = (function () {
             </filter>
           </defs>
           <rect width="100" height="110" fill="url(#obBg)"/>
-          <!-- Africa outline (simplified) -->
-          <path class="ob-continent"
-            d="M28,5 L38,4 L48,6 L58,5 L68,8 L78,12 L83,18 L84,26
-               L82,33 L85,40 L84,48 L80,55 L82,62 L80,70 L76,78
-               L70,85 L64,90 L57,94 L50,96 L43,95 L37,91 L31,85
-               L25,78 L20,70 L18,62 L15,54 L12,46 L10,38 L8,30
-               L10,22 L14,15 L20,9 Z"
-            fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <!-- Real country boundaries (js/africa-geo.js) -->
+          <g id="ob-country-layer" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="0.25"></g>
           <!-- City dots injected by JS -->
           <g id="ob-city-layer"></g>
           <!-- Spread lines injected by JS -->
@@ -209,8 +218,15 @@ OmicsLab.Outbreak = (function () {
     if (!pid) return;
     const p = PATHOGENS.find(x => x.id === pid);
 
-    /* Init state */
-    const sourceIdx = Math.floor(Math.random() * CITIES.length);
+    /* Init state — for geographically-restricted pathogens (endemicCountries
+       set above), the index case can only start in a city in one of those
+       countries. Falls back to the full city list if the pathogen has no
+       such field, or if none of its endemic countries are in CITIES. */
+    const eligible = p.endemicCountries
+      ? CITIES.map((c, i) => i).filter(i => p.endemicCountries.includes(CITIES[i].country))
+      : null;
+    const pool = eligible && eligible.length ? eligible : CITIES.map((c, i) => i);
+    const sourceIdx = pool[Math.floor(Math.random() * pool.length)];
     _sim = {
       pathogen: p,
       source: sourceIdx,
@@ -303,14 +319,51 @@ OmicsLab.Outbreak = (function () {
     _sim.sites.forEach((s, i) => { s.cases = Math.min(newCases[i], 5000); });
   }
 
+  /* ─── Country drill-down filter ───
+     Lets users looking at a geographically-restricted disease (e.g. Ebola,
+     confined to a handful of endemic countries — see PATHOGENS above)
+     zoom into just the affected country instead of scanning the whole
+     continent map. Purely a view filter — doesn't touch simulation state. */
+  function _filterCountry(country) {
+    if (!_sim) return;
+    _sim.countryFilter = country || null;
+    const svg = document.getElementById('ob-map-svg');
+    if (svg) {
+      if (country) {
+        const feature = OmicsLab.AfricaGeo.findFeature(country);
+        svg.setAttribute('viewBox', feature
+          ? OmicsLab.AfricaGeo.countryViewBox(feature, MAP_W, MAP_H, 0.4)
+          : `0 0 ${MAP_W} ${MAP_H}`);
+      } else {
+        svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
+      }
+    }
+    _renderMap();
+  }
+
   /* ─── Map rendering ─── */
   function _renderMap() {
     if (!_sim) return;
+    const countryLayer = document.getElementById('ob-country-layer');
     const cityLayer = document.getElementById('ob-city-layer');
     const linesLayer = document.getElementById('ob-lines-layer');
     if (!cityLayer || !linesLayer) return;
 
     const p = _sim.pathogen;
+    const filter = _sim.countryFilter || null;
+
+    /* Real country boundaries — drawn once per sim, then just re-tinted */
+    if (countryLayer && !countryLayer.dataset.rendered) {
+      countryLayer.innerHTML = OmicsLab.AfricaGeo.allCountryPaths(MAP_W, MAP_H)
+        .map(c => `<path class="ob-country" data-name="${c.name}" d="${c.d}"><title>${c.name}</title></path>`)
+        .join('');
+      countryLayer.dataset.rendered = '1';
+    }
+    if (countryLayer) {
+      countryLayer.querySelectorAll('.ob-country').forEach(el => {
+        el.classList.toggle('ob-country--focus', !!filter && el.dataset.name === OmicsLab.AfricaGeo.resolveName(filter));
+      });
+    }
 
     /* Draw spread lines from source */
     let linesHtml = '';
@@ -327,11 +380,12 @@ OmicsLab.Outbreak = (function () {
       const isSource = i === _sim.source;
       const hasCase  = site.cases > 0;
       const isSeq    = site.sequenced;
+      const dimmed   = !!filter && site.country !== filter;
       const r = hasCase ? Math.min(4, 1.2 + Math.log1p(site.cases) * 0.5) : 1.2;
       const fill = isSeq ? '#00C4A0' : (isSource ? '#58a6ff' : (hasCase ? p.color : '#2d333b'));
       const cls  = hasCase && !isSeq ? 'ob-dot-pulse' : '';
       return `<g class="ob-city-group" onclick="OmicsLab.Outbreak._collectSample(${i})"
-                style="cursor:${hasCase&&!isSeq?'pointer':'default'}">
+                style="cursor:${hasCase&&!isSeq?'pointer':'default'};opacity:${dimmed?0.15:1}">
         <circle cx="${site.x}" cy="${site.y}" r="${r+1.5}" fill="${fill}" opacity="0.18" class="${cls}"/>
         <circle cx="${site.x}" cy="${site.y}" r="${r}" fill="${fill}" class="${cls}"/>
         <title>${site.name}, ${site.country}: ${site.cases.toLocaleString()} cases${isSeq?' (sequenced)':''}</title>
@@ -599,6 +653,10 @@ OmicsLab.Outbreak = (function () {
     document.querySelectorAll('.ob-pathogen-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('ob-selected-info').style.display = 'none';
     document.getElementById('ob-pause-btn').textContent = '⏸ Pause';
+    const countrySelect = document.getElementById('ob-country-select');
+    if (countrySelect) countrySelect.value = '';
+    const svg = document.getElementById('ob-map-svg');
+    if (svg) svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
   }
 
   /* ─── Public init — called by router ─── */
@@ -702,6 +760,6 @@ OmicsLab.Outbreak = (function () {
   }
 
   return { init, _pickPathogen, _startSim, _togglePause, _setSpeed,
-           _collectSample, _buildPhylo, _identifySource, _reset,
+           _collectSample, _buildPhylo, _identifySource, _reset, _filterCountry,
            _mpInit, _mpSend, _mpShowSetup };
 })();

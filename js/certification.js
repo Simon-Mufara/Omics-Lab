@@ -83,8 +83,8 @@ OmicsLab.Certification = (function () {
 
   const CERT_KEY = 'omicslab_certification';
 
-  function _getState() { return JSON.parse(localStorage.getItem(CERT_KEY) || '{"completed":{},"profile":{}}'); }
-  function _saveState(s) { localStorage.setItem(CERT_KEY, JSON.stringify(s)); }
+  function _getState() { return OmicsLab.Utils?.safeParse(CERT_KEY, {completed:{},profile:{}}) || {completed:{},profile:{}}; }
+  function _saveState(s) { (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})(CERT_KEY, s); }
 
   function _toggleModule(moduleId) {
     const s = _getState();
@@ -279,9 +279,9 @@ OmicsLab.Certification = (function () {
     };
 
     /* Save to localStorage */
-    const existing = JSON.parse(localStorage.getItem('omicslab_credentials') || '[]');
+    const existing = OmicsLab.Utils?.safeParse('omicslab_credentials', []) || [];
     existing.push(credential);
-    localStorage.setItem('omicslab_credentials', JSON.stringify(existing));
+    (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})('omicslab_credentials', existing);
 
     /* Download JSON-LD */
     const blob = new Blob([JSON.stringify(credential, null, 2)], { type: 'application/ld+json' });

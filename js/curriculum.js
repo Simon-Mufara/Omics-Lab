@@ -717,7 +717,160 @@ OmicsLab.Curriculum = (function () {
           ],
         },
       ],
-    }
+    },
+    aiml: {
+      id: 'aiml',
+      icon: 'cpu',
+      title: 'AI & Machine Learning for Omics',
+      subtitle: 'How ML actually connects to bioinformatics',
+      color: '#bc8cff',
+      audience: 'Anyone who has used (or will use) the AI/ML tool and wants to know what it means, not just click through it',
+      outcome: 'Explain why ML is used in genomics at all, what a model is actually learning from omics data, when to reach for classical ML vs. a foundation model, and how to read a confusion matrix instead of trusting a headline accuracy number.',
+      badge: 'aiml-certified',
+      lessons: [
+        {
+          id: 'aiml-01', title: 'Why does machine learning matter for bioinformatics?', duration: '15 min', icon: 'cpu',
+          why: 'A single human exome has ~20,000 genes and can carry tens of thousands of variants; a single scRNA-seq run can profile tens of thousands of cells at once. No hand-written rule book scales to deciding which of those variants is pathogenic or which cell type each cell belongs to — which is exactly the gap ML fills.',
+          prereq: null,
+          concepts: [
+            { name: 'Rules you write vs. patterns a model learns', body: 'Traditional bioinformatics code often runs on rules a person wrote directly — "flag any read with Q-score below 20." Machine learning instead learns its own rule from labeled examples, which matters when the real boundary (e.g. pathogenic vs. benign) is too complex, high-dimensional, or subtle for a human to write down by hand.', analogy: 'Like the difference between memorizing "add 15% tip" and actually learning to judge good service from a thousand past examples of what people tipped and why.' },
+            { name: 'Why omics data specifically pushes you toward ML', body: 'Omics datasets are usually both wide (thousands of genes/variants/features per sample) and irregular (batch effects, sequencing noise, population variation) — exactly the conditions where simple thresholds break down but a model trained on many labeled examples can still find the real signal.' },
+            { name: 'Where this is already running in this platform', body: 'The Classical ML tab\'s Random Forest example predicts MDR-TB drug resistance from 20 M. tuberculosis SNPs; the Foundation Models tab\'s ESM-2 scores whether a novel P. falciparum variant is likely pathogenic before anyone runs a wet-lab experiment. These aren\'t hypothetical — they\'re the same categories of tool used in real African genomics research.' },
+          ],
+          theory: 'A classical bioinformatics pipeline applies fixed, human-authored rules to data (a threshold, a lookup table, a scoring formula someone derived). Machine learning flips this: you give the model many examples that already have a known correct answer (a "label" — e.g. this M. tuberculosis genome is drug-resistant, this one isn\'t), and the model searches for a pattern across the input features that best predicts that label. The result is a rule, but one discovered from data rather than typed by a person — which is what lets it capture patterns too complex or high-dimensional for anyone to write out explicitly.',
+          worked: 'Open the AI/ML tool\'s Africa Applications tab and read two or three of the real deployed examples — notice each one names the actual disease, actual dataset, and actual outcome, not a hypothetical.',
+          tryItTool: { mode: 'ai-ml-bio', tab: 'africa', label: 'See real African ML applications' },
+          terms: [
+            { term: 'Machine learning', def: 'A model that learns a predictive rule from labeled examples, rather than following a rule a person wrote by hand.' },
+            { term: 'Training data', def: 'The set of labeled examples a model learns from.' },
+            { term: 'Feature', def: 'One measurable input the model sees per sample — e.g. a SNP genotype, a gene\'s expression level, a read\'s GC content.' },
+            { term: 'Label', def: 'The known correct answer attached to a training example — what the model is trying to learn to predict.' },
+          ],
+          misconceptions: [
+            { claim: '"ML is a black box that just guesses."', correction: 'A trained model\'s predictions are checked against real held-out examples with known answers — that\'s exactly what lets you measure whether it actually works, covered in the confusion-matrix lesson later in this track.' },
+            { claim: '"ML replaces the need for biological domain knowledge."', correction: 'Deciding what counts as a good feature or a correct label still requires real biological understanding — a model trained on badly-chosen features or mislabeled data will confidently learn the wrong thing.' },
+          ],
+          summary: [
+            'Traditional pipelines apply rules a person wrote; ML learns its own rule from labeled examples instead.',
+            'Omics data is wide (many features) and noisy — exactly the conditions where hand-written thresholds break down.',
+            'ML in this platform isn\'t hypothetical — Random Forest MDR-TB prediction and ESM-2 variant scoring are real deployed examples.',
+            'A feature is one input a model sees per sample; a label is the known correct answer it\'s trying to predict.',
+            'Good features and correct labels still require real biological domain knowledge to define.',
+          ],
+          quiz: [
+            { q: 'What is the core difference between a traditional rule-based pipeline and a machine learning model?', options: ['ML models never make mistakes', 'A rule-based pipeline follows a rule a person wrote; ML learns its own rule from labeled examples', 'ML only works on images, not sequence data', 'They are the same thing with different names'], correct: 1, explain: 'The defining difference is where the rule comes from — hand-written vs. learned from labeled data.' },
+            { q: 'Why does omics data specifically push researchers toward ML over simple thresholds?', options: ['Omics data is always small in size', 'Omics data is wide (many features) and irregular, exactly where simple thresholds tend to break down', 'ML is required by journal publication policy', 'Thresholds only work on protein data'], correct: 1, explain: 'High dimensionality plus noise is exactly the setting where a learned model can outperform a fixed rule.' },
+            { q: 'A model trained on mislabeled data (e.g. wrong resistant/susceptible labels) will most likely:', options: ['Automatically detect and fix the mislabeled examples', 'Confidently learn the wrong pattern', 'Refuse to train at all', 'Perform identically to a model trained on correct labels'], correct: 1, explain: 'Models learn whatever pattern is in the labels they\'re given — garbage labels in, confidently wrong predictions out.' },
+          ],
+        },
+        {
+          id: 'aiml-02', title: 'How a model actually learns from omics data', duration: '20 min', icon: 'layers',
+          why: 'A headline like "97% accurate" is meaningless until you know it was measured on data the model never trained on — otherwise it may just have memorized the training set, which is a very live risk in genomics where studies often have far more features (genes, SNPs) than patients.',
+          prereq: 'aiml-01',
+          concepts: [
+            { name: 'Every sample becomes a row of features plus a label', body: 'To a model, a patient sample is just a row of numbers — e.g. genotype at 20 specific SNP positions — paired with a label such as "drug-resistant" or "susceptible." The model never sees the biology directly, only whatever numeric features you hand it.', analogy: 'Like judging a book purely from a spreadsheet of statistics about it (page count, word frequency, publish year) without ever reading the actual text.' },
+            { name: 'Train/test split — why you never grade on the training set', body: 'Data is split into a training set the model learns from and a held-out test set it never sees during training. Reporting accuracy on the training set is like grading students on the exact questions they were given the answers to beforehand.', analogy: 'A driving instructor testing you only on the exact route you rehearsed a hundred times tells you nothing about whether you can actually drive elsewhere.' },
+            { name: 'Overfitting — memorizing noise instead of learning signal', body: 'A model with too much flexibility relative to the amount of training data can fit the noise in that specific dataset perfectly, achieving near-100% training accuracy while performing barely better than random on new data — the "large p, small n" problem: many genomic studies have thousands of features but only hundreds of patients.' },
+          ],
+          theory: 'Training works by repeatedly adjusting the model\'s internal parameters to reduce the gap between its predictions and the true labels on the training set — this gap is called the loss. Pushed far enough with too little data relative to the number of features, the model can drive training loss to near zero not by learning genuine biological signal, but by fitting sample-specific noise (sequencing artifacts, batch effects, coincidental correlations) that has no real predictive value elsewhere. The held-out test set is the only honest check: if test performance is far worse than training performance, that gap is direct evidence of overfitting.',
+          worked: 'Open the AI/ML tool\'s Practice & Build tab and try the pipeline-order exercise — it asks you to put real ML steps (including train/test split) into the correct order, which is exactly the workflow this lesson describes.',
+          tryItTool: { mode: 'ai-ml-bio', tab: 'practice', label: 'Try the ML pipeline-order exercise' },
+          terms: [
+            { term: 'Feature', def: 'One measurable numeric input per sample that the model actually sees (e.g. a SNP genotype, an expression value).' },
+            { term: 'Train/test split', def: 'Dividing data into a set the model learns from and a separate held-out set used only to honestly measure performance.' },
+            { term: 'Overfitting', def: 'A model fitting noise specific to its training data rather than a generalizable pattern — high training accuracy, poor test accuracy.' },
+            { term: 'Large p, small n', def: 'A dataset with many features (p) but few samples (n) — common in genomics, and a major risk factor for overfitting.' },
+          ],
+          misconceptions: [
+            { claim: '"More features always make a model better."', correction: 'With a small number of samples, adding more features increases the risk of overfitting rather than improving real performance — this is exactly the "large p, small n" problem genomics studies run into constantly.' },
+            { claim: '"High training accuracy proves the model works."', correction: 'Training accuracy only proves the model fit the training data — it says nothing about new data until you check held-out test performance separately.' },
+          ],
+          summary: [
+            'A model sees each sample as a row of numeric features paired with a label — never the raw biology directly.',
+            'Train/test split exists so performance is measured honestly, on data the model never learned from.',
+            'Overfitting means fitting noise in the training set rather than a generalizable pattern — training accuracy alone can\'t catch this.',
+            'Genomics studies are especially prone to overfitting because they often have far more features than samples ("large p, small n").',
+            'A large gap between training and test performance is direct evidence a model has overfit.',
+          ],
+          quiz: [
+            { q: 'Why is reporting a model\'s accuracy on its own training set misleading?', options: ['Training accuracy is always exactly 50%', 'The model may have simply memorized that specific data rather than learned a generalizable pattern', 'Training sets are never large enough to compute accuracy', 'It isn\'t misleading — training accuracy is the standard metric'], correct: 1, explain: 'Training accuracy can be inflated by memorization (overfitting) — only held-out test performance reflects real-world generalization.' },
+            { q: 'What makes genomics data especially prone to overfitting?', options: ['Genomic data is always perfectly clean', 'Studies often have far more features (genes/SNPs) than patient samples', 'DNA sequences cannot be converted into numeric features', 'Overfitting is impossible with biological data'], correct: 1, explain: 'The "large p, small n" pattern — many features, few samples — is a classic overfitting risk factor common across genomics.' },
+            { q: 'A model scores 99% on training data but 54% on held-out test data. What does this most likely indicate?', options: ['The model is excellent and ready to deploy', 'The model has overfit the training data', 'The test set must be labeled incorrectly', 'This gap is normal and expected for all models'], correct: 1, explain: 'A large train/test performance gap is the textbook signature of overfitting.' },
+          ],
+        },
+        {
+          id: 'aiml-03', title: 'Classical ML vs. foundation models — when to use which', duration: '18 min', icon: 'zap',
+          why: 'This platform\'s AI/ML tool lists six classical algorithms and six foundation models side by side — without a decision framework, that just looks like an arbitrary catalogue instead of two genuinely different tools for genuinely different jobs.',
+          prereq: 'aiml-02',
+          concepts: [
+            { name: 'Classical ML: trained from scratch on your data', body: 'Algorithms like Random Forest or Logistic Regression start with no prior knowledge and learn entirely from the labeled dataset you give them. They tend to work well on structured, tabular data (a spreadsheet of SNPs and outcomes) and stay interpretable — you can usually see which features drove a prediction.' },
+            { name: 'Foundation models: pretrained on massive general data, then adapted', body: 'A model like ESM-2 was already trained on 250 million protein sequences before you ever touch it. Using it on your specific problem means adapting ("fine-tuning") that existing general knowledge, rather than starting from zero — which is what lets it work well even when you only have a small labeled dataset of your own.', analogy: 'Like hiring someone who already has a medical degree and just needs orientation to your specific clinic, versus training someone from complete scratch.' },
+            { name: 'Matching the tool to the data you actually have', body: 'Small, well-structured tabular data with a real need for interpretability (e.g. a GWAS case-control table) usually favors classical ML. Raw sequence, structure, or single-cell data — especially with limited labeled examples of your own — usually favors a foundation model, because its pretraining already encodes general biological patterns.' },
+          ],
+          theory: 'The technical name for what a foundation model gives you is transfer learning: knowledge learned from a huge, general pretraining dataset transfers to your specific, much smaller task, so the model needs far fewer labeled examples of your own to perform well. Classical ML has no such transfer — every classical model starts genuinely blank and depends entirely on the size and quality of the dataset you provide it. Neither approach is universally "better": a foundation model brings transferred general knowledge at the cost of being larger, slower, and harder to interpret; classical ML brings speed and interpretability at the cost of needing a reasonably sized, well-labeled dataset of its own.',
+          worked: 'Open the AI/ML tool\'s Classical ML tab and use the "which algorithm" chooser — then compare against browsing the Foundation Models tab\'s task lists. Notice how the classical tab\'s use-cases (GWAS, resistance prediction from a SNP table) differ in shape from the foundation-model tab\'s use-cases (raw sequence/structure input).',
+          tryItTool: { mode: 'ai-ml-bio', tab: 'classical', label: 'Try the algorithm chooser' },
+          terms: [
+            { term: 'Classical ML', def: 'A model trained entirely from scratch on the labeled dataset you provide, with no prior pretraining.' },
+            { term: 'Foundation model', def: 'A model pretrained on a massive general dataset before being adapted to a specific task.' },
+            { term: 'Transfer learning', def: 'Reusing knowledge learned during pretraining on a new, typically much smaller and more specific task.' },
+            { term: 'Fine-tuning', def: 'The process of further training a pretrained foundation model on your specific, smaller dataset.' },
+          ],
+          misconceptions: [
+            { claim: '"Foundation models are always better than classical ML."', correction: 'For small, structured tabular problems needing interpretability — like a GWAS case-control study — classical ML (e.g. logistic regression) is often the better, more appropriate choice, not an inferior fallback.' },
+            { claim: '"Classical ML is outdated technology."', correction: 'Gradient-boosted trees and similar classical methods remain state-of-the-art for tabular prediction tasks like polygenic risk scores — they are current best practice, not legacy tools.' },
+          ],
+          summary: [
+            'Classical ML starts from zero and learns entirely from your dataset; foundation models start pretrained on massive general data.',
+            'Transfer learning is what lets a foundation model perform well even with relatively few labeled examples of your own.',
+            'Classical ML tends to favor structured tabular data and interpretability; foundation models favor raw sequence/structure data with limited labels.',
+            'Neither is universally better — the right choice depends on your data\'s shape and how much labeled data you actually have.',
+            'Fine-tuning is the process of adapting a pretrained foundation model to your specific task.',
+          ],
+          quiz: [
+            { q: 'What does "transfer learning" specifically refer to?', options: ['Copying a dataset from one computer to another', 'Reusing knowledge a model learned during large-scale pretraining on a new, more specific task', 'Converting DNA sequences into RNA sequences', 'Training two models simultaneously'], correct: 1, explain: 'Transfer learning means pretrained general knowledge carries over ("transfers") to help with a new, smaller task.' },
+            { q: 'For a small, well-structured GWAS case-control table where interpretability matters, which approach is typically more appropriate?', options: ['A large foundation model, always', 'Classical ML (e.g. logistic regression)', 'Neither approach can handle tabular data', 'Foundation models cannot be fine-tuned'], correct: 1, explain: 'Structured tabular data with a real need for interpretability is the classic strength case for classical ML.' },
+            { q: 'Why can a foundation model often perform well with fewer labeled examples than classical ML needs?', options: ['Foundation models don\'t actually need any data', 'Its pretraining already encodes general patterns that transfer to the new task', 'Foundation models are always smaller than classical models', 'This is a myth — they need equally large labeled datasets'], correct: 1, explain: 'Pretraining is what supplies the general knowledge classical ML would otherwise have to learn entirely from your own limited labels.' },
+          ],
+        },
+        {
+          id: 'aiml-04', title: 'Reading a confusion matrix — evaluating a real model', duration: '20 min', icon: 'bar-chart',
+          why: 'A claimed "97% accurate" diagnostic model can still be nearly useless if the disease it\'s detecting is rare — a model that always predicts "healthy" can hit 97% accuracy on a population where only 3% are actually sick, while catching zero real cases. Reading the confusion matrix, not the headline number, is what tells you whether a model actually works.',
+          prereq: 'aiml-03',
+          concepts: [
+            { name: 'The four outcomes of a binary prediction', body: 'For a resistant/susceptible call, every prediction lands in one of four boxes: true positive (correctly called resistant), true negative (correctly called susceptible), false positive (wrongly called resistant), false negative (wrongly called susceptible, the dangerous miss). The confusion matrix is just these four counts laid out in a grid.' },
+            { name: 'Sensitivity vs. specificity — two different questions', body: 'Sensitivity (recall) asks: of everyone who is actually resistant, how many did the model catch? Specificity asks: of everyone who is actually susceptible, how many did the model correctly clear? A model can score high on one while scoring poorly on the other — they are not interchangeable.', analogy: 'Sensitivity is like a smoke detector\'s ability to catch every real fire; specificity is its ability to not go off when someone is just making toast.' },
+            { name: 'The accuracy paradox with imbalanced classes', body: 'When one outcome is rare (e.g. only 3% of samples are truly drug-resistant), a model that just predicts the majority class every time can post a high overall accuracy while being clinically useless — it never catches the cases that actually matter.' },
+          ],
+          theory: 'Overall accuracy is (true positives + true negatives) divided by all predictions — a single number that treats every correct call as equally valuable. But in an imbalanced dataset, that single number can hide near-total failure on the minority class: if 97% of samples are truly susceptible, a model that predicts "susceptible" for every single sample scores 97% accuracy while having a sensitivity of exactly 0% — it never once correctly identifies a resistant case. This is precisely why the confusion matrix\'s four separate counts, and the sensitivity/specificity computed from them, matter more than the single accuracy headline, especially for rare-disease or rare-outcome prediction tasks common in genomics.',
+          worked: 'Open the AI/ML tool\'s Practice & Build tab and use the confusion-matrix calculator — enter counts for a resistant/susceptible prediction scenario and watch how sensitivity and specificity can diverge sharply from the overall accuracy number.',
+          tryItTool: { mode: 'ai-ml-bio', tab: 'practice', label: 'Try the confusion-matrix calculator' },
+          terms: [
+            { term: 'True/false positive', def: 'A positive prediction that was correct (true) or incorrect (false) against the real label.' },
+            { term: 'True/false negative', def: 'A negative prediction that was correct (true) or incorrect (false) against the real label.' },
+            { term: 'Sensitivity (recall)', def: 'Of all truly positive cases, the fraction the model correctly identified.' },
+            { term: 'Specificity', def: 'Of all truly negative cases, the fraction the model correctly identified.' },
+            { term: 'Accuracy paradox', def: 'A high overall accuracy score that hides poor performance on a rare but important class.' },
+          ],
+          misconceptions: [
+            { claim: '"A high accuracy percentage means the model is clinically useful."', correction: 'With imbalanced classes, a high accuracy can coexist with near-zero sensitivity for the exact outcome that matters most — always check the confusion matrix, not just the headline number.' },
+            { claim: '"Sensitivity and specificity measure the same thing."', correction: 'They answer two different questions — catching true positives vs. correctly clearing true negatives — and a model can score very differently on each.' },
+          ],
+          summary: [
+            'Every binary prediction lands in one of four boxes: true positive, true negative, false positive, false negative.',
+            'Sensitivity asks how many real positives were caught; specificity asks how many real negatives were correctly cleared — they can diverge sharply.',
+            'With imbalanced classes, a model can post high accuracy while having near-zero sensitivity for the rare, important outcome.',
+            'The confusion matrix\'s four separate counts reveal failure modes a single accuracy number can hide.',
+            'This matters most exactly where genomics often lands: rare-disease or rare-resistance prediction with imbalanced classes.',
+          ],
+          quiz: [
+            { q: 'In a dataset where 97% of samples are truly susceptible, a model that always predicts "susceptible" would score:', options: ['0% accuracy', '~97% accuracy but 0% sensitivity for resistant cases', '50% accuracy exactly', 'It would fail to run'], correct: 1, explain: 'This is the accuracy paradox — high accuracy from always guessing the majority class, while catching zero true positives.' },
+            { q: 'What does sensitivity (recall) specifically measure?', options: ['Overall percentage of all correct predictions', 'Of all truly positive cases, the fraction correctly identified', 'Of all truly negative cases, the fraction correctly identified', 'How fast the model makes predictions'], correct: 1, explain: 'Sensitivity is about catching real positives — a distinct question from overall accuracy or specificity.' },
+            { q: 'Why is the confusion matrix more informative than a single accuracy number for imbalanced genomic prediction tasks?', options: ['It is not more informative — accuracy alone is always sufficient', 'It separates the four outcome types, revealing failures a single number can hide on the minority (often clinically critical) class', 'The confusion matrix replaces the need for a test set', 'It only applies to image classification tasks'], correct: 1, explain: 'The four-way breakdown exposes exactly where a model fails, which a single blended accuracy score cannot.' },
+          ],
+        },
+      ],
+    },
   };
 
   /* ─── Progress store ─── */
@@ -900,7 +1053,7 @@ OmicsLab.Curriculum = (function () {
       <div class="curr-ch-section">
         <div class="curr-ch-h">Try it</div>
         <p>${lesson.worked}</p>
-        ${lesson.tryItTool ? `<button type="button" class="curr-tryit-btn" onclick="OmicsLab.Curriculum._openTool('${lesson.tryItTool.mode}')">
+        ${lesson.tryItTool ? `<button type="button" class="curr-tryit-btn" onclick="OmicsLab.Curriculum._openTool('${lesson.tryItTool.mode}','${lesson.tryItTool.tab||''}')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           ${lesson.tryItTool.label} — it's the real tool, not a description
         </button>` : ''}
@@ -1005,7 +1158,12 @@ OmicsLab.Curriculum = (function () {
      of only describing it in prose. Clicks the real mode-tab button rather
      than re-implementing switchMode()'s internals, since that function
      expects a genuine button element. */
-  function _openTool(mode) {
+  function _openTool(mode, tab) {
+    if (mode === 'ai-ml-bio') {
+      if (OmicsLab.Router) OmicsLab.Router.navigate('ai-ml-bio');
+      if (tab) setTimeout(() => OmicsLab.AIMLBio?.setTab?.(tab), 150);
+      return;
+    }
     if (OmicsLab.Router) OmicsLab.Router.navigate('terminal');
     setTimeout(() => {
       if (mode === 'notebook') {

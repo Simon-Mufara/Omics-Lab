@@ -315,6 +315,8 @@ OmicsLab.App = (function() {
 
       ${_buildVariantWalkthrough(wf.id)}
 
+      ${OmicsLab.OutputViz?.panelHTML(wf, q, score) || ''}
+
       <div class="results-actions">
         <button class="btn-result-primary" onclick="OmicsLab.App.startWorkflow('${wf.id}')">
           ${OmicsLab.Icons.svg('rotate-cw',15)} Retry This Protocol

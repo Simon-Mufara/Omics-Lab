@@ -325,9 +325,9 @@ OmicsLab.Institution = (function () {
   function _renderStudentView(container) {
     const inst = _loadInstitution();
     const sname = localStorage.getItem('omicslab_student_name') || 'Student';
-    const xpState = JSON.parse(localStorage.getItem('omicslab_xp_v1') || '{"xp":0}');
-    const skills  = JSON.parse(localStorage.getItem('omicslab_skills_v1') || '[]');
-    const certs   = JSON.parse(localStorage.getItem('omicslab_certification') || '{"completed":{}}');
+    const xpState = OmicsLab.Utils?.safeParse('omicslab_xp_v1', {xp:0}) || {xp:0};
+    const skills  = OmicsLab.Utils?.safeParse('omicslab_skills_v1', []) || [];
+    const certs   = OmicsLab.Utils?.safeParse('omicslab_certification', {completed:{}}) || {completed:{}};
     const certCount = Object.keys(certs.completed || {}).length;
 
     container.innerHTML = `
@@ -385,9 +385,9 @@ OmicsLab.Institution = (function () {
   function _exportStudentData() {
     const sname   = localStorage.getItem('omicslab_student_name') || 'Student';
     const inst    = _loadInstitution();
-    const xpState = JSON.parse(localStorage.getItem('omicslab_xp_v1') || '{"xp":0}');
-    const skills  = JSON.parse(localStorage.getItem('omicslab_skills_v1') || '[]');
-    const certs   = JSON.parse(localStorage.getItem('omicslab_certification') || '{"completed":{}}');
+    const xpState = OmicsLab.Utils?.safeParse('omicslab_xp_v1', {xp:0}) || {xp:0};
+    const skills  = OmicsLab.Utils?.safeParse('omicslab_skills_v1', []) || [];
+    const certs   = OmicsLab.Utils?.safeParse('omicslab_certification', {completed:{}}) || {completed:{}};
     const payload = {
       schemaVersion: '1.0',
       name: sname,

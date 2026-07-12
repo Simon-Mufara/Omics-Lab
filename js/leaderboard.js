@@ -99,16 +99,16 @@ OmicsLab.Leaderboard = (function () {
 
   /* ─── Load state ─── */
   function _loadBoard() {
-    const stored = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    const stored = OmicsLab.Utils?.safeParse(STORE_KEY, null);
     if (stored) return stored;
     /* Initialise from seed */
-    localStorage.setItem(STORE_KEY, JSON.stringify(SEED_COHORT));
+    (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})(STORE_KEY, SEED_COHORT);
     return SEED_COHORT;
   }
 
   function _getMyEntry() {
-    const profile = JSON.parse(localStorage.getItem(MY_KEY) || '{}');
-    const sessions = JSON.parse(localStorage.getItem('omicslab_sessions') || '[]');
+    const profile = OmicsLab.Utils?.safeParse(MY_KEY, {}) || {};
+    const sessions = OmicsLab.Utils?.safeParse('omicslab_sessions', []) || [];
     const best = sessions.reduce((max, s) => s.score > max ? s.score : max, 0);
     const streak = sessions.length;
     const city = profile.city || 'Your City';

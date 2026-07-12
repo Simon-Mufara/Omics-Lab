@@ -11,8 +11,8 @@ OmicsLab.LabNotebook = (function () {
   const KEY = 'omicslab_labnotebook_entries';
   let _editingId = null;
 
-  function _getEntries() { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
-  function _saveEntries(e) { localStorage.setItem(KEY, JSON.stringify(e)); }
+  function _getEntries() { return OmicsLab.Utils?.safeParse(KEY, []) || []; }
+  function _saveEntries(e) { (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})(KEY, e); }
 
   const ENTRY_TYPES = [
     { value:'experiment', label:'Experiment', color:'#58a6ff' },

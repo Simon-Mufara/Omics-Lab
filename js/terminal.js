@@ -1412,25 +1412,42 @@ print("█=West African  ▓=East African  ░=Non-African")`
     }
   ];
 
+  /* Reject a promise if it doesn't settle within `ms` — without this,
+     a slow/blocked CDN (common on low-bandwidth African connections)
+     left the kernel hanging on "loading" forever with no feedback. */
+  function _withTimeout(promise, ms, message) {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error(message)), ms)),
+    ]);
+  }
+
   async function _loadPyodide() {
     if (_py) return _py;
     if (_pyLoading) {
       await new Promise(r => { const t = setInterval(() => { if (_py || !_pyLoading) { clearInterval(t); r(); } }, 200); });
       return _py;
     }
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+      _setKernelStatus('error', 'You appear to be offline. Connect to the internet once to download the Python kernel — it will then work offline on this device.');
+      return null;
+    }
     _pyLoading = true;
     _setKernelStatus('loading');
     try {
       if (!window.loadPyodide) {
-        await new Promise((resolve, reject) => {
+        await _withTimeout(new Promise((resolve, reject) => {
           const s = document.createElement('script');
           s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
           s.onload = resolve;
-          s.onerror = () => reject(new Error('Failed to load Pyodide CDN'));
+          s.onerror = () => reject(new Error('Failed to load Pyodide from CDN'));
           document.head.appendChild(s);
-        });
+        }), 20000, 'Pyodide script load timed out — check your connection and retry');
       }
-      _py = await window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' });
+      _py = await _withTimeout(
+        window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' }),
+        45000, 'Python kernel took too long to start — check your connection and retry'
+      );
       _pyLoading = false;
       _setKernelStatus('ready');
       return _py;
@@ -1443,13 +1460,16 @@ print("█=West African  ▓=East African  ░=Non-African")`
 
   function _setKernelStatus(state, msg) {
     const el = document.getElementById('nb-kernel-status');
-    if (!el) return;
-    const labels = { loading:'Python kernel loading (first time may take ~20s)…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
-    const colors = { loading:'#e3b341', ready:'#00C4A0', error:'#f85149' };
-    el.textContent = msg || labels[state] || state;
-    el.style.color = colors[state] || '#A8A098';
-    const dot = document.getElementById('nb-kernel-dot');
-    if (dot) { dot.style.background = colors[state] || '#A8A098'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
+    if (el) {
+      const labels = { loading:'Python kernel loading (first time may take ~20s)…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
+      const colors = { loading:'#e3b341', ready:'#00C4A0', error:'#f85149' };
+      el.textContent = msg || labels[state] || state;
+      el.style.color = colors[state] || '#A8A098';
+      const dot = document.getElementById('nb-kernel-dot');
+      if (dot) { dot.style.background = colors[state] || '#A8A098'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
+    }
+    const retryWrap = document.getElementById('nb-kernel-retry');
+    if (retryWrap) retryWrap.style.display = state === 'error' ? '' : 'none';
   }
 
   function _renderNotebook(nbId) {
@@ -1865,6 +1885,11 @@ print("█=West African  ▓=East African  ░=Non-African")`
           <div class="nb-kernel-bar">
             <span id="nb-kernel-dot" class="nb-kernel-dot"></span>
             <span id="nb-kernel-status" class="nb-kernel-status">Kernel idle — click Run to start Python</span>
+            <span id="nb-kernel-retry" style="display:none">
+              <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.restartKernel()" title="Retry loading the Python kernel">
+                ${OmicsLab.Icons?.svg('refresh-cw',12)||''} Retry
+              </button>
+            </span>
             <span class="nb-kernel-sep"></span>
             <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.clearNotebook()" title="Clear all outputs">
               ${OmicsLab.Icons?.svg('trash-2',12)||''} Clear outputs
@@ -1893,7 +1918,7 @@ print("█=West African  ▓=East African  ░=Non-African")`
           <!-- Pyodide info bar -->
           <div class="nb-info-bar">
             ${OmicsLab.Icons?.svg('info',12)||''}
-            <span>Real Python executes in your browser via <b>Pyodide</b> (WebAssembly). First run loads ~10 MB from CDN. Works offline after that.</span>
+            <span>Real Python executes in your browser via <b>Pyodide</b> (WebAssembly). First run needs internet to download ~10 MB — this browser then caches it, so it works fully offline after that.</span>
           </div>
 
           <!-- Output / Logs tabs -->
@@ -2033,7 +2058,30 @@ print("█=West African  ▓=East African  ░=Non-African")`
     URL.revokeObjectURL(a.href);
   }
 
+  /* Opens the real notebook pre-loaded with one or more starter cells,
+     e.g. from the "Visualize in Python" panel on a simulation results
+     screen. `cells` is [{title, code}, ...]. Clicks the real notebook
+     tab button rather than calling switchMode() directly, since
+     switchMode() dereferences its `btn` argument unconditionally. */
+  function openStarterSnippet(cells) {
+    const tabBtn = document.querySelector('.term-mode-tab.nb-tab-btn');
+    if (tabBtn) tabBtn.click();
+    if (!Array.isArray(cells) || !cells.length) return;
+    setTimeout(() => {
+      cells.forEach(({ title, code }) => {
+        addNotebookCell();
+        const areas = document.querySelectorAll('.nb-code-area');
+        const lastArea = areas[areas.length - 1];
+        if (lastArea) lastArea.value = code || '';
+        const titles = document.querySelectorAll('.nb-cell-title');
+        const lastTitle = titles[titles.length - 1];
+        if (lastTitle && title) lastTitle.textContent = title;
+      });
+    }, 150);
+  }
+
   return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript,
            runCell, addNotebookCell, clearNotebook, restartKernel, _renderNotebook,
-           copyAndEdit, _switchNbView, submitNbComment, NB_LIST: _NB_DATA.map(n => ({ id: n.id, name: n.name })) };
+           copyAndEdit, _switchNbView, submitNbComment, openStarterSnippet,
+           NB_LIST: _NB_DATA.map(n => ({ id: n.id, name: n.name })) };
 })();

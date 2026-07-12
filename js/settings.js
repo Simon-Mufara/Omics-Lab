@@ -122,7 +122,7 @@ OmicsLab.Settings = (function () {
 
   /* ─── Build section HTML ─── */
   function _buildProfileSection(s) {
-    const user = JSON.parse(localStorage.getItem('omicslab_user') || '{}');
+    const user = OmicsLab.Utils?.safeParse('omicslab_user', {}) || {};
     return `
       <div class="st-section" id="st-sec-profile">
         <div class="st-section-title">Profile</div>
@@ -155,12 +155,12 @@ OmicsLab.Settings = (function () {
   }
 
   function _saveProfile() {
-    const user = JSON.parse(localStorage.getItem('omicslab_user') || '{}');
+    const user = OmicsLab.Utils?.safeParse('omicslab_user', {}) || {};
     user.name = document.getElementById('st-name')?.value || user.name;
     user.institution = document.getElementById('st-inst')?.value || user.institution;
     user.country = document.getElementById('st-country')?.value || user.country;
     user.role = document.getElementById('st-role')?.value || user.role;
-    localStorage.setItem('omicslab_user', JSON.stringify(user));
+    (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})('omicslab_user', user);
     const dgnKey = document.getElementById('st-disgenet-key')?.value?.trim();
     if (dgnKey !== undefined) localStorage.setItem('omicslab_disgenet_key', dgnKey);
     OmicsLab.Notify?.success('Profile saved');

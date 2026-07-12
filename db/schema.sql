@@ -5,12 +5,18 @@
 
 -- Enable UUID extension
 create extension if not exists "uuid-ossp";
+-- Case-insensitive text, for username (case-insensitive-unique, stored as typed)
+create extension if not exists citext;
 
 -- ── Users (mirrors Clerk user profile) ──────────────────────────
+-- Identity/auth stays on Clerk (see js/auth-clerk.js) — there is no
+-- Supabase auth.users table in play here, so this row IS the profile;
+-- it's kept as one table rather than a separate `profiles` table to
+-- avoid two competing identity records for the same person.
 create table if not exists public.users (
   id            uuid primary key default uuid_generate_v4(),
   clerk_id      text unique,                      -- Clerk user ID
-  email         text unique not null,
+  email         text unique not null,              -- private mirror; see column revoke below
   name          text not null,
   avatar_url    text,
   institution   text,
@@ -24,8 +30,21 @@ create table if not exists public.users (
   student_verified    boolean default false,
   stripe_customer_id  text unique,
   paystack_customer_code text unique,
+  -- ── Public identity (Prompt: identity foundation) ──────────────
+  username      citext,                      -- @handle; null until onboarding is completed
+  display_name  text,                        -- public display name, distinct from `name`/Clerk name
+  github_username text,                      -- captured from Clerk's linked GitHub OAuth account
+  bio           text check (bio is null or char_length(bio) <= 280),
+  is_public     boolean not null default true,
   created_at    timestamptz default now(),
-  updated_at    timestamptz default now()
+  updated_at    timestamptz default now(),
+  constraint users_username_format check (
+    username is null or username ~ '^[a-z0-9_]{3,30}$'
+  ),
+  constraint users_username_reserved check (
+    username is null or lower(username::text) not in
+      ('admin','root','omicslab','support','api','null','undefined')
+  )
 );
 
 -- ── Progress: badges, curriculum, XP ────────────────────────────
@@ -111,6 +130,30 @@ create table if not exists public.nexus_messages (
 
 -- Migration (run if upgrading from original schema):
 -- alter table public.nexus_messages add column if not exists author_meta jsonb default '{}';
+
+-- Migration — identity foundation (@username, GitHub linking, public profiles):
+-- run this whole block once in the SQL Editor against the existing project.
+-- create extension if not exists citext;
+-- alter table public.users add column if not exists username citext;
+-- alter table public.users add column if not exists display_name text;
+-- alter table public.users add column if not exists github_username text;
+-- alter table public.users add column if not exists bio text;
+-- alter table public.users add column if not exists is_public boolean not null default true;
+-- alter table public.users add constraint users_username_format check (
+--   username is null or username ~ '^[a-z0-9_]{3,30}$');
+-- alter table public.users add constraint users_username_reserved check (
+--   username is null or lower(username::text) not in
+--     ('admin','root','omicslab','support','api','null','undefined'));
+-- alter table public.users add constraint users_bio_length check (
+--   bio is null or char_length(bio) <= 280);
+-- create unique index if not exists idx_users_username_unique
+--   on public.users (username) where username is not null;
+-- create unique index if not exists idx_users_github_username_unique
+--   on public.users (github_username) where github_username is not null;
+-- create policy "users_public_read" on public.users
+--   for select using (is_public = true and username is not null);
+-- revoke select (email) on public.users from authenticated, anon;
+-- (then run the public.is_username_available(citext) function + grant from the Indexes section below)
 
 -- Migration — individual subscription tiers (Scholar / Practitioner) + Paystack:
 -- alter table public.users drop constraint if exists users_plan_check;
@@ -205,6 +248,22 @@ alter table public.forum_comments    enable row level security;
 create policy "users_self" on public.users
   for all using (auth.uid()::text = clerk_id);
 
+-- Public directory: anyone (including anon) can see completed, public
+-- profiles. This is a ROW policy only — it does not by itself decide
+-- which COLUMNS are visible. `email` is locked out at the column-grant
+-- level immediately below, so it stays hidden regardless of which rows
+-- a query is allowed to see, on this policy or the self-row one above.
+create policy "users_public_read" on public.users
+  for select using (is_public = true and username is not null);
+
+-- email is a private mirror of the Clerk auth email (search-matching
+-- only, per spec — never shown or edited in any client UI; a user's
+-- own email is sourced from Clerk directly, not this table). Revoking
+-- column-level SELECT means neither anon nor authenticated can ever
+-- read it via PostgREST, including the row's own owner — only
+-- service_role (used server-side, e.g. api/*.js) bypasses this.
+revoke select (email) on public.users from authenticated, anon;
+
 -- Progress: own data only
 create policy "progress_self" on public.progress
   for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
@@ -262,6 +321,40 @@ create index if not exists idx_nexus_channel       on public.nexus_messages(chan
 create index if not exists idx_leaderboard_score   on public.leaderboard(total_score desc);
 create index if not exists idx_forum_topics_cat     on public.forum_topics(category, created_at desc);
 create index if not exists idx_forum_comments_topic on public.forum_comments(topic_id, created_at asc);
+
+-- Case-insensitive unique @username; partial so multiple null (not-yet-
+-- onboarded) rows don't collide. citext already makes lookups
+-- case-insensitive, but the index still needs to exist to enforce it
+-- and to make the availability check + lookups fast.
+create unique index if not exists idx_users_username_unique
+  on public.users (username) where username is not null;
+
+-- One GitHub account can't be linked to more than one profile; multiple
+-- users may have no linked GitHub account (null), so this is partial.
+create unique index if not exists idx_users_github_username_unique
+  on public.users (github_username) where github_username is not null;
+
+-- ════════════════════════════════════════════════════════════════
+-- Username availability check — callable by anon/authenticated
+-- without exposing the users table directly (RLS would otherwise
+-- hide non-public rows from this check, making a taken username
+-- look "available"). SECURITY DEFINER runs with the function
+-- owner's privileges, bypassing RLS for this single boolean lookup.
+-- ════════════════════════════════════════════════════════════════
+create or replace function public.is_username_available(check_username citext)
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    check_username ~ '^[a-z0-9_]{3,30}$'
+    and lower(check_username::text) not in
+      ('admin','root','omicslab','support','api','null','undefined')
+    and not exists (select 1 from public.users where username = check_username);
+$$;
+
+grant execute on function public.is_username_available(citext) to anon, authenticated;
 
 -- ════════════════════════════════════════════════════════════════
 -- updated_at trigger

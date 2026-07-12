@@ -189,13 +189,20 @@ OmicsLab.AuthClerk = (function () {
       _updateNav(null);
       return;
     }
+    /* Clerk keeps linked OAuth providers on the user object regardless
+       of which method was used to sign in this session — a GitHub
+       username here means GitHub is linked, not necessarily how they
+       just authenticated. */
+    const githubAccount = clerkUser.externalAccounts?.find(a => a.provider === 'oauth_github');
+
     _user = {
-      id:        clerkUser.id,
-      email:     clerkUser.primaryEmailAddress?.emailAddress || '',
-      name:      [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || 'OmicsLab User',
-      avatarUrl: clerkUser.imageUrl || '',
-      role:      clerkUser.publicMetadata?.role || 'student',
-      plan:      clerkUser.publicMetadata?.plan || 'free',
+      id:            clerkUser.id,
+      email:         clerkUser.primaryEmailAddress?.emailAddress || '',
+      name:          [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || 'OmicsLab User',
+      avatarUrl:     clerkUser.imageUrl || '',
+      role:          clerkUser.publicMetadata?.role || 'student',
+      plan:          clerkUser.publicMetadata?.plan || 'free',
+      githubUsername: githubAccount?.username || null,
     };
     try {
       localStorage.setItem('omicslab_user_profile', JSON.stringify(_user));
@@ -219,7 +226,14 @@ OmicsLab.AuthClerk = (function () {
       getToken().then(jwt => {
         if (!jwt) return;
         OmicsLab.DB.setSession?.(jwt);
-        OmicsLab.DB.upsertUser({ clerk_id: _user.id, email: _user.email, name: _user.name, avatar_url: _user.avatarUrl, role: _user.role, plan: _user.plan });
+        OmicsLab.DB.upsertUser({
+          clerk_id: _user.id, email: _user.email, name: _user.name, avatar_url: _user.avatarUrl,
+          role: _user.role, plan: _user.plan,
+          /* Only ever set, never clear — omitting the key (rather than
+             sending null) means a sign-in with no linked GitHub account
+             doesn't wipe out a previously-linked one. */
+          ...(_user.githubUsername ? { github_username: _user.githubUsername } : {}),
+        });
         OmicsLab.DB.syncOnSignIn(_user.id);
       }).catch(() => {});
     }

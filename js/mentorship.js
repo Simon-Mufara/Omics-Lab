@@ -21,12 +21,12 @@ OmicsLab.Mentorship = (function () {
   ];
 
   function _getMentors() {
-    const saved = JSON.parse(localStorage.getItem('omicslab_mentor_profiles') || '[]');
+    const saved = OmicsLab.Utils?.safeParse('omicslab_mentor_profiles', []) || [];
     return [...SEED_MENTORS, ...saved];
   }
-  function _getMyProfile() { return JSON.parse(localStorage.getItem('omicslab_my_mentor_profile') || 'null'); }
-  function _getConnections() { return JSON.parse(localStorage.getItem('omicslab_mentorship_conns') || '[]'); }
-  function _saveConnections(c) { localStorage.setItem('omicslab_mentorship_conns', JSON.stringify(c)); }
+  function _getMyProfile() { return OmicsLab.Utils?.safeParse('omicslab_my_mentor_profile', null); }
+  function _getConnections() { return OmicsLab.Utils?.safeParse('omicslab_mentorship_conns', []) || []; }
+  function _saveConnections(c) { (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})('omicslab_mentorship_conns', c); }
 
   function _connect(mid) {
     const me = _getMyProfile();
@@ -203,7 +203,7 @@ OmicsLab.Mentorship = (function () {
 
   /* ── QR-code shareable profile (Prompt 53) ── */
   function _shareProfile() {
-    const profile = JSON.parse(localStorage.getItem('omicslab_my_mentor_profile') || 'null');
+    const profile = OmicsLab.Utils?.safeParse('omicslab_my_mentor_profile', null);
     if (!profile) { OmicsLab.Toast?.show('Register your profile first', 'info'); return; }
 
     /* Encode profile as URL hash data */

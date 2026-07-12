@@ -7,6 +7,8 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.AfricaMap = (function() {
 
+  const W = 520, H = 480;
+
   /* Static data: genomics centres and programmes */
   const CENTRES = [
     { id:'capetown',   name:'H3Africa APCDR Cape Town',           country:'South Africa',  lat:-33.9,  lon:18.4,   type:'sequencing',  desc:'African Population Cohort Disease Research hub at UCT. Focus: cardiometabolic disease genetics, pharmacogenomics across African ancestry groups.',       programs:['H3Africa','APCDR','AWI-Gen'], focus:'Pharmacogenomics, CVD, Diabetes' },
@@ -37,20 +39,21 @@ OmicsLab.AfricaMap = (function() {
     { id:'algiers',    name:'Institut Pasteur d\'Algérie',         country:'Algeria',     lat:36.75,  lon:3.06,   type:'research',    desc:'Algeria\'s national Pasteur institute with genomic research and public health sequencing for North Africa.', programs:['Pasteur Network','WHO'], focus:'Public health genomics, surveillance' }
   ];
 
-  /* SVG coordinate projection: simple linear scale */
-  /* Africa bounding box: lon -18 to 52, lat -35 to 38 */
-  function _project(lat, lon) {
-    const W = 520, H = 480;
-    const x = ((lon - (-18)) / (52 - (-18))) * W;
-    const y = ((38 - lat) / (38 - (-35))) * H;
-    return { x: Math.round(x), y: Math.round(y) };
-  }
-
   const TYPE_COLOR = {
     'sequencing':  '#00C4A0',
     'surveillance':'#e3b341',
     'research':    '#58a6ff'
   };
+
+  /* SVG coordinate projection — delegates to the shared real-geography
+     module (js/africa-geo.js) so centre dots stay pixel-aligned with
+     the real country polygons drawn underneath them. */
+  function _project(lat, lon) {
+    const { x, y } = OmicsLab.AfricaGeo.project(lat, lon, W, H);
+    return { x: Math.round(x), y: Math.round(y) };
+  }
+
+  let _selectedSlug = null;
 
   function init() {
     const container = document.getElementById('africa-map-container');
@@ -59,13 +62,26 @@ OmicsLab.AfricaMap = (function() {
     _attachEvents();
   }
 
+  function _countrySelectOptions() {
+    const names = OmicsLab.AfricaGeo.COUNTRIES.features
+      .map(f => f.properties.name)
+      .sort((a, b) => a.localeCompare(b));
+    return names.map(n => `<option value="${OmicsLab.AfricaGeo.slugify(n)}">${n}</option>`).join('');
+  }
+
   function _buildHTML() {
+    const countryPaths = OmicsLab.AfricaGeo.allCountryPaths(W, H).map(c =>
+      `<path class="amap-country" d="${c.d}" data-slug="${c.slug}" data-name="${c.name}"
+        tabindex="0" role="button" aria-label="${c.name}"><title>${c.name}</title></path>`
+    ).join('');
+
     const dots = CENTRES.map(c => {
       const { x, y } = _project(c.lat, c.lon);
       const col = TYPE_COLOR[c.type] || '#aaa';
+      const slug = OmicsLab.AfricaGeo.slugify(OmicsLab.AfricaGeo.resolveName(c.country));
       return `<circle class="amap-dot" cx="${x}" cy="${y}" r="7"
                fill="${col}" stroke="#0D1524" stroke-width="2"
-               data-id="${c.id}" tabindex="0" role="button"
+               data-id="${c.id}" data-country-slug="${slug}" tabindex="0" role="button"
                aria-label="${c.name}"/>
               <circle class="amap-pulse" cx="${x}" cy="${y}" r="7"
                fill="none" stroke="${col}" stroke-width="1.5" opacity="0.5"/>`;
@@ -74,8 +90,25 @@ OmicsLab.AfricaMap = (function() {
     return `
       <div class="amap-layout">
         <div class="amap-svg-wrap">
-          <svg class="amap-svg" viewBox="0 0 520 480" xmlns="http://www.w3.org/2000/svg" aria-label="Africa Genomics Lab Map">
-            ${_africaOutline()}
+          <div class="amap-country-picker">
+            <label for="amap-country-select">Focus on a country</label>
+            <select id="amap-country-select" class="amap-country-select" onchange="OmicsLab.AfricaMap._selectCountry(this.value)">
+              <option value="">All of Africa</option>
+              ${_countrySelectOptions()}
+            </select>
+            <button type="button" class="amap-reset-btn" id="amap-reset-btn" style="display:none" onclick="OmicsLab.AfricaMap._selectCountry('')">
+              ${OmicsLab.Icons?.svg('x',12)||''} Show all Africa
+            </button>
+          </div>
+          <svg class="amap-svg" id="amap-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" aria-label="Africa Genomics Lab Map">
+            <defs>
+              <radialGradient id="amap-bg" cx="50%" cy="50%" r="70%">
+                <stop offset="0%" stop-color="#111B2E"/>
+                <stop offset="100%" stop-color="#0D1524"/>
+              </radialGradient>
+            </defs>
+            <rect width="${W}" height="${H}" fill="url(#amap-bg)" rx="12"/>
+            <g class="amap-countries" fill="#1c2430" stroke="#243048" stroke-width="0.8">${countryPaths}</g>
             ${dots}
           </svg>
           <div class="amap-legend">
@@ -87,7 +120,7 @@ OmicsLab.AfricaMap = (function() {
         <div class="amap-info-panel" id="amap-info-panel">
           <div class="amap-info-placeholder">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <p>Click any dot on the map to see details about that genomics centre.</p>
+            <p>Click any dot on the map, or pick a country above, to see details.</p>
           </div>
         </div>
       </div>`;
@@ -98,6 +131,64 @@ OmicsLab.AfricaMap = (function() {
       dot.addEventListener('click', () => _showInfo(dot.dataset.id));
       dot.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') _showInfo(dot.dataset.id); });
     });
+    document.querySelectorAll('.amap-country').forEach(path => {
+      path.addEventListener('click', () => _selectCountry(path.dataset.slug));
+      path.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') _selectCountry(path.dataset.slug); });
+    });
+  }
+
+  /* Zoom the map to one country and filter the centre list to it — lets
+     users looking at a geographically-limited situation (e.g. a single
+     country's genomics infrastructure) drill in instead of scanning the
+     whole continent. Empty slug resets to the full-continent view. */
+  function _selectCountry(slug) {
+    _selectedSlug = slug || null;
+    const svg = document.getElementById('amap-svg');
+    const select = document.getElementById('amap-country-select');
+    const resetBtn = document.getElementById('amap-reset-btn');
+    if (select && select.value !== (slug || '')) select.value = slug || '';
+
+    document.querySelectorAll('.amap-country').forEach(p => {
+      p.classList.toggle('amap-country--selected', !!slug && p.dataset.slug === slug);
+    });
+    document.querySelectorAll('.amap-dot, .amap-pulse').forEach(d => {
+      const dim = !!slug && d.dataset.countrySlug && d.dataset.countrySlug !== slug;
+      d.classList.toggle('amap-dot--dim', dim);
+    });
+
+    if (svg) {
+      if (slug) {
+        const feature = OmicsLab.AfricaGeo.COUNTRIES.features.find(f => OmicsLab.AfricaGeo.slugify(f.properties.name) === slug);
+        if (feature) svg.setAttribute('viewBox', OmicsLab.AfricaGeo.countryViewBox(feature, W, H));
+      } else {
+        svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      }
+    }
+    if (resetBtn) resetBtn.style.display = slug ? '' : 'none';
+
+    const panel = document.getElementById('amap-info-panel');
+    if (!panel) return;
+    if (!slug) {
+      panel.innerHTML = `
+        <div class="amap-info-placeholder">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <p>Click any dot on the map, or pick a country above, to see details.</p>
+        </div>`;
+      return;
+    }
+    const inCountry = CENTRES.filter(c => OmicsLab.AfricaGeo.slugify(OmicsLab.AfricaGeo.resolveName(c.country)) === slug);
+    const countryName = document.querySelector(`.amap-country[data-slug="${slug}"]`)?.dataset.name || slug;
+    panel.innerHTML = inCountry.length
+      ? `<div class="amap-country-summary">
+          <div class="amap-info-name">${countryName}</div>
+          <div class="amap-info-country">${inCountry.length} genomics ${inCountry.length===1?'centre':'centres'}</div>
+          <ul class="amap-country-list">
+            ${inCountry.map(c => `<li><button type="button" onclick="OmicsLab.AfricaMap._showInfo('${c.id}')">${c.name}</button></li>`).join('')}
+          </ul>
+        </div>`
+      : `<div class="amap-info-placeholder">
+          <p><strong>${countryName}</strong> has no genomics centre in this dataset yet.</p>
+        </div>`;
   }
 
   function _showInfo(id) {
@@ -109,6 +200,7 @@ OmicsLab.AfricaMap = (function() {
     const progs = c.programs.map(p => `<span class="amap-prog-tag">${p}</span>`).join('');
     panel.innerHTML = `
       <div class="amap-info-card" style="--ac:${col}">
+        <button type="button" class="amap-back-btn" onclick="OmicsLab.AfricaMap._selectCountry('${_selectedSlug||''}')">← Back</button>
         <div class="amap-info-head">
           <div class="amap-info-dot" style="background:${col}"></div>
           <div>
@@ -129,56 +221,5 @@ OmicsLab.AfricaMap = (function() {
     });
   }
 
-  /* Africa outline using real coordinate projections for recognisable continent shape */
-  function _africaOutline() {
-    /* All points computed via _project(lat,lon) ahead of time for SVG path */
-    return `
-    <defs>
-      <radialGradient id="amap-bg" cx="50%" cy="50%" r="70%">
-        <stop offset="0%" stop-color="#111B2E"/>
-        <stop offset="100%" stop-color="#0D1524"/>
-      </radialGradient>
-    </defs>
-    <rect width="520" height="480" fill="url(#amap-bg)" rx="12"/>
-    <g fill="#1c2430" stroke="#243048" stroke-width="0.8" opacity="0.9">
-    <!--
-      Points traced clockwise from Morocco NW.
-      Each comment shows approx lat,lon reference.
-    -->
-    <path d="
-      M 91,16
-      C 150,8 185,6 210,8
-      C 240,12 280,34 319,44
-      C 350,40 370,52 387,66
-      C 420,112 440,148 453,174
-      L 511,172
-      C 498,202 475,220 446,238
-      C 440,274 436,296 430,316
-      C 416,352 406,368 394,382
-      C 372,424 348,460 282,475
-      L 260,441
-      L 216,362
-      L 223,284
-      C 214,268 206,258 200,250
-      L 163,224
-      C 148,216 136,215 126,217
-      C 108,218 90,220 77,222
-      L 53,208
-      L 30,191
-      L 7,171
-      L 4,153
-      C 3,136 4,124 7,114
-      C 18,88 28,76 37,66
-      C 56,42 72,28 91,16 Z
-    "/>
-    <!-- Madagascar: centre ~lat -19, lon 47 -->
-    <ellipse cx="487" cy="375" rx="13" ry="40" transform="rotate(-12 487 375)"/>
-    </g>
-    <!-- Equator line -->
-    <line x1="0" y1="${_project(0,0).y}" x2="520" y2="${_project(0,0).y}" stroke="#243048" stroke-width="0.5" stroke-dasharray="4,4"/>
-    <text x="8" y="${_project(0,0).y - 3}" fill="#4a5568" font-size="9" font-family="monospace">Equator</text>
-    `;
-  }
-
-  return { init, CENTRES };
+  return { init, CENTRES, _selectCountry, _showInfo };
 })();

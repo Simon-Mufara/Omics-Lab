@@ -58,8 +58,8 @@ OmicsLab.Hackathon = (function () {
     { team:'BioInfo Togo',           country:'Togo',         score:76, members:3, challenge:'h2', status:'submitted' },
   ];
 
-  function _getMyTeams() { return JSON.parse(localStorage.getItem('omicslab_hackathon_teams') || '[]'); }
-  function _saveMyTeams(t) { localStorage.setItem('omicslab_hackathon_teams', JSON.stringify(t)); }
+  function _getMyTeams() { return OmicsLab.Utils?.safeParse('omicslab_hackathon_teams', []) || []; }
+  function _saveMyTeams(t) { (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})('omicslab_hackathon_teams', t); }
 
   function _joinChallenge(cid) {
     const ch = CHALLENGES.find(c => c.id === cid);

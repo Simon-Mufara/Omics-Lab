@@ -64,7 +64,7 @@ OmicsLab.Directory = (function () {
   let _myProfile = null;
 
   function _allProfiles() {
-    const stored = JSON.parse(localStorage.getItem('omicslab_my_dir_profile') || 'null');
+    const stored = OmicsLab.Utils?.safeParse('omicslab_my_dir_profile', null);
     return stored ? [...BASE_PROFILES, stored] : BASE_PROFILES;
   }
 

@@ -197,7 +197,7 @@ A proportion of any intellectual property generated from this work will be held 
     const disKey   = disease.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z_]/g,'');
 
     /* Wet lab steps from protocols if available */
-    const myProtos = JSON.parse(localStorage.getItem('omicslab_my_protocols_v1') || '[]');
+    const myProtos = OmicsLab.Utils?.safeParse('omicslab_my_protocols_v1', []) || [];
     const proto = myProtos[0];
     const wetLabSteps = proto
       ? proto.steps.map(s => `  • Step ${s.n}: ${s.title} — ${s.detail}`).join('\n')
@@ -298,7 +298,7 @@ A proportion of any intellectual property generated from this work will be held 
 
   /* ─── Auto-fill from last lab session ─── */
   function _autoFill() {
-    const session = JSON.parse(localStorage.getItem('omicslab_last_session') || '{}');
+    const session = OmicsLab.Utils?.safeParse('omicslab_last_session', {}) || {};
     if (!session.domain) { _toast('No recent lab session found — fill the form manually.', true); return; }
     const wf = session.workflowName || session.domain || '';
     const di = (session.disease || '').toLowerCase();

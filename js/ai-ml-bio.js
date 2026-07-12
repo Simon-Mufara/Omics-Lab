@@ -88,7 +88,7 @@ OmicsLab.AIMLBio = (function () {
   const ALL_FEATS  = ['GC content', 'Sample collection date', 'k-mer frequencies', 'Researcher initials', 'Sequence entropy', 'File creation timestamp', 'Conservation score', 'Codon bias', 'Gel image filename'];
 
   /* ─── State ─── */
-  let _tab = 'llms';
+  let _tab = 'start';
   let _modelId = 'nucleotide-transformer';
   let _nnRunning = false;
   let _nnActivations = []; /* per-layer activation strength 0-1 */
@@ -113,6 +113,7 @@ OmicsLab.AIMLBio = (function () {
 
       <div class="aml-tabs" role="tablist">
         ${[
+          ['start',    'Start Here'],
           ['llms',     'Foundation Models & LLMs'],
           ['nn',       'Neural Networks'],
           ['classical','Classical ML'],
@@ -144,12 +145,79 @@ OmicsLab.AIMLBio = (function () {
   function _renderTab() {
     const body = document.getElementById('aml-tab-body');
     if (!body) return;
+    if (_tab === 'start')     body.innerHTML = _tabStart();
     if (_tab === 'llms')      body.innerHTML = _tabLLMs();
     if (_tab === 'nn')        { body.innerHTML = _tabNN(); _initNNCanvas(); }
     if (_tab === 'classical') body.innerHTML = _tabClassical();
     if (_tab === 'workflows') body.innerHTML = _tabWorkflows();
     if (_tab === 'africa')    body.innerHTML = _tabAfrica();
     if (_tab === 'practice')  body.innerHTML = _tabPractice();
+  }
+
+  /* ═══════════ TAB: Start Here ════════════
+     A beginner on-ramp for users who land on this tool directly (not via
+     the guided curriculum) — this tab used to jump straight into advanced
+     foundation-model content with no "why does this matter" primer. */
+  function _tabStart() {
+    const concepts = [
+      { name: 'Rules you write vs. patterns a model learns', body: 'Traditional bioinformatics code runs on rules a person wrote — "flag reads below Q20." ML instead learns its own rule from labeled examples, for when the real boundary is too complex to write by hand.', analogy: 'Like the difference between a fixed recipe and a chef who has tasted a thousand dishes and learned to judge by feel.' },
+      { name: 'Classical ML vs. foundation models', body: 'Classical ML (Random Forest, logistic regression) learns entirely from the dataset you give it. A foundation model (ESM-2, Nucleotide Transformer) was already pretrained on millions of sequences, so it needs far fewer labeled examples of your own.', analogy: 'Training from scratch vs. hiring someone who already has the degree and just needs orientation.' },
+      { name: 'Why "97% accurate" isn\'t the whole story', body: 'With imbalanced classes (a rare resistance mutation, a rare disease), a model can score high accuracy while missing almost every real positive case. The Practice tab\'s confusion-matrix exercise shows exactly why.', analogy: 'A smoke detector that never goes off still "passes" 99% of quiet days — until the one day it matters.' },
+    ];
+    const misconceptions = [
+      { claim: '"ML is a black box that just guesses."', correction: 'Predictions are checked against real held-out examples with known answers — that\'s exactly how you measure whether a model actually works (see the Practice tab).' },
+      { claim: '"More features / a bigger model is always better."', correction: 'With small genomic datasets (often more genes than patients), extra features usually increase overfitting risk rather than improving real performance.' },
+    ];
+
+    return `
+    <div class="aml-start-page">
+      <div class="aml-start-section">
+        <div class="aml-start-h">${OmicsLab.Icons?.svg('cpu',16)||''} Why does ML matter for bioinformatics?</div>
+        <div class="aml-start-body">
+          A single exome carries tens of thousands of variants; a single scRNA-seq run profiles tens of thousands of cells at once. No hand-written rule book scales to deciding which variant is pathogenic or which cell type each cell is — that's the gap machine learning fills. It isn't a separate field bolted onto bioinformatics: the Classical ML tab's Random Forest example predicts real MDR-TB drug resistance from SNPs, and the Foundation Models tab's ESM-2 scores real variant pathogenicity — the same categories of tool used in actual African genomics research today.
+        </div>
+        <div class="aml-start-concepts">
+          ${concepts.map(c => `
+            <div class="aml-start-concept">
+              <div class="aml-start-concept-name">${c.name}</div>
+              <div class="aml-start-concept-body">${c.body}</div>
+              ${c.analogy ? `<div class="aml-start-concept-analogy">${c.analogy}</div>` : ''}
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="aml-start-section">
+        <div class="aml-start-h">${OmicsLab.Icons?.svg('alert-triangle',16)||''} Common misconceptions</div>
+        <div class="aml-start-misconceptions">
+          ${misconceptions.map(m => `
+            <div class="aml-start-mis"><strong>${m.claim}</strong> ${m.correction}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="aml-start-section">
+        <div class="aml-start-h">${OmicsLab.Icons?.svg('target',16)||''} Where to go next</div>
+        <div class="aml-start-body">Jump to whichever part answers your actual question right now — or work through them in order.</div>
+        <div class="aml-start-links">
+          <button class="aml-start-link-btn" onclick="OmicsLab.AIMLBio.setTab('llms')">${OmicsLab.Icons?.svg('cpu',13)||''} Foundation Models &amp; LLMs</button>
+          <button class="aml-start-link-btn" onclick="OmicsLab.AIMLBio.setTab('classical')">${OmicsLab.Icons?.svg('bar-chart',13)||''} Classical ML</button>
+          <button class="aml-start-link-btn" onclick="OmicsLab.AIMLBio.setTab('africa')">${OmicsLab.Icons?.svg('globe',13)||''} Africa Applications</button>
+          <button class="aml-start-link-btn" onclick="OmicsLab.AIMLBio.setTab('practice')">${OmicsLab.Icons?.svg('flask',13)||''} Practice &amp; Build</button>
+        </div>
+      </div>
+
+      <div class="aml-start-section aml-start-cta">
+        <div>
+          <div class="aml-start-h" style="margin-bottom:.25rem">${OmicsLab.Icons?.svg('award',16)||''} Want the guided, quizzed version?</div>
+          <div class="aml-start-body">The <strong>AI &amp; Machine Learning for Omics</strong> curriculum track walks through these same ideas as structured lessons — with worked examples, key terms, and short quizzes — and links back into this tool for each hands-on step.</div>
+        </div>
+        <button class="aml-start-cta-btn" onclick="OmicsLab.AIMLBio._openCurriculumTrack()">Open the curriculum track →</button>
+      </div>
+    </div>`;
+  }
+
+  function _openCurriculumTrack() {
+    if (OmicsLab.Router) OmicsLab.Router.navigate('learn');
+    setTimeout(() => OmicsLab.Curriculum?.openTrack?.('aiml'), 150);
   }
 
   /* ═══════════ TAB: LLMs ════════════ */
@@ -573,6 +641,7 @@ OmicsLab.AIMLBio = (function () {
           <div class="aml-ex-score">${_px.q1score}/${_px.q1total} correct</div>
         </div>
         <div class="aml-ex-body">
+          <div class="aml-ex-realworld"><strong>Real-world task:</strong> this is the same "which tool do I even reach for" decision you hit the moment a PI hands you a new dataset — before any code gets written.</div>
           <div class="aml-scenario-box">${q.scenario}</div>
           <div class="aml-options-grid">
             ${q.options.map((opt, i) => {
@@ -602,6 +671,7 @@ OmicsLab.AIMLBio = (function () {
           </div>
         </div>
         <div class="aml-ex-body">
+          <div class="aml-ex-realworld"><strong>Real-world task:</strong> this is the exact step order a real analysis notebook follows — get the split/fit order wrong and you get "data leakage," where a model looks great in testing and then fails in production.</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
             <div>
               <div class="aml-ex-section-label">Available steps — click to add</div>
@@ -644,6 +714,7 @@ OmicsLab.AIMLBio = (function () {
           </div>
         </div>
         <div class="aml-ex-body">
+          <div class="aml-ex-realworld"><strong>Real-world task:</strong> this is exactly the table a variant caller's or resistance predictor's QC report hands you — reading it correctly (not just the headline accuracy) is what tells you whether to trust the tool clinically.</div>
           <div style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start">
             <div>
               <div class="aml-ex-section-label" style="margin-bottom:.5rem">Confusion matrix (n=${cmTotal})</div>
@@ -703,6 +774,7 @@ OmicsLab.AIMLBio = (function () {
           </div>
         </div>
         <div class="aml-ex-body">
+          <div class="aml-ex-realworld"><strong>Real-world task:</strong> picking features badly is the single most common way real ML-in-genomics projects quietly fail — a model that "learns" the sample collection date isn't learning biology at all.</div>
           <p class="aml-scenario-box">You are training a Random Forest to classify pathogenic vs. benign DNA variants. Your dataset has 9 candidate features. Select only the features with genuine biological signal — including anything else would introduce data leakage or add noise with no predictive value.</p>
           <div class="aml-feat-grid">
             ${ALL_FEATS.map(f => {
@@ -796,5 +868,5 @@ OmicsLab.AIMLBio = (function () {
   function selectModel(id) { _modelId = id; setTab('llms'); }
   function _esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-  return { init, setTab, selectModel, runForwardPass, resetNN, _answerQ1, _nextQ1, _addPipeStep, _resetPipe, _cmInput, _checkCM, _resetCM, _featToggle, _checkFeats, _resetFeats };
+  return { init, setTab, selectModel, runForwardPass, resetNN, _answerQ1, _nextQ1, _addPipeStep, _resetPipe, _cmInput, _checkCM, _resetCM, _featToggle, _checkFeats, _resetFeats, _openCurriculumTrack };
 })();

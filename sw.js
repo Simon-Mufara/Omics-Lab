@@ -5,11 +5,19 @@
         the vercel.json Cache-Control fix, so deploys never visibly
         landed until a second reload. Cache is now only an offline
         fallback for these assets, never the first response.
+   v52: PAGES_CACHE bumped so a stale pre-fix index.html can't keep
+        being served offline after the hard-refresh crash-cascade fix
+        landed (see js/utils.js, index.html boot sequence, router.js).
+        Added a Pyodide cache-first carve-out (PYODIDE_CACHE) so the
+        Python terminal genuinely works offline after one successful
+        load, instead of the UI claiming that while every CDN request
+        silently passed through uncached.
    ═══════════════════════════════════════════════════════════════ */
 
 const STATIC_CACHE  = 'ol-static-v51';  /* js/ css/ images/ */
-const PAGES_CACHE   = 'ol-pages-v11';   /* index.html + offline.html */
+const PAGES_CACHE   = 'ol-pages-v12';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
+const PYODIDE_CACHE = 'ol-pyodide-v1'; /* Pyodide runtime/wasm/stdlib — long-lived */
 
 /* Precache offline fallback on install */
 const OFFLINE_URL = '/offline.html';
@@ -33,7 +41,7 @@ self.addEventListener('install', e => {
    first install and a real new version apart via the standard
    registration.installing/updatefound lifecycle. */
 self.addEventListener('activate', e => {
-  const CURRENT = new Set([STATIC_CACHE, PAGES_CACHE, FONTS_CACHE]);
+  const CURRENT = new Set([STATIC_CACHE, PAGES_CACHE, FONTS_CACHE, PYODIDE_CACHE]);
   e.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
@@ -55,24 +63,34 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  /* 2. Cross-origin (CDNs, APIs) → pass through, no caching */
+  /* 2. Pyodide runtime (CDN) → Cache-First, long-lived. Makes the
+     Python terminal genuinely work offline after one successful load —
+     previously this fell through to rule 3 below (pass-through, never
+     cached), contradicting the terminal UI's "works offline after
+     first run" claim. */
+  if (url.startsWith('https://cdn.jsdelivr.net/pyodide/')) {
+    e.respondWith(_cacheFirst(e.request, PYODIDE_CACHE));
+    return;
+  }
+
+  /* 4. Cross-origin (other CDNs, APIs) → pass through, no caching */
   if (!url.startsWith(ORIGIN)) return;
 
-  /* 3. Auth / API routes → Network-Only (never cache auth data) */
+  /* 5. Auth / API routes → Network-Only (never cache auth data) */
   const path = url.slice(ORIGIN.length);
   if (path.startsWith('/auth/') || path.startsWith('/api/') ||
       path.startsWith('/analytics/')) {
     return; /* let the request pass through unmodified */
   }
 
-  /* 4. index.html → Network-First with 3s timeout; offline.html fallback */
+  /* 6. index.html → Network-First with 3s timeout; offline.html fallback */
   if (path === '/' || path === '/Omics-Lab/' || path.endsWith('/index.html') ||
       path === '/Omics-Lab' || path === '') {
     e.respondWith(_networkFirstWithOffline(e.request, PAGES_CACHE, 3000));
     return;
   }
 
-  /* 5. JS / CSS / JSON → always Network-First. The cache here exists purely
+  /* 7. JS / CSS / JSON → always Network-First. The cache here exists purely
      as an offline fallback — if it's the first response a visitor sees, a
      fresh deploy can never be distinguishable from a stale one. */
   if (path.match(/\.(js|css|json|webmanifest)(\?.*)?$/)) {
@@ -80,13 +98,13 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  /* 6. Images / fonts / SVG → Cache-First */
+  /* 8. Images / fonts / SVG → Cache-First */
   if (path.match(/\.(png|jpg|jpeg|gif|svg|webp|ico|woff2?|ttf|otf)(\?.*)?$/)) {
     e.respondWith(_cacheFirst(e.request, STATIC_CACHE));
     return;
   }
 
-  /* 7. Everything else → Network-First */
+  /* 9. Everything else → Network-First */
   e.respondWith(_networkFirst(e.request, STATIC_CACHE, 5000));
 });
 

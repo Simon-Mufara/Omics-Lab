@@ -1,11 +1,14 @@
 {
-  "buildCommand": null,
+  "buildCommand": "npm run build:hub",
   "outputDirectory": ".",
   "installCommand": "npm install",
   "framework": null,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/hub/assets/(.*)", "destination": "/hub-dist/assets/$1" },
+    { "source": "/hub/(.*)", "destination": "/hub-dist/index" },
+    { "source": "/hub", "destination": "/hub-dist/index" },
+    { "source": "/((?!api/).*)", "destination": "/index" }
   ],
   "headers": [
     {
@@ -16,7 +19,13 @@
         { "key": "X-XSS-Protection",         "value": "1; mode=block" },
         { "key": "Referrer-Policy",          "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy",       "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Content-Security-Policy",  "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net *.clerk.dev clerk.omicsdatalab.tech; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; connect-src 'self' *.clerk.dev clerk.omicsdatalab.tech *.supabase.co api.resend.com api.anthropic.com; img-src 'self' data: blob: https:; worker-src 'self' blob:; frame-src *.clerk.dev clerk.omicsdatalab.tech; frame-ancestors 'none'" }
+        { "key": "Content-Security-Policy",  "value": "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net *.clerk.dev clerk.omicsdatalab.tech challenges.cloudflare.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; connect-src 'self' *.clerk.dev clerk.omicsdatalab.tech *.supabase.co api.resend.com api.anthropic.com challenges.cloudflare.com cdn.jsdelivr.net; img-src 'self' data: blob: https:; worker-src 'self' blob:; frame-src *.clerk.dev clerk.omicsdatalab.tech challenges.cloudflare.com accounts.google.com; frame-ancestors 'none'" }
+      ]
+    },
+    {
+      "source": "/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
       ]
     },
     {
@@ -39,6 +48,18 @@
     },
     {
       "source": "/images/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/hub-dist/index.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/hub-dist/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]

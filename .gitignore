@@ -11,6 +11,9 @@
 node_modules/
 npm-debug.log*
 
+# Hub (React) build output
+hub-dist/
+
 # OS
 .DS_Store
 Thumbs.db

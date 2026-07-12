@@ -1285,6 +1285,23 @@ input[type=range]::-webkit-slider-thumb {
   display: flex; align-items: center; gap: 0.5rem;
 }
 
+/* Post-results "visualize in Python" panel */
+.oviz-cell { margin-bottom: 1rem; }
+.oviz-cell-title { font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem; }
+.oviz-code {
+  background: var(--surface-1); border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md); padding: 0.85rem 1rem;
+  font-family: var(--font-mono); font-size: 0.74rem; line-height: 1.55;
+  color: var(--text-secondary); overflow-x: auto; white-space: pre;
+  margin-bottom: 0.5rem;
+}
+.oviz-copy-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
+  border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.74rem; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 0.35rem;
+}
+.oviz-copy-btn:hover { color: var(--text-primary); border-color: var(--accent); }
+
 /* QC table */
 .qc-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
 .qc-table th {
@@ -2675,6 +2692,40 @@ mark.qa-highlight {
   background: var(--surface-3); border: 1px solid var(--border); color: var(--text-muted);
   font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 20px;
 }
+
+/* Real country boundaries + drill-down (js/africa-geo.js) */
+.amap-country { cursor: pointer; transition: fill 0.15s, stroke 0.15s; }
+.amap-country:hover { fill: #24314a; stroke: #3a4d70; }
+.amap-country--selected { fill: rgba(0,196,160,0.18); stroke: #00C4A0; stroke-width: 1.4; }
+.amap-svg { transition: none; }
+.amap-dot--dim, .amap-dot--dim + .amap-pulse { opacity: 0.15; }
+.amap-country-picker {
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; flex-wrap: wrap;
+}
+.amap-country-picker label { font-size: 0.75rem; color: var(--text-muted); }
+.amap-country-select {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 0.35rem 0.6rem; font-size: 0.8rem;
+}
+.amap-reset-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
+  border-radius: 8px; padding: 0.3rem 0.65rem; font-size: 0.76rem; cursor: pointer;
+}
+.amap-reset-btn:hover { color: var(--text); border-color: var(--accent); }
+.amap-country-summary { display: flex; flex-direction: column; gap: 0.6rem; }
+.amap-country-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.amap-country-list button {
+  width: 100%; text-align: left; background: var(--surface-3); border: 1px solid var(--border);
+  color: var(--text); border-radius: 8px; padding: 0.5rem 0.7rem; font-size: 0.8rem; cursor: pointer;
+}
+.amap-country-list button:hover { border-color: var(--accent); }
+.amap-back-btn {
+  display: inline-flex; align-items: center; gap: 0.3rem; align-self: flex-start;
+  background: none; border: none; color: var(--text-muted); font-size: 0.76rem;
+  cursor: pointer; padding: 0;
+}
+.amap-back-btn:hover { color: var(--accent); }
 
 /* ── Troubleshooting Modal ────────────────────────────────────── */
 .troubleshoot-modal-overlay {

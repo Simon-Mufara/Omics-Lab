@@ -2068,6 +2068,7 @@
 
 <!-- OmicsLab service layer — must run before feature modules -->
 <script defer src="js/config.js"></script>
+<script defer src="js/utils.js"></script>
 <script defer src="js/db.js"></script>
 
 <!-- Scripts — load order matters (notify first, then icons → namespace → data → engine → bench → app) -->
@@ -2083,6 +2084,7 @@
 <script defer src="js/bench.js"></script>
 <script defer src="js/compare.js"></script>
 <script defer src="js/quiz.js"></script>
+<script defer src="js/africa-geo.js"></script>
 <script defer src="js/africa-map.js"></script>
 <script defer src="js/troubleshoot.js"></script>
 <script defer src="js/sandbox.js"></script>
@@ -2214,6 +2216,7 @@
 <script defer src="js/notifications.js"></script>
 <script defer src="js/offline-indicator.js"></script>
 <script defer src="js/output-tracker.js"></script>
+<script defer src="js/output-viz.js"></script>
 <script defer src="js/study-music.js"></script>
 <script defer src="js/theme.js"></script>
 <script defer src="js/dashboard.js"></script>
@@ -2360,24 +2363,33 @@
     } catch(e) {}
   })();
 
-  /* ── Boot new modules after app.js initialises ── */
+  /* ── Boot new modules after app.js initialises ──
+     Each call is isolated via OmicsLab.Utils.safeInit so one module
+     throwing (e.g. on stale post-deploy localStorage data a hard
+     refresh never clears) can't stop every module listed after it
+     from running — previously a single throw here silently killed
+     Auth/Entitlements/NexusRealtime init for the rest of the visit. */
   document.addEventListener('DOMContentLoaded', function () {
-    if (OmicsLab.Auth)      OmicsLab.Auth.init();
-    if (OmicsLab.Changelog) OmicsLab.Changelog.init();
-    if (OmicsLab.Analysis)  OmicsLab.Analysis.init();
-    if (OmicsLab.Terminal)  OmicsLab.Terminal.init();
-    if (OmicsLab.Router)    OmicsLab.Router.init();
-    if (OmicsLab.Profile)   OmicsLab.Profile.init();
-    if (OmicsLab.MobileNav) OmicsLab.MobileNav.init();
-    if (OmicsLab.Shortcuts)   OmicsLab.Shortcuts.init();
-    if (OmicsLab.Theme)       OmicsLab.Theme.init?.();
-    if (OmicsLab.StudyMusic)  OmicsLab.StudyMusic.init();
+    var _si = OmicsLab.Utils
+      ? OmicsLab.Utils.safeInit
+      : function (name, fn) { try { fn(); } catch (e) { console.error('[Boot] init failed: ' + name, e); } };
+
+    if (OmicsLab.Auth)      _si('Auth',      function(){ OmicsLab.Auth.init(); });
+    if (OmicsLab.Changelog) _si('Changelog', function(){ OmicsLab.Changelog.init(); });
+    if (OmicsLab.Analysis)  _si('Analysis',  function(){ OmicsLab.Analysis.init(); });
+    if (OmicsLab.Terminal)  _si('Terminal',  function(){ OmicsLab.Terminal.init(); });
+    if (OmicsLab.Router)    _si('Router',    function(){ OmicsLab.Router.init(); });
+    if (OmicsLab.Profile)   _si('Profile',   function(){ OmicsLab.Profile.init(); });
+    if (OmicsLab.MobileNav) _si('MobileNav', function(){ OmicsLab.MobileNav.init(); });
+    if (OmicsLab.Shortcuts)   _si('Shortcuts',   function(){ OmicsLab.Shortcuts.init(); });
+    if (OmicsLab.Theme)       _si('Theme',       function(){ OmicsLab.Theme.init?.(); });
+    if (OmicsLab.StudyMusic)  _si('StudyMusic',  function(){ OmicsLab.StudyMusic.init(); });
     /* Service layer */
-    if (OmicsLab.DB)              OmicsLab.DB.init();
-    if (OmicsLab.Analytics)       OmicsLab.Analytics.init();
-    if (OmicsLab.AuthClerk)       OmicsLab.AuthClerk.init();
-    if (OmicsLab.Entitlements)    OmicsLab.Entitlements.init();
-    if (OmicsLab.NexusRealtime)   OmicsLab.NexusRealtime.init();
+    if (OmicsLab.DB)              _si('DB',            function(){ OmicsLab.DB.init(); });
+    if (OmicsLab.Analytics)       _si('Analytics',      function(){ OmicsLab.Analytics.init(); });
+    if (OmicsLab.AuthClerk)       _si('AuthClerk',      function(){ OmicsLab.AuthClerk.init(); });
+    if (OmicsLab.Entitlements)    _si('Entitlements',   function(){ OmicsLab.Entitlements.init(); });
+    if (OmicsLab.NexusRealtime)   _si('NexusRealtime',  function(){ OmicsLab.NexusRealtime.init(); });
     /* Sentry — init when SDK loads (may be after DOMContentLoaded) */
     function _initSentry() {
       var dsn = window.OMICSLAB_CONFIG && window.OMICSLAB_CONFIG.sentryDsn;
@@ -2501,6 +2513,10 @@
     setTimeout(tick, 1200);
   }
 </script>
+
+<!-- Vercel Web Analytics (vanilla JS — no framework/bundler on this site) -->
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
 
 </body>
 </html>
