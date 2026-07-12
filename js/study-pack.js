@@ -10,9 +10,10 @@ OmicsLab.StudyPack = (function () {
   /* ── Storage ── */
   function _getNote(id)      { return localStorage.getItem('omicslab_sp_note_'   + id) || ''; }
   function _getStatus(id)    { return localStorage.getItem('omicslab_sp_status_' + id) || 'not-started'; }
+  function _getUpdated(id)   { return localStorage.getItem('omicslab_sp_updated_' + id) || null; }
   function _isBm(id)         { return localStorage.getItem('omicslab_sp_bm_'     + id) === '1'; }
-  function _saveNote(id, v)  { localStorage.setItem('omicslab_sp_note_'   + id, v); }
-  function _saveStatus(id,v) { localStorage.setItem('omicslab_sp_status_' + id, v); }
+  function _saveNote(id, v)  { localStorage.setItem('omicslab_sp_note_'   + id, v); localStorage.setItem('omicslab_sp_updated_' + id, String(Date.now())); }
+  function _saveStatus(id,v) { localStorage.setItem('omicslab_sp_status_' + id, v); localStorage.setItem('omicslab_sp_updated_' + id, String(Date.now())); }
   function _toggleBm(id)     {
     const was = _isBm(id);
     localStorage.setItem('omicslab_sp_bm_' + id, was ? '0' : '1');
@@ -51,6 +52,8 @@ OmicsLab.StudyPack = (function () {
         ['Duplication Rate','Fraction of reads that are PCR copies. Above ~30% inflates false DE calls.'],
         ['On-target Rate','Fraction of reads aligning to intended regions; low rates waste sequencing depth.'],
       ],
+      mistake: { claim: '"If my final score is high, every step along the way must have been optimal."', correction: 'A high score can still hide a marginal step whose damage was partially masked by strong choices elsewhere — always check the per-stage cascade, not just the final number.' },
+      curriculumLink: { trackId: 'wetlab', lessonId: 'wl-01', label: 'Go deeper: Wet-Lab Scientist track' },
     },
     { id:'analysis',   cat:'simulation', page:'analysis',    color:'#58a6ff', time:'2h',
       name:'Analysis Studio',
@@ -68,6 +71,8 @@ OmicsLab.StudyPack = (function () {
         ['Phred Score','Quality = −10 log₁₀(P_error). Q30 = 99.9% base-call accuracy.'],
         ['MSA','Multiple Sequence Alignment: simultaneous alignment of ≥3 sequences to reveal conservation.'],
       ],
+      mistake: { claim: '"A FASTQ and a FASTA file are basically the same thing."', correction: 'FASTQ carries a per-base quality score for every raw read; FASTA carries none — treating a quality-free reference sequence as if it had confidence scores (or vice versa) breaks every tool downstream.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-02', label: 'Go deeper: Bioinformatician track' },
     },
     { id:'outbreak',   cat:'simulation', page:'outbreak',    color:'#f97316', time:'2h',
       name:'Outbreak Simulator',
@@ -85,6 +90,8 @@ OmicsLab.StudyPack = (function () {
         ['Transmission Chain','Sequence of infections linking source to subsequent cases.'],
         ['Genomic Epidemiology','Use of pathogen whole-genome sequencing to track disease spread.'],
       ],
+      mistake: { claim: '"The tree shows exactly who infected whom."', correction: 'A phylogenetic tree shows genetic relatedness, which is strong supporting evidence for transmission — not a literal, directly-observed transmission record.' },
+      curriculumLink: { trackId: 'publichealth', lessonId: 'ph-01', label: 'Go deeper: Public Health Researcher track' },
     },
     { id:'debugger',   cat:'simulation', page:'debugger',    color:'#ff6b6b', time:'1h',
       name:'Protocol Debugger',
@@ -101,6 +108,7 @@ OmicsLab.StudyPack = (function () {
         ['Downstream Artefact','A secondary metric failure caused by an upstream error (not the cause itself).'],
         ['Corrective Action','Protocol or analysis change that resolves the root cause.'],
       ],
+      mistake: { claim: '"Every failing metric in the report is a separate problem to fix."', correction: 'Several failing metrics are often all downstream artefacts of one single upstream root cause — fixing that one thing can resolve most of the report at once.' },
     },
     { id:'virtual-lab',cat:'simulation', page:'virtual-lab', color:'#00C4A0', time:'1h',
       name:'Virtual Lab Tour',
@@ -111,6 +119,8 @@ OmicsLab.StudyPack = (function () {
         'Understand throughput, cost, and read-length trade-offs',
         'Navigate a 360° tour of a modern sequencing facility',
       ],
+      mistake: { claim: '"The newest, most expensive instrument is always the right choice."', correction: 'The right instrument depends on the actual question and setting — turnaround time, portability, and read-length needs often matter more than raw cost or novelty.' },
+      curriculumLink: { trackId: 'wetlab', lessonId: 'wl-04', label: 'Go deeper: Wet-Lab Scientist track' },
       concepts:[
         ['Illumina NovaSeq','High-throughput short-read sequencer; up to 6 Tb per run.'],
         ['Oxford Nanopore MinION','Pocket-sized long-read sequencer; real-time basecalling.'],
@@ -137,6 +147,8 @@ OmicsLab.StudyPack = (function () {
         ['Overrepresented Sequence','Read appearing at >0.1% frequency; often rRNA, adapter dimers, or vector.'],
         ['N Content','Bases the sequencer could not call; high N% indicates low-quality cycles.'],
       ],
+      mistake: { claim: '"A WARN or FAIL on any metric means the whole file is unusable."', correction: 'A WARN, and often a FAIL, usually means trim or address the specific flagged issue — not discard the entire file. Quality decay at the read tail is a normal, fixable pattern, not a verdict on the whole sample.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-02', label: 'Go deeper: Bioinformatician track' },
     },
     { id:'seq-align',  cat:'genomics',   page:'seq-align',   color:'#00C4A0', time:'2h',
       name:'Sequence Alignment',
@@ -154,6 +166,8 @@ OmicsLab.StudyPack = (function () {
         ['DP Matrix','Scoring matrix filled in O(mn); back-tracking recovers the alignment path.'],
         ['BLOSUM62','Substitution matrix derived from conserved protein blocks; standard for proteins.'],
       ],
+      mistake: { claim: '"Global and local alignment always give the same answer, just different names."', correction: 'They solve different questions — Needleman-Wunsch forces an end-to-end alignment of both full sequences, while Smith-Waterman finds only the best-matching local region and can correctly ignore unrelated flanking sequence.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-03', label: 'Go deeper: Bioinformatician track' },
     },
     { id:'gwas',       cat:'genomics',   page:'gwas',        color:'#58a6ff', time:'2.5h',
       name:'GWAS Suite',
@@ -171,6 +185,7 @@ OmicsLab.StudyPack = (function () {
         ['QQ Plot','Quantile-quantile plot of observed vs expected p-values; inflation indicates confounding.'],
         ['Genomic Inflation λ','Median observed/expected χ²; λ > 1.05 suggests population stratification.'],
       ],
+      mistake: { claim: '"A statistically significant GWAS hit is proof that gene causes the disease."', correction: 'A significant association flags a genomic region worth investigating — it is not itself proof of causation, and the true causal variant may be a different one in linkage disequilibrium with the flagged SNP.' },
     },
     { id:'assembly',   cat:'genomics',   page:'assembly',    color:'#e3b341', time:'2h',
       name:'Genome Assembly',
@@ -188,6 +203,7 @@ OmicsLab.StudyPack = (function () {
         ['de Bruijn Graph','Graph where nodes are k-mers and edges are k−1 overlaps; used by SPAdes.'],
         ['Hybrid Assembly','Combining Illumina short reads with Nanopore long reads for optimal quality.'],
       ],
+      mistake: { claim: '"A higher N50 always means a better assembly."', correction: 'N50 measures contiguity, not correctness — a high N50 built from misassembled or chimeric contigs can be worse than a more fragmented but accurate one. Check assembly correctness metrics too, not N50 alone.' },
     },
     { id:'nanopore',   cat:'genomics',   page:'nanopore',    color:'#00C4A0', time:'1.5h',
       name:'Nanopore QC',
@@ -205,6 +221,8 @@ OmicsLab.StudyPack = (function () {
         ['Basecalling','Converting raw electrical signals (squiggle) to nucleotide sequence.'],
         ['Guppy/Dorado','ONT basecalling software; Dorado is the current production tool.'],
       ],
+      mistake: { claim: '"Illumina QC thresholds (like Q30) apply directly to Nanopore data."', correction: 'Nanopore accuracy profiles differ fundamentally from Illumina\'s — applying Illumina-calibrated thresholds directly will misjudge genuinely usable Nanopore runs as failures.' },
+      curriculumLink: { trackId: 'wetlab', lessonId: 'wl-04', label: 'Go deeper: Wet-Lab Scientist track' },
     },
 
     /* ── VARIANTS ── */
@@ -224,6 +242,8 @@ OmicsLab.StudyPack = (function () {
         ['ClinVar','NCBI database of human variants with curated clinical significance entries.'],
         ['Allele Frequency','Proportion of chromosomes carrying a variant; rarity correlates with pathogenicity.'],
       ],
+      mistake: { claim: '"A variant\'s classification is the same no matter which population database you check it against."', correction: 'The same physical variant can read as common-and-benign against one population\'s reference and rare-and-concerning against a mismatched one — always check gnomAD AFR specifically for African-ancestry samples.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-04', label: 'Go deeper: Bioinformatician track' },
     },
     { id:'pharmacogenomics', cat:'variants', page:'pharmacogenomics', color:'#f97316', time:'2h',
       name:'Pharmacogenomics',
@@ -241,6 +261,7 @@ OmicsLab.StudyPack = (function () {
         ['CYP2B6*6','Most common star allele in Africans; reduces efavirenz clearance 3-fold.'],
         ['DPWG','Dutch Pharmacogenetics Working Group guidelines for PGx-based dosing.'],
       ],
+      mistake: { claim: '"PGx dosing guidelines developed in European cohorts apply equally well everywhere."', correction: 'African populations carry star alleles (like CYP2B6*6) at frequencies and combinations absent from the European-derived reference panels many guidelines were built on — applying them uncritically can misdose real patients.' },
     },
     { id:'crispr',     cat:'variants', page:'crispr',        color:'#f85149', time:'1.5h',
       name:'CRISPR Design Lab',
@@ -258,6 +279,7 @@ OmicsLab.StudyPack = (function () {
         ['HDR','Homology-Directed Repair: precise editing using a donor template.'],
         ['NHEJ','Non-Homologous End Joining: error-prone repair creating indels; used for knockouts.'],
       ],
+      mistake: { claim: '"A guide RNA with zero predicted off-targets is guaranteed safe to use."', correction: 'Off-target scores are computational predictions based on sequence similarity, not a guarantee — experimental validation (e.g. GUIDE-seq) is still needed before any real editing, especially in a clinical context.' },
     },
     { id:'amr',        cat:'variants', page:'amr',           color:'#ff6b6b', time:'1.5h',
       name:'AMR Profiler',
@@ -275,6 +297,7 @@ OmicsLab.StudyPack = (function () {
         ['rpoB S450L','The most common rifampicin-resistance mutation in M. tuberculosis.'],
         ['CARD','Comprehensive Antibiotic Resistance Database; reference for AMR gene identification.'],
       ],
+      mistake: { claim: '"MDR-TB and XDR-TB are just two names for the same level of severity."', correction: 'XDR-TB is a strictly more severe classification than MDR-TB — resistant to MDR-defining drugs plus fluoroquinolones and a second-line injectable/bedaquiline/linezolid — confusing the two changes the clinical response required.' },
     },
 
     /* ── EXPRESSION ── */
@@ -294,6 +317,7 @@ OmicsLab.StudyPack = (function () {
         ['Heatmap','Colour-coded matrix of expression values; rows = genes, columns = samples.'],
         ['Hierarchical Clustering','Groups genes/samples by expression similarity; reveals co-expression modules.'],
       ],
+      mistake: { claim: '"A large log₂FC alone means a gene is biologically important."', correction: 'A large fold change with a poor FDR is likely noise, not signal — always read log₂FC and FDR together, never one without the other.' },
     },
     { id:'single-cell',cat:'expression', page:'single-cell', color:'#bc8cff', time:'2.5h',
       name:'scRNA-seq Explorer',
@@ -311,6 +335,7 @@ OmicsLab.StudyPack = (function () {
         ['UMI','Unique Molecular Identifier: counts transcripts without PCR amplification bias.'],
         ['Marker Gene','Gene highly expressed in one cluster; used to annotate cell identity.'],
       ],
+      mistake: { claim: '"Distance between two clusters on a UMAP plot is a meaningful, exact biological distance."', correction: 'UMAP preserves local neighbourhood structure well but distorts global distances — two clusters that look far apart aren\'t necessarily "more different" than two that look moderately close.' },
     },
     { id:'proteomics', cat:'expression', page:'proteomics',  color:'#bc8cff', time:'2h',
       name:'Proteomics Fundamentals',
@@ -328,6 +353,7 @@ OmicsLab.StudyPack = (function () {
         ['FDR 1%','Standard confidence threshold for peptide-spectrum match acceptance.'],
         ['iTRAQ','Isobaric Tag for Relative and Absolute Quantification; 8-plex multiplexing reagent.'],
       ],
+      mistake: { claim: '"mRNA expression level is a reliable proxy for protein abundance."', correction: 'mRNA and protein levels correlate only moderately in practice — post-transcriptional regulation and protein turnover mean you often need proteomic data directly, not just RNA-seq, to know what\'s actually being made.' },
     },
     { id:'epigenomics',cat:'expression', page:'epigenomics', color:'#00C4A0', time:'2h',
       name:'Epigenomics Explorer',
@@ -345,6 +371,7 @@ OmicsLab.StudyPack = (function () {
         ['Bisulfite Sequencing','Chemical conversion unmethylated C→T; sequencing reveals methylation state.'],
         ['DMR','Differentially Methylated Region: locus with methylation differences between conditions.'],
       ],
+      mistake: { claim: '"Epigenetic marks are permanent, unlike DNA sequence which can mutate."', correction: 'The opposite is often true in practice — methylation and histone marks are dynamic and can change with environment, age, and cell state, which is exactly why they can differ between otherwise identical genomes.' },
     },
 
     /* ── PIPELINES ── */
@@ -364,6 +391,8 @@ OmicsLab.StudyPack = (function () {
         ['featureCounts','Counts reads overlapping annotated genomic features (genes, exons).'],
         ['Nextflow/Snakemake','Workflow languages for reproducible, scalable bioinformatics pipelines.'],
       ],
+      mistake: { claim: '"Once a pipeline runs without errors, its output must be biologically correct."', correction: 'A pipeline can complete cleanly while still producing a biologically wrong answer if the wrong parameters or reference were used — running without error is a necessary check, not a sufficient one.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-05', label: 'Go deeper: Bioinformatician track' },
     },
     { id:'terminal',   cat:'pipelines', page:'terminal',     color:'#00C4A0', time:'2h',
       name:'Terminal Simulator',
@@ -381,6 +410,8 @@ OmicsLab.StudyPack = (function () {
         ['Samtools','Swiss-army knife for BAM/SAM: sort, index, flagstat, view, depth.'],
         ['Pipe (|)','Redirects output of one command as input to the next without a temp file.'],
       ],
+      mistake: { claim: '"My sbatch job didn\'t run instantly, so it must have failed."', correction: 'sbatch submission is instant by design — the job then queues behind other jobs until matching resources free up; check squeue for its real status before assuming failure.' },
+      curriculumLink: { trackId: 'foundations', lessonId: 'f-01', label: 'Go deeper: Foundations track' },
     },
     { id:'kraken',     cat:'pipelines', page:'kraken',       color:'#e3b341', time:'1.5h',
       name:'Metagenomics (Kraken2)',
@@ -398,6 +429,7 @@ OmicsLab.StudyPack = (function () {
         ['Beta Diversity','Diversity between samples (Bray-Curtis dissimilarity, UniFrac distance).'],
         ['OTU','Operational Taxonomic Unit: cluster of reads as a proxy for a microbial species.'],
       ],
+      mistake: { claim: '"Kraken2\'s raw classification counts are the final abundance answer."', correction: 'Raw Kraken2 counts are biased by genome size and reference database composition — Bracken\'s Bayesian re-estimation step is what corrects this into a genuinely usable abundance estimate.' },
     },
     { id:'popstruct',  cat:'pipelines', page:'popstruct',    color:'#bc8cff', time:'2h',
       name:'Population Structure',
@@ -415,6 +447,7 @@ OmicsLab.StudyPack = (function () {
         ['Linkage Disequilibrium (LD)','Non-random association of alleles at different loci.'],
         ['AWI-Gen','Africa Wits-INDEPTH Partnership for Genomic Studies; major African GWAS cohort.'],
       ],
+      mistake: { claim: '"Ignoring population structure only introduces a small, negligible bias in a GWAS."', correction: 'Uncorrected population stratification can inflate false-positive association signals substantially — genomic inflation (λ) checks and PCA correction are standard, required steps, not optional refinements.' },
     },
 
     /* ── AFRICAN GENOMICS ── */
@@ -434,6 +467,7 @@ OmicsLab.StudyPack = (function () {
         ['SANBI','South African National Bioinformatics Institute; genomics training and infrastructure.'],
         ['Data Sovereignty','Principle that African genomic data should be controlled by African institutions.'],
       ],
+      mistake: { claim: '"Data sovereignty just means the data is physically stored in Africa."', correction: 'It\'s about meaningful control over access and use decisions, not physical storage location — data can be hosted anywhere while genuine control still resides with the population/institution it concerns.' },
     },
     { id:'bioethics',  cat:'africa',    page:'bioethics',    color:'#f97316', time:'1.5h',
       name:'Bioethics Hub',
@@ -451,6 +485,8 @@ OmicsLab.StudyPack = (function () {
         ['FAIR Principles','Findable, Accessible, Interoperable, Reusable — principles for data sharing.'],
         ['Return of Results','Ethical obligation to report clinically actionable findings to participants.'],
       ],
+      mistake: { claim: '"Individual informed consent is sufficient on its own for African genomics research."', correction: 'Many African research contexts require community-level consent in addition to individual consent — skipping community engagement is a real, documented cause of research harm and mistrust, not a bureaucratic extra.' },
+      curriculumLink: { trackId: 'publichealth', lessonId: 'ph-03', label: 'Go deeper: Public Health Researcher track' },
     },
     { id:'pathogen-tracker', cat:'africa', page:'pathogen-tracker', color:'#ff6b6b', time:'1h',
       name:'Pathogen Tracker',
@@ -468,6 +504,8 @@ OmicsLab.StudyPack = (function () {
         ['GISAID','Global platform for sharing influenza and SARS-CoV-2 genome sequences.'],
         ['Variant of Concern','Pathogen variant with increased transmissibility, severity, or immune evasion.'],
       ],
+      mistake: { claim: '"You need to sequence every single case to track a variant\'s spread."', correction: 'Representative, consistent sentinel sampling reliably detects a rising variant frequency well before exhaustive sequencing would even be feasible — that\'s the whole premise of genomic surveillance.' },
+      curriculumLink: { trackId: 'publichealth', lessonId: 'ph-02', label: 'Go deeper: Public Health Researcher track' },
     },
 
     /* ── RESEARCH ── */
@@ -487,6 +525,8 @@ OmicsLab.StudyPack = (function () {
         ['Pre-registration','Posting a study plan publicly before data collection; prevents p-hacking.'],
         ['FAIR Data','Findable, Accessible, Interoperable, Reusable — guiding principles for data.'],
       ],
+      mistake: { claim: '"Making a dataset publicly available automatically makes it FAIR."', correction: 'Findable, Accessible, Interoperable, and Reusable are four separate, checkable properties — a dataset can be technically public while still scoring poorly on format, metadata, or licensing.' },
+      curriculumLink: { trackId: 'publichealth', lessonId: 'ph-05', label: 'Go deeper: Public Health Researcher track' },
     },
     { id:'grant',      cat:'research',  page:'grant',        color:'#e3b341', time:'2h',
       name:'Grant Generator',
@@ -504,6 +544,7 @@ OmicsLab.StudyPack = (function () {
         ['Impact Score','NIH reviewer score 1–9; below 2.0 typically required for funding.'],
         ['LOI','Letter of Intent: pre-application notice required by some funders.'],
       ],
+      mistake: { claim: '"The Specific Aims page is just a summary — reviewers mostly judge the Methods."', correction: 'Specific Aims is usually the single most-read page in the whole application — many reviewers form their initial judgment there before reaching Methods at all.' },
     },
     { id:'peerreview', cat:'research',  page:'peerreview',   color:'#bc8cff', time:'2h',
       name:'Peer Review Simulator',
@@ -521,6 +562,7 @@ OmicsLab.StudyPack = (function () {
         ['Statistical Power','Probability of detecting a true effect; often under-powered in small cohorts.'],
         ['Reporting Bias','Tendency to publish positive results only; countered by pre-registration.'],
       ],
+      mistake: { claim: '"A rejected manuscript means the science was wrong."', correction: 'Rejection often reflects fixable issues — framing, statistical power, methods clarity — rather than the underlying science being incorrect; reviewer feedback usually points to exactly what to strengthen.' },
     },
 
     /* ── TRAINING ── */
@@ -539,6 +581,7 @@ OmicsLab.StudyPack = (function () {
         ['Badge Assertion','JSON-LD document proving a specific person earned a specific badge.'],
         ['Digital Portfolio','Collection of verifiable achievements; increasingly required by employers.'],
       ],
+      mistake: { claim: '"A certificate is just a PDF you download when you finish."', correction: 'An Open Badge 3.0 credential is a cryptographically signed, independently verifiable claim — anyone can check it is genuine without trusting OmicsLab directly, unlike a plain PDF anyone could edit.' },
     },
     { id:'quizbattle', cat:'training',  page:'quizbattle',   color:'#ff6b6b', time:'1h',
       name:'Quiz Battle',
@@ -555,6 +598,7 @@ OmicsLab.StudyPack = (function () {
         ['Knowledge Gap','Specific topic area with low correct-answer rates; prioritise for review.'],
         ['BroadcastChannel API','Browser API for real-time same-device tab communication without a server.'],
       ],
+      mistake: { claim: '"Re-reading your notes until they feel familiar is the same as knowing the material."', correction: 'Familiarity is not recall — retrieval practice (being tested and having to produce the answer) builds retention 50–80% better than passive re-reading, which is why quizzing beats re-reading even though re-reading feels more productive.' },
     },
     { id:'case-files', cat:'training',  page:'case-files',   color:'#f97316', time:'2.5h',
       name:'Genomics Case Files',
@@ -572,6 +616,8 @@ OmicsLab.StudyPack = (function () {
         ['MDR-TB WGS','Whole-genome sequencing of M. tuberculosis for resistance profiling.'],
         ['GWAS Case','Population study associating SNPs with a complex trait (e.g. hypertension, T2D).'],
       ],
+      mistake: { claim: '"A single gene or variant result is enough to reach a diagnosis or conclusion."', correction: 'Real cases require integrating multiple omics layers and clinical context — a variant call alone, without expression, phylogenetic, or epidemiological corroboration, is rarely conclusive on its own.' },
+      curriculumLink: { trackId: 'bioinformatics', lessonId: 'bi-05', label: 'Go deeper: Bioinformatics Analyst track' },
     },
     { id:'career',     cat:'training',  page:'career',       color:'#bc8cff', time:'1h',
       name:'Career Pathfinder',
@@ -589,6 +635,7 @@ OmicsLab.StudyPack = (function () {
         ['Computational Epidemiologist','Applies genomic and statistical methods to population health.'],
         ['H3ABioNet','Pan-African bioinformatics network; key employer and training provider.'],
       ],
+      mistake: { claim: '"You need a PhD to have a real career in bioinformatics."', correction: 'Clinical bioinformatics, pipeline engineering, and computational epidemiology roles routinely hire at Bachelor\'s/Master\'s level — a PhD matters for research-scientist tracks specifically, not the field as a whole.' },
     },
 
   ]; /* end MODULES */
@@ -662,6 +709,20 @@ OmicsLab.StudyPack = (function () {
           <span class="sp-concept-def">${d}</span>
         </div>`).join('')}
     </div>
+
+    ${m.mistake ? `
+    <div class="sp-section-title">Common Misconception</div>
+    <div class="sp-mistake">
+      <div class="sp-mistake-claim"><span class="sp-mistake-tag">Myth</span>${m.mistake.claim}</div>
+      <div class="sp-mistake-correction"><span class="sp-mistake-tag sp-mistake-tag-fix">Reality</span>${m.mistake.correction}</div>
+    </div>` : ''}
+
+    ${m.curriculumLink ? `
+    <div class="sp-curr-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>${m.curriculumLink.label}</span>
+      <button class="sp-curr-link-btn" onclick="event.stopPropagation();OmicsLab.Router.navigate('learn');setTimeout(()=>OmicsLab.Curriculum.openTrack('${m.curriculumLink.trackId}'),80)">Open Track</button>
+    </div>` : ''}
 
     <div class="sp-notes-area">
       <div class="sp-notes-head">
@@ -1001,5 +1062,5 @@ OmicsLab.StudyPack = (function () {
     }
   }
 
-  return { init, onCat, onStatus, onSearch, _toggle, _bookmark, _setStatus, _noteInput, _exportNotes, _generateQuiz, _checkAnswer };
+  return { init, onCat, onStatus, onSearch, _toggle, _bookmark, _setStatus, _noteInput, _exportNotes, _generateQuiz, _checkAnswer, MODULES, _getStatus, _getNote, _getUpdated };
 })();

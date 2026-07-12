@@ -1050,11 +1050,13 @@ nextflow run nf-core/rnaseq \\
   let _pyLoading = false;
   let _cellSeq = 0;
   let _activeNb = 'seq';
+  let _runLog = [];
 
   const _NB_DATA = [
     {
       id: 'seq', name: 'Sequence Analysis', icon: 'dna',
       desc: 'DNA analysis, GC content, quality metrics, HBB gene',
+      dataset: 'HBB Gene Reference (chr11)',
       cells: [
         {
           title: 'HBB Gene Segment Analysis',
@@ -1142,6 +1144,7 @@ for i in range(0, read_len, 15):
     {
       id: 'variants', name: 'African Variants', icon: 'activity',
       desc: 'Allele frequencies, HWE test, ACMG classification',
+      dataset: 'African Variant Panel (H3Africa)',
       cells: [
         {
           title: 'African Variant Landscape',
@@ -1237,6 +1240,7 @@ for c in crit:
     {
       id: 'rnaseq', name: 'RNA-seq DEG', icon: 'trending-up',
       desc: 'Count matrices, fold-change, pathway analysis',
+      dataset: 'GEO Bulk RNA-seq Counts',
       cells: [
         {
           title: 'Simulate Count Matrix',
@@ -1333,6 +1337,7 @@ for pw, genes in PATHWAYS.items():
     {
       id: 'popgen', name: 'Population Genetics', icon: 'globe',
       desc: 'FST, HWE, admixture, African diversity',
+      dataset: '1000 Genomes African Superpopulation',
       cells: [
         {
           title: 'Population Differentiation (FST)',
@@ -1459,6 +1464,122 @@ print("█=West African  ▓=East African  ░=Non-African")`
     if (!cells) return;
     _cellSeq = 0;
     cells.innerHTML = nb.cells.map((cell, i) => _cellHTML(cell, i)).join('');
+
+    _runLog = [];
+    _renderMetaBar(nb);
+    _switchNbView('output');
+    _renderNbComments(nb.id);
+  }
+
+  /* ─── Kaggle-style kernel meta bar: version, Copy & Edit, runtime, input ─── */
+  function _nbVersion(id) { return parseInt(localStorage.getItem('omicslab_nb_version_' + id) || '1', 10); }
+
+  function _renderMetaBar(nb) {
+    const bar = document.getElementById('nb-meta-bar');
+    if (!bar) return;
+    const v = _nbVersion(nb.id);
+    bar.innerHTML = `
+      <div class="nb-meta-left">
+        <span class="nb-input-chip" title="Input dataset">${OmicsLab.Icons?.svg('database',12)||''} ${_esc(nb.dataset || 'Reference data')}</span>
+        <span class="nb-version-chip">Version ${v} of ${v}</span>
+        <span class="nb-runtime-chip">${OmicsLab.Icons?.svg('cpu',12)||''} Python 3.11 · Pyodide WASM · CPU</span>
+      </div>
+      <button class="nb-copyedit-btn" onclick="OmicsLab.Terminal.copyAndEdit()">${OmicsLab.Icons?.svg('copy',12)||''} Copy &amp; Edit</button>`;
+  }
+
+  function copyAndEdit() {
+    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    if (!nb) return;
+    const v = _nbVersion(nb.id) + 1;
+    localStorage.setItem('omicslab_nb_version_' + nb.id, String(v));
+    localStorage.setItem('omicslab_nb_forked_' + nb.id, String(Date.now()));
+    _renderMetaBar(nb);
+    OmicsLab.Notify?.success(`Notebook copied — now editing your own Version ${v}`);
+  }
+
+  /* ─── Output / Logs tabs ─── */
+  function _switchNbView(view) {
+    document.querySelectorAll('.nb-view-tab').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    const cells = document.getElementById('nb-cells');
+    const logs  = document.getElementById('nb-logs');
+    if (view === 'logs') {
+      if (cells) cells.style.display = 'none';
+      if (logs) {
+        logs.style.display = '';
+        logs.innerHTML = _runLog.length
+          ? _runLog.slice().reverse().map(l => `<div class="nb-log-line"><span class="nb-log-time">${l.time}</span><span class="nb-log-cell">Cell ${l.cell}</span><span class="nb-log-status nb-log-status-${l.status}">${l.status}</span></div>`).join('')
+          : '<div class="nb-log-empty">No runs yet this session.</div>';
+      }
+    } else {
+      if (cells) cells.style.display = '';
+      if (logs) logs.style.display = 'none';
+    }
+  }
+
+  /* ─── Comments (Kaggle-style kernel discussion, backed by the Community forum) ─── */
+  async function _nbAuthHeader() {
+    if (!OmicsLab.AuthClerk?.isSignedIn?.()) return null;
+    const token = await OmicsLab.AuthClerk.getToken();
+    return token ? { Authorization: `Bearer ${token}` } : null;
+  }
+
+  function _nbTopicId(nbId) { return localStorage.getItem('omicslab_nb_topicid_' + nbId); }
+
+  async function _renderNbComments(nbId) {
+    const el = document.getElementById('nb-comments');
+    if (!el) return;
+    const topicId = _nbTopicId(nbId);
+    const signedIn = !!OmicsLab.AuthClerk?.isSignedIn?.();
+    let comments = [];
+    if (topicId) {
+      try {
+        const res = await fetch('/api/forum-comments?topic_id=' + encodeURIComponent(topicId));
+        const data = await res.json();
+        comments = data.comments || [];
+      } catch {}
+    }
+    el.innerHTML = `
+      <div class="nb-comments-head">${comments.length} Comment${comments.length === 1 ? '' : 's'}</div>
+      <div class="nb-comments-list">
+        ${comments.length ? comments.map(c => `
+          <div class="nb-comment">
+            <span class="nb-comment-author">${_esc(c.users?.name || 'OmicsLab Member')}</span>
+            <span class="nb-comment-text">${_esc(c.body)}</span>
+          </div>`).join('') : '<div class="nb-comments-empty">No comments yet — be the first to discuss this notebook.</div>'}
+      </div>
+      ${signedIn
+        ? `<textarea class="nb-comment-ta" id="nb-comment-ta" rows="2" placeholder="Add a comment…"></textarea>
+           <button class="nb-comment-btn" onclick="OmicsLab.Terminal.submitNbComment()">Post</button>`
+        : `<div class="nb-comments-signin">Please <button class="nb-inline-link" onclick="OmicsLab.AuthClerk.signIn()">sign in</button> to comment.</div>`}`;
+  }
+
+  async function submitNbComment() {
+    const ta = document.getElementById('nb-comment-ta');
+    const body = ta?.value.trim();
+    if (!body) return;
+    const headers = await _nbAuthHeader();
+    if (!headers) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    if (!nb) return;
+
+    let topicId = _nbTopicId(nb.id);
+    if (!topicId) {
+      const res = await fetch('/api/forum-topics', {
+        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category: 'showcase', title: `Notebook: ${nb.name}`, body: `Discussion thread for the ${nb.name} notebook.` }),
+      }).catch(() => null);
+      if (!res || !res.ok) return;
+      const data = await res.json();
+      topicId = data.topic?.id;
+      if (topicId) localStorage.setItem('omicslab_nb_topicid_' + nb.id, topicId);
+    }
+    if (!topicId) return;
+
+    await fetch('/api/forum-comments', {
+      method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic_id: topicId, body }),
+    }).catch(() => {});
+    await _renderNbComments(nb.id);
   }
 
   function _cellHTML(cell, idx) {
@@ -1503,6 +1624,7 @@ print("█=West African  ▓=East African  ░=Non-African")`
     let stdout = '';
     py.setStdout({ batched: s => { stdout += s + '\n'; } });
 
+    const logTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     try {
       const result = await py.runPythonAsync(code);
       let out = stdout;
@@ -1510,8 +1632,10 @@ print("█=West African  ▓=East African  ░=Non-African")`
       outEl.innerHTML = out
         ? `<div class="nb-out-stdout"><pre>${_esc(out.trimEnd())}</pre></div>`
         : '<div class="nb-out-empty">Cell executed — no output</div>';
+      _runLog.push({ cell: n, status: 'ok', time: logTime });
     } catch (err) {
       outEl.innerHTML = `<div class="nb-out-error"><b>Error:</b> ${_esc(String(err))}</div>`;
+      _runLog.push({ cell: n, status: 'error', time: logTime });
     }
 
     if (numEl) numEl.textContent = 'Out[' + n + ']:';
@@ -1763,14 +1887,27 @@ print("█=West African  ▓=East African  ░=Non-African")`
               </button>`).join('')}
           </div>
 
+          <!-- Kaggle-style kernel meta bar -->
+          <div id="nb-meta-bar" class="nb-meta-bar"></div>
+
           <!-- Pyodide info bar -->
           <div class="nb-info-bar">
             ${OmicsLab.Icons?.svg('info',12)||''}
             <span>Real Python executes in your browser via <b>Pyodide</b> (WebAssembly). First run loads ~10 MB from CDN. Works offline after that.</span>
           </div>
 
+          <!-- Output / Logs tabs -->
+          <div class="nb-view-tabs">
+            <button class="nb-view-tab active" data-view="output" onclick="OmicsLab.Terminal._switchNbView('output')">Output</button>
+            <button class="nb-view-tab" data-view="logs" onclick="OmicsLab.Terminal._switchNbView('logs')">Logs</button>
+          </div>
+
           <!-- Cells -->
           <div id="nb-cells" class="nb-cells"></div>
+          <div id="nb-logs" class="nb-logs" style="display:none"></div>
+
+          <!-- Comments (Kaggle-style kernel discussion) -->
+          <div class="nb-comments" id="nb-comments"></div>
 
         </div>
       </div>`;
@@ -1897,5 +2034,6 @@ print("█=West African  ▓=East African  ░=Non-African")`
   }
 
   return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript,
-           runCell, addNotebookCell, clearNotebook, restartKernel, _renderNotebook };
+           runCell, addNotebookCell, clearNotebook, restartKernel, _renderNotebook,
+           copyAndEdit, _switchNbView, submitNbComment, NB_LIST: _NB_DATA.map(n => ({ id: n.id, name: n.name })) };
 })();

@@ -15,7 +15,7 @@ OmicsLab.Router = (function () {
     home: {
       label: 'Home',
       icon: 'layers',
-      sections: ['showcase-section', 'home-visual-section', 'changelog-section'],
+      sections: ['home-visual-section', 'changelog-section'],
     },
     guide: {
       label: 'User Guide',
@@ -29,7 +29,30 @@ OmicsLab.Router = (function () {
       icon: 'flask',
       color: '#00C4A0',
       tagline: 'Interactive wet-lab simulations with live QC feedback',
-      sections: ['domain-section', 'sandbox-section', 'sabotage-section', 'compare-section'],
+      /* 'lab' opens the full-screen experiment chooser instead of showing landing
+         sections (see navigate() below) — it owns no sections of its own. */
+      sections: [],
+    },
+    sandbox: {
+      label: 'Pipeline Sandbox',
+      icon: 'hexagon',
+      color: '#00C4A0',
+      tagline: 'Drag-and-drop bioinformatics pipeline builder with input/output validation',
+      sections: ['sandbox-section'],
+    },
+    sabotage: {
+      label: 'Error Injection Mode',
+      icon: 'target',
+      color: '#f97316',
+      tagline: 'Teaching mode — one step secretly receives a wrong input; trace it back from the QC metrics',
+      sections: ['sabotage-section'],
+    },
+    compare: {
+      label: 'Compare Workflows',
+      icon: 'scale',
+      color: '#bc8cff',
+      tagline: 'Side-by-side workflow comparison — cost, turnaround time, instruments, and sample requirements',
+      sections: ['compare-section'],
     },
     learn: {
       label: 'Learn',
@@ -694,6 +717,13 @@ OmicsLab.Router = (function () {
       tagline: 'Connect with other OmicsLab researchers — see who is online, add friends by code, and chat directly in the platform',
       sections: ['social-section'],
     },
+    community: {
+      label: 'Community',
+      icon: 'message-square',
+      color: '#58a6ff',
+      tagline: 'Discussion topics, questions, and shared results from genomics learners and researchers across the OmicsLab community',
+      sections: ['community-section'],
+    },
     'scrna-explorer': {
       label: 'scRNA-seq Explorer',
       icon: 'layers',
@@ -740,47 +770,42 @@ OmicsLab.Router = (function () {
 
   /* Maps each page to its primary nav group for active-state highlighting */
   const PAGE_TO_GROUP = {
-    lab: 'train', learn: 'train', career: 'train', leaderboard: 'train',
-    research: 'research', africa: 'research',
-    outbreak: 'research', datasets: 'research', protocols: 'research', collab: 'research', grant: 'research', alerts: 'research',
-    analysis: 'tools', terminal: 'tools', debugger: 'tools', phylo: 'tools', heatmap: 'tools', peerreview: 'research', journalclub: 'train', citations: 'tools', quizbattle: 'train', qualitypredictor: 'tools', variantinterp: 'tools', primerdesign: 'tools',
-    nexus: 'research', paperhub: 'research', teams: 'research',
-    pubmed: 'research', 'gene-lookup': 'tools', protein: 'tools',
-    uniprot: 'tools', targets: 'research', string: 'tools', preprints: 'research',
-    pathways: 'tools', sra: 'research',
-    ai: 'tools', thesis: 'research', bionlp: 'tools',
-    /* Part 3 */
-    codon: 'tools', nanopore: 'tools', amr: 'tools', kraken: 'tools', popstruct: 'tools', 'genome-browser': 'tools',
-    /* Part 4 */
-    directory: 'research', hackathon: 'research', mentorship: 'research',
-    /* Part 5 */
-    h3africa: 'africa', 'pathogen-tracker': 'africa', glossary: 'africa', 'offline-data': 'africa',
-    /* Part 6 */
-    labnotebook: 'research', 'pipeline-gen': 'tools', metaanalysis: 'tools',
-    /* Part 7 */
-    'api-docs': 'tools',
-    /* Part 8 */
-    certification: 'train', impact: 'research', partners: 'research', about: 'research',
-    /* Part 9 */
-    'skill-tree': 'train', 'variant-atlas': 'tools', 'clinical-decision': 'tools',
-    'one-health': 'research', institution: 'train',
-    ask: 'ask', mentor: 'ask',
-    'virtual-lab': 'tools',
-    gwas: 'tools', pharmacogenomics: 'tools', 'network-hub': 'research', 'rna-atlas': 'tools',
-    fastqc: 'tools', 'single-cell': 'tools', assembly: 'tools',
-    bioethics: 'research', enrichment: 'tools',
-    'pipeline-visual': 'train', 'case-files': 'train', 'ai-ml-bio': 'train',
-    'stats-genomics': 'train', 'seq-align': 'train',
-    epigenomics: 'train', crispr: 'train', proteomics: 'train',
-    'research-wizard': 'research', 'alignment-viewer': 'tools', recombination: 'tools',
-    social: 'research',
-    'scrna-explorer': 'tools',
-    'variants-explorer': 'tools',
-    'knowledge-graph': 'tools',
-    'output-tracker': 'research',
-    pricing: 'research',
-    guide: 'train',
-    study: 'train',
+    /* Learn — tr-simulate (Practice) + tr-learn (Concepts) tabs */
+    lab: 'train', analysis: 'train', terminal: 'train', debugger: 'train', 'virtual-lab': 'train', outbreak: 'train',
+    sandbox: 'train', sabotage: 'train', compare: 'train',
+    learn: 'train', 'ai-ml-bio': 'train', 'stats-genomics': 'train', 'seq-align': 'train', 'pipeline-visual': 'train',
+    epigenomics: 'train', crispr: 'train', proteomics: 'train', 'case-files': 'train', study: 'train',
+    journalclub: 'train', quizbattle: 'train', glossary: 'train',
+    /* not linked from the current nav markup — kept on their prior sensible group */
+    'skill-tree': 'train',
+
+    /* Research — res-plan / res-africa / res-community / res-lit tabs */
+    research: 'research', peerreview: 'research', grant: 'research', labnotebook: 'research', 'output-tracker': 'research',
+    'research-wizard': 'research', social: 'research', community: 'research',
+    africa: 'research', alerts: 'research', datasets: 'research', 'pathogen-tracker': 'research', bioethics: 'research', 'network-hub': 'research',
+    nexus: 'research', teams: 'research', collab: 'research', mentorship: 'research', hackathon: 'research', directory: 'research',
+    pubmed: 'research', preprints: 'research', paperhub: 'research', thesis: 'research', sra: 'research',
+    /* not linked from the current nav markup — kept on their prior sensible group */
+    protocols: 'research', h3africa: 'research', 'offline-data': 'research', 'one-health': 'research',
+
+    /* Tools — tools-genomics / tools-expr / tools-db / tools-ai tabs */
+    variantinterp: 'tools', phylo: 'tools', 'alignment-viewer': 'tools', recombination: 'tools', 'scrna-explorer': 'tools',
+    'variants-explorer': 'tools', primerdesign: 'tools', 'genome-browser': 'tools', nanopore: 'tools', amr: 'tools',
+    kraken: 'tools', popstruct: 'tools', gwas: 'tools', pharmacogenomics: 'tools', fastqc: 'tools', assembly: 'tools',
+    heatmap: 'tools', qualitypredictor: 'tools', codon: 'tools', metaanalysis: 'tools', 'single-cell': 'tools',
+    enrichment: 'tools', 'rna-atlas': 'tools', 'pipeline-gen': 'tools',
+    'gene-lookup': 'tools', protein: 'tools', uniprot: 'tools', string: 'tools', pathways: 'tools', targets: 'tools',
+    'knowledge-graph': 'tools', citations: 'tools',
+    ai: 'tools', bionlp: 'tools', 'api-docs': 'tools', ask: 'tools', mentor: 'tools',
+    /* not linked from the current nav markup — kept on their prior sensible group */
+    'variant-atlas': 'tools', 'clinical-decision': 'tools',
+
+    /* About — flat mega-menu */
+    certification: 'about', leaderboard: 'about', impact: 'about',
+    career: 'about', guide: 'about', pricing: 'about', partners: 'about', about: 'about',
+    workshop: 'about', /* not a standalone route (nested workshop-section in research); item deep-links to 'research' for now */
+    institution: 'about',
+
     settings: null,
     profile: null, /* user pill is the nav element for profile */
     privacy: null,
@@ -871,6 +896,7 @@ OmicsLab.Router = (function () {
     institution:        ['css/institution.css'],
     pricing:            ['css/pricing.css'],
     social:             ['css/social.css'],
+    community:          ['css/community.css'],
     'virtual-lab':      ['css/virtual-lab.css'],
     gwas:               ['css/gwas.css'],
     pharmacogenomics:   ['css/pharmacogenomics.css'],
@@ -1010,20 +1036,21 @@ OmicsLab.Router = (function () {
       if (showHome) _animateIn(homeContent);
     }
 
-    /* Home visual hero (DNA animation) + showcase — init on every home visit, stop on leave */
+    /* Home visual hero (DNA animation) — init on every home visit, stop on leave.
+       (Showcase carousel removed — redundant with the how-it-works explainer.) */
     if (page === 'home') {
-      try { OmicsLab.Showcase?.init(); } catch(e) { console.warn('[OmicsLab] Showcase init failed:', e); }
       try { OmicsLab.HomeHero?.init(); } catch(e) { console.warn('[OmicsLab] HomeHero init failed:', e); }
     } else {
-      try { OmicsLab.Showcase?.stop(); } catch {}
       try { OmicsLab.HomeHero?.stop(); } catch {}
     }
 
-    /* Show/hide hero + stats strip */
+    /* Show/hide hero + stats strip + how-it-works explainer */
     const hero  = document.querySelector('.hero');
     const stats = document.querySelector('.stats-strip');
+    const howItWorks = document.getElementById('how-it-works-section');
     if (hero)  { hero.style.display  = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(hero); }
     if (stats) { stats.style.display = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(stats); }
+    if (howItWorks) { howItWorks.style.display = page === 'home' ? '' : 'none'; if (page === 'home') _animateIn(howItWorks); }
 
     /* Dashboard — shown on home only when a user exists (Clerk or localStorage) */
     const dash = document.getElementById('home-dashboard');
@@ -1296,6 +1323,7 @@ OmicsLab.Router = (function () {
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');
     if (page === 'social' && OmicsLab.Social)                 _si(OmicsLab.Social,          'social-section',            'Social');
+    if (page === 'community' && OmicsLab.Community)           _si(OmicsLab.Community,       'community-section',        'Community');
     if (page === 'scrna-explorer')     OmicsLab.EmbeddedApps?.init('scrna-explorer');
     if (page === 'variants-explorer')  OmicsLab.EmbeddedApps?.init('variants-explorer');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');
@@ -1363,95 +1391,6 @@ OmicsLab.Router = (function () {
       if (statsStrip) statsStrip.after(homeContent);
     }
 
-    const WORKFLOWS = [
-      {
-        name: 'Whole Genome Sequencing',
-        domain: 'Genomics',
-        color: '#00C4A0',
-        desc: 'From blood tube to variant calls — DNA extraction, library prep, Illumina sequencing, BWA-MEM2 alignment, GATK HaplotypeCaller, and VEP annotation.',
-        tools: ['BWA-MEM2', 'samtools', 'Picard', 'GATK4', 'VEP'],
-        difficulty: 'Advanced',
-        diffClass: 'diff-advanced',
-        page: 'lab',
-      },
-      {
-        name: 'Bulk RNA-seq',
-        domain: 'Transcriptomics',
-        color: '#58a6ff',
-        desc: 'Measure genome-wide gene expression: poly-A selection, STAR 2-pass alignment, featureCounts, DESeq2 differential expression, and volcano plot visualisation.',
-        tools: ['STAR', 'featureCounts', 'Salmon', 'DESeq2', 'ggplot2'],
-        difficulty: 'Intermediate',
-        diffClass: 'diff-intermediate',
-        page: 'lab',
-      },
-      {
-        name: 'Metagenomic Profiling',
-        domain: 'Metagenomics',
-        color: '#f97316',
-        desc: 'Characterise microbial communities from environmental or clinical samples using Kraken2 taxonomic classification and Bracken abundance re-estimation.',
-        tools: ['fastp', 'Kraken2', 'Bracken', 'KronaTools', 'R'],
-        difficulty: 'Beginner',
-        diffClass: 'diff-beginner',
-        page: 'lab',
-      },
-    ];
-
-    const TESTIMONIALS = [
-      {
-        quote: 'OmicsLab completely changed how I teach genomics. Students now arrive at the bench understanding exactly what each step does — the error propagation alone is worth an entire semester.',
-        name: 'Dr. Amara Osei-Bonsu',
-        role: 'Genomics Training Lecturer · Nairobi, Kenya',
-        avatar: '👩🏿‍',
-        flag: '🇰🇪',
-        color: '#00C4A0',
-      },
-      {
-        quote: 'As a PhD student with no wet-lab access, this platform let me simulate an entire WGS pipeline before touching a single sample. My supervisor was impressed by how prepared I was.',
-        name: 'Sipho Dlamini',
-        role: 'PhD Candidate, Computational Biology · South Africa',
-        avatar: '👨🏿‍💻',
-        flag: '🇿🇦',
-        color: '#58a6ff',
-      },
-      {
-        quote: 'The Africa Hub content is unlike anything I\'ve seen in a training platform — real population genomics context, One Health surveillance, African disease datasets. It speaks our language.',
-        name: 'Fatima Al-Rashidi',
-        role: 'Bioinformatician & Trainer · Entebbe, Uganda',
-        avatar: '👩🏽‍',
-        flag: '🇺🇬',
-        color: '#bc8cff',
-      },
-    ];
-
-    const PARTNERS = [
-      { mark: 'H3', name: 'H3Africa\nInspiration', color: '#00C4A0', bg: 'rgba(0,196,160,0.1)' },
-      { mark: 'GE', name: 'MalariaGEN\nOpen Data', color: '#58a6ff', bg: 'rgba(88,166,255,0.1)' },
-      { mark: 'AW', name: 'AWI-Gen\nDataset', color: '#f97316', bg: 'rgba(249,115,22,0.1)' },
-      { mark: 'EN', name: 'Ensembl\nGenome', color: '#bc8cff', bg: 'rgba(188,140,255,0.1)' },
-      { mark: 'SR', name: 'NCBI SRA\nOpen Data', color: '#e3b341', bg: 'rgba(227,179,65,0.1)' },
-      { mark: 'GT', name: 'GATK\nStandards', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)' },
-    ];
-
-    /* ── Today's Focus data (from Study Pack categories) ── */
-    const FOCUS_ITEMS = [
-      { title:'DNA Extraction & QC', why:'The quality of your DNA determines every downstream result — degradation and inhibitors cause silent failures.', page:'lab', color:'#00C4A0' },
-      { title:'FASTQ Quality Control', why:'Phred scores below Q30 introduce systematic errors that propagate through alignment and variant calling.', page:'fastqc', color:'#00C4A0' },
-      { title:'Reference Genome Bias', why:'Most reference panels are European-derived — understanding this bias is essential for African genomics research.', page:'learn', color:'#f97316' },
-      { title:'ACMG/AMP Variant Classification', why:'Getting classification right matters clinically — a VUS in a European database may be Pathogenic in an African cohort.', page:'variantinterp', color:'#bc8cff' },
-      { title:'Phylogenetic Tree Interpretation', why:'Reading a phylo tree correctly lets you trace pathogen transmission chains and identify the index case.', page:'outbreak', color:'#f97316' },
-      { title:'APOL1 Risk Alleles & CKD', why:'G1/G2 risk alleles occur in ~22% of West Africans — missing them in clinical workup leads to preventable renal disease.', page:'variantinterp', color:'#58a6ff' },
-      { title:'RNA-seq Differential Expression', why:'Choosing between DESeq2 and edgeR, and setting correct thresholds (padj < 0.05, |log2FC| > 1), changes your biology.', page:'heatmap', color:'#58a6ff' },
-      { title:'Antimicrobial Resistance Genomics', why:'rpoB S450L is the most important TB resistance mutation globally — every clinical microbiologist must know it.', page:'amr', color:'#f97316' },
-      { title:'Population Structure & PCA', why:'Failing to correct for population structure inflates GWAS false positives by orders of magnitude.', page:'gwas', color:'#e3b341' },
-      { title:'G6PD Deficiency Screening', why:'Prescribing primaquine to a G6PD-deficient patient can trigger life-threatening haemolysis.', page:'pharmacogenomics', color:'#e3b341' },
-      { title:'Nanopore Sequencing QC', why:'Long-read accuracy metrics differ fundamentally from Illumina — N50 read length and basecall accuracy drive pipeline choice.', page:'nanopore', color:'#00C4A0' },
-      { title:'CRISPR Guide Design', why:'Off-target scores and PAM site selection determine whether your edit is a clean knockout or a mosaic disaster.', page:'crispr', color:'#bc8cff' },
-      { title:'scRNA-seq Clustering', why:'Choosing the wrong resolution parameter merges cell types or splits one type into artefactual clusters.', page:'single-cell', color:'#58a6ff' },
-      { title:'Epigenomics & DNA Methylation', why:'African populations show distinct methylation patterns that alter gene expression and disease susceptibility.', page:'epigenomics', color:'#00C4A0' },
-    ];
-    const dayIdx = Math.floor(Date.now() / 86400000) % FOCUS_ITEMS.length;
-    const focus  = FOCUS_ITEMS[dayIdx];
-
     /* ── Continue where you left off ── */
     let continueHtml = '';
     try {
@@ -1474,180 +1413,10 @@ OmicsLab.Router = (function () {
       }
     } catch {}
 
-    homeContent.innerHTML = `
-
-      <!-- ══ CONTINUE + TODAY'S FOCUS ══ -->
-      <div class="home-focus-row">
-        ${continueHtml}
-        <div class="home-focus-card" onclick="OmicsLab.Router.navigate('${focus.page}')" role="button" tabindex="0"
-             onkeydown="if(event.key==='Enter')OmicsLab.Router.navigate('${focus.page}')"
-             style="--focus-color:${focus.color}">
-          <div class="home-focus-tag">Today's Focus</div>
-          <div class="home-focus-title">${focus.title}</div>
-          <div class="home-focus-why">${focus.why}</div>
-          <span class="home-focus-cta">Open module →</span>
-        </div>
-
-        <div class="home-pipeline-card-mini">
-          <div class="home-pipeline-mini-label">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#bc8cff" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.44l-1.97-10.5A2.5 2.5 0 0 1 7.5 6H9.5zM14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.44l1.97-10.5A2.5 2.5 0 0 0 16.5 6H14.5z"/></svg>
-            AI Pipeline Recommender
-          </div>
-          <div class="home-pipeline-mini-sub">Describe your data and get an instant pipeline suggestion</div>
-          <div class="home-pipeline-mini-form">
-            <textarea class="home-pipeline-mini-input" id="hpm-input" rows="2"
-              placeholder="e.g. 30x WGS from 50 Kenyan TB patients, Illumina NovaSeq 6000..."
-              onkeydown="if((event.ctrlKey||event.metaKey)&&event.key==='Enter'){event.preventDefault();OmicsLab.Router._pipelineRecommend()}"
-            ></textarea>
-            <button class="home-pipeline-mini-btn" onclick="OmicsLab.Router._pipelineRecommend()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Recommend
-            </button>
-          </div>
-          <div class="home-pipeline-mini-result" id="hpm-result" style="display:none"></div>
-        </div>
-      </div>
-
-      <!-- ══ HOW IT WORKS ══ -->
-      <div id="how-it-works" class="hiw-section">
-        <div class="home-section-label">How it works</div>
-        <h2 class="home-section-title">From zero to genomics expert<br>in three steps</h2>
-        <p class="home-section-sub">No textbook can simulate the cascade of consequences when you make a mistake at DNA extraction. OmicsLab can.</p>
-
-        <div class="hiw-steps">
-          <div class="hiw-step">
-            <div class="hiw-step-num hiw-step-num-1">
-              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('flask', 28) || ''}</span>
-              <div class="hiw-step-badge">1</div>
-            </div>
-            <div class="hiw-step-title">Choose your experiment</div>
-            <div class="hiw-step-desc">
-              Pick from 14 realistic protocols across 8 omics domains — WGS, RNA-seq, ATAC-seq, ChIP-seq, single-cell, metagenomics, proteomics, and more. Every protocol targets real African diseases.
-            </div>
-            <div class="hiw-step-chips">
-              <span class="hiw-step-chip chip-green">WGS</span>
-              <span class="hiw-step-chip chip-green">RNA-seq</span>
-              <span class="hiw-step-chip chip-green">scRNA-seq</span>
-              <span class="hiw-step-chip chip-green">Metagenomics</span>
-            </div>
-          </div>
-
-          <div class="hiw-step">
-            <div class="hiw-step-num hiw-step-num-2">
-              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('activity', 28) || ''}</span>
-              <div class="hiw-step-badge">2</div>
-            </div>
-            <div class="hiw-step-title">Run the protocol, make decisions</div>
-            <div class="hiw-step-desc">
-              Drag reagents onto the bench, tune instrument parameters, and watch 8 live QC metrics update after every decision. Early mistakes amplify downstream — just like real life.
-            </div>
-            <div class="hiw-step-chips">
-              <span class="hiw-step-chip chip-blue">Drag & drop</span>
-              <span class="hiw-step-chip chip-blue">Live QC</span>
-              <span class="hiw-step-chip chip-blue">Error cascade</span>
-            </div>
-          </div>
-
-          <div class="hiw-step">
-            <div class="hiw-step-num hiw-step-num-3">
-              <span class="hiw-step-icon">${OmicsLab.Icons?.svg('bar-chart', 28) || ''}</span>
-              <div class="hiw-step-badge">3</div>
-            </div>
-            <div class="hiw-step-title">Get results, earn your certificate</div>
-            <div class="hiw-step-desc">
-              Receive a full QC report with per-metric PASS/FAIL, a mistake log showing exactly where you went wrong, and a grade. Complete a curriculum track to earn a shareable certificate.
-            </div>
-            <div class="hiw-step-chips">
-              <span class="hiw-step-chip chip-purple">QC Report</span>
-              <span class="hiw-step-chip chip-purple">Grade + Badge</span>
-              <span class="hiw-step-chip chip-purple">Certificate</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══ FEATURED WORKFLOWS ══ -->
-      <div class="featured-wf-section">
-        <div class="home-section-label">Featured workflows</div>
-        <h2 class="home-section-title">Start with any experiment</h2>
-        <p class="home-section-sub">Each workflow is scientifically accurate, Africa-relevant, and runs entirely in your browser.</p>
-
-        <div class="wf-cards-row">
-          ${WORKFLOWS.map(w => `
-            <button class="wf-feature-card" style="--wf-color:${w.color}"
-                    onclick="OmicsLab.Router.navigate('${w.page}')">
-              <div class="wfc-domain">${w.domain}</div>
-              <div class="wfc-name">${w.name}</div>
-              <div class="wfc-desc">${w.desc}</div>
-              <div class="wfc-tools">
-                ${w.tools.map(t => `<span class="wfc-tool">${t}</span>`).join('')}
-              </div>
-              <div class="wfc-footer">
-                <span class="wfc-difficulty ${w.diffClass}">${w.difficulty}</span>
-                <span class="wfc-start">Start Protocol <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
-              </div>
-            </button>`).join('')}
-        </div>
-
-        <div style="text-align:center;margin-top:2rem">
-          <button class="btn-hero-secondary-new" onclick="OmicsLab.Router.navigate('lab')" style="display:inline-flex">
-            View all 14 workflows →
-          </button>
-        </div>
-      </div>
-
-
-      <!-- ══ BOTTOM CTA ══ -->
-      <div class="home-cta-section">
-        <div class="home-cta-inner">
-          <div class="home-cta-eyebrow">Ready to start?</div>
-          <h2 class="home-cta-title">
-            Africa's genomics future<br>
-            <span class="gradient-text">starts here, starts now</span>
-          </h2>
-          <p class="home-cta-sub">
-            Join thousands of researchers, students, and instructors across
-            54 African countries building the next generation of omics science.
-          </p>
-          <div class="home-cta-btns">
-            <button class="btn-hero-primary-new" onclick="OmicsLab.Router.navigate('lab')">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Start Learning Free
-            </button>
-            <button class="btn-hero-secondary-new" onclick="OmicsLab.Router.navigate('learn')">
-              Browse curriculum tracks
-            </button>
-          </div>
-          <div class="home-cta-note">
-            No account required · Works offline · Free forever ·
-            <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1" target="_blank" rel="noopener">Open in GitHub Codespaces</a>
-          </div>
-        </div>
-      </div>`;
-
-    /* Animate stat counters when section scrolls into view */
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.querySelectorAll('[data-target]').forEach(el => {
-          const target = parseInt(el.dataset.target);
-          const span = el.querySelector('span');
-          if (!span || span.dataset.counted) return;
-          span.dataset.counted = '1';
-          let current = 0;
-          const step = Math.ceil(target / 60);
-          const timer = setInterval(() => {
-            current = Math.min(current + step, target);
-            span.textContent = current.toLocaleString();
-            if (current >= target) clearInterval(timer);
-          }, 24);
-        });
-        observer.unobserve(entry.target);
-      });
-    }, { threshold: 0.3 });
-    const statsRow = document.getElementById('impact-stats-row');
-    if (statsRow) observer.observe(statsRow);
-
+    /* Trimmed to just the personalised "continue" banner — the old block also
+       duplicated the hero's 3-step explainer, the tools category grid, and the
+       hero's own CTAs a second and third time. Renders nothing for new visitors. */
+    homeContent.innerHTML = continueHtml ? `<div class="home-focus-row">${continueHtml}</div>` : '';
   }
 
   /* ─── Sync nav active state to current page on init ─── */

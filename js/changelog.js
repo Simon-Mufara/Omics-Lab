@@ -73,31 +73,30 @@ OmicsLab.Changelog = (function () {
     },
   ];
 
+  /* Only the latest release shows on the homepage — the full history isn't
+     something a visitor needs to see; it's an internal note, not a feature. */
   function render() {
     const container = document.getElementById('changelog-content');
     if (!container) return;
 
-    container.innerHTML = ENTRIES.map((entry, i) => `
-      <div class="cl-entry ${i === 0 ? 'cl-entry-latest' : ''}">
+    const entry = ENTRIES[0];
+    container.innerHTML = `
+      <div class="cl-entry cl-entry-latest">
         <div class="cl-version-col">
-          <div class="cl-version-badge ${i === 0 ? 'cl-badge-latest' : 'cl-badge-old'}">
-            v${entry.version}
-          </div>
           <div class="cl-date">${entry.date}</div>
-          ${i === 0 ? '<div class="cl-badge-chip">Latest</div>' : ''}
-          ${i < ENTRIES.length - 1 ? '<div class="cl-line"></div>' : ''}
+          <div class="cl-badge-chip">Latest</div>
         </div>
         <div class="cl-content">
           <div class="cl-title">${entry.title}</div>
           <ul class="cl-list">
-            ${entry.highlights.map(h => `
+            ${entry.highlights.slice(0, 4).map(h => `
               <li class="cl-item">
                 <span class="cl-item-icon">${OmicsLab.Icons?.svg(h.icon, 14) || ''}</span>
                 <span class="cl-item-text">${h.text}</span>
               </li>`).join('')}
           </ul>
         </div>
-      </div>`).join('');
+      </div>`;
   }
 
   function init() {

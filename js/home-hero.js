@@ -428,6 +428,18 @@ OmicsLab.HomeHero = (function () {
 </section>`;
   }
 
+  /* ── "Bench to Bytes" journey explainer — mounted in the landing hero ── */
+  function _mountJourneyExplainer() {
+    if (!OmicsLab.Explainer) return;
+    const el = document.getElementById('landing-explainer');
+    if (!el) return;
+
+    OmicsLab.Explainer.mount('#landing-explainer', OmicsLab.Explainer.JOURNEY_SCENES, {
+      label: 'How OmicsLab fits into the lab workflow',
+      theme: OmicsLab.Explainer.JOURNEY_THEME,
+    });
+  }
+
   /* ── Internal resize handler (kept across navigations) ── */
   let _resizeHandler = null;
 
@@ -468,6 +480,8 @@ OmicsLab.HomeHero = (function () {
     /* Size first, then animate */
     _resize();
     _animate(canvas);
+
+    _mountJourneyExplainer();
   }
 
   return { init, stop };

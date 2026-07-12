@@ -704,6 +704,11 @@ OmicsLab.UserGuide = (function () {
               ${MODULES.length} tools across 10 categories, with descriptions, purpose notes, and one-click navigation.
               A complete reference for students, researchers, and instructors.
             </p>
+            <button type="button" class="btn btn-secondary" style="margin-bottom:1rem"
+                    onclick="OmicsLab.Explainer && OmicsLab.Explainer.openModal(OmicsLab.Explainer.JOURNEY_SCENES, {label:'How OmicsLab fits into a real lab workflow', theme: OmicsLab.Explainer.JOURNEY_THEME})">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Watch: how it all fits together (60 sec)
+            </button>
             <div class="ug-search-wrap">
               <svg class="ug-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
               <input id="ug-search" class="ug-search-input" type="search"

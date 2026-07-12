@@ -369,6 +369,69 @@
   line-height: 1.5;
 }
 
+/* Common Misconception */
+.sp-mistake {
+  background: #0D1524;
+  border: 1px solid #182236;
+  border-left: 3px solid #f85149;
+  border-radius: 6px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.sp-mistake-claim, .sp-mistake-correction {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #A8A098;
+}
+.sp-mistake-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  margin-right: 0.5rem;
+  background: #f8514922;
+  color: #f85149;
+  vertical-align: middle;
+}
+.sp-mistake-tag-fix {
+  background: #00C4A022;
+  color: #00C4A0;
+}
+
+/* Curriculum cross-link */
+.sp-curr-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #58a6ff11;
+  border: 1px solid #58a6ff33;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.78rem;
+  color: #58a6ff;
+}
+.sp-curr-link svg { flex-shrink: 0; }
+.sp-curr-link span { flex: 1; }
+.sp-curr-link-btn {
+  background: #58a6ff22;
+  border: 1px solid #58a6ff55;
+  color: #58a6ff;
+  border-radius: 5px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.sp-curr-link-btn:hover { background: #58a6ff33; }
+
 /* Notes */
 .sp-notes-area {
   background: #0D1524;

@@ -10,21 +10,23 @@
 .lab-icon { display: inline-block; vertical-align: middle; flex-shrink: 0; pointer-events: none; }
 
 :root {
-  /* Surfaces */
-  --bg:          #080c10;
-  --surface-1:   #0D1524;
-  --surface-2:   #111B2E;
-  --surface-3:   #182236;
-  --surface-4:   #2d333b;
+  /* Surfaces — aliased to tokens.css's --bg-* so this legacy naming
+     automatically follows the active theme instead of drifting out
+     of sync with it (these hex values matched tokens.css exactly). */
+  --bg:          var(--bg-root, #080c10);
+  --surface-1:   var(--bg-inset, #0D1524);
+  --surface-2:   var(--bg-surface, #111B2E);
+  --surface-3:   var(--bg-overlay, #182236);
+  --surface-4:   var(--bg-overlay, #2d333b);
 
   /* Borders */
-  --border:      #243048;
-  --border-dim:  #182236;
+  --border:      var(--border-muted, #243048);
+  --border-dim:  var(--border-default, #182236);
 
   /* Text */
-  --text:        #E4DDD2;
-  --text-muted:  #A8A098;
-  --text-dim:    #354060;
+  --text:        var(--text-primary, #E4DDD2);
+  --text-muted:  var(--text-secondary, #A8A098);
+  --text-dim:    var(--border-strong, #354060);
 
   /* Domain accent colours */
   --genomics:    #58a6ff;
@@ -3104,6 +3106,17 @@ mark.qa-highlight {
 .curr-stat-n         { font-size:1.6rem; font-weight:800; }
 .curr-stat-l         { font-size:0.72rem; color:var(--text-muted); }
 .curr-reset-btn      { margin-left:auto; padding:0.35rem 0.8rem; border-radius:8px; background:transparent; border:1px solid var(--border); color:var(--text-muted); font-size:0.8rem; cursor:pointer; }
+
+/* Kaggle-style "continue where you left off" strip */
+.curr-section-label  { font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.9rem; }
+.curr-continue-section { margin-bottom: 0.5rem; }
+.curr-continue-row   { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; }
+.curr-continue-card  { background:var(--surface-2); border:1px solid var(--border); border-left:3px solid var(--track-color,#00C4A0); border-radius:4px 10px 10px 4px; padding:0.9rem 1.1rem; cursor:pointer; transition:border-color .15s; }
+.curr-continue-card:hover { border-color: var(--track-color, #00C4A0); }
+.curr-continue-title { font-weight:700; font-size:0.9rem; margin-bottom:0.25rem; }
+.curr-continue-next  { font-size:0.78rem; color:var(--text-muted); margin-bottom:0.6rem; }
+.curr-continue-pct   { font-size:0.72rem; color:var(--text-muted); margin-top:0.3rem; text-align:right; }
+
 .curr-track-grid     { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.25rem; }
 .curr-track-card     { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; overflow:hidden; cursor:pointer; transition:border-color 0.2s,transform 0.15s; }
 .curr-track-card:hover,.curr-track-card.active { border-color:var(--track-color,#00C4A0); transform:translateY(-2px); }
@@ -3139,6 +3152,98 @@ mark.qa-highlight {
 .curr-lesson-actions{ display:flex; flex-direction:column; gap:0.4rem; min-width:80px; }
 .curr-go-btn        { padding:0.4rem 0.75rem; border-radius:8px; background:#58a6ff; color:#000; border:none; font-weight:700; cursor:pointer; font-size:0.8rem; white-space:nowrap; }
 .curr-mark-btn      { padding:0.35rem 0.75rem; border-radius:8px; background:transparent; border:1px solid var(--border); color:var(--text-muted); cursor:pointer; font-size:0.78rem; }
+.curr-recommended-badge { font-size:0.62rem; font-weight:800; letter-spacing:0.05em; text-transform:uppercase; color:#0D1524; background:var(--track-color, #e3b341); padding:0.2rem 0.6rem; border-radius:99px; }
+
+/* ── Capstone card — the real, non-honor-system requirement before a track certifies ── */
+.curr-capstone-card { margin-top: 1.25rem; padding: 1.1rem 1.3rem; background: rgba(227,179,65,0.06); border: 1px solid rgba(227,179,65,0.35); border-radius: 10px; }
+.curr-capstone-card.met { background: rgba(0,196,160,0.06); border-color: rgba(0,196,160,0.35); }
+.curr-capstone-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #e3b341; margin-bottom: 0.4rem; }
+.curr-capstone-card.met .curr-capstone-label { color: #00C4A0; }
+.curr-capstone-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.35rem; }
+.curr-capstone-desc { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 0.6rem; }
+.curr-capstone-score { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.6rem; }
+.curr-capstone-score b { color: var(--text); }
+.curr-capstone-btn { padding: 0.5rem 1.1rem; background: #e3b341; border: none; border-radius: 8px; color: #0D1524; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
+
+/* ── Chapter view + real quiz gate (Foundations-style lessons) ──── */
+.curr-chapter {
+  position: relative;
+  margin-top: 1rem;
+  padding: 1.75rem 1.85rem 2rem;
+  background: var(--surface-1);
+  border: 1px solid var(--track-color, var(--border));
+  border-radius: 14px;
+}
+.curr-chapter-close {
+  position: absolute; top: 1rem; right: 1rem;
+  width: 30px; height: 30px; display: grid; place-items: center;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: var(--surface-2); color: var(--text-muted); cursor: pointer;
+}
+.curr-chapter-close:hover { color: var(--text); }
+.curr-ch-title { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.3rem; padding-right: 2.5rem; }
+.curr-ch-duration { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.curr-ch-done-tag { color: #00C4A0; font-weight: 700; }
+
+.curr-ch-section { margin: 1.6rem 0; }
+.curr-ch-h { font-size: 0.98rem; font-weight: 700; margin-bottom: 0.7rem; color: var(--text); }
+.curr-ch-section p { color: var(--text-muted); line-height: 1.65; margin: 0 0 0.6rem; font-size: 0.92rem; }
+.curr-ch-section p:last-child { margin-bottom: 0; }
+.curr-ch-why p { background: rgba(227,179,65,0.08); border-left: 3px solid #e3b341; border-radius: 4px 8px 8px 4px; padding: 0.85rem 1rem; margin: 0; }
+.curr-tryit-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 0.8rem; padding: 0.55rem 1rem;
+  background: var(--track-color, #00C4A0); border: none; border-radius: 8px;
+  color: #0D1524; font-weight: 700; font-size: 0.84rem; cursor: pointer;
+  transition: opacity .15s;
+}
+.curr-tryit-btn:hover { opacity: 0.85; }
+
+.curr-ch-concept { margin-bottom: 1.2rem; }
+.curr-ch-concept:last-child { margin-bottom: 0; }
+.curr-ch-concept-name { font-weight: 700; font-size: 0.92rem; margin-bottom: 0.25rem; }
+.curr-ch-analogy { margin-top: 0.45rem; font-size: 0.84rem; padding: 0.5rem 0.75rem; background: rgba(188,140,255,0.08); border-radius: 6px; color: var(--text-muted); }
+.curr-ch-analogy b { color: #bc8cff; }
+
+.curr-ch-glossary dt { font-weight: 700; font-size: 0.88rem; margin-top: 0.6rem; }
+.curr-ch-glossary dt:first-child { margin-top: 0; }
+.curr-ch-glossary dd { margin: 0.1rem 0 0; color: var(--text-muted); font-size: 0.84rem; }
+
+.curr-ch-misconception { margin-bottom: 0.9rem; }
+.curr-ch-misconception:last-child { margin-bottom: 0; }
+.curr-ch-claim { font-style: italic; font-size: 0.88rem; }
+.curr-ch-correction { color: var(--text-muted); font-size: 0.84rem; margin-top: 0.2rem; }
+
+.curr-ch-summary { margin: 0; padding-left: 1.1rem; color: var(--text-muted); font-size: 0.88rem; }
+.curr-ch-summary li { margin-bottom: 0.4rem; }
+.curr-ch-summary li:last-child { margin-bottom: 0; }
+
+/* Quiz */
+.curr-ch-quiz { border-top: 1px solid var(--border); padding-top: 1.6rem; }
+.curr-quiz-q { margin-bottom: 1.4rem; }
+.curr-quiz-question { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.6rem; }
+.curr-quiz-opts { display: flex; flex-direction: column; gap: 0.45rem; }
+.curr-quiz-opt {
+  text-align: left; padding: 0.55rem 0.8rem; font-size: 0.85rem;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); cursor: pointer; transition: border-color .12s, background .12s;
+}
+.curr-quiz-opt:hover:not(:disabled) { border-color: var(--track-color, #58a6ff); }
+.curr-quiz-opt.selected { border-color: var(--track-color, #58a6ff); background: rgba(88,166,255,0.08); }
+.curr-quiz-opt.correct-answer { border-color: #00C4A0; background: rgba(0,196,160,0.1); color: #00C4A0; }
+.curr-quiz-opt.wrong-answer { border-color: #ff6b6b; background: rgba(255,107,107,0.08); color: #ff6b6b; }
+.curr-quiz-opt:disabled { cursor: default; }
+.curr-quiz-feedback { font-size: 0.82rem; color: var(--text-muted); margin-top: 0.5rem; padding: 0.5rem 0.7rem; background: var(--surface-2); border-radius: 6px; }
+.curr-quiz-submit {
+  padding: 0.65rem 1.4rem; background: var(--track-color, #00C4A0); border: none; border-radius: 8px;
+  color: #0D1524; font-weight: 800; font-size: 0.88rem; cursor: pointer; margin-top: 0.5rem;
+}
+.curr-quiz-result { margin-top: 1rem; }
+.curr-quiz-msg { padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.86rem; font-weight: 600; }
+.curr-quiz-msg-pass { background: rgba(0,196,160,0.1); color: #00C4A0; border: 1px solid rgba(0,196,160,0.3); }
+.curr-quiz-msg-fail { background: rgba(255,107,107,0.08); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.25); }
+.curr-quiz-msg-warn { background: rgba(227,179,65,0.1); color: #e3b341; border: 1px solid rgba(227,179,65,0.3); }
+.curr-quiz-retry { margin-top: 0.75rem; padding: 0.5rem 1.1rem; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.82rem; }
 
 /* ── Badges & Certificates ────────────────────────────────────── */
 .badges-section  { padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
@@ -3302,19 +3407,19 @@ mark.qa-highlight {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: #06090f;
+  background: var(--bg-root, #06090f);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 :root {
-  --bg: #06090f;
-  --surface-1: #0D1524;
-  --surface-2: #111B2E;
-  --surface-3: #1c2128;
-  --surface-4: #272e38;
-  --border: #2a3142;
-  --border-dim: #1c2128;
+  --bg: var(--bg-root, #06090f);
+  --surface-1: var(--bg-inset, #0D1524);
+  --surface-2: var(--bg-surface, #111B2E);
+  --surface-3: var(--bg-overlay, #1c2128);
+  --surface-4: var(--bg-overlay, #272e38);
+  --border: var(--border-muted, #2a3142);
+  --border-dim: var(--border-default, #1c2128);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.25);
   --shadow-elevated: 0 4px 24px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
   --shadow-modal: 0 24px 64px rgba(0,0,0,0.7);
@@ -3355,7 +3460,7 @@ body {
     radial-gradient(ellipse 80% 60% at 15% 40%, rgba(0,196,160,0.07) 0%, transparent 60%),
     radial-gradient(ellipse 60% 50% at 85% 55%, rgba(88,166,255,0.06) 0%, transparent 55%),
     radial-gradient(ellipse 50% 40% at 50% 0%, rgba(210,168,255,0.05) 0%, transparent 50%),
-    #06090f;
+    var(--bg-root);
   padding: 5rem 4rem 4.5rem;
 }
 .hero-title { font-size: 3.6rem; font-weight: 900; line-height: 1.08; letter-spacing: -2px; }
@@ -3393,7 +3498,7 @@ body {
 }
 
 /* Reduce padding between sections — they were 4rem+4rem = 8rem gap */
-.domain-section,
+.domain-section, .how-it-works-section,
 .curriculum-section, .badges-section, .africa-hub-section,
 .workshop-section, .hpc-training-section, .research-mode-section,
 .repro-hub-section, .sandbox-section, .bioinfo-pipeline-section,
@@ -3518,7 +3623,7 @@ button { cursor: pointer; }
 .reveal.visible { opacity: 1; transform: none; }
 
 /* ── Scroll divider between sections ─────────────────────────── */
-.domain-section,
+.domain-section, .how-it-works-section,
 .curriculum-section, .badges-section, .africa-hub-section,
 .workshop-section, .hpc-training-section, .research-mode-section,
 .repro-hub-section, .sandbox-section, .bioinfo-pipeline-section,
@@ -3537,7 +3642,7 @@ button { cursor: pointer; }
 
 /* ── Mobile responsive overrides ─────────────────────────────── */
 @media (max-width: 768px) {
-  .domain-section,
+  .domain-section, .how-it-works-section,
   .curriculum-section, .badges-section, .africa-hub-section,
   .workshop-section, .hpc-training-section, .research-mode-section,
   .repro-hub-section, .sandbox-section, .bioinfo-pipeline-section,
@@ -3738,7 +3843,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 }
 
 /* ── Prevent horizontal overflow everywhere ──────────────────── */
-section, .domain-section, .curriculum-section, .badges-section,
+section, .domain-section, .how-it-works-section, .curriculum-section, .badges-section,
 .africa-hub-section, .workshop-section, .repro-hub-section,
 .hpc-training-section, .research-mode-section, .sandbox-section,
 .bioinfo-pipeline-section, .repo-explorer-section, .tool-explorer-section,

@@ -109,9 +109,12 @@ OmicsLab.Settings = (function () {
     setTimeout(() => window.location.reload(), 800);
   }
 
-  function _deleteAccount() {
+  async function _deleteAccount() {
     if (!confirm('DELETE ALL OmicsLab data from this device? All progress, notes, and settings will be permanently erased.')) return;
     if (!confirm('Are you absolutely sure? This is irreversible.')) return;
+    /* Sign out first — an active Clerk/local session otherwise survives the
+       localStorage wipe and re-populates the same profile on next load. */
+    try { await OmicsLab.Auth?.signOut?.(); } catch {}
     Object.keys(localStorage).filter(k => k.startsWith('omicslab')).forEach(k => localStorage.removeItem(k));
     OmicsLab.Notify?.info('All data cleared. Reloading…');
     setTimeout(() => window.location.reload(), 1000);

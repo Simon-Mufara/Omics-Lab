@@ -18,8 +18,12 @@ create table if not exists public.users (
   role          text default 'student'
                   check (role in ('student','researcher','instructor','clinician','bioinformatician','public-health')),
   plan          text default 'free'
-                  check (plan in ('free','campus','enterprise')),
+                  check (plan in ('free','scholar','practitioner','campus','enterprise')),
+  billing_period      text
+                        check (billing_period in ('monthly','annual')),
+  student_verified    boolean default false,
   stripe_customer_id  text unique,
+  paystack_customer_code text unique,
   created_at    timestamptz default now(),
   updated_at    timestamptz default now()
 );
@@ -108,12 +112,38 @@ create table if not exists public.nexus_messages (
 -- Migration (run if upgrading from original schema):
 -- alter table public.nexus_messages add column if not exists author_meta jsonb default '{}';
 
--- ── Stripe subscriptions ─────────────────────────────────────────
+-- Migration — individual subscription tiers (Scholar / Practitioner) + Paystack:
+-- alter table public.users drop constraint if exists users_plan_check;
+-- alter table public.users add constraint users_plan_check
+--   check (plan in ('free','scholar','practitioner','campus','enterprise'));
+-- alter table public.users add column if not exists billing_period text
+--   check (billing_period in ('monthly','annual'));
+-- alter table public.users add column if not exists student_verified boolean default false;
+-- alter table public.users add column if not exists paystack_customer_code text unique;
+-- alter table public.subscriptions add column if not exists paystack_subscription_code text unique;
+-- alter table public.subscriptions add column if not exists paystack_plan_code text;
+-- alter table public.subscriptions add column if not exists provider text default 'stripe'
+--   check (provider in ('stripe','paystack'));
+-- create table if not exists public.ai_tutor_usage (
+--   id            uuid primary key default uuid_generate_v4(),
+--   user_id       uuid references public.users(id) on delete cascade,
+--   usage_date    date not null default current_date,
+--   question_count integer not null default 0,
+--   unique (user_id, usage_date)
+-- );
+-- alter table public.ai_tutor_usage enable row level security;
+-- create policy "ai_tutor_usage_self" on public.ai_tutor_usage
+--   for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+-- ── Stripe / Paystack subscriptions ────────────────────────────────
 create table if not exists public.subscriptions (
   id                    uuid primary key default uuid_generate_v4(),
   user_id               uuid references public.users(id) on delete cascade,
+  provider              text default 'stripe' check (provider in ('stripe','paystack')),
   stripe_subscription_id text unique,
   stripe_price_id       text,
+  paystack_subscription_code text unique,
+  paystack_plan_code    text,
   plan                  text,
   status                text,   -- 'active' | 'canceled' | 'past_due'
   current_period_end    timestamptz,
@@ -121,11 +151,46 @@ create table if not exists public.subscriptions (
   updated_at            timestamptz default now()
 );
 
+-- ── AI Tutor daily usage (Bench tier is capped; paid tiers are unlimited) ──
+create table if not exists public.ai_tutor_usage (
+  id             uuid primary key default uuid_generate_v4(),
+  user_id        uuid references public.users(id) on delete cascade,
+  usage_date     date not null default current_date,
+  question_count integer not null default 0,
+  unique (user_id, usage_date)
+);
+
+-- ── Community discussion topics (Kaggle-style forum) ────────────────
+create table if not exists public.forum_topics (
+  id             uuid primary key default uuid_generate_v4(),
+  user_id        uuid references public.users(id) on delete cascade,
+  category       text not null default 'general'
+                   check (category in ('general','help','showcase','africa','careers')),
+  title          text not null,
+  body           text not null,
+  reacted_by     jsonb not null default '[]',    -- array of clerk_id strings
+  comment_count  integer not null default 0,
+  created_at     timestamptz default now(),
+  updated_at     timestamptz default now()
+);
+
+-- ── Community discussion comments (1-level threaded) ────────────────
+create table if not exists public.forum_comments (
+  id                 uuid primary key default uuid_generate_v4(),
+  topic_id           uuid references public.forum_topics(id) on delete cascade,
+  user_id            uuid references public.users(id) on delete cascade,
+  parent_comment_id  uuid references public.forum_comments(id) on delete cascade,
+  body               text not null,
+  reacted_by         jsonb not null default '[]',
+  created_at         timestamptz default now()
+);
+
 -- ════════════════════════════════════════════════════════════════
 -- Row Level Security (RLS) — users only see their own data
 -- ════════════════════════════════════════════════════════════════
 
 alter table public.users             enable row level security;
+alter table public.ai_tutor_usage    enable row level security;
 alter table public.progress          enable row level security;
 alter table public.lab_results       enable row level security;
 alter table public.notebook_entries  enable row level security;
@@ -133,6 +198,8 @@ alter table public.citations         enable row level security;
 alter table public.leaderboard       enable row level security;
 alter table public.nexus_messages    enable row level security;
 alter table public.subscriptions     enable row level security;
+alter table public.forum_topics      enable row level security;
+alter table public.forum_comments    enable row level security;
 
 -- Users can read/write their own row
 create policy "users_self" on public.users
@@ -170,6 +237,20 @@ create policy "nexus_write" on public.nexus_messages
 create policy "subscriptions_self" on public.subscriptions
   for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
 
+-- AI Tutor usage: own only (server also writes via service role — see api/ai-tutor-quota.js)
+create policy "ai_tutor_usage_self" on public.ai_tutor_usage
+  for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+-- Community forum: anyone can read (Kaggle-style public discussions), write own posts
+create policy "forum_topics_read" on public.forum_topics
+  for select using (true);
+create policy "forum_topics_write" on public.forum_topics
+  for insert with check (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+create policy "forum_comments_read" on public.forum_comments
+  for select using (true);
+create policy "forum_comments_write" on public.forum_comments
+  for insert with check (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
 -- ════════════════════════════════════════════════════════════════
 -- Indexes
 -- ════════════════════════════════════════════════════════════════
@@ -179,6 +260,8 @@ create index if not exists idx_notebook_user       on public.notebook_entries(us
 create index if not exists idx_citations_user      on public.citations(user_id);
 create index if not exists idx_nexus_channel       on public.nexus_messages(channel, created_at desc);
 create index if not exists idx_leaderboard_score   on public.leaderboard(total_score desc);
+create index if not exists idx_forum_topics_cat     on public.forum_topics(category, created_at desc);
+create index if not exists idx_forum_comments_topic on public.forum_comments(topic_id, created_at asc);
 
 -- ════════════════════════════════════════════════════════════════
 -- updated_at trigger
@@ -190,3 +273,4 @@ begin new.updated_at = now(); return new; end; $$;
 create trigger users_updated_at             before update on public.users             for each row execute function public.set_updated_at();
 create trigger notebook_updated_at          before update on public.notebook_entries  for each row execute function public.set_updated_at();
 create trigger subscriptions_updated_at     before update on public.subscriptions     for each row execute function public.set_updated_at();
+create trigger forum_topics_updated_at      before update on public.forum_topics      for each row execute function public.set_updated_at();

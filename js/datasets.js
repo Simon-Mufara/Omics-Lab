@@ -684,10 +684,20 @@ OmicsLab.Datasets = (function () {
   function _loadIntoLab(id) {
     const ds = DATASETS.find(d => d.id === id);
     if (!ds) return;
-    /* Navigate to lab and pre-select matching workflow */
-    if (OmicsLab.Router) OmicsLab.Router.navigate('lab');
-    /* Show a brief toast */
-    _toast(`Loading "${ds.title.slice(0, 40)}…" into Lab`);
+    /* These are real SRA/ENA/GISAID accessions, not a wet-lab protocol to
+       simulate — the useful next step is analysing real data, not starting
+       the reagent-clicking bench experience. Send them to Analysis Studio's
+       FASTQ QC tab (every dataset here is a raw-read type) with the
+       accession pre-filled so they can fetch it and paste it in themselves. */
+    if (OmicsLab.Router) OmicsLab.Router.navigate('analysis');
+    setTimeout(() => {
+      OmicsLab.Analysis?.switchTab?.('fastq');
+      const textarea = document.querySelector('.az-panel-content[data-panel="fastq"] textarea');
+      if (textarea && !textarea.value) {
+        textarea.placeholder = `Fetch ${ds.accession} from ${ds.source || 'its source repository'}, then paste the FASTQ content here — or click "Load demo data" to try the tool first.`;
+      }
+    }, 60);
+    _toast(`Opening Analysis Studio for "${ds.title.slice(0, 40)}…" (${ds.accession})`);
   }
 
   function _toast(msg) {

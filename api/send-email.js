@@ -1,9 +1,10 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab — Resend Email API Route
-   POST /api/send-email
+   POST /api/send-email   (requires Authorization: Bearer <clerk-jwt>)
    Body: { type, to, data }
    Types: 'welcome' | 'certificate' | 'streak-reminder' | 'mention'
    ═══════════════════════════════════════════════════════════════ */
+import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 
 const RESEND_API_KEY  = process.env.RESEND_API_KEY;
 const FROM_EMAIL      = process.env.RESEND_FROM_EMAIL || 'noreply@omicsdatalab.tech';
@@ -90,6 +91,17 @@ const TEMPLATES = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!RESEND_API_KEY)       return res.status(503).json({ error: 'Email service not configured' });
+
+  /* All four templates (welcome, certificate, streak-reminder, mention)
+     are only ever meant to fire for an already-signed-in user — this
+     route was previously unauthenticated, making it an open relay
+     against our Resend account/sending domain. */
+  try {
+    await requireAuth(req);
+  } catch (err) {
+    if (err instanceof AuthError) return res.status(err.status).json({ error: err.message });
+    throw err;
+  }
 
   const { type, to, data = {} } = req.body || {};
 

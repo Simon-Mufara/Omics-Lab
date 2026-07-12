@@ -5,49 +5,27 @@
             customer.subscription.deleted, invoice.payment_failed
    ═══════════════════════════════════════════════════════════════ */
 
+import Stripe from 'stripe';
+import { supabaseServiceRequest } from '../lib/supabase-admin.js';
+
 const STRIPE_SECRET_KEY     = process.env.STRIPE_SECRET_KEY;
 const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
-const SUPABASE_URL          = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY  = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-/* Minimal Stripe signature verification (no SDK needed) */
-async function verifyStripeSignature(payload, sigHeader, secret) {
-  const [, ts] = sigHeader.match(/t=(\d+)/) || [];
-  const [, v1] = sigHeader.match(/v1=([a-f0-9]+)/) || [];
-  if (!ts || !v1) throw new Error('Invalid signature header');
+const stripe = STRIPE_SECRET_KEY ? new Stripe(STRIPE_SECRET_KEY) : null;
 
-  const signed = `${ts}.${payload}`;
+/* Vercel auto-parses application/json bodies, which destroys the exact
+   byte sequence Stripe signed — re-serializing the parsed object with
+   JSON.stringify never reliably reproduces it (key order, whitespace,
+   number formatting can all differ), so signature verification against
+   a re-stringified body silently fails for real requests. Disable the
+   platform body parser for this route and verify against the raw
+   bytes instead, via Stripe's own (battle-tested) SDK. */
+export const config = { api: { bodyParser: false } };
 
-  const key = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(secret),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign']
-  );
-  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signed));
-  const hex = Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
-
-  if (hex !== v1) throw new Error('Signature mismatch');
-
-  /* Reject if older than 5 minutes */
-  if (Math.abs(Date.now() / 1000 - parseInt(ts)) > 300) throw new Error('Timestamp too old');
-}
-
-/* Supabase service-role request (bypasses RLS) */
-async function supabaseServiceRequest(path, method, body) {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) return null;
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    method,
-    headers: {
-      'apikey':        SUPABASE_SERVICE_KEY,
-      'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`,
-      'Content-Type':  'application/json',
-      'Prefer':        'return=minimal',
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  return res;
+async function readRawBody(req) {
+  const chunks = [];
+  for await (const chunk of req) chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  return Buffer.concat(chunks);
 }
 
 function planFromPriceId(priceId) {
@@ -72,7 +50,10 @@ async function handleCheckoutCompleted(event) {
   const priceId = sub.items?.data?.[0]?.price?.id;
   const plan    = planFromPriceId(priceId);
 
-  /* Upsert subscription row */
+  /* Upsert subscription row — PostgREST only resolves on_conflict when
+     told to via Prefer: resolution=merge-duplicates; without it, a
+     POST that collides with an existing user_id row errors instead of
+     updating it (e.g. every returning/resubscribing customer). */
   await supabaseServiceRequest('subscriptions?on_conflict=user_id', 'POST', {
     user_id:                userId,
     stripe_subscription_id: subId,
@@ -80,7 +61,7 @@ async function handleCheckoutCompleted(event) {
     plan,
     status:                 sub.status,
     current_period_end:     new Date(sub.current_period_end * 1000).toISOString(),
-  });
+  }, { prefer: 'return=minimal,resolution=merge-duplicates' });
 
   /* Update user plan */
   await supabaseServiceRequest(`users?id=eq.${userId}`, 'PATCH', { plan });
@@ -137,25 +118,20 @@ async function handlePaymentFailed(event) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  if (!STRIPE_WEBHOOK_SECRET) {
+  if (!STRIPE_WEBHOOK_SECRET || !stripe) {
     return res.status(503).json({ error: 'Webhook secret not configured' });
   }
 
   const sigHeader = req.headers['stripe-signature'];
-  const rawBody   = req.body; /* Vercel buffers raw body as string when Content-Type is application/json */
+  const rawBody   = await readRawBody(req);
 
+  let event;
   try {
-    await verifyStripeSignature(
-      typeof rawBody === 'string' ? rawBody : JSON.stringify(rawBody),
-      sigHeader,
-      STRIPE_WEBHOOK_SECRET
-    );
+    event = stripe.webhooks.constructEvent(rawBody, sigHeader, STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error('[stripe-webhook] Signature verification failed:', err.message);
     return res.status(400).json({ error: 'Invalid signature' });
   }
-
-  const event = typeof rawBody === 'string' ? JSON.parse(rawBody) : rawBody;
 
   try {
     switch (event.type) {

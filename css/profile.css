@@ -469,6 +469,34 @@
 }
 .track-cta-btn:hover { gap: 0.5rem; }
 
+/* Your Work (Kaggle-style activity history) */
+.yw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 2.5rem;
+}
+.yw-card {
+  display: flex; gap: 0.7rem; align-items: flex-start;
+  background: #0D1524; border: 1px solid #182236; border-radius: 10px;
+  padding: 0.85rem 0.95rem; cursor: pointer; transition: border-color .12s, transform .12s;
+}
+.yw-card:hover { border-color: #2a3a55; transform: translateY(-1px); }
+.yw-icon {
+  display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 7px;
+  background: #58a6ff1a; color: #58a6ff; flex-shrink: 0;
+}
+.yw-body { min-width: 0; flex: 1; }
+.yw-title { font-size: 0.85rem; font-weight: 700; color: #E4DDD2; margin-bottom: 0.15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.yw-subtitle { font-size: 0.72rem; color: #6E6860; margin-bottom: 0.4rem; }
+.yw-meta { display: flex; align-items: center; gap: 0.35rem; font-size: 0.68rem; color: #6E6860; flex-wrap: wrap; }
+.yw-dot { opacity: 0.5; }
+.yw-status { font-weight: 700; padding: 0.06rem 0.4rem; border-radius: 4px; }
+.yw-status-completed  { background: #00C4A022; color: #00C4A0; }
+.yw-status-in-progress{ background: #e3b34122; color: #e3b341; }
+.yw-status-not-started{ background: #58a6ff22; color: #58a6ff; }
+.yw-empty { grid-column: 1 / -1; padding: 2rem 1rem; text-align: center; color: #6E6860; font-size: 0.82rem; background: #0D1524; border: 1px dashed #182236; border-radius: 10px; }
+
 /* Badges */
 .badges-grid {
   display: grid;

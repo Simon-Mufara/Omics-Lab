@@ -12,6 +12,7 @@
     "check:console": "grep -rn 'console\\.log(' js/ --include='*.js' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0"
   },
   "dependencies": {
+    "@clerk/backend": "^3.11.2",
     "@pinecone-database/pinecone": "^2.2.2",
     "@upstash/redis": "^1.31.3",
     "resend": "^3.2.0",

@@ -111,28 +111,6 @@ OmicsLab.Theme = (function () {
         color:var(--text-primary,#E4DDD2);
       }
       .nav-theme-btn:active{background:var(--bg-inset,#0D1524)}
-
-      /* ── Light theme globals ── */
-      [data-theme="light"]{
-        --bg-root:#ffffff;
-        --bg-canvas:#f6f8fa;
-        --bg-surface:#ffffff;
-        --bg-overlay:#eaeef2;
-        --bg-inset:#f6f8fa;
-        --border-default:#d0d7de;
-        --border-muted:#d8dee4;
-        --text-primary:#1f2328;
-        --text-secondary:#24292f;
-        --text-muted:#656d76;
-        --text-faint:#8c959f;
-        --green:#1a7f37;
-        --green-dim:#0d5523;
-        --blue:#0969da;
-        --purple:#8250df;
-        --orange:#bc4c00;
-        --red:#d1242f;
-        --yellow:#9a6700;
-      }
     `;
     document.head.appendChild(s);
   }

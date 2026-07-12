@@ -5,25 +5,58 @@ window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Pricing = (function () {
 
-  /* ── Tier data ── */
-  const TIERS = [
+  /* ── Individual tiers (ZAR) — ids referenced by _openCheckout() ── */
+  const IND_TIERS = [
     {
-      id:'community', name:'Community', price:'Free', priceSub:'forever — no card needed',
-      color:'#00C4A0', badge:null,
-      desc:'Every individual researcher, student, and self-directed learner. No account. No install. No expiry.',
+      id:'bench', name:'Bench', color:'#00C4A0', badge:null,
+      desc:'Every self-directed learner. No card. No expiry. Run any of the 14 lab workflows start to finish.',
+      priceM:0, priceY:0, studentM:0, studentY:0,
       cta:'Start Learning Free', ctaStyle:'outline',
       ctaAction:"OmicsLab.Router.navigate('lab')",
-      features:[
-        '87+ interactive modules & tools',
-        'Full offline PWA (no internet needed)',
-        '21 African languages',
-        'Community Open Badge certificates',
-        'Social Hub & peer learning network',
-        'AI Assistant (bring your own key)',
-        'scRNA-seq & Variant Analysis live apps',
+      outcomes:[
+        'Run all 14 lab workflows end-to-end, with live QC',
+        'Track your progress across every curriculum track',
+        '3 Socratic AI Tutor questions a day',
+        'Try the Variant Interpreter on 5 teaching variants',
+        'Preview the scRNA-seq Explorer on a guided dataset',
+        'Full offline PWA, all 21 languages',
       ],
-      missing:['Instructor admin dashboard','Cohort tracking','Branded certificates','CSV progress exports','Priority support'],
+      missing:['A verifiable certificate on completion','Unlimited AI Tutor','Your own data in the Variant Interpreter & scRNA-seq Explorer'],
     },
+    {
+      id:'scholar', name:'Scholar', color:'#00C4A0', badge:'Most students choose this',
+      desc:'For students who want the full toolkit and a certificate that actually counts.',
+      priceM:79, priceY:790, studentM:49, studentY:490,
+      cta:'Subscribe', ctaStyle:'solid',
+      ctaAction:"OmicsLab.Pricing._openCheckout('scholar')",
+      outcomes:[
+        'Master ACMG variant classification on your own VCF data',
+        'Run unlimited scRNA-seq clustering analyses, saved & exported',
+        'Ask the Socratic AI Tutor unlimited questions',
+        'Earn a verifiable Open Badge 3.0 certificate per track',
+        'Get early access to every new module',
+      ],
+      missing:['Pipeline Sandbox export to real Snakemake/Nextflow files','Grant Generator & Thesis Coach AI tools'],
+    },
+    {
+      id:'practitioner', name:'Practitioner', color:'#bc8cff', badge:null,
+      desc:'For postgrads and working bioinformaticians who need professional-grade output.',
+      priceM:199, priceY:1990, studentM:null, studentY:null,
+      cta:'Subscribe', ctaStyle:'outline',
+      ctaAction:"OmicsLab.Pricing._openCheckout('practitioner')",
+      outcomes:[
+        'Everything in Scholar',
+        'Export real pipelines from the Sandbox — Snakemake, Nextflow',
+        'Draft grant sections and thesis chapters with the AI writing tools',
+        'Priority AI Tutor — faster responses, longer context',
+        'A CPD-style professional development credential',
+      ],
+      missing:[],
+    },
+  ];
+
+  /* ── Institutional tiers (unchanged pricing, kept as a separate on-ramp) ── */
+  const TIERS = [
     {
       id:'campus', name:'Campus License', price:'From $1,200', priceSub:'per year · 60% off for Africa',
       color:'#58a6ff', badge:'Most Popular',
@@ -31,16 +64,13 @@ OmicsLab.Pricing = (function () {
       cta:'Request a Quote', ctaStyle:'solid',
       ctaAction:"OmicsLab.Pricing._openInquiry('campus')",
       features:[
-        'Everything in Community',
-        'Up to 200 enrolled learners',
-        'Instructor admin dashboard',
-        '12-week cohort curriculum engine',
-        'Student progress import / export (JSON)',
-        'Cohort CSV & summary reports',
-        'Branded institutional certificates',
-        'Priority email support — 48h response',
-        '1-hour onboarding call with Simon',
-        'LMS integration guide (Moodle / Canvas)',
+        'Give every enrolled student the full Scholar toolkit at once',
+        'Run a 12-week cohort with built-in curriculum pacing, up to 200 learners',
+        'See every student\'s progress and where they\'re stuck from one dashboard',
+        'Hand out certificates that carry your institution\'s seal, not just OmicsLab\'s',
+        'Import/export a whole cohort\'s progress as JSON when the term ends',
+        'Get a real person — Simon, on a call — for onboarding and 48h support',
+        'Drop OmicsLab straight into Moodle or Canvas with the LMS guide',
       ],
       missing:['White-label branding','Custom module development'],
     },
@@ -51,38 +81,210 @@ OmicsLab.Pricing = (function () {
       cta:'Talk to Simon', ctaStyle:'outline',
       ctaAction:"OmicsLab.Pricing._openInquiry('enterprise')",
       features:[
-        'Everything in Campus',
-        'Unlimited learners across any number of sites',
-        'White-label & custom institutional branding',
-        'Self-hosted deployment (nginx / CDN)',
-        'Custom curriculum & module development',
-        'API access for LMS / SCORM / xAPI integration',
-        'Dedicated support — 24h SLA',
-        'Staff training workshops (in-person or virtual)',
-        'Quarterly programme review sessions',
-        'Grant application support with usage evidence',
-        'Data sovereignty: full offline deployment',
-        'Multi-language content customisation',
+        'Everything a Campus license gives, with no cap on learners or sites',
+        'Put your own name on it — full white-label branding, top to bottom',
+        'Run it entirely on your own servers — no dependency on OmicsLab\'s uptime',
+        'Commission modules built for your specific curriculum or disease context',
+        'Plug into your existing LMS/SCORM/xAPI infrastructure via API',
+        'A 24-hour SLA and a dedicated contact, not a shared support queue',
+        'Quarterly reviews and grant-application support backed by real usage data',
       ],
       missing:[],
     },
   ];
 
-  /* ── Comparison rows ── */
+  /* ── Billing period + student-verified state (session-only, not persisted) ── */
+  let _period = 'monthly'; /* 'monthly' | 'annual' */
+  let _verified = false;
+
+  function _fmtZAR(n) {
+    return n === 0 ? 'Free' : `R${n.toLocaleString('en-ZA')}`;
+  }
+
+  /* Returns: amount (ZAR), period ('/mo' | '/yr' | ''), sub (the line shown
+     under the price — free tier, annual monthly-equivalent, or plain monthly). */
+  function _price(tier) {
+    if (tier.priceM === 0) return { amount: 0, period: '', sub: 'forever — no card needed' };
+    const annual = _period === 'annual';
+    const base = annual ? tier.priceY : tier.priceM;
+    const studentPrice = annual ? tier.studentY : tier.studentM;
+    const amount = (_verified && studentPrice != null) ? studentPrice : base;
+    return annual
+      ? { amount, period: '/yr', sub: `≈${_fmtZAR(Math.round(amount / 12))}/mo billed yearly` }
+      : { amount, period: '/mo', sub: 'billed monthly · cancel anytime' };
+  }
+
+  function setPeriod(period) {
+    _period = period;
+    const section = document.getElementById('pricing-section');
+    if (section) _renderIndividualCards(section);
+  }
+
+  function toggleVerified() {
+    _verified = !_verified;
+    const section = document.getElementById('pricing-section');
+    if (section) _renderIndividualCards(section);
+  }
+
+  function _individualCardsHtml() {
+    return IND_TIERS.map(t => {
+      const { amount, period, sub } = _price(t);
+      return `
+        <div class="prc-card${t.badge ? ' prc-card-featured' : ''}" style="--tier-color:${t.color}">
+          ${t.badge ? `<div class="prc-card-badge">${t.badge}</div>` : ''}
+          <div class="prc-card-name" style="color:${t.color}">${t.name}</div>
+          <div class="prc-card-price">${_fmtZAR(amount)}${period ? `<span class="prc-price-period">${period}</span>` : ''}</div>
+          <div class="prc-card-price-sub">${sub}</div>
+          ${(_verified && t.studentM != null && amount > 0) ? `<div class="prc-student-badge">Verified-student rate applied</div>` : ''}
+          <p class="prc-card-desc">${t.desc}</p>
+          <button class="prc-card-btn"
+            style="${t.ctaStyle==='solid'
+              ? `background:${t.color};border-color:${t.color};color:#0D1524`
+              : `background:transparent;border-color:${t.color};color:${t.color}`}"
+            onclick="${t.ctaAction}">${t.cta}</button>
+          <div class="prc2-feat-section">
+            <ul class="prc-feat-list">
+              ${t.outcomes.map(f=>`<li class="prc-feat-item">${_OK}<span>${f}</span></li>`).join('')}
+            </ul>
+            ${t.missing.length ? `<ul class="prc-feat-list" style="margin-top:.5rem">
+              ${t.missing.map(f=>`<li class="prc-feat-item prc-feat-off">${_NO}<span>${f}</span></li>`).join('')}
+            </ul>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function _renderIndividualCards(section) {
+    const mount = section.querySelector('#prc-ind-cards');
+    if (mount) mount.innerHTML = _individualCardsHtml();
+    const toggle = section.querySelector('#prc-period-toggle');
+    if (toggle) toggle.querySelectorAll('.prc-toggle-opt').forEach(b =>
+      b.classList.toggle('active', b.dataset.period === _period));
+    const vbtn = section.querySelector('#prc-verified-toggle');
+    if (vbtn) vbtn.classList.toggle('active', _verified);
+  }
+
+  /* ── Checkout summary modal ──
+     This is OmicsLab's own screen — the actual card-entry step happens on
+     Paystack's hosted, PCI-compliant page after "Continue to secure payment",
+     never inside our own DOM. */
+  function _openCheckout(tierId) {
+    const tier = IND_TIERS.find(t => t.id === tierId);
+    if (!tier) return;
+    const { amount, sub } = _price(tier);
+
+    const overlay = document.createElement('div');
+    overlay.id = 'checkout-overlay';
+    overlay.className = 'checkout-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', `Subscribe to ${tier.name}`);
+    overlay.innerHTML = `
+      <div class="checkout-card">
+        <button type="button" class="checkout-close" onclick="OmicsLab.Pricing._closeCheckout()" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <div class="checkout-eyebrow">Confirm your plan</div>
+        <div class="checkout-plan-row">
+          <div class="checkout-plan-dot" style="background:${tier.color}"></div>
+          <div class="checkout-plan-name">${tier.name}</div>
+          <div class="checkout-plan-price">${_fmtZAR(amount)}<span>/${_period === 'annual' ? 'yr' : 'mo'}</span></div>
+        </div>
+        <div class="checkout-plan-sub">${sub}${_verified && tier.studentM != null ? ' · verified-student rate' : ''}</div>
+
+        <div class="checkout-outcomes">
+          <div class="checkout-outcomes-label">What you're unlocking</div>
+          <ul class="checkout-outcomes-list">
+            ${tier.outcomes.slice(0, 4).map(o => `<li>${_OK}<span>${o}</span></li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="checkout-trust-row">
+          <span>${_OK} No lock-in — cancel anytime, access continues to period end</span>
+          <span>${_OK} Secure payment via Paystack — card details never touch our servers</span>
+        </div>
+
+        <button type="button" class="checkout-pay-btn" id="checkout-pay-btn" onclick="OmicsLab.Pricing._confirmCheckout('${tierId}')">
+          Continue to secure payment
+        </button>
+        <div class="checkout-status" id="checkout-status" style="display:none"></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) _closeCheckout(); });
+  }
+
+  function _closeCheckout() {
+    document.getElementById('checkout-overlay')?.remove();
+  }
+
+  async function _confirmCheckout(tierId) {
+    const tier = IND_TIERS.find(t => t.id === tierId);
+    const btn    = document.getElementById('checkout-pay-btn');
+    const status = document.getElementById('checkout-status');
+    if (!tier || !btn || !status) return;
+
+    if (!OmicsLab.AuthClerk?.getUser?.()) {
+      status.style.display = 'block';
+      status.className = 'checkout-status checkout-status-info';
+      status.innerHTML = `You'll need to sign in first — it's how we know which account to attach the subscription to.`;
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Setting up secure payment…';
+    status.style.display = 'none';
+
+    try {
+      const token = await OmicsLab.AuthClerk.getToken();
+      const { amount } = _price(tier);
+      const res = await fetch('/api/create-paystack-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          plan: tier.id,
+          period: _period,
+          verified: _verified,
+          amountZAR: amount,
+          successUrl: `${location.origin}/?payment=success`,
+          cancelUrl:  `${location.origin}/pricing?payment=cancelled`,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.status === 503) {
+        status.style.display = 'block';
+        status.className = 'checkout-status checkout-status-info';
+        status.innerHTML = `Card payments aren't switched on yet — Simon's finishing the Paystack setup. Email <a href="mailto:simon.mufara1@gmail.com?subject=${encodeURIComponent('OmicsLab ' + tier.name + ' waitlist')}">simon.mufara1@gmail.com</a> and you'll be first notified when it's live.`;
+        btn.disabled = false;
+        btn.textContent = 'Continue to secure payment';
+        return;
+      }
+      if (!res.ok || !data.authorization_url) throw new Error(data.error || 'Checkout failed');
+
+      window.location.href = data.authorization_url;
+    } catch (err) {
+      status.style.display = 'block';
+      status.className = 'checkout-status checkout-status-error';
+      status.textContent = 'Something went wrong starting checkout. Please try again in a moment.';
+      btn.disabled = false;
+      btn.textContent = 'Continue to secure payment';
+    }
+  }
+
+  /* ── Comparison rows — individual tiers only; institutional tiers have
+     their own full feature lists on the Campus/Enterprise cards above ── */
   const CMP = [
-    { f:'87+ modules & tools',          c:'All',         k:'All',         e:'All + custom' },
-    { f:'Offline PWA',                  c:true,          k:true,          e:true },
-    { f:'African languages',            c:'21',          k:'21',          e:'21 + custom' },
-    { f:'Learner accounts',             c:'Unlimited',   k:'Up to 200',   e:'Unlimited' },
-    { f:'Instructor dashboard',         c:false,         k:true,          e:true },
-    { f:'Cohort management',            c:false,         k:true,          e:true },
-    { f:'Progress reports (CSV)',       c:false,         k:true,          e:true },
-    { f:'Branded certificates',         c:false,         k:true,          e:true },
-    { f:'LMS integration guide',        c:false,         k:true,          e:true },
-    { f:'White-label branding',         c:false,         k:false,         e:true },
-    { f:'Custom modules',               c:false,         k:false,         e:true },
-    { f:'Self-hosted deployment',       c:false,         k:false,         e:true },
-    { f:'Support tier',                 c:'Community',   k:'Email 48h',   e:'Dedicated 24h' },
+    { f:'All 14 lab workflows, live QC',        c:true,           k:true,             e:true },
+    { f:'Curriculum tracks & progress',         c:true,           k:true,             e:true },
+    { f:'Socratic AI Tutor',                    c:'3 / day',      k:'Unlimited',      e:'Unlimited, priority' },
+    { f:'Variant Interpreter',                  c:'5 presets',    k:'Your own VCF',   e:'Your own VCF' },
+    { f:'scRNA-seq Explorer',                   c:'1 demo, view only', k:'Unlimited, exportable', e:'Unlimited, exportable' },
+    { f:'Verifiable Open Badge certificate',    c:false,          k:true,             e:true },
+    { f:'Pipeline Sandbox → real pipeline export', c:false,       k:false,            e:true },
+    { f:'Grant Generator & Thesis Coach AI',    c:false,          k:false,            e:true },
+    { f:'Offline PWA, 21 languages',            c:true,           k:true,             e:true },
   ];
 
   /* ── FAQs ── */
@@ -329,7 +531,25 @@ OmicsLab.Pricing = (function () {
 
     <div class="prc-wrap">
 
-      <!-- ══ TIER CARDS ══ -->
+      <!-- ══ INDIVIDUAL PLANS ══ -->
+      <div class="prc-section-label">For individual learners</div>
+      <div class="prc-controls-row">
+        <div class="prc-toggle" id="prc-period-toggle">
+          <button type="button" class="prc-toggle-opt active" data-period="monthly" onclick="OmicsLab.Pricing.setPeriod('monthly')">Monthly</button>
+          <button type="button" class="prc-toggle-opt" data-period="annual" onclick="OmicsLab.Pricing.setPeriod('annual')">Annual <span class="prc-toggle-save">save ~17%</span></button>
+        </div>
+        <button type="button" class="prc-verified-toggle" id="prc-verified-toggle" onclick="OmicsLab.Pricing.toggleVerified()">
+          <span class="prc-verified-check">${_OK}</span>
+          I have a valid African university email (.ac.za etc.)
+        </button>
+      </div>
+      <div class="prc-cards" id="prc-ind-cards">${_individualCardsHtml()}</div>
+
+      <!-- ══ INSTITUTIONAL PLANS ══ -->
+      <div class="prc-inst-divider">
+        <span>Need this for a whole class or department?</span>
+      </div>
+      <div class="prc-section-label">Institutional licensing</div>
       <div class="prc-cards">
         ${TIERS.map(t => `
           <div class="prc-card${t.badge ? ' prc-card-featured' : ''}" style="--tier-color:${t.color}">
@@ -385,15 +605,16 @@ OmicsLab.Pricing = (function () {
 
       <!-- ══ COMPARISON TABLE ══ -->
       <div class="prc-compare" id="prc-compare-section">
-        <div class="prc-section-label">Full feature comparison</div>
+        <div class="prc-section-label">Individual plans, feature by feature</div>
+        <p class="prc-compare-sub">Bringing this to a whole class or department instead? Compare Campus and Enterprise on their cards above.</p>
         <div class="prc-compare-wrap">
           <table class="prc-table">
             <thead>
               <tr>
                 <th class="prc-th-feat">Feature</th>
-                <th class="prc-th-tier" style="color:#00C4A0">Community</th>
-                <th class="prc-th-tier prc-th-mid" style="color:#58a6ff">Campus</th>
-                <th class="prc-th-tier" style="color:#bc8cff">Enterprise</th>
+                <th class="prc-th-tier" style="color:#00C4A0">Bench</th>
+                <th class="prc-th-tier prc-th-mid" style="color:#00C4A0">Scholar</th>
+                <th class="prc-th-tier" style="color:#bc8cff">Practitioner</th>
               </tr>
             </thead>
             <tbody>
@@ -464,5 +685,9 @@ OmicsLab.Pricing = (function () {
     </div>`;
   }
 
-  return { init, _openInquiry, _sendInquiry, _toggleFaq };
+  return {
+    init, _openInquiry, _sendInquiry, _toggleFaq,
+    setPeriod, toggleVerified,
+    _openCheckout, _closeCheckout, _confirmCheckout,
+  };
 })();

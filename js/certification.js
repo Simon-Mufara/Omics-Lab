@@ -211,6 +211,17 @@ OmicsLab.Certification = (function () {
 
   /* ─── Open Badges 3.0 / W3C Verifiable Credential ─── */
   function _generateOpenBadge() {
+    /* Client-side UX gate only — see js/entitlements.js's header comment.
+       A verifiable Open Badge credential naming a real "issuer" is exactly
+       the kind of thing worth a real check; today that check is the same
+       trust boundary as everything else in this file (a local SVG/JSON
+       download), so treat this as a UX nudge, not a security boundary,
+       until credential issuance moves server-side. */
+    if (OmicsLab.Entitlements && !OmicsLab.Entitlements.hasAccess('certificate.verified')) {
+      OmicsLab.Toast?.show('Verifiable Open Badge credentials are a Scholar feature — see Pricing', 'warning');
+      OmicsLab.Router?.navigate('pricing');
+      return;
+    }
     const s = _getState();
     const name = s.profile?.name || 'OmicsLab Learner';
     const inst = s.profile?.inst || '';

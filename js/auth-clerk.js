@@ -227,7 +227,18 @@ OmicsLab.AuthClerk = (function () {
     const sentKey = `omicslab_welcome_sent_${_user.id}`;
     if (!localStorage.getItem(sentKey) && _user.email) {
       localStorage.setItem(sentKey, '1');
-      fetch('/api/send-email', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'welcome', to: _user.email, data: { name: _user.name } }) }).catch(() => {});
+      /* /api/send-email now requires the caller's Clerk session token —
+         it was previously wide open to anyone on the internet. */
+      _clerk.session?.getToken().then(token => {
+        fetch('/api/send-email', {
+          method:  'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ type: 'welcome', to: _user.email, data: { name: _user.name } }),
+        }).catch(() => {});
+      }).catch(() => {});
     }
   }
 

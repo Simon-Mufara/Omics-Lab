@@ -1,0 +1,153 @@
+/* ═══════════════════════════════════════════════════════════════
+   OmicsLab — Explainer (flat-vector animated scene component)
+   Themeable via --exp-* custom properties; override per-instance
+   or per-scene (js/explainer.js writes scene.palette onto these).
+   ═══════════════════════════════════════════════════════════════ */
+
+.ol-explainer {
+  --exp-primary:      var(--green);
+  --exp-accent:       var(--blue);
+  --exp-neutral:      var(--text-muted);
+  --exp-bg:           var(--bg-surface);
+  --exp-caption-text: var(--text-secondary);
+  --exp-dur:          420ms;
+  --exp-ease:         var(--ease-out);
+  --exp-radius:       var(--radius-lg);
+
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.ol-exp-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--exp-bg);
+  border: 1px solid var(--border-default);
+  border-radius: var(--exp-radius);
+  overflow: hidden;
+}
+
+.ol-exp-el {
+  position: absolute;
+  overflow: visible;
+  opacity: 0;
+  transform: translate(-50%, -50%) var(--exp-offset, translate(0, 0));
+  transition: opacity var(--exp-dur) var(--exp-ease),
+              transform var(--exp-dur) var(--exp-ease);
+  pointer-events: none;
+}
+.ol-exp-el.is-in { opacity: 1; transform: translate(-50%, -50%); }
+
+.ol-exp-el[data-motion="slide-up"]    { --exp-offset: translate(0, 16px); }
+.ol-exp-el[data-motion="slide-down"]  { --exp-offset: translate(0, -16px); }
+.ol-exp-el[data-motion="slide-left"]  { --exp-offset: translate(16px, 0); }
+.ol-exp-el[data-motion="slide-right"] { --exp-offset: translate(-16px, 0); }
+
+.ol-shape-primary  { fill: var(--exp-primary);  stroke: var(--exp-primary); }
+.ol-shape-accent   { fill: var(--exp-accent);   stroke: var(--exp-accent); }
+.ol-shape-neutral  { fill: var(--exp-neutral);  stroke: var(--exp-neutral); }
+.ol-shape-onaccent { fill: var(--exp-bg);       stroke: var(--exp-bg); }
+/* stroke-only paths (helix strands, trace lines, checkmarks) — must come
+   after the color classes above so it wins the fill tie and actually
+   shows as a line, not a filled wedge between the path's endpoints. */
+.ol-shape-line { fill: none; }
+
+.ol-exp-caption {
+  min-height: 2.6em;
+  margin: var(--space-4) var(--space-2) 0;
+  padding: 0;
+  color: var(--exp-caption-text);
+  font-size: var(--text-md);
+  line-height: 1.5;
+  text-align: center;
+}
+
+.ol-exp-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.ol-exp-dots {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ol-exp-dot {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.ol-exp-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--border-strong);
+  transition: background var(--dur-normal) var(--ease-out),
+              transform var(--dur-normal) var(--ease-out);
+}
+.ol-exp-dot.is-active::before {
+  background: var(--exp-primary);
+  transform: scale(1.35);
+}
+.ol-exp-dot:hover::before { background: var(--exp-accent); }
+
+@media (max-width: 480px) {
+  .ol-exp-caption { font-size: var(--text-sm); margin-top: var(--space-3); }
+  .ol-exp-controls { gap: var(--space-3); }
+}
+
+/* ── Modal launcher (opt-in "watch how it works") ── */
+.ol-exp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(4, 7, 12, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ol-exp-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.ol-exp-modal-close {
+  position: absolute;
+  z-index: 1;
+  top: var(--space-3);
+  right: var(--space-3);
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--bg-root);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.ol-exp-modal-close:hover { color: var(--text-primary); border-color: var(--border-strong); }

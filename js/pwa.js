@@ -224,18 +224,23 @@ OmicsLab.PWA = (function () {
       document.addEventListener(ev, _touch, { passive: true, capture: true })
     );
 
-    /* SW update message:
+    /* Genuine SW updates are detected and reported by js/app.js (via the
+       registration lifecycle, which can tell a real new version apart
+       from a first-ever install) — it calls _handleUpdateAvailable()
+       directly rather than this module listening for a broadcast. */
+  }
+
+  /* Called only when js/app.js has confirmed an already-controlling
+     service worker was just replaced by a newly-installed one — i.e. a
+     real update, never a first install.
        - Idle ≥ 4 s → auto-reload (user won't lose work)
        - Active      → show banner so user can choose when */
-    navigator.serviceWorker?.addEventListener('message', e => {
-      if (e.data?.type === 'SW_UPDATED') {
-        if (Date.now() - _lastInteraction >= 4000) {
-          window.location.reload();
-        } else {
-          _showUpdateBanner();
-        }
-      }
-    });
+  function _handleUpdateAvailable() {
+    if (Date.now() - _lastInteraction >= 4000) {
+      window.location.reload();
+    } else {
+      _showUpdateBanner();
+    }
   }
 
   function _showUpdateBanner() {
@@ -417,5 +422,5 @@ OmicsLab.PWA = (function () {
     });
   }
 
-  return { init, share, setBadge, buildShareButton, openCommandPalette: _openCommandPalette };
+  return { init, share, setBadge, buildShareButton, openCommandPalette: _openCommandPalette, _handleUpdateAvailable };
 })();

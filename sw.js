@@ -1,10 +1,13 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab Service Worker — Workbox-style manual strategies
-   v38: fix OFFLINE_URL to /offline.html (Vercel root), mobile auth,
-        sign-out session clearing, SW comment sync
+   v39: JS/CSS/JSON always Network-First — stale-while-revalidate
+        was serving last-cached bytes on every load regardless of
+        the vercel.json Cache-Control fix, so deploys never visibly
+        landed until a second reload. Cache is now only an offline
+        fallback for these assets, never the first response.
    ═══════════════════════════════════════════════════════════════ */
 
-const STATIC_CACHE  = 'ol-static-v50';  /* js/ css/ images/ */
+const STATIC_CACHE  = 'ol-static-v51';  /* js/ css/ images/ */
 const PAGES_CACHE   = 'ol-pages-v11';   /* index.html + offline.html */
 const FONTS_CACHE   = 'ol-fonts-v1';   /* Google Fonts — long-lived */
 
@@ -22,7 +25,13 @@ self.addEventListener('install', e => {
   );
 });
 
-/* ─── Activate: delete old caches, claim clients ─── */
+/* ─── Activate: delete old caches, claim clients ───
+   Does NOT announce itself to clients — that fired on every activation,
+   including the very first install (nothing to "update" from), forcing
+   an unwanted reload/banner on a visitor's first-ever load. Genuine
+   update detection now lives client-side in js/app.js, which can tell
+   first install and a real new version apart via the standard
+   registration.installing/updatefound lifecycle. */
 self.addEventListener('activate', e => {
   const CURRENT = new Set([STATIC_CACHE, PAGES_CACHE, FONTS_CACHE]);
   e.waitUntil(
@@ -31,8 +40,6 @@ self.addEventListener('activate', e => {
         keys.filter(k => !CURRENT.has(k)).map(k => caches.delete(k))
       ))
       .then(() => self.clients.claim())
-      .then(() => self.clients.matchAll({ type: 'window' }))
-      .then(clients => clients.forEach(c => c.postMessage({ type: 'SW_UPDATED' })))
   );
 });
 
@@ -65,17 +72,11 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  /* 5. JS / CSS / JSON:
-     - Hard/regular refresh (cache mode 'reload' or 'no-cache') → Network-First so
-       the browser always gets fresh code, then caches it for offline use.
-     - Normal navigation → Stale-While-Revalidate (fast, background update). */
+  /* 5. JS / CSS / JSON → always Network-First. The cache here exists purely
+     as an offline fallback — if it's the first response a visitor sees, a
+     fresh deploy can never be distinguishable from a stale one. */
   if (path.match(/\.(js|css|json|webmanifest)(\?.*)?$/)) {
-    const cm = e.request.cache;
-    if (cm === 'reload' || cm === 'no-cache') {
-      e.respondWith(_networkFirst(e.request, STATIC_CACHE, 8000));
-    } else {
-      e.respondWith(_staleWhileRevalidate(e.request, STATIC_CACHE));
-    }
+    e.respondWith(_networkFirst(e.request, STATIC_CACHE, 4000));
     return;
   }
 
@@ -88,19 +89,6 @@ self.addEventListener('fetch', e => {
   /* 7. Everything else → Network-First */
   e.respondWith(_networkFirst(e.request, STATIC_CACHE, 5000));
 });
-
-/* ─── Stale-While-Revalidate ─── */
-async function _staleWhileRevalidate(req, cacheName) {
-  const cache = await caches.open(cacheName);
-  const cached = await cache.match(req);
-  /* Fire revalidation in background regardless */
-  const fetchPromise = fetch(req).then(res => {
-    if (res && res.ok) cache.put(req, res.clone());
-    return res;
-  }).catch(() => null);
-  /* Return cached immediately, or wait for network if nothing cached */
-  return cached || fetchPromise;
-}
 
 /* ─── Network-First with timeout fallback ─── */
 async function _networkFirst(req, cacheName, timeoutMs) {

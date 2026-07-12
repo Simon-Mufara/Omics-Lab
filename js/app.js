@@ -203,6 +203,15 @@ OmicsLab.App = (function() {
     const q     = OmicsLab.State.quality;
     const E     = OmicsLab.Engine;
 
+    /* Persist the real result — profile.js's auto-award logic (e.g. the
+       "first workflow" badge) and the curriculum capstone gate both read
+       these keys, and previously nothing ever wrote them. */
+    try {
+      localStorage.setItem('omicslab_last_score', String(score));
+      localStorage.setItem('omicslab_score_' + wf.id, String(score));
+      localStorage.setItem('omicslab_completed_' + wf.id, String(Date.now()));
+    } catch {}
+
     const cascadeHtml = wf.pipeline.map((name, i) => {
       const stageQ = Math.round(E.clamp(score - i * (100 - score) * 0.08, 0, 100));
       const col    = E.qualityColor(stageQ, false);
@@ -1477,8 +1486,22 @@ rule annotate:
     if ('serviceWorker' in navigator) {
       /* Vercel serves from root (/sw.js); GitHub Pages needs the repo prefix */
       const _swPath = location.hostname.includes('github.io') ? '/Omics-Lab/sw.js' : '/sw.js';
-      navigator.serviceWorker.register(_swPath).catch(err => console.warn('[SW]', err));
-      /* SW_UPDATED banner handled by pwa.js — no duplicate listener here */
+      /* A controller already existing means an older SW was already
+         running this page — so a later install is a genuine update.
+         No controller means this is the visitor's first-ever load,
+         which must never be announced as an "update". */
+      const _hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.register(_swPath).then(reg => {
+        if (!_hadController) return;
+        reg.addEventListener('updatefound', () => {
+          const worker = reg.installing;
+          worker?.addEventListener('statechange', () => {
+            if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+              OmicsLab.PWA?._handleUpdateAvailable?.();
+            }
+          });
+        });
+      }).catch(err => console.warn('[SW]', err));
     }
   }
 

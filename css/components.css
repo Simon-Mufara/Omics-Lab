@@ -165,3 +165,41 @@
 #a11y-announcer {
   position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;
 }
+
+/* ═══ Entitlement gate card — non-punitive upgrade prompt ═══ */
+.ol-gate-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 2rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+.ol-gate-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--gate-color, var(--accent)) 14%, transparent);
+  color: var(--gate-color, var(--accent));
+  margin-bottom: 0.25rem;
+}
+.ol-gate-title { font-family: var(--font-brand); font-weight: 700; font-size: 1.02rem; color: var(--text-primary); }
+.ol-gate-desc { font-size: 0.86rem; color: var(--text-muted); max-width: 34ch; margin: 0; }
+.ol-gate-btn {
+  margin-top: 0.4rem;
+  padding: 0.55rem 1.15rem;
+  background: var(--gate-color, var(--accent));
+  border: none;
+  border-radius: var(--radius-md);
+  color: #0D1524;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.ol-gate-btn:hover { opacity: 0.88; }

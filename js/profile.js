@@ -263,7 +263,16 @@ OmicsLab.Profile = (function () {
   let _selectedRole = '';
   let _modalStep    = 1;
 
+  function _ensureCss() {
+    if (document.querySelector('link[href="css/profile.css"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'css/profile.css';
+    document.head.appendChild(link);
+  }
+
   function openSetupModal(prefill) {
+    _ensureCss();
     _selectedRole = prefill?.role || '';
     _modalStep    = 1;
 
@@ -479,6 +488,9 @@ OmicsLab.Profile = (function () {
         </div>
       </div>
 
+      <!-- Your Work -->
+      ${_renderYourWork()}
+
       <!-- Recommendations -->
       <div class="profile-sec-head">
         <div class="profile-sec-title">Recommended for ${_esc(profile.name.split(' ')[0])}</div>
@@ -553,6 +565,124 @@ OmicsLab.Profile = (function () {
     });
   }
 
+  /* ── Your Work: aggregate real activity across the app (Kaggle-style "Your Work") ── */
+  function _relTime(ts) {
+    const diff = Date.now() - Number(ts);
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return mins + (mins === 1 ? ' minute ago' : ' minutes ago');
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return hrs + (hrs === 1 ? ' hour ago' : ' hours ago');
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return days + (days === 1 ? ' day ago' : ' days ago');
+    const months = Math.floor(days / 30);
+    return months <= 1 ? 'a month ago' : months + ' months ago';
+  }
+
+  function _prettify(id) {
+    return String(id || '').replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function _yourWorkItems() {
+    const items = [];
+
+    /* Lab simulation / workflow completions */
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      const m = k && k.match(/^omicslab_completed_(.+)$/);
+      if (!m) continue;
+      const id = m[1];
+      const ts = parseInt(localStorage.getItem(k), 10);
+      const score = localStorage.getItem('omicslab_score_' + id);
+      items.push({
+        kind: 'workflow', id, title: _prettify(id),
+        subtitle: 'Lab Simulation' + (score ? ` · Score ${score}%` : ''),
+        status: 'completed', updatedAt: ts || 0, page: 'lab',
+      });
+    }
+
+    /* Study Pack modules */
+    if (OmicsLab.StudyPack?.MODULES) {
+      OmicsLab.StudyPack.MODULES.forEach(mod => {
+        const status = OmicsLab.StudyPack._getStatus(mod.id);
+        if (status === 'not-started') return;
+        const updated = OmicsLab.StudyPack._getUpdated(mod.id);
+        items.push({
+          kind: 'study', id: mod.id, title: mod.name,
+          subtitle: `Study Pack · ${mod.cat}`,
+          status, updatedAt: updated ? parseInt(updated, 10) : 0, page: 'study',
+        });
+      });
+    }
+
+    /* Curriculum lessons */
+    if (OmicsLab.Curriculum?.TRACKS) {
+      let done = {};
+      try { done = JSON.parse(localStorage.getItem('omicslab_curriculum_v1') || '{}'); } catch {}
+      Object.entries(OmicsLab.Curriculum.TRACKS).forEach(([trackId, track]) => {
+        (track.lessons || []).forEach(lesson => {
+          const rec = done[lesson.id];
+          if (!rec) return;
+          items.push({
+            kind: 'lesson', id: lesson.id, title: lesson.title,
+            subtitle: `Curriculum · ${track.title || _prettify(trackId)}`,
+            status: 'completed',
+            updatedAt: rec.ts ? new Date(rec.ts).getTime() : 0,
+            page: 'learn',
+          });
+        });
+      });
+    }
+
+    /* Notebook forks (Copy & Edit in the Terminal's Python Notebook mode) */
+    if (OmicsLab.Terminal?.NB_LIST) {
+      OmicsLab.Terminal.NB_LIST.forEach(nb => {
+        const ts = localStorage.getItem('omicslab_nb_forked_' + nb.id);
+        if (!ts) return;
+        const v = localStorage.getItem('omicslab_nb_version_' + nb.id) || '2';
+        items.push({
+          kind: 'notebook', id: nb.id, title: nb.name,
+          subtitle: `Notebook copied with edits · Version ${v}`,
+          status: 'completed', updatedAt: parseInt(ts, 10), page: 'terminal',
+        });
+      });
+    }
+
+    return items.sort((a, b) => b.updatedAt - a.updatedAt);
+  }
+
+  const _WORK_STATUS_LABEL = { 'not-started': 'Draft', 'in-progress': 'In Progress', completed: 'Completed' };
+  const _WORK_KIND_ICON = { workflow: 'flask', study: 'file-text', lesson: 'book-open', notebook: 'code' };
+
+  function _yourWorkCardHtml(item) {
+    return `
+<div class="yw-card" onclick="OmicsLab.Router&&OmicsLab.Router.navigate('${item.page}')">
+  <span class="yw-icon">${OmicsLab.Icons?.svg(_WORK_KIND_ICON[item.kind] || 'file', 16) || ''}</span>
+  <div class="yw-body">
+    <div class="yw-title">${_esc(item.title)}</div>
+    <div class="yw-subtitle">${_esc(item.subtitle)}</div>
+    <div class="yw-meta">
+      <span class="yw-status yw-status-${item.status}">${_WORK_STATUS_LABEL[item.status] || item.status}</span>
+      <span class="yw-dot">·</span>
+      <span>Private</span>
+      ${item.updatedAt ? `<span class="yw-dot">·</span><span>Updated ${_relTime(item.updatedAt)}</span>` : ''}
+    </div>
+  </div>
+</div>`;
+  }
+
+  function _renderYourWork() {
+    const items = _yourWorkItems();
+    return `
+      <div class="profile-sec-head">
+        <div class="profile-sec-title">Your Work</div>
+        <span class="profile-sec-count">${items.length} item${items.length === 1 ? '' : 's'}</span>
+      </div>
+      <div class="yw-grid">
+        ${items.length ? items.slice(0, 12).map(_yourWorkCardHtml).join('') : '<div class="yw-empty">Nothing here yet — complete a lab simulation, curriculum lesson, or study pack module to start building your history.</div>'}
+      </div>`;
+  }
+
   /* ── Toast notification ── */
   function _toast(msg) {
     OmicsLab.Notify.success(msg);
@@ -575,12 +705,12 @@ OmicsLab.Profile = (function () {
     _updateStreak();
     _checkAutoAwards();
 
-    /* Personalize or show first-visit modal */
+    /* Personalize if a profile already exists. (First-visit setup modal removed —
+       it rendered unstyled on slow/mobile connections because its CSS loaded async
+       after the modal was already shown, blocking the rest of the page.) */
     const profile = getProfile();
     if (profile) {
       personalize(profile);
-    } else {
-      setTimeout(openSetupModal, 900);
     }
   }
 

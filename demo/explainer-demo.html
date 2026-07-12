@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmicsLab Explainer — Bench to Bytes</title>
+<link rel="stylesheet" href="../css/tokens.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/explainer.css">
+<style>
+  body {
+    background: var(--bg-root);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    padding: var(--space-10) var(--space-4);
+  }
+  .demo-wrap { max-width: 640px; margin: 0 auto; }
+  .demo-wrap h1 { font-size: var(--text-xl); margin: 0 0 var(--space-2); }
+  .demo-wrap p.lede { color: var(--text-muted); margin: 0 0 var(--space-8); font-size: var(--text-sm); }
+</style>
+</head>
+<body>
+  <div class="demo-wrap">
+    <h1>Bench to Bytes</h1>
+    <p class="lede">Worked example of <code>OmicsLab.Explainer</code> — 4 scenes, staggered entrances, prev/next + dot navigation.</p>
+    <div id="explainer-demo"></div>
+  </div>
+
+  <script src="../js/explainer.js"></script>
+  <script>
+    const scenes = [
+      {
+        id: 'sample',
+        scene: 'From patient to sample',
+        elements: [
+          { shape: 'person', x: 28, y: 60, enterAt: 0,   motion: 'fade' },
+          { shape: 'tube',    x: 64, y: 62, enterAt: 350, motion: 'slide-up' },
+        ],
+        caption: 'A blood sample is drawn and labelled for the lab.',
+        next: 'prep',
+      },
+      {
+        id: 'prep',
+        scene: 'Bench preparation',
+        elements: [
+          { shape: 'tube',   x: 22, y: 62, enterAt: 0,   motion: 'fade' },
+          { shape: 'fridge', x: 70, y: 55, enterAt: 300, motion: 'slide-left' },
+          { shape: 'icon',   icon: 'dna', x: 46, y: 22, enterAt: 650, motion: 'slide-down' },
+        ],
+        caption: 'DNA is extracted and stored at the right temperature before sequencing.',
+        next: 'sequence',
+      },
+      {
+        id: 'sequence',
+        scene: 'Sequencing run',
+        elements: [
+          { shape: 'tube',      x: 14, y: 66, scale: 0.7, enterAt: 0,   motion: 'slide-right' },
+          { shape: 'sequencer', x: 55, y: 55, enterAt: 300, motion: 'fade' },
+        ],
+        caption: 'The prepared library runs through the sequencer, generating raw reads.',
+        next: 'data',
+      },
+      {
+        id: 'data',
+        scene: 'From bytes to insight',
+        palette: { accent: '#f6a821' },
+        elements: [
+          { shape: 'icon', icon: 'file',  x: 26, y: 52, enterAt: 0,   motion: 'slide-up' },
+          { shape: 'icon', icon: 'cloud', x: 54, y: 28, enterAt: 320, motion: 'fade' },
+          { shape: 'icon', icon: 'check', x: 78, y: 55, enterAt: 640, motion: 'slide-up' },
+        ],
+        caption: 'Reads are processed into data files, ready for analysis and interpretation.',
+      },
+    ];
+
+    OmicsLab.Explainer.mount('#explainer-demo', scenes, {
+      label: 'Bench to Bytes explainer',
+      theme: { primary: 'var(--green)', accent: 'var(--blue)', neutral: 'var(--text-muted)' },
+    });
+  </script>
+</body>
+</html>
