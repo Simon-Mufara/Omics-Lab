@@ -661,16 +661,28 @@
               aria-label="Create a free account">
         Get started free
       </button>
-      <button class="nav-user-pill" id="nav-user-pill"
-              onclick="OmicsLab.Auth?OmicsLab.Auth.openModal('account'):OmicsLab.Router&&OmicsLab.Router.navigate('profile')"
-              aria-label="My Account"
-              style="display:none">
-        <div class="nav-user-avatar" id="nav-user-avatar"></div>
-        <div class="nav-user-info">
-          <div class="nav-user-name" id="nav-user-name"></div>
-          <div class="nav-user-role">My Account</div>
+      <div class="nav-account-wrap" id="nav-account-wrap" style="position:relative;display:none">
+        <button class="nav-user-pill" id="nav-user-pill"
+                onclick="OmicsLab.App.toggleAccountMenu()"
+                aria-haspopup="true" aria-expanded="false"
+                aria-label="Account menu">
+          <div class="nav-user-avatar" id="nav-user-avatar"></div>
+          <div class="nav-user-info">
+            <div class="nav-user-name" id="nav-user-name"></div>
+            <div class="nav-user-role">My Account</div>
+          </div>
+        </button>
+        <div class="nav-account-drop" id="nav-account-drop">
+          <button class="nav-account-item" onclick="OmicsLab.App.closeAccountMenu();OmicsLab.Auth?OmicsLab.Auth.openModal('account'):OmicsLab.Router&&OmicsLab.Router.navigate('profile')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Manage account
+          </button>
+          <button class="nav-account-item nav-account-item-danger" onclick="OmicsLab.App.closeAccountMenu();OmicsLab.AuthClerk?OmicsLab.AuthClerk.signOut():OmicsLab.Auth&&OmicsLab.Auth.signOut()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign out
+          </button>
         </div>
-      </button>
+      </div>
     </div>
 
     <!-- Mobile hamburger -->

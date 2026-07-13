@@ -292,6 +292,45 @@
   border-color: rgba(0,196,160,0.5);
   box-shadow: 0 0 0 3px rgba(0,196,160,0.08);
 }
+
+/* Account dropdown — Manage account / Sign out */
+.nav-account-drop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 190px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-muted);
+  border-radius: 12px;
+  padding: 0.4rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.1rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  z-index: 600;
+  animation: dropIn 0.14s ease;
+}
+.nav-account-drop.open { display: flex; }
+.nav-account-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 0.65rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Inter', system-ui, sans-serif;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.1s, color 0.1s;
+}
+.nav-account-item:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+.nav-account-item-danger { color: #f85149; }
+.nav-account-item-danger:hover { background: rgba(248,81,73,0.1); color: #f85149; }
 /* "Start free" primary CTA in nav */
 .nav-start-btn {
   display: flex;

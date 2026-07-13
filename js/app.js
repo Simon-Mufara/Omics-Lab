@@ -1030,6 +1030,25 @@ OmicsLab.App = (function() {
     if (menu) menu.classList.remove('open');
   }
 
+  /* ─── Account dropdown (Manage account / Sign out) ───
+     Previously the account pill went straight to Clerk's profile
+     modal, which has no sign-out button of its own — desktop users
+     had no way to sign out at all. Now a small dropdown with an
+     explicit Sign Out action. */
+  function toggleAccountMenu() {
+    const btn  = document.getElementById('nav-user-pill');
+    const menu = document.getElementById('nav-account-drop');
+    if (!btn || !menu) return;
+    const isOpen = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(isOpen));
+  }
+  function closeAccountMenu() {
+    const btn  = document.getElementById('nav-user-pill');
+    const menu = document.getElementById('nav-account-drop');
+    if (btn)  btn.setAttribute('aria-expanded', 'false');
+    if (menu) menu.classList.remove('open');
+  }
+
   /* ─── Equipment modal ─── */
   function _openEquipmentModal(equipId) {
     const eq = (OmicsLab.EQUIPMENT_GALLERY || []).find(e => e.id === equipId);
@@ -1512,6 +1531,7 @@ rule annotate:
     openChooser, selectDomain, closeWfPicker, chooserBack,
     _filterDiseases, _filterEquipment,
     scrollTo, toggleMobileNav, toggleLearnMenu, closeLearnMenu,
+    toggleAccountMenu, closeAccountMenu,
     _openEquipmentModal, _closeEquipmentModal,
     _openDiseaseModal, _closeDiseaseModal,
     _filterRepos,
@@ -1557,11 +1577,14 @@ document.addEventListener('DOMContentLoaded', () => {
       OmicsLab.App._closeDiseaseModal();
       OmicsLab.App._closeEquipmentModal();
       OmicsLab.App.closeLearnMenu();
+      OmicsLab.App.closeAccountMenu();
     }
   });
   document.addEventListener('click', e => {
     const wrap = document.getElementById('nav-learn-wrap');
     if (wrap && !wrap.contains(e.target)) OmicsLab.App.closeLearnMenu();
+    const accountWrap = document.getElementById('nav-account-wrap');
+    if (accountWrap && !accountWrap.contains(e.target)) OmicsLab.App.closeAccountMenu();
   });
   _startHeroPreviewCycle();
   _initScrollReveal();

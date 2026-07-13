@@ -629,8 +629,14 @@ OmicsLab.Auth = (function () {
       pill.parentNode.insertBefore(btn, pill);
     }
 
-    /* Wire the pill (already has onclick for auth modal in HTML, but ensure it works) */
-    pill.onclick = () => openModal(_user ? 'account' : 'signin');
+    /* Previously re-wired pill.onclick here to force-open the auth modal —
+       that silently overwrote the pill's real HTML onclick (which now
+       opens the account dropdown with Manage Account / Sign Out) on every
+       page load, since a JS .onclick assignment replaces an inline HTML
+       onclick attribute rather than adding to it. This was the actual
+       reason desktop users could never reach a working sign-out control.
+       The pill's own onclick (index.html) is now the single source of
+       truth for what clicking it does. */
   }
 
   /* ─── Public API ─── */

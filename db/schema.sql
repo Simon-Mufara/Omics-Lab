@@ -730,3 +730,299 @@ create policy "datasets_bucket_owner_delete" on storage.objects
     )
   );
 create trigger forum_topics_updated_at      before update on public.forum_topics      for each row execute function public.set_updated_at();
+
+-- ════════════════════════════════════════════════════════════════
+-- Dataset detail page (Prompt 2) — column-level stats, version
+-- history, activity charts, threaded comments. Builds on the Prompt 2
+-- foundation above (datasets/dataset_files/dataset_events already
+-- exist); everything below is additive and idempotent, safe to run
+-- directly in the SQL Editor against the live project.
+-- ════════════════════════════════════════════════════════════════
+
+-- ── Column-level docs + stats, powers the per-column cards with
+-- mini-histograms (numeric) / top-category bars (categorical). ─────
+create table if not exists public.dataset_columns (
+  id             uuid primary key default uuid_generate_v4(),
+  dataset_id     uuid references public.datasets(id) on delete cascade,
+  file_id        uuid references public.dataset_files(id) on delete cascade,
+  name           text not null,
+  dtype          text not null check (dtype in ('numeric','categorical','text','boolean','datetime')),
+  description    text,
+  -- numeric:     { min, max, mean, histogram: [{ bin_start, bin_end, count }] }
+  -- categorical: { top_values: [{ value, count }], distinct_count }
+  -- text/datetime/boolean: whatever subset of the above is meaningful, or {}
+  summary_stats  jsonb not null default '{}',
+  created_at     timestamptz default now()
+);
+
+alter table public.dataset_columns enable row level security;
+
+create policy "dataset_columns_public_read" on public.dataset_columns
+  for select using (
+    exists (select 1 from public.datasets d where d.id = dataset_id and d.is_public = true)
+  );
+create policy "dataset_columns_owner_all" on public.dataset_columns
+  for all using (
+    exists (
+      select 1 from public.datasets d
+      where d.id = dataset_id
+        and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+
+create index if not exists idx_dataset_columns_dataset on public.dataset_columns(dataset_id);
+create index if not exists idx_dataset_columns_file    on public.dataset_columns(file_id);
+
+-- ── Version history — one row per change, keeps a metadata snapshot
+-- so a prior version can actually be inspected, not just named. Rows
+-- are written ONLY by the trigger functions below (SECURITY DEFINER),
+-- never directly by a client — there is deliberately no insert policy
+-- for anon/authenticated, mirroring the dataset_events write pattern. ──
+create table if not exists public.dataset_versions (
+  id                 uuid primary key default uuid_generate_v4(),
+  dataset_id         uuid references public.datasets(id) on delete cascade,
+  version_number     integer not null,
+  changelog          text not null,
+  metadata_snapshot  jsonb not null default '{}',
+  created_at         timestamptz default now(),
+  created_by         uuid references public.users(id) on delete set null,
+  unique (dataset_id, version_number)
+);
+
+alter table public.dataset_versions enable row level security;
+
+create policy "dataset_versions_read" on public.dataset_versions
+  for select using (
+    exists (
+      select 1 from public.datasets d
+      where d.id = dataset_id
+        and (d.is_public = true or d.owner_id = (select id from public.users where clerk_id = auth.uid()::text))
+    )
+  );
+
+create index if not exists idx_dataset_versions_dataset on public.dataset_versions(dataset_id, version_number desc);
+
+create or replace function public.create_dataset_version_row(p_dataset_id uuid, p_changelog text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  d record;
+  next_version integer;
+  snapshot jsonb;
+begin
+  select * into d from public.datasets where id = p_dataset_id;
+  if not found then return; end if;
+
+  select coalesce(max(version_number), 0) + 1 into next_version
+  from public.dataset_versions where dataset_id = p_dataset_id;
+
+  snapshot := jsonb_build_object(
+    'title', d.title, 'subtitle', d.subtitle, 'description_md', d.description_md,
+    'tags', d.tags, 'license', d.license, 'category', d.category, 'difficulty', d.difficulty,
+    'files', coalesce((
+      select jsonb_agg(jsonb_build_object('filename', f.filename, 'size_bytes', f.size_bytes, 'row_count', f.row_count, 'column_count', f.column_count) order by f.created_at)
+      from public.dataset_files f where f.dataset_id = p_dataset_id
+    ), '[]'::jsonb)
+  );
+
+  insert into public.dataset_versions (dataset_id, version_number, changelog, metadata_snapshot, created_by)
+  values (
+    p_dataset_id, next_version, p_changelog, snapshot,
+    (select id from public.users where clerk_id = auth.uid()::text)
+  );
+end;
+$$;
+
+-- New dataset ⇒ version 1, so history is never empty.
+create or replace function public.trg_dataset_version_on_insert()
+returns trigger language plpgsql as $$
+begin
+  perform public.create_dataset_version_row(new.id, 'Initial version');
+  return new;
+end;
+$$;
+
+create trigger datasets_version_on_insert
+  after insert on public.datasets
+  for each row execute function public.trg_dataset_version_on_insert();
+
+-- Metadata edit ⇒ new version, changelog lists exactly what changed.
+-- Scoped to content columns only (not e.g. view_count/usability_score)
+-- so counters and derived fields don't spam the history.
+create or replace function public.trg_dataset_version_on_update()
+returns trigger language plpgsql as $$
+declare
+  changes text[] := '{}';
+begin
+  if new.title is distinct from old.title then changes := changes || 'title'; end if;
+  if new.subtitle is distinct from old.subtitle then changes := changes || 'subtitle'; end if;
+  if new.description_md is distinct from old.description_md then changes := changes || 'description'; end if;
+  if new.tags is distinct from old.tags then changes := changes || 'tags'; end if;
+  if new.license is distinct from old.license then changes := changes || 'license'; end if;
+  if new.category is distinct from old.category then changes := changes || 'category'; end if;
+  if new.difficulty is distinct from old.difficulty then changes := changes || 'difficulty'; end if;
+
+  if array_length(changes, 1) > 0 then
+    perform public.create_dataset_version_row(new.id, 'Updated ' || array_to_string(changes, ', '));
+  end if;
+  return new;
+end;
+$$;
+
+create trigger datasets_version_on_update
+  after update of title, subtitle, description_md, tags, license, category, difficulty on public.datasets
+  for each row execute function public.trg_dataset_version_on_update();
+
+-- File added/updated/removed ⇒ new version.
+create or replace function public.trg_dataset_version_on_file_change()
+returns trigger language plpgsql as $$
+declare
+  target_id uuid := coalesce(new.dataset_id, old.dataset_id);
+  msg text;
+begin
+  if tg_op = 'INSERT' then
+    msg := 'Added file ' || new.filename;
+  elsif tg_op = 'DELETE' then
+    msg := 'Removed file ' || old.filename;
+  else
+    msg := 'Updated file ' || new.filename;
+  end if;
+  perform public.create_dataset_version_row(target_id, msg);
+  return coalesce(new, old);
+end;
+$$;
+
+create trigger dataset_files_version_on_change
+  after insert or update or delete on public.dataset_files
+  for each row execute function public.trg_dataset_version_on_file_change();
+
+-- ── Threaded comments (one level deep). ─────────────────────────────
+create table if not exists public.dataset_comments (
+  id          uuid primary key default uuid_generate_v4(),
+  dataset_id  uuid references public.datasets(id) on delete cascade,
+  user_id     uuid references public.users(id) on delete cascade,
+  parent_id   uuid references public.dataset_comments(id) on delete cascade,
+  body        text not null check (char_length(trim(body)) > 0 and char_length(body) <= 2000),
+  created_at  timestamptz default now()
+);
+
+-- Enforce "one level deep": a reply's parent must itself be a
+-- top-level comment (parent_id is null), never a reply to a reply.
+create or replace function public.trg_dataset_comments_depth_guard()
+returns trigger language plpgsql as $$
+declare
+  parent_of_parent uuid;
+begin
+  if new.parent_id is not null then
+    select parent_id into parent_of_parent from public.dataset_comments where id = new.parent_id;
+    if parent_of_parent is not null then
+      raise exception 'dataset_comments: replies can only be one level deep';
+    end if;
+  end if;
+  return new;
+end;
+$$;
+
+create trigger dataset_comments_depth_guard
+  before insert on public.dataset_comments
+  for each row execute function public.trg_dataset_comments_depth_guard();
+
+alter table public.dataset_comments enable row level security;
+
+create policy "dataset_comments_read" on public.dataset_comments
+  for select using (
+    exists (
+      select 1 from public.datasets d
+      where d.id = dataset_id
+        and (d.is_public = true or d.owner_id = (select id from public.users where clerk_id = auth.uid()::text))
+    )
+  );
+create policy "dataset_comments_insert" on public.dataset_comments
+  for insert with check (
+    user_id = (select id from public.users where clerk_id = auth.uid()::text)
+    and exists (
+      select 1 from public.datasets d
+      where d.id = dataset_id
+        and (d.is_public = true or d.owner_id = (select id from public.users where clerk_id = auth.uid()::text))
+    )
+  );
+create policy "dataset_comments_delete_own" on public.dataset_comments
+  for delete using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+create index if not exists idx_dataset_comments_dataset on public.dataset_comments(dataset_id, created_at asc);
+create index if not exists idx_dataset_comments_parent  on public.dataset_comments(parent_id);
+
+-- ── dataset_events gains user_id, so views can be deduped per
+-- user per day (spec: "dedupe views per user per day to avoid
+-- inflation"). Anonymous views (user_id null) can't be deduped
+-- server-side without IP tracking, so every anonymous view still
+-- counts — acceptable, matches the "per user" wording literally. ────
+alter table public.dataset_events add column if not exists user_id uuid references public.users(id) on delete set null;
+create index if not exists idx_dataset_events_dataset_user_day
+  on public.dataset_events(dataset_id, user_id, event_type, (created_at::date));
+
+create or replace function public.log_dataset_event(p_dataset_id uuid, p_event_type text, p_user_id uuid default null)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_event_type not in ('view','download') then
+    raise exception 'invalid event_type: %', p_event_type;
+  end if;
+
+  if p_event_type = 'view' and p_user_id is not null and exists (
+    select 1 from public.dataset_events
+    where dataset_id = p_dataset_id and user_id = p_user_id and event_type = 'view'
+      and created_at::date = current_date
+  ) then
+    return; -- already logged this user's view today — skip insert and counter bump
+  end if;
+
+  insert into public.dataset_events (dataset_id, event_type, user_id) values (p_dataset_id, p_event_type, p_user_id);
+  if p_event_type = 'view' then
+    update public.datasets set view_count = view_count + 1 where id = p_dataset_id;
+  else
+    update public.datasets set download_count = download_count + 1 where id = p_dataset_id;
+  end if;
+end;
+$$;
+
+grant execute on function public.log_dataset_event(uuid, text, uuid) to anon, authenticated;
+
+-- Daily view/download counts for the last 30 days, for the Activity
+-- Overview charts. dataset_events itself stays unreadable directly
+-- (see "dataset_events_insert_via_function_only" above) — this is the
+-- one SECURITY DEFINER window onto it, scoped to a single dataset's
+-- aggregates and gated on that dataset's own visibility so a private
+-- dataset's activity isn't exposed to other users.
+create or replace function public.dataset_daily_events(p_dataset_id uuid)
+returns table(day date, event_type text, cnt bigint)
+language plpgsql
+security definer
+set search_path = public
+stable
+as $$
+begin
+  if not exists (
+    select 1 from public.datasets d
+    where d.id = p_dataset_id
+      and (d.is_public = true or d.owner_id = (select id from public.users where clerk_id = auth.uid()::text))
+  ) then
+    return;
+  end if;
+
+  return query
+    select e.created_at::date as day, e.event_type, count(*) as cnt
+    from public.dataset_events e
+    where e.dataset_id = p_dataset_id and e.created_at > now() - interval '30 days'
+    group by 1, 2
+    order by 1;
+end;
+$$;
+
+grant execute on function public.dataset_daily_events(uuid) to anon, authenticated;

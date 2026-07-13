@@ -1,11 +1,27 @@
+import { Suspense, lazy } from 'react';
 import { SignIn, UserButton } from '@clerk/clerk-react';
 import { Link, Route, Routes } from 'react-router-dom';
 import { useCurrentUser } from './hooks/useCurrentUser.js';
 import Onboarding from './pages/Onboarding.jsx';
 import EditProfile from './pages/EditProfile.jsx';
 import DatasetHub from './pages/DatasetHub.jsx';
-import DatasetDetail from './pages/DatasetDetail.jsx';
 import Avatar from './components/Avatar.jsx';
+
+/* Lazy-loaded: DatasetDetail pulls in Recharts for the Columns/Activity
+   charts, which is a meaningful download on its own — most visits are
+   to the Dataset Hub grid, not a specific dataset's detail page, so
+   that cost shouldn't be paid on every page load (Africa-first /
+   low-bandwidth constraint applies to the Hub too, not just the main
+   static site). */
+const DatasetDetail = lazy(() => import('./pages/DatasetDetail.jsx'));
+
+function PageLoading() {
+  return (
+    <div className="ol-page ol-center">
+      <div className="ol-spinner" aria-label="Loading" />
+    </div>
+  );
+}
 
 function TopBar({ profile, isSignedIn }) {
   return (
@@ -102,7 +118,14 @@ export default function App() {
         <Route path="/" element={isSignedIn ? <HomePlaceholder profile={profile} /> : <DatasetHub />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/datasets" element={<DatasetHub />} />
-        <Route path="/datasets/:slug" element={<DatasetDetail profile={profile} isSignedIn={isSignedIn} />} />
+        <Route
+          path="/datasets/:slug"
+          element={
+            <Suspense fallback={<PageLoading />}>
+              <DatasetDetail profile={profile} isSignedIn={isSignedIn} />
+            </Suspense>
+          }
+        />
         <Route
           path="/settings/profile"
           element={

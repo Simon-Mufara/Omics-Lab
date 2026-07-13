@@ -262,6 +262,7 @@ OmicsLab.AuthClerk = (function () {
     const skel = document.getElementById('nav-auth-skeleton');
     if (skel) skel.style.display = 'none';
     /* Desktop nav */
+    const pillWrap  = document.getElementById('nav-account-wrap');
     const pill      = document.getElementById('nav-user-pill');
     const avatar    = document.getElementById('nav-user-avatar');
     const nameEl    = document.getElementById('nav-user-name');
@@ -276,7 +277,13 @@ OmicsLab.AuthClerk = (function () {
     if (user) {
       if (signinBtn) signinBtn.style.display = 'none';
       if (startBtn)  startBtn.style.display  = 'none';
-      if (pill) { pill.style.display = ''; pill.setAttribute('aria-label', `${user.name} — Account settings`); }
+      if (pillWrap) pillWrap.style.display = '';
+      /* js/auth.js's own _updateNavUI() also toggles pill.style.display
+         directly (it hides the pill when its own legacy session is null,
+         which it always is once Clerk is the active provider) — clear
+         that here too or the inner button stays display:none even
+         though the wrapper around it is now visible. */
+      if (pill) { pill.style.display = ''; pill.setAttribute('aria-label', `${user.name} — Account menu`); }
       if (avatar) {
         if (user.avatarUrl) { avatar.innerHTML = `<img src="${user.avatarUrl}" alt="${user.name}" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`; }
         else { avatar.textContent = user.name.split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
@@ -297,7 +304,7 @@ OmicsLab.AuthClerk = (function () {
         welcome.style.display = '';
       }
     } else {
-      if (pill)      pill.style.display = 'none';
+      if (pillWrap)  pillWrap.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
       if (startBtn)  startBtn.style.display  = '';
       if (avatar)    avatar.textContent = '';

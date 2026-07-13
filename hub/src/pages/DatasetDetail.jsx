@@ -1,12 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Avatar from '../components/Avatar.jsx';
-import { supabase } from '../lib/supabaseClient.js';
+import ColumnCard from '../components/ColumnCard.jsx';
+import ActivityCharts from '../components/ActivityCharts.jsx';
+import VersionHistory from '../components/VersionHistory.jsx';
+import DatasetComments from '../components/DatasetComments.jsx';
 import {
   CATEGORY_LABELS,
+  downloadDatasetFile,
   formatBytes,
+  getDatasetActivity,
   getDatasetBySlug,
+  getDatasetColumns,
   getDatasetFiles,
+  getDatasetVersions,
   getOwnersByIds,
   logDatasetEvent,
 } from '../lib/datasetsApi.js';
@@ -19,6 +26,8 @@ const RUBRIC_LABELS = {
   has_preview: 'Has a data preview',
   parses_cleanly: 'Files parse cleanly',
 };
+
+const PREVIEW_PAGE_SIZE = 10;
 
 function UsabilityBreakdown({ score, components }) {
   return (
@@ -37,41 +46,63 @@ function UsabilityBreakdown({ score, components }) {
 
 function FilePreview({ file }) {
   const rows = file.preview_json;
+  const [page, setPage] = useState(0);
   if (!rows || !rows.length) return <p className="ol-sub">No preview available for this file.</p>;
+
   const columns = Object.keys(rows[0]);
+  const pageCount = Math.ceil(rows.length / PREVIEW_PAGE_SIZE);
+  const start = page * PREVIEW_PAGE_SIZE;
+  const pageRows = rows.slice(start, start + PREVIEW_PAGE_SIZE);
+
   return (
-    <div className="ds-preview-scroll">
-      <table className="ds-preview-table">
-        <thead>
-          <tr>
-            {columns.map((c) => (
-              <th key={c}>{c}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr key={i}>
+    <div>
+      <div className="ds-preview-scroll">
+        <table className="ds-preview-table">
+          <thead>
+            <tr>
               {columns.map((c) => (
-                <td key={c}>{row[c] === null || row[c] === undefined ? '—' : String(row[c])}</td>
+                <th key={c}>{c}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {pageRows.map((row, i) => (
+              <tr key={start + i}>
+                {columns.map((c) => (
+                  <td key={c}>{row[c] === null || row[c] === undefined ? '—' : String(row[c])}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {pageCount > 1 && (
+        <div className="ds-preview-pagination">
+          <button type="button" className="ol-btn-ghost" disabled={page === 0} onClick={() => setPage((p) => p - 1)}>
+            ← Prev
+          </button>
+          <span className="ol-sub">
+            Rows {start + 1}–{Math.min(start + PREVIEW_PAGE_SIZE, rows.length)} of {rows.length}
+          </span>
+          <button type="button" className="ol-btn-ghost" disabled={page >= pageCount - 1} onClick={() => setPage((p) => p + 1)}>
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
-function DatasetFile({ file, datasetId }) {
+function DatasetFile({ file, datasetId, userId }) {
   const [expanded, setExpanded] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   async function handleDownload() {
-    await logDatasetEvent(datasetId, 'download');
-    if (file.storage_path) {
-      const { data } = supabase.storage.from('datasets').getPublicUrl(file.storage_path);
-      if (data?.publicUrl) window.open(data.publicUrl, '_blank', 'noopener');
-    }
+    if (!file.storage_path || downloading) return;
+    setDownloading(true);
+    const { error } = await downloadDatasetFile(file.storage_path, file.filename);
+    if (!error) await logDatasetEvent(datasetId, 'download', userId);
+    setDownloading(false);
   }
 
   return (
@@ -89,8 +120,8 @@ function DatasetFile({ file, datasetId }) {
           <button type="button" className="ol-btn-ghost" onClick={() => setExpanded((v) => !v)}>
             {expanded ? 'Hide preview' : 'Preview'}
           </button>
-          <button type="button" className="ol-btn-primary" onClick={handleDownload}>
-            Download
+          <button type="button" className="ol-btn-primary" onClick={handleDownload} disabled={!file.storage_path || downloading}>
+            {downloading ? 'Downloading…' : 'Download'}
           </button>
         </div>
       </div>
@@ -125,17 +156,21 @@ function DatasetFile({ file, datasetId }) {
   );
 }
 
-export default function DatasetDetail() {
+export default function DatasetDetail({ profile, isSignedIn }) {
   const { slug } = useParams();
   const [dataset, setDataset] = useState(undefined); // undefined = loading, null = not found
   const [files, setFiles] = useState([]);
   const [owner, setOwner] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [versions, setVersions] = useState([]);
+  const [activity, setActivity] = useState([]);
   const [error, setError] = useState(null);
   const viewLogged = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
     setDataset(undefined);
+    viewLogged.current = false;
     getDatasetBySlug(slug).then(async ({ data, error: err }) => {
       if (cancelled) return;
       if (err) {
@@ -149,22 +184,32 @@ export default function DatasetDetail() {
       }
       setDataset(data);
 
-      const [{ data: fileRows }, ownerMap] = await Promise.all([
+      const [{ data: fileRows }, ownerMap, { data: columnRows }, { data: versionRows }, { data: activityRows }] = await Promise.all([
         getDatasetFiles(data.id),
         getOwnersByIds([data.owner_id]),
+        getDatasetColumns(data.id),
+        getDatasetVersions(data.id),
+        getDatasetActivity(data.id),
       ]);
       if (cancelled) return;
       setFiles(fileRows);
       setOwner(ownerMap[data.owner_id] || null);
+      setColumns(columnRows);
+      setVersions(versionRows);
+      setActivity(activityRows);
 
       if (!viewLogged.current) {
         viewLogged.current = true;
-        logDatasetEvent(data.id, 'view');
+        logDatasetEvent(data.id, 'view', profile?.id || null);
       }
     });
     return () => {
       cancelled = true;
     };
+    // profile.id is intentionally excluded — logging the view once per
+    // mount is enough; a profile finishing its own async load shouldn't
+    // re-trigger the dataset fetch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
   if (dataset === undefined) {
@@ -207,6 +252,16 @@ export default function DatasetDetail() {
               <span className="ds-card-official">OmicsLab Team</span>
             )}
           </div>
+          <div className="ds-detail-actions">
+            <button
+              type="button"
+              className="ol-btn-ghost"
+              disabled
+              title="Coming soon — opens this dataset directly in the Lab workflow"
+            >
+              Open in Lab
+            </button>
+          </div>
         </div>
         <UsabilityBreakdown score={dataset.usability_score} components={dataset.usability_components} />
       </div>
@@ -229,6 +284,7 @@ export default function DatasetDetail() {
         </div>
       )}
 
+      <h2 className="ds-section-title">About this dataset</h2>
       {dataset.description_md && (
         <div className="ds-description">
           {dataset.description_md.split('\n').map((line, i) => (
@@ -246,12 +302,32 @@ export default function DatasetDetail() {
         </div>
       )}
 
-      <h2 className="ds-section-title">Files</h2>
+      {columns.length > 0 && (
+        <>
+          <h2 className="ds-section-title">Columns</h2>
+          <div className="ds-col-grid">
+            {columns.map((c) => (
+              <ColumnCard key={c.id} column={c} />
+            ))}
+          </div>
+        </>
+      )}
+
+      <h2 className="ds-section-title">Data Explorer</h2>
       <div className="ds-file-list">
         {files.map((f) => (
-          <DatasetFile key={f.id} file={f} datasetId={dataset.id} />
+          <DatasetFile key={f.id} file={f} datasetId={dataset.id} userId={profile?.id || null} />
         ))}
       </div>
+
+      <h2 className="ds-section-title">Activity Overview</h2>
+      <ActivityCharts activity={activity} viewCount={dataset.view_count} downloadCount={dataset.download_count} />
+
+      <h2 className="ds-section-title">Version history</h2>
+      <VersionHistory versions={versions} />
+
+      <h2 className="ds-section-title">Discussion</h2>
+      <DatasetComments datasetId={dataset.id} currentUser={profile} isSignedIn={isSignedIn} />
     </div>
   );
 }

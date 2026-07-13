@@ -75,8 +75,82 @@ export async function getOwnersByIds(ids) {
   return Object.fromEntries(data.map((u) => [u.id, u]));
 }
 
-export async function logDatasetEvent(datasetId, eventType) {
-  return supabase.rpc('log_dataset_event', { p_dataset_id: datasetId, p_event_type: eventType });
+export async function logDatasetEvent(datasetId, eventType, userId = null) {
+  return supabase.rpc('log_dataset_event', { p_dataset_id: datasetId, p_event_type: eventType, p_user_id: userId });
+}
+
+export async function getDatasetColumns(datasetId) {
+  const { data, error } = await supabase.from('dataset_columns').select('*').eq('dataset_id', datasetId).order('created_at', { ascending: true });
+  return { data: data || [], error };
+}
+
+export async function getDatasetVersions(datasetId) {
+  const { data, error } = await supabase
+    .from('dataset_versions')
+    .select('*')
+    .eq('dataset_id', datasetId)
+    .order('version_number', { ascending: false });
+  return { data: data || [], error };
+}
+
+/* Returns { day: 'YYYY-MM-DD', views: n, downloads: n } for every day
+   in the last 30 days (zero-filled) — the RPC only returns days that
+   had at least one event, and a sparse series would make Recharts
+   draw misleading gaps instead of a flat zero line. */
+export async function getDatasetActivity(datasetId) {
+  const { data, error } = await supabase.rpc('dataset_daily_events', { p_dataset_id: datasetId });
+  const byDay = {};
+  const today = new Date();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    byDay[key] = { day: key, views: 0, downloads: 0 };
+  }
+  if (!error && data) {
+    for (const row of data) {
+      const key = row.day;
+      if (!byDay[key]) continue;
+      if (row.event_type === 'view') byDay[key].views = Number(row.cnt);
+      if (row.event_type === 'download') byDay[key].downloads = Number(row.cnt);
+    }
+  }
+  return { data: Object.values(byDay), error };
+}
+
+export async function getDatasetComments(datasetId) {
+  const { data, error } = await supabase
+    .from('dataset_comments')
+    .select('*')
+    .eq('dataset_id', datasetId)
+    .order('created_at', { ascending: true });
+  return { data: data || [], error };
+}
+
+export async function postDatasetComment(datasetId, userId, body, parentId = null) {
+  return supabase.from('dataset_comments').insert({ dataset_id: datasetId, user_id: userId, body, parent_id: parentId }).select().single();
+}
+
+export async function deleteDatasetComment(commentId) {
+  return supabase.from('dataset_comments').delete().eq('id', commentId);
+}
+
+/* Streams the actual file bytes through the Supabase client (rather
+   than just opening the public URL in a new tab) so the browser shows
+   a real download instead of a navigation, and so the download only
+   counts (via the caller logging 'download') once bytes are in hand. */
+export async function downloadDatasetFile(storagePath, filename) {
+  const { data, error } = await supabase.storage.from('datasets').download(storagePath);
+  if (error || !data) return { error };
+  const url = URL.createObjectURL(data);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  return { error: null };
 }
 
 export function formatBytes(bytes) {
