@@ -19,6 +19,7 @@ OmicsLab.Community = (function () {
   ];
 
   let _cat = 'all', _sort = 'new', _topics = [], _activeTopic = null, _comments = [];
+  let _containerId = 'community-section'; /* overridden when mounted inside Nexus's "Forum" tab */
 
   /* ── Helpers ── */
   function _relTime(iso) {
@@ -100,7 +101,7 @@ OmicsLab.Community = (function () {
   }
 
   function _renderList() {
-    const el = document.getElementById('community-section');
+    const el = document.getElementById(_containerId);
     if (!el) return;
     const signedIn = !!OmicsLab.AuthClerk?.isSignedIn?.();
 
@@ -168,7 +169,7 @@ OmicsLab.Community = (function () {
   }
 
   function _renderDetail(topic) {
-    const el = document.getElementById('community-section');
+    const el = document.getElementById(_containerId);
     if (!el) return;
     const author = topic.users?.name || 'OmicsLab Member';
     const avatar = topic.users?.avatar_url;
@@ -334,13 +335,36 @@ OmicsLab.Community = (function () {
     }
   }
 
+  /* Re-render on auth resolve — Clerk's SDK boots asynchronously (CDN
+     script load + poll, up to ~10s), so a user navigating here before
+     it settles saw isSignedIn()===false baked into a one-time render
+     and never got upgraded to "signed in" even after Clerk resolved,
+     since nothing was listening for the change. */
+  function _onAuth() {
+    const el = document.getElementById(_containerId);
+    if (!el?.dataset.commReady) return;
+    if (_activeTopic) _renderDetail(_activeTopic);
+    else _renderList();
+  }
+  OmicsLab.AuthClerk?.onAuthChange?.(_onAuth);
+
   /* ── Init ── */
   function init() {
-    const el = document.getElementById('community-section');
+    const el = document.getElementById(_containerId);
     if (!el || el.dataset.commReady) return;
     el.dataset.commReady = '1';
     _renderList();
   }
 
-  return { init, onCat, onSort, openTopic, backToList, react, openComposer, submitTopic, toggleReplyBox, submitComment };
+  /* Mounts this module into an arbitrary container (used by Nexus's
+     "Forum" tab) instead of its original standalone #community-section. */
+  function mountInto(containerId) {
+    _containerId = containerId || 'community-section';
+    const el = document.getElementById(_containerId);
+    if (!el) return;
+    el.dataset.commReady = '1';
+    _activeTopic ? _renderDetail(_activeTopic) : _renderList();
+  }
+
+  return { init, mountInto, onCat, onSort, openTopic, backToList, react, openComposer, submitTopic, toggleReplyBox, submitComment };
 })();

@@ -852,7 +852,12 @@ OmicsLab.Router = (function () {
     qualitypredictor:   ['css/qualitypredictor.css'],
     variantinterp:      ['css/variantinterp.css'],
     primerdesign:       ['css/primerdesign.css'],
-    nexus:              ['css/nexus.css'],
+    /* Nexus now hosts Community's Forum and Social's People tabs directly
+       (see the merge in js/nexus.js _switchView) — both stylesheets need
+       to load with Nexus itself, not just when navigating to the old
+       standalone /community or /social routes (which now redirect here
+       before PAGE_CSS for those slugs would ever be requested). */
+    nexus:              ['css/nexus.css', 'css/community.css', 'css/social.css'],
     teams:              ['css/teams.css'],
     paperhub:           ['css/paperhub.css'],
     pubmed:             ['css/pubmed.css'],
@@ -974,6 +979,17 @@ OmicsLab.Router = (function () {
 
   /* ─── Navigate to a page ─── */
   function _navigateInner(page) {
+    /* Social and Community were fragmented, inconsistently auth-gated
+       destinations — merged into Nexus as "People" and "Forum" tabs.
+       Redirect old links/bookmarks instead of showing a stale
+       standalone page that no longer reflects where people actually
+       communicate on the hub. */
+    if (page === 'social' || page === 'community') {
+      const view = page === 'social' ? 'people' : 'forum';
+      _navigateInner('nexus');
+      setTimeout(() => OmicsLab.Nexus?._switchView?.(view), 150);
+      return;
+    }
     if (!PAGES[page]) {
       OmicsLab.Error?.render404(page);
       return;
@@ -1241,6 +1257,7 @@ OmicsLab.Router = (function () {
     if (page === 'grant' && OmicsLab.Grant) _si(OmicsLab.Grant, 'grant-section', 'Grant');
     if (page === 'leaderboard' && OmicsLab.Leaderboard) _si(OmicsLab.Leaderboard, 'leaderboard-section', 'Leaderboard');
     if (page === 'debugger' && OmicsLab.Debugger) _si(OmicsLab.Debugger, 'debugger-section', 'Debugger');
+    if (page === 'sandbox' && OmicsLab.Sandbox) _si(OmicsLab.Sandbox, 'sandbox-container', 'Sandbox');
     if (page === 'alerts' && OmicsLab.Alerts) _si(OmicsLab.Alerts, 'alerts-section', 'Alerts');
     if (page === 'phylo' && OmicsLab.Phylo) _si(OmicsLab.Phylo, 'phylo-section', 'Phylo');
     if (page === 'peerreview' && OmicsLab.PeerReview) _si(OmicsLab.PeerReview, 'peerreview-section', 'PeerReview');
@@ -1322,8 +1339,8 @@ OmicsLab.Router = (function () {
     if (page === 'research-wizard' && OmicsLab.ResearchWizard) _si(OmicsLab.ResearchWizard, 'research-wizard-section', 'ResearchWizard');
     if (page === 'alignment-viewer' && OmicsLab.AlignmentViewer) _si(OmicsLab.AlignmentViewer, 'alignment-viewer-section', 'AlignmentViewer');
     if (page === 'recombination' && OmicsLab.Recombination)   _si(OmicsLab.Recombination,   'recombination-section',     'Recombination');
-    if (page === 'social' && OmicsLab.Social)                 _si(OmicsLab.Social,          'social-section',            'Social');
-    if (page === 'community' && OmicsLab.Community)           _si(OmicsLab.Community,       'community-section',        'Community');
+    /* 'social' / 'community' dispatch removed — both now redirect to
+       'nexus' at the top of _navigateInner(), see the merge comment there. */
     if (page === 'scrna-explorer')     OmicsLab.EmbeddedApps?.init('scrna-explorer');
     if (page === 'variants-explorer')  OmicsLab.EmbeddedApps?.init('variants-explorer');
     if (page === 'privacy')  OmicsLab.Legal?.render('privacy');

@@ -60,6 +60,16 @@
   overflow-y: auto;
 }
 
+/* Forum / People — Community and Social merged into Nexus as tabs */
+.nx-view-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #182236;
+  flex-shrink: 0;
+}
+
 .nx-sidebar-label {
   font-size: 0.65rem;
   font-weight: 700;

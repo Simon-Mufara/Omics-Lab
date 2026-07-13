@@ -366,4 +366,367 @@ begin new.updated_at = now(); return new; end; $$;
 create trigger users_updated_at             before update on public.users             for each row execute function public.set_updated_at();
 create trigger notebook_updated_at          before update on public.notebook_entries  for each row execute function public.set_updated_at();
 create trigger subscriptions_updated_at     before update on public.subscriptions     for each row execute function public.set_updated_at();
+
+-- ════════════════════════════════════════════════════════════════
+-- Dataset Hub (Prompt 2) — Kaggle-style datasets to browse & train on.
+-- owner_id references public.users(id), NOT a separate `profiles`
+-- table — Prompt 0 deliberately extended public.users instead of
+-- creating a competing identity table (see the "identity foundation"
+-- section above). Same convention continues here.
+--
+-- Unlike the users-table migrations above, everything from here to
+-- the end of the file is brand new (no existing rows/policies to
+-- collide with) and already idempotent (`create table if not exists`,
+-- `create or replace function/view`) — run it directly in the SQL
+-- Editor against the live project, no separate commented block needed.
+-- Storage bucket + policies still need to be created via the
+-- Dashboard/API, not SQL — see docs/backend-api.md or the summary in
+-- the assistant's reply for that step.
+-- ════════════════════════════════════════════════════════════════
+
+create table if not exists public.datasets (
+  id                uuid primary key default uuid_generate_v4(),
+  owner_id          uuid references public.users(id) on delete set null,
+  title             text not null,
+  slug              text unique not null,
+  subtitle          text,
+  description_md    text,
+  tags              text[] not null default '{}',
+  license           text,
+  category          text not null default 'general'
+                      check (category in ('tabular','gene-expression','variant','single-cell','gwas','protein','africa-cohort','challenge','general')),
+  difficulty        text not null default 'beginner'
+                      check (difficulty in ('beginner','intermediate','advanced')),
+  update_frequency  text,
+  is_public         boolean not null default true,
+  has_starter_exercise boolean not null default false, -- Prompt 3 populates real exercises; filter exists now so the UI control is functional from day one
+  external_download_url text, -- for formats too large to host (FASTQ/BAM subsets etc.) instead of storage_path
+  view_count        integer not null default 0,
+  download_count     integer not null default 0,
+  usability_score    numeric(3,1) not null default 0,
+  usability_components jsonb not null default '{}', -- { has_description, has_column_docs, has_license, has_tags, has_preview, parses_cleanly } — lets the detail page show exactly what's missing
+  created_at         timestamptz default now(),
+  updated_at         timestamptz default now(),
+  constraint datasets_slug_format check (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$')
+);
+
+create table if not exists public.dataset_files (
+  id             uuid primary key default uuid_generate_v4(),
+  dataset_id     uuid references public.datasets(id) on delete cascade,
+  filename       text not null,
+  size_bytes     bigint,
+  storage_path   text, -- path within the `datasets` Storage bucket; null when external_download_url is used instead
+  row_count      integer,
+  column_count   integer,
+  columns_doc    jsonb not null default '[]', -- [{ name, type, description }] — column-level docs feed the usability rubric
+  preview_json   jsonb, -- first ~20 rows for the in-page explorer
+  parses_cleanly boolean not null default true,
+  created_at     timestamptz default now()
+);
+
+-- Minimal event log: backs both the download_count/view_count
+-- increments (via log_dataset_event() below, so counters can't be
+-- forged by a direct UPDATE) and the "Trending" sort, which needs
+-- real timestamps, not just a running total.
+create table if not exists public.dataset_events (
+  id          uuid primary key default uuid_generate_v4(),
+  dataset_id  uuid references public.datasets(id) on delete cascade,
+  event_type  text not null check (event_type in ('view','download')),
+  created_at  timestamptz not null default now()
+);
+
+alter table public.datasets       enable row level security;
+alter table public.dataset_files  enable row level security;
+alter table public.dataset_events enable row level security;
+
+-- Datasets: public rows readable by anyone; owners get full CRUD on
+-- their own (public or not — lets an owner unpublish/edit privately).
+create policy "datasets_public_read" on public.datasets
+  for select using (is_public = true);
+create policy "datasets_owner_all" on public.datasets
+  for all using (owner_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+-- Dataset files inherit their parent dataset's visibility.
+create policy "dataset_files_public_read" on public.dataset_files
+  for select using (
+    exists (select 1 from public.datasets d where d.id = dataset_id and d.is_public = true)
+  );
+create policy "dataset_files_owner_all" on public.dataset_files
+  for all using (
+    exists (
+      select 1 from public.datasets d
+      where d.id = dataset_id
+        and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+
+-- Events are write-only from the client's perspective — inserted via
+-- log_dataset_event() below (SECURITY DEFINER, so it can bump the
+-- counter too), never selected directly by anon/authenticated. Only
+-- service_role or the trending view (also SECURITY DEFINER-backed)
+-- aggregates them.
+create policy "dataset_events_insert_via_function_only" on public.dataset_events
+  for select using (false);
+
+create index if not exists idx_datasets_category      on public.datasets(category);
+create index if not exists idx_datasets_difficulty     on public.datasets(difficulty);
+create index if not exists idx_datasets_license        on public.datasets(license);
+create index if not exists idx_datasets_tags           on public.datasets using gin(tags);
+create index if not exists idx_datasets_owner          on public.datasets(owner_id);
+create index if not exists idx_datasets_downloads      on public.datasets(download_count desc);
+create index if not exists idx_datasets_usability      on public.datasets(usability_score desc);
+create index if not exists idx_datasets_created        on public.datasets(created_at desc);
+-- Search across title/subtitle/tags/description without a separate
+-- tsvector column — pg_trgm makes ILIKE '%term%' fast at this table
+-- size; revisit with a generated tsvector column if the catalog grows
+-- past a few thousand rows.
+create extension if not exists pg_trgm;
+create index if not exists idx_datasets_title_trgm on public.datasets using gin (title gin_trgm_ops);
+create index if not exists idx_datasets_desc_trgm   on public.datasets using gin (description_md gin_trgm_ops);
+create index if not exists idx_dataset_files_dataset on public.dataset_files(dataset_id);
+create index if not exists idx_dataset_events_dataset_type_time on public.dataset_events(dataset_id, event_type, created_at desc);
+
+create trigger datasets_updated_at before update on public.datasets for each row execute function public.set_updated_at();
+
+-- ════════════════════════════════════════════════════════════════
+-- Usability score (0–10) — trigger-maintained, not a generated
+-- column, because the rubric reads dataset_files (a different
+-- table); Postgres generated columns can't reference other tables.
+-- Components are stored so the detail page can show exactly what's
+-- missing, per spec.
+-- ════════════════════════════════════════════════════════════════
+create or replace function public.recompute_dataset_usability(p_dataset_id uuid)
+returns void language plpgsql as $$
+declare
+  d record;
+  has_desc boolean;
+  has_docs boolean;
+  has_license boolean;
+  has_tags boolean;
+  has_preview boolean;
+  parses boolean;
+  score numeric(3,1);
+begin
+  select * into d from public.datasets where id = p_dataset_id;
+  if not found then return; end if;
+
+  has_desc    := coalesce(length(trim(d.description_md)), 0) >= 40;
+  has_license := coalesce(length(trim(d.license)), 0) > 0;
+  has_tags    := coalesce(array_length(d.tags, 1), 0) > 0;
+
+  select
+    bool_or(jsonb_array_length(coalesce(f.columns_doc, '[]'::jsonb)) > 0),
+    bool_or(f.preview_json is not null),
+    bool_and(coalesce(f.parses_cleanly, true))
+  into has_docs, has_preview, parses
+  from public.dataset_files f where f.dataset_id = p_dataset_id;
+
+  has_docs    := coalesce(has_docs, false);
+  has_preview := coalesce(has_preview, false);
+  -- No files yet ⇒ "parses cleanly" can't be claimed true.
+  parses      := coalesce(parses, false);
+
+  score := (
+    (has_desc::int) + (has_docs::int) + (has_license::int) +
+    (has_tags::int) + (has_preview::int) + (parses::int)
+  ) / 6.0 * 10;
+
+  update public.datasets set
+    usability_score = round(score, 1),
+    usability_components = jsonb_build_object(
+      'has_description', has_desc,
+      'has_column_docs', has_docs,
+      'has_license',     has_license,
+      'has_tags',        has_tags,
+      'has_preview',      has_preview,
+      'parses_cleanly',   parses
+    )
+  where id = p_dataset_id;
+end;
+$$;
+
+create or replace function public.trg_recompute_usability_from_datasets()
+returns trigger language plpgsql as $$
+begin
+  perform public.recompute_dataset_usability(new.id);
+  return new;
+end;
+$$;
+
+-- Scoped to the content columns only — an update that touches ONLY
+-- usability_score/usability_components (i.e. the recompute itself)
+-- does not re-fire this, so there's no infinite loop.
+create trigger datasets_usability_on_change
+  after insert or update of description_md, license, tags on public.datasets
+  for each row execute function public.trg_recompute_usability_from_datasets();
+
+create or replace function public.trg_recompute_usability_from_files()
+returns trigger language plpgsql as $$
+begin
+  perform public.recompute_dataset_usability(coalesce(new.dataset_id, old.dataset_id));
+  return coalesce(new, old);
+end;
+$$;
+
+create trigger dataset_files_usability_on_change
+  after insert or update or delete on public.dataset_files
+  for each row execute function public.trg_recompute_usability_from_files();
+
+-- ════════════════════════════════════════════════════════════════
+-- Event logging — SECURITY DEFINER so anon/authenticated can log a
+-- view/download and bump the matching counter atomically, without
+-- ever being granted direct UPDATE on datasets' counter columns
+-- (which would let anyone inflate their own dataset's numbers).
+-- ════════════════════════════════════════════════════════════════
+create or replace function public.log_dataset_event(p_dataset_id uuid, p_event_type text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if p_event_type not in ('view','download') then
+    raise exception 'invalid event_type: %', p_event_type;
+  end if;
+  insert into public.dataset_events (dataset_id, event_type) values (p_dataset_id, p_event_type);
+  if p_event_type = 'view' then
+    update public.datasets set view_count = view_count + 1 where id = p_dataset_id;
+  else
+    update public.datasets set download_count = download_count + 1 where id = p_dataset_id;
+  end if;
+end;
+$$;
+
+grant execute on function public.log_dataset_event(uuid, text) to anon, authenticated;
+
+-- Trending = downloads in the last 30 days. A plain join against
+-- dataset_events from a security_invoker view would run into its own
+-- "select using (false)" policy and silently return 0 for everyone —
+-- so the count is computed by a narrowly-scoped SECURITY DEFINER
+-- function instead (just a count, never raw event rows), while the
+-- view itself stays security_invoker so datasets_public_read RLS
+-- still hides private datasets from other users.
+create or replace function public.trending_downloads_30d(p_dataset_id uuid)
+returns bigint
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select count(*) from public.dataset_events
+  where dataset_id = p_dataset_id and event_type = 'download'
+    and created_at > now() - interval '30 days';
+$$;
+
+grant execute on function public.trending_downloads_30d(uuid) to anon, authenticated;
+
+-- file_count/total_size_bytes are aggregated here (not queried per
+-- card client-side) so the grid stays a single round trip instead of
+-- N+1 — this view is what both the grid and search_datasets() below
+-- actually query.
+create or replace view public.datasets_with_trending
+with (security_invoker = true) as
+select
+  d.*,
+  public.trending_downloads_30d(d.id) as trending_downloads_30d,
+  coalesce(f.file_count, 0) as file_count,
+  coalesce(f.total_size_bytes, 0) as total_size_bytes
+from public.datasets d
+left join (
+  select dataset_id, count(*) as file_count, sum(coalesce(size_bytes, 0)) as total_size_bytes
+  from public.dataset_files
+  group by dataset_id
+) f on f.dataset_id = d.id;
+
+grant select on public.datasets_with_trending to anon, authenticated;
+
+-- Single round-trip search + filter + sort. A plain PostgREST
+-- .or()/.ilike() chain from the client can't do a partial-match
+-- search across a text[] tags column (array containment is exact-
+-- element only), so this does the whole query server-side instead —
+-- also keeps sorting/pagination consistent with the search results.
+create or replace function public.search_datasets(
+  p_search text default null,
+  p_category text default null,
+  p_tags text[] default null,
+  p_difficulty text default null,
+  p_license text default null,
+  p_has_starter_exercise boolean default null,
+  p_sort text default 'newest'
+)
+returns setof public.datasets_with_trending
+language sql
+stable
+security invoker
+set search_path = public
+as $$
+  select d.* from public.datasets_with_trending d
+  where
+    (p_search is null or p_search = '' or
+      d.title ilike '%'||p_search||'%' or
+      d.subtitle ilike '%'||p_search||'%' or
+      d.description_md ilike '%'||p_search||'%' or
+      exists (select 1 from unnest(d.tags) t where t ilike '%'||p_search||'%')
+    )
+    and (p_category is null or d.category = p_category)
+    and (p_tags is null or array_length(p_tags, 1) is null or d.tags && p_tags)
+    and (p_difficulty is null or d.difficulty = p_difficulty)
+    and (p_license is null or d.license = p_license)
+    and (p_has_starter_exercise is null or d.has_starter_exercise = p_has_starter_exercise)
+  order by
+    case when p_sort = 'downloads' then d.download_count end desc nulls last,
+    case when p_sort = 'usability' then d.usability_score end desc nulls last,
+    case when p_sort = 'trending'  then d.trending_downloads_30d end desc nulls last,
+    d.created_at desc;
+$$;
+
+grant execute on function public.search_datasets(text, text, text[], text, text, boolean, text) to anon, authenticated;
+
+-- ════════════════════════════════════════════════════════════════
+-- Storage — public-read `datasets` bucket. Path convention:
+-- {dataset_id}/{filename}, so storage.foldername(name)[1] is the
+-- dataset id and ownership can be checked against public.users.
+--
+-- Public-read means unconditional, matching the spec — note this
+-- does NOT re-check a dataset's is_public flag at the object level:
+-- unpublishing a dataset doesn't retroactively block a direct URL to
+-- an already-uploaded file. Acceptable for the seed/launch scope
+-- here; revisit if truly private datasets become a real use case.
+-- ════════════════════════════════════════════════════════════════
+insert into storage.buckets (id, name, public)
+values ('datasets', 'datasets', true)
+on conflict (id) do nothing;
+
+create policy "datasets_bucket_public_read" on storage.objects
+  for select using (bucket_id = 'datasets');
+
+create policy "datasets_bucket_owner_write" on storage.objects
+  for insert with check (
+    bucket_id = 'datasets'
+    and exists (
+      select 1 from public.datasets d
+      where d.id::text = (storage.foldername(name))[1]
+        and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+
+create policy "datasets_bucket_owner_update" on storage.objects
+  for update using (
+    bucket_id = 'datasets'
+    and exists (
+      select 1 from public.datasets d
+      where d.id::text = (storage.foldername(name))[1]
+        and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+
+create policy "datasets_bucket_owner_delete" on storage.objects
+  for delete using (
+    bucket_id = 'datasets'
+    and exists (
+      select 1 from public.datasets d
+      where d.id::text = (storage.foldername(name))[1]
+        and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
 create trigger forum_topics_updated_at      before update on public.forum_topics      for each row execute function public.set_updated_at();

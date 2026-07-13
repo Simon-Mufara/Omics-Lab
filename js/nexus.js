@@ -47,6 +47,7 @@ OmicsLab.Nexus = (function () {
 
   /* ─── State ─── */
   let _state = { channels: [], activeChannel: 'general', profile: null };
+  let _view = 'channel'; /* 'channel' | 'forum' | 'people' — not persisted, always lands on Channels */
 
   /* ─── Storage ─── */
   function _load() {
@@ -61,10 +62,27 @@ OmicsLab.Nexus = (function () {
       }));
     }
     _state.profile = _state.profile || { name: 'You', role: 'OmicsLab User', avatar: 'YO', color: '#00C4A0' };
+    _syncProfileFromAuth();
   }
 
   function _save() {
     try { localStorage.setItem(STORE, JSON.stringify(_state)); } catch {}
+  }
+
+  /* Binds the real signed-in identity onto the chat profile — previously
+     Nexus never checked auth at all, so every message was posted as a
+     generic "You" even when signed in. Guests can still post (Nexus has
+     no login gate by design), this only personalizes it once a real
+     identity is available. institution/country come from the app's own
+     profile settings since they aren't on the Clerk user object. */
+  function _syncProfileFromAuth() {
+    const cu = OmicsLab.AuthClerk?.getUser?.();
+    if (!cu) return;
+    let extra = {};
+    try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
+    const initials = (cu.name || 'OmicsLab User').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'OL';
+    _state.profile = { ..._state.profile, name: cu.name || _state.profile.name, avatar: initials, role: extra.institution || _state.profile.role };
+    _save();
   }
 
   /* ─── Get channel ─── */
@@ -140,6 +158,15 @@ OmicsLab.Nexus = (function () {
           OmicsLab Nexus
         </div>
         <div class="nx-workspace-sub">African Genomics Network <span id="nx-online-count"></span></div>
+      </div>
+
+      <div class="nx-view-nav">
+        <button class="nx-ch-item ${_view==='forum'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('forum')">
+          <span class="nx-ch-icon">${IC('file-text',13) || '◆'}</span><span class="nx-ch-name">Forum</span>
+        </button>
+        <button class="nx-ch-item ${_view==='people'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('people')">
+          <span class="nx-ch-icon">${IC('users',13) || '@'}</span><span class="nx-ch-name">People</span>
+        </button>
       </div>
 
       <div class="nx-sidebar-section">
@@ -274,10 +301,29 @@ OmicsLab.Nexus = (function () {
   /* ─── Switch channel ─── */
   function _switchChannel(id) {
     _state.activeChannel = id;
+    _view = 'channel';
     _renderSidebar();
     _renderMessages();
     _closeThread();
     OmicsLab.NexusRealtime?.switchChannel?.(id);
+  }
+
+  /* ─── Switch top-level view (Channels / Forum / People) ───
+     Forum and People used to be separate standalone pages
+     (js/community.js, js/social.js) — merged in here as tabs of one
+     communication hub instead of three fragmented, inconsistently
+     auth-gated destinations. */
+  function _switchView(view) {
+    _view = view;
+    _closeThread();
+    _renderSidebar();
+    _renderMain();
+  }
+
+  function _renderMain() {
+    if (_view === 'forum')  { OmicsLab.Community?.mountInto?.('nx-messages'); return; }
+    if (_view === 'people') { OmicsLab.Social?.mountInto?.('nx-messages'); return; }
+    _renderMessages();
   }
 
   /* ─── Send message ─── */
@@ -384,12 +430,22 @@ OmicsLab.Nexus = (function () {
       </div>`;
 
     _renderSidebar();
-    _renderMessages();
+    _renderMain();
   }
+
+  /* Re-sync identity + re-render whichever view is open once Clerk
+     resolves (async SDK boot) or the user signs in/out mid-session. */
+  OmicsLab.AuthClerk?.onAuthChange?.(() => {
+    _syncProfileFromAuth();
+    const section = document.getElementById('nexus-section');
+    if (!section?.dataset.nxReady) return;
+    _renderSidebar();
+    if (_view === 'channel') _renderMain();
+  });
 
   return {
     init,
-    _switchChannel, _send, _sendThread, _react, _openThread, _closeThread,
+    _switchChannel, _switchView, _send, _sendThread, _react, _openThread, _closeThread,
     _composerKey, _threadKey,
     /* Realtime hooks */
     _injectMessage, _hasMessage, _getActiveChannel,

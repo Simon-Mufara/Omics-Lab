@@ -1052,6 +1052,48 @@ nextflow run nf-core/rnaseq \\
   let _activeNb = 'seq';
   let _runLog = [];
 
+  /* ─── Notebook persistence (Kaggle-style: edits + run history survive
+     reload/navigation, previously everything was memory-only and reset
+     the moment you left the Terminal page) ─── */
+  const NB_STORE_KEY = 'omicslab_nb_state_v1';
+  const _nbAutosaveTimers = {};
+
+  function _loadNbStore() { return OmicsLab.Utils?.safeParse(NB_STORE_KEY, {}) || {}; }
+  function _saveNbStore(store) { (OmicsLab.Utils?.safeSet || ((k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }))(NB_STORE_KEY, store); }
+  function _getNbState(nbId) { return _loadNbStore()[nbId] || null; }
+
+  function _saveNbState(nbId, patch) {
+    const store = _loadNbStore();
+    store[nbId] = { ...(store[nbId] || {}), ...patch, savedAt: Date.now() };
+    _saveNbStore(store);
+    return store[nbId];
+  }
+
+  function _relTimeShort(ts) {
+    if (!ts) return 'never';
+    const d = Date.now() - ts;
+    if (d < 10000) return 'just now';
+    if (d < 60000) return Math.floor(d / 1000) + 's ago';
+    if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
+    if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
+    return new Date(ts).toLocaleDateString();
+  }
+
+  /* Debounced autosave — fires ~800ms after the user stops typing in a
+     cell, so we're not hitting localStorage on every keystroke. */
+  function _autosaveCell(idx, code) {
+    clearTimeout(_nbAutosaveTimers[_activeNb + ':' + idx]);
+    _nbAutosaveTimers[_activeNb + ':' + idx] = setTimeout(() => {
+      const state = _getNbState(_activeNb);
+      const cells = state?.cells ? state.cells.slice() : [];
+      if (!cells[idx]) return;
+      cells[idx] = { ...cells[idx], code };
+      _saveNbState(_activeNb, { cells });
+      const chip = document.getElementById('nb-autosave-chip');
+      if (chip) chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved just now`;
+    }, 800);
+  }
+
   const _NB_DATA = [
     {
       id: 'seq', name: 'Sequence Analysis', icon: 'dna',
@@ -1409,6 +1451,122 @@ print()
 print("█=West African  ▓=East African  ░=Non-African")`
         }
       ]
+    },
+    {
+      id: 'heart-disease', name: 'Heart Disease Prediction', icon: 'heart-pulse',
+      desc: 'Classic Kaggle-style ML tutorial — load, explore, train, evaluate (UCI Cleveland schema)',
+      dataset: 'UCI Heart Disease (Cleveland schema, simulated cohort)',
+      cells: [
+        {
+          title: 'Load the dataset',
+          code: `# OmicsLab — Heart Disease Prediction (Kaggle-style ML walkthrough)
+# Same 14-column schema as the classic UCI Cleveland Heart Disease dataset
+# (age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak,
+# slope, ca, thal, target). Cardiovascular disease is a fast-growing
+# burden across Africa as populations urbanize — the exact kind of
+# tabular clinical-risk problem classical ML (see the AI/ML tool's
+# Classical ML tab) is the right fit for, not a foundation model.
+import pandas as pd, numpy as np, random
+
+random.seed(7); np.random.seed(7)
+n = 260
+
+target = np.random.binomial(1, 0.46, n)  # ~46% prevalence, roughly matching the real dataset
+age      = np.clip(np.random.normal(54 + target*4, 9, n), 29, 77).round().astype(int)
+sex      = np.random.binomial(1, 0.68, n)  # 1 = male, matches real dataset's male skew
+cp       = np.random.choice([0,1,2,3], n, p=[0.47,0.17,0.28,0.08])  # chest pain type
+trestbps = np.clip(np.random.normal(131 + target*6, 17, n), 94, 200).round().astype(int)
+chol     = np.clip(np.random.normal(246 + target*15, 51, n), 126, 564).round().astype(int)
+fbs      = np.random.binomial(1, 0.15, n)  # fasting blood sugar > 120 mg/dl
+restecg  = np.random.choice([0,1,2], n, p=[0.5,0.49,0.01])
+thalach  = np.clip(np.random.normal(150 - target*14, 22, n), 71, 202).round().astype(int)  # max heart rate
+exang    = np.random.binomial(1, 0.2 + target*0.3, n)  # exercise-induced angina
+oldpeak  = np.clip(np.random.exponential(0.6 + target*0.7, n), 0, 6.2).round(1)
+slope    = np.random.choice([0,1,2], n, p=[0.07,0.46,0.47])
+ca       = np.random.choice([0,1,2,3], n, p=[0.58,0.21,0.13,0.08])
+thal     = np.random.choice([1,2,3], n, p=[0.06,0.55,0.39])
+
+df = pd.DataFrame({
+    "age":age, "sex":sex, "cp":cp, "trestbps":trestbps, "chol":chol, "fbs":fbs,
+    "restecg":restecg, "thalach":thalach, "exang":exang, "oldpeak":oldpeak,
+    "slope":slope, "ca":ca, "thal":thal, "target":target,
+})
+print(f"{len(df)} patients loaded — {df['target'].sum()} positive ({df['target'].mean()*100:.1f}%)")
+print()
+print(df.head(8))`
+        },
+        {
+          title: 'Explore the data (EDA)',
+          code: `# Every real ML project starts here, not at model.fit() — you have to
+# understand what you're actually feeding the model first.
+print("Summary statistics:")
+print(df.describe().round(1))
+print()
+
+print("Which features actually correlate with target?")
+corr = df.corr(numeric_only=True)["target"].drop("target").sort_values(key=abs, ascending=False)
+for feat, c in corr.items():
+    bar = ("+" if c > 0 else "-") * int(abs(c) * 30)
+    print(f"  {feat:<10} {c:+.3f}  {bar}")
+
+print()
+print("Strongest signals here (thalach, exang, oldpeak, cp) are exactly the")
+print("features cardiologists already weight heavily — a sanity check that")
+print("the data behaves the way domain knowledge says it should.")`
+        },
+        {
+          title: 'Train / test split, then train a classifier',
+          code: `from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+
+X = df.drop(columns=["target"])
+y = df["target"]
+
+# Split BEFORE fitting anything — the single most important rule in this
+# whole notebook. Fitting on data you then test on isn't evaluation, it's
+# memorization, and it will lie to you about real-world performance.
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=7, stratify=y)
+print(f"Train: {len(X_train)} patients · Test: {len(X_test)} patients (held out, untouched until evaluation)")
+
+rf = RandomForestClassifier(n_estimators=200, max_depth=5, random_state=7)
+rf.fit(X_train, y_train)
+
+logreg = LogisticRegression(max_iter=1000)
+logreg.fit(X_train, y_train)
+
+print("Both models trained: Random Forest (non-linear, handles feature interactions)")
+print("                      Logistic Regression (linear, interpretable odds ratios)")`
+        },
+        {
+          title: 'Evaluate: accuracy, confusion matrix, feature importance',
+          code: `from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+for name, model in [("Random Forest", rf), ("Logistic Regression", logreg)]:
+    pred = model.predict(X_test)
+    acc = accuracy_score(y_test, pred)
+    tn, fp, fn, tp = confusion_matrix(y_test, pred).ravel()
+    sens = tp / (tp + fn)  # of real positives, how many did we catch
+    spec = tn / (tn + fp)  # of real negatives, how many did we correctly clear
+    print(f"{name}")
+    print(f"  Accuracy:    {acc*100:.1f}%")
+    print(f"  Sensitivity: {sens*100:.1f}%  (catches {tp}/{tp+fn} real positive cases)")
+    print(f"  Specificity: {spec*100:.1f}%  (correctly clears {tn}/{tn+fp} real negatives)")
+    print(f"  Confusion matrix:  TP={tp}  FP={fp}  FN={fn}  TN={tn}")
+    print()
+
+print("Top features driving the Random Forest's predictions:")
+importances = sorted(zip(X.columns, rf.feature_importances_), key=lambda t: -t[1])
+for feat, imp in importances[:6]:
+    bar = "█" * int(imp * 60)
+    print(f"  {feat:<10} {imp:.3f}  {bar}")
+
+print()
+print("Remember: accuracy alone can mislead on imbalanced data (see the")
+print("AI/ML tool's confusion-matrix lesson) — sensitivity and specificity")
+print("are what actually tell you whether this model is clinically useful.")`
+        },
+      ]
     }
   ];
 
@@ -1489,28 +1647,61 @@ print("█=West African  ▓=East African  ░=Non-African")`
     const cells = document.getElementById('nb-cells');
     if (!cells) return;
     _cellSeq = 0;
-    cells.innerHTML = nb.cells.map((cell, i) => _cellHTML(cell, i)).join('');
 
-    _runLog = [];
+    /* Restore this user's saved edits + run history for this notebook if
+       any exist, instead of always resetting to the pristine starter
+       cells — this is what makes edits and Logs survive a reload or
+       navigating away and back. First-ever visit seeds persisted state
+       from the starter cells so there's something to restore next time. */
+    let state = _getNbState(nbId);
+    if (!state) state = _saveNbState(nbId, { cells: nb.cells.map(c => ({ ...c })), runLog: [] });
+    const cellData = (state.cells && state.cells.length) ? state.cells : nb.cells;
+
+    cells.innerHTML = cellData.map((cell, i) => _cellHTML(cell, i)).join('');
+
+    _runLog = state.runLog || [];
     _renderMetaBar(nb);
     _switchNbView('output');
     _renderNbComments(nb.id);
   }
 
-  /* ─── Kaggle-style kernel meta bar: version, Copy & Edit, runtime, input ─── */
+  /* Resets this notebook's saved edits/run history back to the pristine
+     starter version — the "your own copy went wrong, start over" escape
+     hatch a Kaggle-style persisted notebook needs. */
+  function resetNotebook() {
+    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    if (!nb) return;
+    if (!confirm('Discard your saved edits and run history for this notebook, and restore the original?')) return;
+    _saveNbState(nb.id, { cells: nb.cells.map(c => ({ ...c })), runLog: [] });
+    _renderNotebook(nb.id);
+  }
+
+  /* ─── Kaggle-style kernel meta bar: version, autosave, run history, Copy & Edit, runtime, input ───
+     "Version X of Y" used to always read as "Version N of N" (same
+     counter on both sides — there was never a real "of Y" to browse),
+     which looked fake. Replaced with what's now actually real:
+     the fork version, a live autosave timestamp, and a persisted
+     run count — see NB_STORE_KEY above. */
   function _nbVersion(id) { return parseInt(localStorage.getItem('omicslab_nb_version_' + id) || '1', 10); }
 
   function _renderMetaBar(nb) {
     const bar = document.getElementById('nb-meta-bar');
     if (!bar) return;
     const v = _nbVersion(nb.id);
+    const state = _getNbState(nb.id);
+    const runCount = (state?.runLog || []).length;
     bar.innerHTML = `
       <div class="nb-meta-left">
         <span class="nb-input-chip" title="Input dataset">${OmicsLab.Icons?.svg('database',12)||''} ${_esc(nb.dataset || 'Reference data')}</span>
-        <span class="nb-version-chip">Version ${v} of ${v}</span>
+        <span class="nb-version-chip" title="Bumped each time you Copy & Edit">Version ${v}</span>
+        <span class="nb-autosave-chip" id="nb-autosave-chip" title="Your edits save automatically to this browser">${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved ${_relTimeShort(state?.savedAt)}</span>
+        <span class="nb-runs-chip" id="nb-runs-chip" title="Persists across reloads and future visits">${runCount} run${runCount === 1 ? '' : 's'} logged</span>
         <span class="nb-runtime-chip">${OmicsLab.Icons?.svg('cpu',12)||''} Python 3.11 · Pyodide WASM · CPU</span>
       </div>
-      <button class="nb-copyedit-btn" onclick="OmicsLab.Terminal.copyAndEdit()">${OmicsLab.Icons?.svg('copy',12)||''} Copy &amp; Edit</button>`;
+      <div class="nb-meta-actions">
+        <button class="nb-reset-btn" onclick="OmicsLab.Terminal.resetNotebook()" title="Discard your edits and restore the original">${OmicsLab.Icons?.svg('rotate-cw',12)||''} Reset</button>
+        <button class="nb-copyedit-btn" onclick="OmicsLab.Terminal.copyAndEdit()">${OmicsLab.Icons?.svg('copy',12)||''} Copy &amp; Edit</button>
+      </div>`;
   }
 
   function copyAndEdit() {
@@ -1620,7 +1811,8 @@ print("█=West African  ▓=East African  ░=Non-African")`
       </div>
       <div class="nb-cell-body">
         <div class="nb-cell-title">${cell.title || ''}</div>
-        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="${cell.code.split('\n').length + 1}">${_esc(cell.code)}</textarea>
+        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="${cell.code.split('\n').length + 1}"
+          oninput="OmicsLab.Terminal._autosaveCell(${idx}, this.value)">${_esc(cell.code)}</textarea>
         <div class="nb-output" id="nb-out-${n}"></div>
       </div>
     </div>`;
@@ -1650,7 +1842,20 @@ print("█=West African  ▓=East African  ░=Non-African")`
     let stdout = '';
     py.setStdout({ batched: s => { stdout += s + '\n'; } });
 
+    /* Auto-load any packages the cell imports (pandas, numpy, scikit-learn,
+       etc.) from Pyodide's precompiled package index — without this,
+       `import pandas` throws ModuleNotFoundError since Pyodide only ships
+       the bare interpreter by default. Best-effort: if resolution itself
+       fails (e.g. an unrecognised package name), let runPythonAsync surface
+       the real ImportError rather than swallowing the cell run entirely. */
+    try {
+      outEl.innerHTML = '<div class="nb-running">Loading packages…</div>';
+      await py.loadPackagesFromImports(code);
+    } catch (e) { /* fall through — runPythonAsync will report the real error */ }
+    outEl.innerHTML = '<div class="nb-running">Running…</div>';
+
     const logTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    let runStatus = 'ok';
     try {
       const result = await py.runPythonAsync(code);
       let out = stdout;
@@ -1660,9 +1865,24 @@ print("█=West African  ▓=East African  ░=Non-African")`
         : '<div class="nb-out-empty">Cell executed — no output</div>';
       _runLog.push({ cell: n, status: 'ok', time: logTime });
     } catch (err) {
+      runStatus = 'error';
       outEl.innerHTML = `<div class="nb-out-error"><b>Error:</b> ${_esc(String(err))}</div>`;
       _runLog.push({ cell: n, status: 'error', time: logTime });
     }
+
+    /* Persist the run — code as it stood at run time (in case the debounced
+       autosave hasn't fired yet) plus this run entry in the history log,
+       capped so it can't grow unbounded over a long-lived browser profile. */
+    const idx = parseInt(btn.closest('.nb-cell')?.dataset.cellIdx ?? '-1', 10);
+    const savedState = _getNbState(_activeNb);
+    const persistedCells = savedState?.cells ? savedState.cells.slice() : [];
+    if (idx >= 0 && persistedCells[idx]) persistedCells[idx] = { ...persistedCells[idx], code };
+    const persistedRunLog = (_runLog || []).slice(-50);
+    _saveNbState(_activeNb, { cells: persistedCells, runLog: persistedRunLog, runCount: (savedState?.runCount || 0) + 1 });
+    const chip = document.getElementById('nb-autosave-chip');
+    if (chip) chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved just now`;
+    const runsChip = document.getElementById('nb-runs-chip');
+    if (runsChip) runsChip.textContent = `${persistedRunLog.length} run${persistedRunLog.length === 1 ? '' : 's'} logged`;
 
     if (numEl) numEl.textContent = 'Out[' + n + ']:';
     btn.disabled = false;
@@ -1675,9 +1895,18 @@ print("█=West African  ▓=East African  ░=Non-African")`
     if (!cells) return;
     _cellSeq++;
     const n = _cellSeq;
+
+    /* Persist the new (empty) cell so it survives reload/navigation —
+       appended to the end of this notebook's saved cell list. */
+    const state = _getNbState(_activeNb);
+    const persistedCells = state?.cells ? state.cells.slice() : [];
+    const idx = persistedCells.length;
+    persistedCells.push({ title: '', code: '' });
+    _saveNbState(_activeNb, { cells: persistedCells });
+
     const div = document.createElement('div');
     div.className = 'nb-cell nb-cell--new';
-    div.dataset.cellIdx = n;
+    div.dataset.cellIdx = idx;
     div.innerHTML = `
       <div class="nb-cell-gutter">
         <span class="nb-cell-num" id="nb-num-${n}">In [${n}]:</span>
@@ -1687,7 +1916,8 @@ print("█=West African  ▓=East African  ░=Non-African")`
       </div>
       <div class="nb-cell-body">
         <div class="nb-cell-title"></div>
-        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="5" placeholder="# Write Python code here…"></textarea>
+        <textarea class="nb-code-area" id="nb-code-${n}" spellcheck="false" rows="5" placeholder="# Write Python code here…"
+          oninput="OmicsLab.Terminal._autosaveCell(${idx}, this.value)"></textarea>
         <div class="nb-output" id="nb-out-${n}"></div>
       </div>`;
     cells.appendChild(div);
@@ -2087,7 +2317,7 @@ print("█=West African  ▓=East African  ░=Non-African")`
   }
 
   return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript,
-           runCell, addNotebookCell, clearNotebook, restartKernel, _renderNotebook,
-           copyAndEdit, _switchNbView, submitNbComment, openStarterSnippet,
+           runCell, addNotebookCell, clearNotebook, restartKernel, resetNotebook, _renderNotebook,
+           copyAndEdit, _switchNbView, submitNbComment, openStarterSnippet, _autosaveCell,
            NB_LIST: _NB_DATA.map(n => ({ id: n.id, name: n.name })) };
 })();

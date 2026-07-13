@@ -16,6 +16,23 @@ OmicsLab.Social = (function () {
   let _bc = null;       /* BroadcastChannel for same-tab/device sync */
   let _activeChat = null;  /* userId of open chat */
   let _tab = 'discover';
+  let _containerId = 'social-section'; /* overridden when mounted inside Nexus's "People" tab */
+
+  /* Adapts the real signed-in identity (Clerk) into the {id, name,
+     institution, country} shape this module was originally built
+     against — this module used to read a dead legacy auth module
+     (OmicsLab.Auth) that stops being populated once Clerk is the
+     active provider, which is why "sign in to connect" used to show
+     even to a genuinely signed-in user. institution/country aren't on
+     the Clerk user object, so they're layered in from the app's own
+     profile settings (js/settings.js writes 'omicslab_user'). */
+  function _currentUser() {
+    const cu = OmicsLab.AuthClerk?.getUser?.();
+    if (!cu) return null;
+    let extra = {};
+    try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
+    return { id: cu.id, name: cu.name || extra.name || 'OmicsLab User', institution: extra.institution || '', country: extra.country || '' };
+  }
 
   /* ─── Persistence helpers ─── */
   function _loadFriends()  { try { return JSON.parse(localStorage.getItem(S_FRIENDS)  || '[]'); } catch { return []; } }
@@ -27,14 +44,14 @@ OmicsLab.Social = (function () {
 
   /* ─── My friend code (derived from user ID) ─── */
   function _myCode() {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u) return null;
     return 'OL-' + (u.id || '').slice(0, 8).toUpperCase();
   }
 
   /* ─── Heartbeat: update my presence ─── */
   function _beat() {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u) return;
     const presence = _loadPresence();
     presence[u.id] = { name: u.name, institution: u.institution || '', country: u.country || '', t: Date.now() };
@@ -51,7 +68,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Send a message ─── */
   function _sendMsg(toId, text) {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u || !text.trim()) return;
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, toId);
@@ -67,7 +84,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Unread count for a chat ─── */
   function _unread(friendId) {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u) return 0;
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, friendId);
@@ -76,7 +93,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Mark chat as read ─── */
   function _markRead(friendId) {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u) return;
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, friendId);
@@ -87,7 +104,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Add friend by code ─── */
   function addFriendByCode(code) {
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (!u) { OmicsLab.Notify?.error('Sign in to add friends.'); return; }
     if (!code || !code.startsWith('OL-')) { OmicsLab.Notify?.error('Invalid code. Codes start with OL-'); return; }
 
@@ -123,7 +140,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Init ─── */
   function init() {
-    const section = document.getElementById('social-section');
+    const section = document.getElementById(_containerId);
     if (!section || section.dataset.socReady) { if (section?.dataset.socReady) _render(); return; }
     section.dataset.socReady = '1';
 
@@ -154,9 +171,9 @@ OmicsLab.Social = (function () {
 
   /* ─── Master render ─── */
   function _render() {
-    const section = document.getElementById('social-section');
+    const section = document.getElementById(_containerId);
     if (!section) return;
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
 
     section.innerHTML = `
     <div class="soc-page">
@@ -175,7 +192,7 @@ OmicsLab.Social = (function () {
     <div class="soc-signin-prompt">
       <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A8A098" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <div class="soc-signin-msg">Sign in to connect with other OmicsLab researchers</div>
-      <button class="soc-btn-primary" onclick="OmicsLab.Auth.openModal('signin')">Sign in or create account</button>
+      <button class="soc-btn-primary" onclick="OmicsLab.AuthClerk.signIn()">Sign in or create account</button>
     </div>`;
   }
 
@@ -289,10 +306,10 @@ OmicsLab.Social = (function () {
   function _renderChatView(friendId) {
     const friends = _loadFriends();
     const friend = friends.find(f => f.id === friendId);
-    if (!friend) { _activeChat = null; _tab = 'friends'; return _renderFriends(OmicsLab.Auth?.currentUser()); }
+    if (!friend) { _activeChat = null; _tab = 'friends'; return _renderFriends(_currentUser()); }
 
     _markRead(friendId);
-    const me = OmicsLab.Auth?.currentUser();
+    const me = _currentUser();
     const msgs = _loadMsgs();
     const key = _chatKey(me.id, friendId);
     const chat = (msgs[key] || []).slice(-60);
@@ -399,14 +416,14 @@ OmicsLab.Social = (function () {
 
   function _renderFriendsList() {
     const el = document.getElementById('soc-friends-list');
-    const u = OmicsLab.Auth?.currentUser();
+    const u = _currentUser();
     if (el && u) el.innerHTML = _renderFriends(u).replace('<div class="soc-section" id="soc-friends-list">', '').replace(/^[\s\S]*?<div class="soc-section" id="soc-friends-list">/, '');
   }
 
   function _renderChat(friendId) {
     const el = document.getElementById('soc-chat-msgs');
     if (el && _activeChat === friendId) {
-      const me = OmicsLab.Auth?.currentUser();
+      const me = _currentUser();
       _markRead(friendId);
       const msgs = _loadMsgs();
       const key = _chatKey(me.id, friendId);
@@ -439,12 +456,42 @@ OmicsLab.Social = (function () {
   /* ─── Auth state listener ─── */
   function _onAuth(user) {
     if (user) _beat();
-    const section = document.getElementById('social-section');
+    const section = document.getElementById(_containerId);
     if (section?.dataset.socReady) _render();
   }
 
   /* ─── Wire auth listener once ─── */
-  OmicsLab.Auth?.onAuthStateChange?.(_onAuth);
+  OmicsLab.AuthClerk?.onAuthChange?.(_onAuth);
 
-  return { init, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode };
+  /* Mounts this module into an arbitrary container (used by Nexus's
+     "People" tab) instead of its original standalone #social-section. */
+  function mountInto(containerId) {
+    _containerId = containerId || 'social-section';
+    const section = document.getElementById(_containerId);
+    if (!section) return;
+    if (!section.dataset.socReady) {
+      section.dataset.socReady = '1';
+      try {
+        _bc = _bc || new BroadcastChannel('omicslab_social');
+        _bc.onmessage = e => {
+          if (e.data.type === 'presence') {
+            const p = _loadPresence();
+            p[e.data.userId] = { name: e.data.name, t: e.data.t };
+            _savePresence(p);
+            _softRefreshPresence();
+          }
+          if (e.data.type === 'message' && _activeChat) {
+            _renderChat(_activeChat);
+            _renderFriendsList();
+          }
+        };
+      } catch {}
+      _beat();
+      clearInterval(_heartbeatTimer);
+      _heartbeatTimer = setInterval(_beat, HEARTBEAT);
+    }
+    _render();
+  }
+
+  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode };
 })();

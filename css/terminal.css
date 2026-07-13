@@ -618,19 +618,28 @@
   margin-bottom: 0.85rem;
 }
 .nb-meta-left { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.nb-input-chip, .nb-version-chip, .nb-runtime-chip {
+.nb-input-chip, .nb-version-chip, .nb-runtime-chip, .nb-autosave-chip, .nb-runs-chip {
   display: inline-flex; align-items: center; gap: 0.3rem;
   font-size: 0.72rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 999px;
 }
 .nb-input-chip { background: #00C4A022; color: #00C4A0; }
 .nb-version-chip { background: #58a6ff22; color: #58a6ff; }
 .nb-runtime-chip { background: #6E686022; color: #A8A098; }
+.nb-autosave-chip { background: #3fb95022; color: #3fb950; }
+.nb-runs-chip { background: #bc8cff22; color: #bc8cff; }
+.nb-meta-actions { display: flex; align-items: center; gap: 0.5rem; }
 .nb-copyedit-btn {
   display: inline-flex; align-items: center; gap: 0.35rem;
   background: #58a6ff; color: #08101c; border: none; border-radius: 6px;
   padding: 0.4rem 0.85rem; font-size: 0.76rem; font-weight: 700; cursor: pointer;
 }
 .nb-copyedit-btn:hover { background: #79b8ff; }
+.nb-reset-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  background: none; color: #A8A098; border: 1px solid #243048; border-radius: 6px;
+  padding: 0.4rem 0.7rem; font-size: 0.76rem; font-weight: 600; cursor: pointer;
+}
+.nb-reset-btn:hover { color: #E4DDD2; border-color: #f85149; }
 
 /* Output / Logs tabs */
 .nb-view-tabs { display: flex; gap: 1.25rem; border-bottom: 1px solid #182236; margin-bottom: 1rem; }
