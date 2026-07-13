@@ -117,13 +117,56 @@ OmicsLab.App = (function() {
     if (OmicsLab.Router) OmicsLab.Router.navigate('home');
   }
 
-  /* ─── Start a workflow ─── */
-  function startWorkflow(wfId) {
+  /* ─── Dataset Hub deep-link banner ───
+     Built with textContent/DOM methods rather than innerHTML — this
+     data can arrive via a URL query param (see router.js's `openLab`
+     handling), so it must never be treated as trusted markup. */
+  function _renderPreloadBanner(preload) {
+    const el = document.getElementById('lab-preload-banner');
+    if (!el) return;
+    if (!preload || !preload.datasetTitle) {
+      el.style.display = 'none';
+      el.textContent = '';
+      return;
+    }
+    el.textContent = '';
+
+    const left = document.createElement('span');
+    const badge = document.createElement('span');
+    badge.className = 'preload-badge';
+    badge.textContent = '📊 Preloaded from Dataset Hub:';
+    left.appendChild(badge);
+    const strong = document.createElement('strong');
+    strong.textContent = preload.datasetTitle;
+    left.appendChild(strong);
+    if (preload.exerciseTitle) {
+      left.append(' — ' + preload.exerciseTitle);
+    }
+    el.appendChild(left);
+
+    if (preload.datasetSlug) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = 'View dataset ↗';
+      btn.onclick = () => window.open('/hub/datasets/' + encodeURIComponent(preload.datasetSlug), '_blank', 'noopener');
+      el.appendChild(btn);
+    }
+    el.style.display = '';
+  }
+
+  /* ─── Start a workflow ───
+     `opts.preload` (optional) — { datasetSlug, datasetTitle, exerciseId,
+     exerciseTitle, starterConfig } — arrives from the Dataset Hub's
+     "Open in Lab" deep link (see router.js's `openLab` query-param
+     handling). It's surfaced as a banner, not fed into the simulation
+     mechanics — the guided steps are the same regardless of source. */
+  function startWorkflow(wfId, opts) {
     const wf = OmicsLab.Workflows[wfId];
     if (!wf) return;
 
-    OmicsLab.Engine.reset(wfId);
+    OmicsLab.Engine.reset(wfId, opts?.preload || null);
     clearSabotageStep();
+    _renderPreloadBanner(opts?.preload || null);
 
     document.getElementById('topbar-wf-name').textContent   = wf.name;
     document.getElementById('topbar-domain').textContent    = wf.domainLabel;

@@ -1026,3 +1026,707 @@ end;
 $$;
 
 grant execute on function public.dataset_daily_events(uuid) to anon, authenticated;
+
+-- ════════════════════════════════════════════════════════════════
+-- Learning integration (Prompt 3) — ties datasets into OmicsLab's
+-- existing workflows/tools/progress system rather than inventing a
+-- parallel one: recommended_workflow_ids/recommended_tool_ids reference
+-- the main site's existing workflow/tool ids (js/workflows.js etc.)
+-- as plain text, not a new FK'd registry; completed exercises feed
+-- points into the EXISTING public.leaderboard.total_score, and dataset
+-- progress is mirrored into the existing public.progress table (see
+-- the trigger at the end of this section) so any code that already
+-- reads `progress` picks this up for free.
+-- ════════════════════════════════════════════════════════════════
+
+create table if not exists public.dataset_learning (
+  dataset_id                uuid primary key references public.datasets(id) on delete cascade,
+  learning_objectives       text[] not null default '{}',
+  recommended_workflow_ids  text[] not null default '{}',
+  recommended_tool_ids      text[] not null default '{}',
+  prerequisite_skill_tags   text[] not null default '{}',
+  estimated_minutes         integer,
+  updated_at                timestamptz default now()
+);
+
+alter table public.dataset_learning enable row level security;
+create policy "dataset_learning_public_read" on public.dataset_learning
+  for select using (exists (select 1 from public.datasets d where d.id = dataset_id and d.is_public = true));
+create policy "dataset_learning_owner_all" on public.dataset_learning
+  for all using (exists (select 1 from public.datasets d where d.id = dataset_id and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)));
+
+create trigger dataset_learning_updated_at before update on public.dataset_learning for each row execute function public.set_updated_at();
+
+create table if not exists public.dataset_exercises (
+  id                uuid primary key default uuid_generate_v4(),
+  dataset_id        uuid references public.datasets(id) on delete cascade,
+  title             text not null,
+  prompt_md         text not null,
+  starter_config    jsonb not null default '{}', -- pre-loads the dataset into a lab workflow; shape owned by the main site's LabScene, treated as opaque here
+  solution_hint_md  text,
+  difficulty        text not null default 'beginner' check (difficulty in ('beginner','intermediate','advanced')),
+  points            integer not null default 10,
+  created_at        timestamptz default now()
+);
+
+alter table public.dataset_exercises enable row level security;
+create policy "dataset_exercises_public_read" on public.dataset_exercises
+  for select using (exists (select 1 from public.datasets d where d.id = dataset_id and d.is_public = true));
+create policy "dataset_exercises_owner_all" on public.dataset_exercises
+  for all using (exists (select 1 from public.datasets d where d.id = dataset_id and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)));
+
+create index if not exists idx_dataset_exercises_dataset on public.dataset_exercises(dataset_id, created_at asc);
+
+-- Per-user-per-exercise completion — normalizes user_dataset_progress's
+-- exercises_completed count into actual rows, so (a) points can only be
+-- awarded once per exercise per user and (b) the exercise list can show
+-- a real per-exercise checkmark instead of just a running total.
+create table if not exists public.dataset_exercise_completions (
+  id              uuid primary key default uuid_generate_v4(),
+  user_id         uuid references public.users(id) on delete cascade,
+  exercise_id     uuid references public.dataset_exercises(id) on delete cascade,
+  points_awarded  integer not null default 0,
+  completed_at    timestamptz default now(),
+  unique (user_id, exercise_id)
+);
+
+alter table public.dataset_exercise_completions enable row level security;
+create policy "dataset_exercise_completions_self" on public.dataset_exercise_completions
+  for select using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+create index if not exists idx_dataset_exercise_completions_user on public.dataset_exercise_completions(user_id);
+
+create table if not exists public.user_dataset_progress (
+  user_id               uuid references public.users(id) on delete cascade,
+  dataset_id            uuid references public.datasets(id) on delete cascade,
+  status                text not null default 'viewed' check (status in ('viewed','started','completed')),
+  exercises_completed   integer not null default 0,
+  last_activity_at      timestamptz not null default now(),
+  primary key (user_id, dataset_id)
+);
+
+alter table public.user_dataset_progress enable row level security;
+create policy "user_dataset_progress_self" on public.user_dataset_progress
+  for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+create index if not exists idx_user_dataset_progress_dataset on public.user_dataset_progress(dataset_id);
+
+-- Mirrors dataset progress into the pre-existing progress table (type
+-- 'dataset') so anything already reading `progress` (badges/streaks/
+-- curriculum on the main site) can pick up dataset activity without
+-- this Hub needing to know about that code at all.
+create or replace function public.trg_mirror_dataset_progress()
+returns trigger language plpgsql as $$
+begin
+  insert into public.progress (user_id, type, key, value, earned_at)
+  values (
+    new.user_id, 'dataset', new.dataset_id::text,
+    jsonb_build_object('status', new.status, 'exercises_completed', new.exercises_completed),
+    new.last_activity_at
+  )
+  on conflict (user_id, type, key) do update
+    set value = excluded.value, earned_at = excluded.earned_at;
+  return new;
+end;
+$$;
+
+create trigger user_dataset_progress_mirror
+  after insert or update on public.user_dataset_progress
+  for each row execute function public.trg_mirror_dataset_progress();
+
+-- SECURITY DEFINER so the client can only ever move ITS OWN progress
+-- forward (never spoof another user_id, never regress a resolved
+-- "started" back to a bare page-view). Called on: "Open in Lab" (->
+-- started), page view of an already-started dataset (no-op).
+create or replace function public.mark_dataset_progress(p_dataset_id uuid, p_status text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  uid uuid;
+begin
+  if p_status not in ('viewed','started','completed') then
+    raise exception 'invalid status: %', p_status;
+  end if;
+  select id into uid from public.users where clerk_id = auth.uid()::text;
+  if uid is null then return; end if;
+
+  insert into public.user_dataset_progress (user_id, dataset_id, status, last_activity_at)
+  values (uid, p_dataset_id, p_status, now())
+  on conflict (user_id, dataset_id) do update set
+    -- never move status backwards (completed/started can't regress to viewed)
+    status = case
+      when public.user_dataset_progress.status = 'completed' then 'completed'
+      when public.user_dataset_progress.status = 'started' and p_status = 'viewed' then 'started'
+      else p_status
+    end,
+    last_activity_at = now();
+end;
+$$;
+
+grant execute on function public.mark_dataset_progress(uuid, text) to authenticated;
+
+-- SECURITY DEFINER: resolves the calling user, awards points exactly
+-- once per exercise (unique constraint + ON CONFLICT DO NOTHING makes
+-- re-clicking "Mark complete" a no-op), bumps the leaderboard the
+-- Hub already has, and flips user_dataset_progress to 'completed' once
+-- every exercise for that dataset is done.
+create or replace function public.complete_dataset_exercise(p_exercise_id uuid)
+returns table(exercises_completed integer, dataset_status text)
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  uid uuid;
+  ex record;
+  newly_inserted uuid;
+  total_exercises integer;
+  done_count integer;
+  new_status text;
+begin
+  select id into uid from public.users where clerk_id = auth.uid()::text;
+  if uid is null then raise exception 'not signed in'; end if;
+
+  select * into ex from public.dataset_exercises where id = p_exercise_id;
+  if not found then raise exception 'exercise not found'; end if;
+
+  insert into public.dataset_exercise_completions (user_id, exercise_id, points_awarded)
+  values (uid, p_exercise_id, ex.points)
+  on conflict (user_id, exercise_id) do nothing
+  returning id into newly_inserted;
+
+  if newly_inserted is not null then
+    insert into public.leaderboard (user_id, total_score)
+    values (uid, ex.points)
+    on conflict (user_id) do update set total_score = public.leaderboard.total_score + ex.points, updated_at = now();
+  end if;
+
+  select count(*) into total_exercises from public.dataset_exercises where dataset_id = ex.dataset_id;
+  select count(*) into done_count from public.dataset_exercise_completions c
+    join public.dataset_exercises e on e.id = c.exercise_id
+    where c.user_id = uid and e.dataset_id = ex.dataset_id;
+
+  new_status := case when total_exercises > 0 and done_count >= total_exercises then 'completed' else 'started' end;
+
+  insert into public.user_dataset_progress (user_id, dataset_id, status, exercises_completed, last_activity_at)
+  values (uid, ex.dataset_id, new_status, done_count, now())
+  on conflict (user_id, dataset_id) do update set
+    status = new_status, exercises_completed = done_count, last_activity_at = now();
+
+  return query select done_count, new_status;
+end;
+$$;
+
+grant execute on function public.complete_dataset_exercise(uuid) to authenticated;
+
+-- ── Challenges (Kaggle-competition analogue) ────────────────────────
+create table if not exists public.challenges (
+  id                   uuid primary key default uuid_generate_v4(),
+  dataset_id           uuid references public.datasets(id) on delete cascade,
+  title                text not null,
+  description_md       text,
+  metric               text not null check (metric in ('accuracy','f1','rmse','auc')),
+  held_out_answer_path text, -- private storage path; never selectable by anon/authenticated, see revoke below
+  deadline             timestamptz,
+  is_active            boolean not null default true,
+  created_at           timestamptz default now()
+);
+
+alter table public.challenges enable row level security;
+create policy "challenges_public_read" on public.challenges
+  for select using (exists (select 1 from public.datasets d where d.id = dataset_id and d.is_public = true));
+create policy "challenges_owner_all" on public.challenges
+  for all using (exists (select 1 from public.datasets d where d.id = dataset_id and d.owner_id = (select id from public.users where clerk_id = auth.uid()::text)));
+
+-- Column-level lockout, same pattern as users.email — the row can be
+-- read (so the challenge card/description render), the answer path
+-- column itself never can be, by anyone but service_role.
+revoke select (held_out_answer_path) on public.challenges from authenticated, anon;
+
+create index if not exists idx_challenges_dataset on public.challenges(dataset_id);
+
+create table if not exists public.submissions (
+  id                    uuid primary key default uuid_generate_v4(),
+  challenge_id          uuid references public.challenges(id) on delete cascade,
+  user_id               uuid references public.users(id) on delete cascade,
+  submitted_file_path   text not null,
+  score                 numeric,
+  created_at            timestamptz default now()
+);
+
+alter table public.submissions enable row level security;
+-- Deliberately NOT "read all" at the table level — the leaderboard is
+-- served by challenge_leaderboard() below (rank/best-score only, no
+-- raw file paths or full submission history exposed cross-user).
+create policy "submissions_self_read" on public.submissions
+  for select using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+create policy "submissions_self_insert" on public.submissions
+  for insert with check (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+create index if not exists idx_submissions_challenge_user on public.submissions(challenge_id, user_id);
+create index if not exists idx_submissions_challenge_score on public.submissions(challenge_id, score desc);
+
+-- Rank / best score / submission count per user, joined to the public
+-- profile fields needed to render a row — the one sanctioned window
+-- onto cross-user submissions data.
+create or replace function public.challenge_leaderboard(p_challenge_id uuid)
+returns table(
+  user_id uuid, username citext, display_name text, avatar_url text,
+  best_score numeric, submission_count bigint, rank bigint
+)
+language sql
+security definer
+set search_path = public
+stable
+as $$
+  select
+    u.id, u.username, u.display_name, u.avatar_url,
+    best.best_score, best.submission_count,
+    rank() over (order by best.best_score desc) as rank
+  from (
+    select s.user_id, max(s.score) as best_score, count(*) as submission_count
+    from public.submissions s
+    where s.challenge_id = p_challenge_id and s.score is not null
+    group by s.user_id
+  ) best
+  join public.users u on u.id = best.user_id
+  order by rank;
+$$;
+
+grant execute on function public.challenge_leaderboard(uuid) to anon, authenticated;
+
+-- Storage — private buckets for challenge answers (never client-
+-- readable) and user submissions (owner read/write only). Neither is
+-- `public`, unlike the `datasets` bucket, and challenge-answers gets
+-- NO client-facing policies at all: default-deny plus "only
+-- service_role bypasses RLS/storage policies" is exactly the point.
+insert into storage.buckets (id, name, public)
+values ('challenge-answers', 'challenge-answers', false)
+on conflict (id) do nothing;
+
+insert into storage.buckets (id, name, public)
+values ('submissions', 'submissions', false)
+on conflict (id) do nothing;
+
+-- Path convention: {challenge_id}/{user_id}/{filename}
+create policy "submissions_bucket_owner_write" on storage.objects
+  for insert with check (
+    bucket_id = 'submissions'
+    and (storage.foldername(name))[2] = (select id::text from public.users where clerk_id = auth.uid()::text)
+  );
+
+create policy "submissions_bucket_owner_read" on storage.objects
+  for select using (
+    bucket_id = 'submissions'
+    and (storage.foldername(name))[2] = (select id::text from public.users where clerk_id = auth.uid()::text)
+  );
+
+-- ════════════════════════════════════════════════════════════════
+-- Public profiles (Prompt 4) — /u/:username. `public.users` IS the
+-- profile table (see Prompt 0's "identity foundation" comment above),
+-- and `users_public_read` already lets anyone read a public profile's
+-- row directly. What's still missing is cross-table aggregation:
+-- exercise/submission/badge counts and an activity feed pull from
+-- tables whose RLS is otherwise "owner only" (dataset_exercise_
+-- completions, submissions) or has no existing public-read angle
+-- (progress). Both functions below check the target's own privacy
+-- (is_public + username set, or the caller IS that user) before
+-- returning anything — a private profile's stats/activity are exactly
+-- as invisible as its row already is.
+-- ════════════════════════════════════════════════════════════════
+
+-- progress gains a public-read policy (alongside the existing
+-- owner-only `progress_self`) — badges/xp/curriculum/streak are
+-- Kaggle-tier-style public achievements, not sensitive data, but only
+-- for profiles that have opted into being public in the first place.
+create policy "progress_public_read" on public.progress
+  for select using (
+    exists (select 1 from public.users u where u.id = progress.user_id and u.is_public = true and u.username is not null)
+  );
+
+create or replace function public.public_profile_stats(p_username citext)
+returns table(
+  datasets_count bigint,
+  exercises_completed_count bigint,
+  challenge_submissions_count bigint,
+  certifications_count bigint,
+  total_points integer,
+  workflows_done integer,
+  streak_days integer
+)
+language plpgsql
+security definer
+set search_path = public
+stable
+as $$
+declare
+  target_id uuid;
+  target_is_public boolean;
+  caller_id uuid;
+begin
+  select id, (is_public and username is not null) into target_id, target_is_public
+  from public.users where username = p_username;
+  if target_id is null then return; end if;
+
+  select id into caller_id from public.users where clerk_id = auth.uid()::text;
+  if not target_is_public and target_id is distinct from caller_id then return; end if;
+
+  return query
+  select
+    (select count(*) from public.datasets where owner_id = target_id and is_public = true),
+    (select count(*) from public.dataset_exercise_completions where user_id = target_id),
+    (select count(*) from public.submissions where user_id = target_id),
+    (select count(*) from public.progress where user_id = target_id and type = 'badge'),
+    coalesce((select total_score from public.leaderboard where user_id = target_id), 0),
+    coalesce((select workflows_done from public.leaderboard where user_id = target_id), 0),
+    coalesce((select streak_days from public.leaderboard where user_id = target_id), 0);
+end;
+$$;
+
+grant execute on function public.public_profile_stats(citext) to anon, authenticated;
+
+create or replace function public.public_profile_activity(p_username citext, p_limit integer default 20)
+returns table(activity_type text, occurred_at timestamptz, dataset_slug text, dataset_title text, detail text, score numeric)
+language plpgsql
+security definer
+set search_path = public
+stable
+as $$
+declare
+  target_id uuid;
+  target_is_public boolean;
+  caller_id uuid;
+begin
+  select id, (is_public and username is not null) into target_id, target_is_public
+  from public.users where username = p_username;
+  if target_id is null then return; end if;
+
+  select id into caller_id from public.users where clerk_id = auth.uid()::text;
+  if not target_is_public and target_id is distinct from caller_id then return; end if;
+
+  return query
+  select * from (
+    (
+      select 'dataset_progress'::text as activity_type, p.last_activity_at as occurred_at,
+        d.slug as dataset_slug, d.title as dataset_title, p.status as detail, null::numeric as score
+      from public.user_dataset_progress p
+      join public.datasets d on d.id = p.dataset_id and d.is_public = true
+      where p.user_id = target_id
+      order by p.last_activity_at desc
+      limit p_limit
+    )
+    union all
+    (
+      select 'challenge_submission'::text, s.created_at,
+        d.slug, c.title, null::text, s.score
+      from public.submissions s
+      join public.challenges c on c.id = s.challenge_id
+      join public.datasets d on d.id = c.dataset_id
+      where s.user_id = target_id
+      order by s.created_at desc
+      limit p_limit
+    )
+  ) feed
+  order by occurred_at desc
+  limit p_limit;
+end;
+$$;
+
+grant execute on function public.public_profile_activity(citext, integer) to anon, authenticated;
+
+-- ════════════════════════════════════════════════════════════════
+-- User search & member directory (Prompt 5). One function serves both
+-- the top-nav quick search (small p_limit, a query string) and the
+-- /members directory (role/country/institution filters, pagination,
+-- optionally no query string at all — "browse everyone").
+-- ════════════════════════════════════════════════════════════════
+
+-- Trigram indexes for fuzzy matching. username is citext, so the
+-- expression is cast to text first — gin_trgm_ops isn't defined for
+-- citext directly, and an expression index on (username::text) is the
+-- safe, portable way to get trigram support on a citext column.
+create index if not exists idx_users_username_trgm     on public.users using gin ((username::text) gin_trgm_ops);
+create index if not exists idx_users_display_name_trgm  on public.users using gin (display_name gin_trgm_ops);
+create index if not exists idx_users_github_username_trgm on public.users using gin (github_username gin_trgm_ops);
+create index if not exists idx_users_institution_trgm   on public.users using gin (institution gin_trgm_ops);
+
+-- SECURITY DEFINER so it can check `email` for the exact-match case
+-- (column-level SELECT on email is revoked from anon/authenticated —
+-- see the users table above) without ever including it in the
+-- returned columns. Only a full, exact, case-insensitive email match
+-- is honored; a partial email string isn't treated as an email at all
+-- (the regex requires user@domain.tld) and won't happen to match
+-- anything else either, so it legitimately returns nothing.
+create or replace function public.search_users(
+  p_q text default null,
+  p_role text default null,
+  p_country text default null,
+  p_institution text default null,
+  p_limit integer default 20,
+  p_offset integer default 0
+)
+returns table(
+  id uuid, username citext, display_name text, avatar_url text,
+  role text, institution text, country text, github_username text
+)
+language plpgsql
+security definer
+set search_path = public
+stable
+as $$
+declare
+  needle text := trim(coalesce(p_q, ''));
+  is_email boolean := needle ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$';
+begin
+  return query
+  select u.id, u.username, u.display_name, u.avatar_url, u.role, u.institution, u.country, u.github_username
+  from public.users u
+  where u.is_public = true and u.username is not null
+    and (p_role is null or u.role = p_role)
+    and (p_country is null or u.country = p_country)
+    and (p_institution is null or u.institution = p_institution)
+    and (
+      needle = ''
+      or (is_email and lower(u.email) = lower(needle))
+      or u.username::text ilike '%'||needle||'%'
+      or u.username::text % needle
+      or u.display_name ilike '%'||needle||'%'
+      or u.display_name % needle
+      or u.github_username ilike needle||'%'
+      or u.institution ilike '%'||needle||'%'
+    )
+  order by
+    case
+      when needle = '' then 0
+      when is_email and lower(u.email) = lower(needle) then 0
+      when lower(u.username::text) = lower(needle) then 0
+      when u.username::text ilike needle||'%' or u.github_username ilike needle||'%' or u.display_name ilike needle||'%' then 1
+      else 2
+    end asc,
+    u.username asc
+  limit p_limit offset p_offset;
+end;
+$$;
+
+grant execute on function public.search_users(text, text, text, text, integer, integer) to anon, authenticated;
+
+-- ════════════════════════════════════════════════════════════════
+-- Realtime chat (Prompt 6) — public channels + 1:1 DMs. This is a
+-- fresh Supabase-Realtime-backed system in the Hub; it's deliberately
+-- separate from the main site's existing "Nexus" (js/social.js +
+-- js/community.js, localStorage-first, no live subscriptions) rather
+-- than trying to retrofit that localStorage-era code with realtime.
+-- ════════════════════════════════════════════════════════════════
+
+create table if not exists public.channels (
+  id          uuid primary key default uuid_generate_v4(),
+  slug        text unique not null,
+  name        text not null,
+  description text,
+  is_default  boolean not null default false,
+  created_at  timestamptz default now()
+);
+
+-- Channels are seeded content, not user-created — read-only to
+-- clients (no insert/update/delete policy at all).
+alter table public.channels enable row level security;
+create policy "channels_read" on public.channels for select using (true);
+
+create table if not exists public.conversations (
+  id         uuid primary key default uuid_generate_v4(),
+  created_at timestamptz default now()
+);
+
+alter table public.conversations enable row level security;
+create policy "conversations_participant_read" on public.conversations
+  for select using (
+    exists (
+      select 1 from public.conversation_participants cp
+      where cp.conversation_id = id and cp.user_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+-- Row creation itself happens inside get_or_create_dm() (SECURITY
+-- DEFINER, below) — no direct insert policy needed for authenticated
+-- clients beyond that.
+
+create table if not exists public.conversation_participants (
+  conversation_id uuid references public.conversations(id) on delete cascade,
+  user_id         uuid references public.users(id) on delete cascade,
+  joined_at       timestamptz default now(),
+  primary key (conversation_id, user_id)
+);
+
+alter table public.conversation_participants enable row level security;
+create policy "conversation_participants_read" on public.conversation_participants
+  for select using (
+    exists (
+      select 1 from public.conversation_participants cp2
+      where cp2.conversation_id = conversation_participants.conversation_id
+        and cp2.user_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+
+create table if not exists public.messages (
+  id              uuid primary key default uuid_generate_v4(),
+  channel_id      uuid references public.channels(id) on delete cascade,
+  conversation_id uuid references public.conversations(id) on delete cascade,
+  user_id         uuid references public.users(id) on delete cascade,
+  body            text not null check (char_length(trim(body)) > 0 and char_length(body) <= 4000),
+  created_at      timestamptz default now(),
+  edited_at       timestamptz,
+  constraint messages_exactly_one_target check (
+    (channel_id is not null and conversation_id is null) or
+    (channel_id is null and conversation_id is not null)
+  )
+);
+
+alter table public.messages enable row level security;
+
+-- Public channel messages: readable/writable by any SIGNED-IN user
+-- (per spec) — auth.uid() is null for anonymous requests regardless
+-- of which identity provider issued the JWT, so this doubles as an
+-- "is signed in at all" check consistent with every other policy here.
+create policy "messages_channel_read" on public.messages
+  for select using (channel_id is not null and auth.uid() is not null);
+create policy "messages_channel_insert" on public.messages
+  for insert with check (
+    channel_id is not null and user_id = (select id from public.users where clerk_id = auth.uid()::text)
+  );
+
+create policy "messages_dm_read" on public.messages
+  for select using (
+    conversation_id is not null and exists (
+      select 1 from public.conversation_participants cp
+      where cp.conversation_id = messages.conversation_id
+        and cp.user_id = (select id from public.users where clerk_id = auth.uid()::text)
+    )
+  );
+create policy "messages_dm_insert" on public.messages
+  for insert with check (
+    conversation_id is not null
+    and user_id = (select id from public.users where clerk_id = auth.uid()::text)
+    and exists (
+      select 1 from public.conversation_participants cp
+      where cp.conversation_id = messages.conversation_id and cp.user_id = messages.user_id
+    )
+  );
+
+-- Edit/delete own only. "Admin delete" (per spec's "author/admin
+-- delete") has no dedicated admin flag anywhere else in this schema —
+-- treating that as an operational service-role action (Supabase
+-- dashboard / a future api/* route), same as every other admin-only
+-- action in this codebase, rather than inventing a new is_admin column.
+create policy "messages_update_own" on public.messages
+  for update using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+create policy "messages_delete_own" on public.messages
+  for delete using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+create index if not exists idx_messages_channel      on public.messages(channel_id, created_at asc);
+create index if not exists idx_messages_conversation on public.messages(conversation_id, created_at asc);
+
+-- SECURITY DEFINER: atomically finds-or-creates the 2-person
+-- conversation for (me, other) — a plain client-side insert can't do
+-- this safely (inserting the OTHER participant's row would need a
+-- permissive policy that lets any user add anyone to any
+-- conversation). Returns the conversation id either way.
+create or replace function public.get_or_create_dm(p_other_user_id uuid)
+returns uuid
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  me uuid;
+  existing uuid;
+  new_conv uuid;
+begin
+  select id into me from public.users where clerk_id = auth.uid()::text;
+  if me is null then raise exception 'not signed in'; end if;
+  if me = p_other_user_id then raise exception 'cannot start a conversation with yourself'; end if;
+
+  select cp1.conversation_id into existing
+  from public.conversation_participants cp1
+  where cp1.user_id = me
+    and exists (select 1 from public.conversation_participants cp2 where cp2.conversation_id = cp1.conversation_id and cp2.user_id = p_other_user_id)
+    and (select count(*) from public.conversation_participants cp3 where cp3.conversation_id = cp1.conversation_id) = 2
+  limit 1;
+
+  if existing is not null then return existing; end if;
+
+  insert into public.conversations default values returning id into new_conv;
+  insert into public.conversation_participants (conversation_id, user_id) values (new_conv, me), (new_conv, p_other_user_id);
+  return new_conv;
+end;
+$$;
+
+grant execute on function public.get_or_create_dm(uuid) to authenticated;
+
+-- ── Moderation: report a message. Insert-only from the client —
+-- reports are reviewed via service_role, never listed back to clients
+-- (same "write-only" shape as dataset_events). ──────────────────────
+create table if not exists public.message_reports (
+  id          uuid primary key default uuid_generate_v4(),
+  message_id  uuid references public.messages(id) on delete cascade,
+  reporter_id uuid references public.users(id) on delete cascade,
+  reason      text,
+  created_at  timestamptz default now()
+);
+
+alter table public.message_reports enable row level security;
+create policy "message_reports_insert" on public.message_reports
+  for insert with check (reporter_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+-- ── Unread indicators — one "last read" row per user per channel/DM.
+-- `target_id` is a generated column (coalesces the two nullable FKs,
+-- exactly one of which the check constraint guarantees is set) so a
+-- single PLAIN unique index can back an upsert's ON CONFLICT target —
+-- PostgREST's upsert only matches a full unique index/constraint, not
+-- a partial one, so `unique(user_id, channel_id) where channel_id is
+-- not null` (the obvious first approach) would silently fail every
+-- upsert with "no unique or exclusion constraint matching". ──────────
+create table if not exists public.chat_reads (
+  user_id         uuid references public.users(id) on delete cascade,
+  channel_id      uuid references public.channels(id) on delete cascade,
+  conversation_id uuid references public.conversations(id) on delete cascade,
+  target_id       uuid generated always as (coalesce(channel_id, conversation_id)) stored,
+  last_read_at    timestamptz not null default now(),
+  constraint chat_reads_exactly_one_target check (
+    (channel_id is not null and conversation_id is null) or (channel_id is null and conversation_id is not null)
+  )
+);
+
+create unique index if not exists idx_chat_reads_user_target on public.chat_reads(user_id, target_id);
+
+alter table public.chat_reads enable row level security;
+create policy "chat_reads_self" on public.chat_reads
+  for all using (user_id = (select id from public.users where clerk_id = auth.uid()::text));
+
+-- Latest-message-per-channel/conversation, security_invoker so it
+-- still runs through messages' own RLS (a DM's last-message row is
+-- invisible via this view to anyone but its participants).
+create or replace view public.channel_last_message
+with (security_invoker = true) as
+select channel_id, max(created_at) as last_message_at
+from public.messages
+where channel_id is not null
+group by channel_id;
+
+create or replace view public.conversation_last_message
+with (security_invoker = true) as
+select conversation_id, max(created_at) as last_message_at
+from public.messages
+where conversation_id is not null
+group by conversation_id;
+
+grant select on public.channel_last_message, public.conversation_last_message to authenticated;
+
+insert into public.channels (slug, name, description, is_default) values
+  ('general', 'general', 'General discussion for anyone on OmicsLab', true),
+  ('variant-calling', 'variant-calling', 'Variant calling, VCFs, annotation pipelines', false),
+  ('single-cell', 'single-cell', 'scRNA-seq, clustering, marker genes', false),
+  ('help', 'help', 'Stuck on something? Ask here', false),
+  ('showcase', 'showcase', 'Share what you built or analyzed', false)
+on conflict (slug) do nothing;

@@ -5,6 +5,8 @@ import ColumnCard from '../components/ColumnCard.jsx';
 import ActivityCharts from '../components/ActivityCharts.jsx';
 import VersionHistory from '../components/VersionHistory.jsx';
 import DatasetComments from '../components/DatasetComments.jsx';
+import LearnPanel from '../components/LearnPanel.jsx';
+import ChallengePanel from '../components/ChallengePanel.jsx';
 import {
   CATEGORY_LABELS,
   downloadDatasetFile,
@@ -17,6 +19,15 @@ import {
   getOwnersByIds,
   logDatasetEvent,
 } from '../lib/datasetsApi.js';
+import {
+  getActiveChallenge,
+  getDatasetExercises,
+  getDatasetLearning,
+  getExerciseCompletions,
+  getUserDatasetProgress,
+  markDatasetProgress,
+} from '../lib/learningApi.js';
+import { openInLab } from '../lib/labLink.js';
 
 const RUBRIC_LABELS = {
   has_description: 'Has a description',
@@ -164,8 +175,22 @@ export default function DatasetDetail({ profile, isSignedIn }) {
   const [columns, setColumns] = useState([]);
   const [versions, setVersions] = useState([]);
   const [activity, setActivity] = useState([]);
+  const [learning, setLearning] = useState(null);
+  const [exercises, setExercises] = useState([]);
+  const [completions, setCompletions] = useState([]);
+  const [progress, setProgress] = useState(null);
+  const [challenge, setChallenge] = useState(null);
   const [error, setError] = useState(null);
   const viewLogged = useRef(false);
+
+  async function refreshProgress(datasetId, exerciseIds) {
+    const [{ data: completedIds }, { data: progressRow }] = await Promise.all([
+      getExerciseCompletions(profile?.id, exerciseIds),
+      getUserDatasetProgress(profile?.id, datasetId),
+    ]);
+    setCompletions(completedIds);
+    setProgress(progressRow);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -184,12 +209,24 @@ export default function DatasetDetail({ profile, isSignedIn }) {
       }
       setDataset(data);
 
-      const [{ data: fileRows }, ownerMap, { data: columnRows }, { data: versionRows }, { data: activityRows }] = await Promise.all([
+      const [
+        { data: fileRows },
+        ownerMap,
+        { data: columnRows },
+        { data: versionRows },
+        { data: activityRows },
+        { data: learningRow },
+        { data: exerciseRows },
+        { data: challengeRow },
+      ] = await Promise.all([
         getDatasetFiles(data.id),
         getOwnersByIds([data.owner_id]),
         getDatasetColumns(data.id),
         getDatasetVersions(data.id),
         getDatasetActivity(data.id),
+        getDatasetLearning(data.id),
+        getDatasetExercises(data.id),
+        getActiveChallenge(data.id),
       ]);
       if (cancelled) return;
       setFiles(fileRows);
@@ -197,10 +234,17 @@ export default function DatasetDetail({ profile, isSignedIn }) {
       setColumns(columnRows);
       setVersions(versionRows);
       setActivity(activityRows);
+      setLearning(learningRow);
+      setExercises(exerciseRows);
+      setChallenge(challengeRow);
+
+      await refreshProgress(data.id, exerciseRows.map((e) => e.id));
+      if (cancelled) return;
 
       if (!viewLogged.current) {
         viewLogged.current = true;
         logDatasetEvent(data.id, 'view', profile?.id || null);
+        if (profile?.id) markDatasetProgress(data.id, 'viewed');
       }
     });
     return () => {
@@ -256,8 +300,12 @@ export default function DatasetDetail({ profile, isSignedIn }) {
             <button
               type="button"
               className="ol-btn-ghost"
-              disabled
-              title="Coming soon — opens this dataset directly in the Lab workflow"
+              disabled={!learning?.recommended_workflow_ids?.length}
+              title={learning?.recommended_workflow_ids?.length ? undefined : 'No lab workflow recommended for this dataset yet'}
+              onClick={async () => {
+                if (profile?.id) await markDatasetProgress(dataset.id, 'started');
+                openInLab({ workflowId: learning.recommended_workflow_ids[0], datasetSlug: dataset.slug, datasetTitle: dataset.title });
+              }}
             >
               Open in Lab
             </button>
@@ -325,6 +373,28 @@ export default function DatasetDetail({ profile, isSignedIn }) {
 
       <h2 className="ds-section-title">Version history</h2>
       <VersionHistory versions={versions} />
+
+      {(learning || exercises.length > 0) && (
+        <>
+          <h2 className="ds-section-title">Learn with this dataset</h2>
+          <LearnPanel
+            dataset={dataset}
+            learning={learning}
+            exercises={exercises}
+            completions={completions}
+            progress={progress}
+            isSignedIn={isSignedIn}
+            onProgressChange={() => refreshProgress(dataset.id, exercises.map((e) => e.id))}
+          />
+        </>
+      )}
+
+      {challenge && (
+        <>
+          <h2 className="ds-section-title">Challenge</h2>
+          <ChallengePanel challenge={challenge} currentUser={profile} isSignedIn={isSignedIn} />
+        </>
+      )}
 
       <h2 className="ds-section-title">Discussion</h2>
       <DatasetComments datasetId={dataset.id} currentUser={profile} isSignedIn={isSignedIn} />

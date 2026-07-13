@@ -1524,8 +1524,26 @@ OmicsLab.Router = (function () {
       if (el) el.style.display = 'none';
     });
 
-    /* Navigate to hash or home */
-    navigate(_hashToPage());
+    /* Dataset Hub deep link: /?openLab=<workflowId>&payload=<json>
+       lands straight inside a workflow with the dataset preview shown
+       in a banner, bypassing the normal chooser flow. This must NOT
+       also call navigate() below — screen-lab is a top-level screen
+       outside the router's own page system (see the dual-navigation
+       note near showScreen in app.js), so running both would just
+       have navigate()'s page underneath the lab screen fight for
+       state. The URL is cleaned immediately after so a reload/back
+       doesn't re-trigger it. */
+    const _deepLinkParams = new URLSearchParams(location.search);
+    const _openLabWfId = _deepLinkParams.get('openLab');
+    if (_openLabWfId && OmicsLab.Workflows?.[_openLabWfId] && OmicsLab.App?.startWorkflow) {
+      let preload = null;
+      try { preload = JSON.parse(_deepLinkParams.get('payload') || 'null'); } catch { preload = null; }
+      history.replaceState(null, '', location.pathname + location.hash);
+      OmicsLab.App.startWorkflow(_openLabWfId, { preload });
+    } else {
+      /* Navigate to hash or home */
+      navigate(_hashToPage());
+    }
 
     /* Handle browser back/forward */
     window.addEventListener('popstate', () => navigate(_hashToPage()));

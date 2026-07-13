@@ -5,7 +5,9 @@ import { useCurrentUser } from './hooks/useCurrentUser.js';
 import Onboarding from './pages/Onboarding.jsx';
 import EditProfile from './pages/EditProfile.jsx';
 import DatasetHub from './pages/DatasetHub.jsx';
+import MemberDirectory from './pages/MemberDirectory.jsx';
 import Avatar from './components/Avatar.jsx';
+import GlobalSearch from './components/GlobalSearch.jsx';
 
 /* Lazy-loaded: DatasetDetail pulls in Recharts for the Columns/Activity
    charts, which is a meaningful download on its own — most visits are
@@ -14,6 +16,8 @@ import Avatar from './components/Avatar.jsx';
    low-bandwidth constraint applies to the Hub too, not just the main
    static site). */
 const DatasetDetail = lazy(() => import('./pages/DatasetDetail.jsx'));
+const PublicProfile = lazy(() => import('./pages/PublicProfile.jsx'));
+const Chat = lazy(() => import('./pages/Chat.jsx'));
 
 function PageLoading() {
   return (
@@ -29,10 +33,19 @@ function TopBar({ profile, isSignedIn }) {
       <Link to="/" className="ol-brand">
         OmicsLab <span className="ol-brand-accent">Hub</span>
       </Link>
+      <GlobalSearch />
       <nav className="ol-nav">
         <Link to="/datasets" className="ol-nav-link">
           Datasets
         </Link>
+        <Link to="/members" className="ol-nav-link">
+          Members
+        </Link>
+        {isSignedIn && (
+          <Link to="/chat" className="ol-nav-link">
+            Chat
+          </Link>
+        )}
         <a href="/" className="ol-nav-link">
           ← Back to main site
         </a>
@@ -118,12 +131,41 @@ export default function App() {
         <Route path="/" element={isSignedIn ? <HomePlaceholder profile={profile} /> : <DatasetHub />} />
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/datasets" element={<DatasetHub />} />
+        <Route path="/members" element={<MemberDirectory />} />
         <Route
           path="/datasets/:slug"
           element={
             <Suspense fallback={<PageLoading />}>
               <DatasetDetail profile={profile} isSignedIn={isSignedIn} />
             </Suspense>
+          }
+        />
+        <Route
+          path="/u/:username"
+          element={
+            <Suspense fallback={<PageLoading />}>
+              <PublicProfile currentProfile={profile} isSignedIn={isSignedIn} />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <RequireAuth isSignedIn={isSignedIn}>
+              <Suspense fallback={<PageLoading />}>
+                <Chat profile={profile} isSignedIn={isSignedIn} />
+              </Suspense>
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/chat/:kind/:id"
+          element={
+            <RequireAuth isSignedIn={isSignedIn}>
+              <Suspense fallback={<PageLoading />}>
+                <Chat profile={profile} isSignedIn={isSignedIn} />
+              </Suspense>
+            </RequireAuth>
           }
         />
         <Route

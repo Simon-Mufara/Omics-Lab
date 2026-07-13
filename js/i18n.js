@@ -245,9 +245,13 @@ OmicsLab.I18n = (function () {
     document.addEventListener('click', e => {
       if (!wrap.contains(e.target)) wrap.classList.remove('open');
     });
-    /* Insert before the user pill (or append if pill not found) */
-    const userPill = document.getElementById('nav-user-pill');
-    if (userPill) navRight.insertBefore(wrap, userPill);
+    /* Insert before the account pill (or append if not found). Targets
+       #nav-account-wrap, not #nav-user-pill directly — the pill is now
+       nested inside that wrapper (added for the account dropdown), so
+       it's no longer a direct child of #nav-right and insertBefore()
+       would throw NotFoundError if used as the reference node here. */
+    const pillRef = document.getElementById('nav-account-wrap') || document.getElementById('nav-user-pill');
+    if (pillRef && pillRef.parentNode === navRight) navRight.insertBefore(wrap, pillRef);
     else navRight.appendChild(wrap);
   }
 

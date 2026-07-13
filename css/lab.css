@@ -449,6 +449,39 @@
 }
 #lab-pipeline-bar::-webkit-scrollbar { display: none; }
 
+/* ══════════════════════════════════════════════════════════════
+   DATASET HUB PRELOAD BANNER (Open in Lab deep link)
+   ══════════════════════════════════════════════════════════════ */
+#lab-preload-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  background: #111b2e;
+  border-bottom: 1px solid #182236;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.82rem;
+  color: #a8a098;
+  flex-shrink: 0;
+}
+#lab-preload-banner strong { color: #e4ddd2; }
+#lab-preload-banner .preload-badge {
+  color: #00c4a0;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+#lab-preload-banner button {
+  background: none;
+  border: 1px solid #182236;
+  color: #a8a098;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+#lab-preload-banner button:hover { border-color: #00c4a0; color: #e4ddd2; }
+
 /* Pipeline track inside the bar */
 #lab-pipeline-bar .pipeline-track {
   display: flex;

@@ -730,7 +730,7 @@ OmicsLab.Teams = (function () {
     const section = document.getElementById('teams-section');
     if (!section) return;
 
-    const user = OmicsLab.Auth?.currentUser();
+    const user = OmicsLab.AuthClerk?.getUser?.();
 
     section.innerHTML = `
       <div class="tm-wrap">
@@ -764,7 +764,7 @@ OmicsLab.Teams = (function () {
           ${!user ? `<div class="tm-auth-notice">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
             Sign in to create rooms, record meetings, and sync your meeting history across devices.
-            <button class="tm-auth-link" onclick="OmicsLab.Auth.openModal('signin')">Sign in</button>
+            <button class="tm-auth-link" onclick="OmicsLab.AuthClerk.signIn()">Sign in</button>
           </div>` : ''}
           <div class="tm-rooms-grid" id="tm-rooms-grid">
             ${_rooms.map(r => _roomCardHtml(r)).join('')}
@@ -772,11 +772,11 @@ OmicsLab.Teams = (function () {
           <div class="tm-info-strip">
             <div class="tm-info-item">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-              <span>Same-device multi-tab meetings work now. Cross-device calls require the WebSocket signaling server.</span>
+              <span>Real video calls, working across any device — powered by Jitsi Meet, no install required.</span>
             </div>
             <div class="tm-info-item">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span>All video is processed locally — no data leaves your device without a backend server.</span>
+              <span>Video and audio are end-to-end encrypted by Jitsi — OmicsLab never sees or stores your call content.</span>
             </div>
           </div>
         ` : _renderArticleHubHtml()}
@@ -1051,7 +1051,17 @@ OmicsLab.Teams = (function () {
     };
   }
 
-  /* ─── Join audio only ─── */
+  /* ─── Join audio only ───
+     NOTE: this function and everything through the end of the file
+     (_showPermDenied, _renderMeeting, toggleMute/toggleCamera/
+     toggleScreenShare/toggleHand, _sendChat, the BroadcastChannel-based
+     signaling) is a pre-Jitsi getUserMedia prototype. The real,
+     currently-used meeting flow is joinRoom() → _renderMeetingJitsi()
+     above, which embeds a Jitsi Meet iframe and only calls
+     leaveMeeting() from this section. Confirmed via full call-graph
+     trace: nothing below is reachable from the live UI. Left in place
+     rather than deleted in this pass — flagging so a future cleanup
+     doesn't have to re-derive this. */
   async function _joinAudioOnly(roomId) {
     const room = _rooms.find(r => r.id === roomId);
     if (!room) return;
@@ -1392,7 +1402,11 @@ OmicsLab.Teams = (function () {
 
   /* ─── Helpers ─── */
   function _myName() {
-    return OmicsLab.Auth?.currentUser()?.name || 'You';
+    /* Was reading the dead legacy OmicsLab.Auth module, whose _user is
+       always null once Clerk is the active provider — every participant
+       in every call showed up labeled "You", making it impossible to
+       tell who's who in a real meeting. */
+    return OmicsLab.AuthClerk?.getUser?.()?.name || 'You';
   }
 
   function _escHtml(s) {

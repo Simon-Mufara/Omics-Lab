@@ -42,6 +42,20 @@ OmicsLab.Social = (function () {
   function _loadPresence()  { try { return JSON.parse(localStorage.getItem(S_PRESENCE) || '{}'); } catch { return {}; } }
   function _savePresence(p) { try { localStorage.setItem(S_PRESENCE, JSON.stringify(p)); } catch {} }
 
+  /* Merges the local, same-device-only presence (BroadcastChannel +
+     localStorage — only ever sees other tabs of this exact browser) with
+     real cross-device presence from js/nexus-realtime.js's Supabase
+     Realtime presence channel. Without the latter, "online now" and
+     friend-code lookup could never find an actually-remote colleague —
+     which is why both looked completely broken for real usage. Falls
+     back to local-only if Supabase isn't configured/ready. */
+  function _allPresence() {
+    const merged = { ..._loadPresence() };
+    const real = OmicsLab.NexusRealtime?.getOnlineUsers?.() || [];
+    real.forEach(u => { merged[u.id] = { name: u.name, institution: u.institution, country: u.country, t: u.t }; });
+    return merged;
+  }
+
   /* ─── My friend code (derived from user ID) ─── */
   function _myCode() {
     const u = _currentUser();
@@ -62,7 +76,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Is user online? (< 45s since heartbeat) ─── */
   function _isOnline(userId) {
-    const p = _loadPresence();
+    const p = _allPresence();
     return p[userId] && (Date.now() - p[userId].t < 45000);
   }
 
@@ -108,7 +122,7 @@ OmicsLab.Social = (function () {
     if (!u) { OmicsLab.Notify?.error('Sign in to add friends.'); return; }
     if (!code || !code.startsWith('OL-')) { OmicsLab.Notify?.error('Invalid code. Codes start with OL-'); return; }
 
-    const presence = _loadPresence();
+    const presence = _allPresence();
     const found = Object.entries(presence).find(([id]) => {
       const fCode = 'OL-' + id.slice(0, 8).toUpperCase();
       return fCode === code.toUpperCase();
@@ -222,7 +236,7 @@ OmicsLab.Social = (function () {
 
   /* ─── Discover: users online now ─── */
   function _renderDiscover(me) {
-    const presence = _loadPresence();
+    const presence = _allPresence();
     const friends = _loadFriends();
     const now = Date.now();
     const online = Object.entries(presence)
@@ -238,7 +252,7 @@ OmicsLab.Social = (function () {
           <span class="soc-online-dot"></span>
           ${online.length} researcher${online.length !== 1 ? 's' : ''} online now
         </div>
-        <div class="soc-section-sub">People currently using OmicsLab on this device or in nearby browser sessions.</div>
+        <div class="soc-section-sub">People currently using OmicsLab right now — anywhere, on any device.</div>
       </div>
       ${online.length === 0 ? `
         <div class="soc-empty">
@@ -259,7 +273,7 @@ OmicsLab.Social = (function () {
             </div>`).join('')}
         </div>`}
       <div class="soc-discover-note">
-        <strong>How does this work?</strong> OmicsLab detects nearby sessions using your browser's shared storage. All data stays on your device — nothing is sent to any server.
+        <strong>How does this work?</strong> ${OmicsLab.NexusRealtime?.isReady ? 'Signed-in users show up here the moment they open OmicsLab, on any device — presence is tracked live, not stored anywhere permanent.' : 'Real-time presence isn\'t connected right now, so this only shows other tabs open on this same browser.'}
       </div>
     </div>`;
   }
@@ -399,7 +413,7 @@ OmicsLab.Social = (function () {
   }
 
   function _addFromPresence(userId) {
-    const presence = _loadPresence();
+    const presence = _allPresence();
     const data = presence[userId];
     if (!data) { OmicsLab.Notify?.error('User not found in presence data.'); return; }
     const friends = _loadFriends();
@@ -439,6 +453,14 @@ OmicsLab.Social = (function () {
 
   function _softRefreshPresence() {
     if (_tab === 'discover') _render();
+  }
+
+  /* Called by js/nexus-realtime.js whenever its Supabase presence
+     channel re-syncs, so real cross-device online users appear here
+     without waiting for the next heartbeat/re-render. */
+  function _onPresenceUpdate() {
+    const section = document.getElementById(_containerId);
+    if (section?.dataset.socReady) _softRefreshPresence();
   }
 
   /* ─── Helpers ─── */
@@ -493,5 +515,5 @@ OmicsLab.Social = (function () {
     _render();
   }
 
-  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode };
+  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode, _onPresenceUpdate };
 })();

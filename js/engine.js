@@ -103,8 +103,14 @@ OmicsLab.Engine = (function() {
     return Math.round(clamp(avg - penalty, 0, 100));
   }
 
-  /* Reset state for a new workflow */
-  function reset(workflowId) {
+  /* Reset state for a new workflow. `preload` (optional) carries a
+     Dataset Hub deep-link payload — { datasetSlug, datasetTitle,
+     exerciseId, exerciseTitle, starterConfig } — from OmicsLab.App
+     .startWorkflow()'s opts. It's not consumed by the simulation
+     engine itself (steps stay the same guided drag/choice/slider
+     exercises regardless), just stashed so the lab UI can show what
+     was pre-loaded — see App.startWorkflow's banner render. */
+  function reset(workflowId, preload) {
     OmicsLab.State = {
       workflow: workflowId,
       currentStep: 0,
@@ -120,7 +126,8 @@ OmicsLab.Engine = (function() {
         duplication:1.0, contamination:1.0
       },
       mistakes: [], stepResults: [], selections: {},
-      timerStart: Date.now(), elapsed: 0
+      timerStart: Date.now(), elapsed: 0,
+      preload: preload || null
     };
   }
 

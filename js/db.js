@@ -10,6 +10,20 @@ OmicsLab.DB = (function () {
 
   let _client = null;
   let _ready  = false;
+  let _readyCallbacks = [];
+
+  /* Fires immediately if Supabase is already ready, otherwise queues and
+     fires once _boot() completes. Needed because the Supabase CDN script
+     loads async and _boot() can land well after DOMContentLoaded — any
+     module that checked `DB.isReady` once, synchronously, at its own
+     init() time (like js/nexus-realtime.js used to) would see `false`
+     forever and never retry, permanently disabling cloud sync for that
+     module even after Supabase genuinely became available. */
+  function onReady(cb) {
+    if (typeof cb !== 'function') return;
+    if (_ready) { cb(); return; }
+    _readyCallbacks.push(cb);
+  }
 
   /* ── Init: called after config.js loads ─────────────────────── */
   function init() {
@@ -38,6 +52,9 @@ OmicsLab.DB = (function () {
     _client = window.supabase.createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
     _ready  = true;
     console.log('[OmicsLab DB] Ready ✓');
+    const callbacks = _readyCallbacks;
+    _readyCallbacks = [];
+    callbacks.forEach(cb => { try { cb(); } catch (e) { console.error('[OmicsLab DB] onReady callback failed', e); } });
   }
 
   /* ── Auth token: set when Clerk signs in (Clerk manages refresh) */
@@ -308,7 +325,7 @@ OmicsLab.DB = (function () {
 
   /* ── Public API ─────────────────────────────────────────────── */
   return {
-    init, setSession, syncOnSignIn,
+    init, setSession, syncOnSignIn, onReady,
     /* Users */
     upsertUser, getUser,
     /* Progress */

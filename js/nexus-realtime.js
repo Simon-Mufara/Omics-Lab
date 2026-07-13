@@ -21,24 +21,30 @@ OmicsLab.NexusRealtime = (function () {
   let _activeChannelId = 'general';
   let _ready           = false;
   let _selfId          = null;  /* to skip echoing our own broadcast */
+  let _onlineUsers     = {};    /* real cross-device presence, keyed by Clerk user id */
 
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
     const db = OmicsLab.DB;
-    if (!db?.isReady) {
-      /* Supabase not configured — Nexus stays localStorage-only */
-      return;
-    }
+    if (!db) return;
+    /* db.isReady used to be checked exactly once here, synchronously.
+       The Supabase CDN script loads async, so DB.init() almost never
+       finishes booting before this ran — this module would see
+       isReady===false, bail out, and NEVER retry, permanently disabling
+       cross-device chat and presence for the rest of the session even
+       after Supabase genuinely became ready moments later. onReady()
+       fires immediately if already ready, or queues for when it is. */
+    db.onReady(() => {
+      _client = db.client;
+      _selfId = _getSelfId();
+      _ready  = true;
 
-    _client = db.client;
-    _selfId = _getSelfId();
-    _ready  = true;
-
-    /* Subscribe to the default channel first */
-    _activeChannelId = OmicsLab.Nexus?._getActiveChannel?.() || 'general';
-    _subscribeMessages(_activeChannelId);
-    _subscribePresence();
-    _loadHistory(_activeChannelId);
+      /* Subscribe to the default channel first */
+      _activeChannelId = OmicsLab.Nexus?._getActiveChannel?.() || 'general';
+      _subscribeMessages(_activeChannelId);
+      _subscribePresence();
+      _loadHistory(_activeChannelId);
+    });
   }
 
   /* ── Message broadcast subscription ─────────────────────────── */
@@ -80,6 +86,17 @@ OmicsLab.NexusRealtime = (function () {
       .on('presence', { event: 'sync' }, () => {
         const state = _presenceChannel.presenceState();
         _updateOnlineCount(Object.keys(state).length);
+
+        /* Rebuild the real, cross-device online-user list (keyed by the
+           actual signed-in Clerk user id, not the per-browser selfId) so
+           js/social.js's "who's online" / friend-code lookup can find
+           genuinely remote users instead of only same-browser tabs. */
+        _onlineUsers = {};
+        Object.values(state).forEach(entries => {
+          const meta = entries[0];
+          if (meta?.userId) _onlineUsers[meta.userId] = meta;
+        });
+        OmicsLab.Social?._onPresenceUpdate?.();
       })
       .on('presence', { event: 'join' }, ({ newPresences }) => {
         /* Could show "X joined" notification — skip for now */
@@ -87,13 +104,30 @@ OmicsLab.NexusRealtime = (function () {
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           await _presenceChannel.track({
-            selfId:    _selfId,
-            name:      user.name,
-            avatar:    user.avatar,
-            online_at: new Date().toISOString(),
+            selfId:      _selfId,
+            userId:      _getDbUserId(),
+            name:        user.name,
+            avatar:      user.avatar,
+            institution: user.institution,
+            country:     user.country,
+            online_at:   new Date().toISOString(),
           });
         }
       });
+  }
+
+  /* Real cross-device online users (excludes self), for js/social.js.
+     Only signed-in users are trackable this way — presence is keyed by
+     Clerk user id, so a guest has no userId and can't be "found". */
+  function getOnlineUsers() {
+    const selfDbId = _getDbUserId();
+    return Object.entries(_onlineUsers)
+      .filter(([id]) => id && id !== selfDbId)
+      .map(([id, meta]) => ({
+        id, name: meta.name || 'OmicsLab User',
+        institution: meta.institution || '', country: meta.country || '',
+        t: meta.online_at ? new Date(meta.online_at).getTime() : Date.now(),
+      }));
   }
 
   /* ── Handle incoming broadcast message ──────────────────────── */
@@ -219,13 +253,17 @@ OmicsLab.NexusRealtime = (function () {
   function _getDisplayUser() {
     try {
       const p = JSON.parse(localStorage.getItem('omicslab_user_profile') || '{}');
+      let extra = {};
+      try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
       return {
         name:   p.name   || 'OmicsLab User',
         avatar: p.name   ? p.name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase() : 'OU',
         color:  '#00C4A0',
         role:   p.role   || 'student',
+        institution: extra.institution || '',
+        country:     extra.country || '',
       };
-    } catch { return { name: 'OmicsLab User', avatar: 'OU', color: '#00C4A0', role: 'student' }; }
+    } catch { return { name: 'OmicsLab User', avatar: 'OU', color: '#00C4A0', role: 'student', institution: '', country: '' }; }
   }
 
   function _getDbUserId() {
@@ -236,6 +274,6 @@ OmicsLab.NexusRealtime = (function () {
   }
 
   /* ── Public API ─────────────────────────────────────────────── */
-  return { init, broadcast, switchChannel };
+  return { init, broadcast, switchChannel, getOnlineUsers, get isReady() { return _ready; } };
 
 })();
