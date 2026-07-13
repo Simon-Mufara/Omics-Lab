@@ -161,11 +161,12 @@ OmicsLab.Nexus = (function () {
       </div>
 
       <div class="nx-view-nav">
+        <div class="nx-sidebar-label">Workspace</div>
         <button class="nx-ch-item ${_view==='forum'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('forum')">
           <span class="nx-ch-icon">${IC('file-text',13) || '◆'}</span><span class="nx-ch-name">Forum</span>
         </button>
         <button class="nx-ch-item ${_view==='people'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('people')">
-          <span class="nx-ch-icon">${IC('users',13) || '@'}</span><span class="nx-ch-name">People</span>
+          <span class="nx-ch-icon">@</span><span class="nx-ch-name">People</span>
         </button>
       </div>
 

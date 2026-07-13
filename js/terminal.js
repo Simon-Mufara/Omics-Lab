@@ -1970,15 +1970,25 @@ print("are what actually tell you whether this model is clinically useful.")`
           </button>
         </div>
 
-        <!-- Mode tabs -->
-        <div class="term-mode-tabs">
-          <button class="term-mode-tab active" onclick="OmicsLab.Terminal.switchMode('terminal',this)">${OmicsLab.Icons?.svg('cpu',13)||''} Terminal</button>
-          <button class="term-mode-tab" onclick="OmicsLab.Terminal.switchMode('editor',this)">${OmicsLab.Icons?.svg('file-text',13)||''} Script Editor</button>
-          <button class="term-mode-tab nb-tab-btn" onclick="OmicsLab.Terminal.switchMode('notebook',this)">
-            ${OmicsLab.Icons?.svg('book-open',13)||''} Python Notebook
-            <span class="nb-badge">NEW</span>
-          </button>
-        </div>
+        <div class="term-layout">
+          <!-- Mode rail -->
+          <nav class="term-rail" role="tablist" aria-label="Terminal modes">
+            <button class="term-mode-tab term-rail-item active" onclick="OmicsLab.Terminal.switchMode('terminal',this)">
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('cpu',16)||''}</span>
+              <span class="term-rail-label">Terminal</span>
+            </button>
+            <button class="term-mode-tab term-rail-item" onclick="OmicsLab.Terminal.switchMode('editor',this)">
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('file-text',16)||''}</span>
+              <span class="term-rail-label">Script Editor</span>
+            </button>
+            <button class="term-mode-tab term-rail-item nb-tab-btn" onclick="OmicsLab.Terminal.switchMode('notebook',this)">
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('flask',16)||''}</span>
+              <span class="term-rail-label">Python Notebook</span>
+              <span class="nb-badge">NEW</span>
+            </button>
+          </nav>
+
+          <div class="term-body-wrap">
 
         <!-- Terminal panel -->
         <div class="terminal-panel active" id="term-panel">
@@ -2171,6 +2181,9 @@ print("are what actually tell you whether this model is clinically useful.")`
           <div class="nb-comments" id="nb-comments"></div>
 
         </div>
+
+          </div>
+          </div>
       </div>`;
 
     /* Wire up elements */

@@ -1,16 +1,36 @@
 /* ═══════════════════════════════════════════════════════════════
    OmicsLab — AI & Machine Learning in Bioinformatics
    ═══════════════════════════════════════════════════════════════ */
-.aml-page { max-width: 1280px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.aml-page { max-width: 1400px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
 .aml-header { text-align: center; margin-bottom: 2rem; }
 .aml-title { font-size: clamp(1.6rem,3.2vw,2.3rem); font-weight: 800; margin: 0 0 0.5rem; background: linear-gradient(135deg,#58a6ff,#bc8cff,#00C4A0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
 .aml-sub { font-size: 0.86rem; color: #A8A098; max-width: 780px; margin: 0 auto; line-height: 1.65; }
 
-/* Tabs */
-.aml-tabs { display: flex; gap: 0.35rem; margin-bottom: 2rem; background: #0D1524; border: 1px solid #182236; border-radius: 10px; padding: 0.35rem; flex-wrap: wrap; }
-.aml-tab { flex: 1; min-width: 140px; padding: 0.55rem 0.75rem; background: none; border: none; border-radius: 7px; color: #6E6860; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.18s; white-space: nowrap; }
-.aml-tab:hover { color: #A8A098; background: rgba(255,255,255,0.04); }
-.aml-tab.active { background: #111B2E; color: #A8A098; box-shadow: 0 1px 4px rgba(0,0,0,0.4); }
+/* Rail navigation (replaces the old horizontal tab strip) */
+.aml-layout { display: flex; align-items: flex-start; gap: 1.5rem; }
+.aml-rail {
+  flex: 0 0 220px; position: sticky; top: 1rem;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  background: #0D1524; border: 1px solid #182236; border-radius: 12px; padding: 0.6rem;
+}
+.aml-rail-item {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.6rem 0.7rem; background: none; border: none; border-left: 2px solid transparent;
+  border-radius: 8px; color: #6E6860; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-align: left; transition: all 0.15s; width: 100%;
+}
+.aml-rail-item:hover { color: #A8A098; background: rgba(255,255,255,0.04); }
+.aml-rail-item.active { color: #E4DDD2; background: rgba(0,196,160,0.08); border-left-color: #00C4A0; }
+.aml-rail-icon { flex-shrink: 0; display: flex; color: inherit; opacity: 0.85; }
+.aml-rail-item.active .aml-rail-icon { color: #00C4A0; opacity: 1; }
+.aml-rail-label { line-height: 1.3; }
+.aml-body-wrap { flex: 1; min-width: 0; }
+@media (max-width: 860px) {
+  .aml-layout { flex-direction: column; }
+  .aml-rail { position: static; flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .aml-rail-item { width: auto; flex: 1 1 auto; justify-content: center; border-left: none; border-bottom: 2px solid transparent; }
+  .aml-rail-item.active { border-left-color: transparent; border-bottom-color: #00C4A0; }
+}
 
 /* ─── LLMs tab ─── */
 .aml-llm-layout { display: grid; grid-template-columns: 220px 1fr; gap: 1.5rem; margin-bottom: 2rem; }

@@ -734,5 +734,5 @@ OmicsLab.UserGuide = (function () {
       </div>`;
   }
 
-  return { init, onSearch, onCat, clearSearch };
+  return { init, onSearch, onCat, clearSearch, getModules: () => MODULES, getCats: () => CATS };
 })();

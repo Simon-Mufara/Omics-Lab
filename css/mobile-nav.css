@@ -142,6 +142,18 @@
     padding: .5rem 1rem .75rem;
   }
 
+  /* Category sub-headers within the Tools sheet — same treatment as
+     .mob-nav-section-label in nav.css, repeated here since this sheet
+     is a different overlay (mob-tool-sheet vs. mob-overlay). */
+  .mob-tool-group-label {
+    font-size: .63rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--border-strong, #354060);
+    padding: .5rem .75rem .3rem;
+  }
+
   /* ── Tool panel: Input/Results tab layout ── */
   .tool-tabs {
     display: flex;

@@ -340,28 +340,31 @@
 }
 .ccs-open-btn:hover { opacity: 0.88; }
 
-/* ── Tab bar at top of terminal (mode switcher) ── */
-.term-mode-tabs {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+/* ── Mode rail (left-hand nav replacing the old top tab bar) ── */
+.term-layout { display: flex; align-items: flex-start; gap: 1.25rem; }
+.term-rail {
+  flex: 0 0 190px; position: sticky; top: 1rem;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  background: var(--surface2, #111B2E); border: 1px solid var(--border, #243048);
+  border-radius: 12px; padding: 0.6rem;
 }
-.term-mode-tab {
-  padding: 0.4rem 0.9rem;
-  background: var(--surface2, #111B2E);
-  border: 1px solid var(--border, #243048);
-  border-radius: 9999px;
-  color: var(--text-muted, #A8A098);
-  font-size: 0.82rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s;
+.term-body-wrap { flex: 1; min-width: 0; }
+.term-mode-tab { background: none; border: none; cursor: pointer; }
+.term-rail-item {
+  display: flex; align-items: center; gap: 0.6rem; width: 100%;
+  padding: 0.6rem 0.7rem; border-radius: 8px; border-left: 2px solid transparent;
+  color: var(--text-muted, #A8A098); font-size: 0.82rem; font-weight: 600;
+  text-align: left; transition: all 0.15s; position: relative;
 }
-.term-mode-tab:hover { border-color: var(--success, #00C4A0); color: var(--text, #E4DDD2); }
-.term-mode-tab.active {
-  background: rgba(0,196,160,0.1);
-  border-color: var(--success, #00C4A0);
-  color: var(--success, #00C4A0);
+.term-rail-item:hover { color: var(--text, #E4DDD2); background: rgba(255,255,255,0.04); }
+.term-rail-item.active { color: var(--success, #00C4A0); background: rgba(0,196,160,0.08); border-left-color: var(--success, #00C4A0); }
+.term-rail-icon { flex-shrink: 0; display: flex; }
+.term-rail-label { line-height: 1.3; }
+@media (max-width: 860px) {
+  .term-layout { flex-direction: column; }
+  .term-rail { position: static; flex-direction: row; flex-wrap: wrap; width: 100%; }
+  .term-rail-item { width: auto; flex: 1 1 auto; justify-content: center; border-left: none; border-bottom: 2px solid transparent; }
+  .term-rail-item.active { border-left-color: transparent; border-bottom-color: var(--success, #00C4A0); }
 }
 
 /* ── Script editor panel ── */

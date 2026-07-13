@@ -36,20 +36,29 @@ OmicsLab.MobileNav = (function () {
     },
   ];
 
-  /* Tool picker entries for the "Tools" sheet */
-  const TOOL_SHEET_ITEMS = [
-    { id: 'analysis',        label: 'Analysis Suite',      color: '#e3b341' },
-    { id: 'variantinterp',   label: 'Variant Interpreter', color: '#bc8cff' },
-    { id: 'study',           label: 'Study Pack',          color: '#58a6ff' },
-    { id: 'terminal',        label: 'Terminal',            color: '#00C4A0' },
-    { id: 'primerdesign',    label: 'Primer Design',       color: '#00C4A0' },
-    { id: 'phylo',           label: 'Phylo Tree',          color: '#00C4A0' },
-    { id: 'heatmap',         label: 'Expression Viewer',   color: '#e3b341' },
-    { id: 'qualitypredictor',label: 'Quality Predictor',   color: '#00C4A0' },
-    { id: 'gene-lookup',     label: 'Gene Lookup',         color: '#00C4A0' },
-    { id: 'pubmed',          label: 'PubMed',              color: '#58a6ff' },
-    { id: 'gatk',            label: 'GATK Builder',        color: '#e3b341' },
-  ];
+  /* Tool picker entries for the "Tools" sheet — pulled live from
+     OmicsLab.UserGuide's MODULES, the same canonical "everything in
+     OmicsLab" list the /guide page itself renders, instead of a
+     separately hand-maintained shortlist that silently drifted to 11
+     of 59+ tools while the guide (and the site's own "87+ tools"
+     copy) kept growing. Falls back to a small static list only if
+     user-guide.js somehow hasn't loaded yet. */
+  function _toolSheetGroups() {
+    const modules = OmicsLab.UserGuide?.getModules?.();
+    const cats = OmicsLab.UserGuide?.getCats?.();
+    if (!modules || !cats) {
+      return [{ label: null, items: [
+        { id: 'analysis', name: 'Analysis Suite', color: '#e3b341' },
+        { id: 'variantinterp', name: 'Variant Interpreter', color: '#bc8cff' },
+        { id: 'terminal', name: 'Terminal', color: '#00C4A0' },
+        { id: 'ai', name: 'AI Assistant', color: '#58a6ff' },
+      ] }];
+    }
+    return cats
+      .filter(c => c.id !== 'all')
+      .map(c => ({ label: c.label, items: modules.filter(m => m.cat === c.id) }))
+      .filter(g => g.items.length > 0);
+  }
 
   let _active = 'home';
 
@@ -107,22 +116,25 @@ OmicsLab.MobileNav = (function () {
       overlay.setAttribute('role', 'dialog');
       overlay.setAttribute('aria-modal', 'true');
       overlay.setAttribute('aria-label', 'Tools');
+      const groups = _toolSheetGroups();
       overlay.innerHTML = `
         <div class="mob-modal-sheet" role="document">
           <div class="mob-modal-handle"></div>
           <div class="mob-modal-title">Tools</div>
-          <div style="padding:.25rem .75rem .75rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-            ${TOOL_SHEET_ITEMS.map(t => `
-              <button
-                class="mob-tool-item"
-                style="--tool-color:${t.color}"
-                onclick="OmicsLab.MobileNav._pickTool('${t.id}')"
-                type="button"
-              >
-                <span class="mob-tool-dot" style="background:${t.color}"></span>
-                ${_esc(t.label)}
-              </button>`).join('')}
-          </div>
+          ${groups.map(g => `
+            ${g.label ? `<div class="mob-tool-group-label">${_esc(g.label)}</div>` : ''}
+            <div style="padding:.25rem .75rem .75rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+              ${g.items.map(t => `
+                <button
+                  class="mob-tool-item"
+                  style="--tool-color:${t.color}"
+                  onclick="OmicsLab.MobileNav._pickTool('${t.page || t.id}')"
+                  type="button"
+                >
+                  <span class="mob-tool-dot" style="background:${t.color}"></span>
+                  ${_esc(t.name || t.label)}
+                </button>`).join('')}
+            </div>`).join('')}
         </div>`;
       /* Close on backdrop click */
       overlay.addEventListener('click', e => { if (e.target === overlay) _closeSheet(); });

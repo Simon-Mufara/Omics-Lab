@@ -103,6 +103,16 @@ OmicsLab.AIMLBio = (function () {
     try { _render(container); } catch(e) { console.error('AIMLBio init error:', e); throw e; }
   }
 
+  const _SECTIONS = [
+    ['start',    'target',    'Start Here'],
+    ['llms',     'brain',     'Foundation Models & LLMs'],
+    ['nn',       'layers',    'Neural Networks'],
+    ['classical','bar-chart', 'Classical ML'],
+    ['workflows','link',      'Workflows & Code'],
+    ['africa',   'globe',     'Africa Applications'],
+    ['practice', 'flask',     'Practice & Build'],
+  ];
+
   function _render(container) {
     container.innerHTML = `
     <div class="aml-page">
@@ -111,22 +121,21 @@ OmicsLab.AIMLBio = (function () {
         <p class="aml-sub">Foundation models, neural networks, and classical ML — how they transform omics data into biological insight, with a focus on African disease applications.</p>
       </div>
 
-      <div class="aml-tabs" role="tablist">
-        ${[
-          ['start',    'Start Here'],
-          ['llms',     'Foundation Models & LLMs'],
-          ['nn',       'Neural Networks'],
-          ['classical','Classical ML'],
-          ['workflows','Workflows & Code'],
-          ['africa',   'Africa Applications'],
-          ['practice', 'Practice & Build'],
-        ].map(([id,label]) => `
-          <button class="aml-tab${_tab===id?' active':''}" role="tab" aria-selected="${_tab===id}" data-tab="${id}"
-                  onclick="OmicsLab.AIMLBio.setTab('${id}')">${label}</button>
-        `).join('')}
-      </div>
+      <div class="aml-layout">
+        <nav class="aml-rail" role="tablist" aria-label="AI/ML sections">
+          ${_SECTIONS.map(([id,icon,label]) => `
+            <button class="aml-rail-item${_tab===id?' active':''}" role="tab" aria-selected="${_tab===id}" data-tab="${id}"
+                    onclick="OmicsLab.AIMLBio.setTab('${id}')">
+              <span class="aml-rail-icon">${OmicsLab.Icons?.svg(icon,16)||''}</span>
+              <span class="aml-rail-label">${label}</span>
+            </button>
+          `).join('')}
+        </nav>
 
-      <div id="aml-tab-body"></div>
+        <div class="aml-body-wrap">
+          <div id="aml-tab-body"></div>
+        </div>
+      </div>
     </div>`;
 
     _renderTab();
@@ -135,7 +144,7 @@ OmicsLab.AIMLBio = (function () {
   /* ═══════════ TAB DISPATCH ════════════ */
   function setTab(id) {
     _tab = id;
-    document.querySelectorAll('.aml-tab').forEach(b => {
+    document.querySelectorAll('.aml-rail-item').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === id);
       b.setAttribute('aria-selected', b.dataset.tab === id);
     });

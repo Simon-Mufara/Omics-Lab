@@ -774,36 +774,193 @@
 
       <div class="mob-nav-divider"></div>
 
-      <!-- Tools -->
+      <!-- Tools — Genomics (mirrors desktop mega-menu's Genomics tab; was previously only 4 tools total across all of Tools on mobile) -->
       <div class="mob-nav-section">
-        <div class="mob-nav-section-label">Tools</div>
+        <div class="mob-nav-section-label">Tools — Genomics</div>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('variantinterp');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8.5-2-2"/><path d="m11 11-.5-.5"/><path d="m10 14-2-2"/><path d="m7 17-2.5-2.5"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Variant Interpreter</span><span class="mob-nav-item-desc">ACMG/AMP · gnomAD AFR · ClinVar</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('phylo');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Phylo Tree Builder</span><span class="mob-nav-item-desc">NJ · UPGMA · SVG tree · Newick</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('alignment-viewer');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Alignment Viewer</span><span class="mob-nav-item-desc">AliView-style · colour MSA · conservation</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('recombination');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(249,115,22,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Recombination Scanner</span><span class="mob-nav-item-desc">SimPlot · RDP4-style · breakpoints</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('scrna-explorer');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">scRNA-seq Explorer</span><span class="mob-nav-item-desc">UMAP · clustering · cell-type annotation</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('variants-explorer');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Variant Analysis Suite</span><span class="mob-nav-item-desc">VCF · ACMG · gnomAD · clinical variants</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('primerdesign');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Primer Design</span><span class="mob-nav-item-desc">Wallace Tm · GC% · dimer · Africa genes</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('genome-browser');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Genome Browser</span><span class="mob-nav-item-desc">IGV-style · HBB · G6PD · APOL1 · CYP2D6</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('nanopore');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Nanopore QC</span><span class="mob-nav-item-desc">ONT metrics · PASS/WARN/FAIL thresholds</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('amr');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(255,107,107,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">AMR Profiler</span><span class="mob-nav-item-desc">MDR-TB · XDR-TB · CRE · ESBL · HIV</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('kraken');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Metagenomics</span><span class="mob-nav-item-desc">Kraken2-style taxonomy · 6 African profiles</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('popstruct');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Pop Structure</span><span class="mob-nav-item-desc">ADMIXTURE bars · PCA scatter · AWI-Gen</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('gwas');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">GWAS Suite</span><span class="mob-nav-item-desc">Manhattan plots · PLINK2 · AWI-Gen panel</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('pharmacogenomics');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(249,115,22,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Pharmacogenomics</span><span class="mob-nav-item-desc">CYP variants · HIV/TB/malaria drug-gene</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('fastqc');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Read QC (FastQC)</span><span class="mob-nav-item-desc">Per-base quality · GC content · PASS/WARN/FAIL</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('assembly');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Assembly Evaluator</span><span class="mob-nav-item-desc">N50 · Nx curve · short vs long-read vs hybrid</span></span>
+        </button>
+      </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Tools — Expression -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Tools — Expression</div>
         <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('analysis');OmicsLab.Nav.close()">
           <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
-          <span class="mob-nav-item-text">
-            <span class="mob-nav-item-name">Analysis Studio</span>
-            <span class="mob-nav-item-desc">FASTQ QC, VCF explorer, expression matrix</span>
-          </span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Analysis Studio</span><span class="mob-nav-item-desc">FASTQ · VCF · expression matrix</span></span>
         </button>
-        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('variantinterp');OmicsLab.Nav.close()">
-          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
-          <span class="mob-nav-item-text">
-            <span class="mob-nav-item-name">Variant Interpreter</span>
-            <span class="mob-nav-item-desc">ACMG/AMP · gnomAD AFR · ClinVar</span>
-          </span>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('heatmap');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Expression Visualiser</span><span class="mob-nav-item-desc">Volcano plot · heatmap · DE table</span></span>
         </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('qualitypredictor');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Quality Predictor</span><span class="mob-nav-item-desc">GATK · ENCODE · quality thresholds</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('codon');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Codon Usage</span><span class="mob-nav-item-desc">RSCU analysis · human · MTB · P. falciparum</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('metaanalysis');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Meta-analysis</span><span class="mob-nav-item-desc">Fixed/random effects · forest plot · GWAS</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('single-cell');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Single-Cell Explorer</span><span class="mob-nav-item-desc">UMAP · cell type annotation · malaria &amp; TB</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('enrichment');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" y1="9" x2="6" y2="21"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">GO Enrichment</span><span class="mob-nav-item-desc">GO · KEGG · bubble plot · African DEG lists</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('rna-atlas');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">RNA Expression Atlas</span><span class="mob-nav-item-desc">GTEx · BLUEPRINT · tissue expression map</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('pipeline-gen');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Pipeline Generator</span><span class="mob-nav-item-desc">Snakemake · Nextflow · WGS · RNA-seq · GWAS</span></span>
+        </button>
+      </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Tools — Databases -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Tools — Databases</div>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('gene-lookup');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Gene Lookup</span><span class="mob-nav-item-desc">Ensembl · transcripts · phenotypes · live</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('protein');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Protein Viewer</span><span class="mob-nav-item-desc">AlphaFold · pLDDT chart · 3D structure</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('uniprot');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(227,179,65,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">UniProt Search</span><span class="mob-nav-item-desc">215M proteins · Swiss-Prot · diseases</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('string');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">STRING Network</span><span class="mob-nav-item-desc">Protein interactions · evidence scores</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('pathways');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Pathways</span><span class="mob-nav-item-desc">KEGG · Reactome · Africa diseases</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('targets');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Open Targets</span><span class="mob-nav-item-desc">Disease-gene associations · evidence</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('knowledge-graph');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(188,140,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Knowledge Graph</span><span class="mob-nav-item-desc">Diseases · genes · tools · populations</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('citations');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Citation Manager</span><span class="mob-nav-item-desc">APA · Vancouver · BibTeX · RIS</span></span>
+        </button>
+      </div>
+
+      <div class="mob-nav-divider"></div>
+
+      <!-- Tools — AI & Pipelines -->
+      <div class="mob-nav-section">
+        <div class="mob-nav-section-label">Tools — AI &amp; Pipelines</div>
         <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('ai');OmicsLab.Nav.close()">
           <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a5 5 0 0 1 5 5c0 2.76-2.24 5-5 5S7 9.76 7 7a5 5 0 0 1 5-5z"/><path d="M3 21c0-4.42 4.03-8 9-8s9 3.58 9 8"/></svg></span>
-          <span class="mob-nav-item-text">
-            <span class="mob-nav-item-name">AI Assistant</span>
-            <span class="mob-nav-item-desc">Claude · genomics expert · streaming</span>
-          </span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">AI Assistant</span><span class="mob-nav-item-desc">Claude · genomics expert · streaming</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('bionlp');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">BioNLP</span><span class="mob-nav-item-desc">Entity recognition · genes · variants</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('terminal');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Pipeline Terminal</span><span class="mob-nav-item-desc">22 tools simulated · Codespace</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('virtual-lab');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Virtual Lab</span><span class="mob-nav-item-desc">360 tour of genomics instruments</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('debugger');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(255,107,107,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Protocol Debugger</span><span class="mob-nav-item-desc">200+ rules · QC paste → root cause</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('api-docs');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(88,166,255,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Developer API</span><span class="mob-nav-item-desc">Embed · extend · build on OmicsLab</span></span>
         </button>
         <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('ask');OmicsLab.Nav.close()">
           <span class="mob-nav-item-icon" style="background:rgba(255,107,107,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-          <span class="mob-nav-item-text">
-            <span class="mob-nav-item-name">Ask OmicsLab</span>
-            <span class="mob-nav-item-desc">55+ offline answers on workflows and tools</span>
-          </span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">Ask OmicsLab</span><span class="mob-nav-item-desc">55+ offline answers · search by category</span></span>
+        </button>
+        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('mentor');OmicsLab.Nav.close()">
+          <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/></svg></span>
+          <span class="mob-nav-item-text"><span class="mob-nav-item-name">AI Mentor</span><span class="mob-nav-item-desc">176+ answers · chat interface · offline</span></span>
         </button>
       </div>
 
