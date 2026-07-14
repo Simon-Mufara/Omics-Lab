@@ -274,18 +274,20 @@ OmicsLab.NexusRealtime = (function () {
        fail silently — live broadcast still worked (a separate, unrelated
        channel) but nothing ever actually persisted, so a message sent
        while the recipient wasn't already looking at that exact
-       conversation was gone for good. api/nexus-message.js verifies the
-       Clerk session server-side and resolves + writes with the service
-       role instead, sidestepping the broken client-side RLS path
-       entirely — the same pattern api/ai-tutor-chat.js and
-       api/forum-comments.js already use. Guests (no token) simply don't
-       persist, matching prior behaviour for them. */
+       conversation was gone for good. api/forum-comments.js (via a
+       { type: 'nexus-message' } branch — the Vercel Hobby plan's
+       12-function cap left no room for a dedicated endpoint) verifies
+       the Clerk session server-side and resolves + writes with the
+       service role instead, sidestepping the broken client-side RLS
+       path entirely. Guests (no token) simply don't persist, matching
+       prior behaviour for them. */
     OmicsLab.AuthClerk?.getToken?.().then(token => {
       if (!token) return;
-      fetch('/api/nexus-message', {
+      fetch('/api/forum-comments', {
         method:  'POST',
         headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
+          type:    'nexus-message',
           id:      msg.id,
           channel: channelId,
           content: msg.text,
