@@ -59,17 +59,14 @@ OmicsLab.OfflineIndicator = (function () {
     );
   }
 
+  /* No "Back online" banner — it sat fixed under the header and
+     interrupted the page every time connectivity flapped (including
+     spurious online/offline events from WebSocket reconnects, sleep/
+     wake, flaky wifi), which happens often enough during real use that
+     it read as a recurring UI glitch rather than useful information.
+     Silently dismiss whatever offline banner might be showing instead. */
   function _showBackOnline() {
-    _ensureBar();
-    _bar.innerHTML = `
-      <span class="oi-dot oi-online"></span>
-      <span class="oi-msg">
-        <strong>Back online</strong>
-        <span class="oi-detail"> — Live API features are available again.</span>
-      </span>`;
-    _bar.classList.add('oi-show');
-    OmicsLab.Notify?.success('Back online — live features restored.');
-    setTimeout(() => dismiss(), 4000);
+    dismiss();
   }
 
   function dismiss() {

@@ -80,21 +80,70 @@ OmicsLab.Social = (function () {
     return p[userId] && (Date.now() - p[userId].t < 45000);
   }
 
-  /* ─── Send a message ─── */
+  /* ─── Send a message ───
+     Direct messages used to be localStorage + BroadcastChannel only —
+     fine for two tabs on the same device, but genuinely cross-device
+     friends (now discoverable at all thanks to the real presence fix)
+     could see each other online and add each other, yet nothing they
+     typed to one another ever arrived. Now also broadcasts + persists
+     through the same Supabase Realtime channel/table Nexus's channel
+     chat uses (see js/nexus-realtime.js), just keyed by a 'dm:<ids>'
+     channel id instead of a named channel — no new schema needed. */
   function _sendMsg(toId, text) {
     const u = _currentUser();
     if (!u || !text.trim()) return;
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, toId);
     if (!msgs[key]) msgs[key] = [];
-    const msg = { id: Date.now() + Math.random().toString(36).slice(2), from: u.id, to: toId, text: text.trim(), t: Date.now(), read: false };
+    /* nexus_messages.id is a uuid column — see js/nexus.js's _send() for
+       why a non-UUID id here would silently fail every DB insert. */
+    const msg = { id: crypto.randomUUID(), from: u.id, to: toId, text: text.trim(), t: Date.now(), read: false };
     msgs[key].push(msg);
     _saveMsgs(msgs);
     try { _bc?.postMessage({ type: 'message', key, msg }); } catch {}
+    OmicsLab.NexusRealtime?.broadcast?.('dm:' + key, { id: msg.id, from: u.id, to: toId, text: msg.text, author: u.name });
     _renderChat(toId);
   }
 
   function _chatKey(a, b) { return [a, b].sort().join('::'); }
+
+  /* Called by js/nexus-realtime.js for both live DM broadcasts and DM
+     history reload (fromHistory=true) — either way, merge into the
+     same local store _renderChatView reads so live and reloaded
+     messages render identically. */
+  function _onDMMessage(msg, channelId, fromHistory) {
+    const u = _currentUser();
+    if (!u || !msg?.id) return;
+    const fromId = msg.from;
+    const otherId = fromId === u.id ? msg.to : fromId;
+    if (!otherId) return;
+    const key = _chatKey(u.id, otherId);
+    if (!fromHistory && fromId === u.id) return; /* echo of our own send — already stored locally */
+
+    const msgs = _loadMsgs();
+    if (!msgs[key]) msgs[key] = [];
+    if (msgs[key].some(m => m.id === msg.id)) return; /* already have it */
+    msgs[key].push({ id: msg.id, from: fromId, to: fromId === u.id ? otherId : u.id, text: msg.text, t: msg.ts || Date.now(), read: _activeChat === otherId });
+    msgs[key].sort((a, b) => a.t - b.t);
+    _saveMsgs(msgs);
+
+    if (_activeChat === otherId) _renderChat(otherId);
+    else _renderFriendsList();
+  }
+
+  /* Subscribes NexusRealtime to this DM's channel (for live delivery)
+     and pulls any history from Supabase — without this, a genuinely
+     cross-device conversation only ever showed messages sent while
+     both people happened to have the chat open at the same instant. */
+  function _syncDMChannel(friendId) {
+    const u = _currentUser();
+    if (!u || !OmicsLab.NexusRealtime?.isReady) return;
+    if (friendId) {
+      OmicsLab.NexusRealtime.switchChannel('dm:' + _chatKey(u.id, friendId));
+    } else {
+      OmicsLab.NexusRealtime.switchChannel(OmicsLab.Nexus?._getActiveChannel?.() || 'general');
+    }
+  }
 
   /* ─── Unread count for a chat ─── */
   function _unread(friendId) {
@@ -391,11 +440,17 @@ OmicsLab.Social = (function () {
   }
 
   /* ─── UI handlers ─── */
-  function _setTab(key) { _tab = key; _activeChat = null; _render(); }
+  function _setTab(key) {
+    _tab = key;
+    _activeChat = null;
+    if (key !== 'messages') _syncDMChannel(null);
+    _render();
+  }
 
   function _openChat(friendId) {
     _activeChat = friendId;
     _tab = 'messages';
+    _syncDMChannel(friendId);
     _render();
     /* Scroll to bottom of chat */
     setTimeout(() => {
@@ -515,5 +570,5 @@ OmicsLab.Social = (function () {
     _render();
   }
 
-  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode, _onPresenceUpdate };
+  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode, _onPresenceUpdate, _onDMMessage };
 })();

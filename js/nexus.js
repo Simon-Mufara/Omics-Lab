@@ -338,7 +338,12 @@ OmicsLab.Nexus = (function () {
     if (!ch) return;
 
     const msg = {
-      id: 'msg_' + Date.now(),
+      /* nexus_messages.id is a uuid column — a non-UUID id here made
+         every DB insert fail silently (a console.warn, easy to miss),
+         so live-broadcast delivery worked (that path never touches the
+         DB) but anyone who wasn't online at the exact moment a message
+         was sent could never see it in channel history on reload. */
+      id: crypto.randomUUID(),
       author: _state.profile.name,
       role: _state.profile.role,
       avatar: _state.profile.avatar,

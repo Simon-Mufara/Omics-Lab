@@ -193,6 +193,15 @@ OmicsLab.NexusRealtime = (function () {
   function _onBroadcastMessage(msg, channelId) {
     if (!msg?.id) return;
 
+    /* Direct messages (js/social.js's Friends → Messages tab) share this
+       same broadcast+persist machinery via a 'dm:<sortedIds>' channel id
+       instead of a named Nexus channel — see broadcast()/switchChannel()
+       below. Route those to Social instead of Nexus's channel-chat UI. */
+    if (channelId.startsWith('dm:')) {
+      OmicsLab.Social?._onDMMessage?.(msg, channelId);
+      return;
+    }
+
     /* Nexus.injectMessage handles deduplication + DOM append */
     if (OmicsLab.Nexus?._injectMessage) {
       OmicsLab.Nexus._injectMessage(msg, channelId);
@@ -205,7 +214,7 @@ OmicsLab.NexusRealtime = (function () {
     try {
       const { data, error } = await _client
         .from('nexus_messages')
-        .select('id, content, reactions, author_meta, created_at')
+        .select('id, user_id, content, reactions, author_meta, created_at')
         .eq('channel', channelId)
         .is('thread_id', null)            /* top-level messages only */
         .order('created_at', { ascending: true })
@@ -213,9 +222,13 @@ OmicsLab.NexusRealtime = (function () {
 
       if (error || !data?.length) return;
 
-      /* Map DB rows → Nexus message shape */
+      /* Map DB rows → Nexus message shape. `from` (the sender's user id)
+         is only needed by DM history (js/social.js needs to tell "mine"
+         apart from "theirs" on reload) — harmless extra field for the
+         named-channel case, which ignores it. */
       const msgs = data.map(row => ({
         id:        row.id,
+        from:      row.user_id,
         author:    row.author_meta?.name   || 'Community Member',
         role:      row.author_meta?.role   || '',
         avatar:    row.author_meta?.avatar || '??',
@@ -229,7 +242,9 @@ OmicsLab.NexusRealtime = (function () {
 
       /* Inject each message that isn't already in state */
       msgs.forEach(msg => {
-        if (OmicsLab.Nexus?._injectMessage) {
+        if (channelId.startsWith('dm:')) {
+          OmicsLab.Social?._onDMMessage?.(msg, channelId, /* fromHistory */ true);
+        } else if (OmicsLab.Nexus?._injectMessage) {
           OmicsLab.Nexus._injectMessage(msg, channelId);
         }
       });
@@ -252,10 +267,23 @@ OmicsLab.NexusRealtime = (function () {
 
     /* Persist to DB (fire-and-forget) */
     if (_client) {
-      const userId = _getDbUserId();
+      /* nexus_messages.user_id is a uuid FK into public.users(id) — a
+         Supabase-internal row id, NOT the Clerk id _getDbUserId()
+         actually returns (Clerk ids look like "user_2NNXf...", never
+         valid UUIDs). Passing it here made every single message insert
+         fail silently (a console.warn easy to miss): live broadcast
+         still worked since that path never touches the DB, but no
+         message ever actually persisted, so history/reload/anyone who
+         wasn't online at that exact instant saw nothing. Resolving the
+         real internal UUID requires a working Clerk-id → users.id
+         lookup, which currently also fails (RLS's users_self policy
+         casts the JWT sub claim straight to uuid, which errors on
+         Clerk's id format) — a deeper fix outside this module's scope.
+         user_id is nullable and not even used for display (the UI reads
+         sender name/avatar from author_meta below, not via a join), so
+         omit it entirely rather than send a value guaranteed to fail. */
       _client.from('nexus_messages').insert({
         id:          msg.id,
-        user_id:     userId || null,
         channel:     channelId,
         content:     msg.text,
         reactions:   msg.reactions || {},
