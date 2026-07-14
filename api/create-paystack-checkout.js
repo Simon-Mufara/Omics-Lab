@@ -11,7 +11,10 @@ import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { supabaseServiceRequest } from '../lib/supabase-admin.js';
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
-const APP_URL             = process.env.NEXT_PUBLIC_APP_URL || 'https://omicslab.africa';
+/* Fallback pointed at a domain Simon doesn't own — if NEXT_PUBLIC_APP_URL
+   was ever unset, every post-payment success/cancel redirect would send
+   a paying customer to a site that isn't this one. */
+const APP_URL             = process.env.NEXT_PUBLIC_APP_URL || 'https://omicsdatalab.tech';
 
 /* Recurring billing on Paystack is modelled as a Plan created in the
    dashboard (or via the Plan API) — we only ever reference its plan_code

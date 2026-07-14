@@ -8,7 +8,7 @@ import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { supabaseServiceRequest } from '../lib/supabase-admin.js';
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const APP_URL           = process.env.NEXT_PUBLIC_APP_URL || 'https://omicslab.africa';
+const APP_URL           = process.env.NEXT_PUBLIC_APP_URL || 'https://omicsdatalab.tech';
 
 /* subscriptions/users rows are keyed by the Supabase users.id (uuid),
    not the Clerk user id — resolve the verified caller to that row so
