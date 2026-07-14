@@ -230,7 +230,7 @@ OmicsLab.AuthClerk = (function () {
     if (OmicsLab.DB?.isReady) {
       /* Supabase RLS requires a Clerk JWT — gate sync on token availability.
          Configure a "supabase" JWT template in Clerk dashboard to enable cloud sync. */
-      getToken().then(jwt => {
+      getSupabaseToken().then(jwt => {
         if (!jwt) return;
         OmicsLab.DB.setSession?.(jwt);
         OmicsLab.DB.upsertUser({
@@ -458,10 +458,33 @@ OmicsLab.AuthClerk = (function () {
   function getUser()    { return _user; }
   function isSignedIn() { return _ready && !!_user; }
   function onAuthChange(cb) { if (typeof cb === 'function') _callbacks.push(cb); }
+  /* Standard Clerk session token — what every api/*.js route's
+     requireAuth()/verifyToken() actually expects. This used to request
+     the 'supabase' JWT template unconditionally, which is signed and
+     shaped specifically for Supabase's RLS (a different `aud` claim
+     among other differences) — Clerk's own backend verifyToken() call
+     rejects it as "Invalid or expired session" even though the token
+     is perfectly valid, just not the kind being asked for. Every
+     caller needing a bearer token for our own backend (pricing.js's
+     checkout, community.js's forum posts, entitlements.js, terminal.js,
+     nexus-realtime.js, assistant.js) was silently failing this way —
+     found while debugging a Paystack checkout that failed with exactly
+     that error message. */
   async function getToken() {
+    if (!_ready || !_clerk?.session) return null;
+    try { return await _clerk.session.getToken(); } catch { return null; }
+  }
+
+  /* Supabase-shaped token — only for OmicsLab.DB.setSession(), which
+     needs the 'supabase' template so Supabase's RLS layer can read it
+     (however correctly/incorrectly that's currently configured — see
+     the identity-mapping issues documented elsewhere). Not a
+     general-purpose bearer token; don't use this for our own api/*.js
+     routes. */
+  async function getSupabaseToken() {
     if (!_ready || !_clerk?.session) return null;
     try { return await _clerk.session.getToken({ template: 'supabase' }); } catch { return null; }
   }
 
-  return { init, signIn, signUp, signOut, openAccount, getUser, isSignedIn, onAuthChange, getToken };
+  return { init, signIn, signUp, signOut, openAccount, getUser, isSignedIn, onAuthChange, getToken, getSupabaseToken };
 })();
