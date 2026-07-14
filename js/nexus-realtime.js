@@ -265,38 +265,42 @@ OmicsLab.NexusRealtime = (function () {
       payload: msg,
     }).catch(() => {});
 
-    /* Persist to DB (fire-and-forget) */
-    if (_client) {
-      /* nexus_messages.user_id is a uuid FK into public.users(id) — a
-         Supabase-internal row id, NOT the Clerk id _getDbUserId()
-         actually returns (Clerk ids look like "user_2NNXf...", never
-         valid UUIDs). Passing it here made every single message insert
-         fail silently (a console.warn easy to miss): live broadcast
-         still worked since that path never touches the DB, but no
-         message ever actually persisted, so history/reload/anyone who
-         wasn't online at that exact instant saw nothing. Resolving the
-         real internal UUID requires a working Clerk-id → users.id
-         lookup, which currently also fails (RLS's users_self policy
-         casts the JWT sub claim straight to uuid, which errors on
-         Clerk's id format) — a deeper fix outside this module's scope.
-         user_id is nullable and not even used for display (the UI reads
-         sender name/avatar from author_meta below, not via a join), so
-         omit it entirely rather than send a value guaranteed to fail. */
-      _client.from('nexus_messages').insert({
-        id:          msg.id,
-        channel:     channelId,
-        content:     msg.text,
-        reactions:   msg.reactions || {},
-        author_meta: {
-          name:   msg.author,
-          avatar: msg.avatar,
-          color:  msg.color,
-          role:   msg.role,
-        },
-      }).then(({ error }) => {
-        if (error) console.warn('[NexusRealtime] DB insert failed:', error.message);
-      });
-    }
+    /* Persist via the server (fire-and-forget) — NOT a direct client
+       insert. nexus_messages.user_id is a uuid FK into public.users(id),
+       a Supabase-internal row id the browser never has (only the raw
+       Clerk id, e.g. "user_2NNXf...", never a valid UUID); the insert
+       RLS policy requires it to match auth.uid(), which can't resolve
+       correctly against a Clerk JWT client-side. That made every insert
+       fail silently — live broadcast still worked (a separate, unrelated
+       channel) but nothing ever actually persisted, so a message sent
+       while the recipient wasn't already looking at that exact
+       conversation was gone for good. api/nexus-message.js verifies the
+       Clerk session server-side and resolves + writes with the service
+       role instead, sidestepping the broken client-side RLS path
+       entirely — the same pattern api/ai-tutor-chat.js and
+       api/forum-comments.js already use. Guests (no token) simply don't
+       persist, matching prior behaviour for them. */
+    OmicsLab.AuthClerk?.getToken?.().then(token => {
+      if (!token) return;
+      fetch('/api/nexus-message', {
+        method:  'POST',
+        headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          id:      msg.id,
+          channel: channelId,
+          content: msg.text,
+          reactions: msg.reactions || {},
+          authorMeta: {
+            name:   msg.author,
+            avatar: msg.avatar,
+            color:  msg.color,
+            role:   msg.role,
+          },
+        }),
+      }).then(res => {
+        if (!res.ok) console.warn('[NexusRealtime] Message persist failed:', res.status);
+      }).catch(() => {});
+    }).catch(() => {});
   }
 
   /* ── Switch realtime subscription when user changes channel ─── */
