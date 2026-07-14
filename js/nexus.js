@@ -11,6 +11,13 @@ OmicsLab.Nexus = (function () {
   const STORE = 'omicslab_nexus_v1';
   const IC = OmicsLab.Icons?.svg || (() => '');
 
+  /* A small, curated set rather than a full emoji picker — five
+     reactions cover the common cases (agree, love, funny, celebrate,
+     watching) without the UI/maintenance overhead of a searchable
+     picker most messages will never need. */
+  const REACTION_EMOJI = ['👍', '❤️', '😂', '🎉', '👀'];
+  let _reactionPickerFor = null; /* msg id currently showing its picker, if any */
+
   /* ─── Default channels ─── */
   const DEFAULT_CHANNELS = [
     { id: 'general',        name: 'general',         icon: 'hash', desc: 'General discussion for the OmicsLab community', color: '#00C4A0', pinned: [] },
@@ -100,23 +107,58 @@ OmicsLab.Nexus = (function () {
   }
 
   /* ─── Inject a message received from another user (realtime) ─── */
-  function _injectMessage(msg, channelId) {
+  function _injectMessage(msg, channelId, fromHistory) {
     channelId = channelId || _state.activeChannel;
     const ch = _ch(channelId);
     if (!ch) return;
     if (_hasMessage(msg.id, channelId)) return; /* deduplicate */
 
+    /* Notify on genuinely-live messages only — history reload (opening/
+       switching to a channel) calls this too, for every past message,
+       which would otherwise fire a notification per message on every
+       single channel open. Skip while actually looking at that channel
+       with Nexus visible; no point announcing what's already on screen. */
+    if (!fromHistory) {
+      const nexusVisible = document.getElementById('nexus-section')?.style.display !== 'none';
+      const watching = document.visibilityState === 'visible' && nexusVisible && channelId === _state.activeChannel;
+      if (!watching) {
+        /* Notifications.add() persists `link` to localStorage (JSON),
+           so it must be a plain route string _onItemClick can pass to
+           Router.navigate() later — not a function/closure. */
+        OmicsLab.Notifications?.add(
+          `${msg.author} in #${ch.name || channelId}`,
+          msg.text.length > 100 ? msg.text.slice(0, 100) + '…' : msg.text,
+          { cat: 'nexus', link: 'nexus' }
+        );
+      }
+    }
+
+    /* Messages used to be pushed in ARRIVAL order, not send order — fine
+       when everyone's on a fast, low-latency connection, but two users
+       on real, different networks routinely have their broadcasts (or
+       a history reload racing a live broadcast) arrive out of sequence,
+       making it look like whoever's message happened to land first was
+       "first" even when it wasn't. Sorting by ts fixes the underlying
+       order; whether that lands the new message at the very end (the
+       common case — cheap DOM append) or somewhere earlier (rare —
+       needs a full re-render to actually reflect the corrected order)
+       is handled below. */
     ch.messages.push(msg);
+    ch.messages.sort((a, b) => a.ts - b.ts);
+    const isLast = ch.messages[ch.messages.length - 1].id === msg.id;
     _save();
 
     if (channelId === _state.activeChannel) {
-      /* Append to DOM without full re-render */
       const list = document.getElementById('nx-messages-list');
-      if (list) {
+      if (list && isLast) {
+        /* Common case: genuinely the newest message — cheap DOM append */
         const empty = list.querySelector('.nx-empty-ch');
         if (empty) empty.remove();
         list.insertAdjacentHTML('beforeend', _msgHtml(msg));
         _scrollBottom();
+      } else if (list) {
+        /* Arrived out of order — re-render so position reflects ts */
+        _renderMessages();
       }
       /* Animate the new message in */
       const el = document.querySelector(`[data-msgid="${msg.id}"]`);
@@ -189,7 +231,13 @@ OmicsLab.Nexus = (function () {
   /* ─── Render message ─── */
   function _msgHtml(msg, inThread = false) {
     const reactionHtml = Object.entries(msg.reactions || {}).map(([icon, n]) =>
-      n > 0 ? `<button class="nx-reaction" onclick="OmicsLab.Nexus._react('${msg.id}','${icon}')">${icon === '+1' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' : OmicsLab.Icons.svg(icon, 12)} ${n}</button>` : ''
+      /* Older seed data used icon NAMES ('+1', 'zap', 'check-circle', …)
+         rendered via the app's SVG icon set; real reactions now use an
+         actual emoji character as the key. Icons.svg() returns '' for
+         anything it doesn't recognize (an emoji never matches an icon
+         name), so falling back to the raw key renders the emoji as-is
+         without needing to special-case which format a given key is. */
+      n > 0 ? `<button class="nx-reaction" onclick="OmicsLab.Nexus._react('${msg.id}','${icon}')">${icon === '+1' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' : (OmicsLab.Icons.svg(icon, 12) || icon)} ${n}</button>` : ''
     ).join('');
 
     const threadCount = msg.thread?.length || 0;
@@ -214,7 +262,13 @@ OmicsLab.Nexus = (function () {
           ${!inThread ? `
             <div class="nx-msg-actions">
               <button class="nx-msg-action" title="Reply in thread" onclick="OmicsLab.Nexus._openThread('${msg.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
-              <button class="nx-msg-action" title="Add reaction" onclick="OmicsLab.Nexus._react('${msg.id}','+1')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+              <div class="nx-reaction-picker-wrap">
+                <button class="nx-msg-action" title="Add reaction" onclick="OmicsLab.Nexus._toggleReactionPicker('${msg.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+                ${_reactionPickerFor === msg.id ? `
+                  <div class="nx-reaction-picker">
+                    ${REACTION_EMOJI.map(e => `<button class="nx-reaction-picker-btn" onclick="OmicsLab.Nexus._pickReaction('${msg.id}','${e}')">${e}</button>`).join('')}
+                  </div>` : ''}
+              </div>
             </div>` : ''}
         </div>
       </div>`;
@@ -404,6 +458,16 @@ OmicsLab.Nexus = (function () {
     _renderMessages();
   }
 
+  function _toggleReactionPicker(msgId) {
+    _reactionPickerFor = _reactionPickerFor === msgId ? null : msgId;
+    _renderMessages();
+  }
+
+  function _pickReaction(msgId, emoji) {
+    _reactionPickerFor = null;
+    _react(msgId, emoji);
+  }
+
   /* ─── Keyboard shortcuts ─── */
   function _composerKey(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); _send(); }
@@ -452,7 +516,7 @@ OmicsLab.Nexus = (function () {
   return {
     init,
     _switchChannel, _switchView, _send, _sendThread, _react, _openThread, _closeThread,
-    _composerKey, _threadKey,
+    _composerKey, _threadKey, _toggleReactionPicker, _pickReaction,
     /* Realtime hooks */
     _injectMessage, _hasMessage, _getActiveChannel,
   };

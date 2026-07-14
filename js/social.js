@@ -123,12 +123,22 @@ OmicsLab.Social = (function () {
     const msgs = _loadMsgs();
     if (!msgs[key]) msgs[key] = [];
     if (msgs[key].some(m => m.id === msg.id)) return; /* already have it */
-    msgs[key].push({ id: msg.id, from: fromId, to: fromId === u.id ? otherId : u.id, text: msg.text, t: msg.ts || Date.now(), read: _activeChat === otherId });
+    const watching = _activeChat === otherId;
+    msgs[key].push({ id: msg.id, from: fromId, to: fromId === u.id ? otherId : u.id, text: msg.text, t: msg.ts || Date.now(), read: watching });
     msgs[key].sort((a, b) => a.t - b.t);
     _saveMsgs(msgs);
 
-    if (_activeChat === otherId) _renderChat(otherId);
+    if (watching) _renderChat(otherId);
     else _renderFriendsList();
+
+    /* Notify on a genuinely live, unread DM — history reload (opening
+       Messages, or a channel history sync) also calls this for every
+       past message, and re-notifying every time you just reopen a
+       chat would be exactly the kind of noise this is supposed to
+       prevent, not add. */
+    if (!fromHistory && !watching) {
+      OmicsLab.Notifications?.add(msg.author || 'New message', msg.text.length > 100 ? msg.text.slice(0, 100) + '…' : msg.text, { cat: 'nexus', link: 'nexus' });
+    }
   }
 
   /* Subscribes NexusRealtime to this DM's channel (for live delivery)

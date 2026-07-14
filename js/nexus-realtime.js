@@ -245,7 +245,7 @@ OmicsLab.NexusRealtime = (function () {
         if (channelId.startsWith('dm:')) {
           OmicsLab.Social?._onDMMessage?.(msg, channelId, /* fromHistory */ true);
         } else if (OmicsLab.Nexus?._injectMessage) {
-          OmicsLab.Nexus._injectMessage(msg, channelId);
+          OmicsLab.Nexus._injectMessage(msg, channelId, /* fromHistory */ true);
         }
       });
 
