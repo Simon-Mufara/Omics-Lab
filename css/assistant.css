@@ -2,18 +2,29 @@
    OmicsLab AI Assistant — styles
    ═══════════════════════════════════════════════════════ */
 
+/* Floating-card layout matching Terminal's .term-layout / Nexus's
+   .nx-layout rail pattern (rounded, bordered panels with a gap and
+   page padding) instead of the previous edge-to-edge grid, which was
+   the main thing reading as visually disconnected from the rest of
+   the app. */
 .ai-wrap {
-  display: grid;
-  grid-template-columns: 220px 1fr;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
   height: calc(100vh - 64px);
   max-height: 860px;
+  padding: 1rem;
+  box-sizing: border-box;
   overflow: hidden;
 }
 
 /* ── Sidebar ── */
 .ai-sidebar {
+  flex: 0 0 220px;
+  height: 100%;
   background: #0D1524;
-  border-right: 1px solid #182236;
+  border: 1px solid #182236;
+  border-radius: 12px;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -116,10 +127,15 @@
 
 /* ── Chat area ── */
 .ai-chat-area {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: #0D1524;
+  border: 1px solid #182236;
+  border-radius: 12px;
 }
 
 .ai-message-list {
@@ -420,8 +436,11 @@
 
 /* ── Responsive ── */
 @media (max-width: 680px) {
-  .ai-wrap { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
-  .ai-sidebar { flex-direction: row; flex-wrap: wrap; gap: .5rem; padding: .75rem; border-right: none; border-bottom: 1px solid #182236; }
+  .ai-wrap { flex-direction: column; padding: .75rem; gap: .75rem; }
+  .ai-sidebar { flex: 0 0 auto; width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; gap: .5rem; padding: .75rem; }
+  .ai-sidebar > .ai-model-row, .ai-sidebar > .ai-status-wrap { border-bottom: none; padding: 0; }
+  .ai-sidebar-header { width: 100%; }
   .ai-sidebar-note { display: none; }
+  .ai-chat-area { flex: 1; min-height: 0; }
   .ai-starter-grid { grid-template-columns: 1fr; }
 }
