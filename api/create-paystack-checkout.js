@@ -69,12 +69,13 @@ export default async function handler(req, res) {
   if (!user) return res.status(404).json({ error: 'No account found for this session' });
 
   const {
-    plan, period, verified,
+    plan, period, verified, amountZAR,
     successUrl: rawSuccessUrl,
     cancelUrl:  rawCancelUrl,
   } = req.body || {};
 
   if (!plan || !period) return res.status(400).json({ error: 'Missing plan or period' });
+  if (!amountZAR || amountZAR <= 0) return res.status(400).json({ error: 'Missing or invalid amount' });
 
   const planKey  = `${plan}:${period}${verified ? ':student' : ''}`;
   const planCode = PLAN_CODES[planKey];
@@ -85,6 +86,14 @@ export default async function handler(req, res) {
   try {
     const init = await paystackRequest('transaction/initialize', {
       email:        user.email,
+      /* Paystack's transaction/initialize requires `amount` even when a
+         `plan` code is given — it's the amount of the FIRST charge;
+         the plan governs recurrence after that. Omitting it isn't a
+         silent no-op, it's a hard validation error from Paystack, which
+         was exactly why every checkout attempt failed. Amount must be
+         in the smallest currency unit (cents for ZAR), matching what
+         js/pricing.js's IND_TIERS defines in whole Rand. */
+      amount:       Math.round(amountZAR * 100),
       plan:         planCode,
       callback_url: callbackUrl,
       currency:     'ZAR',

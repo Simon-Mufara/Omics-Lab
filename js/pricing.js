@@ -265,9 +265,17 @@ OmicsLab.Pricing = (function () {
 
       window.location.href = data.authorization_url;
     } catch (err) {
+      /* Used to always show a fixed generic string here regardless of
+         what actually failed — meant a real backend error (e.g. a
+         missing required field Paystack rejected) was indistinguishable
+         from a network hiccup, in the UI or to anyone debugging it
+         after the fact without direct server log access. Show the
+         specific message when there is one. */
       status.style.display = 'block';
       status.className = 'checkout-status checkout-status-error';
-      status.textContent = 'Something went wrong starting checkout. Please try again in a moment.';
+      status.textContent = err?.message && err.message !== 'Checkout failed'
+        ? `Couldn't start checkout: ${err.message}`
+        : 'Something went wrong starting checkout. Please try again in a moment.';
       btn.disabled = false;
       btn.textContent = 'Continue to secure payment';
     }
