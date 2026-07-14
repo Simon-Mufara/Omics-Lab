@@ -662,6 +662,19 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.6rem); }
 .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
 .footer-links a:hover { color: var(--success); }
 
+/* ── Compact footer (every non-home page) ── */
+.site-footer-compact {
+  border-top: 1px solid var(--border-dim);
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: .75rem;
+  color: var(--text-muted);
+  font-size: .76rem;
+}
+.footer-compact-links { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+.footer-compact-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+.footer-compact-links a:hover { color: var(--success); }
+
 /* ═══════════════════════════════════════════════════════════════
    LAB WORKSPACE
    ═══════════════════════════════════════════════════════════════ */

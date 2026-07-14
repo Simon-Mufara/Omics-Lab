@@ -1082,6 +1082,18 @@ OmicsLab.Router = (function () {
       if (showHome) _animateIn(homeContent);
     }
 
+    /* Footer: the full marketing footer (mission blurb, language pills,
+       stats row, feedback box) lives inside #screen-landing, which is
+       the persistent app shell — router.js only ever toggles the
+       tool-specific sections, never screen-landing itself, so the
+       footer previously showed on every single page regardless of
+       route. Swap it for a compact legal-links-only footer everywhere
+       except home. */
+    const footerFull    = document.getElementById('site-footer-full');
+    const footerCompact = document.getElementById('site-footer-compact');
+    if (footerFull)    footerFull.style.display    = page === 'home' ? '' : 'none';
+    if (footerCompact) footerCompact.style.display = page === 'home' ? 'none' : '';
+
     /* Home visual hero (DNA animation) — init on every home visit, stop on leave.
        (Showcase carousel removed — redundant with the how-it-works explainer.) */
     if (page === 'home') {

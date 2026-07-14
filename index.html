@@ -1906,7 +1906,7 @@
   </div>
 
   <!-- Footer -->
-  <footer class="landing-footer">
+  <footer class="landing-footer" id="site-footer-full">
     <div class="footer-logo">OmicsLab Simulator</div>
 
     <div class="footer-mission">
@@ -1976,6 +1976,20 @@
     <div style="color:var(--text-muted);font-size:0.72rem;margin-top:1.5rem;text-align:center;opacity:0.6">
       Affiliated with H3Africa · H3ABioNet · Africa CDC &nbsp;·&nbsp;
       <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener" style="color:inherit">CC BY 4.0</a>
+    </div>
+  </footer>
+
+  <!-- Compact footer for every non-home page — the full marketing
+       footer above (mission blurb, language pills, stats row, bio,
+       feedback box) is home-only; tool pages just need the legal
+       links without the extra weight. -->
+  <footer class="site-footer-compact" id="site-footer-compact" style="display:none">
+    <span class="footer-compact-copy">&copy; OmicsLab Simulator</span>
+    <div class="footer-compact-links">
+      <a href="#/privacy" onclick="OmicsLab.Router.navigate('privacy')">Privacy</a>
+      <a href="#/terms" onclick="OmicsLab.Router.navigate('terms')">Terms</a>
+      <a href="mailto:simon.mufara1@gmail.com" aria-label="Send email to Simon Mufara">Contact</a>
+      <a href="https://github.com/Simon-Mufara/Omics-Lab/issues/new" target="_blank" rel="noopener">Report an issue</a>
     </div>
   </footer>
 </section>
