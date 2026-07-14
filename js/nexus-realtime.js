@@ -59,6 +59,16 @@ OmicsLab.NexusRealtime = (function () {
          would reliably lose each other. */
       clearInterval(_retrackTimer);
       _retrackTimer = setInterval(_retrack, 20000);
+
+      /* Browsers throttle setInterval heavily (sometimes to once/minute
+         or less) in backgrounded/inactive tabs, so the 20s heartbeat
+         above can't be relied on to fire promptly the moment someone
+         actually looks at the tab again — retrack immediately on
+         visibility regain so "are you online right now" doesn't depend
+         on background-timer throttling lining up. */
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') _retrack();
+      });
     });
 
     /* Re-send our presence payload whenever Clerk's auth state resolves
