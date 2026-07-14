@@ -22,6 +22,7 @@ OmicsLab.NexusRealtime = (function () {
   let _ready           = false;
   let _selfId          = null;  /* to skip echoing our own broadcast */
   let _onlineUsers     = {};    /* real cross-device presence, keyed by Clerk user id */
+  let _retrackTimer    = null;  /* periodic online_at refresh so presence never looks stale */
 
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
@@ -44,7 +45,29 @@ OmicsLab.NexusRealtime = (function () {
       _subscribeMessages(_activeChannelId);
       _subscribePresence();
       _loadHistory(_activeChannelId);
+
+      /* Refresh our presence payload's online_at every 20s. js/social.js's
+         "Online Now" list and per-friend online check both treat any
+         presence entry older than 45s as stale (a rule that makes sense
+         for its OWN local BroadcastChannel presence, which really does
+         need periodic proof-of-life writes) — but this module only ever
+         called track() once, so a real Supabase-connected user's entry
+         silently aged past that 45s window and vanished from "who's
+         online" for everyone else even though their connection never
+         dropped. Two people who stayed on the People tab for more than
+         45 seconds while checking whether they could see each other
+         would reliably lose each other. */
+      clearInterval(_retrackTimer);
+      _retrackTimer = setInterval(_retrack, 20000);
     });
+
+    /* Re-send our presence payload whenever Clerk's auth state resolves
+       or changes, not just once at initial subscribe — see _retrack()
+       for why the one-shot track() left signed-in users invisible to
+       each other. Fires on sign-in, sign-out, and Clerk's first-ever
+       resolution of a persisted session (which frequently lands after
+       the presence channel has already subscribed). */
+    OmicsLab.AuthClerk?.onAuthChange?.(() => _retrack());
   }
 
   /* ── Message broadcast subscription ─────────────────────────── */
@@ -76,8 +99,6 @@ OmicsLab.NexusRealtime = (function () {
       _client.removeChannel(_presenceChannel);
     }
 
-    const user = _getDisplayUser();
-
     _presenceChannel = _client.channel('nexus-presence', {
       config: { presence: { key: _selfId } },
     });
@@ -93,7 +114,16 @@ OmicsLab.NexusRealtime = (function () {
            genuinely remote users instead of only same-browser tabs. */
         _onlineUsers = {};
         Object.values(state).forEach(entries => {
-          const meta = entries[0];
+          /* Supabase Realtime Presence appends a new metadata entry to this
+             key's array on every track() call rather than replacing it in
+             place — entries[0] is the FIRST-ever track for that key, not
+             the current one. Reading entries[0] meant every re-track (the
+             periodic online_at refresh below, or the auth-resolves-late
+             retrack) silently had no visible effect: the timestamp/name/etc
+             other clients actually read never advanced past the original
+             value, which is what made two genuinely still-connected users
+             look "stale" and drop off each other's Online Now list. */
+          const meta = entries[entries.length - 1];
           if (meta?.userId) _onlineUsers[meta.userId] = meta;
         });
         OmicsLab.Social?._onPresenceUpdate?.();
@@ -102,18 +132,37 @@ OmicsLab.NexusRealtime = (function () {
         /* Could show "X joined" notification — skip for now */
       })
       .subscribe(async (status) => {
-        if (status === 'SUBSCRIBED') {
-          await _presenceChannel.track({
-            selfId:      _selfId,
-            userId:      _getDbUserId(),
-            name:        user.name,
-            avatar:      user.avatar,
-            institution: user.institution,
-            country:     user.country,
-            online_at:   new Date().toISOString(),
-          });
-        }
+        if (status === 'SUBSCRIBED') _retrack();
       });
+  }
+
+  /* Sends (or re-sends) our presence payload with whatever identity is
+     currently known. track() used to be called exactly once, inside the
+     subscribe() callback above — but Clerk's session hydration is an
+     async network round-trip that frequently hasn't finished by the time
+     Supabase's presence channel subscribes, so the very first track()
+     often fired with userId===null (identity not resolved yet) and was
+     NEVER retried. That user's own presence.track payload permanently
+     lacked a userId for the rest of the tab's life, silently excluding
+     them from everyone else's "who's online" list (getOnlineUsers()
+     only keeps entries with a truthy meta.userId) even though the
+     channel connection itself was completely healthy — which is exactly
+     what made two genuinely-online, genuinely-chatting users invisible
+     to each other in Nexus's People tab. Re-tracking on every auth
+     change (see the AuthClerk.onAuthChange wiring below) fixes this by
+     re-sending the payload once the real Clerk id is actually known. */
+  function _retrack() {
+    if (!_presenceChannel || !_ready) return;
+    const user = _getDisplayUser();
+    _presenceChannel.track({
+      selfId:      _selfId,
+      userId:      _getDbUserId(),
+      name:        user.name,
+      avatar:      user.avatar,
+      institution: user.institution,
+      country:     user.country,
+      online_at:   new Date().toISOString(),
+    }).catch(() => {});
   }
 
   /* Real cross-device online users (excludes self), for js/social.js.

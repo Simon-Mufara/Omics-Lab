@@ -126,8 +126,15 @@ OmicsLab.AuthClerk = (function () {
       _patchAuthModal();
 
       /* Sync immediately — this also clears any stale local auth.js session
-         when Clerk reports no user, so the Sign In button appears right away */
+         when Clerk reports no user, so the Sign In button appears right away.
+         Also notify onAuthChange subscribers on this first sync, not just on
+         later addListener firings — modules like nexus-realtime.js need to
+         know the real Clerk id the moment it's actually known (e.g. to (re)send
+         a Realtime presence payload), and for a returning signed-in user this
+         first resolution of their persisted session IS the only "user became
+         known" event that will ever fire this page load. */
       _syncUser(_clerk.user || null);
+      _callbacks.forEach(cb => cb(_user));
 
       _clerk.addListener(({ user }) => {
         _syncUser(user);
