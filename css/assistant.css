@@ -14,37 +14,66 @@
 .ai-sidebar {
   background: #0D1524;
   border-right: 1px solid #182236;
-  padding: 1rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: .75rem;
   overflow-y: auto;
 }
 
-.ai-sidebar-header { margin-bottom: .25rem; }
-.ai-sidebar-title {
+.ai-sidebar-header {
   display: flex;
   align-items: center;
-  gap: .4rem;
-  font-size: .88rem;
+  gap: .55rem;
+  padding: 1rem;
+  border-bottom: 1px solid #182236;
+}
+.ai-sidebar-header svg {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+  border-radius: 8px;
+  background: rgba(0,196,160,.1);
+  color: #00C4A0;
+  box-sizing: border-box;
+}
+.ai-sidebar-title {
+  font-size: .9rem;
   font-weight: 700;
   color: #E4DDD2;
+  letter-spacing: .01em;
 }
 
-.ai-model-label { font-size: .7rem; color: #354060; text-transform: uppercase; letter-spacing: .05em; }
+/* Direct children of .ai-sidebar below the header (.ai-model-row,
+   #ai-status-wrap, .ai-clear-btn, #ai-status-note) are grouped visually
+   with consistent padding + dividers, matching Nexus's sidebar section
+   rhythm — without needing new wrapper elements around content that
+   js/assistant.js renders elsewhere and is under active development. */
+.ai-sidebar > .ai-model-row,
+.ai-sidebar > .ai-status-wrap {
+  padding: .85rem 1rem;
+  border-bottom: 1px solid #182236;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.ai-sidebar > .ai-clear-btn { margin: .85rem 1rem 0; align-self: flex-start; }
+
+.ai-model-label { font-size: .65rem; font-weight: 700; color: #6E6860; text-transform: uppercase; letter-spacing: .08em; }
 .ai-model-select {
   width: 100%;
-  padding: .35rem .5rem;
+  padding: .4rem .55rem;
   background: #111B2E;
   border: 1px solid #243048;
-  border-radius: 5px;
-  color: #A8A098;
+  border-radius: 6px;
+  color: #E4DDD2;
   font-size: .78rem;
   font-family: inherit;
   outline: none;
   cursor: pointer;
+  transition: border-color .15s;
 }
-.ai-model-select:focus { border-color: #58a6ff; }
+.ai-model-select:focus { border-color: #00C4A0; }
 
 .ai-key-row { display: flex; align-items: center; gap: .5rem; }
 .ai-key-btn {
@@ -54,14 +83,14 @@
   padding: .3rem .65rem;
   background: #182236;
   border: 1px solid #243048;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #A8A098;
   font-size: .72rem;
   cursor: pointer;
   font-family: inherit;
   transition: color .15s, border-color .15s;
 }
-.ai-key-btn:hover { color: #E4DDD2; border-color: #58a6ff; }
+.ai-key-btn:hover { color: #E4DDD2; border-color: #00C4A0; }
 .ai-key-badge { font-size: .7rem; color: #354060; }
 .ai-key-badge.ai-key-ok { color: #00C4A0; }
 
@@ -74,7 +103,7 @@
   padding: .3rem .65rem;
   background: transparent;
   border: 1px solid #243048;
-  border-radius: 5px;
+  border-radius: 6px;
   color: #6E6860;
   font-size: .72rem;
   cursor: pointer;
@@ -83,7 +112,7 @@
 }
 .ai-clear-btn:hover { color: #ff6b6b; border-color: rgba(255,107,107,.3); }
 
-.ai-sidebar-note { font-size: .66rem; color: #354060; line-height: 1.5; margin-top: auto; }
+.ai-sidebar-note { font-size: .66rem; color: #354060; line-height: 1.5; padding: .85rem 1rem; margin-top: auto; }
 
 /* ── Chat area ── */
 .ai-chat-area {
@@ -222,8 +251,18 @@
   text-align: center;
 }
 
-.ai-welcome-icon { color: #354060; }
-.ai-welcome-title { font-size: 1.15rem; font-weight: 700; color: #E4DDD2; }
+.ai-welcome-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(0,196,160,.1);
+  color: #00C4A0;
+  margin-bottom: .25rem;
+}
+.ai-welcome-title { font-size: 1.2rem; font-weight: 700; color: #E4DDD2; }
 .ai-welcome-sub { font-size: .82rem; color: #A8A098; max-width: 420px; line-height: 1.55; }
 
 .ai-ctx-badge {
