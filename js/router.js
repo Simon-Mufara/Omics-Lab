@@ -829,7 +829,7 @@ OmicsLab.Router = (function () {
     analysis:           ['css/analysis.css','css/alignment-viewer.css','css/heatmap.css','css/qualitypredictor.css','css/variantinterp.css','css/protein-viewer.css','css/pathways.css','css/genomebrowser.css','css/variant-atlas.css'],
     terminal:           ['css/terminal.css'],
     ask:                ['css/mentor.css'],
-    assistant:          ['css/assistant.css'],
+    ai:                 ['css/assistant.css'],
     settings:           ['css/settings.css'],
     profile:            ['css/profile.css'],
     career:             ['css/career.css','css/mentorship.css','css/thesis-coach.css'],
@@ -926,19 +926,32 @@ OmicsLab.Router = (function () {
     recombination:      ['css/recombination.css'],
   };
 
-  /* Inject <link> tags on demand; idempotent — each href loaded once */
+  /* Inject <link> tags on demand; idempotent — each href loaded once.
+     Returns a Promise that resolves once every NEWLY-requested file has
+     either loaded or failed (already-loaded files resolve immediately) —
+     _navigateInner uses this to keep the incoming page invisible until
+     its CSS is actually applied, instead of showing a flash of unstyled
+     HTML while the <link> fetch is still in flight (very visible on a
+     first cold-cache visit to any page — every route hits this, not
+     just one page). */
   const _loadedCss = new Set();
   function _loadCss(page) {
     const files = PAGE_CSS[page];
-    if (!files) return;
+    if (!files) return Promise.resolve();
+    const pending = [];
     files.forEach(href => {
       if (_loadedCss.has(href)) return;
       _loadedCss.add(href);
       const link = document.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
+      pending.push(new Promise(resolve => {
+        link.onload  = resolve;
+        link.onerror = resolve; /* don't hang the reveal on one bad stylesheet */
+      }));
       document.head.appendChild(link);
     });
+    return pending.length ? Promise.all(pending) : Promise.resolve();
   }
 
   let _currentPage = 'home';
@@ -994,7 +1007,7 @@ OmicsLab.Router = (function () {
       OmicsLab.Error?.render404(page);
       return;
     }
-    _loadCss(page);
+    const _cssReady = _loadCss(page);
     _npStart();
     if (_currentPage !== page) _prevPage = _currentPage;
     _currentPage = page;
@@ -1034,15 +1047,32 @@ OmicsLab.Router = (function () {
       if (OmicsLab.App && OmicsLab.App.showScreen) OmicsLab.App.showScreen('screen-landing');
     }
 
-    /* Show/hide sections */
+    /* Show/hide sections. Newly-shown sections stay visibility:hidden
+       until _cssReady resolves — otherwise the section's HTML renders
+       immediately (synchronously, below) while its <link rel=stylesheet>
+       is still an in-flight network request, producing a visible flash
+       of unstyled content on every first visit to a route this session
+       (cold cache, or right after a fresh deploy bumps the URL). An 800ms
+       fallback timeout reveals it regardless, in case a stylesheet never
+       fires load/error for some reason — content must never stay hidden
+       forever over a CSS hiccup. */
     const targetSections = PAGES[page].sections;
+    const _shownEls = [];
     ALL_SECTIONS.forEach(id => {
       const el = document.getElementById(id);
       if (!el) return;
       const show = targetSections.includes(id);
       el.style.display = show ? '' : 'none';
-      if (show) _animateIn(el);
+      if (show) {
+        el.style.visibility = 'hidden';
+        _shownEls.push(el);
+        _animateIn(el);
+      }
     });
+    if (_shownEls.length) {
+      const _reveal = () => _shownEls.forEach(el => { el.style.visibility = ''; });
+      Promise.race([_cssReady, new Promise(r => setTimeout(r, 800))]).then(_reveal);
+    }
 
     /* Show/hide home content */
     const homeContent = document.getElementById('home-page-content');
