@@ -95,7 +95,15 @@ export default async function handler(req, res) {
       amount:       Math.round(amountZAR * 100),
       plan:         planCode,
       callback_url: callbackUrl,
-      currency:     'ZAR',
+      /* Dropped an explicit currency here — when a `plan` is given,
+         Paystack derives currency from the plan itself; sending our
+         own ZAR alongside it is redundant at best, and if it doesn't
+         exactly match how the plan is actually stored server-side
+         (independent of what the dashboard displays), could plausibly
+         be why an otherwise-real, confirmed-correct plan code comes
+         back "not found" — worth ruling out since every other
+         explanation (code correctness, test/live mode, whitespace,
+         auth) has already been checked directly. */
       metadata: {
         userId: user.id,
         plan, period, verified: !!verified,
