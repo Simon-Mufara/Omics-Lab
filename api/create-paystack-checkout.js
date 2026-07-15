@@ -103,7 +103,16 @@ export default async function handler(req, res) {
       },
     });
 
-    if (!init.status) return res.status(400).json({ error: init.message || 'Could not start checkout' });
+    if (!init.status) {
+      /* Temporary: surface Paystack's full raw response, not just
+         .message — "Plan not found" for a plan code confirmed to exist
+         (byte-for-byte match, correct test/live mode) has exhausted
+         every code-level explanation; Paystack's response may carry
+         more (an error `code`, `type`, etc.) than the message string
+         alone shows. Remove once resolved. */
+      console.error('[create-paystack-checkout] Paystack rejected:', JSON.stringify(init), 'planCode=', planCode, 'sentAmount=', Math.round(amountZAR * 100));
+      return res.status(400).json({ error: init.message || 'Could not start checkout', paystackRaw: init });
+    }
 
     return res.status(200).json({
       authorization_url: init.data.authorization_url,
