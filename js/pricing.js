@@ -262,12 +262,14 @@ OmicsLab.Pricing = (function () {
         return;
       }
       if (!res.ok || !data.authorization_url) {
-        /* Temporary: log Paystack's full raw rejection to the console
-           (not just the message shown in the UI) while diagnosing
-           "Plan not found" for a plan confirmed to exist. Remove once
+        /* Temporary: put Paystack's full raw rejection directly in the
+           thrown message (console logging turned out unreliable to get
+           relayed back — screenshots kept missing it) so it shows up
+           on the page itself with zero devtools steps needed. Remove
+           once "Plan not found" for a plan confirmed to exist is
            resolved — see api/create-paystack-checkout.js. */
-        if (data.paystackRaw) console.error('[pricing] Paystack raw response:', data.paystackRaw);
-        throw new Error(data.error || 'Checkout failed');
+        const detail = data.paystackRaw ? ` [${JSON.stringify(data.paystackRaw)}]` : '';
+        throw new Error((data.error || 'Checkout failed') + detail);
       }
 
       window.location.href = data.authorization_url;
