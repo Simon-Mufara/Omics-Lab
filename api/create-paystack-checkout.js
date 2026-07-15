@@ -119,7 +119,10 @@ export default async function handler(req, res) {
          more (an error `code`, `type`, etc.) than the message string
          alone shows. Remove once resolved. */
       console.error('[create-paystack-checkout] Paystack rejected:', JSON.stringify(init), 'planCode=', planCode, 'sentAmount=', Math.round(amountZAR * 100));
-      return res.status(400).json({ error: init.message || 'Could not start checkout', paystackRaw: init });
+      /* planCode itself isn't secret (unlike PAYSTACK_SECRET_KEY) — safe
+         to echo back so the exact value being sent is visible without
+         needing server log access, which kept being the bottleneck. */
+      return res.status(400).json({ error: init.message || 'Could not start checkout', paystackRaw: init, planCodeUsed: planCode, planKeyUsed: planKey });
     }
 
     return res.status(200).json({

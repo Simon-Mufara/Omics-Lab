@@ -269,7 +269,8 @@ OmicsLab.Pricing = (function () {
            once "Plan not found" for a plan confirmed to exist is
            resolved — see api/create-paystack-checkout.js. */
         const detail = data.paystackRaw ? ` [${JSON.stringify(data.paystackRaw)}]` : '';
-        throw new Error((data.error || 'Checkout failed') + detail);
+        const planDetail = data.planCodeUsed ? ` (sent plan="${data.planCodeUsed}" key="${data.planKeyUsed}")` : '';
+        throw new Error((data.error || 'Checkout failed') + detail + planDetail);
       }
 
       window.location.href = data.authorization_url;
