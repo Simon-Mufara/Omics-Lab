@@ -10,23 +10,29 @@
 import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { resolveOrProvisionUser } from '../lib/user-provisioning.js';
 
-const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
+const PAYSTACK_SECRET_KEY = (process.env.PAYSTACK_SECRET_KEY || '').trim();
 /* Fallback pointed at a domain Simon doesn't own — if NEXT_PUBLIC_APP_URL
    was ever unset, every post-payment success/cancel redirect would send
    a paying customer to a site that isn't this one. */
 const APP_URL             = process.env.NEXT_PUBLIC_APP_URL || 'https://omicsdatalab.tech';
 
-/* Recurring billing on Paystack is modelled as a Plan created in the
-   dashboard (or via the Plan API) — we only ever reference its plan_code
-   here, never define pricing ourselves, so the numbers a customer is
-   charged always match what's actually configured in Paystack. */
+/* .trim() on every value: env vars pasted from a dashboard table (as
+   these plan codes were) very easily pick up a trailing space or
+   newline that's invisible in the Vercel UI but makes the stored
+   string not exactly equal the real code — Paystack then correctly
+   reports "Plan not found" for a plan that, by every visual check,
+   obviously exists. Recurring billing itself is modelled as a Plan
+   created in the dashboard (or via the Plan API) — we only ever
+   reference its plan_code here, never define pricing ourselves, so
+   the numbers a customer is charged always match what's actually
+   configured in Paystack. */
 const PLAN_CODES = {
-  'scholar:monthly':               process.env.PAYSTACK_PLAN_SCHOLAR_MONTHLY,
-  'scholar:monthly:student':       process.env.PAYSTACK_PLAN_SCHOLAR_MONTHLY_STUDENT,
-  'scholar:annual':                process.env.PAYSTACK_PLAN_SCHOLAR_ANNUAL,
-  'scholar:annual:student':        process.env.PAYSTACK_PLAN_SCHOLAR_ANNUAL_STUDENT,
-  'practitioner:monthly':          process.env.PAYSTACK_PLAN_PRACTITIONER_MONTHLY,
-  'practitioner:annual':           process.env.PAYSTACK_PLAN_PRACTITIONER_ANNUAL,
+  'scholar:monthly':               (process.env.PAYSTACK_PLAN_SCHOLAR_MONTHLY || '').trim(),
+  'scholar:monthly:student':       (process.env.PAYSTACK_PLAN_SCHOLAR_MONTHLY_STUDENT || '').trim(),
+  'scholar:annual':                (process.env.PAYSTACK_PLAN_SCHOLAR_ANNUAL || '').trim(),
+  'scholar:annual:student':        (process.env.PAYSTACK_PLAN_SCHOLAR_ANNUAL_STUDENT || '').trim(),
+  'practitioner:monthly':          (process.env.PAYSTACK_PLAN_PRACTITIONER_MONTHLY || '').trim(),
+  'practitioner:annual':           (process.env.PAYSTACK_PLAN_PRACTITIONER_ANNUAL || '').trim(),
 };
 
 function sameOrigin(url) {
