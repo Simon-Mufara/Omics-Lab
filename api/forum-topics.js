@@ -5,14 +5,13 @@
    ═══════════════════════════════════════════════════════════════ */
 import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { supabaseServiceRequest } from '../lib/supabase-admin.js';
+import { resolveOrProvisionUser } from '../lib/user-provisioning.js';
 
 const CATEGORIES = ['general', 'help', 'showcase', 'africa', 'careers'];
 
 async function _resolveUserId(clerkId) {
-  const res = await supabaseServiceRequest(`users?clerk_id=eq.${encodeURIComponent(clerkId)}&select=id`, 'GET');
-  if (!res) return null;
-  const rows = await res.json();
-  return rows?.[0]?.id || null;
+  const user = await resolveOrProvisionUser(clerkId).catch(() => null);
+  return user?.id || null;
 }
 
 export default async function handler(req, res) {

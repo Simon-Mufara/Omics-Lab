@@ -14,12 +14,11 @@
    ═══════════════════════════════════════════════════════════════ */
 import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { supabaseServiceRequest, supabaseStorageDownloadText } from '../lib/supabase-admin.js';
+import { resolveOrProvisionUser } from '../lib/user-provisioning.js';
 
 async function resolveUserId(clerkId) {
-  const res = await supabaseServiceRequest(`users?clerk_id=eq.${encodeURIComponent(clerkId)}&select=id`, 'GET');
-  if (!res) return null;
-  const rows = await res.json();
-  return rows?.[0]?.id || null;
+  const user = await resolveOrProvisionUser(clerkId).catch(() => null);
+  return user?.id || null;
 }
 
 /* Minimal CSV parser — handles quoted fields with escaped `""`, which

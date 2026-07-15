@@ -16,12 +16,11 @@
    ═══════════════════════════════════════════════════════════════ */
 import { requireAuth, AuthError } from '../lib/clerk-auth.js';
 import { supabaseServiceRequest } from '../lib/supabase-admin.js';
+import { resolveOrProvisionUser } from '../lib/user-provisioning.js';
 
 async function _resolveUserId(clerkId) {
-  const res = await supabaseServiceRequest(`users?clerk_id=eq.${encodeURIComponent(clerkId)}&select=id`, 'GET');
-  if (!res) return null;
-  const rows = await res.json();
-  return rows?.[0]?.id || null;
+  const user = await resolveOrProvisionUser(clerkId).catch(() => null);
+  return user?.id || null;
 }
 
 /* See api/nexus-message.js's original doc comment for why this needs

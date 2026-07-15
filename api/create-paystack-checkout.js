@@ -8,7 +8,7 @@
    hosted flow instead of building a card form ourselves.
    ═══════════════════════════════════════════════════════════════ */
 import { requireAuth, AuthError } from '../lib/clerk-auth.js';
-import { supabaseServiceRequest } from '../lib/supabase-admin.js';
+import { resolveOrProvisionUser } from '../lib/user-provisioning.js';
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
 /* Fallback pointed at a domain Simon doesn't own — if NEXT_PUBLIC_APP_URL
@@ -28,13 +28,6 @@ const PLAN_CODES = {
   'practitioner:monthly':          process.env.PAYSTACK_PLAN_PRACTITIONER_MONTHLY,
   'practitioner:annual':           process.env.PAYSTACK_PLAN_PRACTITIONER_ANNUAL,
 };
-
-async function resolveSupabaseUserId(clerkId) {
-  const res = await supabaseServiceRequest(`users?clerk_id=eq.${encodeURIComponent(clerkId)}&select=id,email`, 'GET');
-  if (!res) return null; /* Supabase not configured */
-  const rows = await res.json();
-  return rows?.[0] || null;
-}
 
 function sameOrigin(url) {
   if (typeof url !== 'string' || !url) return false;
@@ -65,7 +58,7 @@ export default async function handler(req, res) {
     throw err;
   }
 
-  const user = await resolveSupabaseUserId(auth.clerkId).catch(() => null);
+  const user = await resolveOrProvisionUser(auth.clerkId).catch(() => null);
   if (!user) return res.status(404).json({ error: 'No account found for this session' });
 
   const {
