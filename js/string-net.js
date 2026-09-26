@@ -7,46 +7,45 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.StringNet = (function () {
-
-  const BASE    = 'https://string-db.org/api';
+  const BASE = 'https://string-db.org/api';
   const SPECIES = 9606; /* Homo sapiens */
-  const CALLER  = 'OmicsLab';
+  const CALLER = 'OmicsLab';
 
   /* Pre-loaded African disease proteins */
   const AFRICA_PROTEINS = [
-    { gene: 'HBB',   desc: 'Haemoglobin β — sickle cell' },
-    { gene: 'G6PD',  desc: 'G6PD — malaria protection' },
+    { gene: 'HBB', desc: 'Haemoglobin β — sickle cell' },
+    { gene: 'G6PD', desc: 'G6PD — malaria protection' },
     { gene: 'APOL1', desc: 'Apolipoprotein L1 — CKD risk' },
-    { gene: 'TP53',  desc: 'p53 — cancer suppressor' },
+    { gene: 'TP53', desc: 'p53 — cancer suppressor' },
     { gene: 'BRCA1', desc: 'BRCA1 — breast cancer' },
-    { gene: 'LMNA',  desc: 'Lamin A/C — cardiomyopathy' },
-    { gene: 'MYH7',  desc: 'Myosin heavy chain — HCM' },
-    { gene: 'IL6',   desc: 'Interleukin-6 — inflammation' },
+    { gene: 'LMNA', desc: 'Lamin A/C — cardiomyopathy' },
+    { gene: 'MYH7', desc: 'Myosin heavy chain — HCM' },
+    { gene: 'IL6', desc: 'Interleukin-6 — inflammation' },
   ];
 
   /* Subscore labels */
   const SUBSCORES = [
-    { key: 'escore', label: 'Experimental',    color: '#00C4A0' },
-    { key: 'dscore', label: 'Database',         color: '#58a6ff' },
-    { key: 'tscore', label: 'Text mining',      color: '#e3b341' },
-    { key: 'ascore', label: 'Coexpression',     color: '#bc8cff' },
-    { key: 'pscore', label: 'Co-occurrence',    color: '#f97316' },
-    { key: 'nscore', label: 'Neighborhood',     color: '#79c0ff' },
-    { key: 'fscore', label: 'Gene fusion',      color: '#ff7b93' },
+    { key: 'escore', label: 'Experimental', color: '#00C4A0' },
+    { key: 'dscore', label: 'Database', color: '#58a6ff' },
+    { key: 'tscore', label: 'Text mining', color: '#e3b341' },
+    { key: 'ascore', label: 'Coexpression', color: '#bc8cff' },
+    { key: 'pscore', label: 'Co-occurrence', color: '#f97316' },
+    { key: 'nscore', label: 'Neighborhood', color: '#79c0ff' },
+    { key: 'fscore', label: 'Gene fusion', color: '#ff7b93' },
   ];
 
-  let _minScore  = 400;
-  let _allRows   = [];
-  let _protein   = '';
+  let _minScore = 400;
+  let _allRows = [];
+  let _protein = '';
 
   /* ─── Resolve protein to STRING ID ─── */
   async function _resolve(gene) {
     const params = new URLSearchParams({
-      identifier:    gene,
-      species:       SPECIES,
+      identifier: gene,
+      species: SPECIES,
       caller_identity: CALLER,
-      format:        'json',
-      limit:         1,
+      format: 'json',
+      limit: 1,
     });
     const res = await fetch(`${BASE}/json/get_string_ids?${params}`);
     if (!res.ok) throw new Error('STRING resolve failed ' + res.status);
@@ -58,11 +57,11 @@ OmicsLab.StringNet = (function () {
   /* ─── Fetch interaction partners ─── */
   async function _fetchPartners(stringId, gene) {
     const params = new URLSearchParams({
-      identifier:      stringId,
-      species:         SPECIES,
+      identifier: stringId,
+      species: SPECIES,
       caller_identity: CALLER,
-      format:          'json',
-      limit:           50,
+      format: 'json',
+      limit: 50,
     });
     const res = await fetch(`${BASE}/json/interaction_partners?${params}`);
     if (!res.ok) throw new Error('STRING partners fetch failed ' + res.status);
@@ -87,23 +86,27 @@ OmicsLab.StringNet = (function () {
   }
 
   /* ─── Render ─── */
-  function _el() { return document.getElementById('sn-results'); }
+  function _el() {
+    return document.getElementById('sn-results');
+  }
 
   function _renderLoading(gene) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="sn-loading"><div class="sn-spinner"></div> Fetching STRING interactions for ${_esc(gene)}…</div>`;
+    if (el)
+      el.innerHTML = `<div class="sn-loading"><div class="sn-spinner"></div> Fetching STRING interactions for ${_esc(gene)}…</div>`;
   }
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="sn-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
+    if (el)
+      el.innerHTML = `<div class="sn-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
   }
 
   function _renderTable(rows, resolved) {
     const el = _el();
     if (!el) return;
 
-    const filtered = rows.filter(r => (r.score || 0) * 1000 >= _minScore);
+    const filtered = rows.filter((r) => (r.score || 0) * 1000 >= _minScore);
     const queryGene = resolved.preferredName || _protein;
 
     if (!filtered.length) {
@@ -113,7 +116,7 @@ OmicsLab.StringNet = (function () {
 
     /* Summary stats */
     const avgScore = filtered.reduce((s, r) => s + r.score, 0) / filtered.length;
-    const expCount = filtered.filter(r => (r.escore || 0) > 0.15).length;
+    const expCount = filtered.filter((r) => (r.escore || 0) > 0.15).length;
 
     el.innerHTML = `
       <div class="sn-result-header">
@@ -127,11 +130,13 @@ OmicsLab.StringNet = (function () {
       </div>
 
       <div class="sn-legend">
-        ${SUBSCORES.map(s => `
+        ${SUBSCORES.map(
+          (s) => `
           <span class="sn-legend-item">
             <span class="sn-legend-dot" style="background:${s.color}"></span>
             ${s.label}
-          </span>`).join('')}
+          </span>`
+        ).join('')}
       </div>
 
       <div class="sn-table-wrap">
@@ -140,12 +145,15 @@ OmicsLab.StringNet = (function () {
             <tr>
               <th>Partner</th>
               <th>Combined score</th>
-              ${SUBSCORES.map(s => `<th title="${s.label}">${s.label.slice(0,4)}</th>`).join('')}
+              ${SUBSCORES.map((s) => `<th title="${s.label}">${s.label.slice(0, 4)}</th>`).join('')}
               <th></th>
             </tr>
           </thead>
           <tbody>
-            ${filtered.slice(0, 30).map(r => _rowHtml(r)).join('')}
+            ${filtered
+              .slice(0, 30)
+              .map((r) => _rowHtml(r))
+              .join('')}
           </tbody>
         </table>
       </div>`;
@@ -153,11 +161,11 @@ OmicsLab.StringNet = (function () {
 
   function _rowHtml(r) {
     const partner = r.preferredName_B || r.stringId_B || '—';
-    const score   = r.score || 0;
-    const pct     = Math.min(score * 100, 100);
-    const col     = score > 0.7 ? '#00C4A0' : score > 0.4 ? '#e3b341' : '#58a6ff';
+    const score = r.score || 0;
+    const pct = Math.min(score * 100, 100);
+    const col = score > 0.7 ? '#00C4A0' : score > 0.4 ? '#e3b341' : '#58a6ff';
 
-    const subscoreCells = SUBSCORES.map(s => {
+    const subscoreCells = SUBSCORES.map((s) => {
       const v = r[s.key] || 0;
       const vPct = Math.min(v * 100, 100);
       return `<td>
@@ -214,7 +222,11 @@ OmicsLab.StringNet = (function () {
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   /* ─── Init ─── */
@@ -251,8 +263,9 @@ OmicsLab.StringNet = (function () {
 
         <div class="sn-quick-proteins">
           <span class="sn-quick-label">African disease proteins:</span>
-          ${AFRICA_PROTEINS.map(p =>
-            `<button class="sn-protein-chip" onclick="OmicsLab.StringNet._quickLoad('${p.gene}')" title="${_esc(p.desc)}">${p.gene}</button>`
+          ${AFRICA_PROTEINS.map(
+            (p) =>
+              `<button class="sn-protein-chip" onclick="OmicsLab.StringNet._quickLoad('${p.gene}')" title="${_esc(p.desc)}">${p.gene}</button>`
           ).join('')}
         </div>
 

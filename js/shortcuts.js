@@ -8,18 +8,25 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Shortcuts = (function () {
-
   let _gBuffer = false; // waiting for second key after 'g'
-  let _gTimer  = null;
+  let _gTimer = null;
 
   const NAV_MAP = {
-    h: 'home', l: 'lab', a: 'africa', t: 'terminal',
-    r: 'research', s: 'study', v: 'variantinterp',
-    q: 'ask', p: 'profile', g: 'guide',
+    h: 'home',
+    l: 'lab',
+    a: 'africa',
+    t: 'terminal',
+    r: 'research',
+    s: 'study',
+    v: 'variantinterp',
+    q: 'ask',
+    p: 'profile',
+    g: 'guide',
   };
 
   const SHEET = [
-    { group: 'Navigation (press G then…)',
+    {
+      group: 'Navigation (press G then…)',
       items: [
         { key: 'G H', desc: 'Go Home' },
         { key: 'G L', desc: 'Go Lab Simulations' },
@@ -29,29 +36,37 @@ OmicsLab.Shortcuts = (function () {
         { key: 'G S', desc: 'Go Study Pack' },
         { key: 'G V', desc: 'Go Variant Interpreter' },
         { key: 'G Q', desc: 'Go Ask / FAQ' },
-      ]},
-    { group: 'Actions',
+      ],
+    },
+    {
+      group: 'Actions',
       items: [
         { key: '/', desc: 'Open search' },
         { key: '?', desc: 'Show this help' },
         { key: 'Esc', desc: 'Close modal / menu' },
         { key: 'Ctrl K', desc: 'Open search (alternative)' },
-      ]},
-    { group: 'In Study Pack',
+      ],
+    },
+    {
+      group: 'In Study Pack',
       items: [
         { key: 'F', desc: 'Flashcard mode' },
         { key: 'E', desc: 'Export notes' },
-      ]},
-    { group: 'In Variant Interpreter',
+      ],
+    },
+    {
+      group: 'In Variant Interpreter',
       items: [
         { key: 'Enter', desc: 'Interpret variant' },
         { key: 'Ctrl R', desc: 'Generate AI report' },
-      ]},
+      ],
+    },
   ];
 
   function _onKey(e) {
     const tag = (e.target.tagName || '').toLowerCase();
-    const inField = tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
+    const inField =
+      tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
 
     /* Esc always works */
     if (e.key === 'Escape') {
@@ -87,7 +102,10 @@ OmicsLab.Shortcuts = (function () {
     /* Ctrl+R in variantinterp → AI report */
     if ((e.ctrlKey || e.metaKey) && e.key === 'r') {
       const btn = document.getElementById('vi-ai-report-btn');
-      if (btn) { e.preventDefault(); btn.click(); }
+      if (btn) {
+        e.preventDefault();
+        btn.click();
+      }
       return;
     }
 
@@ -144,8 +162,11 @@ OmicsLab.Shortcuts = (function () {
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.id = 'sc-shortcut-overlay';
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(1,4,9,.75);backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;animation:sc-fade .15s ease';
-      overlay.onclick = e => { if (e.target === overlay) _closeSheet(); };
+      overlay.style.cssText =
+        'position:fixed;inset:0;background:rgba(1,4,9,.75);backdrop-filter:blur(4px);z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;animation:sc-fade .15s ease';
+      overlay.onclick = (e) => {
+        if (e.target === overlay) _closeSheet();
+      };
       document.body.appendChild(overlay);
     }
     overlay.style.display = 'flex';
@@ -172,15 +193,24 @@ OmicsLab.Shortcuts = (function () {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-        ${SHEET.map(g => `
+        ${SHEET.map(
+          (g) => `
           <div class="sc-group">
             <div class="sc-group-label">${g.group}</div>
-            ${g.items.map(i => `
+            ${g.items
+              .map(
+                (i) => `
               <div class="sc-item">
-                <span class="sc-key">${i.key.split(' ').map(k => `<kbd class="sc-kbd">${k}</kbd>`).join('')}</span>
+                <span class="sc-key">${i.key
+                  .split(' ')
+                  .map((k) => `<kbd class="sc-kbd">${k}</kbd>`)
+                  .join('')}</span>
                 <span class="sc-desc">${i.desc}</span>
-              </div>`).join('')}
-          </div>`).join('')}
+              </div>`
+              )
+              .join('')}
+          </div>`
+        ).join('')}
         <div style="margin-top:.5rem;font-size:.68rem;color:#354060;border-top:1px solid #182236;padding-top:.75rem">
           Tip: Shortcuts are disabled while typing in a text field.
         </div>

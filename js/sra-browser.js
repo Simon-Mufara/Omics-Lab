@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.SRABrowser = (function () {
-
   const ESEARCH = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi';
   const ESUMMARY = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi';
 
@@ -95,12 +94,18 @@ OmicsLab.SRABrowser = (function () {
 
   /* Africa search presets */
   const PRESETS = [
-    { label: 'Africa WGS Homo sapiens',    q: 'Africa "whole genome sequencing" "Homo sapiens"' },
-    { label: 'Africa Plasmodium WGS',      q: 'Africa "Plasmodium falciparum" "whole genome sequencing"' },
-    { label: 'Africa MTB drug resistance', q: 'Africa "Mycobacterium tuberculosis" "drug resistance"' },
-    { label: 'Africa COVID-19 sequences',  q: 'Africa "SARS-CoV-2" OR "COVID-19"' },
-    { label: 'H3Africa consortium SRA',    q: 'H3Africa' },
-    { label: 'Africa metagenomics',        q: 'Africa metagenomics gut microbiome 16S OR WGS' },
+    { label: 'Africa WGS Homo sapiens', q: 'Africa "whole genome sequencing" "Homo sapiens"' },
+    {
+      label: 'Africa Plasmodium WGS',
+      q: 'Africa "Plasmodium falciparum" "whole genome sequencing"',
+    },
+    {
+      label: 'Africa MTB drug resistance',
+      q: 'Africa "Mycobacterium tuberculosis" "drug resistance"',
+    },
+    { label: 'Africa COVID-19 sequences', q: 'Africa "SARS-CoV-2" OR "COVID-19"' },
+    { label: 'H3Africa consortium SRA', q: 'H3Africa' },
+    { label: 'Africa metagenomics', q: 'Africa metagenomics gut microbiome 16S OR WGS' },
   ];
 
   let _liveResults = [];
@@ -109,24 +114,28 @@ OmicsLab.SRABrowser = (function () {
 
   /* ─── Escape helper ─── */
   function _esc(s) {
-    return String(s).replace(/[<>&"']/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' }[c]));
+    return String(s).replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
   }
 
   /* ─── Format bases ─── */
   function _fmtBases(b) {
     if (typeof b === 'string') return b;
     if (b >= 1e12) return (b / 1e12).toFixed(1) + ' Tb';
-    if (b >= 1e9)  return (b / 1e9).toFixed(1) + ' Gb';
-    if (b >= 1e6)  return (b / 1e6).toFixed(0) + ' Mb';
+    if (b >= 1e9) return (b / 1e9).toFixed(1) + ' Gb';
+    if (b >= 1e6) return (b / 1e6).toFixed(0) + ' Mb';
     return b + ' bp';
   }
 
   /* ─── Access badge ─── */
   function _accessBadge(access) {
     const cls = access === 'Open' ? 'sra-open' : 'sra-ctrl';
-    const icon = access === 'Open'
-      ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 11V7a4 4 0 0 1 8 0m0 0v4"/><rect x="3" y="11" width="18" height="11" rx="2"/></svg>'
-      : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
+    const icon =
+      access === 'Open'
+        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 11V7a4 4 0 0 1 8 0m0 0v4"/><rect x="3" y="11" width="18" height="11" rx="2"/></svg>'
+        : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
     return `<span class="sra-access-badge ${cls}">${icon} ${_esc(access)}</span>`;
   }
 
@@ -154,7 +163,7 @@ OmicsLab.SRABrowser = (function () {
           <span class="sra-meta-item"><strong style="color:#E4DDD2">${d.samples.toLocaleString()}</strong> samples</span>
           <span class="sra-meta-item"><strong style="color:#E4DDD2">${typeof d.bases === 'string' ? d.bases : _fmtBases(d.bases)}</strong></span>
         </div>
-        <div class="sra-countries">${d.countries.map(c => `<span class="sra-country-chip">${_esc(c)}</span>`).join('')}</div>
+        <div class="sra-countries">${d.countries.map((c) => `<span class="sra-country-chip">${_esc(c)}</span>`).join('')}</div>
         <div class="sra-disease">${_esc(d.disease)}</div>
         <div class="sra-note">${_esc(d.note)}</div>
         <div class="sra-card-actions">
@@ -221,7 +230,9 @@ aws s3 sync s3://sra-pub-run-odp/sra/${acc}/ ./ --no-sign-request</pre>
           <div class="sra-modal-note">Note: Controlled access studies require dbGaP approval before download. Open access studies can be downloaded immediately.</div>
         </div>
       </div>`;
-    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) overlay.remove();
+    });
     document.body.appendChild(overlay);
   }
 
@@ -241,29 +252,34 @@ aws s3 sync s3://sra-pub-run-odp/sra/${acc}/ ./ --no-sign-request</pre>
     if (!resultEl) return;
     resultEl.innerHTML = '<div class="sra-loading">Searching NCBI SRA…</div>';
     try {
-      const q = encodeURIComponent(`${term} AND "Homo sapiens"[Organism] OR "Plasmodium falciparum"[Organism] OR "Mycobacterium tuberculosis"[Organism]`);
+      const q = encodeURIComponent(
+        `${term} AND "Homo sapiens"[Organism] OR "Plasmodium falciparum"[Organism] OR "Mycobacterium tuberculosis"[Organism]`
+      );
       const res = await fetch(`${ESEARCH}?db=sra&term=${q}&retmax=10&retmode=json`);
       if (!res.ok) throw new Error('NCBI HTTP ' + res.status);
       const data = await res.json();
       const ids = data.esearchresult?.idlist || [];
-      if (!ids.length) { resultEl.innerHTML = '<div class="sra-empty">No results from NCBI for this query.</div>'; return; }
+      if (!ids.length) {
+        resultEl.innerHTML = '<div class="sra-empty">No results from NCBI for this query.</div>';
+        return;
+      }
       /* Fetch summaries */
       const sumRes = await fetch(`${ESUMMARY}?db=sra&id=${ids.join(',')}&retmode=json`);
       if (!sumRes.ok) throw new Error('NCBI summary HTTP ' + sumRes.status);
       const sumData = await sumRes.json();
       const uids = sumData.result?.uids || [];
-      _liveResults = uids.map(uid => {
+      _liveResults = uids.map((uid) => {
         const r = sumData.result[uid];
         /* Parse XML-embedded fields from expxml/runs */
         const titleMatch = r?.expxml?.match(/<Title>([^<]+)<\/Title>/);
-        const orgMatch   = r?.expxml?.match(/<Organism[^>]*taxid="[^"]*"[^>]*>([^<]+)<\/Organism>/);
-        const platMatch  = r?.expxml?.match(/platform="([^"]+)"/i);
-        const runMatch   = r?.runs?.match(/total_runs="(\d+)"/);
-        const accMatch   = r?.expxml?.match(/acc="([A-Z]+\d+)"/);
+        const orgMatch = r?.expxml?.match(/<Organism[^>]*taxid="[^"]*"[^>]*>([^<]+)<\/Organism>/);
+        const platMatch = r?.expxml?.match(/platform="([^"]+)"/i);
+        const runMatch = r?.runs?.match(/total_runs="(\d+)"/);
+        const accMatch = r?.expxml?.match(/acc="([A-Z]+\d+)"/);
         return {
-          acc:   accMatch?.[1] || `SRA${uid}`,
+          acc: accMatch?.[1] || `SRA${uid}`,
           title: titleMatch?.[1] || r?.title || 'Untitled study',
-          org:   orgMatch?.[1] || 'Unknown',
+          org: orgMatch?.[1] || 'Unknown',
           platform: platMatch?.[1] || 'Unknown',
           runs: runMatch?.[1] || '?',
         };
@@ -279,7 +295,10 @@ aws s3 sync s3://sra-pub-run-odp/sra/${acc}/ ./ --no-sign-request</pre>
   /* ─── Preset search ─── */
   function _runPreset(q) {
     const input = document.getElementById('sra-search-input');
-    if (input) { input.value = q; _searchNCBI(q); }
+    if (input) {
+      input.value = q;
+      _searchNCBI(q);
+    }
   }
 
   /* ─── Render results section ─── */
@@ -318,7 +337,7 @@ aws s3 sync s3://sra-pub-run-odp/sra/${acc}/ ./ --no-sign-request</pre>
         <!-- Presets -->
         <div class="sra-presets">
           <span class="sra-presets-label">Quick:</span>
-          ${PRESETS.map(p => `<button class="sra-preset-btn" onclick="OmicsLab.SRABrowser._runPreset('${_esc(p.q)}')">${_esc(p.label)}</button>`).join('')}
+          ${PRESETS.map((p) => `<button class="sra-preset-btn" onclick="OmicsLab.SRABrowser._runPreset('${_esc(p.q)}')">${_esc(p.label)}</button>`).join('')}
         </div>
 
         <!-- Live results -->

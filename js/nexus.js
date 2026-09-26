@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Nexus = (function () {
-
   const STORE = 'omicslab_nexus_v1';
   const IC = OmicsLab.Icons?.svg || (() => '');
 
@@ -20,41 +19,216 @@ OmicsLab.Nexus = (function () {
 
   /* ─── Default channels ─── */
   const DEFAULT_CHANNELS = [
-    { id: 'general',        name: 'general',         icon: 'hash', desc: 'General discussion for the OmicsLab community', color: '#00C4A0', pinned: [] },
-    { id: 'announcements',  name: 'announcements',   icon: 'bell', desc: 'Platform updates and new feature releases', color: '#58a6ff', pinned: [] },
-    { id: 'wgs-genomics',   name: 'wgs-genomics',    icon: 'dna',  desc: 'Whole Genome Sequencing — methods, QC, GATK, variant calling', color: '#bc8cff', pinned: [] },
-    { id: 'rna-seq',        name: 'rna-seq',          icon: 'activity', desc: 'Bulk RNA-seq, differential expression, DESeq2, edgeR', color: '#e3b341', pinned: [] },
-    { id: 'africa-science', name: 'africa-science',  icon: 'globe', desc: 'H3Africa, AWI-Gen, APCDR, African genomics initiatives', color: '#f97316', pinned: [] },
-    { id: 'outbreaks',      name: 'outbreak-response',icon: 'alert-triangle', desc: 'Epidemics, surveillance, One Health, genomic epidemiology', color: '#ff6b6b', pinned: [] },
-    { id: 'bioinformatics', name: 'bioinformatics',  icon: 'terminal', desc: 'Tools, pipelines, HPC, cloud computing, reproducibility', color: '#00C4A0', pinned: [] },
-    { id: 'papers',         name: 'paper-discussion', icon: 'file-text', desc: 'Discuss recent publications in African genomics', color: '#58a6ff', pinned: [] },
-    { id: 'help',           name: 'help',             icon: 'message-circle', desc: 'Ask questions, get support from the community', color: '#bc8cff', pinned: [] },
+    {
+      id: 'general',
+      name: 'general',
+      icon: 'hash',
+      desc: 'General discussion for the OmicsLab community',
+      color: '#00C4A0',
+      pinned: [],
+    },
+    {
+      id: 'announcements',
+      name: 'announcements',
+      icon: 'bell',
+      desc: 'Platform updates and new feature releases',
+      color: '#58a6ff',
+      pinned: [],
+    },
+    {
+      id: 'wgs-genomics',
+      name: 'wgs-genomics',
+      icon: 'dna',
+      desc: 'Whole Genome Sequencing — methods, QC, GATK, variant calling',
+      color: '#bc8cff',
+      pinned: [],
+    },
+    {
+      id: 'rna-seq',
+      name: 'rna-seq',
+      icon: 'activity',
+      desc: 'Bulk RNA-seq, differential expression, DESeq2, edgeR',
+      color: '#e3b341',
+      pinned: [],
+    },
+    {
+      id: 'africa-science',
+      name: 'africa-science',
+      icon: 'globe',
+      desc: 'H3Africa, AWI-Gen, APCDR, African genomics initiatives',
+      color: '#f97316',
+      pinned: [],
+    },
+    {
+      id: 'outbreaks',
+      name: 'outbreak-response',
+      icon: 'alert-triangle',
+      desc: 'Epidemics, surveillance, One Health, genomic epidemiology',
+      color: '#ff6b6b',
+      pinned: [],
+    },
+    {
+      id: 'bioinformatics',
+      name: 'bioinformatics',
+      icon: 'terminal',
+      desc: 'Tools, pipelines, HPC, cloud computing, reproducibility',
+      color: '#00C4A0',
+      pinned: [],
+    },
+    {
+      id: 'papers',
+      name: 'paper-discussion',
+      icon: 'file-text',
+      desc: 'Discuss recent publications in African genomics',
+      color: '#58a6ff',
+      pinned: [],
+    },
+    {
+      id: 'help',
+      name: 'help',
+      icon: 'message-circle',
+      desc: 'Ask questions, get support from the community',
+      color: '#bc8cff',
+      pinned: [],
+    },
   ];
 
   /* ─── Seed messages ─── */
   const SEED_MESSAGES = {
-    'general': [
-      { id: 'gm1', author: 'Dr. Amara Osei', role: 'KEMRI · Kenya', avatar: 'AO', color: '#00C4A0', ts: Date.now() - 86400000*3, text: 'Welcome to OmicsLab Nexus! This is the community hub for African genomics researchers, students, and instructors. Introduce yourself below.', reactions: { '+1': 12, 'check-circle': 5 }, pinned: false, thread: [] },
-      { id: 'gm2', author: 'Sipho Dlamini', role: 'UCT · South Africa', avatar: 'SD', color: '#58a6ff', ts: Date.now() - 86400000*2, text: 'Just completed the WGS curriculum track — the error propagation simulation in the DNA extraction step was incredibly realistic. Lost 40% of my reads because of a mis-calibrated bead ratio. Lesson learned!', reactions: { 'zap': 8 }, pinned: false, thread: [{ id: 'gm2r1', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#00C4A0', ts: Date.now() - 86400000*2 + 3600000, text: 'That is exactly the kind of mistake that costs real experiments. The bead ratio step has a 15% pass rate on first attempt.', reactions: {}, pinned: false }] },
-      { id: 'gm3', author: 'Fatima Al-Rashidi', role: 'APCDR · Uganda', avatar: 'FA', color: '#bc8cff', ts: Date.now() - 86400000, text: 'Anyone working on APOL1 kidney disease variants in Ugandan cohorts? Looking to compare gnomAD AFR frequencies with local data.', reactions: { 'heart-pulse': 4 }, pinned: false, thread: [] },
+    general: [
+      {
+        id: 'gm1',
+        author: 'Dr. Amara Osei',
+        role: 'KEMRI · Kenya',
+        avatar: 'AO',
+        color: '#00C4A0',
+        ts: Date.now() - 86400000 * 3,
+        text: 'Welcome to OmicsLab Nexus! This is the community hub for African genomics researchers, students, and instructors. Introduce yourself below.',
+        reactions: { '+1': 12, 'check-circle': 5 },
+        pinned: false,
+        thread: [],
+      },
+      {
+        id: 'gm2',
+        author: 'Sipho Dlamini',
+        role: 'UCT · South Africa',
+        avatar: 'SD',
+        color: '#58a6ff',
+        ts: Date.now() - 86400000 * 2,
+        text: 'Just completed the WGS curriculum track — the error propagation simulation in the DNA extraction step was incredibly realistic. Lost 40% of my reads because of a mis-calibrated bead ratio. Lesson learned!',
+        reactions: { zap: 8 },
+        pinned: false,
+        thread: [
+          {
+            id: 'gm2r1',
+            author: 'Platform',
+            role: 'OmicsLab',
+            avatar: 'OL',
+            color: '#00C4A0',
+            ts: Date.now() - 86400000 * 2 + 3600000,
+            text: 'That is exactly the kind of mistake that costs real experiments. The bead ratio step has a 15% pass rate on first attempt.',
+            reactions: {},
+            pinned: false,
+          },
+        ],
+      },
+      {
+        id: 'gm3',
+        author: 'Fatima Al-Rashidi',
+        role: 'APCDR · Uganda',
+        avatar: 'FA',
+        color: '#bc8cff',
+        ts: Date.now() - 86400000,
+        text: 'Anyone working on APOL1 kidney disease variants in Ugandan cohorts? Looking to compare gnomAD AFR frequencies with local data.',
+        reactions: { 'heart-pulse': 4 },
+        pinned: false,
+        thread: [],
+      },
     ],
-    'announcements': [
-      { id: 'an1', author: 'OmicsLab Platform', role: 'System', avatar: 'OL', color: '#58a6ff', ts: Date.now() - 86400000*5, text: 'Version 2.0 is live. Major additions: Phylo Tree Builder (NJ + UPGMA), Expression Visualiser (volcano + heatmap), Peer Review Simulator, Citation Manager, and Multiplayer Quiz Battle. See the changelog for full details.', reactions: { '+1': 24, 'zap': 18 }, pinned: true, thread: [] },
-      { id: 'an2', author: 'OmicsLab Platform', role: 'System', avatar: 'OL', color: '#58a6ff', ts: Date.now() - 86400000*2, text: 'New tools live: Sample Quality Predictor (GATK/ENCODE/H3Africa thresholds), Variant Interpreter (ACMG/AMP 2015 + 20 Africa variants), and Primer Design (Wallace Tm + dimer checks). Access them all under Tools.', reactions: { '+1': 31 }, pinned: true, thread: [] },
+    announcements: [
+      {
+        id: 'an1',
+        author: 'OmicsLab Platform',
+        role: 'System',
+        avatar: 'OL',
+        color: '#58a6ff',
+        ts: Date.now() - 86400000 * 5,
+        text: 'Version 2.0 is live. Major additions: Phylo Tree Builder (NJ + UPGMA), Expression Visualiser (volcano + heatmap), Peer Review Simulator, Citation Manager, and Multiplayer Quiz Battle. See the changelog for full details.',
+        reactions: { '+1': 24, zap: 18 },
+        pinned: true,
+        thread: [],
+      },
+      {
+        id: 'an2',
+        author: 'OmicsLab Platform',
+        role: 'System',
+        avatar: 'OL',
+        color: '#58a6ff',
+        ts: Date.now() - 86400000 * 2,
+        text: 'New tools live: Sample Quality Predictor (GATK/ENCODE/H3Africa thresholds), Variant Interpreter (ACMG/AMP 2015 + 20 Africa variants), and Primer Design (Wallace Tm + dimer checks). Access them all under Tools.',
+        reactions: { '+1': 31 },
+        pinned: true,
+        thread: [],
+      },
     ],
     'africa-science': [
-      { id: 'af1', author: 'Dr. Kagiso Motsepe', role: 'KRISP · South Africa', avatar: 'KM', color: '#f97316', ts: Date.now() - 86400000*4, text: 'The AWI-Gen study published new GWAS hits for cardiometabolic traits across 6 African sites — including Burkina Faso, Ghana, Kenya, Nigeria, South Africa and Tanzania. Strong population stratification signals in PCA. Worth discussing the ancestry inference methods used.', reactions: { 'bar-chart': 7, '+1': 9 }, pinned: false, thread: [] },
-      { id: 'af2', author: 'Amira Hassan', role: 'ACEGID · Nigeria', avatar: 'AH', color: '#e3b341', ts: Date.now() - 86400000*2, text: 'H3Africa data governance workshop recordings are available. Key takeaway: community advisory boards are now required for any genomic data sharing outside the country of origin. Important for all research using African cohort data.', reactions: { 'shield': 11, '+1': 6 }, pinned: true, thread: [] },
+      {
+        id: 'af1',
+        author: 'Dr. Kagiso Motsepe',
+        role: 'KRISP · South Africa',
+        avatar: 'KM',
+        color: '#f97316',
+        ts: Date.now() - 86400000 * 4,
+        text: 'The AWI-Gen study published new GWAS hits for cardiometabolic traits across 6 African sites — including Burkina Faso, Ghana, Kenya, Nigeria, South Africa and Tanzania. Strong population stratification signals in PCA. Worth discussing the ancestry inference methods used.',
+        reactions: { 'bar-chart': 7, '+1': 9 },
+        pinned: false,
+        thread: [],
+      },
+      {
+        id: 'af2',
+        author: 'Amira Hassan',
+        role: 'ACEGID · Nigeria',
+        avatar: 'AH',
+        color: '#e3b341',
+        ts: Date.now() - 86400000 * 2,
+        text: 'H3Africa data governance workshop recordings are available. Key takeaway: community advisory boards are now required for any genomic data sharing outside the country of origin. Important for all research using African cohort data.',
+        reactions: { shield: 11, '+1': 6 },
+        pinned: true,
+        thread: [],
+      },
     ],
-    'outbreaks': [
-      { id: 'ob1', author: 'Dr. Yewande Adeyemi', role: 'IHVN · Nigeria', avatar: 'YA', color: '#ff6b6b', ts: Date.now() - 86400000*6, text: 'Mpox clade Ib update: 847 confirmed cases in DRC this week. Genome sequences now available on GISAID. The phylo clustering suggests two distinct transmission chains — one linked to the healthcare setting, one community-acquired. Real-time tree is in the OmicsLab Journal Club.', reactions: { 'alert-triangle': 14, '+1': 8 }, pinned: false, thread: [] },
-      { id: 'ob2', author: 'Platform', role: 'OmicsLab', avatar: 'OL', color: '#00C4A0', ts: Date.now() - 86400000*3, text: 'Outbreak Alert feed updated: Marburg Rwanda (active · 28 cases), XDR-TB South Africa (ongoing), Oropouche West Africa (new · 14 cases). Use the Outbreak Alerts section for genomic readiness scores per country.', reactions: {}, pinned: false, thread: [] },
+    outbreaks: [
+      {
+        id: 'ob1',
+        author: 'Dr. Yewande Adeyemi',
+        role: 'IHVN · Nigeria',
+        avatar: 'YA',
+        color: '#ff6b6b',
+        ts: Date.now() - 86400000 * 6,
+        text: 'Mpox clade Ib update: 847 confirmed cases in DRC this week. Genome sequences now available on GISAID. The phylo clustering suggests two distinct transmission chains — one linked to the healthcare setting, one community-acquired. Real-time tree is in the OmicsLab Journal Club.',
+        reactions: { 'alert-triangle': 14, '+1': 8 },
+        pinned: false,
+        thread: [],
+      },
+      {
+        id: 'ob2',
+        author: 'Platform',
+        role: 'OmicsLab',
+        avatar: 'OL',
+        color: '#00C4A0',
+        ts: Date.now() - 86400000 * 3,
+        text: 'Outbreak Alert feed updated: Marburg Rwanda (active · 28 cases), XDR-TB South Africa (ongoing), Oropouche West Africa (new · 14 cases). Use the Outbreak Alerts section for genomic readiness scores per country.',
+        reactions: {},
+        pinned: false,
+        thread: [],
+      },
     ],
   };
 
   /* ─── State ─── */
   let _state = { channels: [], activeChannel: 'general', profile: null };
-  let _view = 'channel'; /* 'channel' | 'forum' | 'people' — not persisted, always lands on Channels */
+  let _view =
+    'channel'; /* 'channel' | 'forum' | 'people' — not persisted, always lands on Channels */
 
   /* ─── Storage ─── */
   function _load() {
@@ -63,17 +237,24 @@ OmicsLab.Nexus = (function () {
       if (raw) _state = { ..._state, ...JSON.parse(raw) };
     } catch {}
     if (!_state.channels || !_state.channels.length) {
-      _state.channels = DEFAULT_CHANNELS.map(c => ({
+      _state.channels = DEFAULT_CHANNELS.map((c) => ({
         ...c,
         messages: SEED_MESSAGES[c.id] || [],
       }));
     }
-    _state.profile = _state.profile || { name: 'You', role: 'OmicsLab User', avatar: 'YO', color: '#00C4A0' };
+    _state.profile = _state.profile || {
+      name: 'You',
+      role: 'OmicsLab User',
+      avatar: 'YO',
+      color: '#00C4A0',
+    };
     _syncProfileFromAuth();
   }
 
   function _save() {
-    try { localStorage.setItem(STORE, JSON.stringify(_state)); } catch {}
+    try {
+      localStorage.setItem(STORE, JSON.stringify(_state));
+    } catch {}
   }
 
   /* Binds the real signed-in identity onto the chat profile — previously
@@ -86,15 +267,29 @@ OmicsLab.Nexus = (function () {
     const cu = OmicsLab.AuthClerk?.getUser?.();
     if (!cu) return;
     let extra = {};
-    try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
-    const initials = (cu.name || 'OmicsLab User').trim().split(/\s+/).slice(0, 2).map(w => w[0] || '').join('').toUpperCase() || 'OL';
-    _state.profile = { ..._state.profile, name: cu.name || _state.profile.name, avatar: initials, role: extra.institution || _state.profile.role };
+    try {
+      extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}');
+    } catch {}
+    const initials =
+      (cu.name || 'OmicsLab User')
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((w) => w[0] || '')
+        .join('')
+        .toUpperCase() || 'OL';
+    _state.profile = {
+      ..._state.profile,
+      name: cu.name || _state.profile.name,
+      avatar: initials,
+      role: extra.institution || _state.profile.role,
+    };
     _save();
   }
 
   /* ─── Get channel ─── */
   function _ch(id) {
-    return _state.channels.find(c => c.id === id);
+    return _state.channels.find((c) => c.id === id);
   }
 
   /* ─── Format timestamp ─── */
@@ -120,7 +315,10 @@ OmicsLab.Nexus = (function () {
        with Nexus visible; no point announcing what's already on screen. */
     if (!fromHistory) {
       const nexusVisible = document.getElementById('nexus-section')?.style.display !== 'none';
-      const watching = document.visibilityState === 'visible' && nexusVisible && channelId === _state.activeChannel;
+      const watching =
+        document.visibilityState === 'visible' &&
+        nexusVisible &&
+        channelId === _state.activeChannel;
       if (!watching) {
         /* Notifications.add() persists `link` to localStorage (JSON),
            so it must be a plain route string _onItemClick can pass to
@@ -172,26 +370,30 @@ OmicsLab.Nexus = (function () {
   function _hasMessage(id, channelId) {
     channelId = channelId || _state.activeChannel;
     const ch = _ch(channelId);
-    return !!(ch?.messages.find(m => m.id === id));
+    return !!ch?.messages.find((m) => m.id === id);
   }
 
-  function _getActiveChannel() { return _state.activeChannel; }
+  function _getActiveChannel() {
+    return _state.activeChannel;
+  }
 
   /* ─── Render sidebar ─── */
   function _renderSidebar() {
     const s = document.getElementById('nx-sidebar');
     if (!s) return;
 
-    const channelItems = _state.channels.map(c => {
-      const active = c.id === _state.activeChannel;
-      const unread = (c.messages || []).length;
-      return `
+    const channelItems = _state.channels
+      .map((c) => {
+        const active = c.id === _state.activeChannel;
+        const unread = (c.messages || []).length;
+        return `
         <button class="nx-ch-item ${active ? 'nx-ch-active' : ''}" onclick="OmicsLab.Nexus._switchChannel('${c.id}')">
           <span class="nx-ch-icon" style="color:${c.color}">#</span>
           <span class="nx-ch-name">${c.name}</span>
           ${!active && unread > 0 ? `<span class="nx-ch-badge">${Math.min(unread, 99)}</span>` : ''}
         </button>`;
-    }).join('');
+      })
+      .join('');
 
     s.innerHTML = `
       <div class="nx-sidebar-header">
@@ -204,10 +406,10 @@ OmicsLab.Nexus = (function () {
 
       <div class="nx-view-nav">
         <div class="nx-sidebar-label">Workspace</div>
-        <button class="nx-ch-item ${_view==='forum'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('forum')">
-          <span class="nx-ch-icon">${IC('file-text',13) || '◆'}</span><span class="nx-ch-name">Forum</span>
+        <button class="nx-ch-item ${_view === 'forum' ? 'nx-ch-active' : ''}" onclick="OmicsLab.Nexus._switchView('forum')">
+          <span class="nx-ch-icon">${IC('file-text', 13) || '◆'}</span><span class="nx-ch-name">Forum</span>
         </button>
-        <button class="nx-ch-item ${_view==='people'?'nx-ch-active':''}" onclick="OmicsLab.Nexus._switchView('people')">
+        <button class="nx-ch-item ${_view === 'people' ? 'nx-ch-active' : ''}" onclick="OmicsLab.Nexus._switchView('people')">
           <span class="nx-ch-icon">@</span><span class="nx-ch-name">People</span>
         </button>
       </div>
@@ -230,15 +432,19 @@ OmicsLab.Nexus = (function () {
 
   /* ─── Render message ─── */
   function _msgHtml(msg, inThread = false) {
-    const reactionHtml = Object.entries(msg.reactions || {}).map(([icon, n]) =>
-      /* Older seed data used icon NAMES ('+1', 'zap', 'check-circle', …)
+    const reactionHtml = Object.entries(msg.reactions || {})
+      .map(([icon, n]) =>
+        /* Older seed data used icon NAMES ('+1', 'zap', 'check-circle', …)
          rendered via the app's SVG icon set; real reactions now use an
          actual emoji character as the key. Icons.svg() returns '' for
          anything it doesn't recognize (an emoji never matches an icon
          name), so falling back to the raw key renders the emoji as-is
          without needing to special-case which format a given key is. */
-      n > 0 ? `<button class="nx-reaction" onclick="OmicsLab.Nexus._react('${msg.id}','${icon}')">${icon === '+1' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' : (OmicsLab.Icons.svg(icon, 12) || icon)} ${n}</button>` : ''
-    ).join('');
+        n > 0
+          ? `<button class="nx-reaction" onclick="OmicsLab.Nexus._react('${msg.id}','${icon}')">${icon === '+1' ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>' : OmicsLab.Icons.svg(icon, 12) || icon} ${n}</button>`
+          : ''
+      )
+      .join('');
 
     const threadCount = msg.thread?.length || 0;
 
@@ -254,22 +460,34 @@ OmicsLab.Nexus = (function () {
           </div>
           <div class="nx-msg-text">${_linkify(msg.text)}</div>
           ${reactionHtml ? `<div class="nx-reactions">${reactionHtml}</div>` : ''}
-          ${!inThread && threadCount > 0 ? `
+          ${
+            !inThread && threadCount > 0
+              ? `
             <button class="nx-thread-btn" onclick="OmicsLab.Nexus._openThread('${msg.id}')">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               ${threadCount} ${threadCount === 1 ? 'reply' : 'replies'}
-            </button>` : ''}
-          ${!inThread ? `
+            </button>`
+              : ''
+          }
+          ${
+            !inThread
+              ? `
             <div class="nx-msg-actions">
               <button class="nx-msg-action" title="Reply in thread" onclick="OmicsLab.Nexus._openThread('${msg.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
               <div class="nx-reaction-picker-wrap">
                 <button class="nx-msg-action" title="Add reaction" onclick="OmicsLab.Nexus._toggleReactionPicker('${msg.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 13s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
-                ${_reactionPickerFor === msg.id ? `
+                ${
+                  _reactionPickerFor === msg.id
+                    ? `
                   <div class="nx-reaction-picker">
-                    ${REACTION_EMOJI.map(e => `<button class="nx-reaction-picker-btn" onclick="OmicsLab.Nexus._pickReaction('${msg.id}','${e}')">${e}</button>`).join('')}
-                  </div>` : ''}
+                    ${REACTION_EMOJI.map((e) => `<button class="nx-reaction-picker-btn" onclick="OmicsLab.Nexus._pickReaction('${msg.id}','${e}')">${e}</button>`).join('')}
+                  </div>`
+                    : ''
+                }
               </div>
-            </div>` : ''}
+            </div>`
+              : ''
+          }
         </div>
       </div>`;
   }
@@ -277,7 +495,9 @@ OmicsLab.Nexus = (function () {
   /* ─── Basic @mention + URL linkify ─── */
   function _linkify(text) {
     return text
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
       .replace(/@(\w+)/g, '<span class="nx-mention">@$1</span>')
       .replace(/`([^`]+)`/g, '<code class="nx-code">$1</code>');
   }
@@ -290,8 +510,8 @@ OmicsLab.Nexus = (function () {
     const ch = _ch(_state.activeChannel);
     if (!ch) return;
 
-    const msgs = (ch.messages || []).map(m => _msgHtml(m)).join('');
-    const pinned = (ch.messages || []).filter(m => m.pinned);
+    const msgs = (ch.messages || []).map((m) => _msgHtml(m)).join('');
+    const pinned = (ch.messages || []).filter((m) => m.pinned);
 
     panel.innerHTML = `
       <div class="nx-channel-header">
@@ -321,7 +541,7 @@ OmicsLab.Nexus = (function () {
   function _openThread(msgId) {
     const ch = _ch(_state.activeChannel);
     if (!ch) return;
-    const msg = ch.messages.find(m => m.id === msgId);
+    const msg = ch.messages.find((m) => m.id === msgId);
     if (!msg) return;
 
     const panel = document.getElementById('nx-thread');
@@ -337,7 +557,7 @@ OmicsLab.Nexus = (function () {
       </div>
       <div class="nx-thread-parent">${_msgHtml(msg, true)}</div>
       <div class="nx-thread-divider">${(msg.thread || []).length} ${(msg.thread || []).length === 1 ? 'reply' : 'replies'}</div>
-      <div class="nx-thread-replies">${(msg.thread || []).map(r => _msgHtml(r, true)).join('')}</div>
+      <div class="nx-thread-replies">${(msg.thread || []).map((r) => _msgHtml(r, true)).join('')}</div>
       <div class="nx-thread-composer">
         <textarea class="nx-composer-input" id="nx-thread-input" rows="1"
           placeholder="Reply in thread…"
@@ -376,8 +596,14 @@ OmicsLab.Nexus = (function () {
   }
 
   function _renderMain() {
-    if (_view === 'forum')  { OmicsLab.Community?.mountInto?.('nx-messages'); return; }
-    if (_view === 'people') { OmicsLab.Social?.mountInto?.('nx-messages'); return; }
+    if (_view === 'forum') {
+      OmicsLab.Community?.mountInto?.('nx-messages');
+      return;
+    }
+    if (_view === 'people') {
+      OmicsLab.Social?.mountInto?.('nx-messages');
+      return;
+    }
     _renderMessages();
   }
 
@@ -426,7 +652,7 @@ OmicsLab.Nexus = (function () {
     if (!text) return;
 
     const ch = _ch(_state.activeChannel);
-    const msg = ch?.messages.find(m => m.id === msgId);
+    const msg = ch?.messages.find((m) => m.id === msgId);
     if (!msg) return;
 
     msg.thread = msg.thread || [];
@@ -450,7 +676,7 @@ OmicsLab.Nexus = (function () {
   function _react(msgId, icon) {
     const ch = _ch(_state.activeChannel);
     if (!ch) return;
-    const msg = ch.messages.find(m => m.id === msgId);
+    const msg = ch.messages.find((m) => m.id === msgId);
     if (!msg) return;
     msg.reactions = msg.reactions || {};
     msg.reactions[icon] = (msg.reactions[icon] || 0) + 1;
@@ -470,10 +696,16 @@ OmicsLab.Nexus = (function () {
 
   /* ─── Keyboard shortcuts ─── */
   function _composerKey(e) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); _send(); }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      _send();
+    }
   }
   function _threadKey(e, msgId) {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); _sendThread(msgId); }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      _sendThread(msgId);
+    }
   }
 
   /* ─── Auto-resize textarea ─── */
@@ -515,9 +747,20 @@ OmicsLab.Nexus = (function () {
 
   return {
     init,
-    _switchChannel, _switchView, _send, _sendThread, _react, _openThread, _closeThread,
-    _composerKey, _threadKey, _toggleReactionPicker, _pickReaction,
+    _switchChannel,
+    _switchView,
+    _send,
+    _sendThread,
+    _react,
+    _openThread,
+    _closeThread,
+    _composerKey,
+    _threadKey,
+    _toggleReactionPicker,
+    _pickReaction,
     /* Realtime hooks */
-    _injectMessage, _hasMessage, _getActiveChannel,
+    _injectMessage,
+    _hasMessage,
+    _getActiveChannel,
   };
 })();

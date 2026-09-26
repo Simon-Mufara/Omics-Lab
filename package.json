@@ -8,9 +8,12 @@
   },
   "scripts": {
     "validate": "node scripts/validate-html.js",
-    "lint": "node scripts/validate-html.js && node -e \"require('fs').readdirSync('api').forEach(f=>require('child_process').execSync('node --check api/'+f,{stdio:'inherit'}))\"",
-    "check:console": "grep -rn 'console\\.log(' js/ --include='*.js' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0",
-    "build:hub": "npm --prefix hub install && npm --prefix hub run build"
+    "lint": "node scripts/validate-html.js && node -e \"require('fs').readdirSync('api').forEach(f=>require('child_process').execSync('node --check api/'+f,{stdio:'inherit'}))\" && eslint . --ext .js,.ts --ignore-path .gitignore",
+    "check:console": "grep -rn 'console\\.log(' js/ --include='*.js,.ts' | grep -v 'config.js\\|analytics.js\\|db.js' && exit 1 || exit 0",
+    "build:hub": "npm --prefix hub install && npm --prefix hub run build",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@clerk/backend": "^3.11.2",
@@ -21,6 +24,13 @@
     "stripe": "^14.25.0"
   },
   "devDependencies": {
-    "html-validate": "^9.4.0"
+    "@types/node": "^26.6.2",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "html-validate": "^9.4.0",
+    "prettier": "^3.9.8",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.0"
   }
 }

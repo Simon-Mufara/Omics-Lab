@@ -8,20 +8,84 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.ThesisCoach = (function () {
-
   const STORE = 'omicslab_thesis_v1';
 
   /* Default chapter structure */
   const CHAPTERS = [
-    { id: 'intro',       title: 'Chapter 1: Introduction',          target: 6000,  subsections: ['Background & rationale', 'Problem statement', 'Research questions & objectives', 'Significance', 'Thesis overview'] },
-    { id: 'lit',         title: 'Chapter 2: Literature Review',      target: 8000,  subsections: ['Genomic landscape of [topic]', 'African population genetics', 'Current tools & methods', 'Gaps in knowledge', 'Theoretical framework'] },
-    { id: 'methods',     title: 'Chapter 3: Materials & Methods',    target: 5000,  subsections: ['Study design & cohort', 'Sample collection & ethics', 'Sequencing & QC', 'Bioinformatics pipeline', 'Statistical analysis'] },
-    { id: 'results',     title: 'Chapter 4: Results',                target: 7000,  subsections: ['Quality metrics', 'Primary findings', 'Population analysis', 'Variant/expression landscape', 'Comparative analysis'] },
-    { id: 'discussion',  title: 'Chapter 5: Discussion & Conclusion', target: 5000, subsections: ['Interpretation of findings', 'African-specific context', 'Limitations', 'Future directions', 'Conclusion'] },
+    {
+      id: 'intro',
+      title: 'Chapter 1: Introduction',
+      target: 6000,
+      subsections: [
+        'Background & rationale',
+        'Problem statement',
+        'Research questions & objectives',
+        'Significance',
+        'Thesis overview',
+      ],
+    },
+    {
+      id: 'lit',
+      title: 'Chapter 2: Literature Review',
+      target: 8000,
+      subsections: [
+        'Genomic landscape of [topic]',
+        'African population genetics',
+        'Current tools & methods',
+        'Gaps in knowledge',
+        'Theoretical framework',
+      ],
+    },
+    {
+      id: 'methods',
+      title: 'Chapter 3: Materials & Methods',
+      target: 5000,
+      subsections: [
+        'Study design & cohort',
+        'Sample collection & ethics',
+        'Sequencing & QC',
+        'Bioinformatics pipeline',
+        'Statistical analysis',
+      ],
+    },
+    {
+      id: 'results',
+      title: 'Chapter 4: Results',
+      target: 7000,
+      subsections: [
+        'Quality metrics',
+        'Primary findings',
+        'Population analysis',
+        'Variant/expression landscape',
+        'Comparative analysis',
+      ],
+    },
+    {
+      id: 'discussion',
+      title: 'Chapter 5: Discussion & Conclusion',
+      target: 5000,
+      subsections: [
+        'Interpretation of findings',
+        'African-specific context',
+        'Limitations',
+        'Future directions',
+        'Conclusion',
+      ],
+    },
   ];
 
   /* Research areas for context */
-  const RESEARCH_AREAS = ['Genomics / WGS', 'Transcriptomics / RNA-Seq', 'Epigenomics', 'Metagenomics', 'Population genetics', 'Clinical genomics', 'Infectious disease genomics', 'Cancer genomics', 'Pharmacogenomics'];
+  const RESEARCH_AREAS = [
+    'Genomics / WGS',
+    'Transcriptomics / RNA-Seq',
+    'Epigenomics',
+    'Metagenomics',
+    'Population genetics',
+    'Clinical genomics',
+    'Infectious disease genomics',
+    'Cancer genomics',
+    'Pharmacogenomics',
+  ];
 
   let _project = null;
   let _activeChapter = null;
@@ -29,31 +93,40 @@ OmicsLab.ThesisCoach = (function () {
 
   /* ─── State management ─── */
   function _load() {
-    try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch { return null; }
+    try {
+      return JSON.parse(localStorage.getItem(STORE) || 'null');
+    } catch {
+      return null;
+    }
   }
   function _save() {
-    if (_project) try { localStorage.setItem(STORE, JSON.stringify(_project)); } catch {}
+    if (_project)
+      try {
+        localStorage.setItem(STORE, JSON.stringify(_project));
+      } catch {}
   }
 
   function _newProject(form) {
     _project = {
-      title:       form.title,
-      degree:      form.degree,
+      title: form.title,
+      degree: form.degree,
       institution: form.institution,
-      area:        form.area,
-      question:    form.question,
-      supervisor:  form.supervisor,
-      deadline:    form.deadline,
-      created:     new Date().toISOString(),
-      chapters:    CHAPTERS.map(c => ({ ...c, words: 0, text: '', notes: '' })),
-      abstract:    '',
+      area: form.area,
+      question: form.question,
+      supervisor: form.supervisor,
+      deadline: form.deadline,
+      created: new Date().toISOString(),
+      chapters: CHAPTERS.map((c) => ({ ...c, words: 0, text: '', notes: '' })),
+      abstract: '',
     };
     _save();
     _renderMain();
   }
 
   /* ─── Render ─── */
-  function _section() { return document.getElementById('thesis-section'); }
+  function _section() {
+    return document.getElementById('thesis-section');
+  }
 
   function _renderSetup() {
     const s = _section();
@@ -80,7 +153,7 @@ OmicsLab.ThesisCoach = (function () {
               </div>
               <div class="tc-field"><label class="tc-label">Research area</label>
                 <select class="tc-input" id="tc-area">
-                  ${RESEARCH_AREAS.map(a => `<option>${a}</option>`).join('')}
+                  ${RESEARCH_AREAS.map((a) => `<option>${a}</option>`).join('')}
                 </select>
               </div>
             </div>
@@ -98,15 +171,18 @@ OmicsLab.ThesisCoach = (function () {
 
   function _submitSetup() {
     const title = document.getElementById('tc-title')?.value.trim();
-    if (!title) { document.getElementById('tc-title').style.borderColor = '#ff6b6b'; return; }
+    if (!title) {
+      document.getElementById('tc-title').style.borderColor = '#ff6b6b';
+      return;
+    }
     _newProject({
       title,
-      degree:      document.getElementById('tc-degree')?.value,
-      area:        document.getElementById('tc-area')?.value,
+      degree: document.getElementById('tc-degree')?.value,
+      area: document.getElementById('tc-area')?.value,
       institution: document.getElementById('tc-inst')?.value.trim(),
-      supervisor:  document.getElementById('tc-sup')?.value.trim(),
-      question:    document.getElementById('tc-q')?.value.trim(),
-      deadline:    document.getElementById('tc-deadline')?.value,
+      supervisor: document.getElementById('tc-sup')?.value.trim(),
+      question: document.getElementById('tc-q')?.value.trim(),
+      deadline: document.getElementById('tc-deadline')?.value,
     });
   }
 
@@ -115,7 +191,7 @@ OmicsLab.ThesisCoach = (function () {
     if (!s || !_project) return;
 
     const totalTarget = _project.chapters.reduce((a, c) => a + c.target, 0);
-    const totalWords  = _project.chapters.reduce((a, c) => a + (c.words || 0), 0);
+    const totalWords = _project.chapters.reduce((a, c) => a + (c.words || 0), 0);
     const pct = Math.min(Math.round((totalWords / totalTarget) * 100), 100);
 
     /* Days to deadline */
@@ -160,40 +236,49 @@ OmicsLab.ThesisCoach = (function () {
 
   function _tabContent() {
     if (_activeTab === 'progress') return _progressTab();
-    if (_activeTab === 'write')    return _writeTab();
+    if (_activeTab === 'write') return _writeTab();
     if (_activeTab === 'abstract') return _abstractTab();
     return '';
   }
 
   function _progressTab() {
     return `<div class="tc-chapter-grid">
-      ${_project.chapters.map(ch => {
-        const pct = ch.target ? Math.min(Math.round(((ch.words || 0) / ch.target) * 100), 100) : 0;
-        const col  = pct >= 80 ? '#00C4A0' : pct >= 40 ? '#e3b341' : '#58a6ff';
-        return `
+      ${_project.chapters
+        .map((ch) => {
+          const pct = ch.target
+            ? Math.min(Math.round(((ch.words || 0) / ch.target) * 100), 100)
+            : 0;
+          const col = pct >= 80 ? '#00C4A0' : pct >= 40 ? '#e3b341' : '#58a6ff';
+          return `
           <div class="tc-chapter-card">
             <div class="tc-ch-title">${_esc(ch.title)}</div>
             <div class="tc-ch-meta">${(ch.words || 0).toLocaleString()} / ${ch.target.toLocaleString()} words · ${pct}%</div>
             <div class="tc-ch-bar-wrap"><div class="tc-ch-bar" style="width:${pct}%;background:${col}"></div></div>
             <div class="tc-subsections">
-              ${ch.subsections.map(sub => `<div class="tc-sub">${_esc(sub)}</div>`).join('')}
+              ${ch.subsections.map((sub) => `<div class="tc-sub">${_esc(sub)}</div>`).join('')}
             </div>
             <button class="tc-write-ch-btn" onclick="OmicsLab.ThesisCoach._openChapter('${ch.id}')">Open in Write</button>
           </div>`;
-      }).join('')}
+        })
+        .join('')}
     </div>`;
   }
 
   function _writeTab() {
-    const ch = _activeChapter ? _project.chapters.find(c => c.id === _activeChapter) : _project.chapters[0];
+    const ch = _activeChapter
+      ? _project.chapters.find((c) => c.id === _activeChapter)
+      : _project.chapters[0];
     if (!ch) return '<div class="tc-empty">No chapter selected.</div>';
 
     return `
       <div class="tc-write-layout">
         <div class="tc-chapter-selector">
-          ${_project.chapters.map(c =>
-            `<button class="tc-ch-sel-btn ${c.id === ch.id ? 'tc-ch-sel-active' : ''}" onclick="OmicsLab.ThesisCoach._openChapter('${c.id}')">${_esc(c.title.slice(0, 30))}</button>`
-          ).join('')}
+          ${_project.chapters
+            .map(
+              (c) =>
+                `<button class="tc-ch-sel-btn ${c.id === ch.id ? 'tc-ch-sel-active' : ''}" onclick="OmicsLab.ThesisCoach._openChapter('${c.id}')">${_esc(c.title.slice(0, 30))}</button>`
+            )
+            .join('')}
         </div>
 
         <div class="tc-write-panel">
@@ -209,7 +294,7 @@ OmicsLab.ThesisCoach = (function () {
           </div>
 
           <div class="tc-subsection-hints">
-            ${ch.subsections.map(sub => `<span class="tc-sub-hint">${_esc(sub)}</span>`).join('')}
+            ${ch.subsections.map((sub) => `<span class="tc-sub-hint">${_esc(sub)}</span>`).join('')}
           </div>
 
           <textarea class="tc-chapter-textarea" id="tc-ch-text-${ch.id}"
@@ -263,17 +348,23 @@ OmicsLab.ThesisCoach = (function () {
     const el = document.getElementById('tc-tab-content');
     if (el) el.innerHTML = _tabContent();
     /* Update tab active state */
-    document.querySelectorAll('.tc-tab').forEach(btn => {
-      btn.classList.toggle('tc-tab-active', btn.textContent.toLowerCase().includes(tab === 'progress' ? 'chapter' : tab));
+    document.querySelectorAll('.tc-tab').forEach((btn) => {
+      btn.classList.toggle(
+        'tc-tab-active',
+        btn.textContent.toLowerCase().includes(tab === 'progress' ? 'chapter' : tab)
+      );
     });
   }
 
   function _saveChapter(id) {
-    const ch = _project.chapters.find(c => c.id === id);
+    const ch = _project.chapters.find((c) => c.id === id);
     if (!ch) return;
     const ta = document.getElementById(`tc-ch-text-${id}`);
     const notes = document.getElementById(`tc-ch-notes-${id}`);
-    if (ta) { ch.text = ta.value; ch.words = _wc(ta.value); }
+    if (ta) {
+      ch.text = ta.value;
+      ch.words = _wc(ta.value);
+    }
     if (notes) ch.notes = notes.value;
     _save();
     _toast('Saved');
@@ -284,13 +375,18 @@ OmicsLab.ThesisCoach = (function () {
 
   function _saveAbstract() {
     const ta = document.getElementById('tc-abstract-text');
-    if (ta) { _project.abstract = ta.value; _save(); _toast('Abstract saved'); }
+    if (ta) {
+      _project.abstract = ta.value;
+      _save();
+      _toast('Abstract saved');
+    }
   }
 
   function _countWords(id, text) {
     const wc = document.getElementById(`tc-wc-${id}`);
-    const ch = _project.chapters.find(c => c.id === id);
-    if (wc && ch) wc.textContent = `${_wc(text).toLocaleString()} / ${ch.target.toLocaleString()} words`;
+    const ch = _project.chapters.find((c) => c.id === id);
+    if (wc && ch)
+      wc.textContent = `${_wc(text).toLocaleString()} / ${ch.target.toLocaleString()} words`;
   }
 
   function _countAbstract(text) {
@@ -298,11 +394,13 @@ OmicsLab.ThesisCoach = (function () {
     if (el) el.textContent = `${_wc(text)} / 350 words`;
   }
 
-  function _wc(text) { return (text.trim().match(/\S+/g) || []).length; }
+  function _wc(text) {
+    return (text.trim().match(/\S+/g) || []).length;
+  }
 
   /* ─── AI drafting ─── */
   async function _aiDraft(chapterId) {
-    const ch = _project.chapters.find(c => c.id === chapterId);
+    const ch = _project.chapters.find((c) => c.id === chapterId);
     if (!ch) return;
 
     const out = document.getElementById(`tc-ai-output-${chapterId}`);
@@ -323,19 +421,25 @@ Target: ${ch.target} words total. Provide:
 3. Key references to search for (African cohorts, seminal papers)
 4. Suggested figures/tables for this chapter`;
 
-    out.innerHTML = '<div class="tc-ai-loading"><div class="tc-spinner"></div> Drafting with AI…</div>';
+    out.innerHTML =
+      '<div class="tc-ai-loading"><div class="tc-spinner"></div> Drafting with AI…</div>';
 
     /* Inject context and use Assistant */
     OmicsLab.Assistant.setContext({ page: 'thesis', chapter: ch.title, project: _project.title });
 
     let fullText = '';
     try {
-      await OmicsLab.Assistant._streamDirect(prompt, (chunk) => {
-        fullText += chunk;
-        out.innerHTML = `<div class="tc-ai-result"><div class="tc-ai-result-header">AI Draft for ${_esc(ch.title)}<button class="tc-insert-btn" onclick="OmicsLab.ThesisCoach._insertDraft('${chapterId}')">Insert into editor</button></div><div id="tc-ai-text-${chapterId}" class="tc-ai-md">${_simplemd(fullText)}</div></div>`;
-      }, () => {}, (err) => {
-        out.innerHTML = `<div class="tc-ai-error">${_esc(err)}</div>`;
-      });
+      await OmicsLab.Assistant._streamDirect(
+        prompt,
+        (chunk) => {
+          fullText += chunk;
+          out.innerHTML = `<div class="tc-ai-result"><div class="tc-ai-result-header">AI Draft for ${_esc(ch.title)}<button class="tc-insert-btn" onclick="OmicsLab.ThesisCoach._insertDraft('${chapterId}')">Insert into editor</button></div><div id="tc-ai-text-${chapterId}" class="tc-ai-md">${_simplemd(fullText)}</div></div>`;
+        },
+        () => {},
+        (err) => {
+          out.innerHTML = `<div class="tc-ai-error">${_esc(err)}</div>`;
+        }
+      );
     } catch (err) {
       out.innerHTML = `<div class="tc-ai-error">${_esc(err.message)}</div>`;
     }
@@ -346,8 +450,8 @@ Target: ${ch.target} words total. Provide:
     if (!out) return;
 
     const findings = _project.chapters
-      .filter(c => c.text)
-      .map(c => `${c.title}: ${c.text.slice(0, 200)}`)
+      .filter((c) => c.text)
+      .map((c) => `${c.title}: ${c.text.slice(0, 200)}`)
       .join('\n');
 
     const prompt = `Write a structured abstract (250–350 words) for this thesis:
@@ -361,27 +465,43 @@ ${findings ? 'Key content from chapters:\n' + findings : ''}
 Structure the abstract with these sections: Background, Methods, Results, Conclusions.
 Make it suitable for African genomics research. Be specific and avoid vague statements.`;
 
-    out.innerHTML = '<div class="tc-ai-loading"><div class="tc-spinner"></div> Generating abstract…</div>';
+    out.innerHTML =
+      '<div class="tc-ai-loading"><div class="tc-spinner"></div> Generating abstract…</div>';
 
     let fullText = '';
     try {
-      await OmicsLab.Assistant._streamDirect(prompt, (chunk) => {
-        fullText += chunk;
-        out.innerHTML = `<div class="tc-ai-result"><div class="tc-ai-result-header">AI Abstract Draft<button class="tc-insert-btn" onclick="OmicsLab.ThesisCoach._insertAbstract()">Insert</button></div><div id="tc-ai-abstract-text" class="tc-ai-md">${_simplemd(fullText)}</div></div>`;
-      }, () => {}, (err) => { out.innerHTML = `<div class="tc-ai-error">${_esc(err)}</div>`; });
-    } catch (err) { out.innerHTML = `<div class="tc-ai-error">${_esc(err.message)}</div>`; }
+      await OmicsLab.Assistant._streamDirect(
+        prompt,
+        (chunk) => {
+          fullText += chunk;
+          out.innerHTML = `<div class="tc-ai-result"><div class="tc-ai-result-header">AI Abstract Draft<button class="tc-insert-btn" onclick="OmicsLab.ThesisCoach._insertAbstract()">Insert</button></div><div id="tc-ai-abstract-text" class="tc-ai-md">${_simplemd(fullText)}</div></div>`;
+        },
+        () => {},
+        (err) => {
+          out.innerHTML = `<div class="tc-ai-error">${_esc(err)}</div>`;
+        }
+      );
+    } catch (err) {
+      out.innerHTML = `<div class="tc-ai-error">${_esc(err.message)}</div>`;
+    }
   }
 
   function _insertDraft(chId) {
     const src = document.getElementById(`tc-ai-text-${chId}`)?.innerText || '';
     const ta = document.getElementById(`tc-ch-text-${chId}`);
-    if (ta && src) { ta.value = (ta.value ? ta.value + '\n\n' : '') + src; _countWords(chId, ta.value); }
+    if (ta && src) {
+      ta.value = (ta.value ? ta.value + '\n\n' : '') + src;
+      _countWords(chId, ta.value);
+    }
   }
 
   function _insertAbstract() {
     const src = document.getElementById('tc-ai-abstract-text')?.innerText || '';
     const ta = document.getElementById('tc-abstract-text');
-    if (ta && src) { ta.value = src; _countAbstract(src); }
+    if (ta && src) {
+      ta.value = src;
+      _countAbstract(src);
+    }
   }
 
   /* ─── Export ─── */
@@ -390,20 +510,25 @@ Make it suitable for African genomics research. Be specific and avoid vague stat
     let text = `${_project.title}\n${'='.repeat(60)}\n`;
     text += `${_project.degree} · ${_project.institution || ''} · ${_project.supervisor || ''}\n\n`;
     if (_project.abstract) text += `ABSTRACT\n${'-'.repeat(40)}\n${_project.abstract}\n\n`;
-    _project.chapters.forEach(ch => {
+    _project.chapters.forEach((ch) => {
       text += `\n${'='.repeat(60)}\n${ch.title.toUpperCase()}\n${'='.repeat(60)}\n\n`;
       text += ch.text || '[Not yet written]\n';
     });
     const blob = new Blob([text], { type: 'text/plain' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a'); a.href = url; a.download = 'thesis-draft.txt'; a.click();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'thesis-draft.txt';
+    a.click();
     URL.revokeObjectURL(url);
   }
 
   function _resetProject() {
     if (!confirm('Delete this project and start a new one?')) return;
     localStorage.removeItem(STORE);
-    _project = null; _activeChapter = null; _activeTab = 'progress';
+    _project = null;
+    _activeChapter = null;
+    _activeTab = 'progress';
     _renderSetup();
   }
 
@@ -420,7 +545,7 @@ Make it suitable for African genomics research. Be specific and avoid vague stat
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   /* ─── Init ─── */
@@ -433,11 +558,26 @@ Make it suitable for African genomics research. Be specific and avoid vague stat
   }
 
   /* Expose stream helper for AI calls from within thesis module */
-  OmicsLab.Assistant._streamDirect = async function(prompt, onChunk, onDone, onError) {
+  OmicsLab.Assistant._streamDirect = async function (prompt, onChunk, onDone, onError) {
     const msgs = [{ role: 'user', content: prompt }];
     await OmicsLab.Assistant._streamPublic(msgs, onChunk, onDone, onError);
   };
 
   /* We need to expose the stream function publicly */
-  return { init, _submitSetup, _openChapter, _setTab, _saveChapter, _saveAbstract, _countWords, _countAbstract, _aiDraft, _aiAbstract, _insertDraft, _insertAbstract, _exportThesis, _resetProject };
+  return {
+    init,
+    _submitSetup,
+    _openChapter,
+    _setTab,
+    _saveChapter,
+    _saveAbstract,
+    _countWords,
+    _countAbstract,
+    _aiDraft,
+    _aiAbstract,
+    _insertDraft,
+    _insertAbstract,
+    _exportThesis,
+    _resetProject,
+  };
 })();

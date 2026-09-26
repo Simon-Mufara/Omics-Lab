@@ -6,30 +6,98 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Partners = (function () {
-
   const PARTNERS = [
-    { name:'H3Africa Consortium', type:'Inspiration', region:'Pan-African', desc:'Human Heredity and Health in Africa — a landmark African genomics initiative that inspires OmicsLab\'s Africa-first data philosophy.', link:'https://h3africa.org' },
-    { name:'H3ABioNet', type:'Inspiration', region:'Pan-African', desc:'Pan-African bioinformatics network whose open training resources inspire OmicsLab\'s community-oriented approach.', link:'https://h3abionet.org' },
-    { name:'Africa CDC', type:'Public Health', region:'Pan-African', desc:'African Union\'s public health agency — a model for data-driven genomic surveillance that shapes the Pathogen Tracker module.', link:'https://africacdc.org' },
-    { name:'MalariaGEN', type:'Open Data', region:'Global', desc:'Malaria Genomic Epidemiology Network — open malaria genomics datasets used as reference material in OmicsLab modules.', link:'https://malariagen.net' },
-    { name:'Wellcome Sanger Institute', type:'Inspiration', region:'UK/Global', desc:'World-class genomic resources and African genomics programmes that inspire OmicsLab\'s pathogen and population modules.', link:'https://www.sanger.ac.uk' },
-    { name:'WACCBIP, Univ. of Ghana', type:'Inspiration', region:'Ghana', desc:'West Africa Centre for Cell Biology of Infectious Pathogens — whose training model inspires OmicsLab\'s disease-focused content.', link:'https://waccbip.org' },
-    { name:'Anthropic (Claude API)', type:'Technology', region:'Global', desc:'Large language model provider — powering the AI Assistant, Thesis Coach, and Grant Writing features.', link:'https://anthropic.com' },
+    {
+      name: 'H3Africa Consortium',
+      type: 'Inspiration',
+      region: 'Pan-African',
+      desc: "Human Heredity and Health in Africa — a landmark African genomics initiative that inspires OmicsLab's Africa-first data philosophy.",
+      link: 'https://h3africa.org',
+    },
+    {
+      name: 'H3ABioNet',
+      type: 'Inspiration',
+      region: 'Pan-African',
+      desc: "Pan-African bioinformatics network whose open training resources inspire OmicsLab's community-oriented approach.",
+      link: 'https://h3abionet.org',
+    },
+    {
+      name: 'Africa CDC',
+      type: 'Public Health',
+      region: 'Pan-African',
+      desc: "African Union's public health agency — a model for data-driven genomic surveillance that shapes the Pathogen Tracker module.",
+      link: 'https://africacdc.org',
+    },
+    {
+      name: 'MalariaGEN',
+      type: 'Open Data',
+      region: 'Global',
+      desc: 'Malaria Genomic Epidemiology Network — open malaria genomics datasets used as reference material in OmicsLab modules.',
+      link: 'https://malariagen.net',
+    },
+    {
+      name: 'Wellcome Sanger Institute',
+      type: 'Inspiration',
+      region: 'UK/Global',
+      desc: "World-class genomic resources and African genomics programmes that inspire OmicsLab's pathogen and population modules.",
+      link: 'https://www.sanger.ac.uk',
+    },
+    {
+      name: 'WACCBIP, Univ. of Ghana',
+      type: 'Inspiration',
+      region: 'Ghana',
+      desc: "West Africa Centre for Cell Biology of Infectious Pathogens — whose training model inspires OmicsLab's disease-focused content.",
+      link: 'https://waccbip.org',
+    },
+    {
+      name: 'Anthropic (Claude API)',
+      type: 'Technology',
+      region: 'Global',
+      desc: 'Large language model provider — powering the AI Assistant, Thesis Coach, and Grant Writing features.',
+      link: 'https://anthropic.com',
+    },
   ];
 
   const CONTRIBUTORS = [
-    { name:'Simon Mufara', role:'Lead Developer & Vision', country:'South Africa', github:'simonmufara' },
-    { name:'Open Contributions', role:'Community-driven bug reports, translations, and dataset curation', country:'Pan-Africa', github:'omicslab-africa' },
+    {
+      name: 'Simon Mufara',
+      role: 'Lead Developer & Vision',
+      country: 'South Africa',
+      github: 'simonmufara',
+    },
+    {
+      name: 'Open Contributions',
+      role: 'Community-driven bug reports, translations, and dataset curation',
+      country: 'Pan-Africa',
+      github: 'omicslab-africa',
+    },
   ];
 
   const FOUNDATION = {
     name: 'OmicsLab Open Foundation (proposed)',
-    mission: 'To make cutting-edge bioinformatics tools freely available to every researcher in Africa, with zero barriers to access — online, offline, and in every major African language.',
+    mission:
+      'To make cutting-edge bioinformatics tools freely available to every researcher in Africa, with zero barriers to access — online, offline, and in every major African language.',
     pillars: [
-      { icon:'○', title:'Open Source', desc:'All OmicsLab code is open source under MIT licence. Fork it, adapt it, build on it.' },
-      { icon:'○', title:'Offline-First', desc:'Every module works without internet. Designed for Africa\'s connectivity realities.' },
-      { icon:'○', title:'Multilingual', desc:'21 languages — English, Swahili, Hausa, Yoruba, Amharic, French, Arabic and more.' },
-      { icon:'○', title:'Community-Governed', desc:'Roadmap decisions informed by African researchers, not external funders alone.' },
+      {
+        icon: '○',
+        title: 'Open Source',
+        desc: 'All OmicsLab code is open source under MIT licence. Fork it, adapt it, build on it.',
+      },
+      {
+        icon: '○',
+        title: 'Offline-First',
+        desc: "Every module works without internet. Designed for Africa's connectivity realities.",
+      },
+      {
+        icon: '○',
+        title: 'Multilingual',
+        desc: '21 languages — English, Swahili, Hausa, Yoruba, Amharic, French, Arabic and more.',
+      },
+      {
+        icon: '○',
+        title: 'Community-Governed',
+        desc: 'Roadmap decisions informed by African researchers, not external funders alone.',
+      },
     ],
     github: 'https://github.com/omicslab-africa',
     email: 'hello@omicslab.africa',
@@ -39,7 +107,14 @@ OmicsLab.Partners = (function () {
     const section = document.getElementById('partners-section');
     if (!section || section.dataset.prReady) return;
     section.dataset.prReady = '1';
-    const typeColor = { Academic:'#58a6ff', Infrastructure:'#00C4A0', 'Public Health':'#f97316', Research:'#bc8cff', Technology:'#e3b341', Global:'#79c0ff' };
+    const typeColor = {
+      Academic: '#58a6ff',
+      Infrastructure: '#00C4A0',
+      'Public Health': '#f97316',
+      Research: '#bc8cff',
+      Technology: '#e3b341',
+      Global: '#79c0ff',
+    };
     section.innerHTML = `
       <div class="pr-wrap">
         <div class="pr-header">
@@ -54,10 +129,14 @@ OmicsLab.Partners = (function () {
           <div class="pr-foundation-name">${FOUNDATION.name}</div>
           <div class="pr-foundation-mission">${FOUNDATION.mission}</div>
           <div class="pr-pillars">
-            ${FOUNDATION.pillars.map(p => `<div class="pr-pillar">
+            ${FOUNDATION.pillars
+              .map(
+                (p) => `<div class="pr-pillar">
               <div class="pr-pillar-title">${p.title}</div>
               <div class="pr-pillar-desc">${p.desc}</div>
-            </div>`).join('')}
+            </div>`
+              )
+              .join('')}
           </div>
           <div class="pr-foundation-links">
             <a class="pr-gh-link" href="${FOUNDATION.github}" target="_blank" rel="noopener">
@@ -70,15 +149,17 @@ OmicsLab.Partners = (function () {
         <!-- Partners grid -->
         <div class="pr-section-label">Organisations that inspire OmicsLab</div>
         <div class="pr-partners-grid">
-          ${PARTNERS.map(p => `<div class="pr-partner-card">
+          ${PARTNERS.map(
+            (p) => `<div class="pr-partner-card">
             <div class="pr-partner-hdr">
               <span class="pr-partner-name">${p.name}</span>
-              <span class="pr-partner-type" style="color:${typeColor[p.type]||'#A8A098'};border-color:${typeColor[p.type]||'#A8A098'}30">${p.type}</span>
+              <span class="pr-partner-type" style="color:${typeColor[p.type] || '#A8A098'};border-color:${typeColor[p.type] || '#A8A098'}30">${p.type}</span>
             </div>
             <div class="pr-partner-region">${p.region}</div>
             <div class="pr-partner-desc">${p.desc}</div>
             <a class="pr-partner-link" href="${p.link}" target="_blank" rel="noopener">Visit →</a>
-          </div>`).join('')}
+          </div>`
+          ).join('')}
         </div>
         <!-- Developer spotlight -->
         <div class="pr-dev-card">

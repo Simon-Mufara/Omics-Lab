@@ -4,21 +4,31 @@
 window.OmicsLab = window.OmicsLab || {};
 
 /* ─── QC Panel ────────────────────────────────────────────── */
-OmicsLab.QC = (function() {
+OmicsLab.QC = (function () {
   const GAUGES = [
-    { key:'sampleIntegrity',   label:'Sample Integrity',    inv:false, fmt:v=>`${(v/10).toFixed(1)}/10 RIN` },
-    { key:'purity',            label:'260/280 Purity',      inv:false, fmt:v=>v>=88?'1.9–2.1':v>=65?'~1.7':'<1.5' },
-    { key:'yield',             label:'Material Yield',      inv:false, fmt:v=>`${v}%` },
-    { key:'libraryComplexity', label:'Library Complexity',  inv:false, fmt:v=>`${v}%` },
-    { key:'sequencingQ30',     label:'Q30 Score',           inv:false, fmt:v=>`${v}%` },
-    { key:'alignmentRate',     label:'Alignment Rate',      inv:false, fmt:v=>`${v}%` },
-    { key:'duplication',       label:'Duplication Rate',    inv:true,  fmt:v=>`${v}%` },
-    { key:'contamination',     label:'Contamination',       inv:true,  fmt:v=>`${v}%` },
+    {
+      key: 'sampleIntegrity',
+      label: 'Sample Integrity',
+      inv: false,
+      fmt: (v) => `${(v / 10).toFixed(1)}/10 RIN`,
+    },
+    {
+      key: 'purity',
+      label: '260/280 Purity',
+      inv: false,
+      fmt: (v) => (v >= 88 ? '1.9–2.1' : v >= 65 ? '~1.7' : '<1.5'),
+    },
+    { key: 'yield', label: 'Material Yield', inv: false, fmt: (v) => `${v}%` },
+    { key: 'libraryComplexity', label: 'Library Complexity', inv: false, fmt: (v) => `${v}%` },
+    { key: 'sequencingQ30', label: 'Q30 Score', inv: false, fmt: (v) => `${v}%` },
+    { key: 'alignmentRate', label: 'Alignment Rate', inv: false, fmt: (v) => `${v}%` },
+    { key: 'duplication', label: 'Duplication Rate', inv: true, fmt: (v) => `${v}%` },
+    { key: 'contamination', label: 'Contamination', inv: true, fmt: (v) => `${v}%` },
   ];
 
   function render() {
     const q = OmicsLab.State.quality;
-    document.getElementById('qc-gauges').innerHTML = GAUGES.map(g => {
+    document.getElementById('qc-gauges').innerHTML = GAUGES.map((g) => {
       const v = q[g.key];
       const color = OmicsLab.Engine.qualityColor(v, g.inv);
       return `<div class="qc-gauge" id="gauge-${g.key}">
@@ -33,16 +43,22 @@ OmicsLab.QC = (function() {
 
   function update() {
     const q = OmicsLab.State.quality;
-    GAUGES.forEach(g => {
-      const v     = q[g.key];
+    GAUGES.forEach((g) => {
+      const v = q[g.key];
       const color = OmicsLab.Engine.qualityColor(v, g.inv);
-      const bar   = document.getElementById(`gbar-${g.key}`);
-      const val   = document.getElementById(`gval-${g.key}`);
-      if (bar) { bar.style.width = `${v}%`; bar.style.background = color; }
-      if (val) { val.textContent = g.fmt(v); val.style.color = color; }
+      const bar = document.getElementById(`gbar-${g.key}`);
+      const val = document.getElementById(`gval-${g.key}`);
+      if (bar) {
+        bar.style.width = `${v}%`;
+        bar.style.background = color;
+      }
+      if (val) {
+        val.textContent = g.fmt(v);
+        val.style.color = color;
+      }
     });
-    const sc  = OmicsLab.Engine.computeScore();
-    const el  = document.getElementById('score-num');
+    const sc = OmicsLab.Engine.computeScore();
+    const el = document.getElementById('score-num');
     if (el) {
       el.textContent = sc;
       el.className = 'score-num ' + (sc >= 70 ? 'ok' : sc >= 50 ? 'warn' : 'bad');
@@ -52,17 +68,18 @@ OmicsLab.QC = (function() {
   }
 
   function renderSidebar() {
-    const q   = OmicsLab.State.quality;
+    const q = OmicsLab.State.quality;
     const rows = [
-      { key:'sampleIntegrity',   label:'Sample Integrity' },
-      { key:'libraryComplexity', label:'Library Complexity' },
-      { key:'duplication',       label:'Duplication',     inv:true },
-      { key:'contamination',     label:'Contamination',   inv:true },
+      { key: 'sampleIntegrity', label: 'Sample Integrity' },
+      { key: 'libraryComplexity', label: 'Library Complexity' },
+      { key: 'duplication', label: 'Duplication', inv: true },
+      { key: 'contamination', label: 'Contamination', inv: true },
     ];
-    document.getElementById('sidebar-quality').innerHTML = rows.map(r => {
-      const v = q[r.key];
-      const color = OmicsLab.Engine.qualityColor(v, r.inv);
-      return `<div class="sqm-row">
+    document.getElementById('sidebar-quality').innerHTML = rows
+      .map((r) => {
+        const v = q[r.key];
+        const color = OmicsLab.Engine.qualityColor(v, r.inv);
+        return `<div class="sqm-row">
         <div class="sqm-label">
           <span>${r.label}</span>
           <span style="color:${color};font-weight:700">${v}%</span>
@@ -71,18 +88,21 @@ OmicsLab.QC = (function() {
           <div class="sqm-fill" style="width:${v}%;background:${color}"></div>
         </div>
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   function renderPipeline(stageIdx) {
     const wf = OmicsLab.Workflows[OmicsLab.State.workflow];
-    document.getElementById('pipeline-track').innerHTML = wf.pipeline.map((name, i) => {
-      let cls = i < stageIdx ? 'p-done' : i === stageIdx ? 'p-active' : '';
-      return `<div class="pipe-node ${cls}">
+    document.getElementById('pipeline-track').innerHTML = wf.pipeline
+      .map((name, i) => {
+        let cls = i < stageIdx ? 'p-done' : i === stageIdx ? 'p-active' : '';
+        return `<div class="pipe-node ${cls}">
         <div class="pipe-dot"></div>
         <span>${name}</span>
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   function renderMistakes() {
@@ -91,9 +111,9 @@ OmicsLab.QC = (function() {
     if (OmicsLab.State.mistakes.length === 0) {
       log.innerHTML = '<div class="no-mistakes">[OK] No mistakes yet</div>';
     } else {
-      log.innerHTML = OmicsLab.State.mistakes.map(m =>
-        `<div class="mistake-entry"><strong>Step ${m.step}:</strong> ${m.choice}</div>`
-      ).join('');
+      log.innerHTML = OmicsLab.State.mistakes
+        .map((m) => `<div class="mistake-entry"><strong>Step ${m.step}:</strong> ${m.choice}</div>`)
+        .join('');
       log.scrollTop = log.scrollHeight;
     }
   }
@@ -103,34 +123,42 @@ OmicsLab.QC = (function() {
     if (!el) return;
     el.style.transition = 'none';
     el.style.background = direction === 'up' ? 'rgba(0,196,160,0.1)' : 'rgba(229,83,75,0.1)';
-    setTimeout(() => { el.style.transition = 'background 0.8s'; el.style.background = ''; }, 50);
+    setTimeout(() => {
+      el.style.transition = 'background 0.8s';
+      el.style.background = '';
+    }, 50);
   }
 
   /* Disease context panel — which diseases this workflow investigates */
   function renderDiseaseContext() {
     const panel = document.getElementById('disease-context-panel');
     if (!panel) return;
-    const wfId    = OmicsLab.State.workflow;
-    const dids    = (OmicsLab.WorkflowDiseases && OmicsLab.WorkflowDiseases[wfId]) || [];
+    const wfId = OmicsLab.State.workflow;
+    const dids = (OmicsLab.WorkflowDiseases && OmicsLab.WorkflowDiseases[wfId]) || [];
     if (!dids.length || !OmicsLab.DISEASES) {
-      panel.innerHTML = '<div style="color:var(--text-muted);font-size:0.78rem;padding:0.5rem 0">No disease context available</div>';
+      panel.innerHTML =
+        '<div style="color:var(--text-muted);font-size:0.78rem;padding:0.5rem 0">No disease context available</div>';
       return;
     }
-    panel.innerHTML = dids.map(did => {
-      const d = OmicsLab.DISEASES[did];
-      if (!d) return '';
-      const bm = d.biomarkers ? d.biomarkers.slice(0,3).join(' · ') : '';
-      const snippet = OmicsLab.DiseaseLearning ? OmicsLab.DiseaseLearning.renderContextSnippet(did) : '';
-      return `<div class="dc-mini-card" style="--dc-color:${d.color}">
+    panel.innerHTML = dids
+      .map((did) => {
+        const d = OmicsLab.DISEASES[did];
+        if (!d) return '';
+        const bm = d.biomarkers ? d.biomarkers.slice(0, 3).join(' · ') : '';
+        const snippet = OmicsLab.DiseaseLearning
+          ? OmicsLab.DiseaseLearning.renderContextSnippet(did)
+          : '';
+        return `<div class="dc-mini-card" style="--dc-color:${d.color}">
         <div class="dc-mini-head">
-          <span class="dc-mini-icon">${OmicsLab.Icons.svg(d.icon,16)}</span>
+          <span class="dc-mini-icon">${OmicsLab.Icons.svg(d.icon, 16)}</span>
           <span class="dc-mini-name">${d.name}</span>
           <span class="dc-mini-cat">${d.category}</span>
         </div>
-        ${bm ? `<div class="dc-mini-bm">${OmicsLab.Icons.svg('target',11)} ${bm}</div>` : ''}
+        ${bm ? `<div class="dc-mini-bm">${OmicsLab.Icons.svg('target', 11)} ${bm}</div>` : ''}
         ${snippet}
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   /* Tool flow panel — tools relevant to the current step */
@@ -142,96 +170,113 @@ OmicsLab.QC = (function() {
     const stageTools = _getStepTools(step.id, phaseLC);
 
     if (!stageTools.length) {
-      panel.innerHTML = '<div style="color:var(--text-muted);font-size:0.78rem;padding:0.5rem 0">Wet-lab step — no computational tools</div>';
+      panel.innerHTML =
+        '<div style="color:var(--text-muted);font-size:0.78rem;padding:0.5rem 0">Wet-lab step — no computational tools</div>';
       return;
     }
 
-    panel.innerHTML = stageTools.map(tid => {
-      const t = OmicsLab.TOOLS && OmicsLab.TOOLS[tid];
-      if (!t) return '';
-      return `<div class="tf-mini-card">
+    panel.innerHTML = stageTools
+      .map((tid) => {
+        const t = OmicsLab.TOOLS && OmicsLab.TOOLS[tid];
+        if (!t) return '';
+        return `<div class="tf-mini-card">
         <div class="tf-mini-name">${t.name}</div>
         <div class="tf-mini-io"><span class="tf-in">${t.input}</span> → <span class="tf-out">${t.output}</span></div>
-        <div class="tf-mini-desc">${t.desc.substring(0,100)}${t.desc.length>100?'…':''}</div>
+        <div class="tf-mini-desc">${t.desc.substring(0, 100)}${t.desc.length > 100 ? '…' : ''}</div>
         <div class="tf-mini-cat">${t.category}</div>
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   /* Map step IDs → relevant tool IDs */
   function _getStepTools(stepId, phase) {
     const stepToolMap = {
-      'alignment':       ['bwa-mem2','fastqc','fastp'],
-      'aligner-rna':     ['star','fastp','fastqc'],
-      'variant-caller':  ['gatk-hc','deepvariant','annovar'],
-      'annotation-wes':  ['gatk-hc','vep','annovar'],
-      'de-method':       ['deseq2','edger','clusterprofiler'],
-      'deseq-method':    ['deseq2','clusterprofiler'],
-      'tax-classifier':  ['kraken2','humann3'],
-      'functional':      ['humann3','clusterprofiler'],
-      'normalization':   ['deseq2','scanpy'],
-      'doublet-removal': ['seurat','scanpy'],
-      'batch-correction':['harmony','seurat','scanpy'],
-      'peak-caller':     ['macs3','homer','deeptools'],
-      'motif-analysis':  ['homer','deeptools'],
-      'mito-filter':     ['seurat','scanpy'],
-      'idr-chip':        ['macs3','deeptools'],
-      'asv-otu':         ['dada2','qiime2'],
-      'feature-detect':  ['xcms','metaboanalyst'],
-      'prot-quant':      ['maxquant','perseus'],
-      'lineage':         ['pangolin','nextclade'],
-      'cite-integration':['seurat','harmony'],
-      'rin-check':       ['fastqc','multiqc'],
-      'ct-threshold':    ['fastqc'],
+      alignment: ['bwa-mem2', 'fastqc', 'fastp'],
+      'aligner-rna': ['star', 'fastp', 'fastqc'],
+      'variant-caller': ['gatk-hc', 'deepvariant', 'annovar'],
+      'annotation-wes': ['gatk-hc', 'vep', 'annovar'],
+      'de-method': ['deseq2', 'edger', 'clusterprofiler'],
+      'deseq-method': ['deseq2', 'clusterprofiler'],
+      'tax-classifier': ['kraken2', 'humann3'],
+      functional: ['humann3', 'clusterprofiler'],
+      normalization: ['deseq2', 'scanpy'],
+      'doublet-removal': ['seurat', 'scanpy'],
+      'batch-correction': ['harmony', 'seurat', 'scanpy'],
+      'peak-caller': ['macs3', 'homer', 'deeptools'],
+      'motif-analysis': ['homer', 'deeptools'],
+      'mito-filter': ['seurat', 'scanpy'],
+      'idr-chip': ['macs3', 'deeptools'],
+      'asv-otu': ['dada2', 'qiime2'],
+      'feature-detect': ['xcms', 'metaboanalyst'],
+      'prot-quant': ['maxquant', 'perseus'],
+      lineage: ['pangolin', 'nextclade'],
+      'cite-integration': ['seurat', 'harmony'],
+      'rin-check': ['fastqc', 'multiqc'],
+      'ct-threshold': ['fastqc'],
     };
     if (stepToolMap[stepId]) return stepToolMap[stepId];
     if (phase.includes('bioinformatics') || phase.includes('analysis')) {
-      return ['fastqc','multiqc'];
+      return ['fastqc', 'multiqc'];
     }
     return [];
   }
 
-  return { render, update, renderPipeline, flashGauge, renderSidebar, renderMistakes, renderDiseaseContext, renderToolFlow };
+  return {
+    render,
+    update,
+    renderPipeline,
+    flashGauge,
+    renderSidebar,
+    renderMistakes,
+    renderDiseaseContext,
+    renderToolFlow,
+  };
 })();
 
 /* ─── Protocol Step List ─────────────────────────────────── */
-OmicsLab.ProtocolPanel = (function() {
+OmicsLab.ProtocolPanel = (function () {
   function render(currentIdx) {
-    const wf    = OmicsLab.Workflows[OmicsLab.State.workflow];
+    const wf = OmicsLab.Workflows[OmicsLab.State.workflow];
     const total = wf.steps.length;
-    document.getElementById('step-dots').innerHTML = wf.steps.map((_, i) => {
-      const cls = i < currentIdx ? 'done' : i === currentIdx ? 'active' : '';
-      return `<div class="step-dot ${cls}"></div>`;
-    }).join('');
+    document.getElementById('step-dots').innerHTML = wf.steps
+      .map((_, i) => {
+        const cls = i < currentIdx ? 'done' : i === currentIdx ? 'active' : '';
+        return `<div class="step-dot ${cls}"></div>`;
+      })
+      .join('');
     document.getElementById('step-counter').textContent = `Step ${currentIdx + 1} of ${total}`;
 
-    document.getElementById('protocol-steps').innerHTML = wf.steps.map((step, i) => {
-      let cls = 'locked';
-      if (i < currentIdx) cls = 'done';
-      else if (i === currentIdx) cls = 'active';
-      const num = i < currentIdx ? '[OK]' : (i + 1);
-      return `<div class="proto-step ${cls}">
+    document.getElementById('protocol-steps').innerHTML = wf.steps
+      .map((step, i) => {
+        let cls = 'locked';
+        if (i < currentIdx) cls = 'done';
+        else if (i === currentIdx) cls = 'active';
+        const num = i < currentIdx ? '[OK]' : i + 1;
+        return `<div class="proto-step ${cls}">
         <div class="proto-num">${num}</div>
         <div class="proto-info">
           <div class="proto-step-name">${step.title}</div>
           <div class="proto-step-phase">${step.phase}${cls === 'done' ? ' · done' : cls === 'active' ? ' · in progress' : ''}</div>
         </div>
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
   return { render };
 })();
 
 /* ─── Drag-and-Drop System ───────────────────────────────── */
-OmicsLab.DragDrop = (function() {
+OmicsLab.DragDrop = (function () {
   let _dragging = null;
-  let _ghost    = null;
+  let _ghost = null;
 
   function buildShelf(reagentIds) {
-    const items = reagentIds.map(id => {
-      const r = OmicsLab.REAGENTS[id];
-      if (!r) return '';
-      return `<div class="reagent-item" draggable="true"
+    const items = reagentIds
+      .map((id) => {
+        const r = OmicsLab.REAGENTS[id];
+        if (!r) return '';
+        return `<div class="reagent-item" draggable="true"
                    data-rid="${id}"
                    data-cat="${r.cat}"
                    id="reagent-${id}">
@@ -239,7 +284,8 @@ OmicsLab.DragDrop = (function() {
         <div class="reagent-name">${r.label}</div>
         <div class="reagent-cat">${r.cat}</div>
       </div>`;
-    }).join('');
+      })
+      .join('');
     return `<div class="reagent-shelf">
       <div class="shelf-label">Reagent Shelf</div>
       ${items}
@@ -262,8 +308,8 @@ OmicsLab.DragDrop = (function() {
     const zone = document.getElementById('main-drop-zone');
     if (!zone) return;
 
-    document.querySelectorAll('.reagent-item').forEach(el => {
-      el.addEventListener('dragstart', e => {
+    document.querySelectorAll('.reagent-item').forEach((el) => {
+      el.addEventListener('dragstart', (e) => {
         _dragging = el.dataset.rid;
         el.classList.add('dragging');
         e.dataTransfer.setData('text/plain', _dragging);
@@ -282,24 +328,27 @@ OmicsLab.DragDrop = (function() {
       el.addEventListener('dragend', () => {
         el.classList.remove('dragging');
         _dragging = null;
-        if (_ghost) { _ghost.remove(); _ghost = null; }
+        if (_ghost) {
+          _ghost.remove();
+          _ghost = null;
+        }
       });
     });
 
     document.addEventListener('dragover', positionGhost);
 
-    zone.addEventListener('dragover', e => {
+    zone.addEventListener('dragover', (e) => {
       e.preventDefault();
       if (!zone.classList.contains('filled')) {
         const valid = step.reagentIds.includes(_dragging);
-        zone.classList.toggle('drag-over-valid',   valid);
+        zone.classList.toggle('drag-over-valid', valid);
         zone.classList.toggle('drag-over-invalid', !valid);
       }
     });
     zone.addEventListener('dragleave', () => {
       zone.classList.remove('drag-over-valid', 'drag-over-invalid');
     });
-    zone.addEventListener('drop', e => {
+    zone.addEventListener('drop', (e) => {
       e.preventDefault();
       zone.classList.remove('drag-over-valid', 'drag-over-invalid');
       const rid = e.dataTransfer.getData('text/plain') || _dragging;
@@ -315,13 +364,13 @@ OmicsLab.DragDrop = (function() {
   function positionGhost(e) {
     if (_ghost) {
       _ghost.style.left = e.clientX + 'px';
-      _ghost.style.top  = e.clientY + 'px';
+      _ghost.style.top = e.clientY + 'px';
     }
   }
 
   function handleDrop(rid, step, zone, onDrop) {
     const opt = step.optionMap[rid];
-    const r   = OmicsLab.REAGENTS[rid];
+    const r = OmicsLab.REAGENTS[rid];
     if (!opt || !r) return;
 
     zone.classList.add('filled', 'animate-drop');
@@ -339,15 +388,15 @@ OmicsLab.DragDrop = (function() {
   }
 
   function spawnBubbles(zone, impact) {
-    const colors = { good:'#00C4A0', bad:'#e5534b', warn:'#d29922' };
-    const color  = colors[impact] || '#A8A098';
+    const colors = { good: '#00C4A0', bad: '#e5534b', warn: '#d29922' };
+    const color = colors[impact] || '#A8A098';
     const overlay = document.getElementById('reaction-overlay');
     if (!overlay) return;
     for (let i = 0; i < 8; i++) {
       setTimeout(() => {
         const b = document.createElement('div');
         b.className = 'bubble';
-        b.style.cssText = `left:${20+Math.random()*60}%;bottom:${10+Math.random()*40}%;background:${color}88;animation-delay:${Math.random()*0.3}s`;
+        b.style.cssText = `left:${20 + Math.random() * 60}%;bottom:${10 + Math.random() * 40}%;background:${color}88;animation-delay:${Math.random() * 0.3}s`;
         overlay.appendChild(b);
         setTimeout(() => b.remove(), 1000);
       }, i * 60);
@@ -358,37 +407,54 @@ OmicsLab.DragDrop = (function() {
     let touchItem = null;
     let touchGhost = null;
 
-    document.querySelectorAll('.reagent-item').forEach(el => {
-      el.addEventListener('touchstart', e => {
-        touchItem = el;
-        const r = OmicsLab.REAGENTS[el.dataset.rid];
-        touchGhost = document.createElement('div');
-        touchGhost.className = 'drag-ghost';
-        touchGhost.innerHTML = `${OmicsLab.Icons.reagentIcon(r.cat, 14)} ${r.label}`;
-        document.body.appendChild(touchGhost);
-        e.preventDefault();
-      }, { passive: false });
+    document.querySelectorAll('.reagent-item').forEach((el) => {
+      el.addEventListener(
+        'touchstart',
+        (e) => {
+          touchItem = el;
+          const r = OmicsLab.REAGENTS[el.dataset.rid];
+          touchGhost = document.createElement('div');
+          touchGhost.className = 'drag-ghost';
+          touchGhost.innerHTML = `${OmicsLab.Icons.reagentIcon(r.cat, 14)} ${r.label}`;
+          document.body.appendChild(touchGhost);
+          e.preventDefault();
+        },
+        { passive: false }
+      );
 
-      el.addEventListener('touchmove', e => {
-        const t = e.touches[0];
+      el.addEventListener(
+        'touchmove',
+        (e) => {
+          const t = e.touches[0];
+          if (touchGhost) {
+            touchGhost.style.left = t.clientX + 'px';
+            touchGhost.style.top = t.clientY + 'px';
+          }
+          const rect = zone.getBoundingClientRect();
+          const over =
+            t.clientX >= rect.left &&
+            t.clientX <= rect.right &&
+            t.clientY >= rect.top &&
+            t.clientY <= rect.bottom;
+          zone.classList.toggle('drag-over-valid', over);
+          e.preventDefault();
+        },
+        { passive: false }
+      );
+
+      el.addEventListener('touchend', (e) => {
         if (touchGhost) {
-          touchGhost.style.left = t.clientX + 'px';
-          touchGhost.style.top  = t.clientY + 'px';
+          touchGhost.remove();
+          touchGhost = null;
         }
-        const rect = zone.getBoundingClientRect();
-        const over = t.clientX >= rect.left && t.clientX <= rect.right &&
-                     t.clientY >= rect.top  && t.clientY <= rect.bottom;
-        zone.classList.toggle('drag-over-valid', over);
-        e.preventDefault();
-      }, { passive: false });
-
-      el.addEventListener('touchend', e => {
-        if (touchGhost) { touchGhost.remove(); touchGhost = null; }
         zone.classList.remove('drag-over-valid', 'drag-over-invalid');
         const t = e.changedTouches[0];
         const rect = zone.getBoundingClientRect();
-        const over = t.clientX >= rect.left && t.clientX <= rect.right &&
-                     t.clientY >= rect.top  && t.clientY <= rect.bottom;
+        const over =
+          t.clientX >= rect.left &&
+          t.clientX <= rect.right &&
+          t.clientY >= rect.top &&
+          t.clientY <= rect.bottom;
         if (over && touchItem && !zone.classList.contains('filled')) {
           handleDrop(touchItem.dataset.rid, step, zone, onDrop);
         }
@@ -401,12 +467,14 @@ OmicsLab.DragDrop = (function() {
 })();
 
 /* ─── Step Renderer ──────────────────────────────────────── */
-OmicsLab.Renderer = (function() {
-
+OmicsLab.Renderer = (function () {
   function renderStep(stepIndex) {
-    const wf   = OmicsLab.Workflows[OmicsLab.State.workflow];
+    const wf = OmicsLab.Workflows[OmicsLab.State.workflow];
     const step = wf.steps[stepIndex];
-    if (!step) { OmicsLab.App.showResults(); return; }
+    if (!step) {
+      OmicsLab.App.showResults();
+      return;
+    }
 
     /* Sound: ding on step completion (skip first step — App.startWorkflow already dings) */
     if (stepIndex > 0 && OmicsLab.Sound) OmicsLab.Sound.step();
@@ -418,11 +486,11 @@ OmicsLab.Renderer = (function() {
     OmicsLab.QC.renderToolFlow(step);
 
     document.getElementById('step-phase-tag').textContent = step.phase;
-    document.getElementById('step-title').textContent     = step.title;
-    document.getElementById('step-desc').textContent      = step.desc;
+    document.getElementById('step-title').textContent = step.title;
+    document.getElementById('step-desc').textContent = step.desc;
 
     const bench = document.getElementById('bench-workspace');
-    if (step.type === 'drag')        renderDragStep(step, bench);
+    if (step.type === 'drag') renderDragStep(step, bench);
     else if (step.type === 'choice') renderChoiceStep(step, bench);
     else if (step.type === 'slider') renderSliderStep(step, bench);
 
@@ -431,7 +499,11 @@ OmicsLab.Renderer = (function() {
     setTimeout(() => startEquipTimer(bench), 80);
 
     /* Sabotage Mode — auto-inject the worst choice after a short delay */
-    if (OmicsLab.SabotageMode && OmicsLab.App && typeof OmicsLab.App.getSabotageStep === 'function') {
+    if (
+      OmicsLab.SabotageMode &&
+      OmicsLab.App &&
+      typeof OmicsLab.App.getSabotageStep === 'function'
+    ) {
       const sabIdx = OmicsLab.App.getSabotageStep(wf.steps.length);
       if (stepIndex === sabIdx) _scheduleSabotage(step);
     }
@@ -461,15 +533,15 @@ OmicsLab.Renderer = (function() {
       const chip = document.createElement('div');
       chip.className = 'equip-simtime';
       const realLabels = {
-        3500:'real: ~10 min · 12,000 × g · 4°C',
-        3000:'real: ~10–30 min',
-        4000:'real: ~30–90 min',
-        4500:'real: ~18 min – 2 h',
-        5000:'real: ~24–48 h',
-        2000:'real: ~2–5 min',
-        2500:'real: ~5–30 min',
+        3500: 'real: ~10 min · 12,000 × g · 4°C',
+        3000: 'real: ~10–30 min',
+        4000: 'real: ~30–90 min',
+        4500: 'real: ~18 min – 2 h',
+        5000: 'real: ~24–48 h',
+        2000: 'real: ~2–5 min',
+        2500: 'real: ~5–30 min',
       };
-      chip.textContent = realLabels[simMs] || `sim: ${(simMs/1000).toFixed(1)}s`;
+      chip.textContent = realLabels[simMs] || `sim: ${(simMs / 1000).toFixed(1)}s`;
       label.after(chip);
     }
 
@@ -477,23 +549,30 @@ OmicsLab.Renderer = (function() {
     const bar = document.createElement('div');
     bar.className = 'equip-progress-bar';
     equipEl.appendChild(bar);
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      bar.style.transition = `width ${simMs}ms linear`;
-      bar.style.width = '100%';
-    }));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${simMs}ms linear`;
+        bar.style.width = '100%';
+      })
+    );
 
     // On completion: stop animations, show done badge
     setTimeout(() => {
       equipEl.classList.add('equip-complete');
 
       const dot = equipEl.querySelector('.panel-dot');
-      if (dot) { dot.classList.remove('running'); dot.classList.add('done'); }
+      if (dot) {
+        dot.classList.remove('running');
+        dot.classList.add('done');
+      }
 
       const cycles = equipEl.querySelector('.tc-cycles');
       if (cycles) cycles.textContent = cycles.textContent.replace('Running', '[OK] Complete');
 
       const typing = equipEl.querySelector('.term-line.typing');
-      if (typing) typing.innerHTML = 'Processing reads ██████████ 100% <span style="color:var(--success)">[OK] done</span>';
+      if (typing)
+        typing.innerHTML =
+          'Processing reads ██████████ 100% <span style="color:var(--success)">[OK] done</span>';
 
       const nameLabel = equipEl.querySelector('.equip-name-label');
       if (nameLabel && !equipEl.querySelector('.equip-done-badge')) {
@@ -508,7 +587,8 @@ OmicsLab.Renderer = (function() {
   function showFeedback(impact, title, body) {
     const box = document.getElementById('feedback-box');
     if (!box) return;
-    const cls = impact === 'good' ? 'feedback-good' : impact === 'bad' ? 'feedback-bad' : 'feedback-warn';
+    const cls =
+      impact === 'good' ? 'feedback-good' : impact === 'bad' ? 'feedback-bad' : 'feedback-warn';
     box.className = `feedback-box ${cls}`;
     box.innerHTML = `<div class="feedback-title">${title}</div>${body}`;
     box.style.display = 'block';
@@ -528,11 +608,15 @@ OmicsLab.Renderer = (function() {
     `;
 
     OmicsLab.DragDrop.attachEvents(step, (rid, opt, reagent) => {
-      const titles = { good:'[OK] Correct Choice', bad:'[FAIL] Problematic Choice', warn:'[!] Suboptimal Choice' };
+      const titles = {
+        good: '[OK] Correct Choice',
+        bad: '[FAIL] Problematic Choice',
+        warn: '[!] Suboptimal Choice',
+      };
       const bodies = {
-        good:`<strong>${reagent.label}</strong> is the optimal reagent here. Quality metrics maintained.`,
+        good: `<strong>${reagent.label}</strong> is the optimal reagent here. Quality metrics maintained.`,
         bad: `<strong>${reagent.label}</strong> will cause significant downstream problems. Check the QC panel for the impact.`,
-        warn:`<strong>${reagent.label}</strong> works but isn't ideal. Minor quality penalty applied.`
+        warn: `<strong>${reagent.label}</strong> works but isn't ideal. Minor quality penalty applied.`,
       };
       showFeedback(opt.impact, titles[opt.impact], bodies[opt.impact]);
 
@@ -550,27 +634,39 @@ OmicsLab.Renderer = (function() {
       ${equipVisual(step)}
       ${eduNote(step.edu)}
       <div class="choice-grid" id="choice-grid">
-        ${opts.map((o, i) => {
-          const badgeCls = o.impact === 'good' ? 'badge-green' : o.impact === 'bad' ? 'badge-red' : 'badge-orange';
-          const badgeLbl = o.impact === 'good' ? '[OK] Optimal' : o.impact === 'bad' ? '[FAIL] Avoid' : '[!] Suboptimal';
-          return `<button class="choice-btn" data-idx="${i}">
+        ${opts
+          .map((o, i) => {
+            const badgeCls =
+              o.impact === 'good'
+                ? 'badge-green'
+                : o.impact === 'bad'
+                  ? 'badge-red'
+                  : 'badge-orange';
+            const badgeLbl =
+              o.impact === 'good'
+                ? '[OK] Optimal'
+                : o.impact === 'bad'
+                  ? '[FAIL] Avoid'
+                  : '[!] Suboptimal';
+            return `<button class="choice-btn" data-idx="${i}">
             <div class="cb-title">${o.label}</div>
             <div class="cb-desc">${o.desc}</div>
             <div class="cb-badge domain-badge ${badgeCls}" style="margin-top:0.5rem">${badgeLbl}</div>
           </button>`;
-        }).join('')}
+          })
+          .join('')}
       </div>
       <div class="feedback-box" id="feedback-box" style="display:none"></div>
       <button class="btn-advance" id="btn-advance" disabled>Select an option to continue →</button>
     `;
 
-    document.querySelectorAll('.choice-btn').forEach(btn => {
+    document.querySelectorAll('.choice-btn').forEach((btn) => {
       btn.addEventListener('click', () => {
         if (btn.classList.contains('cb-locked')) return;
         const idx = parseInt(btn.dataset.idx);
         const opt = opts[idx];
 
-        document.querySelectorAll('.choice-btn').forEach(b => b.classList.add('cb-locked'));
+        document.querySelectorAll('.choice-btn').forEach((b) => b.classList.add('cb-locked'));
         btn.classList.add(opt.impact === 'bad' ? 'cb-wrong' : 'cb-selected');
 
         OmicsLab.Engine.applyOption(opt, step.id);
@@ -582,11 +678,15 @@ OmicsLab.Renderer = (function() {
           else OmicsLab.Sound.error();
         }
 
-        const titles = { good:'[OK] Excellent', bad:'[FAIL] Poor choice', warn:'[!] Suboptimal' };
+        const titles = {
+          good: '[OK] Excellent',
+          bad: '[FAIL] Poor choice',
+          warn: '[!] Suboptimal',
+        };
         const bodies = {
-          good:`<strong>${opt.label}</strong> — optimal for this step. No quality penalty.`,
+          good: `<strong>${opt.label}</strong> — optimal for this step. No quality penalty.`,
           bad: `<strong>${opt.label}</strong> causes significant problems. Your QC metrics have dropped.`,
-          warn:`<strong>${opt.label}</strong> introduces minor issues. Small quality penalty applied.`
+          warn: `<strong>${opt.label}</strong> introduces minor issues. Small quality penalty applied.`,
         };
         showFeedback(opt.impact, titles[opt.impact], bodies[opt.impact]);
 
@@ -632,7 +732,7 @@ OmicsLab.Renderer = (function() {
       valBox.textContent = `${v} ${step.unit}`;
       const d = Math.abs(v - step.optimal);
       const range = step.max - step.min;
-      const color = d > range*0.3 ? '#e5534b' : d > range*0.12 ? '#d29922' : '#00C4A0';
+      const color = d > range * 0.3 ? '#e5534b' : d > range * 0.12 ? '#d29922' : '#00C4A0';
       valBox.style.color = color;
     });
 
@@ -655,7 +755,7 @@ OmicsLab.Renderer = (function() {
     setTimeout(() => {
       const banner = document.getElementById('sabotage-active-banner');
       if (banner) banner.remove();
-      if (step.type === 'drag')        _sabotageDropStep(step);
+      if (step.type === 'drag') _sabotageDropStep(step);
       else if (step.type === 'choice') _sabotageChoiceStep(step);
       else if (step.type === 'slider') _sabotageSliderStep(step);
     }, 1800);
@@ -665,27 +765,44 @@ OmicsLab.Renderer = (function() {
     const optMap = step.optionMap || {};
     let worstRid = null;
     for (const [rid, opt] of Object.entries(optMap)) {
-      if (opt.impact === 'bad') { worstRid = rid; break; }
+      if (opt.impact === 'bad') {
+        worstRid = rid;
+        break;
+      }
       if (opt.impact === 'warn' && !worstRid) worstRid = rid;
     }
     if (!worstRid) return;
     const zone = document.getElementById('main-drop-zone');
     if (!zone || zone.classList.contains('filled')) return;
     OmicsLab.DragDrop.handleDrop(worstRid, step, zone, (rid, opt, r) => {
-      const title = opt.impact === 'bad' ? '[!] Sabotage! Worst Reagent Auto-Selected' : '[!] Sabotage! Suboptimal Reagent Auto-Selected';
-      showFeedback(opt.impact === 'bad' ? 'bad' : 'warn', title,
-        `<strong>Sabotage Mode</strong> forced <strong>${r.label}</strong>. Check your QC metrics for the impact!`);
+      const title =
+        opt.impact === 'bad'
+          ? '[!] Sabotage! Worst Reagent Auto-Selected'
+          : '[!] Sabotage! Suboptimal Reagent Auto-Selected';
+      showFeedback(
+        opt.impact === 'bad' ? 'bad' : 'warn',
+        title,
+        `<strong>Sabotage Mode</strong> forced <strong>${r.label}</strong>. Check your QC metrics for the impact!`
+      );
       const btn = document.getElementById('btn-advance');
-      if (btn) { btn.disabled = false; btn.textContent = 'Continue →'; btn.onclick = () => renderStep(OmicsLab.State.currentStep + 1); }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Continue →';
+        btn.onclick = () => renderStep(OmicsLab.State.currentStep + 1);
+      }
     });
   }
 
   function _sabotageChoiceStep(step) {
     const opts = step.options || [];
     let worstIdx = -1;
-    opts.forEach((o, i) => { if (o.impact === 'bad'  && worstIdx === -1) worstIdx = i; });
+    opts.forEach((o, i) => {
+      if (o.impact === 'bad' && worstIdx === -1) worstIdx = i;
+    });
     if (worstIdx === -1)
-      opts.forEach((o, i) => { if (o.impact === 'warn' && worstIdx === -1) worstIdx = i; });
+      opts.forEach((o, i) => {
+        if (o.impact === 'warn' && worstIdx === -1) worstIdx = i;
+      });
     if (worstIdx === -1) return;
     const btn = document.querySelector(`.choice-btn[data-idx="${worstIdx}"]`);
     if (btn && !btn.classList.contains('cb-locked')) btn.click();
@@ -694,28 +811,32 @@ OmicsLab.Renderer = (function() {
   function _sabotageSliderStep(step) {
     const slider = document.getElementById('main-slider');
     if (!slider) return;
-    const extremeVal = (Math.abs(step.max - step.optimal) >= Math.abs(step.optimal - step.min)) ? step.max : step.min;
+    const extremeVal =
+      Math.abs(step.max - step.optimal) >= Math.abs(step.optimal - step.min) ? step.max : step.min;
     slider.value = extremeVal;
     slider.dispatchEvent(new Event('input'));
-    setTimeout(() => { const btn = document.getElementById('btn-advance'); if (btn) btn.click(); }, 600);
+    setTimeout(() => {
+      const btn = document.getElementById('btn-advance');
+      if (btn) btn.click();
+    }, 600);
   }
 
   function _submitSlider() {
-    const step   = OmicsLab.Renderer._currentSliderStep;
+    const step = OmicsLab.Renderer._currentSliderStep;
     const slider = document.getElementById('main-slider');
     if (!step || !slider) return;
 
-    const v      = parseFloat(slider.value);
+    const v = parseFloat(slider.value);
     const impact = OmicsLab.Engine.applySlider(step, v);
     OmicsLab.QC.update();
 
     slider.disabled = true;
 
-    const titles = { good:'[OK] On target', bad:'[FAIL] Out of range', warn:'[!] Off-optimal' };
-    const bodies  = {
+    const titles = { good: '[OK] On target', bad: '[FAIL] Out of range', warn: '[!] Off-optimal' };
+    const bodies = {
       good: `${v} ${step.unit} is within the optimal range (~${step.optimal} ${step.unit}).`,
       warn: `${v} ${step.unit} is somewhat off from optimal (~${step.optimal} ${step.unit}). Minor penalty applied.`,
-      bad:  `${v} ${step.unit} is significantly off from optimal (~${step.optimal} ${step.unit}). Quality has dropped.`
+      bad: `${v} ${step.unit} is significantly off from optimal (~${step.optimal} ${step.unit}). Quality has dropped.`,
     };
     showFeedback(impact, titles[impact], bodies[impact]);
 

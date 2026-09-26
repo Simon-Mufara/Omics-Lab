@@ -8,28 +8,52 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.ProteinViewer = (function () {
-
-  const AF_API   = 'https://alphafold.ebi.ac.uk/api';
-  const UNIPROT  = 'https://rest.uniprot.org/uniprotkb';
+  const AF_API = 'https://alphafold.ebi.ac.uk/api';
+  const UNIPROT = 'https://rest.uniprot.org/uniprotkb';
 
   /* Pre-loaded proteins (gene → UniProt accession) */
   const AFRICA_PROTEINS = [
-    { gene: 'HBB',    acc: 'P68871', name: 'Haemoglobin subunit beta',      disease: 'Sickle cell disease' },
-    { gene: 'G6PD',   acc: 'P11413', name: 'Glucose-6-phosphate dehydrogenase', disease: 'G6PD deficiency / malaria' },
-    { gene: 'APOL1',  acc: 'O14791', name: 'Apolipoprotein L1',              disease: 'Chronic kidney disease' },
-    { gene: 'HBA1',   acc: 'P69905', name: 'Haemoglobin subunit alpha-1',   disease: 'Alpha-thalassemia' },
-    { gene: 'BRCA1',  acc: 'P38398', name: 'Breast cancer type 1 susceptibility', disease: 'Breast cancer' },
-    { gene: 'TP53',   acc: 'P04637', name: 'Cellular tumour antigen p53',    disease: 'Multiple cancers' },
-    { gene: 'CYP2D6', acc: 'P10635', name: 'Cytochrome P450 2D6',           disease: 'Drug metabolism' },
-    { gene: 'LMNA',   acc: 'P02545', name: 'Prelamin-A/C',                   disease: 'Dilated cardiomyopathy' },
+    {
+      gene: 'HBB',
+      acc: 'P68871',
+      name: 'Haemoglobin subunit beta',
+      disease: 'Sickle cell disease',
+    },
+    {
+      gene: 'G6PD',
+      acc: 'P11413',
+      name: 'Glucose-6-phosphate dehydrogenase',
+      disease: 'G6PD deficiency / malaria',
+    },
+    { gene: 'APOL1', acc: 'O14791', name: 'Apolipoprotein L1', disease: 'Chronic kidney disease' },
+    {
+      gene: 'HBA1',
+      acc: 'P69905',
+      name: 'Haemoglobin subunit alpha-1',
+      disease: 'Alpha-thalassemia',
+    },
+    {
+      gene: 'BRCA1',
+      acc: 'P38398',
+      name: 'Breast cancer type 1 susceptibility',
+      disease: 'Breast cancer',
+    },
+    {
+      gene: 'TP53',
+      acc: 'P04637',
+      name: 'Cellular tumour antigen p53',
+      disease: 'Multiple cancers',
+    },
+    { gene: 'CYP2D6', acc: 'P10635', name: 'Cytochrome P450 2D6', disease: 'Drug metabolism' },
+    { gene: 'LMNA', acc: 'P02545', name: 'Prelamin-A/C', disease: 'Dilated cardiomyopathy' },
   ];
 
   /* pLDDT colour tiers */
   const TIERS = [
     { min: 90, label: 'Very high (>90)', color: '#1d4ed8' },
-    { min: 70, label: 'High (70–90)',    color: '#22d3ee' },
-    { min: 50, label: 'Low (50–70)',     color: '#fbbf24' },
-    { min: 0,  label: 'Very low (<50)', color: '#f97316' },
+    { min: 70, label: 'High (70–90)', color: '#22d3ee' },
+    { min: 50, label: 'Low (50–70)', color: '#fbbf24' },
+    { min: 0, label: 'Very low (<50)', color: '#f97316' },
   ];
 
   let _currentAcc = null;
@@ -51,13 +75,16 @@ OmicsLab.ProteinViewer = (function () {
       if (!res.ok) return {};
       const d = await res.json();
       return {
-        name:   d.proteinDescription?.recommendedName?.fullName?.value || '',
-        gene:   (d.genes || [])[0]?.geneName?.value || '',
-        org:    d.organism?.scientificName || '',
+        name: d.proteinDescription?.recommendedName?.fullName?.value || '',
+        gene: (d.genes || [])[0]?.geneName?.value || '',
+        org: d.organism?.scientificName || '',
         length: d.sequence?.length || 0,
-        function: (d.comments || []).find(c => c.commentType === 'FUNCTION')?.texts?.[0]?.value || '',
+        function:
+          (d.comments || []).find((c) => c.commentType === 'FUNCTION')?.texts?.[0]?.value || '',
       };
-    } catch { return {}; }
+    } catch {
+      return {};
+    }
   }
 
   /* ─── Fetch and parse PDB for pLDDT scores ─── */
@@ -67,51 +94,58 @@ OmicsLab.ProteinViewer = (function () {
       if (!res.ok) return [];
       const text = await res.text();
       const scores = [];
-      text.split('\n').forEach(line => {
+      text.split('\n').forEach((line) => {
         if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
           const bfactor = parseFloat(line.slice(60, 66).trim());
-          const resNum  = parseInt(line.slice(22, 26).trim(), 10);
-          const ca      = line.slice(12, 16).trim() === 'CA';
+          const resNum = parseInt(line.slice(22, 26).trim(), 10);
+          const ca = line.slice(12, 16).trim() === 'CA';
           if (ca && !isNaN(bfactor) && !isNaN(resNum)) {
             scores.push({ res: resNum, plddt: bfactor });
           }
         }
       });
       return scores;
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   /* ─── Build pLDDT SVG chart ─── */
   function _buildChart(scores) {
     if (!scores.length) return '<div class="pv-no-chart">pLDDT data unavailable</div>';
 
-    const W       = 760;
-    const H       = 120;
+    const W = 760;
+    const H = 120;
     const PADDING = { top: 10, right: 12, bottom: 24, left: 36 };
     const cW = W - PADDING.left - PADDING.right;
-    const cH = H - PADDING.top  - PADDING.bottom;
+    const cH = H - PADDING.top - PADDING.bottom;
 
-    const maxRes   = scores[scores.length - 1].res;
+    const maxRes = scores[scores.length - 1].res;
     const barWidth = Math.max(1, Math.floor(cW / scores.length));
 
-    const bars = scores.map((s, i) => {
-      const tier  = TIERS.find(t => s.plddt >= t.min) || TIERS[TIERS.length - 1];
-      const x     = PADDING.left + (i / scores.length) * cW;
-      const barH  = (s.plddt / 100) * cH;
-      const y     = PADDING.top + cH - barH;
-      return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth}" height="${barH.toFixed(1)}" fill="${tier.color}" opacity="0.85"/>`;
-    }).join('');
+    const bars = scores
+      .map((s, i) => {
+        const tier = TIERS.find((t) => s.plddt >= t.min) || TIERS[TIERS.length - 1];
+        const x = PADDING.left + (i / scores.length) * cW;
+        const barH = (s.plddt / 100) * cH;
+        const y = PADDING.top + cH - barH;
+        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth}" height="${barH.toFixed(1)}" fill="${tier.color}" opacity="0.85"/>`;
+      })
+      .join('');
 
-    const yLabels = [0, 25, 50, 70, 90, 100].map(v => {
-      const y = PADDING.top + cH - (v / 100) * cH;
-      return `<text x="${PADDING.left - 4}" y="${(y + 3).toFixed(1)}" fill="#A8A098" font-size="8" text-anchor="end">${v}</text>
+    const yLabels = [0, 25, 50, 70, 90, 100]
+      .map((v) => {
+        const y = PADDING.top + cH - (v / 100) * cH;
+        return `<text x="${PADDING.left - 4}" y="${(y + 3).toFixed(1)}" fill="#A8A098" font-size="8" text-anchor="end">${v}</text>
               <line x1="${PADDING.left}" y1="${y.toFixed(1)}" x2="${W - PADDING.right}" y2="${y.toFixed(1)}" stroke="#182236" stroke-width="0.5"/>`;
-    }).join('');
+      })
+      .join('');
 
     const avgScore = (scores.reduce((a, b) => a + b.plddt, 0) / scores.length).toFixed(1);
 
-    const legend = TIERS.map(t =>
-      `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#A8A098">
+    const legend = TIERS.map(
+      (t) =>
+        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#A8A098">
         <span style="width:10px;height:10px;border-radius:2px;background:${t.color};display:inline-block;flex-shrink:0"></span>${t.label}</span>`
     ).join('');
 
@@ -125,7 +159,7 @@ OmicsLab.ProteinViewer = (function () {
           <rect x="${PADDING.left}" y="${PADDING.top}" width="${cW}" height="${cH}" fill="#111B2E"/>
           ${yLabels}
           ${bars}
-          <text x="${W/2}" y="${H - 4}" fill="#354060" font-size="8" text-anchor="middle">Residue (1–${maxRes})</text>
+          <text x="${W / 2}" y="${H - 4}" fill="#354060" font-size="8" text-anchor="middle">Residue (1–${maxRes})</text>
         </svg>
         <div class="pv-legend">${legend}</div>
       </div>`;
@@ -139,10 +173,7 @@ OmicsLab.ProteinViewer = (function () {
     _renderLoading(acc);
 
     try {
-      const [pred, upInfo] = await Promise.all([
-        _fetchPrediction(acc),
-        _fetchUniProtInfo(acc),
-      ]);
+      const [pred, upInfo] = await Promise.all([_fetchPrediction(acc), _fetchUniProtInfo(acc)]);
 
       const scores = pred.pdbUrl ? await _fetchPLDDT(pred.pdbUrl) : [];
       _renderProtein(pred, upInfo, scores);
@@ -154,7 +185,7 @@ OmicsLab.ProteinViewer = (function () {
   /* ─── Lookup by gene symbol (called from GeneLookup) ─── */
   async function lookupByGene(symbol) {
     symbol = symbol.toUpperCase();
-    const known = AFRICA_PROTEINS.find(p => p.gene === symbol);
+    const known = AFRICA_PROTEINS.find((p) => p.gene === symbol);
     if (known) {
       const inp = document.getElementById('pv-acc-input');
       if (inp) inp.value = known.acc;
@@ -180,33 +211,37 @@ OmicsLab.ProteinViewer = (function () {
   }
 
   /* ─── Render states ─── */
-  function _el() { return document.getElementById('pv-result'); }
+  function _el() {
+    return document.getElementById('pv-result');
+  }
 
   function _renderLoading(id) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pv-loading"><div class="pv-spinner"></div> Fetching AlphaFold prediction for ${_esc(id)}…</div>`;
+    if (el)
+      el.innerHTML = `<div class="pv-loading"><div class="pv-spinner"></div> Fetching AlphaFold prediction for ${_esc(id)}…</div>`;
   }
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pv-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
+    if (el)
+      el.innerHTML = `<div class="pv-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
   }
 
   function _renderProtein(pred, upInfo, scores) {
     const el = _el();
     if (!el) return;
 
-    const name   = upInfo.name || pred.uniprotDescription || 'Unknown protein';
-    const gene   = upInfo.gene  || '';
+    const name = upInfo.name || pred.uniprotDescription || 'Unknown protein';
+    const gene = upInfo.gene || '';
     const length = upInfo.length || '';
-    const org    = upInfo.org   || 'Homo sapiens';
+    const org = upInfo.org || 'Homo sapiens';
     const avgPLDDT = scores.length
       ? (scores.reduce((a, b) => a + b.plddt, 0) / scores.length).toFixed(1)
       : 'N/A';
 
-    const version  = pred.latestVersion || 1;
+    const version = pred.latestVersion || 1;
     const modelUrl = pred.cifUrl || pred.pdbUrl || '';
-    const afPage   = `https://alphafold.ebi.ac.uk/entry/${_currentAcc}`;
+    const afPage = `https://alphafold.ebi.ac.uk/entry/${_currentAcc}`;
 
     el.innerHTML = `
       <div class="pv-protein-card">
@@ -280,11 +315,13 @@ OmicsLab.ProteinViewer = (function () {
         <div class="pv-preloaded">
           <div class="pv-preloaded-label">African disease proteins:</div>
           <div class="pv-preloaded-grid">
-            ${AFRICA_PROTEINS.map(p => `
+            ${AFRICA_PROTEINS.map(
+              (p) => `
               <button class="pv-protein-chip" onclick="OmicsLab.ProteinViewer._quickLoad('${p.acc}','${p.gene}')" title="${_esc(p.disease)}">
                 <span class="pv-chip-gene">${p.gene}</span>
                 <span class="pv-chip-acc">${p.acc}</span>
-              </button>`).join('')}
+              </button>`
+            ).join('')}
           </div>
         </div>
 
@@ -299,7 +336,10 @@ OmicsLab.ProteinViewer = (function () {
 
   function _lookupAcc() {
     const inp = document.getElementById('pv-acc-input');
-    if (inp && inp.value.trim()) { _doLookup(inp.value); return; }
+    if (inp && inp.value.trim()) {
+      _doLookup(inp.value);
+      return;
+    }
     const gInp = document.getElementById('pv-gene-input');
     if (gInp && gInp.value.trim()) lookupByGene(gInp.value);
   }
@@ -313,7 +353,7 @@ OmicsLab.ProteinViewer = (function () {
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   return { init, lookupByGene, _lookupAcc, _quickLoad };

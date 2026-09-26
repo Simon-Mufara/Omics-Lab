@@ -8,12 +8,11 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.DataImport = (function () {
-
   const WORKER_PATH = 'js/parsers/worker.js';
-  let _worker   = null;
-  let _jobId    = 0;
-  let _pending  = {};   /* id → { resolve, reject } */
-  let _inited   = false;
+  let _worker = null;
+  let _jobId = 0;
+  let _pending = {}; /* id → { resolve, reject } */
+  let _inited = false;
 
   const MAX_BYTES = 100 * 1024 * 1024; /* 100 MB hard limit */
   const WARN_BYTES = 50 * 1024 * 1024; /* 50 MB warn */
@@ -24,21 +23,23 @@ OmicsLab.DataImport = (function () {
     if (typeof Worker === 'undefined') return null;
     try {
       _worker = new Worker(WORKER_PATH);
-      _worker.onmessage = e => {
+      _worker.onmessage = (e) => {
         const { id, ok, result, error } = e.data;
         const job = _pending[id];
         if (!job) return;
         delete _pending[id];
         if (ok) job.resolve(result);
-        else    job.reject(new Error(error || 'Parse error'));
+        else job.reject(new Error(error || 'Parse error'));
       };
-      _worker.onerror = err => {
-        Object.values(_pending).forEach(j => j.reject(new Error(err.message || 'Worker error')));
+      _worker.onerror = (err) => {
+        Object.values(_pending).forEach((j) => j.reject(new Error(err.message || 'Worker error')));
         _pending = {};
         _worker = null;
       };
       return _worker;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   function _parse(type, text) {
@@ -48,12 +49,17 @@ OmicsLab.DataImport = (function () {
         /* Fallback: synchronous parse on main thread */
         try {
           let r;
-          if (type === 'fastq' && OmicsLab.Parsers?.fastq)   r = OmicsLab.Parsers.fastq(text);
-          else if (type === 'vcf' && OmicsLab.Parsers?.vcf)  r = OmicsLab.Parsers.vcf(text);
+          if (type === 'fastq' && OmicsLab.Parsers?.fastq) r = OmicsLab.Parsers.fastq(text);
+          else if (type === 'vcf' && OmicsLab.Parsers?.vcf) r = OmicsLab.Parsers.vcf(text);
           else if (type === 'matrix' && OmicsLab.Parsers?.matrix) r = OmicsLab.Parsers.matrix(text);
-          else { reject(new Error('Parser not available')); return; }
+          else {
+            reject(new Error('Parser not available'));
+            return;
+          }
           resolve(r);
-        } catch (e) { reject(e); }
+        } catch (e) {
+          reject(e);
+        }
         return;
       }
       const id = ++_jobId;
@@ -65,13 +71,22 @@ OmicsLab.DataImport = (function () {
   /* ─── Detect file type from extension + sniff first bytes ─── */
   function _detectType(file, text) {
     const name = file.name.toLowerCase();
-    if (name.endsWith('.fastq') || name.endsWith('.fq') ||
-        name.endsWith('.fastq.gz') || name.endsWith('.fq.gz') ||
-        text.trimStart().startsWith('@')) return 'fastq';
-    if (name.endsWith('.vcf') || name.endsWith('.vcf.gz') ||
-        text.includes('##fileformat=VCF') || text.startsWith('##')) return 'vcf';
-    if (name.endsWith('.csv') || name.endsWith('.tsv') || name.endsWith('.txt'))
-      return 'matrix';
+    if (
+      name.endsWith('.fastq') ||
+      name.endsWith('.fq') ||
+      name.endsWith('.fastq.gz') ||
+      name.endsWith('.fq.gz') ||
+      text.trimStart().startsWith('@')
+    )
+      return 'fastq';
+    if (
+      name.endsWith('.vcf') ||
+      name.endsWith('.vcf.gz') ||
+      text.includes('##fileformat=VCF') ||
+      text.startsWith('##')
+    )
+      return 'vcf';
+    if (name.endsWith('.csv') || name.endsWith('.tsv') || name.endsWith('.txt')) return 'matrix';
     return null;
   }
 
@@ -128,14 +143,18 @@ OmicsLab.DataImport = (function () {
       _renderResult(zone, type, null, file.name, file.size);
     } else {
       _renderResult(zone, type, result, file.name, file.size);
-      OmicsLab.A11y?.announce(`${type.toUpperCase()} parsed: ${file.name}. ${_summarySentence(type, result)}`);
+      OmicsLab.A11y?.announce(
+        `${type.toUpperCase()} parsed: ${file.name}. ${_summarySentence(type, result)}`
+      );
     }
   }
 
   function _summarySentence(type, r) {
-    if (type === 'fastq') return `${r.readCount.toLocaleString()} reads, mean Q${r.meanQuality}, ${r.q30Pct}% ≥Q30.`;
-    if (type === 'vcf')   return `${r.variantCount.toLocaleString()} variants, ${r.passRate}% PASS.`;
-    if (type === 'matrix') return `${r.geneCount.toLocaleString()} genes × ${r.sampleCount} samples.`;
+    if (type === 'fastq')
+      return `${r.readCount.toLocaleString()} reads, mean Q${r.meanQuality}, ${r.q30Pct}% ≥Q30.`;
+    if (type === 'vcf') return `${r.variantCount.toLocaleString()} variants, ${r.passRate}% PASS.`;
+    if (type === 'matrix')
+      return `${r.geneCount.toLocaleString()} genes × ${r.sampleCount} samples.`;
     return '';
   }
 
@@ -144,8 +163,8 @@ OmicsLab.DataImport = (function () {
     const bar = zone.querySelector('.di-progress-bar-fill');
     const lbl = zone.querySelector('.di-progress-label');
     const wrap = zone.querySelector('.di-progress-wrap');
-    if (bar)  bar.style.width = pct + '%';
-    if (lbl)  lbl.textContent  = label;
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = label;
     if (wrap) wrap.style.display = pct > 0 ? '' : 'none';
   }
 
@@ -159,7 +178,11 @@ OmicsLab.DataImport = (function () {
       <span class="di-result-size">${_fmt(size)}</span>
     </div>`;
 
-    if (!r) { html += `<div class="di-error-card">Could not parse file — see error message above.</div>`; out.innerHTML = html; return; }
+    if (!r) {
+      html += `<div class="di-error-card">Could not parse file — see error message above.</div>`;
+      out.innerHTML = html;
+      return;
+    }
 
     if (type === 'fastq') html += _fastqCards(r);
     else if (type === 'vcf') html += _vcfCards(r);
@@ -175,46 +198,64 @@ OmicsLab.DataImport = (function () {
     const passLabel = r.pass ? 'PASS' : 'REVIEW';
 
     const metrics = [
-      { label: 'Total reads',       value: r.readCount.toLocaleString(),      ok: true },
-      { label: 'Total bases',       value: _fmtBases(r.totalBases),            ok: true },
-      { label: 'Mean quality',      value: `Q${r.meanQuality}`,                ok: r.meanQuality >= 28 },
-      { label: '≥Q30 bases',       value: `${r.q30Pct}%`,                      ok: r.q30Pct >= 75 },
-      { label: '≥Q20 bases',       value: `${r.q20Pct}%`,                      ok: r.q20Pct >= 90 },
-      { label: 'GC content',        value: `${r.gcPct}%`,                       ok: r.gcPct >= 35 && r.gcPct <= 70 },
-      { label: 'N bases',           value: `${r.nPct}%`,                        ok: r.nPct < 5 },
-      { label: 'Median read length', value: `${r.medianReadLength} bp`,          ok: r.medianReadLength >= 50 },
+      { label: 'Total reads', value: r.readCount.toLocaleString(), ok: true },
+      { label: 'Total bases', value: _fmtBases(r.totalBases), ok: true },
+      { label: 'Mean quality', value: `Q${r.meanQuality}`, ok: r.meanQuality >= 28 },
+      { label: '≥Q30 bases', value: `${r.q30Pct}%`, ok: r.q30Pct >= 75 },
+      { label: '≥Q20 bases', value: `${r.q20Pct}%`, ok: r.q20Pct >= 90 },
+      { label: 'GC content', value: `${r.gcPct}%`, ok: r.gcPct >= 35 && r.gcPct <= 70 },
+      { label: 'N bases', value: `${r.nPct}%`, ok: r.nPct < 5 },
+      {
+        label: 'Median read length',
+        value: `${r.medianReadLength} bp`,
+        ok: r.medianReadLength >= 50,
+      },
     ];
 
-    const metricHtml = metrics.map(m => `
+    const metricHtml = metrics
+      .map(
+        (m) => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
         <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
         <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
 
     /* Per-base quality miniature bar chart */
-    const chartHtml = r.perBaseQ.length ? `
+    const chartHtml = r.perBaseQ.length
+      ? `
       <div class="di-chart-title">Per-base quality score</div>
       <div class="di-bar-chart" aria-label="Per-base quality score bar chart">
-        ${r.perBaseQ.map((q, i) => {
-          const h = Math.round(q / 40 * 40);
-          const c = q >= 30 ? '#00C4A0' : q >= 20 ? '#e3b341' : '#ff6b6b';
-          return `<div class="di-bar" style="height:${h}px;background:${c}" title="Pos ${i+1}: Q${q}"></div>`;
-        }).join('')}
+        ${r.perBaseQ
+          .map((q, i) => {
+            const h = Math.round((q / 40) * 40);
+            const c = q >= 30 ? '#00C4A0' : q >= 20 ? '#e3b341' : '#ff6b6b';
+            return `<div class="di-bar" style="height:${h}px;background:${c}" title="Pos ${i + 1}: Q${q}"></div>`;
+          })
+          .join('')}
       </div>
-      <div class="di-chart-axis"><span>Position 1</span><span>Position ${r.perBaseQ.length}</span></div>` : '';
+      <div class="di-chart-axis"><span>Position 1</span><span>Position ${r.perBaseQ.length}</span></div>`
+      : '';
 
-    const issuesHtml = r.issues.length ? `
+    const issuesHtml = r.issues.length
+      ? `
       <div class="di-issues-list">
-        ${r.issues.map(issue => `
+        ${r.issues
+          .map(
+            (issue) => `
           <div class="di-issue">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             ${issue}
-          </div>`).join('')}
-      </div>` : '';
+          </div>`
+          )
+          .join('')}
+      </div>`
+      : '';
 
     return `
-      <div class="di-status-badge" style="background:rgba(${r.pass?'63,185,80':'249,115,22'},.1);color:${passColor};border:1px solid ${passColor}40">
+      <div class="di-status-badge" style="background:rgba(${r.pass ? '63,185,80' : '249,115,22'},.1);color:${passColor};border:1px solid ${passColor}40">
         ${r.pass ? '[OK]' : '!'} ${passLabel}
       </div>
       <div class="di-metrics-grid">${metricHtml}</div>
@@ -225,58 +266,84 @@ OmicsLab.DataImport = (function () {
   /* ─── VCF result cards ─── */
   function _vcfCards(r) {
     const metrics = [
-      { label: 'Total variants',   value: r.variantCount.toLocaleString(), ok: true },
-      { label: 'PASS rate',        value: `${r.passRate}%`,                ok: r.passRate >= 90 },
-      { label: 'SNPs',             value: `${r.snpCount.toLocaleString()} (${r.snpRate}%)`, ok: true },
-      { label: 'Indels',           value: r.indelCount.toLocaleString(),   ok: true },
-      { label: 'Mean QUAL',        value: r.meanQual ? `${r.meanQual}` : 'N/A', ok: (r.meanQual || 0) >= 30 },
-      { label: 'Ti/Tv ratio',      value: r.tiTvRatio ? `${r.tiTvRatio}` : 'N/A', ok: !r.tiTvRatio || (r.tiTvRatio >= 1.8 && r.tiTvRatio <= 3.0) },
-      { label: 'Samples',          value: String(r.sampleCount || 0),      ok: true },
-      { label: 'File format',      value: r.fileFormat,                    ok: true },
+      { label: 'Total variants', value: r.variantCount.toLocaleString(), ok: true },
+      { label: 'PASS rate', value: `${r.passRate}%`, ok: r.passRate >= 90 },
+      { label: 'SNPs', value: `${r.snpCount.toLocaleString()} (${r.snpRate}%)`, ok: true },
+      { label: 'Indels', value: r.indelCount.toLocaleString(), ok: true },
+      {
+        label: 'Mean QUAL',
+        value: r.meanQual ? `${r.meanQual}` : 'N/A',
+        ok: (r.meanQual || 0) >= 30,
+      },
+      {
+        label: 'Ti/Tv ratio',
+        value: r.tiTvRatio ? `${r.tiTvRatio}` : 'N/A',
+        ok: !r.tiTvRatio || (r.tiTvRatio >= 1.8 && r.tiTvRatio <= 3.0),
+      },
+      { label: 'Samples', value: String(r.sampleCount || 0), ok: true },
+      { label: 'File format', value: r.fileFormat, ok: true },
     ];
 
-    const metricHtml = metrics.map(m => `
+    const metricHtml = metrics
+      .map(
+        (m) => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
         <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
         <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
 
     /* Chrom distribution bar chart */
-    const maxCount = Math.max(...r.chromDistribution.map(c => c.count), 1);
-    const chromHtml = r.chromDistribution.length ? `
+    const maxCount = Math.max(...r.chromDistribution.map((c) => c.count), 1);
+    const chromHtml = r.chromDistribution.length
+      ? `
       <div class="di-chart-title">Variant count per chromosome</div>
       <div class="di-chrom-chart">
-        ${r.chromDistribution.map(c => `
+        ${r.chromDistribution
+          .map(
+            (c) => `
           <div class="di-chrom-row">
             <span class="di-chrom-label">${c.chrom}</span>
             <div class="di-chrom-bar-wrap">
-              <div class="di-chrom-bar" style="width:${Math.round(c.count/maxCount*100)}%"></div>
+              <div class="di-chrom-bar" style="width:${Math.round((c.count / maxCount) * 100)}%"></div>
             </div>
             <span class="di-chrom-count">${c.count.toLocaleString()}</span>
-          </div>`).join('')}
-      </div>` : '';
+          </div>`
+          )
+          .join('')}
+      </div>`
+      : '';
 
     /* Preview table */
-    const previewHtml = r.preview.length ? `
+    const previewHtml = r.preview.length
+      ? `
       <div class="di-chart-title">Variant preview</div>
       <div class="di-vcf-preview-wrap">
         <table class="di-vcf-table">
           <thead><tr><th>CHROM</th><th>POS</th><th>REF</th><th>ALT</th><th>QUAL</th><th>FILTER</th></tr></thead>
-          <tbody>${r.preview.map(v => `
+          <tbody>${r.preview
+            .map(
+              (v) => `
             <tr>
               <td>${v.chrom}</td><td>${v.pos.toLocaleString()}</td>
               <td class="di-base-ref">${v.ref}</td>
               <td class="di-base-alt">${v.alt}</td>
               <td>${v.qual != null && !isNaN(v.qual) ? v.qual.toFixed(1) : '.'}</td>
-              <td style="color:${v.filter==='PASS'?'#00C4A0':'#A8A098'}">${v.filter}</td>
-            </tr>`).join('')}
+              <td style="color:${v.filter === 'PASS' ? '#00C4A0' : '#A8A098'}">${v.filter}</td>
+            </tr>`
+            )
+            .join('')}
           </tbody>
         </table>
-      </div>` : '';
+      </div>`
+      : '';
 
-    const tiTvNote = r.tiTvRatio && (r.tiTvRatio < 1.8 || r.tiTvRatio > 3.0)
-      ? `<div class="di-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Ti/Tv ratio ${r.tiTvRatio} outside expected range (1.8–3.0) — check for sequencing artefacts</div>` : '';
+    const tiTvNote =
+      r.tiTvRatio && (r.tiTvRatio < 1.8 || r.tiTvRatio > 3.0)
+        ? `<div class="di-issue"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Ti/Tv ratio ${r.tiTvRatio} outside expected range (1.8–3.0) — check for sequencing artefacts</div>`
+        : '';
 
     return `
       <div class="di-metrics-grid">${metricHtml}</div>
@@ -288,64 +355,86 @@ OmicsLab.DataImport = (function () {
   /* ─── Matrix result cards ─── */
   function _matrixCards(r) {
     const metrics = [
-      { label: 'Genes',           value: r.geneCount.toLocaleString(),   ok: r.geneCount > 100 },
-      { label: 'Samples',         value: String(r.sampleCount),           ok: r.sampleCount >= 2 },
-      { label: 'Format',          value: r.format,                        ok: true },
-      { label: 'Min value',       value: String(r.globalMin),             ok: true },
-      { label: 'Max value',       value: String(r.globalMax),             ok: true },
-      { label: 'Mean expression', value: String(r.meanExpression),        ok: true },
-      { label: 'Zero fraction',   value: `${r.zeroFraction}%`,            ok: r.zeroFraction < 80 },
-      { label: 'Type',            value: r.isNormalised ? 'Normalised' : 'Raw counts', ok: true },
+      { label: 'Genes', value: r.geneCount.toLocaleString(), ok: r.geneCount > 100 },
+      { label: 'Samples', value: String(r.sampleCount), ok: r.sampleCount >= 2 },
+      { label: 'Format', value: r.format, ok: true },
+      { label: 'Min value', value: String(r.globalMin), ok: true },
+      { label: 'Max value', value: String(r.globalMax), ok: true },
+      { label: 'Mean expression', value: String(r.meanExpression), ok: true },
+      { label: 'Zero fraction', value: `${r.zeroFraction}%`, ok: r.zeroFraction < 80 },
+      { label: 'Type', value: r.isNormalised ? 'Normalised' : 'Raw counts', ok: true },
     ];
 
-    const metricHtml = metrics.map(m => `
+    const metricHtml = metrics
+      .map(
+        (m) => `
       <div class="di-metric">
         <div class="di-metric-label">${m.label}</div>
         <div class="di-metric-value" style="color:${m.ok ? '#00C4A0' : '#f97316'}">${m.value}</div>
         <div class="di-metric-dot" style="background:${m.ok ? '#00C4A0' : '#f97316'}"></div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
 
     /* Top genes table */
-    const topHtml = r.topGenes.length ? `
+    const topHtml = r.topGenes.length
+      ? `
       <div class="di-chart-title">Top expressed genes</div>
       <div class="di-vcf-preview-wrap">
         <table class="di-vcf-table">
           <thead><tr><th>Gene</th><th>Total counts</th><th>Mean expression</th></tr></thead>
-          <tbody>${r.topGenes.map(g => `
+          <tbody>${r.topGenes
+            .map(
+              (g) => `
             <tr>
               <td style="color:#58a6ff;font-family:'JetBrains Mono',monospace">${g.name}</td>
               <td>${g.totalCount.toLocaleString()}</td>
               <td>${g.meanExpr}</td>
-            </tr>`).join('')}
+            </tr>`
+            )
+            .join('')}
           </tbody>
         </table>
-      </div>` : '';
+      </div>`
+      : '';
 
     /* Sample totals */
-    const sampleHtml = r.sampleTotals.length ? `
+    const sampleHtml = r.sampleTotals.length
+      ? `
       <div class="di-chart-title">Sample sequencing depth</div>
       <div class="di-chrom-chart">
         ${(() => {
-          const maxT = Math.max(...r.sampleTotals.map(s => s.total), 1);
-          return r.sampleTotals.map(s => `
+          const maxT = Math.max(...r.sampleTotals.map((s) => s.total), 1);
+          return r.sampleTotals
+            .map(
+              (s) => `
             <div class="di-chrom-row">
-              <span class="di-chrom-label" title="${s.name}">${s.name.length > 10 ? s.name.slice(0,9)+'…' : s.name}</span>
+              <span class="di-chrom-label" title="${s.name}">${s.name.length > 10 ? s.name.slice(0, 9) + '…' : s.name}</span>
               <div class="di-chrom-bar-wrap">
-                <div class="di-chrom-bar" style="width:${Math.round(s.total/maxT*100)}%;background:#58a6ff"></div>
+                <div class="di-chrom-bar" style="width:${Math.round((s.total / maxT) * 100)}%;background:#58a6ff"></div>
               </div>
               <span class="di-chrom-count">${s.total.toLocaleString()}</span>
-            </div>`).join('');
+            </div>`
+            )
+            .join('');
         })()}
-      </div>` : '';
+      </div>`
+      : '';
 
-    const warnHtml = r.warnings.length ? `
+    const warnHtml = r.warnings.length
+      ? `
       <div class="di-issues-list">
-        ${r.warnings.map(w => `
+        ${r.warnings
+          .map(
+            (w) => `
           <div class="di-issue">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2.5" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             ${w}
-          </div>`).join('')}
-      </div>` : '';
+          </div>`
+          )
+          .join('')}
+      </div>`
+      : '';
 
     return `
       <div class="di-metrics-grid">${metricHtml}</div>
@@ -356,15 +445,15 @@ OmicsLab.DataImport = (function () {
 
   function _fmtBases(n) {
     if (n < 1000) return n + ' bp';
-    if (n < 1e6)  return (n / 1000).toFixed(0) + ' Kbp';
-    if (n < 1e9)  return (n / 1e6).toFixed(1) + ' Mbp';
+    if (n < 1e6) return (n / 1000).toFixed(0) + ' Kbp';
+    if (n < 1e9) return (n / 1e6).toFixed(1) + ' Mbp';
     return (n / 1e9).toFixed(2) + ' Gbp';
   }
 
   /* ─── Build the import panel ─── */
   function _buildPanel() {
     const panel = document.createElement('div');
-    panel.id    = 'di-panel';
+    panel.id = 'di-panel';
     panel.className = 'di-panel';
     panel.setAttribute('role', 'region');
     panel.setAttribute('aria-label', 'Data Import');
@@ -380,10 +469,33 @@ OmicsLab.DataImport = (function () {
 
       <div class="di-zones-row">
         ${[
-          { id:'fastq', icon:'bar-chart', label:'FASTQ File', hint:'.fastq  .fq', color:'#00C4A0', accept:'.fastq,.fq,.fastq.gz,.fq.gz,.txt' },
-          { id:'vcf',   icon:'microscope', label:'VCF File',   hint:'.vcf  .vcf.gz', color:'#bc8cff', accept:'.vcf,.vcf.gz,.txt' },
-          { id:'matrix',icon:'trending-up', label:'Expression Matrix', hint:'.csv  .tsv', color:'#58a6ff', accept:'.csv,.tsv,.txt' },
-        ].map(z => `
+          {
+            id: 'fastq',
+            icon: 'bar-chart',
+            label: 'FASTQ File',
+            hint: '.fastq  .fq',
+            color: '#00C4A0',
+            accept: '.fastq,.fq,.fastq.gz,.fq.gz,.txt',
+          },
+          {
+            id: 'vcf',
+            icon: 'microscope',
+            label: 'VCF File',
+            hint: '.vcf  .vcf.gz',
+            color: '#bc8cff',
+            accept: '.vcf,.vcf.gz,.txt',
+          },
+          {
+            id: 'matrix',
+            icon: 'trending-up',
+            label: 'Expression Matrix',
+            hint: '.csv  .tsv',
+            color: '#58a6ff',
+            accept: '.csv,.tsv,.txt',
+          },
+        ]
+          .map(
+            (z) => `
           <div class="di-zone" id="di-zone-${z.id}" data-type="${z.id}"
                tabindex="0" role="button"
                aria-label="Drop ${z.label} file here or click to browse"
@@ -400,7 +512,9 @@ OmicsLab.DataImport = (function () {
               <div class="di-progress-label">Processing…</div>
             </div>
             <div class="di-result-area" style="display:none"></div>
-          </div>`).join('')}
+          </div>`
+          )
+          .join('')}
       </div>
 
       <div class="di-global-drop-hint">
@@ -415,35 +529,40 @@ OmicsLab.DataImport = (function () {
   function _wireZone(zone) {
     const input = zone.querySelector('.di-file-input');
     if (input) {
-      input.addEventListener('change', e => {
+      input.addEventListener('change', (e) => {
         const f = e.target.files?.[0];
         if (f) _handleFile(f, zone);
         e.target.value = '';
       });
     }
 
-    zone.addEventListener('dragover', e => {
+    zone.addEventListener('dragover', (e) => {
       e.preventDefault();
       zone.classList.add('di-zone-over');
     });
-    zone.addEventListener('dragleave', e => {
+    zone.addEventListener('dragleave', (e) => {
       if (!zone.contains(e.relatedTarget)) zone.classList.remove('di-zone-over');
     });
-    zone.addEventListener('drop', e => {
+    zone.addEventListener('drop', (e) => {
       e.preventDefault();
       zone.classList.remove('di-zone-over');
       const f = e.dataTransfer.files?.[0];
       if (f) _handleFile(f, zone);
     });
-    zone.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input?.click(); }
+    zone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        input?.click();
+      }
     });
   }
 
   /* ─── Global panel drag (auto-route to correct zone) ─── */
   function _wireGlobalDrop(panel) {
-    panel.addEventListener('dragover', e => { e.preventDefault(); });
-    panel.addEventListener('drop', e => {
+    panel.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+    panel.addEventListener('drop', (e) => {
       e.preventDefault();
       const f = e.dataTransfer.files?.[0];
       if (!f) return;
@@ -470,18 +589,20 @@ OmicsLab.DataImport = (function () {
       btn.dataset.tab = 'import';
       btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Import File`;
       btn.onclick = () => {
-        tabs.querySelectorAll('.az-tab').forEach(t => t.classList.remove('active'));
+        tabs.querySelectorAll('.az-tab').forEach((t) => t.classList.remove('active'));
         btn.classList.add('active');
-        document.querySelectorAll('.az-panel-content').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.az-panel-content').forEach((p) => p.classList.remove('active'));
         const diWrap = document.getElementById('di-panel-wrap');
-        if (diWrap) { diWrap.style.display = ''; }
+        if (diWrap) {
+          diWrap.style.display = '';
+        }
       };
       tabs.appendChild(btn);
     }
 
     /* Hide other panels when Import tab is open — show others when they click another tab */
     if (tabs) {
-      tabs.querySelectorAll('.az-tab:not([data-tab="import"])').forEach(t => {
+      tabs.querySelectorAll('.az-tab:not([data-tab="import"])').forEach((t) => {
         const orig = t.onclick;
         t.addEventListener('click', () => {
           const diWrap = document.getElementById('di-panel-wrap');
@@ -497,7 +618,7 @@ OmicsLab.DataImport = (function () {
     wrap.appendChild(panel);
     analysisSection.appendChild(wrap);
 
-    ['fastq','vcf','matrix'].forEach(id => {
+    ['fastq', 'vcf', 'matrix'].forEach((id) => {
       const zone = panel.querySelector(`#di-zone-${id}`);
       if (zone) _wireZone(zone);
     });

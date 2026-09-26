@@ -12,18 +12,22 @@ OmicsLab.Notify = (function () {
   const MAX = 4;
 
   const ICONS = {
-    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-    error:   '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-    warning: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-    info:    '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-    loading: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="nt-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
+    success:
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    warning:
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    loading:
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="nt-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
   };
 
   const COLORS = {
     success: '#00C4A0',
-    error:   '#ff6b6b',
+    error: '#ff6b6b',
     warning: '#e3b341',
-    info:    '#58a6ff',
+    info: '#58a6ff',
     loading: '#A8A098',
   };
 
@@ -77,10 +81,17 @@ OmicsLab.Notify = (function () {
     el.innerHTML = `
       <span class="nt-icon" aria-hidden="true">${ICONS[type] || ICONS.info}</span>
       <div class="nt-body">
-        <div class="nt-msg">${String(message).replace(/</g,'&lt;')}</div>
-        ${actions.length ? `<div class="nt-actions">${actions.map((a,i) =>
-          `<button class="nt-action-btn" data-ai="${i}">${String(a.label).replace(/</g,'&lt;')}</button>`
-        ).join('')}</div>` : ''}
+        <div class="nt-msg">${String(message).replace(/</g, '&lt;')}</div>
+        ${
+          actions.length
+            ? `<div class="nt-actions">${actions
+                .map(
+                  (a, i) =>
+                    `<button class="nt-action-btn" data-ai="${i}">${String(a.label).replace(/</g, '&lt;')}</button>`
+                )
+                .join('')}</div>`
+            : ''
+        }
       </div>
       <button class="nt-close" aria-label="Dismiss" onclick="OmicsLab.Notify.dismiss('${id}')">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -89,7 +100,10 @@ OmicsLab.Notify = (function () {
 
     /* Wire action buttons */
     actions.forEach((a, i) => {
-      el.querySelector(`[data-ai="${i}"]`)?.addEventListener('click', () => { a.onClick?.(); _dismiss(id); });
+      el.querySelector(`[data-ai="${i}"]`)?.addEventListener('click', () => {
+        a.onClick?.();
+        _dismiss(id);
+      });
     });
 
     _container.appendChild(el);
@@ -107,13 +121,27 @@ OmicsLab.Notify = (function () {
     el.addEventListener('animationend', () => el.remove(), { once: true });
   }
 
-  function dismiss(id) { _dismiss(id); }
-  function dismissAll() { _container?.querySelectorAll('.nt-toast').forEach(el => _dismiss(el.id)); }
-  function success(msg, opts) { return show(msg, 'success', opts); }
-  function error(msg, opts) { return show(msg, 'error', { persist: true, ...opts }); }
-  function warning(msg, opts) { return show(msg, 'warning', opts); }
-  function info(msg, opts) { return show(msg, 'info', opts); }
-  function loading(msg, opts) { return show(msg, 'loading', { persist: true, ...opts }); }
+  function dismiss(id) {
+    _dismiss(id);
+  }
+  function dismissAll() {
+    _container?.querySelectorAll('.nt-toast').forEach((el) => _dismiss(el.id));
+  }
+  function success(msg, opts) {
+    return show(msg, 'success', opts);
+  }
+  function error(msg, opts) {
+    return show(msg, 'error', { persist: true, ...opts });
+  }
+  function warning(msg, opts) {
+    return show(msg, 'warning', opts);
+  }
+  function info(msg, opts) {
+    return show(msg, 'info', opts);
+  }
+  function loading(msg, opts) {
+    return show(msg, 'loading', { persist: true, ...opts });
+  }
 
   return { show, dismiss, dismissAll, success, error, warning, info, loading };
 })();

@@ -11,25 +11,25 @@ OmicsLab.Analytics = (function () {
   const QUEUE_KEY = 'omicslab_analytics_queue';
   const MAX_QUEUE = 200;
 
-  let _ph       = null;   /* posthog instance */
-  let _ready    = false;
-  let _userId   = null;
+  let _ph = null; /* posthog instance */
+  let _ready = false;
+  let _userId = null;
 
   /* ── Init PostHog ─────────────────────────────────────────────  */
   function init() {
     const cfg = window.OMICSLAB_CONFIG;
-    const key  = cfg?.posthogKey;
+    const key = cfg?.posthogKey;
     const host = cfg?.posthogHost || 'https://app.posthog.com';
 
     if (key && window.posthog) {
       window.posthog.init(key, {
-        api_host:             host,
-        autocapture:          false,   /* manual event capture only */
-        capture_pageview:     false,   /* we fire page events manually */
-        persistence:          'localStorage+cookie',
+        api_host: host,
+        autocapture: false /* manual event capture only */,
+        capture_pageview: false /* we fire page events manually */,
+        persistence: 'localStorage+cookie',
         disable_session_recording: false,
         loaded: (ph) => {
-          _ph    = ph;
+          _ph = ph;
           _ready = true;
           _flushLocalQueue();
         },
@@ -60,9 +60,9 @@ OmicsLab.Analytics = (function () {
   function fire(event, props = {}) {
     const payload = {
       event,
-      ts:        Date.now(),
+      ts: Date.now(),
       sessionId: _sessionId(),
-      country:   _country(),
+      country: _country(),
       props,
     };
 
@@ -124,34 +124,57 @@ OmicsLab.Analytics = (function () {
     if (!_ready || !_ph) return;
     const q = _getQueue();
     if (!q.length) return;
-    q.forEach(p => {
-      _ph.capture(p.event, { ...p.props, session_id: p.sessionId, region: p.country, queued_at: p.ts });
+    q.forEach((p) => {
+      _ph.capture(p.event, {
+        ...p.props,
+        session_id: p.sessionId,
+        region: p.country,
+        queued_at: p.ts,
+      });
     });
     localStorage.removeItem(QUEUE_KEY);
   }
 
   function _getQueue() {
-    try { return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
+    } catch {
+      return [];
+    }
   }
 
   /* ── Helpers ──────────────────────────────────────────────────  */
   function _sessionId() {
     const k = 'omicslab_anon_session';
     let id = sessionStorage.getItem(k);
-    if (!id) { id = Math.random().toString(36).slice(2) + Date.now().toString(36); sessionStorage.setItem(k, id); }
+    if (!id) {
+      id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem(k, id);
+    }
     return id;
   }
 
   function _country() {
-    try { return Intl.DateTimeFormat().resolvedOptions().timeZone.split('/')[0] || 'Unknown'; } catch { return 'Unknown'; }
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone.split('/')[0] || 'Unknown';
+    } catch {
+      return 'Unknown';
+    }
   }
 
   return {
-    init, identify, reset,
-    fire, page,
-    trackWorkflowComplete, trackBadgeEarned, trackOnboardingStep,
-    trackSearch, trackFeatureUsed, startFunnel, completeFunnel,
+    init,
+    identify,
+    reset,
+    fire,
+    page,
+    trackWorkflowComplete,
+    trackBadgeEarned,
+    trackOnboardingStep,
+    trackSearch,
+    trackFeatureUsed,
+    startFunnel,
+    completeFunnel,
     _getQueue,
   };
-
 })();

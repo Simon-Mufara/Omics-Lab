@@ -6,16 +6,15 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Dashboard = (function () {
-
-  const HISTORY_KEY  = 'omicslab_nav_history';
-  const STREAK_KEY   = 'omicslab_streak';
-  const STREAK_DATE  = 'omicslab_streak_date';
+  const HISTORY_KEY = 'omicslab_nav_history';
+  const STREAK_KEY = 'omicslab_streak';
+  const STREAK_DATE = 'omicslab_streak_date';
 
   /* ─── Recent page tracking (called from router.js) ─── */
   function trackPage(page) {
     try {
       const list = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-      const filtered = list.filter(p => p !== page).slice(0, 9);
+      const filtered = list.filter((p) => p !== page).slice(0, 9);
       filtered.unshift(page);
       localStorage.setItem(HISTORY_KEY, JSON.stringify(filtered));
     } catch {}
@@ -23,13 +22,17 @@ OmicsLab.Dashboard = (function () {
   }
 
   function _getHistory() {
-    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    } catch {
+      return [];
+    }
   }
 
   /* ─── Streak logic ─── */
   function _updateStreak() {
     const today = new Date().toDateString();
-    const last  = localStorage.getItem(STREAK_DATE);
+    const last = localStorage.getItem(STREAK_DATE);
     const streak = parseInt(localStorage.getItem(STREAK_KEY) || '0', 10);
     if (last === today) return;
     const yesterday = new Date(Date.now() - 86400000).toDateString();
@@ -44,45 +47,141 @@ OmicsLab.Dashboard = (function () {
 
   /* ─── Page metadata (matches PAGES in router.js) ─── */
   const PAGE_META = {
-    lab:            { label:'Lab Simulator',        icon:'flask',       color:'#00C4A0', sub:'14 interactive protocols' },
-    analysis:       { label:'Analysis Suite',       icon:'bar-chart',   color:'#e3b341', sub:'FASTQ · VCF · MSA · RNA-seq' },
-    variantinterp:  { label:'Variant Interpreter',  icon:'dna',         color:'#bc8cff', sub:'ACMG · gnomAD · ClinVar' },
-    primerdesign:   { label:'Primer Design',        icon:'scissors',    color:'#00C4A0', sub:'Tm · GC% · dimer checks' },
-    phylo:          { label:'Phylo Tree Builder',   icon:'git-branch',  color:'#00C4A0', sub:'NJ · UPGMA · Newick export' },
-    heatmap:        { label:'Expression Visualiser',icon:'activity',    color:'#e3b341', sub:'Volcano · heatmap · DE table' },
-    qualitypredictor:{label:'Quality Predictor',    icon:'check-circle',color:'#00C4A0', sub:'GATK · H3Africa thresholds' },
-    pubmed:         { label:'PubMed',               icon:'file-text',   color:'#58a6ff', sub:'36M citations · Africa filter' },
-    'gene-lookup':  { label:'Gene Lookup',          icon:'search',      color:'#00C4A0', sub:'Ensembl · gnomAD · AlphaFold' },
-    nexus:          { label:'Nexus Hub',             icon:'brain',       color:'#58a6ff', sub:'Channels · threads · @mentions' },
-    alerts:         { label:'Outbreak Alerts',      icon:'alert-triangle', color:'#ff6b6b', sub:'Live Africa surveillance' },
-    career:         { label:'Career Quiz',          icon:'target',      color:'#bc8cff', sub:'Personalised roadmap' },
-    paperhub:       { label:'PaperHub',             icon:'file-text',   color:'#bc8cff', sub:'Africa genomics library' },
-    pathways:       { label:'Pathways',             icon:'activity',    color:'#00C4A0', sub:'KEGG · Reactome · Africa' },
-    sra:            { label:'SRA Browser',          icon:'database',    color:'#e3b341', sub:'Africa datasets · download' },
-    'knowledge-graph':{label:'Knowledge Graph',    icon:'layers',      color:'#bc8cff', sub:'Diseases · genes · tools' },
-    'output-tracker':{label:'Output Tracker',      icon:'clipboard',   color:'#00C4A0', sub:'Publications · grants · talks' },
-    settings:       { label:'Settings',            icon:'cpu',         color:'#A8A098', sub:'Appearance · language · keys' },
+    lab: {
+      label: 'Lab Simulator',
+      icon: 'flask',
+      color: '#00C4A0',
+      sub: '14 interactive protocols',
+    },
+    analysis: {
+      label: 'Analysis Suite',
+      icon: 'bar-chart',
+      color: '#e3b341',
+      sub: 'FASTQ · VCF · MSA · RNA-seq',
+    },
+    variantinterp: {
+      label: 'Variant Interpreter',
+      icon: 'dna',
+      color: '#bc8cff',
+      sub: 'ACMG · gnomAD · ClinVar',
+    },
+    primerdesign: {
+      label: 'Primer Design',
+      icon: 'scissors',
+      color: '#00C4A0',
+      sub: 'Tm · GC% · dimer checks',
+    },
+    phylo: {
+      label: 'Phylo Tree Builder',
+      icon: 'git-branch',
+      color: '#00C4A0',
+      sub: 'NJ · UPGMA · Newick export',
+    },
+    heatmap: {
+      label: 'Expression Visualiser',
+      icon: 'activity',
+      color: '#e3b341',
+      sub: 'Volcano · heatmap · DE table',
+    },
+    qualitypredictor: {
+      label: 'Quality Predictor',
+      icon: 'check-circle',
+      color: '#00C4A0',
+      sub: 'GATK · H3Africa thresholds',
+    },
+    pubmed: {
+      label: 'PubMed',
+      icon: 'file-text',
+      color: '#58a6ff',
+      sub: '36M citations · Africa filter',
+    },
+    'gene-lookup': {
+      label: 'Gene Lookup',
+      icon: 'search',
+      color: '#00C4A0',
+      sub: 'Ensembl · gnomAD · AlphaFold',
+    },
+    nexus: {
+      label: 'Nexus Hub',
+      icon: 'brain',
+      color: '#58a6ff',
+      sub: 'Channels · threads · @mentions',
+    },
+    alerts: {
+      label: 'Outbreak Alerts',
+      icon: 'alert-triangle',
+      color: '#ff6b6b',
+      sub: 'Live Africa surveillance',
+    },
+    career: { label: 'Career Quiz', icon: 'target', color: '#bc8cff', sub: 'Personalised roadmap' },
+    paperhub: {
+      label: 'PaperHub',
+      icon: 'file-text',
+      color: '#bc8cff',
+      sub: 'Africa genomics library',
+    },
+    pathways: {
+      label: 'Pathways',
+      icon: 'activity',
+      color: '#00C4A0',
+      sub: 'KEGG · Reactome · Africa',
+    },
+    sra: {
+      label: 'SRA Browser',
+      icon: 'database',
+      color: '#e3b341',
+      sub: 'Africa datasets · download',
+    },
+    'knowledge-graph': {
+      label: 'Knowledge Graph',
+      icon: 'layers',
+      color: '#bc8cff',
+      sub: 'Diseases · genes · tools',
+    },
+    'output-tracker': {
+      label: 'Output Tracker',
+      icon: 'clipboard',
+      color: '#00C4A0',
+      sub: 'Publications · grants · talks',
+    },
+    settings: {
+      label: 'Settings',
+      icon: 'cpu',
+      color: '#A8A098',
+      sub: 'Appearance · language · keys',
+    },
   };
 
   /* ─── Recommendation engine ─── */
   function _getRecommendations(history) {
     const role = localStorage.getItem('omicslab_onboarding_role') || 'researcher';
     const roleRecs = {
-      student:    ['lab','learn','qualitypredictor','variantinterp','glossary','phylo'],
-      researcher: ['variantinterp','gene-lookup','pathways','sra','heatmap','pubmed'],
-      instructor: ['learn','curriculum','badges','labnotebook','output-tracker','workshop'],
+      student: ['lab', 'learn', 'qualitypredictor', 'variantinterp', 'glossary', 'phylo'],
+      researcher: ['variantinterp', 'gene-lookup', 'pathways', 'sra', 'heatmap', 'pubmed'],
+      instructor: ['learn', 'curriculum', 'badges', 'labnotebook', 'output-tracker', 'workshop'],
     };
     const base = roleRecs[role] || roleRecs.researcher;
     /* Filter out recently visited */
     const histSet = new Set(history.slice(0, 4));
-    const fresh = base.filter(p => !histSet.has(p));
+    const fresh = base.filter((p) => !histSet.has(p));
     return fresh.slice(0, 3);
   }
 
   /* ─── Render dashboard ─── */
   function render(container) {
-    const user = OmicsLab.AuthClerk?.getUser?.()
-              || (() => { try { return JSON.parse(localStorage.getItem('omicslab_user_profile') || localStorage.getItem('omicslab_user') || 'null'); } catch { return null; } })();
+    const user =
+      OmicsLab.AuthClerk?.getUser?.() ||
+      (() => {
+        try {
+          return JSON.parse(
+            localStorage.getItem('omicslab_user_profile') ||
+              localStorage.getItem('omicslab_user') ||
+              'null'
+          );
+        } catch {
+          return null;
+        }
+      })();
     const name = user?.name || localStorage.getItem('omicslab_profile_name') || 'Researcher';
     const inst = user?.institution || localStorage.getItem('omicslab_profile_institution') || '';
     const history = _getHistory().slice(0, 3);
@@ -104,27 +203,34 @@ OmicsLab.Dashboard = (function () {
               <span class="db-hello">${_esc(greeting)}, ${_esc(firstName)}.</span>
               ${inst ? `<span class="db-inst">${_esc(inst)}</span>` : ''}
             </div>
-            ${streak > 0 ? `
+            ${
+              streak > 0
+                ? `
               <div class="db-streak">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e3b341" stroke-width="2" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 ${streak}-day streak
-              </div>` : ''}
+              </div>`
+                : ''
+            }
           </div>
 
           <div class="db-cols">
 
             <!-- Continue where you left off -->
-            ${history.length ? `
+            ${
+              history.length
+                ? `
               <div class="db-card">
                 <div class="db-card-title">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                   Continue where you left off
                 </div>
                 <div class="db-continue-list">
-                  ${history.map(page => {
-                    const meta = PAGE_META[page];
-                    if (!meta) return '';
-                    return `
+                  ${history
+                    .map((page) => {
+                      const meta = PAGE_META[page];
+                      if (!meta) return '';
+                      return `
                       <button class="db-continue-btn" onclick="OmicsLab.Router.navigate('${page}')">
                         <span class="db-cont-icon">${OmicsLab.Icons?.svg(meta.icon, 16) || ''}</span>
                         <span class="db-cont-body">
@@ -133,22 +239,29 @@ OmicsLab.Dashboard = (function () {
                         </span>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                       </button>`;
-                  }).filter(Boolean).join('')}
+                    })
+                    .filter(Boolean)
+                    .join('')}
                 </div>
-              </div>` : ''}
+              </div>`
+                : ''
+            }
 
             <!-- Recommended for you -->
-            ${recs.length ? `
+            ${
+              recs.length
+                ? `
               <div class="db-card">
                 <div class="db-card-title">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zM12 8v4l3 3"/></svg>
                   Recommended for you
                 </div>
                 <div class="db-continue-list">
-                  ${recs.map(page => {
-                    const meta = PAGE_META[page];
-                    if (!meta) return '';
-                    return `
+                  ${recs
+                    .map((page) => {
+                      const meta = PAGE_META[page];
+                      if (!meta) return '';
+                      return `
                       <button class="db-continue-btn" onclick="OmicsLab.Router.navigate('${page}')">
                         <span class="db-cont-icon">${OmicsLab.Icons?.svg(meta.icon, 16) || ''}</span>
                         <span class="db-cont-body">
@@ -157,9 +270,13 @@ OmicsLab.Dashboard = (function () {
                         </span>
                         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                       </button>`;
-                  }).filter(Boolean).join('')}
+                    })
+                    .filter(Boolean)
+                    .join('')}
                 </div>
-              </div>` : ''}
+              </div>`
+                : ''
+            }
 
             <!-- Africa Pulse -->
             <div class="db-card db-pulse-card">
@@ -170,11 +287,11 @@ OmicsLab.Dashboard = (function () {
               </div>
               <div class="db-pulse-items" id="db-pulse-items">
                 <div class="db-pulse-item">
-                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin',11)||''} DRC</span>
+                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin', 11) || ''} DRC</span>
                   <span class="db-pulse-event">Mpox Clade I — active genomic surveillance</span>
                 </div>
                 <div class="db-pulse-item">
-                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('globe',11)||''} East Africa</span>
+                  <span class="db-pulse-country">${OmicsLab.Icons?.svg('globe', 11) || ''} East Africa</span>
                   <span class="db-pulse-event">Cholera V. cholerae O1 — El Tor biotype cluster</span>
                 </div>
               </div>
@@ -197,16 +314,25 @@ OmicsLab.Dashboard = (function () {
     try {
       const alerts = OmicsLab.Alerts?._getLatest?.(2);
       if (alerts && alerts.length) {
-        container.innerHTML = alerts.map(a => `
+        container.innerHTML = alerts
+          .map(
+            (a) => `
           <div class="db-pulse-item">
-            <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin',11)||''} ${_esc(a.country || 'Africa')}</span>
+            <span class="db-pulse-country">${OmicsLab.Icons?.svg('map-pin', 11) || ''} ${_esc(a.country || 'Africa')}</span>
             <span class="db-pulse-event">${_esc(a.title || a.name || 'Active surveillance')}</span>
-          </div>`).join('');
+          </div>`
+          )
+          .join('');
       }
     } catch {}
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   function _injectStyles() {
     if (document.getElementById('db-styles')) return;

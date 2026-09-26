@@ -8,22 +8,21 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.VoiceCompose = (function () {
-
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   let _recognition = null;
-  let _active      = false;
+  let _active = false;
   let _silenceTimer = null;
-  let _targetInput = null;   /* the textarea being dictated to */
+  let _targetInput = null; /* the textarea being dictated to */
   let _activeBtnId = null;
 
   /* ─── Build recognition instance ─── */
   function _buildRecognition(lang) {
     if (!SpeechRecognition) return null;
     const r = new SpeechRecognition();
-    r.continuous      = true;
-    r.interimResults  = true;
-    r.lang            = lang || _getLang();
+    r.continuous = true;
+    r.interimResults = true;
+    r.lang = lang || _getLang();
     r.maxAlternatives = 1;
 
     r.onstart = () => {
@@ -32,8 +31,9 @@ OmicsLab.VoiceCompose = (function () {
       OmicsLab.Notify?.info('Listening… speak now', { ttl: 2000 });
     };
 
-    r.onresult = e => {
-      let interim = ''; let final = '';
+    r.onresult = (e) => {
+      let interim = '';
+      let final = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const t = e.results[i][0].transcript;
         if (e.results[i].isFinal) final += t;
@@ -59,7 +59,7 @@ OmicsLab.VoiceCompose = (function () {
       }
     };
 
-    r.onerror = e => {
+    r.onerror = (e) => {
       if (e.error === 'not-allowed') {
         OmicsLab.Notify?.error('Microphone permission denied');
       } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
@@ -77,9 +77,19 @@ OmicsLab.VoiceCompose = (function () {
     try {
       const stored = localStorage.getItem('omicslab_lang') || navigator.language || 'en-US';
       /* Normalise common codes */
-      const map = { en: 'en-US', sw: 'sw-KE', fr: 'fr-FR', ar: 'ar-SA', zu: 'zu-ZA', yo: 'yo-NG', am: 'am-ET' };
-      return map[stored.slice(0,2)] || stored;
-    } catch { return 'en-US'; }
+      const map = {
+        en: 'en-US',
+        sw: 'sw-KE',
+        fr: 'fr-FR',
+        ar: 'ar-SA',
+        zu: 'zu-ZA',
+        yo: 'yo-NG',
+        am: 'am-ET',
+      };
+      return map[stored.slice(0, 2)] || stored;
+    } catch {
+      return 'en-US';
+    }
   }
 
   /* ─── Start ─── */
@@ -89,7 +99,10 @@ OmicsLab.VoiceCompose = (function () {
       return;
     }
 
-    if (_active) { _stop(); return; }
+    if (_active) {
+      _stop();
+      return;
+    }
 
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -112,7 +125,9 @@ OmicsLab.VoiceCompose = (function () {
   function _stop() {
     clearTimeout(_silenceTimer);
     if (_recognition) {
-      try { _recognition.stop(); } catch {}
+      try {
+        _recognition.stop();
+      } catch {}
     }
     _cleanup();
   }
@@ -122,7 +137,8 @@ OmicsLab.VoiceCompose = (function () {
     _setBtnState(false);
     if (_targetInput) {
       /* Clean up interim brackets */
-      _targetInput.value = _targetInput.dataset.voiceBase || _targetInput.value.replace(/\s*\[.*?\]$/, '');
+      _targetInput.value =
+        _targetInput.dataset.voiceBase || _targetInput.value.replace(/\s*\[.*?\]$/, '');
       delete _targetInput.dataset.voiceBase;
       _targetInput = null;
     }

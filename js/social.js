@@ -6,15 +6,14 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Social = (function () {
-
-  const S_FRIENDS  = 'omicslab_friends_v1';
-  const S_MSGS     = 'omicslab_messages_v1';
+  const S_FRIENDS = 'omicslab_friends_v1';
+  const S_MSGS = 'omicslab_messages_v1';
   const S_PRESENCE = 'omicslab_presence_v1';
-  const HEARTBEAT  = 25000; /* ms — update last-active every 25s */
+  const HEARTBEAT = 25000; /* ms — update last-active every 25s */
 
   let _heartbeatTimer = null;
-  let _bc = null;       /* BroadcastChannel for same-tab/device sync */
-  let _activeChat = null;  /* userId of open chat */
+  let _bc = null; /* BroadcastChannel for same-tab/device sync */
+  let _activeChat = null; /* userId of open chat */
   let _tab = 'discover';
   let _containerId = 'social-section'; /* overridden when mounted inside Nexus's "People" tab */
 
@@ -30,17 +29,54 @@ OmicsLab.Social = (function () {
     const cu = OmicsLab.AuthClerk?.getUser?.();
     if (!cu) return null;
     let extra = {};
-    try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
-    return { id: cu.id, name: cu.name || extra.name || 'OmicsLab User', institution: extra.institution || '', country: extra.country || '' };
+    try {
+      extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}');
+    } catch {}
+    return {
+      id: cu.id,
+      name: cu.name || extra.name || 'OmicsLab User',
+      institution: extra.institution || '',
+      country: extra.country || '',
+    };
   }
 
   /* ─── Persistence helpers ─── */
-  function _loadFriends()  { try { return JSON.parse(localStorage.getItem(S_FRIENDS)  || '[]'); } catch { return []; } }
-  function _saveFriends(f) { try { localStorage.setItem(S_FRIENDS, JSON.stringify(f)); } catch {} }
-  function _loadMsgs()     { try { return JSON.parse(localStorage.getItem(S_MSGS)     || '{}'); } catch { return {}; } }
-  function _saveMsgs(m)    { try { localStorage.setItem(S_MSGS, JSON.stringify(m)); } catch {} }
-  function _loadPresence()  { try { return JSON.parse(localStorage.getItem(S_PRESENCE) || '{}'); } catch { return {}; } }
-  function _savePresence(p) { try { localStorage.setItem(S_PRESENCE, JSON.stringify(p)); } catch {} }
+  function _loadFriends() {
+    try {
+      return JSON.parse(localStorage.getItem(S_FRIENDS) || '[]');
+    } catch {
+      return [];
+    }
+  }
+  function _saveFriends(f) {
+    try {
+      localStorage.setItem(S_FRIENDS, JSON.stringify(f));
+    } catch {}
+  }
+  function _loadMsgs() {
+    try {
+      return JSON.parse(localStorage.getItem(S_MSGS) || '{}');
+    } catch {
+      return {};
+    }
+  }
+  function _saveMsgs(m) {
+    try {
+      localStorage.setItem(S_MSGS, JSON.stringify(m));
+    } catch {}
+  }
+  function _loadPresence() {
+    try {
+      return JSON.parse(localStorage.getItem(S_PRESENCE) || '{}');
+    } catch {
+      return {};
+    }
+  }
+  function _savePresence(p) {
+    try {
+      localStorage.setItem(S_PRESENCE, JSON.stringify(p));
+    } catch {}
+  }
 
   /* Merges the local, same-device-only presence (BroadcastChannel +
      localStorage — only ever sees other tabs of this exact browser) with
@@ -52,7 +88,9 @@ OmicsLab.Social = (function () {
   function _allPresence() {
     const merged = { ..._loadPresence() };
     const real = OmicsLab.NexusRealtime?.getOnlineUsers?.() || [];
-    real.forEach(u => { merged[u.id] = { name: u.name, institution: u.institution, country: u.country, t: u.t }; });
+    real.forEach((u) => {
+      merged[u.id] = { name: u.name, institution: u.institution, country: u.country, t: u.t };
+    });
     return merged;
   }
 
@@ -68,16 +106,23 @@ OmicsLab.Social = (function () {
     const u = _currentUser();
     if (!u) return;
     const presence = _loadPresence();
-    presence[u.id] = { name: u.name, institution: u.institution || '', country: u.country || '', t: Date.now() };
+    presence[u.id] = {
+      name: u.name,
+      institution: u.institution || '',
+      country: u.country || '',
+      t: Date.now(),
+    };
     _savePresence(presence);
     /* Broadcast to other tabs */
-    try { _bc?.postMessage({ type: 'presence', userId: u.id, name: u.name, t: Date.now() }); } catch {}
+    try {
+      _bc?.postMessage({ type: 'presence', userId: u.id, name: u.name, t: Date.now() });
+    } catch {}
   }
 
   /* ─── Is user online? (< 45s since heartbeat) ─── */
   function _isOnline(userId) {
     const p = _allPresence();
-    return p[userId] && (Date.now() - p[userId].t < 45000);
+    return p[userId] && Date.now() - p[userId].t < 45000;
   }
 
   /* ─── Send a message ───
@@ -97,15 +142,32 @@ OmicsLab.Social = (function () {
     if (!msgs[key]) msgs[key] = [];
     /* nexus_messages.id is a uuid column — see js/nexus.js's _send() for
        why a non-UUID id here would silently fail every DB insert. */
-    const msg = { id: crypto.randomUUID(), from: u.id, to: toId, text: text.trim(), t: Date.now(), read: false };
+    const msg = {
+      id: crypto.randomUUID(),
+      from: u.id,
+      to: toId,
+      text: text.trim(),
+      t: Date.now(),
+      read: false,
+    };
     msgs[key].push(msg);
     _saveMsgs(msgs);
-    try { _bc?.postMessage({ type: 'message', key, msg }); } catch {}
-    OmicsLab.NexusRealtime?.broadcast?.('dm:' + key, { id: msg.id, from: u.id, to: toId, text: msg.text, author: u.name });
+    try {
+      _bc?.postMessage({ type: 'message', key, msg });
+    } catch {}
+    OmicsLab.NexusRealtime?.broadcast?.('dm:' + key, {
+      id: msg.id,
+      from: u.id,
+      to: toId,
+      text: msg.text,
+      author: u.name,
+    });
     _renderChat(toId);
   }
 
-  function _chatKey(a, b) { return [a, b].sort().join('::'); }
+  function _chatKey(a, b) {
+    return [a, b].sort().join('::');
+  }
 
   /* Called by js/nexus-realtime.js for both live DM broadcasts and DM
      history reload (fromHistory=true) — either way, merge into the
@@ -122,9 +184,16 @@ OmicsLab.Social = (function () {
 
     const msgs = _loadMsgs();
     if (!msgs[key]) msgs[key] = [];
-    if (msgs[key].some(m => m.id === msg.id)) return; /* already have it */
+    if (msgs[key].some((m) => m.id === msg.id)) return; /* already have it */
     const watching = _activeChat === otherId;
-    msgs[key].push({ id: msg.id, from: fromId, to: fromId === u.id ? otherId : u.id, text: msg.text, t: msg.ts || Date.now(), read: watching });
+    msgs[key].push({
+      id: msg.id,
+      from: fromId,
+      to: fromId === u.id ? otherId : u.id,
+      text: msg.text,
+      t: msg.ts || Date.now(),
+      read: watching,
+    });
     msgs[key].sort((a, b) => a.t - b.t);
     _saveMsgs(msgs);
 
@@ -137,7 +206,11 @@ OmicsLab.Social = (function () {
        chat would be exactly the kind of noise this is supposed to
        prevent, not add. */
     if (!fromHistory && !watching) {
-      OmicsLab.Notifications?.add(msg.author || 'New message', msg.text.length > 100 ? msg.text.slice(0, 100) + '…' : msg.text, { cat: 'nexus', link: 'nexus' });
+      OmicsLab.Notifications?.add(
+        msg.author || 'New message',
+        msg.text.length > 100 ? msg.text.slice(0, 100) + '…' : msg.text,
+        { cat: 'nexus', link: 'nexus' }
+      );
     }
   }
 
@@ -161,7 +234,7 @@ OmicsLab.Social = (function () {
     if (!u) return 0;
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, friendId);
-    return (msgs[key] || []).filter(m => m.to === u.id && !m.read).length;
+    return (msgs[key] || []).filter((m) => m.to === u.id && !m.read).length;
   }
 
   /* ─── Mark chat as read ─── */
@@ -171,15 +244,23 @@ OmicsLab.Social = (function () {
     const msgs = _loadMsgs();
     const key = _chatKey(u.id, friendId);
     if (!msgs[key]) return;
-    msgs[key].forEach(m => { if (m.to === u.id) m.read = true; });
+    msgs[key].forEach((m) => {
+      if (m.to === u.id) m.read = true;
+    });
     _saveMsgs(msgs);
   }
 
   /* ─── Add friend by code ─── */
   function addFriendByCode(code) {
     const u = _currentUser();
-    if (!u) { OmicsLab.Notify?.error('Sign in to add friends.'); return; }
-    if (!code || !code.startsWith('OL-')) { OmicsLab.Notify?.error('Invalid code. Codes start with OL-'); return; }
+    if (!u) {
+      OmicsLab.Notify?.error('Sign in to add friends.');
+      return;
+    }
+    if (!code || !code.startsWith('OL-')) {
+      OmicsLab.Notify?.error('Invalid code. Codes start with OL-');
+      return;
+    }
 
     const presence = _allPresence();
     const found = Object.entries(presence).find(([id]) => {
@@ -188,24 +269,38 @@ OmicsLab.Social = (function () {
     });
 
     if (!found) {
-      OmicsLab.Notify?.error('No user found with that code. They must be online or have logged in recently.');
+      OmicsLab.Notify?.error(
+        'No user found with that code. They must be online or have logged in recently.'
+      );
       return;
     }
 
     const [friendId, friendData] = found;
-    if (friendId === u.id) { OmicsLab.Notify?.error("That's your own code!"); return; }
+    if (friendId === u.id) {
+      OmicsLab.Notify?.error("That's your own code!");
+      return;
+    }
 
     const friends = _loadFriends();
-    if (friends.find(f => f.id === friendId)) { OmicsLab.Notify?.error('Already friends!'); return; }
+    if (friends.find((f) => f.id === friendId)) {
+      OmicsLab.Notify?.error('Already friends!');
+      return;
+    }
 
-    friends.push({ id: friendId, name: friendData.name, institution: friendData.institution || '', country: friendData.country || '', addedAt: Date.now() });
+    friends.push({
+      id: friendId,
+      name: friendData.name,
+      institution: friendData.institution || '',
+      country: friendData.country || '',
+      addedAt: Date.now(),
+    });
     _saveFriends(friends);
     OmicsLab.Notify?.success('Friend added: ' + friendData.name);
     _renderFriendsList();
   }
 
   function removeFriend(friendId) {
-    const friends = _loadFriends().filter(f => f.id !== friendId);
+    const friends = _loadFriends().filter((f) => f.id !== friendId);
     _saveFriends(friends);
     if (_activeChat === friendId) _activeChat = null;
     _render();
@@ -214,13 +309,16 @@ OmicsLab.Social = (function () {
   /* ─── Init ─── */
   function init() {
     const section = document.getElementById(_containerId);
-    if (!section || section.dataset.socReady) { if (section?.dataset.socReady) _render(); return; }
+    if (!section || section.dataset.socReady) {
+      if (section?.dataset.socReady) _render();
+      return;
+    }
     section.dataset.socReady = '1';
 
     /* BroadcastChannel for same-device tab sync */
     try {
       _bc = new BroadcastChannel('omicslab_social');
-      _bc.onmessage = e => {
+      _bc.onmessage = (e) => {
         if (e.data.type === 'presence') {
           const p = _loadPresence();
           p[e.data.userId] = { name: e.data.name, t: e.data.t };
@@ -274,22 +372,22 @@ OmicsLab.Social = (function () {
     const totalUnread = friends.reduce((acc, f) => acc + _unread(f.id), 0);
     const tabs = [
       { key: 'discover', label: 'Online Now' },
-      { key: 'friends',  label: `Friends${friends.length ? ' (' + friends.length + ')' : ''}` },
+      { key: 'friends', label: `Friends${friends.length ? ' (' + friends.length + ')' : ''}` },
       { key: 'messages', label: `Messages${totalUnread ? ' (' + totalUnread + ')' : ''}` },
-      { key: 'mycode',   label: 'My Code' },
+      { key: 'mycode', label: 'My Code' },
     ];
     return `
     <div class="soc-tabs">
-      ${tabs.map(t => `<button class="soc-tab ${_tab === t.key ? 'soc-tab-active' : ''}" onclick="OmicsLab.Social._setTab('${t.key}')">${t.label}</button>`).join('')}
+      ${tabs.map((t) => `<button class="soc-tab ${_tab === t.key ? 'soc-tab-active' : ''}" onclick="OmicsLab.Social._setTab('${t.key}')">${t.label}</button>`).join('')}
     </div>
     <div id="soc-tab-body">${_renderTab(u)}</div>`;
   }
 
   function _renderTab(u) {
-    if (_tab === 'discover')  return _renderDiscover(u);
-    if (_tab === 'friends')   return _renderFriends(u);
-    if (_tab === 'messages')  return _activeChat ? _renderChatView(_activeChat) : _renderFriends(u);
-    if (_tab === 'mycode')    return _renderMyCode(u);
+    if (_tab === 'discover') return _renderDiscover(u);
+    if (_tab === 'friends') return _renderFriends(u);
+    if (_tab === 'messages') return _activeChat ? _renderChatView(_activeChat) : _renderFriends(u);
+    if (_tab === 'mycode') return _renderMyCode(u);
     return '';
   }
 
@@ -299,10 +397,10 @@ OmicsLab.Social = (function () {
     const friends = _loadFriends();
     const now = Date.now();
     const online = Object.entries(presence)
-      .filter(([id, p]) => id !== me.id && (now - p.t < 45000))
+      .filter(([id, p]) => id !== me.id && now - p.t < 45000)
       .map(([id, p]) => ({ id, ...p }));
 
-    const isFriend = id => friends.some(f => f.id === id);
+    const isFriend = (id) => friends.some((f) => f.id === id);
 
     return `
     <div class="soc-section">
@@ -313,13 +411,18 @@ OmicsLab.Social = (function () {
         </div>
         <div class="soc-section-sub">People currently using OmicsLab right now — anywhere, on any device.</div>
       </div>
-      ${online.length === 0 ? `
+      ${
+        online.length === 0
+          ? `
         <div class="soc-empty">
           <div class="soc-empty-msg">No other users detected online right now.</div>
           <div class="soc-empty-hint">Share your code with colleagues so they can find and add you as a friend.</div>
-        </div>` : `
+        </div>`
+          : `
         <div class="soc-user-grid">
-          ${online.map(u => `
+          ${online
+            .map(
+              (u) => `
             <div class="soc-user-card">
               <div class="soc-user-avatar">${_initials(u.name)}</div>
               <div class="soc-user-info">
@@ -329,10 +432,13 @@ OmicsLab.Social = (function () {
               </div>
               <div class="soc-user-online"><span class="soc-online-dot soc-dot-sm"></span> Online</div>
               ${!isFriend(u.id) ? `<button class="soc-btn-add" onclick="OmicsLab.Social._addFromPresence('${u.id}')">+ Add</button>` : `<span class="soc-friend-tag">Friend</span>`}
-            </div>`).join('')}
-        </div>`}
+            </div>`
+            )
+            .join('')}
+        </div>`
+      }
       <div class="soc-discover-note">
-        <strong>How does this work?</strong> ${OmicsLab.NexusRealtime?.isReady ? 'Signed-in users show up here the moment they open OmicsLab, on any device — presence is tracked live, not stored anywhere permanent.' : 'Real-time presence isn\'t connected right now, so this only shows other tabs open on this same browser.'}
+        <strong>How does this work?</strong> ${OmicsLab.NexusRealtime?.isReady ? 'Signed-in users show up here the moment they open OmicsLab, on any device — presence is tracked live, not stored anywhere permanent.' : "Real-time presence isn't connected right now, so this only shows other tabs open on this same browser."}
       </div>
     </div>`;
   }
@@ -343,13 +449,18 @@ OmicsLab.Social = (function () {
     return `
     <div class="soc-section" id="soc-friends-list">
       ${_renderAddFriendBar()}
-      ${friends.length === 0 ? `
+      ${
+        friends.length === 0
+          ? `
         <div class="soc-empty">
           <div class="soc-empty-msg">No friends added yet.</div>
           <div class="soc-empty-hint">Ask a colleague for their OmicsLab code (shown in "My Code" tab) and enter it above.</div>
-        </div>` : `
+        </div>`
+          : `
         <div class="soc-friends-list">
-          ${friends.map(f => `
+          ${friends
+            .map(
+              (f) => `
             <div class="soc-friend-row">
               <div class="soc-user-avatar soc-av-sm">${_initials(f.name)}</div>
               <div class="soc-friend-info">
@@ -362,8 +473,11 @@ OmicsLab.Social = (function () {
                 <button class="soc-btn-msg" onclick="OmicsLab.Social._openChat('${f.id}')">Message</button>
                 <button class="soc-btn-remove" onclick="OmicsLab.Social.removeFriend('${f.id}')">Remove</button>
               </div>
-            </div>`).join('')}
-        </div>`}
+            </div>`
+            )
+            .join('')}
+        </div>`
+      }
     </div>`;
   }
 
@@ -378,8 +492,12 @@ OmicsLab.Social = (function () {
   /* ─── Chat view ─── */
   function _renderChatView(friendId) {
     const friends = _loadFriends();
-    const friend = friends.find(f => f.id === friendId);
-    if (!friend) { _activeChat = null; _tab = 'friends'; return _renderFriends(_currentUser()); }
+    const friend = friends.find((f) => f.id === friendId);
+    if (!friend) {
+      _activeChat = null;
+      _tab = 'friends';
+      return _renderFriends(_currentUser());
+    }
 
     _markRead(friendId);
     const me = _currentUser();
@@ -402,11 +520,15 @@ OmicsLab.Social = (function () {
       </div>
       <div class="soc-chat-msgs" id="soc-chat-msgs">
         ${chat.length === 0 ? '<div class="soc-chat-empty">No messages yet. Say hello!</div>' : ''}
-        ${chat.map(m => `
+        ${chat
+          .map(
+            (m) => `
           <div class="soc-msg-row ${m.from === me.id ? 'soc-msg-mine' : 'soc-msg-theirs'}">
             <div class="soc-msg-bubble">${_escMsg(m.text)}</div>
             <div class="soc-msg-time">${_timeAgo(m.t)}</div>
-          </div>`).join('')}
+          </div>`
+          )
+          .join('')}
       </div>
       <div class="soc-chat-input-bar">
         <textarea class="soc-chat-input" id="soc-chat-text" placeholder="Type a message…" rows="1"
@@ -426,11 +548,15 @@ OmicsLab.Social = (function () {
       <div class="soc-mycode-card">
         <div class="soc-mycode-label">Your OmicsLab Code</div>
         <div class="soc-mycode-code" id="soc-mycode">${code || 'Sign in to generate your code'}</div>
-        ${code ? `
+        ${
+          code
+            ? `
           <button class="soc-btn-copy" onclick="OmicsLab.Social._copyCode('${code}')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             Copy code
-          </button>` : ''}
+          </button>`
+            : ''
+        }
         <p class="soc-mycode-hint">Share this code with colleagues so they can find and add you as a friend. Your code stays the same as long as you use the same account on this device.</p>
       </div>
       <div class="soc-profile-preview">
@@ -480,23 +606,41 @@ OmicsLab.Social = (function () {
   function _addFromPresence(userId) {
     const presence = _allPresence();
     const data = presence[userId];
-    if (!data) { OmicsLab.Notify?.error('User not found in presence data.'); return; }
+    if (!data) {
+      OmicsLab.Notify?.error('User not found in presence data.');
+      return;
+    }
     const friends = _loadFriends();
-    if (friends.find(f => f.id === userId)) { OmicsLab.Notify?.error('Already friends!'); return; }
-    friends.push({ id: userId, name: data.name, institution: data.institution || '', country: data.country || '', addedAt: Date.now() });
+    if (friends.find((f) => f.id === userId)) {
+      OmicsLab.Notify?.error('Already friends!');
+      return;
+    }
+    friends.push({
+      id: userId,
+      name: data.name,
+      institution: data.institution || '',
+      country: data.country || '',
+      addedAt: Date.now(),
+    });
     _saveFriends(friends);
     OmicsLab.Notify?.success('Friend added: ' + data.name);
     _render();
   }
 
   function _copyCode(code) {
-    navigator.clipboard?.writeText(code).then(() => OmicsLab.Notify?.success('Code copied to clipboard')).catch(() => OmicsLab.Notify?.error('Copy failed — select and copy manually'));
+    navigator.clipboard
+      ?.writeText(code)
+      .then(() => OmicsLab.Notify?.success('Code copied to clipboard'))
+      .catch(() => OmicsLab.Notify?.error('Copy failed — select and copy manually'));
   }
 
   function _renderFriendsList() {
     const el = document.getElementById('soc-friends-list');
     const u = _currentUser();
-    if (el && u) el.innerHTML = _renderFriends(u).replace('<div class="soc-section" id="soc-friends-list">', '').replace(/^[\s\S]*?<div class="soc-section" id="soc-friends-list">/, '');
+    if (el && u)
+      el.innerHTML = _renderFriends(u)
+        .replace('<div class="soc-section" id="soc-friends-list">', '')
+        .replace(/^[\s\S]*?<div class="soc-section" id="soc-friends-list">/, '');
   }
 
   function _renderChat(friendId) {
@@ -507,11 +651,15 @@ OmicsLab.Social = (function () {
       const msgs = _loadMsgs();
       const key = _chatKey(me.id, friendId);
       const chat = (msgs[key] || []).slice(-60);
-      el.innerHTML = chat.map(m => `
+      el.innerHTML = chat
+        .map(
+          (m) => `
         <div class="soc-msg-row ${m.from === me.id ? 'soc-msg-mine' : 'soc-msg-theirs'}">
           <div class="soc-msg-bubble">${_escMsg(m.text)}</div>
           <div class="soc-msg-time">${_timeAgo(m.t)}</div>
-        </div>`).join('');
+        </div>`
+        )
+        .join('');
       el.scrollTop = el.scrollHeight;
     }
   }
@@ -529,14 +677,25 @@ OmicsLab.Social = (function () {
   }
 
   /* ─── Helpers ─── */
-  function _initials(name) { return (name||'?').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
-  function _esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function _escMsg(s) { return _esc(s).replace(/\n/g,'<br>'); }
+  function _initials(name) {
+    return (name || '?')
+      .split(' ')
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join('')
+      .toUpperCase();
+  }
+  function _esc(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function _escMsg(s) {
+    return _esc(s).replace(/\n/g, '<br>');
+  }
   function _timeAgo(ts) {
     const d = Date.now() - ts;
-    if (d < 60000)  return 'just now';
-    if (d < 3600000) return Math.floor(d/60000) + 'm ago';
-    if (d < 86400000) return Math.floor(d/3600000) + 'h ago';
+    if (d < 60000) return 'just now';
+    if (d < 3600000) return Math.floor(d / 60000) + 'm ago';
+    if (d < 86400000) return Math.floor(d / 3600000) + 'h ago';
     return new Date(ts).toLocaleDateString();
   }
 
@@ -560,7 +719,7 @@ OmicsLab.Social = (function () {
       section.dataset.socReady = '1';
       try {
         _bc = _bc || new BroadcastChannel('omicslab_social');
-        _bc.onmessage = e => {
+        _bc.onmessage = (e) => {
           if (e.data.type === 'presence') {
             const p = _loadPresence();
             p[e.data.userId] = { name: e.data.name, t: e.data.t };
@@ -580,5 +739,17 @@ OmicsLab.Social = (function () {
     _render();
   }
 
-  return { init, mountInto, addFriendByCode, removeFriend, _setTab, _openChat, _send, _addFromPresence, _copyCode, _onPresenceUpdate, _onDMMessage };
+  return {
+    init,
+    mountInto,
+    addFriendByCode,
+    removeFriend,
+    _setTab,
+    _openChat,
+    _send,
+    _addFromPresence,
+    _copyCode,
+    _onPresenceUpdate,
+    _onDMMessage,
+  };
 })();

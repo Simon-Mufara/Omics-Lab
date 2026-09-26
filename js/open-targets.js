@@ -8,40 +8,39 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.OpenTargets = (function () {
-
   const GQL = 'https://api.platform.opentargets.org/api/v4/graphql';
 
   /* African disease EFO/MONDO IDs */
   const AFRICA_DISEASES = [
-    { label: 'Sickle cell disease',      id: 'EFO_0004251' },
-    { label: 'Malaria',                  id: 'EFO_0001068' },
-    { label: 'Tuberculosis',             id: 'MONDO_0018076' },
-    { label: 'HIV/AIDS',                 id: 'EFO_0000764' },
-    { label: 'G6PD deficiency',          id: 'EFO_0000549' },
-    { label: 'Chronic kidney disease',   id: 'EFO_0003884' },
-    { label: 'Burkitt lymphoma',         id: 'EFO_0000183' },
-    { label: 'Lassa fever',              id: 'EFO_0007245' },
+    { label: 'Sickle cell disease', id: 'EFO_0004251' },
+    { label: 'Malaria', id: 'EFO_0001068' },
+    { label: 'Tuberculosis', id: 'MONDO_0018076' },
+    { label: 'HIV/AIDS', id: 'EFO_0000764' },
+    { label: 'G6PD deficiency', id: 'EFO_0000549' },
+    { label: 'Chronic kidney disease', id: 'EFO_0003884' },
+    { label: 'Burkitt lymphoma', id: 'EFO_0000183' },
+    { label: 'Lassa fever', id: 'EFO_0007245' },
   ];
 
   /* African disease genes */
   const AFRICA_GENES = [
-    { label: 'HBB — sickle cell',   ensemblId: 'ENSG00000244734' },
-    { label: 'G6PD — G6PD def.',    ensemblId: 'ENSG00000160211' },
-    { label: 'APOL1 — CKD',         ensemblId: 'ENSG00000100342' },
-    { label: 'BRCA1 — breast Ca',   ensemblId: 'ENSG00000012048' },
-    { label: 'TP53 — cancer',       ensemblId: 'ENSG00000141510' },
-    { label: 'CYP2D6 — drug met.',  ensemblId: 'ENSG00000100197' },
+    { label: 'HBB — sickle cell', ensemblId: 'ENSG00000244734' },
+    { label: 'G6PD — G6PD def.', ensemblId: 'ENSG00000160211' },
+    { label: 'APOL1 — CKD', ensemblId: 'ENSG00000100342' },
+    { label: 'BRCA1 — breast Ca', ensemblId: 'ENSG00000012048' },
+    { label: 'TP53 — cancer', ensemblId: 'ENSG00000141510' },
+    { label: 'CYP2D6 — drug met.', ensemblId: 'ENSG00000100197' },
   ];
 
   /* Evidence datatype colours */
   const DATATYPE_COLOR = {
-    genetic_association:   '#bc8cff',
-    somatic_mutation:      '#ff6b6b',
-    known_drug:            '#00C4A0',
-    literature:            '#58a6ff',
-    rna_expression:        '#e3b341',
-    animal_model:          '#f97316',
-    affected_pathway:      '#79c0ff',
+    genetic_association: '#bc8cff',
+    somatic_mutation: '#ff6b6b',
+    known_drug: '#00C4A0',
+    literature: '#58a6ff',
+    rna_expression: '#e3b341',
+    animal_model: '#f97316',
+    affected_pathway: '#79c0ff',
   };
 
   let _mode = 'disease'; /* 'disease' | 'gene' */
@@ -115,7 +114,10 @@ OmicsLab.OpenTargets = (function () {
       const q = _mode === 'disease' ? DISEASE_SEARCH : GENE_SEARCH;
       const data = await _gql(q, { q: term });
       const hits = data.search?.hits || [];
-      if (!hits.length) { _renderEmpty('No results found — try a different term.'); return; }
+      if (!hits.length) {
+        _renderEmpty('No results found — try a different term.');
+        return;
+      }
       _renderSearchHits(hits);
     } catch (err) {
       _renderError(err.message);
@@ -139,7 +141,9 @@ OmicsLab.OpenTargets = (function () {
   }
 
   /* ─── Render helpers ─── */
-  function _el() { return document.getElementById('ot-results'); }
+  function _el() {
+    return document.getElementById('ot-results');
+  }
 
   function _renderLoading(msg) {
     const el = _el();
@@ -153,7 +157,8 @@ OmicsLab.OpenTargets = (function () {
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="ot-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
+    if (el)
+      el.innerHTML = `<div class="ot-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
   }
 
   function _scoreBar(score) {
@@ -164,13 +169,14 @@ OmicsLab.OpenTargets = (function () {
 
   function _datatypeChips(dtScores) {
     return (dtScores || [])
-      .filter(d => d.score > 0.01)
+      .filter((d) => d.score > 0.01)
       .sort((a, b) => b.score - a.score)
-      .map(d => {
+      .map((d) => {
         const col = DATATYPE_COLOR[d.componentId] || '#6E6860';
         const label = d.componentId.replace(/_/g, ' ');
         return `<span class="ot-dt-chip" style="border-color:${col};color:${col}" title="Score: ${d.score.toFixed(3)}">${label}</span>`;
-      }).join('');
+      })
+      .join('');
   }
 
   function _renderSearchHits(hits) {
@@ -179,17 +185,24 @@ OmicsLab.OpenTargets = (function () {
     el.innerHTML = `
       <div class="ot-search-hits">
         <div class="ot-search-hits-label">Select to load associations:</div>
-        ${hits.map(h => `
+        ${hits
+          .map(
+            (h) => `
           <button class="ot-hit-btn" onclick="OmicsLab.OpenTargets._loadById('${_esc(h.id)}')">
             <span class="ot-hit-name">${_esc(h.name)}</span>
             <span class="ot-hit-id">${_esc(h.id)}</span>
-          </button>`).join('')}
+          </button>`
+          )
+          .join('')}
       </div>`;
   }
 
   function _renderDiseaseResult(disease) {
     const el = _el();
-    if (!el || !disease) { _renderEmpty('Disease not found.'); return; }
+    if (!el || !disease) {
+      _renderEmpty('Disease not found.');
+      return;
+    }
 
     const rows = disease.associatedTargets?.rows || [];
     const count = disease.associatedTargets?.count || 0;
@@ -204,7 +217,9 @@ OmicsLab.OpenTargets = (function () {
       </div>
 
       <div class="ot-assoc-list">
-        ${rows.map(r => `
+        ${rows
+          .map(
+            (r) => `
           <div class="ot-assoc-row">
             <div class="ot-assoc-target">
               <span class="ot-gene-sym">${_esc(r.target.approvedSymbol)}</span>
@@ -216,13 +231,18 @@ OmicsLab.OpenTargets = (function () {
               <a class="ot-mini-link" href="https://platform.opentargets.org/evidence/${r.target.id}/${disease.id}" target="_blank" rel="noopener">Evidence</a>
               <button class="ot-mini-btn" onclick="OmicsLab.GeneLookup && (OmicsLab.Router.navigate('gene-lookup'), setTimeout(()=>OmicsLab.GeneLookup._quickLookup('${_esc(r.target.approvedSymbol)}'),400))">Gene Lookup</button>
             </div>
-          </div>`).join('')}
+          </div>`
+          )
+          .join('')}
       </div>`;
   }
 
   function _renderGeneResult(target) {
     const el = _el();
-    if (!el || !target) { _renderEmpty('Gene not found.'); return; }
+    if (!el || !target) {
+      _renderEmpty('Gene not found.');
+      return;
+    }
 
     const rows = target.associatedDiseases?.rows || [];
     const count = target.associatedDiseases?.count || 0;
@@ -236,7 +256,9 @@ OmicsLab.OpenTargets = (function () {
       </div>
 
       <div class="ot-assoc-list">
-        ${rows.map(r => `
+        ${rows
+          .map(
+            (r) => `
           <div class="ot-assoc-row">
             <div class="ot-assoc-target">
               <span class="ot-gene-sym">${_esc(r.disease.name)}</span>
@@ -247,25 +269,39 @@ OmicsLab.OpenTargets = (function () {
             <div class="ot-assoc-links">
               <a class="ot-mini-link" href="https://platform.opentargets.org/evidence/${target.id}/${r.disease.id}" target="_blank" rel="noopener">Evidence</a>
             </div>
-          </div>`).join('')}
+          </div>`
+          )
+          .join('')}
       </div>`;
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function _setMode(mode) {
     _mode = mode;
-    document.getElementById('ot-mode-disease')?.classList.toggle('ot-mode-active', mode === 'disease');
+    document
+      .getElementById('ot-mode-disease')
+      ?.classList.toggle('ot-mode-active', mode === 'disease');
     document.getElementById('ot-mode-gene')?.classList.toggle('ot-mode-active', mode === 'gene');
     /* Update quick searches visibility */
-    document.getElementById('ot-quick-diseases')?.style.setProperty('display', mode === 'disease' ? 'flex' : 'none');
-    document.getElementById('ot-quick-genes')?.style.setProperty('display', mode === 'gene' ? 'flex' : 'none');
+    document
+      .getElementById('ot-quick-diseases')
+      ?.style.setProperty('display', mode === 'disease' ? 'flex' : 'none');
+    document
+      .getElementById('ot-quick-genes')
+      ?.style.setProperty('display', mode === 'gene' ? 'flex' : 'none');
     const inp = document.getElementById('ot-search-input');
-    if (inp) inp.placeholder = mode === 'disease'
-      ? 'Disease name — e.g. malaria, sickle cell, tuberculosis…'
-      : 'Gene symbol or name — e.g. HBB, APOL1, G6PD…';
+    if (inp)
+      inp.placeholder =
+        mode === 'disease'
+          ? 'Disease name — e.g. malaria, sickle cell, tuberculosis…'
+          : 'Gene symbol or name — e.g. HBB, APOL1, G6PD…';
     _renderEmpty('');
   }
 
@@ -302,14 +338,16 @@ OmicsLab.OpenTargets = (function () {
         <div class="ot-quick-row">
           <div id="ot-quick-diseases" class="ot-quick-searches" style="display:flex">
             <span class="ot-quick-label">African diseases:</span>
-            ${AFRICA_DISEASES.map(d =>
-              `<button class="ot-quick-btn" onclick="OmicsLab.OpenTargets._loadById('${d.id}')">${d.label}</button>`
+            ${AFRICA_DISEASES.map(
+              (d) =>
+                `<button class="ot-quick-btn" onclick="OmicsLab.OpenTargets._loadById('${d.id}')">${d.label}</button>`
             ).join('')}
           </div>
           <div id="ot-quick-genes" class="ot-quick-searches" style="display:none">
             <span class="ot-quick-label">African disease genes:</span>
-            ${AFRICA_GENES.map(g =>
-              `<button class="ot-quick-btn" onclick="OmicsLab.OpenTargets._loadById('${g.ensemblId}')">${g.label}</button>`
+            ${AFRICA_GENES.map(
+              (g) =>
+                `<button class="ot-quick-btn" onclick="OmicsLab.OpenTargets._loadById('${g.ensemblId}')">${g.label}</button>`
             ).join('')}
           </div>
         </div>

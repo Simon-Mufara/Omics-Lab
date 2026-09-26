@@ -9,16 +9,26 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.NexusAttachments = (function () {
-
-  const MAX_HARD = 5 * 1024 * 1024;   /* 5MB */
-  const MAX_SOFT = 2 * 1024 * 1024;   /* 2MB */
+  const MAX_HARD = 5 * 1024 * 1024; /* 5MB */
+  const MAX_SOFT = 2 * 1024 * 1024; /* 2MB */
 
   /* File types */
-  const IMAGE_TYPES  = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'];
-  const TEXT_EXTS    = ['.txt', '.csv', '.vcf', '.fasta', '.fa', '.fastq', '.fq', '.tsv', '.bed', '.gff'];
-  const PDF_TYPE     = 'application/pdf';
+  const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml'];
+  const TEXT_EXTS = [
+    '.txt',
+    '.csv',
+    '.vcf',
+    '.fasta',
+    '.fa',
+    '.fastq',
+    '.fq',
+    '.tsv',
+    '.bed',
+    '.gff',
+  ];
+  const PDF_TYPE = 'application/pdf';
 
-  let _pending = null;   /* { name, type, data, size } — staged for next send */
+  let _pending = null; /* { name, type, data, size } — staged for next send */
   let _observer = null;
 
   /* ─── Init: monkey-patch _send + watch for composer ─── */
@@ -46,7 +56,7 @@ OmicsLab.NexusAttachments = (function () {
       if (_pending) {
         try {
           const state = nx._getState ? nx._getState() : null;
-          const ch = state ? state.channels?.find(c => c.id === state.activeChannel) : null;
+          const ch = state ? state.channels?.find((c) => c.id === state.activeChannel) : null;
           if (ch && ch.messages.length) {
             const last = ch.messages[ch.messages.length - 1];
             last.file = _pending;
@@ -92,7 +102,7 @@ OmicsLab.NexusAttachments = (function () {
       const inp = document.createElement('input');
       inp.type = 'file';
       inp.accept = IMAGE_TYPES.join(',') + ',' + TEXT_EXTS.join(',') + ',' + PDF_TYPE;
-      inp.onchange = e => _handleFile(e.target.files[0]);
+      inp.onchange = (e) => _handleFile(e.target.files[0]);
       inp.click();
     };
 
@@ -108,12 +118,12 @@ OmicsLab.NexusAttachments = (function () {
     if (!msgList || msgList._dropWired) return;
     msgList._dropWired = true;
 
-    msgList.addEventListener('dragover', e => {
+    msgList.addEventListener('dragover', (e) => {
       e.preventDefault();
       msgList.classList.add('nx-drop-active');
     });
     msgList.addEventListener('dragleave', () => msgList.classList.remove('nx-drop-active'));
-    msgList.addEventListener('drop', e => {
+    msgList.addEventListener('drop', (e) => {
       e.preventDefault();
       msgList.classList.remove('nx-drop-active');
       const file = e.dataTransfer.files[0];
@@ -131,29 +141,47 @@ OmicsLab.NexusAttachments = (function () {
     }
 
     if (file.size > MAX_SOFT) {
-      OmicsLab.Notify?.warning(`Large file (${_fmtSize(file.size)}) — may affect localStorage storage`);
+      OmicsLab.Notify?.warning(
+        `Large file (${_fmtSize(file.size)}) — may affect localStorage storage`
+      );
     }
 
     const reader = new FileReader();
 
     if (IMAGE_TYPES.includes(file.type)) {
-      reader.onload = e => {
-        _pending = { name: file.name, type: file.type, data: e.target.result, size: file.size, kind: 'image' };
+      reader.onload = (e) => {
+        _pending = {
+          name: file.name,
+          type: file.type,
+          data: e.target.result,
+          size: file.size,
+          kind: 'image',
+        };
         _showPreview();
       };
       reader.readAsDataURL(file);
-
     } else if (file.type === PDF_TYPE) {
-      reader.onload = e => {
-        _pending = { name: file.name, type: file.type, data: e.target.result, size: file.size, kind: 'pdf' };
+      reader.onload = (e) => {
+        _pending = {
+          name: file.name,
+          type: file.type,
+          data: e.target.result,
+          size: file.size,
+          kind: 'pdf',
+        };
         _showPreview();
       };
       reader.readAsDataURL(file);
-
     } else {
       /* Text-based file */
-      reader.onload = e => {
-        _pending = { name: file.name, type: 'text/plain', data: e.target.result, size: file.size, kind: 'text' };
+      reader.onload = (e) => {
+        _pending = {
+          name: file.name,
+          type: 'text/plain',
+          data: e.target.result,
+          size: file.size,
+          kind: 'text',
+        };
         _showPreview();
       };
       reader.readAsText(file);
@@ -201,10 +229,13 @@ OmicsLab.NexusAttachments = (function () {
   /* ─── Watch messages list to render attachment HTML ─── */
   function _watchMessages() {
     /* Use event delegation — attachment rendering is triggered by Nexus rebuilding the list */
-    document.addEventListener('click', e => {
+    document.addEventListener('click', (e) => {
       /* Lightbox */
       const img = e.target.closest('.nx-attach-img');
-      if (img) { _openLightbox(img.src, img.alt); return; }
+      if (img) {
+        _openLightbox(img.src, img.alt);
+        return;
+      }
       /* Code block toggle */
       const toggle = e.target.closest('.nx-code-toggle');
       if (toggle) {
@@ -223,11 +254,15 @@ OmicsLab.NexusAttachments = (function () {
         const name = dl.dataset.name;
         const type = dl.dataset.type;
         if (!data) return;
-        const blob = type === PDF_TYPE
-          ? _b64ToBlob(data.split(',')[1], PDF_TYPE)
-          : new Blob([data], { type: 'text/plain' });
+        const blob =
+          type === PDF_TYPE
+            ? _b64ToBlob(data.split(',')[1], PDF_TYPE)
+            : new Blob([data], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        a.click();
         URL.revokeObjectURL(url);
         return;
       }
@@ -248,9 +283,9 @@ OmicsLab.NexusAttachments = (function () {
     try {
       const state = nx._getState ? nx._getState() : null;
       if (!state) return;
-      const ch = state.channels?.find(c => c.id === state.activeChannel);
+      const ch = state.channels?.find((c) => c.id === state.activeChannel);
       if (!ch) return;
-      ch.messages.forEach(msg => {
+      ch.messages.forEach((msg) => {
         if (!msg.file) return;
         const el = document.querySelector(`[data-msgid="${msg.id}"] .nx-msg-text`);
         if (!el || el.dataset.attachRendered) return;
@@ -281,7 +316,9 @@ OmicsLab.NexusAttachments = (function () {
     }
     /* text/code */
     const ext = file.name.split('.').pop()?.toLowerCase() || '';
-    const langClass = ['vcf','fasta','fa','fastq','fq'].includes(ext) ? `language-${ext}` : 'language-text';
+    const langClass = ['vcf', 'fasta', 'fa', 'fastq', 'fq'].includes(ext)
+      ? `language-${ext}`
+      : 'language-text';
     const preview = (file.data || '').slice(0, 800);
     const truncated = (file.data || '').length > 800;
     return `
@@ -292,7 +329,7 @@ OmicsLab.NexusAttachments = (function () {
           <span class="nx-code-sz">${_fmtSize(file.size)}</span>
           <button class="nx-code-copy btn btn-ghost btn-sm" type="button" onclick="navigator.clipboard.writeText(${JSON.stringify(file.data || '')}).then(()=>OmicsLab.Notify?.success('Copied'))">Copy</button>
           <button class="nx-code-toggle btn btn-ghost btn-sm" type="button">Collapse</button>
-          <button class="btn btn-ghost btn-sm nx-attach-download" data-data="${_esc(file.data||'')}" data-name="${_esc(file.name)}" data-type="text/plain" type="button">
+          <button class="btn btn-ghost btn-sm nx-attach-download" data-data="${_esc(file.data || '')}" data-name="${_esc(file.name)}" data-type="text/plain" type="button">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </button>
         </div>
@@ -305,11 +342,14 @@ OmicsLab.NexusAttachments = (function () {
     const overlay = document.createElement('div');
     overlay.id = 'nx-lightbox';
     overlay.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out`;
-    overlay.innerHTML = `<img src="${_esc(src)}" alt="${_esc(alt||'')}" style="max-width:92vw;max-height:88vh;border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.7)">`;
+    overlay.innerHTML = `<img src="${_esc(src)}" alt="${_esc(alt || '')}" style="max-width:92vw;max-height:88vh;border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.7)">`;
     overlay.onclick = () => overlay.remove();
     document.body.appendChild(overlay);
     document.addEventListener('keydown', function esc(e) {
-      if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+      if (e.key === 'Escape') {
+        overlay.remove();
+        document.removeEventListener('keydown', esc);
+      }
     });
   }
 
@@ -327,7 +367,12 @@ OmicsLab.NexusAttachments = (function () {
     return new Blob([arr], { type });
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   function _injectStyles() {
     if (document.getElementById('nx-attach-styles')) return;

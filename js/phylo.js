@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Phylo = (function () {
-
   /* ─── Example FASTA sequences (real 16S rRNA excerpts, truncated) ─── */
   const EXAMPLES = {
     sars: {
@@ -91,7 +90,10 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
 
   /* ─── Parse distance matrix (tab or space separated) ─── */
   function _parseMatrix(text) {
-    const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+    const lines = text
+      .trim()
+      .split(/\r?\n/)
+      .filter((l) => l.trim());
     const n = parseInt(lines[0]);
     if (isNaN(n) || lines.length < n + 1) return null;
     const names = [];
@@ -109,7 +111,8 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     const len = Math.min(a.length, b.length);
     if (!len) return 0;
     let diff = 0;
-    for (let i = 0; i < len; i++) if (a[i] !== b[i] && a[i] !== 'N' && b[i] !== 'N' && a[i] !== '-' && b[i] !== '-') diff++;
+    for (let i = 0; i < len; i++)
+      if (a[i] !== b[i] && a[i] !== 'N' && b[i] !== 'N' && a[i] !== '-' && b[i] !== '-') diff++;
     return diff / len;
   }
 
@@ -131,15 +134,21 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
      ───────────────────────────────────────────────────────────── */
   function _upgma(names, distMat) {
     let n = names.length;
-    let nodes = names.map(name => ({ name, leaves: 1 }));
-    let dists = distMat.map(row => row.slice()); /* deep copy */
+    let nodes = names.map((name) => ({ name, leaves: 1 }));
+    let dists = distMat.map((row) => row.slice()); /* deep copy */
 
     while (nodes.length > 1) {
       /* Find minimum distance */
-      let minD = Infinity, minI = 0, minJ = 1;
+      let minD = Infinity,
+        minI = 0,
+        minJ = 1;
       for (let i = 0; i < nodes.length; i++)
         for (let j = i + 1; j < nodes.length; j++)
-          if (dists[i][j] < minD) { minD = dists[i][j]; minI = i; minJ = j; }
+          if (dists[i][j] < minD) {
+            minD = dists[i][j];
+            minI = i;
+            minJ = j;
+          }
 
       const nodeA = nodes[minI];
       const nodeB = nodes[minJ];
@@ -150,8 +159,8 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
         dist: minD,
         branchLen: minD / 2,
       };
-      nodeA.branchLen = (minD / 2) - (nodeA.dist || 0) / 2;
-      nodeB.branchLen = (minD / 2) - (nodeB.dist || 0) / 2;
+      nodeA.branchLen = minD / 2 - (nodeA.dist || 0) / 2;
+      nodeB.branchLen = minD / 2 - (nodeB.dist || 0) / 2;
       const newLeaves = nodeA.leaves + nodeB.leaves;
 
       /* Recompute distances using weighted average */
@@ -164,13 +173,12 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
         newDists.push(d);
       }
 
-      const nextNodes = kept.map(k => nodes[k]);
+      const nextNodes = kept.map((k) => nodes[k]);
       nextNodes.push({ ...newNode, leaves: newLeaves });
       const m = nextNodes.length;
       const nextDists = Array.from({ length: m }, () => new Array(m).fill(0));
       for (let i = 0; i < kept.length; i++)
-        for (let j = 0; j < kept.length; j++)
-          nextDists[i][j] = dists[kept[i]][kept[j]];
+        for (let j = 0; j < kept.length; j++) nextDists[i][j] = dists[kept[i]][kept[j]];
       for (let i = 0; i < kept.length; i++) {
         nextDists[i][m - 1] = nextDists[m - 1][i] = newDists[i];
       }
@@ -185,22 +193,26 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
      ───────────────────────────────────────────────────────────── */
   function _nj(names, distMat) {
     let n = names.length;
-    let nodes = names.map(name => ({ name }));
-    let d = distMat.map(r => r.slice());
+    let nodes = names.map((name) => ({ name }));
+    let d = distMat.map((r) => r.slice());
 
     while (n > 2) {
       /* Compute net divergence r[i] */
       const r = new Array(n).fill(0);
-      for (let i = 0; i < n; i++)
-        for (let j = 0; j < n; j++)
-          r[i] += d[i][j];
+      for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) r[i] += d[i][j];
 
       /* Compute Q matrix, find min */
-      let minQ = Infinity, minI = 0, minJ = 1;
+      let minQ = Infinity,
+        minI = 0,
+        minJ = 1;
       for (let i = 0; i < n; i++)
         for (let j = i + 1; j < n; j++) {
           const q = (n - 2) * d[i][j] - r[i] - r[j];
-          if (q < minQ) { minQ = q; minI = i; minJ = j; }
+          if (q < minQ) {
+            minQ = q;
+            minI = i;
+            minJ = j;
+          }
         }
 
       /* Branch lengths */
@@ -225,13 +237,12 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
         newDists.push((d[minI][k] + d[minJ][k] - d[minI][minJ]) / 2);
       }
 
-      const nextNodes = kept.map(k => nodes[k]);
+      const nextNodes = kept.map((k) => nodes[k]);
       nextNodes.push(newNode);
       const m = nextNodes.length;
       const nextDists = Array.from({ length: m }, () => new Array(m).fill(0));
       for (let i = 0; i < kept.length; i++)
-        for (let j = 0; j < kept.length; j++)
-          nextDists[i][j] = d[kept[i]][kept[j]];
+        for (let j = 0; j < kept.length; j++) nextDists[i][j] = d[kept[i]][kept[j]];
       for (let i = 0; i < kept.length; i++) {
         nextDists[i][m - 1] = nextDists[m - 1][i] = newDists[i];
       }
@@ -298,7 +309,16 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
   }
 
   /* ─── Draw to SVG string ─── */
-  const PALETTE = ['#00C4A0', '#58a6ff', '#bc8cff', '#f97316', '#ff6b6b', '#e3b341', '#26a69a', '#ff8a65'];
+  const PALETTE = [
+    '#00C4A0',
+    '#58a6ff',
+    '#bc8cff',
+    '#f97316',
+    '#ff6b6b',
+    '#e3b341',
+    '#26a69a',
+    '#ff8a65',
+  ];
 
   function _svgTree(root) {
     _leafIndex = 0;
@@ -306,7 +326,10 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     _layoutDepth(root, 0);
     const maxD = _maxDepth(root);
     const nLeaves = _countLeaves(root);
-    const PAD_L = 20, PAD_R = 180, PAD_T = 30, PAD_B = 30;
+    const PAD_L = 20,
+      PAD_R = 180,
+      PAD_T = 30,
+      PAD_B = 30;
     const ROW_H = 28;
     const W = 700;
     const H = nLeaves * ROW_H + PAD_T + PAD_B;
@@ -379,9 +402,9 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
   /* ─── Distance matrix table HTML ─── */
   function _distTableHtml(names, mat) {
     const n = names.length;
-    let h = `<table class="phylo-dist-table"><thead><tr><th></th>${names.map(n => `<th>${n.slice(0,12)}</th>`).join('')}</tr></thead><tbody>`;
+    let h = `<table class="phylo-dist-table"><thead><tr><th></th>${names.map((n) => `<th>${n.slice(0, 12)}</th>`).join('')}</tr></thead><tbody>`;
     for (let i = 0; i < n; i++) {
-      h += `<tr><td class="phylo-dist-name">${names[i].slice(0,12)}</td>`;
+      h += `<tr><td class="phylo-dist-name">${names[i].slice(0, 12)}</td>`;
       for (let j = 0; j < n; j++) {
         const v = mat[i][j];
         const heat = i === j ? '#0D1524' : `hsl(${120 - v * 600},70%,30%)`;
@@ -398,38 +421,58 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     const inp = document.getElementById('phylo-input')?.value?.trim() || '';
     const algo = document.querySelector('input[name="phylo-algo"]:checked')?.value || 'nj';
     const statusEl = document.getElementById('phylo-status');
-    const treeEl   = document.getElementById('phylo-tree-svg');
-    const distEl   = document.getElementById('phylo-dist-matrix');
+    const treeEl = document.getElementById('phylo-tree-svg');
+    const distEl = document.getElementById('phylo-dist-matrix');
     const newickEl = document.getElementById('phylo-newick');
 
-    if (!inp) { if (statusEl) statusEl.textContent = 'Please paste sequences or a distance matrix.'; return; }
+    if (!inp) {
+      if (statusEl) statusEl.textContent = 'Please paste sequences or a distance matrix.';
+      return;
+    }
     if (statusEl) statusEl.textContent = 'Building…';
 
     let names, mat, seqs;
     if (inp.startsWith('>')) {
       seqs = _parseFasta(inp);
-      if (seqs.length < 3) { statusEl.textContent = 'Need at least 3 sequences.'; return; }
-      names = seqs.map(s => s.name);
+      if (seqs.length < 3) {
+        statusEl.textContent = 'Need at least 3 sequences.';
+        return;
+      }
+      names = seqs.map((s) => s.name);
       mat = _buildDistMatrix(seqs);
     } else {
       const parsed = _parseMatrix(inp);
-      if (!parsed) { statusEl.textContent = 'Could not parse matrix — expected PHYLIP format (N on first line, then rows).'; return; }
+      if (!parsed) {
+        statusEl.textContent =
+          'Could not parse matrix — expected PHYLIP format (N on first line, then rows).';
+        return;
+      }
       names = parsed.names;
       mat = parsed.mat;
     }
 
-    const root = algo === 'nj' ? _nj(names, mat.map(r => r.slice())) : _upgma(names, mat.map(r => r.slice()));
-    const svg  = _svgTree(root);
+    const root =
+      algo === 'nj'
+        ? _nj(
+            names,
+            mat.map((r) => r.slice())
+          )
+        : _upgma(
+            names,
+            mat.map((r) => r.slice())
+          );
+    const svg = _svgTree(root);
     const newick = _toNewick(root) + ';';
 
-    if (treeEl)   treeEl.innerHTML = svg;
-    if (distEl)   distEl.innerHTML = _distTableHtml(names, mat);
+    if (treeEl) treeEl.innerHTML = svg;
+    if (distEl) distEl.innerHTML = _distTableHtml(names, mat);
     if (newickEl) newickEl.textContent = newick;
-    if (statusEl) statusEl.textContent = `Tree built (${algo.toUpperCase()}) — ${names.length} taxa, ${(mat[0][1] * 100).toFixed(2)}% max distance`;
+    if (statusEl)
+      statusEl.textContent = `Tree built (${algo.toUpperCase()}) — ${names.length} taxa, ${(mat[0][1] * 100).toFixed(2)}% max distance`;
 
     /* Store for download */
     treeEl._newick = newick;
-    treeEl._svg    = svg;
+    treeEl._svg = svg;
   }
 
   /* ─── Download helpers ─── */
@@ -437,7 +480,10 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     const el = document.getElementById('phylo-tree-svg');
     if (!el || !el._newick) return;
     const blob = new Blob([el._newick], { type: 'text/plain' });
-    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'omicslab_tree.nwk' });
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(blob),
+      download: 'omicslab_tree.nwk',
+    });
     a.click();
   }
 
@@ -445,7 +491,10 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     const el = document.getElementById('phylo-tree-svg');
     if (!el || !el._svg) return;
     const blob = new Blob([el._svg], { type: 'image/svg+xml' });
-    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'omicslab_tree.svg' });
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(blob),
+      download: 'omicslab_tree.svg',
+    });
     a.click();
   }
 
@@ -454,7 +503,12 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     if (!el) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
       const btn = document.getElementById('phylo-copy-btn');
-      if (btn) { btn.textContent = '[OK] Copied'; setTimeout(() => { btn.textContent = 'Copy Newick'; }, 1800); }
+      if (btn) {
+        btn.textContent = '[OK] Copied';
+        setTimeout(() => {
+          btn.textContent = 'Copy Newick';
+        }, 1800);
+      }
     });
   }
 
@@ -481,9 +535,12 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
               <div class="phylo-card-title">Input sequences</div>
               <div class="phylo-examples-row">
                 <span class="phylo-examples-label">Load example:</span>
-                ${Object.entries(EXAMPLES).map(([k, ex]) =>
-                  `<button class="phylo-ex-btn" onclick="OmicsLab.Phylo._loadExample('${k}')">${ex.label.split(' ')[0]}</button>`
-                ).join('')}
+                ${Object.entries(EXAMPLES)
+                  .map(
+                    ([k, ex]) =>
+                      `<button class="phylo-ex-btn" onclick="OmicsLab.Phylo._loadExample('${k}')">${ex.label.split(' ')[0]}</button>`
+                  )
+                  .join('')}
               </div>
               <textarea id="phylo-input" class="phylo-textarea" rows="12"
                 placeholder="Paste FASTA sequences (> 3 seqs) or PHYLIP distance matrix…"></textarea>
@@ -538,7 +595,7 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
               </div>
               <div id="phylo-tree-svg" class="phylo-tree-canvas">
                 <div class="phylo-empty-state">
-                  <div class="phylo-empty-icon">${OmicsLab.Icons?.svg('git-branch',32)||''}</div>
+                  <div class="phylo-empty-icon">${OmicsLab.Icons?.svg('git-branch', 32) || ''}</div>
                   <div class="phylo-empty-text">Load an example or paste sequences above, then click <strong>Build Tree</strong></div>
                 </div>
               </div>
@@ -565,20 +622,46 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
           <div class="phylo-section-title">Key phylogenetics concepts</div>
           <div class="phylo-concepts-grid">
             ${[
-              { t: 'Clade', d: 'A group containing an ancestor and all of its descendants — a monophyletic group.' },
-              { t: 'Branch length', d: 'Represents the amount of evolutionary change (substitutions per site) along a lineage.' },
-              { t: 'Bootstrap support', d: 'Percentage of times a clade appears in trees built from resampled datasets (100 = fully supported).' },
-              { t: 'Root', d: 'The oldest ancestor in the tree. NJ produces unrooted trees; UPGMA roots at the midpoint.' },
-              { t: 'Newick format', d: 'Standard text encoding for trees: (A:0.1,B:0.2):0.05 — parens = clade, number = branch length.' },
-              { t: 'Molecular clock', d: 'Assumption that sequences evolve at a constant rate — enables dating nodes when calibrated to known events.' },
-            ].map(c => `<div class="phylo-concept-card"><div class="phylo-concept-t">${c.t}</div><div class="phylo-concept-d">${c.d}</div></div>`).join('')}
+              {
+                t: 'Clade',
+                d: 'A group containing an ancestor and all of its descendants — a monophyletic group.',
+              },
+              {
+                t: 'Branch length',
+                d: 'Represents the amount of evolutionary change (substitutions per site) along a lineage.',
+              },
+              {
+                t: 'Bootstrap support',
+                d: 'Percentage of times a clade appears in trees built from resampled datasets (100 = fully supported).',
+              },
+              {
+                t: 'Root',
+                d: 'The oldest ancestor in the tree. NJ produces unrooted trees; UPGMA roots at the midpoint.',
+              },
+              {
+                t: 'Newick format',
+                d: 'Standard text encoding for trees: (A:0.1,B:0.2):0.05 — parens = clade, number = branch length.',
+              },
+              {
+                t: 'Molecular clock',
+                d: 'Assumption that sequences evolve at a constant rate — enables dating nodes when calibrated to known events.',
+              },
+            ]
+              .map(
+                (c) =>
+                  `<div class="phylo-concept-card"><div class="phylo-concept-t">${c.t}</div><div class="phylo-concept-d">${c.d}</div></div>`
+              )
+              .join('')}
           </div>
         </div>
       </div>`;
 
     /* Keyboard shortcut */
-    document.getElementById('phylo-input')?.addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); _build(); }
+    document.getElementById('phylo-input')?.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        _build();
+      }
     });
   }
 
@@ -586,7 +669,9 @@ ATGACAAACATCCGAAAATCACACCCCATCATCATAATCGCCATAGCCATCAAACTCCTCCTCCTAAACG`,
     const ex = EXAMPLES[key];
     if (!ex) return;
     const ta = document.getElementById('phylo-input');
-    if (ta) { ta.value = ex.fasta; }
+    if (ta) {
+      ta.value = ex.fasta;
+    }
     const statusEl = document.getElementById('phylo-status');
     if (statusEl) statusEl.textContent = `Loaded: ${ex.label}`;
   }

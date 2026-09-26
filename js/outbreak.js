@@ -5,31 +5,71 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Outbreak = (function () {
-
-  const MAP_W = 100, MAP_H = 110;
+  const MAP_W = 100,
+    MAP_H = 110;
 
   /* ─── Pathogens ─── */
   const PATHOGENS = [
-    { id:'ebola',  name:'Ebola Virus (EBOV)',      color:'#f97316',
-      r0:2.0, cfr:0.50, genome:'RNA', genomeLen:18959,  incubation:8,
-      desc:'Filovirus — highly lethal haemorrhagic fever; spreads via direct contact.',
+    {
+      id: 'ebola',
+      name: 'Ebola Virus (EBOV)',
+      color: '#f97316',
+      r0: 2.0,
+      cfr: 0.5,
+      genome: 'RNA',
+      genomeLen: 18959,
+      incubation: 8,
+      desc: 'Filovirus — highly lethal haemorrhagic fever; spreads via direct contact.',
       /* Historical Ebola outbreaks cluster in these countries — the index
          case shouldn't be able to "start" in e.g. Cairo. Ongoing spread
          is left unconstrained (real outbreaks do cross borders once seeded). */
-      endemicCountries: ['DR Congo', 'Guinea', 'Sierra Leone', 'Uganda'] },
-    { id:'mpox',   name:'Mpox (MPXV clade Ib)',    color:'#bc8cff',
-      r0:1.4, cfr:0.04, genome:'dsDNA', genomeLen:197000, incubation:12,
-      desc:'Orthopoxvirus — zoonotic; resurging in DRC basin with human-to-human spread.',
-      endemicCountries: ['DR Congo', 'Nigeria', 'Cameroon'] },
-    { id:'cholera', name:'Vibrio cholerae O1',     color:'#58a6ff',
-      r0:3.5, cfr:0.01, genome:'dsDNA', genomeLen:4033460, incubation:2,
-      desc:'Waterborne diarrhoeal disease; linked to flooding and poor WASH infrastructure.' },
-    { id:'tb',     name:'M. tuberculosis (XDR-TB)',color:'#e3b341',
-      r0:2.5, cfr:0.15, genome:'dsDNA', genomeLen:4411532, incubation:42,
-      desc:'Airborne bacterial infection; extensively drug-resistant strains increasing.' },
-    { id:'covid',  name:'SARS-CoV-2 (novel var.)', color:'#00C4A0',
-      r0:5.5, cfr:0.015, genome:'ssRNA', genomeLen:29903,  incubation:5,
-      desc:'Betacoronavirus; novel variant with heightened immune evasion detected.' },
+      endemicCountries: ['DR Congo', 'Guinea', 'Sierra Leone', 'Uganda'],
+    },
+    {
+      id: 'mpox',
+      name: 'Mpox (MPXV clade Ib)',
+      color: '#bc8cff',
+      r0: 1.4,
+      cfr: 0.04,
+      genome: 'dsDNA',
+      genomeLen: 197000,
+      incubation: 12,
+      desc: 'Orthopoxvirus — zoonotic; resurging in DRC basin with human-to-human spread.',
+      endemicCountries: ['DR Congo', 'Nigeria', 'Cameroon'],
+    },
+    {
+      id: 'cholera',
+      name: 'Vibrio cholerae O1',
+      color: '#58a6ff',
+      r0: 3.5,
+      cfr: 0.01,
+      genome: 'dsDNA',
+      genomeLen: 4033460,
+      incubation: 2,
+      desc: 'Waterborne diarrhoeal disease; linked to flooding and poor WASH infrastructure.',
+    },
+    {
+      id: 'tb',
+      name: 'M. tuberculosis (XDR-TB)',
+      color: '#e3b341',
+      r0: 2.5,
+      cfr: 0.15,
+      genome: 'dsDNA',
+      genomeLen: 4411532,
+      incubation: 42,
+      desc: 'Airborne bacterial infection; extensively drug-resistant strains increasing.',
+    },
+    {
+      id: 'covid',
+      name: 'SARS-CoV-2 (novel var.)',
+      color: '#00C4A0',
+      r0: 5.5,
+      cfr: 0.015,
+      genome: 'ssRNA',
+      genomeLen: 29903,
+      incubation: 5,
+      desc: 'Betacoronavirus; novel variant with heightened immune evasion detected.',
+    },
   ];
 
   /* ─── African cities (lat/lng → SVG x/y on 100×110 viewBox) ───
@@ -37,33 +77,33 @@ OmicsLab.Outbreak = (function () {
      so city dots stay pixel-aligned with the real country polygons drawn
      underneath them, instead of a separate hand-tuned linear formula. */
   const CITIES = [
-    { id:'nga', name:'Lagos',        country:'Nigeria',       lng:3.4,   lat:6.5  },
-    { id:'gin', name:'Conakry',      country:'Guinea',        lng:-13.7, lat:9.5  },
-    { id:'sle', name:'Freetown',     country:'Sierra Leone',  lng:-13.2, lat:8.5  },
-    { id:'gha', name:'Accra',        country:'Ghana',         lng:-0.2,  lat:5.6  },
-    { id:'abj', name:'Abidjan',      country:'Côte d\'Ivoire',lng:-4.0,  lat:5.3  },
-    { id:'cmr', name:'Yaoundé',      country:'Cameroon',      lng:11.5,  lat:3.9  },
-    { id:'cod', name:'Kinshasa',     country:'DR Congo',      lng:15.3,  lat:-4.3 },
-    { id:'eth', name:'Addis Ababa',  country:'Ethiopia',      lng:38.7,  lat:9.0  },
-    { id:'ken', name:'Nairobi',      country:'Kenya',         lng:36.8,  lat:-1.3 },
-    { id:'uga', name:'Kampala',      country:'Uganda',        lng:32.6,  lat:0.3  },
-    { id:'tza', name:'Dar es Salaam',country:'Tanzania',      lng:39.3,  lat:-6.8 },
-    { id:'rwa', name:'Kigali',       country:'Rwanda',        lng:30.1,  lat:-1.9 },
-    { id:'mwi', name:'Lilongwe',     country:'Malawi',        lng:33.8,  lat:-13.9},
-    { id:'zmb', name:'Lusaka',       country:'Zambia',        lng:28.3,  lat:-15.4},
-    { id:'zwe', name:'Harare',       country:'Zimbabwe',      lng:31.0,  lat:-17.8},
-    { id:'moz', name:'Maputo',       country:'Mozambique',    lng:32.6,  lat:-25.9},
-    { id:'zaf', name:'Johannesburg', country:'South Africa',  lng:28.0,  lat:-26.2},
-    { id:'cpt', name:'Cape Town',    country:'South Africa',  lng:18.4,  lat:-33.9},
-    { id:'egy', name:'Cairo',        country:'Egypt',         lng:31.2,  lat:30.1 },
-    { id:'dkr', name:'Dakar',        country:'Senegal',       lng:-17.4, lat:14.7 },
-  ].map(c => {
+    { id: 'nga', name: 'Lagos', country: 'Nigeria', lng: 3.4, lat: 6.5 },
+    { id: 'gin', name: 'Conakry', country: 'Guinea', lng: -13.7, lat: 9.5 },
+    { id: 'sle', name: 'Freetown', country: 'Sierra Leone', lng: -13.2, lat: 8.5 },
+    { id: 'gha', name: 'Accra', country: 'Ghana', lng: -0.2, lat: 5.6 },
+    { id: 'abj', name: 'Abidjan', country: "Côte d'Ivoire", lng: -4.0, lat: 5.3 },
+    { id: 'cmr', name: 'Yaoundé', country: 'Cameroon', lng: 11.5, lat: 3.9 },
+    { id: 'cod', name: 'Kinshasa', country: 'DR Congo', lng: 15.3, lat: -4.3 },
+    { id: 'eth', name: 'Addis Ababa', country: 'Ethiopia', lng: 38.7, lat: 9.0 },
+    { id: 'ken', name: 'Nairobi', country: 'Kenya', lng: 36.8, lat: -1.3 },
+    { id: 'uga', name: 'Kampala', country: 'Uganda', lng: 32.6, lat: 0.3 },
+    { id: 'tza', name: 'Dar es Salaam', country: 'Tanzania', lng: 39.3, lat: -6.8 },
+    { id: 'rwa', name: 'Kigali', country: 'Rwanda', lng: 30.1, lat: -1.9 },
+    { id: 'mwi', name: 'Lilongwe', country: 'Malawi', lng: 33.8, lat: -13.9 },
+    { id: 'zmb', name: 'Lusaka', country: 'Zambia', lng: 28.3, lat: -15.4 },
+    { id: 'zwe', name: 'Harare', country: 'Zimbabwe', lng: 31.0, lat: -17.8 },
+    { id: 'moz', name: 'Maputo', country: 'Mozambique', lng: 32.6, lat: -25.9 },
+    { id: 'zaf', name: 'Johannesburg', country: 'South Africa', lng: 28.0, lat: -26.2 },
+    { id: 'cpt', name: 'Cape Town', country: 'South Africa', lng: 18.4, lat: -33.9 },
+    { id: 'egy', name: 'Cairo', country: 'Egypt', lng: 31.2, lat: 30.1 },
+    { id: 'dkr', name: 'Dakar', country: 'Senegal', lng: -17.4, lat: 14.7 },
+  ].map((c) => {
     const { x, y } = OmicsLab.AfricaGeo.project(c.lat, c.lng, MAP_W, MAP_H);
     return { ...c, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
   });
 
   /* ─── State ─── */
-  let _sim = null;   // active simulation object
+  let _sim = null; // active simulation object
 
   /* ─── Build the section HTML ─── */
   function _buildSection() {
@@ -88,14 +128,16 @@ OmicsLab.Outbreak = (function () {
   <div class="ob-picker" id="ob-picker">
     <div class="ob-picker-label">Choose pathogen</div>
     <div class="ob-pathogen-grid" id="ob-pathogen-grid">
-      ${PATHOGENS.map(p => `
+      ${PATHOGENS.map(
+        (p) => `
       <button class="ob-pathogen-card" data-pid="${p.id}"
               onclick="OmicsLab.Outbreak._pickPathogen('${p.id}')">
         <span class="ob-path-dot" style="background:${p.color}"></span>
         <span class="ob-path-name">${p.name}</span>
-        <span class="ob-path-stat">R₀ ${p.r0} · CFR ${(p.cfr*100).toFixed(0)}%</span>
+        <span class="ob-path-stat">R₀ ${p.r0} · CFR ${(p.cfr * 100).toFixed(0)}%</span>
         <span class="ob-path-desc">${p.desc}</span>
-      </button>`).join('')}
+      </button>`
+      ).join('')}
     </div>
     <div class="ob-selected-info" id="ob-selected-info" style="display:none">
       <div class="ob-sel-left">
@@ -104,7 +146,7 @@ OmicsLab.Outbreak = (function () {
       </div>
       <button class="ob-start-btn" id="ob-start-btn"
               onclick="OmicsLab.Outbreak._startSim()">
-        ${OmicsLab.Icons?.svg('alert-triangle',14)||''} Start Outbreak
+        ${OmicsLab.Icons?.svg('alert-triangle', 14) || ''} Start Outbreak
       </button>
     </div>
   </div>
@@ -113,12 +155,15 @@ OmicsLab.Outbreak = (function () {
   <div class="ob-canvas" id="ob-canvas" style="display:none">
     <!-- Africa map -->
     <div class="ob-map-panel">
-      <div class="ob-panel-label">${OmicsLab.Icons?.svg('map-pin',13)||''} Live Case Map — Click outbreak sites to collect samples</div>
+      <div class="ob-panel-label">${OmicsLab.Icons?.svg('map-pin', 13) || ''} Live Case Map — Click outbreak sites to collect samples</div>
       <div class="ob-country-filter">
         <label for="ob-country-select">Focus on a country</label>
         <select id="ob-country-select" onchange="OmicsLab.Outbreak._filterCountry(this.value)">
           <option value="">All countries in this outbreak</option>
-          ${[...new Set(CITIES.map(c => c.country))].sort((a,b)=>a.localeCompare(b)).map(c => `<option value="${c}">${c}</option>`).join('')}
+          ${[...new Set(CITIES.map((c) => c.country))]
+            .sort((a, b) => a.localeCompare(b))
+            .map((c) => `<option value="${c}">${c}</option>`)
+            .join('')}
         </select>
       </div>
       <div class="ob-map-wrap">
@@ -156,19 +201,19 @@ OmicsLab.Outbreak = (function () {
     <div class="ob-right-panel">
       <!-- Timeline -->
       <div class="ob-timeline-box">
-        <div class="ob-panel-label">${OmicsLab.Icons?.svg('clock',13)||''} Epidemic Timeline</div>
+        <div class="ob-panel-label">${OmicsLab.Icons?.svg('clock', 13) || ''} Epidemic Timeline</div>
         <div class="ob-timeline" id="ob-timeline"></div>
       </div>
       <!-- Sequence collection -->
       <div class="ob-seq-box" id="ob-seq-box">
-        <div class="ob-panel-label">${OmicsLab.Icons?.svg('dna',13)||''} Sample Collection <span id="ob-seq-count-badge" class="ob-seq-badge">0 / 5 needed</span></div>
+        <div class="ob-panel-label">${OmicsLab.Icons?.svg('dna', 13) || ''} Sample Collection <span id="ob-seq-count-badge" class="ob-seq-badge">0 / 5 needed</span></div>
         <div class="ob-seq-list" id="ob-seq-list">
           <div class="ob-seq-hint">Click an outbreak site on the map to collect a sample.</div>
         </div>
       </div>
       <!-- Phylo tree -->
       <div class="ob-phylo-box" id="ob-phylo-box" style="display:none">
-        <div class="ob-panel-label">${OmicsLab.Icons?.svg('git-branch',13)||''} Phylogenetic Tree
+        <div class="ob-panel-label">${OmicsLab.Icons?.svg('git-branch', 13) || ''} Phylogenetic Tree
           <button class="ob-phylo-rebuild" onclick="OmicsLab.Outbreak._buildPhylo()">Rebuild</button>
         </div>
         <svg id="ob-phylo-svg" class="ob-phylo-svg" viewBox="0 0 300 200"
@@ -176,7 +221,7 @@ OmicsLab.Outbreak = (function () {
         <button class="ob-identify-btn" id="ob-identify-btn"
                 onclick="OmicsLab.Outbreak._identifySource()"
                 style="display:none">
-          ${OmicsLab.Icons?.svg('search',13)||''} Identify Index Case
+          ${OmicsLab.Icons?.svg('search', 13) || ''} Identify Index Case
         </button>
       </div>
       <!-- Result panel -->
@@ -187,7 +232,7 @@ OmicsLab.Outbreak = (function () {
   <!-- Control bar -->
   <div class="ob-controls" id="ob-controls" style="display:none">
     <button class="ob-ctrl-btn" id="ob-pause-btn" onclick="OmicsLab.Outbreak._togglePause()"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Pause</button>
-    <button class="ob-ctrl-btn" onclick="OmicsLab.Outbreak._buildPhylo()" id="ob-build-phylo-btn" disabled>${OmicsLab.Icons?.svg('git-branch',13)||''} Build Phylo Tree</button>
+    <button class="ob-ctrl-btn" onclick="OmicsLab.Outbreak._buildPhylo()" id="ob-build-phylo-btn" disabled>${OmicsLab.Icons?.svg('git-branch', 13) || ''} Build Phylo Tree</button>
     <button class="ob-ctrl-btn ob-reset" onclick="OmicsLab.Outbreak._reset()">↺ Reset</button>
     <button class="ob-ctrl-btn" onclick="OmicsLab.Outbreak._mpShowSetup()" title="Co-op multiplayer mode — 2 tabs">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -202,13 +247,16 @@ OmicsLab.Outbreak = (function () {
 
   /* ─── Pick pathogen ─── */
   function _pickPathogen(pid) {
-    const p = PATHOGENS.find(x => x.id === pid);
+    const p = PATHOGENS.find((x) => x.id === pid);
     if (!p) return;
-    document.querySelectorAll('.ob-pathogen-card').forEach(c => c.classList.toggle('selected', c.dataset.pid === pid));
+    document
+      .querySelectorAll('.ob-pathogen-card')
+      .forEach((c) => c.classList.toggle('selected', c.dataset.pid === pid));
     const info = document.getElementById('ob-selected-info');
     info.style.display = 'flex';
     document.getElementById('ob-sel-name').textContent = p.name;
-    document.getElementById('ob-sel-genome').textContent = `Genome: ${p.genome} · ${p.genomeLen.toLocaleString()} bp · Incubation: ${p.incubation}d`;
+    document.getElementById('ob-sel-genome').textContent =
+      `Genome: ${p.genome} · ${p.genomeLen.toLocaleString()} bp · Incubation: ${p.incubation}d`;
     info.dataset.pid = pid;
   }
 
@@ -216,14 +264,14 @@ OmicsLab.Outbreak = (function () {
   function _startSim() {
     const pid = document.getElementById('ob-selected-info')?.dataset.pid;
     if (!pid) return;
-    const p = PATHOGENS.find(x => x.id === pid);
+    const p = PATHOGENS.find((x) => x.id === pid);
 
     /* Init state — for geographically-restricted pathogens (endemicCountries
        set above), the index case can only start in a city in one of those
        countries. Falls back to the full city list if the pathogen has no
        such field, or if none of its endemic countries are in CITIES. */
     const eligible = p.endemicCountries
-      ? CITIES.map((c, i) => i).filter(i => p.endemicCountries.includes(CITIES[i].country))
+      ? CITIES.map((c, i) => i).filter((i) => p.endemicCountries.includes(CITIES[i].country))
       : null;
     const pool = eligible && eligible.length ? eligible : CITIES.map((c, i) => i);
     const sourceIdx = pool[Math.floor(Math.random() * pool.length)];
@@ -242,7 +290,9 @@ OmicsLab.Outbreak = (function () {
         mutations: _randMutations(i === sourceIdx ? 0 : null),
       })),
       sequences: [],
-      timeline: [`Day 0 — First case detected in ${CITIES[sourceIdx].name}, ${CITIES[sourceIdx].country}.`],
+      timeline: [
+        `Day 0 — First case detected in ${CITIES[sourceIdx].name}, ${CITIES[sourceIdx].country}.`,
+      ],
       identified: false,
     };
 
@@ -282,13 +332,15 @@ OmicsLab.Outbreak = (function () {
     if (!_sim.paused) _tick();
   }
 
-  function _setSpeed(v) { if (_sim) _sim.speed = +v; }
+  function _setSpeed(v) {
+    if (_sim) _sim.speed = +v;
+  }
 
   /* ─── Disease spreading (simplified SIR-inspired) ─── */
   function _spreadDisease() {
     if (!_sim) return;
     const p = _sim.pathogen;
-    const newCases = [..._sim.sites.map(s => s.cases)];
+    const newCases = [..._sim.sites.map((s) => s.cases)];
 
     _sim.sites.forEach((site, i) => {
       if (site.cases === 0) return;
@@ -297,14 +349,16 @@ OmicsLab.Outbreak = (function () {
         if (i === j) return;
         const dx = site.x - CITIES[j].x;
         const dy = site.y - CITIES[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
+        const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist > 35) return; // only spread to nearby cities
         const prob = (p.r0 * 0.035) / (dist * 0.3);
         if (Math.random() < prob) {
           const newC = Math.ceil(Math.random() * p.r0);
           newCases[j] += newC;
           if (_sim.sites[j].cases === 0) {
-            _sim.timeline.unshift(`Day ${_sim.day} — ${newC} cases detected in ${CITIES[j].name}, ${CITIES[j].country}.`);
+            _sim.timeline.unshift(
+              `Day ${_sim.day} — ${newC} cases detected in ${CITIES[j].name}, ${CITIES[j].country}.`
+            );
           }
           _sim.sites[j].total += newC;
         }
@@ -316,7 +370,9 @@ OmicsLab.Outbreak = (function () {
         _sim.sites[i].total += growth;
       }
     });
-    _sim.sites.forEach((s, i) => { s.cases = Math.min(newCases[i], 5000); });
+    _sim.sites.forEach((s, i) => {
+      s.cases = Math.min(newCases[i], 5000);
+    });
   }
 
   /* ─── Country drill-down filter ───
@@ -331,9 +387,12 @@ OmicsLab.Outbreak = (function () {
     if (svg) {
       if (country) {
         const feature = OmicsLab.AfricaGeo.findFeature(country);
-        svg.setAttribute('viewBox', feature
-          ? OmicsLab.AfricaGeo.countryViewBox(feature, MAP_W, MAP_H, 0.4)
-          : `0 0 ${MAP_W} ${MAP_H}`);
+        svg.setAttribute(
+          'viewBox',
+          feature
+            ? OmicsLab.AfricaGeo.countryViewBox(feature, MAP_W, MAP_H, 0.4)
+            : `0 0 ${MAP_W} ${MAP_H}`
+        );
       } else {
         svg.setAttribute('viewBox', `0 0 ${MAP_W} ${MAP_H}`);
       }
@@ -355,13 +414,19 @@ OmicsLab.Outbreak = (function () {
     /* Real country boundaries — drawn once per sim, then just re-tinted */
     if (countryLayer && !countryLayer.dataset.rendered) {
       countryLayer.innerHTML = OmicsLab.AfricaGeo.allCountryPaths(MAP_W, MAP_H)
-        .map(c => `<path class="ob-country" data-name="${c.name}" d="${c.d}"><title>${c.name}</title></path>`)
+        .map(
+          (c) =>
+            `<path class="ob-country" data-name="${c.name}" d="${c.d}"><title>${c.name}</title></path>`
+        )
         .join('');
       countryLayer.dataset.rendered = '1';
     }
     if (countryLayer) {
-      countryLayer.querySelectorAll('.ob-country').forEach(el => {
-        el.classList.toggle('ob-country--focus', !!filter && el.dataset.name === OmicsLab.AfricaGeo.resolveName(filter));
+      countryLayer.querySelectorAll('.ob-country').forEach((el) => {
+        el.classList.toggle(
+          'ob-country--focus',
+          !!filter && el.dataset.name === OmicsLab.AfricaGeo.resolveName(filter)
+        );
       });
     }
 
@@ -376,43 +441,50 @@ OmicsLab.Outbreak = (function () {
     linesLayer.innerHTML = linesHtml;
 
     /* Draw city dots */
-    cityLayer.innerHTML = _sim.sites.map((site, i) => {
-      const isSource = i === _sim.source;
-      const hasCase  = site.cases > 0;
-      const isSeq    = site.sequenced;
-      const dimmed   = !!filter && site.country !== filter;
-      const r = hasCase ? Math.min(4, 1.2 + Math.log1p(site.cases) * 0.5) : 1.2;
-      const fill = isSeq ? '#00C4A0' : (isSource ? '#58a6ff' : (hasCase ? p.color : '#2d333b'));
-      const cls  = hasCase && !isSeq ? 'ob-dot-pulse' : '';
-      return `<g class="ob-city-group" onclick="OmicsLab.Outbreak._collectSample(${i})"
-                style="cursor:${hasCase&&!isSeq?'pointer':'default'};opacity:${dimmed?0.15:1}">
-        <circle cx="${site.x}" cy="${site.y}" r="${r+1.5}" fill="${fill}" opacity="0.18" class="${cls}"/>
+    cityLayer.innerHTML = _sim.sites
+      .map((site, i) => {
+        const isSource = i === _sim.source;
+        const hasCase = site.cases > 0;
+        const isSeq = site.sequenced;
+        const dimmed = !!filter && site.country !== filter;
+        const r = hasCase ? Math.min(4, 1.2 + Math.log1p(site.cases) * 0.5) : 1.2;
+        const fill = isSeq ? '#00C4A0' : isSource ? '#58a6ff' : hasCase ? p.color : '#2d333b';
+        const cls = hasCase && !isSeq ? 'ob-dot-pulse' : '';
+        return `<g class="ob-city-group" onclick="OmicsLab.Outbreak._collectSample(${i})"
+                style="cursor:${hasCase && !isSeq ? 'pointer' : 'default'};opacity:${dimmed ? 0.15 : 1}">
+        <circle cx="${site.x}" cy="${site.y}" r="${r + 1.5}" fill="${fill}" opacity="0.18" class="${cls}"/>
         <circle cx="${site.x}" cy="${site.y}" r="${r}" fill="${fill}" class="${cls}"/>
-        <title>${site.name}, ${site.country}: ${site.cases.toLocaleString()} cases${isSeq?' (sequenced)':''}</title>
-        ${hasCase ? `<text x="${site.x}" y="${site.y - r - 1}" text-anchor="middle"
-          font-size="2.2" fill="rgba(255,255,255,0.65)">${site.name}</text>` : ''}
+        <title>${site.name}, ${site.country}: ${site.cases.toLocaleString()} cases${isSeq ? ' (sequenced)' : ''}</title>
+        ${
+          hasCase
+            ? `<text x="${site.x}" y="${site.y - r - 1}" text-anchor="middle"
+          font-size="2.2" fill="rgba(255,255,255,0.65)">${site.name}</text>`
+            : ''
+        }
       </g>`;
-    }).join('');
+      })
+      .join('');
   }
 
   /* ─── Stats bar ─── */
   function _renderStats() {
     if (!_sim) return;
     const totalCases = _sim.sites.reduce((a, s) => a + s.cases, 0);
-    const activeSites = _sim.sites.filter(s => s.cases > 0).length;
-    document.getElementById('ob-stat-day').textContent   = _sim.day;
+    const activeSites = _sim.sites.filter((s) => s.cases > 0).length;
+    document.getElementById('ob-stat-day').textContent = _sim.day;
     document.getElementById('ob-stat-cases').textContent = totalCases.toLocaleString();
     document.getElementById('ob-stat-sites').textContent = activeSites;
-    document.getElementById('ob-stat-seqs').textContent  = _sim.sequences.length;
+    document.getElementById('ob-stat-seqs').textContent = _sim.sequences.length;
   }
 
   /* ─── Timeline ─── */
   function _renderTimeline() {
     const el = document.getElementById('ob-timeline');
     if (!el || !_sim) return;
-    el.innerHTML = _sim.timeline.slice(0, 8).map((t, i) =>
-      `<div class="ob-tl-item${i===0?' ob-tl-new':''}">${t}</div>`
-    ).join('');
+    el.innerHTML = _sim.timeline
+      .slice(0, 8)
+      .map((t, i) => `<div class="ob-tl-item${i === 0 ? ' ob-tl-new' : ''}">${t}</div>`)
+      .join('');
   }
 
   /* ─── Collect sample from a site ─── */
@@ -422,7 +494,7 @@ OmicsLab.Outbreak = (function () {
     if (!site.cases || site.sequenced || site.sequencing) return;
 
     site.sequencing = true;
-    const seqId = `SEQ-${_sim.pathogen.id.toUpperCase()}-${String(siteIdx).padStart(3,'0')}`;
+    const seqId = `SEQ-${_sim.pathogen.id.toUpperCase()}-${String(siteIdx).padStart(3, '0')}`;
     _addSeqItem(seqId, site.name, site.country, 0);
 
     /* Animate progress */
@@ -435,8 +507,14 @@ OmicsLab.Outbreak = (function () {
         site.sequenced = true;
         site.sequencing = false;
         site.seqDay = _sim.day;
-        _sim.sequences.push({ seqId, siteIdx, name: site.name, country: site.country,
-          mutations: site.mutations, day: _sim.day });
+        _sim.sequences.push({
+          seqId,
+          siteIdx,
+          name: site.name,
+          country: site.country,
+          mutations: site.mutations,
+          day: _sim.day,
+        });
         _updateSeqItem(seqId, 100, site.mutations);
         _renderMap();
         _renderStats();
@@ -468,9 +546,11 @@ OmicsLab.Outbreak = (function () {
     if (bar) bar.style.width = pct + '%';
     if (status) {
       if (pct >= 100 && mutations !== null) {
-        status.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Complete — ${mutations.length} SNPs detected`;
+        status.innerHTML = `${OmicsLab.Icons?.svg('check-circle', 12) || ''} Complete — ${mutations.length} SNPs detected`;
         status.style.color = '#00C4A0';
-        document.getElementById(`bar-${seqId}`)?.parentElement?.parentElement?.classList.add('done');
+        document
+          .getElementById(`bar-${seqId}`)
+          ?.parentElement?.parentElement?.classList.add('done');
       } else {
         status.textContent = `Sequencing… ${pct}%`;
       }
@@ -498,9 +578,9 @@ OmicsLab.Outbreak = (function () {
   function _buildPhylo() {
     if (!_sim || _sim.sequences.length < 2) return;
     const seqs = _sim.sequences;
-    const svg  = document.getElementById('ob-phylo-svg');
-    const box  = document.getElementById('ob-phylo-box');
-    const btn  = document.getElementById('ob-identify-btn');
+    const svg = document.getElementById('ob-phylo-svg');
+    const box = document.getElementById('ob-phylo-box');
+    const btn = document.getElementById('ob-identify-btn');
     if (!svg || !box) return;
 
     box.style.display = 'block';
@@ -509,28 +589,35 @@ OmicsLab.Outbreak = (function () {
     /* Build a simple distance-based dendrogram.
        Distance = |mutations difference| + |day difference| * 0.5 */
     const n = seqs.length;
-    const W = 300, H = 200;
+    const W = 300,
+      H = 200;
     const leafH = H / (n + 1);
 
     /* Assign leaves y positions */
     const leaves = seqs.map((s, i) => ({
       ...s,
       leafY: leafH * (i + 1),
-      dist: s.siteIdx === _sim.source ? 0
-          : Math.abs(s.mutations.length - seqs.find(x => x.siteIdx === _sim.source)?.mutations.length || 0) + s.day * 0.3,
+      dist:
+        s.siteIdx === _sim.source
+          ? 0
+          : Math.abs(
+              s.mutations.length - seqs.find((x) => x.siteIdx === _sim.source)?.mutations.length ||
+                0
+            ) +
+            s.day * 0.3,
     }));
 
     /* Sort by distance so source is at top */
     leaves.sort((a, b) => a.dist - b.dist);
 
     /* Draw tree */
-    const maxDist = Math.max(...leaves.map(l => l.dist)) || 1;
-    const scaleX  = (W - 80) / (maxDist + 1);
-    const rootX   = 20;
+    const maxDist = Math.max(...leaves.map((l) => l.dist)) || 1;
+    const scaleX = (W - 80) / (maxDist + 1);
+    const rootX = 20;
 
     let svgContent = `<rect width="${W}" height="${H}" fill="none"/>`;
     let cladeLines = '';
-    const leafXs = leaves.map(l => rootX + l.dist * scaleX);
+    const leafXs = leaves.map((l) => rootX + l.dist * scaleX);
 
     /* Vertical clade lines (grouping nearest neighbours) */
     /* Connect all leaves to root with horizontal lines */
@@ -560,9 +647,9 @@ OmicsLab.Outbreak = (function () {
     }
 
     /* Scale bar */
-    svgContent += `<line x1="${rootX}" y1="${H-8}" x2="${rootX + scaleX}" y2="${H-8}"
+    svgContent += `<line x1="${rootX}" y1="${H - 8}" x2="${rootX + scaleX}" y2="${H - 8}"
       stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
-      <text x="${rootX}" y="${H-3}" font-size="6" fill="rgba(255,255,255,0.45)">1 SNP unit</text>`;
+      <text x="${rootX}" y="${H - 3}" font-size="6" fill="rgba(255,255,255,0.45)">1 SNP unit</text>`;
 
     svg.innerHTML = svgContent;
     svg.style.display = 'block';
@@ -578,13 +665,15 @@ OmicsLab.Outbreak = (function () {
     const src = _sim.sites[_sim.source];
     const p = _sim.pathogen;
     const totalCases = _sim.sites.reduce((a, s) => a + s.total, 0);
-    const affectedCountries = [...new Set(_sim.sites.filter(s=>s.cases>0).map(s=>s.country))];
+    const affectedCountries = [
+      ...new Set(_sim.sites.filter((s) => s.cases > 0).map((s) => s.country)),
+    ];
 
     const box = document.getElementById('ob-result-box');
     box.style.display = 'block';
     box.innerHTML = `
 <div class="ob-result">
-  <div class="ob-result-title">${OmicsLab.Icons?.svg('microscope',16)||''} Index Case Identified</div>
+  <div class="ob-result-title">${OmicsLab.Icons?.svg('microscope', 16) || ''} Index Case Identified</div>
   <div class="ob-result-card">
     <div class="ob-result-row">
       <span class="ob-result-label">Origin city</span>
@@ -604,7 +693,7 @@ OmicsLab.Outbreak = (function () {
     </div>
     <div class="ob-result-row">
       <span class="ob-result-label">Countries affected</span>
-      <span class="ob-result-val">${affectedCountries.length} (${affectedCountries.slice(0,3).join(', ')}${affectedCountries.length>3?'…':''})</span>
+      <span class="ob-result-val">${affectedCountries.length} (${affectedCountries.slice(0, 3).join(', ')}${affectedCountries.length > 3 ? '…' : ''})</span>
     </div>
     <div class="ob-result-row">
       <span class="ob-result-label">Sequences collected</span>
@@ -614,7 +703,7 @@ OmicsLab.Outbreak = (function () {
   <div class="ob-result-insight">
     <strong>Genomic insight:</strong> Phylogenetic analysis of ${_sim.sequences.length} whole-genome sequences
     placed the root of the outbreak clade in <strong>${src.name}</strong>. The ${p.genome} genome
-    (${p.genomeLen.toLocaleString()} bp) accumulated ~${_sim.sequences.reduce((a,s)=>a+s.mutations.length,0)} SNPs
+    (${p.genomeLen.toLocaleString()} bp) accumulated ~${_sim.sequences.reduce((a, s) => a + s.mutations.length, 0)} SNPs
     across collected samples relative to the reference, consistent with ${_sim.day} days of evolution
     at the expected substitution rate for ${p.name}.
   </div>
@@ -634,7 +723,11 @@ OmicsLab.Outbreak = (function () {
     const n = count ?? Math.floor(Math.random() * 8) + 1;
     const positions = new Set();
     while (positions.size < n) positions.add(Math.floor(Math.random() * 29903));
-    return [...positions].map(p => ({ pos: p, ref: 'ACGT'[Math.floor(Math.random()*4)], alt: 'ACGT'[Math.floor(Math.random()*4)] }));
+    return [...positions].map((p) => ({
+      pos: p,
+      ref: 'ACGT'[Math.floor(Math.random() * 4)],
+      alt: 'ACGT'[Math.floor(Math.random() * 4)],
+    }));
   }
 
   /* ─── Reset ─── */
@@ -645,12 +738,13 @@ OmicsLab.Outbreak = (function () {
     document.getElementById('ob-canvas').style.display = 'none';
     document.getElementById('ob-controls').style.display = 'none';
     document.getElementById('ob-stats-row').style.display = 'none';
-    document.getElementById('ob-seq-list').innerHTML = '<div class="ob-seq-hint">Click an outbreak site on the map to collect a sample.</div>';
+    document.getElementById('ob-seq-list').innerHTML =
+      '<div class="ob-seq-hint">Click an outbreak site on the map to collect a sample.</div>';
     document.getElementById('ob-phylo-box').style.display = 'none';
     document.getElementById('ob-result-box').style.display = 'none';
     document.getElementById('ob-build-phylo-btn').disabled = true;
     document.getElementById('ob-build-phylo-btn').style.animation = '';
-    document.querySelectorAll('.ob-pathogen-card').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.ob-pathogen-card').forEach((c) => c.classList.remove('selected'));
     document.getElementById('ob-selected-info').style.display = 'none';
     document.getElementById('ob-pause-btn').textContent = '⏸ Pause';
     const countrySelect = document.getElementById('ob-country-select');
@@ -673,23 +767,39 @@ OmicsLab.Outbreak = (function () {
      Role: Commander (strategy) + Field Epidemiologist (genomic actions)
      ══════════════════════════════════════════════════════════════ */
   const _MP = {
-    ch: null, role: null, connected: false,
+    ch: null,
+    role: null,
+    connected: false,
     log: [],
   };
 
   const MP_ROLES = {
-    commander: { label: 'Commander', color: '#58a6ff', desc: 'Set containment strategy, allocate resources' },
-    field:     { label: 'Field Epidemiologist', color: '#00C4A0', desc: 'Collect samples, run genomics, identify source' },
+    commander: {
+      label: 'Commander',
+      color: '#58a6ff',
+      desc: 'Set containment strategy, allocate resources',
+    },
+    field: {
+      label: 'Field Epidemiologist',
+      color: '#00C4A0',
+      desc: 'Collect samples, run genomics, identify source',
+    },
   };
 
   function _mpInit(role) {
-    if (!window.BroadcastChannel) { OmicsLab.Toast?.show('Multiplayer requires BroadcastChannel (Chrome/Edge)', 'info'); return; }
+    if (!window.BroadcastChannel) {
+      OmicsLab.Toast?.show('Multiplayer requires BroadcastChannel (Chrome/Edge)', 'info');
+      return;
+    }
     _MP.role = role;
     _MP.ch = new BroadcastChannel('omicslab_outbreak_mp');
     _MP.connected = true;
     _MP.ch.postMessage({ type: 'join', role, ts: Date.now() });
     _MP.ch.onmessage = ({ data }) => _mpReceive(data);
-    OmicsLab.Toast?.show(`Joined as ${MP_ROLES[role].label} — open another tab to co-op`, 'success');
+    OmicsLab.Toast?.show(
+      `Joined as ${MP_ROLES[role].label} — open another tab to co-op`,
+      'success'
+    );
     _mpRenderPanel();
   }
 
@@ -726,21 +836,28 @@ OmicsLab.Outbreak = (function () {
     const roleColor = MP_ROLES[_MP.role]?.color || '#A8A098';
     panel.innerHTML = `
       <div style="font-weight:700;color:${roleColor};margin-bottom:.4rem">${MP_ROLES[_MP.role]?.label || _MP.role} — Co-op Mode</div>
-      ${_MP.role === 'commander' ? `
+      ${
+        _MP.role === 'commander'
+          ? `
         <button onclick="OmicsLab.Outbreak._mpSend('strategy_lockdown','Region A')" style="background:#58a6ff;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem .2rem 0 0">Order Lockdown</button>
         <button onclick="OmicsLab.Outbreak._mpSend('strategy_trace','all contacts')" style="background:#58a6ff;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem 0 0 0">Contact Trace</button>
-      ` : `
+      `
+          : `
         <button onclick="OmicsLab.Outbreak._mpSend('action_collect','sample from index case')" style="background:#00C4A0;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem .2rem 0 0">Collect Sample</button>
         <button onclick="OmicsLab.Outbreak._mpSend('action_sequence','WGS')" style="background:#00C4A0;color:#000;border:none;border-radius:5px;padding:.3rem .7rem;font-size:.75rem;cursor:pointer;margin:.2rem 0 0 0">Run WGS</button>
-      `}
+      `
+      }
       <div style="margin-top:.6rem;max-height:110px;overflow-y:auto;border-top:1px solid var(--border,#243048);padding-top:.4rem;color:var(--text-muted,#A8A098)">
-        ${_MP.log.map(l => `<div style="margin-bottom:.2rem">${l}</div>`).join('') || '<div>No events yet</div>'}
+        ${_MP.log.map((l) => `<div style="margin-bottom:.2rem">${l}</div>`).join('') || '<div>No events yet</div>'}
       </div>
       <button onclick="document.getElementById('ob-mp-panel').remove()" style="margin-top:.5rem;background:none;border:none;color:var(--text-muted,#6E6860);font-size:.7rem;cursor:pointer">Close panel</button>`;
   }
 
   function _mpShowSetup() {
-    if (!window.BroadcastChannel) { OmicsLab.Toast?.show('BroadcastChannel not supported', 'info'); return; }
+    if (!window.BroadcastChannel) {
+      OmicsLab.Toast?.show('BroadcastChannel not supported', 'info');
+      return;
+    }
     const overlay = document.createElement('div');
     overlay.style.cssText = `position:fixed;inset:0;z-index:6000;background:rgba(8,12,16,.85);display:flex;align-items:center;justify-content:center`;
     overlay.innerHTML = `
@@ -748,18 +865,36 @@ OmicsLab.Outbreak = (function () {
         <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 .5rem">Co-op Outbreak Mode</h3>
         <p style="color:var(--text-muted,#A8A098);font-size:.85rem;margin:0 0 1.25rem">Open this page in two browser tabs. Each player picks a role — Commander coordinates strategy, Field Epidemiologist handles genomics sampling.</p>
         <div style="display:flex;gap:.75rem;justify-content:center">
-          ${Object.entries(MP_ROLES).map(([k, r]) => `
+          ${Object.entries(MP_ROLES)
+            .map(
+              ([k, r]) => `
             <button onclick="OmicsLab.Outbreak._mpInit('${k}');this.closest('div[style*=fixed]').remove()" style="background:${r.color};color:#000;border:none;border-radius:8px;padding:.6rem 1.2rem;font-size:.85rem;font-weight:700;cursor:pointer">
               ${r.label}
-            </button>`).join('')}
+            </button>`
+            )
+            .join('')}
         </div>
         <button onclick="this.closest('div[style*=fixed]').remove()" style="margin-top:1rem;background:none;border:none;color:var(--text-muted,#6E6860);font-size:.78rem;cursor:pointer">Cancel</button>
       </div>`;
     document.body.appendChild(overlay);
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+    overlay.onclick = (e) => {
+      if (e.target === overlay) overlay.remove();
+    };
   }
 
-  return { init, _pickPathogen, _startSim, _togglePause, _setSpeed,
-           _collectSample, _buildPhylo, _identifySource, _reset, _filterCountry,
-           _mpInit, _mpSend, _mpShowSetup };
+  return {
+    init,
+    _pickPathogen,
+    _startSim,
+    _togglePause,
+    _setSpeed,
+    _collectSample,
+    _buildPhylo,
+    _identifySource,
+    _reset,
+    _filterCountry,
+    _mpInit,
+    _mpSend,
+    _mpShowSetup,
+  };
 })();

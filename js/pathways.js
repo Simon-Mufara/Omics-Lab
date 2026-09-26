@@ -7,27 +7,98 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Pathways = (function () {
-
   const KEGG_BASE = 'https://rest.kegg.jp';
 
   const AFRICA_PATHWAYS = [
-    { id: 'hsa05144', name: 'Malaria',                    cat: 'Infectious Disease',   kegg: 'hsa05144', react: 'R-HSA-1280215', color: '#f97316', genes: ['HBB','GYPA','CD36','CR1'],          desc: 'P. falciparum invasion, G6PD interaction, haemoglobin polymerisation, cytoadherence in African populations.' },
-    { id: 'hsa05152', name: 'Tuberculosis',               cat: 'Infectious Disease',   kegg: 'hsa05152', react: 'R-HSA-5620971', color: '#e3b341', genes: ['TNF','IL10','TLR2','VDR'],           desc: 'M. tuberculosis survival in macrophages, immune evasion — MTB is the leading infectious disease killer in Africa.' },
-    { id: 'hsa05170', name: 'HIV Infection',              cat: 'Infectious Disease',   kegg: 'hsa05170', react: 'R-HSA-162906',  color: '#bc8cff', genes: ['CCR5','TRIM5','APOBEC3G','BST2'],   desc: 'HIV-1 entry, innate restriction factors, CCR5 delta32 absent in most African populations.' },
-    { id: 'hsa00480', name: 'Glutathione Metabolism',     cat: 'Metabolism',           kegg: 'hsa00480', react: 'R-HSA-174403',  color: '#00C4A0', genes: ['G6PD','GSS','GPX1','GCLC'],         desc: 'G6PD deficiency — redox balance, haemolytic anaemia, antimalarial drug toxicity (primaquine, dapsone).' },
-    { id: 'hsa00030', name: 'Pentose Phosphate Pathway',  cat: 'Metabolism',           kegg: 'hsa00030', react: 'R-HSA-71336',   color: '#00C4A0', genes: ['G6PD','PGD','RPIA','TALDO1'],       desc: 'G6PD central role in erythrocyte NADPH production — key to malaria parasite-induced oxidative stress defence.' },
-    { id: 'hsa04620', name: 'Toll-like Receptor Signalling', cat: 'Immune System',     kegg: 'hsa04620', react: 'R-HSA-168928',  color: '#58a6ff', genes: ['TLR1','TLR4','TLR6','MYD88'],       desc: 'TLR4 Asp299Gly variant at high frequency in Africa — alters malaria and sepsis susceptibility.' },
-    { id: 'hsa04060', name: 'Cytokine–Cytokine Receptor', cat: 'Immune System',        kegg: 'hsa04060', react: 'R-HSA-1280215', color: '#58a6ff', genes: ['TNF','IL6','IFNG','IL10'],           desc: 'Cytokine profiles differ substantially in African malaria, TB, and HIV co-infections.' },
-    { id: 'hsa05133', name: 'Pertussis',                  cat: 'Infectious Disease',   kegg: 'hsa05133', react: 'R-HSA-5620971', color: '#f97316', genes: ['TLR4','IL1B','NFKB1','CASP1'],      desc: 'Bordetella pertussis — re-emerging in Africa; vaccine-schedule gaps in under-5 cohorts.' },
+    {
+      id: 'hsa05144',
+      name: 'Malaria',
+      cat: 'Infectious Disease',
+      kegg: 'hsa05144',
+      react: 'R-HSA-1280215',
+      color: '#f97316',
+      genes: ['HBB', 'GYPA', 'CD36', 'CR1'],
+      desc: 'P. falciparum invasion, G6PD interaction, haemoglobin polymerisation, cytoadherence in African populations.',
+    },
+    {
+      id: 'hsa05152',
+      name: 'Tuberculosis',
+      cat: 'Infectious Disease',
+      kegg: 'hsa05152',
+      react: 'R-HSA-5620971',
+      color: '#e3b341',
+      genes: ['TNF', 'IL10', 'TLR2', 'VDR'],
+      desc: 'M. tuberculosis survival in macrophages, immune evasion — MTB is the leading infectious disease killer in Africa.',
+    },
+    {
+      id: 'hsa05170',
+      name: 'HIV Infection',
+      cat: 'Infectious Disease',
+      kegg: 'hsa05170',
+      react: 'R-HSA-162906',
+      color: '#bc8cff',
+      genes: ['CCR5', 'TRIM5', 'APOBEC3G', 'BST2'],
+      desc: 'HIV-1 entry, innate restriction factors, CCR5 delta32 absent in most African populations.',
+    },
+    {
+      id: 'hsa00480',
+      name: 'Glutathione Metabolism',
+      cat: 'Metabolism',
+      kegg: 'hsa00480',
+      react: 'R-HSA-174403',
+      color: '#00C4A0',
+      genes: ['G6PD', 'GSS', 'GPX1', 'GCLC'],
+      desc: 'G6PD deficiency — redox balance, haemolytic anaemia, antimalarial drug toxicity (primaquine, dapsone).',
+    },
+    {
+      id: 'hsa00030',
+      name: 'Pentose Phosphate Pathway',
+      cat: 'Metabolism',
+      kegg: 'hsa00030',
+      react: 'R-HSA-71336',
+      color: '#00C4A0',
+      genes: ['G6PD', 'PGD', 'RPIA', 'TALDO1'],
+      desc: 'G6PD central role in erythrocyte NADPH production — key to malaria parasite-induced oxidative stress defence.',
+    },
+    {
+      id: 'hsa04620',
+      name: 'Toll-like Receptor Signalling',
+      cat: 'Immune System',
+      kegg: 'hsa04620',
+      react: 'R-HSA-168928',
+      color: '#58a6ff',
+      genes: ['TLR1', 'TLR4', 'TLR6', 'MYD88'],
+      desc: 'TLR4 Asp299Gly variant at high frequency in Africa — alters malaria and sepsis susceptibility.',
+    },
+    {
+      id: 'hsa04060',
+      name: 'Cytokine–Cytokine Receptor',
+      cat: 'Immune System',
+      kegg: 'hsa04060',
+      react: 'R-HSA-1280215',
+      color: '#58a6ff',
+      genes: ['TNF', 'IL6', 'IFNG', 'IL10'],
+      desc: 'Cytokine profiles differ substantially in African malaria, TB, and HIV co-infections.',
+    },
+    {
+      id: 'hsa05133',
+      name: 'Pertussis',
+      cat: 'Infectious Disease',
+      kegg: 'hsa05133',
+      react: 'R-HSA-5620971',
+      color: '#f97316',
+      genes: ['TLR4', 'IL1B', 'NFKB1', 'CASP1'],
+      desc: 'Bordetella pertussis — re-emerging in Africa; vaccine-schedule gaps in under-5 cohorts.',
+    },
   ];
 
   const GENE_EXAMPLES = [
-    { symbol:'HBB',   ncbiId:'3043', label:'HBB (Sickle cell / beta-thal)' },
-    { symbol:'G6PD',  ncbiId:'2539', label:'G6PD (G6PD deficiency)' },
-    { symbol:'APOL1', ncbiId:'8542', label:'APOL1 (CKD in Africa)' },
-    { symbol:'TNF',   ncbiId:'7124', label:'TNF (Malaria/TB immunity)' },
-    { symbol:'CCR5',  ncbiId:'1234', label:'CCR5 (HIV entry receptor)' },
-    { symbol:'TLR4',  ncbiId:'7099', label:'TLR4 (Sepsis/Malaria risk)' },
+    { symbol: 'HBB', ncbiId: '3043', label: 'HBB (Sickle cell / beta-thal)' },
+    { symbol: 'G6PD', ncbiId: '2539', label: 'G6PD (G6PD deficiency)' },
+    { symbol: 'APOL1', ncbiId: '8542', label: 'APOL1 (CKD in Africa)' },
+    { symbol: 'TNF', ncbiId: '7124', label: 'TNF (Malaria/TB immunity)' },
+    { symbol: 'CCR5', ncbiId: '1234', label: 'CCR5 (HIV entry receptor)' },
+    { symbol: 'TLR4', ncbiId: '7099', label: 'TLR4 (Sepsis/Malaria risk)' },
   ];
 
   let _activeTab = 'kegg';
@@ -37,13 +108,16 @@ OmicsLab.Pathways = (function () {
 
   /* ─── Escape helper ─── */
   function _esc(s) {
-    return String(s).replace(/[<>&"']/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' }[c]));
+    return String(s).replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
   }
 
   /* ─── Tab switch ─── */
   function _switchTab(tab) {
     _activeTab = tab;
-    ['kegg', 'reactome'].forEach(t => {
+    ['kegg', 'reactome'].forEach((t) => {
       const btn = document.getElementById(`pw-tab-${t}`);
       const pnl = document.getElementById(`pw-panel-${t}`);
       if (btn) btn.classList.toggle('pw-tab-active', t === tab);
@@ -54,9 +128,10 @@ OmicsLab.Pathways = (function () {
 
   /* ─── Select pathway from sidebar ─── */
   function _selectPath(id) {
-    _selectedPath = AFRICA_PATHWAYS.find(p => p.id === id) || AFRICA_PATHWAYS[0];
-    document.querySelectorAll('.pw-path-item').forEach(el =>
-      el.classList.toggle('pw-path-active', el.dataset.id === id));
+    _selectedPath = AFRICA_PATHWAYS.find((p) => p.id === id) || AFRICA_PATHWAYS[0];
+    document
+      .querySelectorAll('.pw-path-item')
+      .forEach((el) => el.classList.toggle('pw-path-active', el.dataset.id === id));
     if (_activeTab === 'kegg') _renderPathwayDetail();
     else _renderReactome();
   }
@@ -87,7 +162,7 @@ OmicsLab.Pathways = (function () {
         </div>
       </div>
       <div class="pw-map-desc">${_esc(p.desc)}</div>
-      <div class="pw-map-genes"><span class="pw-genes-label">Key genes:</span> ${p.genes.map(g => `<span class="pw-gene-chip">${g}</span>`).join('')}</div>
+      <div class="pw-map-genes"><span class="pw-genes-label">Key genes:</span> ${p.genes.map((g) => `<span class="pw-gene-chip">${g}</span>`).join('')}</div>
       <div class="pw-map-scroll">
         <div class="pw-map-inner" id="pw-map-inner">
           <img class="pw-map-img" id="pw-map-img"
@@ -138,7 +213,11 @@ OmicsLab.Pathways = (function () {
   /* ─── KEGG live keyword search ─── */
   function _debounceSearch(kw) {
     clearTimeout(_searchTimer);
-    if (!kw.trim()) { const el = document.getElementById('pw-search-results'); if (el) el.innerHTML = ''; return; }
+    if (!kw.trim()) {
+      const el = document.getElementById('pw-search-results');
+      if (el) el.innerHTML = '';
+      return;
+    }
     _searchTimer = setTimeout(() => _searchKegg(kw), 420);
   }
 
@@ -147,19 +226,33 @@ OmicsLab.Pathways = (function () {
     if (!el) return;
     el.innerHTML = '<div class="pw-loading">Querying KEGG…</div>';
     try {
-      const res = await fetch(`${KEGG_BASE}/find/pathway/${encodeURIComponent(keyword)}`, { signal: AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined });
+      const res = await fetch(`${KEGG_BASE}/find/pathway/${encodeURIComponent(keyword)}`, {
+        signal: AbortSignal.timeout ? AbortSignal.timeout(6000) : undefined,
+      });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
-      const rows = text.trim().split('\n').filter(Boolean).slice(0, 14).map(line => {
-        const [id, name] = line.split('\t');
-        return { id: id.replace('path:', ''), name: name || id };
-      });
-      if (!rows.length) { el.innerHTML = '<div class="pw-search-empty">No pathways found.</div>'; return; }
-      el.innerHTML = rows.map(r => `
+      const rows = text
+        .trim()
+        .split('\n')
+        .filter(Boolean)
+        .slice(0, 14)
+        .map((line) => {
+          const [id, name] = line.split('\t');
+          return { id: id.replace('path:', ''), name: name || id };
+        });
+      if (!rows.length) {
+        el.innerHTML = '<div class="pw-search-empty">No pathways found.</div>';
+        return;
+      }
+      el.innerHTML = rows
+        .map(
+          (r) => `
         <div class="pw-search-item" onclick="OmicsLab.Pathways._loadKeggMap('${r.id}','${_esc(r.name)}')">
           <span class="pw-search-id">${r.id}</span>
           <span class="pw-search-name">${_esc(r.name)}</span>
-        </div>`).join('');
+        </div>`
+        )
+        .join('');
     } catch {
       el.innerHTML = `<div class="pw-search-err">KEGG API requires server-side proxy for browser access.
         <a href="https://www.kegg.jp/kegg-bin/search_pathway_text?query=${encodeURIComponent(keyword)}&org=hsa" target="_blank" rel="noopener" class="pw-ext-link">Search on KEGG.jp →</a></div>`;
@@ -182,13 +275,24 @@ OmicsLab.Pathways = (function () {
       const res = await fetch(`${KEGG_BASE}/link/pathway/hsa:${ncbiId}`);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const text = await res.text();
-      const paths = text.trim().split('\n').filter(Boolean).map(l => l.split('\t')[1]?.replace('path:','') || '');
-      if (!paths.length) { el.innerHTML = `<div class="pw-search-empty">No KEGG pathways for ${_esc(symbol)}.</div>`; return; }
+      const paths = text
+        .trim()
+        .split('\n')
+        .filter(Boolean)
+        .map((l) => l.split('\t')[1]?.replace('path:', '') || '');
+      if (!paths.length) {
+        el.innerHTML = `<div class="pw-search-empty">No KEGG pathways for ${_esc(symbol)}.</div>`;
+        return;
+      }
       el.innerHTML = `<div class="pw-gene-result-label">${_esc(symbol)} → ${paths.length} pathway(s):</div>
         <div class="pw-gene-path-chips">
-          ${paths.slice(0,12).map(pid =>
-            `<button class="pw-gene-path-chip" onclick="OmicsLab.Pathways._loadKeggMap('${pid}','${pid}')">${pid}</button>`
-          ).join('')}
+          ${paths
+            .slice(0, 12)
+            .map(
+              (pid) =>
+                `<button class="pw-gene-path-chip" onclick="OmicsLab.Pathways._loadKeggMap('${pid}','${pid}')">${pid}</button>`
+            )
+            .join('')}
         </div>`;
     } catch {
       el.innerHTML = `<div class="pw-search-err">KEGG CORS limit.
@@ -205,8 +309,9 @@ OmicsLab.Pathways = (function () {
       <div class="pw-reactome-ctrl">
         <label class="pw-select-label">Pathway:</label>
         <select class="pw-select" onchange="OmicsLab.Pathways._loadReactomePathway(this.value)">
-          ${AFRICA_PATHWAYS.map(ap =>
-            `<option value="${ap.react}"${ap.id === p.id ? ' selected' : ''}>${_esc(ap.name)}</option>`
+          ${AFRICA_PATHWAYS.map(
+            (ap) =>
+              `<option value="${ap.react}"${ap.id === p.id ? ' selected' : ''}>${_esc(ap.name)}</option>`
           ).join('')}
         </select>
         <a class="pw-ext-link" href="https://reactome.org/PathwayBrowser/#/${p.react}" target="_blank" rel="noopener">Full screen →</a>
@@ -225,14 +330,16 @@ OmicsLab.Pathways = (function () {
   }
 
   function _loadReactomePathway(reactomeId) {
-    const path = AFRICA_PATHWAYS.find(p => p.react === reactomeId);
+    const path = AFRICA_PATHWAYS.find((p) => p.react === reactomeId);
     if (path) {
       _selectedPath = path;
-      document.querySelectorAll('.pw-path-item').forEach(el =>
-        el.classList.toggle('pw-path-active', el.dataset.id === path.id));
+      document
+        .querySelectorAll('.pw-path-item')
+        .forEach((el) => el.classList.toggle('pw-path-active', el.dataset.id === path.id));
     }
     const wrap = document.getElementById('pw-reactome-iframe-wrap');
-    if (wrap) wrap.innerHTML = `<iframe src="https://reactome.org/PathwayBrowser/#/${reactomeId}" title="Reactome Pathway Browser" class="pw-reactome-iframe" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
+    if (wrap)
+      wrap.innerHTML = `<iframe src="https://reactome.org/PathwayBrowser/#/${reactomeId}" title="Reactome Pathway Browser" class="pw-reactome-iframe" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>`;
   }
 
   /* ─── Init ─── */
@@ -263,7 +370,8 @@ OmicsLab.Pathways = (function () {
             <div class="pw-sidebar">
               <div class="pw-section-label">Africa Disease Pathways</div>
               <div class="pw-path-list">
-                ${AFRICA_PATHWAYS.map(p => `
+                ${AFRICA_PATHWAYS.map(
+                  (p) => `
                   <button class="pw-path-item${p.id === _selectedPath.id ? ' pw-path-active' : ''}" data-id="${p.id}"
                     onclick="OmicsLab.Pathways._selectPath('${p.id}')">
                     <span class="pw-path-dot" style="background:${p.color}"></span>
@@ -271,7 +379,8 @@ OmicsLab.Pathways = (function () {
                       <span class="pw-path-name">${_esc(p.name)}</span>
                       <span class="pw-path-cat">${_esc(p.cat)}</span>
                     </span>
-                  </button>`).join('')}
+                  </button>`
+                ).join('')}
               </div>
 
               <div class="pw-section-label" style="margin-top:1.25rem">Search KEGG</div>
@@ -283,7 +392,7 @@ OmicsLab.Pathways = (function () {
               <div class="pw-gene-row">
                 <select class="pw-select" id="pw-gene-select" style="flex:1">
                   <option value="">Select gene…</option>
-                  ${GENE_EXAMPLES.map(g => `<option value="${g.ncbiId}|${g.symbol}">${_esc(g.label)}</option>`).join('')}
+                  ${GENE_EXAMPLES.map((g) => `<option value="${g.ncbiId}|${g.symbol}">${_esc(g.label)}</option>`).join('')}
                 </select>
                 <button class="pw-btn" onclick="OmicsLab.Pathways._onGeneLookup()">Find</button>
               </div>
@@ -302,5 +411,16 @@ OmicsLab.Pathways = (function () {
     _renderPathwayDetail();
   }
 
-  return { init, _switchTab, _selectPath, _loadKeggMap, _zoomMap, _debounceSearch, _searchKegg, _onGeneLookup, _lookupGenePathways, _loadReactomePathway };
+  return {
+    init,
+    _switchTab,
+    _selectPath,
+    _loadKeggMap,
+    _zoomMap,
+    _debounceSearch,
+    _searchKegg,
+    _onGeneLookup,
+    _lookupGenePathways,
+    _loadReactomePathway,
+  };
 })();

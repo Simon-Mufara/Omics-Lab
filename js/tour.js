@@ -14,53 +14,52 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Tour = (function () {
-
   const DONE_KEY = 'omicslab_tour_done';
 
   /* ── Step definitions ──────────────────────────────────────── */
   const STEPS = [
     {
-      target:    '.featured-wf-section',
-      fallback:  '#home-page-content',
-      title:     'Pick your first workflow',
-      body:      '14 scientifically accurate protocols — Whole Genome Sequencing, RNA-seq, metagenomics, ATAC-seq, and more — each built around real African diseases. Click any card to begin.',
-      placement: 'above',   /* tooltip appears above spotlight */
-      pad:       14,
-      radius:    '14px',
+      target: '.featured-wf-section',
+      fallback: '#home-page-content',
+      title: 'Pick your first workflow',
+      body: '14 scientifically accurate protocols — Whole Genome Sequencing, RNA-seq, metagenomics, ATAC-seq, and more — each built around real African diseases. Click any card to begin.',
+      placement: 'above' /* tooltip appears above spotlight */,
+      pad: 14,
+      radius: '14px',
     },
     {
-      target:    'button[data-group="train"]',
-      fallback:  '#ng-train',
-      title:     'Drag reagents. Get real feedback.',
-      body:      'The Train menu opens Lab Simulations and Curriculum Tracks. Tune instrument parameters, watch 8 live QC metrics update in real time, and see exactly how early mistakes cascade downstream.',
+      target: 'button[data-group="train"]',
+      fallback: '#ng-train',
+      title: 'Drag reagents. Get real feedback.',
+      body: 'The Train menu opens Lab Simulations and Curriculum Tracks. Tune instrument parameters, watch 8 live QC metrics update in real time, and see exactly how early mistakes cascade downstream.',
       placement: 'below',
-      pad:       10,
-      radius:    '10px',
+      pad: 10,
+      radius: '10px',
     },
     {
-      target:    '#how-it-works',
-      fallback:  '#home-page-content',
-      title:     'Study diseases, tools & pipelines',
-      body:      'The Learn section covers 40+ diseases, 50+ bioinformatics tools, HPC training, and structured curriculum tracks. Complete a track and earn a shareable certificate.',
+      target: '#how-it-works',
+      fallback: '#home-page-content',
+      title: 'Study diseases, tools & pipelines',
+      body: 'The Learn section covers 40+ diseases, 50+ bioinformatics tools, HPC training, and structured curriculum tracks. Complete a track and earn a shareable certificate.',
       placement: 'above',
-      pad:       14,
-      radius:    '14px',
+      pad: 14,
+      radius: '14px',
     },
     {
-      target:    '#nav-user-pill',
-      fallback:  '#nav-right',
-      title:     'Your progress is always saved',
-      body:      'Everything is stored locally — no account needed. Open your profile to see earned badges, curriculum progress, total time studied, and personalised workflow recommendations.',
+      target: '#nav-user-pill',
+      fallback: '#nav-right',
+      title: 'Your progress is always saved',
+      body: 'Everything is stored locally — no account needed. Open your profile to see earned badges, curriculum progress, total time studied, and personalised workflow recommendations.',
       placement: 'below',
-      pad:       10,
-      radius:    '9999px',  /* pill shape for the user pill */
+      pad: 10,
+      radius: '9999px' /* pill shape for the user pill */,
     },
   ];
 
   /* ── State ──────────────────────────────────────────────────── */
-  let _step    = 0;
+  let _step = 0;
   let _running = false;
-  let _navZ    = '';        /* saved nav z-index */
+  let _navZ = ''; /* saved nav z-index */
   let _resizeT = null;
 
   /* ─── Public API ────────────────────────────────────────────── */
@@ -71,7 +70,7 @@ OmicsLab.Tour = (function () {
     if (localStorage.getItem(DONE_KEY)) return;
 
     _running = true;
-    _step    = 0;
+    _step = 0;
 
     _buildDom();
     _goToStep(0);
@@ -96,7 +95,9 @@ OmicsLab.Tour = (function () {
   }
 
   /* reset() — for debugging: lets the tour run again */
-  function reset() { localStorage.removeItem(DONE_KEY); }
+  function reset() {
+    localStorage.removeItem(DONE_KEY);
+  }
 
   /* ─── DOM helpers ───────────────────────────────────────────── */
 
@@ -125,7 +126,7 @@ OmicsLab.Tour = (function () {
   }
 
   function _wipeDom() {
-    ['tour-backdrop', 'tour-spotlight', 'tour-tooltip'].forEach(id => {
+    ['tour-backdrop', 'tour-spotlight', 'tour-tooltip'].forEach((id) => {
       document.getElementById(id)?.remove();
     });
   }
@@ -149,7 +150,11 @@ OmicsLab.Tour = (function () {
 
     /* Gracefully skip steps with no matching target */
     if (!target) {
-      if (idx < STEPS.length - 1) { _goToStep(idx + 1); } else { end(); }
+      if (idx < STEPS.length - 1) {
+        _goToStep(idx + 1);
+      } else {
+        end();
+      }
       return;
     }
 
@@ -208,15 +213,15 @@ OmicsLab.Tour = (function () {
   /* ─── Spotlight positioning ─────────────────────────────────── */
 
   function _placeSpotlight(def, target) {
-    const sp   = document.getElementById('tour-spotlight');
+    const sp = document.getElementById('tour-spotlight');
     if (!sp) return;
     const rect = target.getBoundingClientRect();
-    const pad  = def.pad || 10;
+    const pad = def.pad || 10;
 
-    sp.style.top          = (rect.top    - pad) + 'px';
-    sp.style.left         = (rect.left   - pad) + 'px';
-    sp.style.width        = (rect.width  + pad * 2) + 'px';
-    sp.style.height       = (rect.height + pad * 2) + 'px';
+    sp.style.top = rect.top - pad + 'px';
+    sp.style.left = rect.left - pad + 'px';
+    sp.style.width = rect.width + pad * 2 + 'px';
+    sp.style.height = rect.height + pad * 2 + 'px';
     sp.style.borderRadius = def.radius || '10px';
   }
 
@@ -227,8 +232,8 @@ OmicsLab.Tour = (function () {
     if (!tt) return;
 
     const isLast = idx === STEPS.length - 1;
-    const dots   = STEPS.map((_, i) =>
-      `<span class="tour-dot ${i < idx ? 'done' : i === idx ? 'active' : ''}"></span>`
+    const dots = STEPS.map(
+      (_, i) => `<span class="tour-dot ${i < idx ? 'done' : i === idx ? 'active' : ''}"></span>`
     ).join('');
 
     /* Determine if arrow should point up (tooltip below) or down (tooltip above) */
@@ -247,9 +252,11 @@ OmicsLab.Tour = (function () {
       <h3 class="tour-title">${def.title}</h3>
       <p class="tour-body">${def.body}</p>
       <div class="tour-actions">
-        ${!isLast
-          ? `<button class="tour-skip-btn" onclick="OmicsLab.Tour.end()">Skip tour</button>`
-          : '<span></span>'}
+        ${
+          !isLast
+            ? `<button class="tour-skip-btn" onclick="OmicsLab.Tour.end()">Skip tour</button>`
+            : '<span></span>'
+        }
         <button class="tour-next-btn" onclick="OmicsLab.Tour.next()">
           ${isLast ? 'Start Exploring' : 'Next'}
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
@@ -263,51 +270,51 @@ OmicsLab.Tour = (function () {
   }
 
   function _placeTooltip(def, target) {
-    const tt   = document.getElementById('tour-tooltip');
-    const arr  = document.getElementById('tour-arrow');
+    const tt = document.getElementById('tour-tooltip');
+    const arr = document.getElementById('tour-arrow');
     if (!tt) return;
 
     const rect = target.getBoundingClientRect();
-    const pad  = def.pad || 10;
-    const GAP  = 18;
-    const TW   = Math.min(340, window.innerWidth - 32);
-    const TH   = tt.offsetHeight || 230;
-    const vw   = window.innerWidth;
-    const vh   = window.innerHeight;
+    const pad = def.pad || 10;
+    const GAP = 18;
+    const TW = Math.min(340, window.innerWidth - 32);
+    const TH = tt.offsetHeight || 230;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
 
     let top, below;
 
     if (def.placement === 'below') {
-      top   = rect.bottom + pad + GAP;
+      top = rect.bottom + pad + GAP;
       below = true;
       /* Flip above if not enough room below */
       if (top + TH > vh - 12) {
-        top   = rect.top - pad - TH - GAP;
+        top = rect.top - pad - TH - GAP;
         below = false;
       }
     } else {
-      top   = rect.top - pad - TH - GAP;
+      top = rect.top - pad - TH - GAP;
       below = false;
       /* Flip below if not enough room above */
       if (top < 12) {
-        top   = rect.bottom + pad + GAP;
+        top = rect.bottom + pad + GAP;
         below = true;
       }
     }
 
     /* Center tooltip horizontally over target; clamp to viewport */
     const idealLeft = rect.left + rect.width / 2 - TW / 2;
-    const left      = Math.max(16, Math.min(idealLeft, vw - TW - 16));
+    const left = Math.max(16, Math.min(idealLeft, vw - TW - 16));
 
-    tt.style.top   = top  + 'px';
-    tt.style.left  = left + 'px';
-    tt.style.width = TW   + 'px';
+    tt.style.top = top + 'px';
+    tt.style.left = left + 'px';
+    tt.style.width = TW + 'px';
 
     /* Position arrow to point at the target center horizontally */
     if (arr) {
       const targetCenter = rect.left + rect.width / 2;
-      const arrowLeft    = Math.min(Math.max(targetCenter - left, 24), TW - 24);
-      arr.style.left      = arrowLeft + 'px';
+      const arrowLeft = Math.min(Math.max(targetCenter - left, 24), TW - 24);
+      arr.style.left = arrowLeft + 'px';
       arr.style.transform = 'translateX(-50%)';
 
       /* Swap arrow direction class if placement flipped */
@@ -323,7 +330,7 @@ OmicsLab.Tour = (function () {
 
   function _setVisible(on) {
     document.getElementById('tour-spotlight')?.classList.toggle('visible', on);
-    document.getElementById('tour-tooltip')  ?.classList.toggle('visible', on);
+    document.getElementById('tour-tooltip')?.classList.toggle('visible', on);
   }
 
   /* ─── Nav elevation ─────────────────────────────────────────── */
@@ -337,7 +344,10 @@ OmicsLab.Tour = (function () {
 
   function _elevateNav() {
     const nav = document.getElementById('main-nav');
-    if (nav) { _navZ = nav.style.zIndex; nav.style.zIndex = '8003'; }
+    if (nav) {
+      _navZ = nav.style.zIndex;
+      nav.style.zIndex = '8003';
+    }
   }
 
   function _restoreNav() {
@@ -347,15 +357,19 @@ OmicsLab.Tour = (function () {
 
   /* ─── Scroll locking ────────────────────────────────────────── */
 
-  function _lockScroll()   { document.body.style.overflow = 'hidden'; }
-  function _unlockScroll() { document.body.style.overflow = ''; }
+  function _lockScroll() {
+    document.body.style.overflow = 'hidden';
+  }
+  function _unlockScroll() {
+    document.body.style.overflow = '';
+  }
 
   /* ─── Target resolution ─────────────────────────────────────── */
 
   function _resolve(selector, fallback) {
-    return document.querySelector(selector)
-        || (fallback && document.querySelector(fallback))
-        || null;
+    return (
+      document.querySelector(selector) || (fallback && document.querySelector(fallback)) || null
+    );
   }
 
   /* ─── Event handlers ────────────────────────────────────────── */
@@ -379,7 +393,7 @@ OmicsLab.Tour = (function () {
     clearTimeout(_resizeT);
     _resizeT = setTimeout(() => {
       if (!_running) return;
-      const def    = STEPS[_step];
+      const def = STEPS[_step];
       const target = _resolve(def.target, def.fallback);
       if (!target) return;
       _placeSpotlight(def, target);
@@ -388,5 +402,4 @@ OmicsLab.Tour = (function () {
   }
 
   return { start, next, end, reset };
-
 })();

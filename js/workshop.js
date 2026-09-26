@@ -6,41 +6,62 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Workshop = (function () {
-
   const STORE_KEY = 'omicslab_workshop_v1';
 
   const MODULES = [
-    { id: 'disease-explorer',  label: 'Disease Explorer',   section: 'disease-explorer-section' },
-    { id: 'learning-journey',  label: 'Learning Journey',   section: 'disease-learning-section' },
-    { id: 'workflow-sim',      label: 'Workflow Simulation', section: 'domain-section' },
-    { id: 'pipeline-guide',    label: 'Pipeline Guide',     section: 'bioinfo-pipeline-section' },
-    { id: 'hpc-training',      label: 'HPC Training',       section: 'hpc-training-section' },
-    { id: 'repro-hub',         label: 'Repro Hub',          section: 'repro-hub-section' },
-    { id: 'africa-hub',        label: 'Africa Science Hub', section: 'africa-hub-section' },
-    { id: 'equipment-gallery', label: 'Equipment Gallery',  section: 'equipment-gallery-section' }
+    { id: 'disease-explorer', label: 'Disease Explorer', section: 'disease-explorer-section' },
+    { id: 'learning-journey', label: 'Learning Journey', section: 'disease-learning-section' },
+    { id: 'workflow-sim', label: 'Workflow Simulation', section: 'domain-section' },
+    { id: 'pipeline-guide', label: 'Pipeline Guide', section: 'bioinfo-pipeline-section' },
+    { id: 'hpc-training', label: 'HPC Training', section: 'hpc-training-section' },
+    { id: 'repro-hub', label: 'Repro Hub', section: 'repro-hub-section' },
+    { id: 'africa-hub', label: 'Africa Science Hub', section: 'africa-hub-section' },
+    { id: 'equipment-gallery', label: 'Equipment Gallery', section: 'equipment-gallery-section' },
   ];
 
   /* ─── Storage ─── */
   function _load() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || 'null') || { sessions: {}, activeSession: null }; }
-    catch { return { sessions: {}, activeSession: null }; }
+    try {
+      return (
+        JSON.parse(localStorage.getItem(STORE_KEY) || 'null') || {
+          sessions: {},
+          activeSession: null,
+        }
+      );
+    } catch {
+      return { sessions: {}, activeSession: null };
+    }
   }
-  function _save(data) { try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch {} }
+  function _save(data) {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    } catch {}
+  }
 
   /* ─── Session management ─── */
   function createSession() {
-    const name     = (document.getElementById('ws-session-name') || {}).value || '';
+    const name = (document.getElementById('ws-session-name') || {}).value || '';
     const location = (document.getElementById('ws-location') || {}).value || '';
-    const date     = (document.getElementById('ws-date') || {}).value || new Date().toISOString().slice(0,10);
-    const track    = (document.getElementById('ws-track') || {}).value || 'bioinformatics';
+    const date =
+      (document.getElementById('ws-date') || {}).value || new Date().toISOString().slice(0, 10);
+    const track = (document.getElementById('ws-track') || {}).value || 'bioinformatics';
 
-    if (!name.trim()) { alert('Please enter a session name.'); return; }
+    if (!name.trim()) {
+      alert('Please enter a session name.');
+      return;
+    }
 
     const code = _genCode();
     const data = _load();
     data.sessions[code] = {
-      code, name: name.trim(), location: location.trim(), date, track,
-      created: new Date().toISOString(), students: [], modulesRequired: MODULES.map(m => m.id)
+      code,
+      name: name.trim(),
+      location: location.trim(),
+      date,
+      track,
+      created: new Date().toISOString(),
+      students: [],
+      modulesRequired: MODULES.map((m) => m.id),
     };
     data.activeSession = code;
     _save(data);
@@ -52,11 +73,17 @@ OmicsLab.Workshop = (function () {
   function joinSession() {
     const code = ((document.getElementById('ws-join-code') || {}).value || '').trim().toUpperCase();
     const name = ((document.getElementById('ws-student-name') || {}).value || '').trim();
-    if (!code || !name) { alert('Enter both session code and your name.'); return; }
+    if (!code || !name) {
+      alert('Enter both session code and your name.');
+      return;
+    }
     const data = _load();
     const session = data.sessions[code];
-    if (!session) { alert('Session not found. Check the code and try again.'); return; }
-    if (!session.students.find(s => s.name === name)) {
+    if (!session) {
+      alert('Session not found. Check the code and try again.');
+      return;
+    }
+    if (!session.students.find((s) => s.name === name)) {
       session.students.push({ name, joined: new Date().toISOString(), completed: [] });
     }
     data.activeSession = code;
@@ -70,7 +97,7 @@ OmicsLab.Workshop = (function () {
     const session = data.sessions[data.activeSession];
     if (!session) return;
     const studentName = _getCurrentStudentName();
-    let student = session.students.find(s => s.name === studentName);
+    let student = session.students.find((s) => s.name === studentName);
     if (!student) {
       student = { name: studentName, joined: new Date().toISOString(), completed: [] };
       session.students.push(student);
@@ -80,7 +107,7 @@ OmicsLab.Workshop = (function () {
     }
     _save(data);
     _refresh();
-    const mod = MODULES.find(m => m.id === moduleId);
+    const mod = MODULES.find((m) => m.id === moduleId);
     if (mod && OmicsLab.App) OmicsLab.App.scrollTo(mod.section);
     if (session.students.length >= 5) OmicsLab.Badges && OmicsLab.Badges.unlock('cohort-complete');
   }
@@ -94,7 +121,9 @@ OmicsLab.Workshop = (function () {
 
   function _genCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join(
+      ''
+    );
   }
 
   /* ─── Export ─── */
@@ -102,30 +131,51 @@ OmicsLab.Workshop = (function () {
     const data = _load();
     const code = data.activeSession;
     const session = code ? data.sessions[code] : null;
-    if (!session) { alert('No active session to export.'); return; }
+    if (!session) {
+      alert('No active session to export.');
+      return;
+    }
 
-    const rows = [['Student Name', 'Joined', ...MODULES.map(m => m.label), 'Completed', 'Completion %']];
-    session.students.forEach(s => {
-      const pct = Math.round(s.completed.length / MODULES.length * 100);
-      rows.push([s.name, s.joined.slice(0,10), ...MODULES.map(m => s.completed.includes(m.id) ? '[OK]' : ''), s.completed.length, pct + '%']);
+    const rows = [
+      ['Student Name', 'Joined', ...MODULES.map((m) => m.label), 'Completed', 'Completion %'],
+    ];
+    session.students.forEach((s) => {
+      const pct = Math.round((s.completed.length / MODULES.length) * 100);
+      rows.push([
+        s.name,
+        s.joined.slice(0, 10),
+        ...MODULES.map((m) => (s.completed.includes(m.id) ? '[OK]' : '')),
+        s.completed.length,
+        pct + '%',
+      ]);
     });
 
-    const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+    const csv = rows.map((r) => r.map((c) => `"${c}"`).join(',')).join('\n');
     const blob = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
     const a = document.createElement('a');
-    a.href = blob; a.download = `workshop-${code}-report.csv`;
-    document.body.appendChild(a); a.click(); a.remove();
+    a.href = blob;
+    a.download = `workshop-${code}-report.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   function exportJSON() {
     const data = _load();
     const code = data.activeSession;
     const session = code ? data.sessions[code] : null;
-    if (!session) { alert('No active session.'); return; }
-    const blob = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(session, null, 2));
+    if (!session) {
+      alert('No active session.');
+      return;
+    }
+    const blob =
+      'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(session, null, 2));
     const a = document.createElement('a');
-    a.href = blob; a.download = `workshop-${code}.json`;
-    document.body.appendChild(a); a.click(); a.remove();
+    a.href = blob;
+    a.download = `workshop-${code}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   /* ─── Render ─── */
@@ -133,19 +183,27 @@ OmicsLab.Workshop = (function () {
     const data = _load();
     const code = data.activeSession;
     const session = code ? data.sessions[code] : null;
-    if (!session) return '<div class="ws-no-session">No active session. Create or join one above.</div>';
+    if (!session)
+      return '<div class="ws-no-session">No active session. Create or join one above.</div>';
 
     const totalStudents = session.students.length;
     const avgCompletion = totalStudents
-      ? Math.round(session.students.reduce((s, st) => s + st.completed.length, 0) / totalStudents / MODULES.length * 100)
+      ? Math.round(
+          (session.students.reduce((s, st) => s + st.completed.length, 0) /
+            totalStudents /
+            MODULES.length) *
+            100
+        )
       : 0;
 
-    const studentRows = session.students.map(s => {
-      const pct = Math.round(s.completed.length / MODULES.length * 100);
-      const color = pct >= 80 ? '#00C4A0' : pct >= 50 ? '#d29922' : '#A8A098';
-      return `<tr>
+    const studentRows =
+      session.students
+        .map((s) => {
+          const pct = Math.round((s.completed.length / MODULES.length) * 100);
+          const color = pct >= 80 ? '#00C4A0' : pct >= 50 ? '#d29922' : '#A8A098';
+          return `<tr>
         <td>${s.name}</td>
-        <td>${s.joined.slice(0,10)}</td>
+        <td>${s.joined.slice(0, 10)}</td>
         <td>
           <div style="display:flex;align-items:center;gap:0.5rem">
             <div style="flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px">
@@ -154,22 +212,31 @@ OmicsLab.Workshop = (function () {
             <span style="font-size:0.78rem;color:${color};min-width:30px">${pct}%</span>
           </div>
         </td>
-        <td>${MODULES.filter(m => s.completed.includes(m.id)).map(m => `<span class="ws-mod-tag done">${m.label}</span>`).join('')}
-            ${MODULES.filter(m => !s.completed.includes(m.id)).map(m => `<span class="ws-mod-tag">${m.label}</span>`).join('')}
+        <td>${MODULES.filter((m) => s.completed.includes(m.id))
+          .map((m) => `<span class="ws-mod-tag done">${m.label}</span>`)
+          .join('')}
+            ${MODULES.filter((m) => !s.completed.includes(m.id))
+              .map((m) => `<span class="ws-mod-tag">${m.label}</span>`)
+              .join('')}
         </td>
       </tr>`;
-    }).join('') || '<tr><td colspan="4" style="color:var(--text-muted);padding:1rem">No students have joined yet.</td></tr>';
+        })
+        .join('') ||
+      '<tr><td colspan="4" style="color:var(--text-muted);padding:1rem">No students have joined yet.</td></tr>';
 
-    const myCompleted = (session.students.find(s => s.name === _getCurrentStudentName()) || {}).completed || [];
+    const myCompleted =
+      (session.students.find((s) => s.name === _getCurrentStudentName()) || {}).completed || [];
 
-    const moduleChecks = MODULES.map(m => `
+    const moduleChecks = MODULES.map(
+      (m) => `
       <div class="ws-module-check ${myCompleted.includes(m.id) ? 'done' : ''}">
         <span>${myCompleted.includes(m.id) ? '[OK]' : '○'}</span>
         <span>${m.label}</span>
         <button class="ws-go-btn" onclick="OmicsLab.Workshop.markModuleDone('${m.id}')">
           ${myCompleted.includes(m.id) ? 'Review' : 'Go →'}
         </button>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     return `
     <div class="ws-session-header">
@@ -212,17 +279,25 @@ OmicsLab.Workshop = (function () {
     if (histPanel) {
       const sessions = Object.values(allSessions);
       histPanel.innerHTML = sessions.length
-        ? sessions.map(s => `<div class="ws-hist-row" onclick="OmicsLab.Workshop.loadSession('${s.code}')">
+        ? sessions
+            .map(
+              (s) => `<div class="ws-hist-row" onclick="OmicsLab.Workshop.loadSession('${s.code}')">
             <div><strong>${s.name}</strong> · ${s.code}</div>
-            <div style="font-size:0.78rem;color:var(--text-muted)">${s.location||'Online'} · ${s.date} · ${s.students.length} students</div>
-          </div>`).join('')
+            <div style="font-size:0.78rem;color:var(--text-muted)">${s.location || 'Online'} · ${s.date} · ${s.students.length} students</div>
+          </div>`
+            )
+            .join('')
         : '<div style="color:var(--text-muted);font-size:0.85rem">No sessions yet.</div>';
     }
   }
 
   function loadSession(code) {
     const data = _load();
-    if (data.sessions[code]) { data.activeSession = code; _save(data); _refresh(); }
+    if (data.sessions[code]) {
+      data.activeSession = code;
+      _save(data);
+      _refresh();
+    }
   }
 
   /* ─── Init ─── */
@@ -231,7 +306,9 @@ OmicsLab.Workshop = (function () {
     if (!container) return;
 
     const tracks = OmicsLab.Curriculum
-      ? Object.values(OmicsLab.Curriculum.TRACKS).map(t => `<option value="${t.id}">${t.title}</option>`).join('')
+      ? Object.values(OmicsLab.Curriculum.TRACKS)
+          .map((t) => `<option value="${t.id}">${t.title}</option>`)
+          .join('')
       : '<option value="bioinformatics">Bioinformatics</option><option value="wetlab">Wet-Lab</option><option value="publichealth">Public Health</option>';
 
     container.innerHTML = `
@@ -241,7 +318,7 @@ OmicsLab.Workshop = (function () {
           <div class="ws-card-head">${OmicsLab.Icons?.svg('layers', 14) || ''} Create Session (Instructor)</div>
           <div class="ws-field"><label>Session Name</label><input id="ws-session-name" type="text" placeholder="e.g. H3ABioNet Workshop 2026" /></div>
           <div class="ws-field"><label>Location / Institution</label><input id="ws-location" type="text" placeholder="e.g. KEMRI, Nairobi" /></div>
-          <div class="ws-field"><label>Date</label><input id="ws-date" type="date" value="${new Date().toISOString().slice(0,10)}" /></div>
+          <div class="ws-field"><label>Date</label><input id="ws-date" type="date" value="${new Date().toISOString().slice(0, 10)}" /></div>
           <div class="ws-field"><label>Primary Track</label><select id="ws-track">${tracks}</select></div>
           <button class="ws-btn-primary" onclick="OmicsLab.Workshop.createSession()">Create Session</button>
         </div>
@@ -267,5 +344,13 @@ OmicsLab.Workshop = (function () {
     _refresh();
   }
 
-  return { init, createSession, joinSession, markModuleDone, exportReport, exportJSON, loadSession };
+  return {
+    init,
+    createSession,
+    joinSession,
+    markModuleDone,
+    exportReport,
+    exportJSON,
+    loadSession,
+  };
 })();

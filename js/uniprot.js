@@ -7,39 +7,48 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.UniProt = (function () {
-
   const BASE = 'https://rest.uniprot.org/uniprotkb';
 
   const FIELDS = [
-    'accession', 'gene_names', 'protein_name', 'organism_name',
-    'sequence_length', 'annotation_score', 'cc_function',
-    'cc_disease', 'cc_subcellular_location', 'feature_count',
+    'accession',
+    'gene_names',
+    'protein_name',
+    'organism_name',
+    'sequence_length',
+    'annotation_score',
+    'cc_function',
+    'cc_disease',
+    'cc_subcellular_location',
+    'feature_count',
     'xref_ensembl',
   ].join(',');
 
   /* Quick Africa proteins */
   const AFRICA_QUERIES = [
-    { label: 'Sickle cell (HBB)',       q: 'gene:HBB AND organism_id:9606 AND reviewed:true' },
-    { label: 'G6PD deficiency',          q: 'gene:G6PD AND organism_id:9606 AND reviewed:true' },
-    { label: 'APOL1 kidney disease',    q: 'gene:APOL1 AND organism_id:9606 AND reviewed:true' },
-    { label: 'P. falciparum proteins',  q: 'organism_id:36329 AND reviewed:true' },
-    { label: 'TB (M. tuberculosis)',     q: 'organism_id:83332 AND reviewed:true' },
-    { label: 'HIV-1 proteins',          q: 'organism_id:11676 AND reviewed:true' },
-    { label: 'African trypanosomes',    q: 'organism_id:5691 AND reviewed:true' },
-    { label: 'Lassa virus',             q: 'organism_id:11620 AND reviewed:true' },
+    { label: 'Sickle cell (HBB)', q: 'gene:HBB AND organism_id:9606 AND reviewed:true' },
+    { label: 'G6PD deficiency', q: 'gene:G6PD AND organism_id:9606 AND reviewed:true' },
+    { label: 'APOL1 kidney disease', q: 'gene:APOL1 AND organism_id:9606 AND reviewed:true' },
+    { label: 'P. falciparum proteins', q: 'organism_id:36329 AND reviewed:true' },
+    { label: 'TB (M. tuberculosis)', q: 'organism_id:83332 AND reviewed:true' },
+    { label: 'HIV-1 proteins', q: 'organism_id:11676 AND reviewed:true' },
+    { label: 'African trypanosomes', q: 'organism_id:5691 AND reviewed:true' },
+    { label: 'Lassa virus', q: 'organism_id:11620 AND reviewed:true' },
   ];
 
   let _lastResults = [];
-  let _debTimer    = null;
-  let _page        = 0;
-  let _total       = 0;
-  let _query       = '';
-  let _reviewed    = true;
-  const PAGE_SIZE  = 20;
+  let _debTimer = null;
+  let _page = 0;
+  let _total = 0;
+  let _query = '';
+  let _reviewed = true;
+  const PAGE_SIZE = 20;
 
   /* ─── Search ─── */
   async function _doSearch(page = 0) {
-    if (!_query.trim()) { _renderEmpty('Enter a protein name, gene, or disease above.'); return; }
+    if (!_query.trim()) {
+      _renderEmpty('Enter a protein name, gene, or disease above.');
+      return;
+    }
     _page = page;
     _renderLoading();
 
@@ -47,9 +56,9 @@ OmicsLab.UniProt = (function () {
     if (_reviewed && !q.includes('reviewed:')) q += ' AND reviewed:true';
 
     const params = new URLSearchParams({
-      query:  q,
+      query: q,
       format: 'json',
-      size:   PAGE_SIZE,
+      size: PAGE_SIZE,
       cursor: page > 0 ? _cursor || '' : '',
       fields: FIELDS,
     });
@@ -66,7 +75,8 @@ OmicsLab.UniProt = (function () {
       _nextLink = nextMatch ? nextMatch[1] : null;
 
       const data = await res.json();
-      _total = parseInt(res.headers.get('X-Total-Results') || '0', 10) || (data.results || []).length;
+      _total =
+        parseInt(res.headers.get('X-Total-Results') || '0', 10) || (data.results || []).length;
       _lastResults = data.results || [];
       _renderResults(_lastResults);
     } catch (err) {
@@ -97,30 +107,41 @@ OmicsLab.UniProt = (function () {
   /* ─── Helpers ─── */
   function _proteinName(entry) {
     const rec = entry.proteinDescription?.recommendedName;
-    return rec?.fullName?.value || entry.proteinDescription?.submissionNames?.[0]?.fullName?.value || '—';
+    return (
+      rec?.fullName?.value || entry.proteinDescription?.submissionNames?.[0]?.fullName?.value || '—'
+    );
   }
 
   function _geneNames(entry) {
-    return (entry.genes || []).map(g => g.geneName?.value || '').filter(Boolean).join(', ') || '—';
+    return (
+      (entry.genes || [])
+        .map((g) => g.geneName?.value || '')
+        .filter(Boolean)
+        .join(', ') || '—'
+    );
   }
 
   function _functionText(entry) {
-    const fn = (entry.comments || []).find(c => c.commentType === 'FUNCTION');
+    const fn = (entry.comments || []).find((c) => c.commentType === 'FUNCTION');
     const text = fn?.texts?.[0]?.value || '';
     return text ? text.slice(0, 240) + (text.length > 240 ? '…' : '') : '';
   }
 
   function _diseases(entry) {
     return (entry.comments || [])
-      .filter(c => c.commentType === 'DISEASE')
-      .map(c => c.disease?.diseaseId || c.disease?.diseaseName || '')
+      .filter((c) => c.commentType === 'DISEASE')
+      .map((c) => c.disease?.diseaseId || c.disease?.diseaseName || '')
       .filter(Boolean)
       .slice(0, 4);
   }
 
   function _subcellular(entry) {
-    const sc = (entry.comments || []).find(c => c.commentType === 'SUBCELLULAR_LOCATION');
-    return (sc?.subcellularLocations || []).map(l => l.location?.value).filter(Boolean).slice(0, 3).join(', ');
+    const sc = (entry.comments || []).find((c) => c.commentType === 'SUBCELLULAR_LOCATION');
+    return (sc?.subcellularLocations || [])
+      .map((l) => l.location?.value)
+      .filter(Boolean)
+      .slice(0, 3)
+      .join(', ');
   }
 
   function _score(entry) {
@@ -128,27 +149,34 @@ OmicsLab.UniProt = (function () {
   }
 
   /* ─── Render ─── */
-  function _el() { return document.getElementById('up-results'); }
+  function _el() {
+    return document.getElementById('up-results');
+  }
 
   function _renderLoading() {
     const el = _el();
-    if (el) el.innerHTML = `<div class="up-loading"><div class="up-spinner"></div> Searching UniProt…</div>`;
+    if (el)
+      el.innerHTML = `<div class="up-loading"><div class="up-spinner"></div> Searching UniProt…</div>`;
   }
 
   function _renderEmpty(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="up-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
+    if (el)
+      el.innerHTML = `<div class="up-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="up-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
+    if (el)
+      el.innerHTML = `<div class="up-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
   }
 
   function _scoreStars(n) {
     const filled = Math.round(n);
-    return Array.from({ length: 5 }, (_, i) =>
-      `<svg width="9" height="9" viewBox="0 0 24 24" fill="${i < filled ? '#e3b341' : 'none'}" stroke="#e3b341" stroke-width="2" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+    return Array.from(
+      { length: 5 },
+      (_, i) =>
+        `<svg width="9" height="9" viewBox="0 0 24 24" fill="${i < filled ? '#e3b341' : 'none'}" stroke="#e3b341" stroke-width="2" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
     ).join('');
   }
 
@@ -156,7 +184,10 @@ OmicsLab.UniProt = (function () {
     const el = _el();
     if (!el) return;
 
-    if (!entries.length) { _renderEmpty('No results. Try a broader search or toggle reviewed filter.'); return; }
+    if (!entries.length) {
+      _renderEmpty('No results. Try a broader search or toggle reviewed filter.');
+      return;
+    }
 
     el.innerHTML = `
       <div class="up-results-header">
@@ -164,28 +195,33 @@ OmicsLab.UniProt = (function () {
         <span class="up-page-info">Page ${_page + 1}</span>
       </div>
       <div class="up-card-list">
-        ${entries.map(e => _cardHtml(e)).join('')}
+        ${entries.map((e) => _cardHtml(e)).join('')}
       </div>
-      ${_nextLink ? `
+      ${
+        _nextLink
+          ? `
         <div class="up-pagination">
           <button class="up-page-btn" onclick="OmicsLab.UniProt._nextPage()">
             Load next 20
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
-        </div>` : ''}`;
+        </div>`
+          : ''
+      }`;
   }
 
   function _cardHtml(e) {
-    const acc      = e.primaryAccession;
-    const name     = _proteinName(e);
-    const gene     = _geneNames(e);
-    const org      = e.organism?.scientificName || '';
-    const length   = e.sequence?.length || 0;
-    const fn       = _functionText(e);
+    const acc = e.primaryAccession;
+    const name = _proteinName(e);
+    const gene = _geneNames(e);
+    const org = e.organism?.scientificName || '';
+    const length = e.sequence?.length || 0;
+    const fn = _functionText(e);
     const diseases = _diseases(e);
-    const subloc   = _subcellular(e);
-    const score    = _score(e);
-    const isReviewed = e.entryType?.includes('Swiss') || e.entryType === 'UniProtKB reviewed (Swiss-Prot)';
+    const subloc = _subcellular(e);
+    const score = _score(e);
+    const isReviewed =
+      e.entryType?.includes('Swiss') || e.entryType === 'UniProtKB reviewed (Swiss-Prot)';
 
     return `
       <div class="up-card">
@@ -207,10 +243,14 @@ OmicsLab.UniProt = (function () {
 
         ${fn ? `<div class="up-function">${_esc(fn)}</div>` : ''}
 
-        ${diseases.length ? `
+        ${
+          diseases.length
+            ? `
           <div class="up-diseases">
-            ${diseases.map(d => `<span class="up-disease-tag">${_esc(d)}</span>`).join('')}
-          </div>` : ''}
+            ${diseases.map((d) => `<span class="up-disease-tag">${_esc(d)}</span>`).join('')}
+          </div>`
+            : ''
+        }
 
         ${subloc ? `<div class="up-subloc"><span class="up-subloc-label">Location:</span> ${_esc(subloc)}</div>` : ''}
 
@@ -220,11 +260,15 @@ OmicsLab.UniProt = (function () {
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg>
             AlphaFold structure
           </button>
-          ${gene !== '—' ? `
+          ${
+            gene !== '—'
+              ? `
             <button class="up-action-btn" onclick="OmicsLab.UniProt._lookupGene('${_esc(gene.split(',')[0].trim())}')">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
               Gene Lookup
-            </button>` : ''}
+            </button>`
+              : ''
+          }
         </div>
       </div>`;
   }
@@ -250,7 +294,11 @@ OmicsLab.UniProt = (function () {
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function _quickSearch(q) {
@@ -263,7 +311,9 @@ OmicsLab.UniProt = (function () {
   function _onInput(val) {
     _query = val;
     clearTimeout(_debTimer);
-    _debTimer = setTimeout(() => { if (_query.length >= 3) _doSearch(0); }, 350);
+    _debTimer = setTimeout(() => {
+      if (_query.length >= 3) _doSearch(0);
+    }, 350);
   }
 
   function _toggleReviewed() {
@@ -307,8 +357,9 @@ OmicsLab.UniProt = (function () {
 
         <div class="up-quick-searches">
           <div class="up-quick-label">Africa quick searches:</div>
-          ${AFRICA_QUERIES.map(q =>
-            `<button class="up-quick-btn" onclick="OmicsLab.UniProt._quickSearch('${_esc(q.q)}')">${q.label}</button>`
+          ${AFRICA_QUERIES.map(
+            (q) =>
+              `<button class="up-quick-btn" onclick="OmicsLab.UniProt._quickSearch('${_esc(q.q)}')">${q.label}</button>`
           ).join('')}
         </div>
 
@@ -321,5 +372,14 @@ OmicsLab.UniProt = (function () {
       </div>`;
   }
 
-  return { init, _doSearch, _nextPage, _quickSearch, _onInput, _toggleReviewed, _viewStructure, _lookupGene };
+  return {
+    init,
+    _doSearch,
+    _nextPage,
+    _quickSearch,
+    _onInput,
+    _toggleReviewed,
+    _viewStructure,
+    _lookupGene,
+  };
 })();

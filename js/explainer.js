@@ -5,16 +5,15 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Explainer = (function () {
-
   const NS = 'http://www.w3.org/2000/svg';
 
   /* shape id → [viewBox, aspect-ratio, default width % of stage] */
   const SHAPE_META = {
-    person:    { viewBox: '0 0 24 36', ratio: '24/36', width: 9  },
-    tube:      { viewBox: '0 0 14 36', ratio: '14/36', width: 5  },
-    fridge:    { viewBox: '0 0 30 40', ratio: '30/40', width: 12 },
+    person: { viewBox: '0 0 24 36', ratio: '24/36', width: 9 },
+    tube: { viewBox: '0 0 14 36', ratio: '14/36', width: 5 },
+    fridge: { viewBox: '0 0 30 40', ratio: '30/40', width: 12 },
     sequencer: { viewBox: '0 0 44 28', ratio: '44/28', width: 20 },
-    icon:      { viewBox: '0 0 24 24', ratio: '1/1',   width: 8  },
+    icon: { viewBox: '0 0 24 24', ratio: '1/1', width: 8 },
   };
 
   const SYMBOLS = `
@@ -68,8 +67,8 @@ OmicsLab.Explainer = (function () {
       id: 'sample',
       scene: 'From patient to sample',
       elements: [
-        { shape: 'person', x: 28, y: 60, enterAt: 0,   motion: 'fade' },
-        { shape: 'tube',   x: 64, y: 62, enterAt: 350, motion: 'slide-up' },
+        { shape: 'person', x: 28, y: 60, enterAt: 0, motion: 'fade' },
+        { shape: 'tube', x: 64, y: 62, enterAt: 350, motion: 'slide-up' },
       ],
       caption: 'A blood sample is drawn and labelled for the lab.',
       next: 'prep',
@@ -78,9 +77,9 @@ OmicsLab.Explainer = (function () {
       id: 'prep',
       scene: 'Bench preparation',
       elements: [
-        { shape: 'tube',   x: 22, y: 62, enterAt: 0,   motion: 'fade' },
+        { shape: 'tube', x: 22, y: 62, enterAt: 0, motion: 'fade' },
         { shape: 'fridge', x: 70, y: 55, enterAt: 300, motion: 'slide-left' },
-        { shape: 'icon',   icon: 'dna', x: 46, y: 22, enterAt: 650, motion: 'slide-down' },
+        { shape: 'icon', icon: 'dna', x: 46, y: 22, enterAt: 650, motion: 'slide-down' },
       ],
       caption: 'DNA is extracted and stored at the right temperature before sequencing.',
       next: 'sequence',
@@ -89,10 +88,11 @@ OmicsLab.Explainer = (function () {
       id: 'sequence',
       scene: 'Sequencing run',
       elements: [
-        { shape: 'tube',      x: 14, y: 66, scale: 0.7, enterAt: 0,   motion: 'slide-right' },
+        { shape: 'tube', x: 14, y: 66, scale: 0.7, enterAt: 0, motion: 'slide-right' },
         { shape: 'sequencer', x: 55, y: 55, enterAt: 300, motion: 'fade' },
       ],
-      caption: 'The prepared library runs through the sequencer, generating raw reads — this is where OmicsLab picks up.',
+      caption:
+        'The prepared library runs through the sequencer, generating raw reads — this is where OmicsLab picks up.',
       next: 'data',
     },
     {
@@ -100,20 +100,28 @@ OmicsLab.Explainer = (function () {
       scene: 'From bytes to insight',
       palette: { accent: '#f6a821' },
       elements: [
-        { shape: 'icon', icon: 'file',  x: 26, y: 52, enterAt: 0,   motion: 'slide-up' },
+        { shape: 'icon', icon: 'file', x: 26, y: 52, enterAt: 0, motion: 'slide-up' },
         { shape: 'icon', icon: 'cloud', x: 54, y: 28, enterAt: 320, motion: 'fade' },
         { shape: 'icon', icon: 'check', x: 78, y: 55, enterAt: 640, motion: 'slide-up' },
       ],
-      caption: 'Reads are processed into data files, ready for analysis and interpretation — the part you’ll run yourself.',
+      caption:
+        'Reads are processed into data files, ready for analysis and interpretation — the part you’ll run yourself.',
     },
   ];
 
-  const JOURNEY_THEME = { primary: 'var(--green)', accent: 'var(--blue)', neutral: 'var(--text-muted)' };
+  const JOURNEY_THEME = {
+    primary: 'var(--green)',
+    accent: 'var(--blue)',
+    neutral: 'var(--text-muted)',
+  };
 
   let _spriteReady = false;
 
   function _injectSprite() {
-    if (_spriteReady || document.getElementById('ol-exp-sprite')) { _spriteReady = true; return; }
+    if (_spriteReady || document.getElementById('ol-exp-sprite')) {
+      _spriteReady = true;
+      return;
+    }
     const svg = document.createElementNS(NS, 'svg');
     svg.id = 'ol-exp-sprite';
     svg.setAttribute('aria-hidden', 'true');
@@ -130,7 +138,7 @@ OmicsLab.Explainer = (function () {
   function _applyPalette(container, palette) {
     if (!palette) return;
     if (palette.primary) container.style.setProperty('--exp-primary', palette.primary);
-    if (palette.accent)  container.style.setProperty('--exp-accent',  palette.accent);
+    if (palette.accent) container.style.setProperty('--exp-accent', palette.accent);
     if (palette.neutral) container.style.setProperty('--exp-neutral', palette.neutral);
   }
 
@@ -161,26 +169,36 @@ OmicsLab.Explainer = (function () {
       </div>
     `;
 
-    const stage    = container.querySelector('.ol-exp-stage');
-    const caption  = container.querySelector('.ol-exp-caption');
+    const stage = container.querySelector('.ol-exp-stage');
+    const caption = container.querySelector('.ol-exp-caption');
     const dotsWrap = container.querySelector('.ol-exp-dots');
-    const prevBtn  = container.querySelector('.ol-exp-prev');
-    const nextBtn  = container.querySelector('.ol-exp-next');
+    const prevBtn = container.querySelector('.ol-exp-prev');
+    const nextBtn = container.querySelector('.ol-exp-next');
 
-    let index = Math.max(0, scenes.findIndex(s => s.id === opts.start));
+    let index = Math.max(
+      0,
+      scenes.findIndex((s) => s.id === opts.start)
+    );
     let timers = [];
 
-    function _clearTimers() { timers.forEach(clearTimeout); timers = []; }
+    function _clearTimers() {
+      timers.forEach(clearTimeout);
+      timers = [];
+    }
 
     function _renderDots() {
-      dotsWrap.innerHTML = scenes.map((s, i) => `
+      dotsWrap.innerHTML = scenes
+        .map(
+          (s, i) => `
         <button type="button" class="ol-exp-dot${i === index ? ' is-active' : ''}"
           data-i="${i}" role="tab" aria-selected="${i === index}"
           aria-label="Scene ${i + 1}: ${s.scene}"></button>
-      `).join('');
-      dotsWrap.querySelectorAll('.ol-exp-dot').forEach(d =>
-        d.addEventListener('click', () => renderScene(parseInt(d.dataset.i, 10)))
-      );
+      `
+        )
+        .join('');
+      dotsWrap
+        .querySelectorAll('.ol-exp-dot')
+        .forEach((d) => d.addEventListener('click', () => renderScene(parseInt(d.dataset.i, 10))));
     }
 
     function renderScene(i) {
@@ -192,7 +210,7 @@ OmicsLab.Explainer = (function () {
       stage.setAttribute('aria-label', s.scene || '');
       stage.innerHTML = '';
 
-      (s.elements || []).forEach(el => {
+      (s.elements || []).forEach((el) => {
         const meta = SHAPE_META[el.shape] || SHAPE_META.icon;
         const w = meta.width * (el.scale || 1);
         const wrap = document.createElementNS(NS, 'svg');
@@ -221,20 +239,22 @@ OmicsLab.Explainer = (function () {
 
     function next() {
       const s = scenes[index];
-      const toId = s.next ? scenes.findIndex(x => x.id === s.next) : -1;
+      const toId = s.next ? scenes.findIndex((x) => x.id === s.next) : -1;
       if (toId > -1) renderScene(toId);
       else if (index < scenes.length - 1) renderScene(index + 1);
     }
-    function prev() { if (index > 0) renderScene(index - 1); }
+    function prev() {
+      if (index > 0) renderScene(index - 1);
+    }
     function goTo(id) {
-      const i = scenes.findIndex(x => x.id === id);
+      const i = scenes.findIndex((x) => x.id === id);
       if (i > -1) renderScene(i);
     }
 
     prevBtn.addEventListener('click', prev);
     nextBtn.addEventListener('click', next);
     if (!container.hasAttribute('tabindex')) container.tabIndex = 0;
-    container.addEventListener('keydown', e => {
+    container.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') next();
       if (e.key === 'ArrowLeft') prev();
     });
@@ -242,7 +262,9 @@ OmicsLab.Explainer = (function () {
     renderScene(index);
 
     return {
-      next, prev, goTo,
+      next,
+      prev,
+      goTo,
       destroy() {
         _clearTimers();
         container.innerHTML = '';
@@ -256,7 +278,9 @@ OmicsLab.Explainer = (function () {
      never crowds a space-constrained layout (e.g. the Lab workspace). ── */
   let _modalInstance = null;
 
-  function _onEsc(e) { if (e.key === 'Escape') closeModal(); }
+  function _onEsc(e) {
+    if (e.key === 'Escape') closeModal();
+  }
 
   function openModal(scenes, opts) {
     opts = opts || {};
@@ -277,7 +301,9 @@ OmicsLab.Explainer = (function () {
       </div>`;
     document.body.appendChild(overlay);
 
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
     overlay.querySelector('.ol-exp-modal-close').addEventListener('click', closeModal);
     document.addEventListener('keydown', _onEsc);
 
@@ -288,7 +314,10 @@ OmicsLab.Explainer = (function () {
     const overlay = document.getElementById('ol-exp-modal-overlay');
     if (overlay) overlay.remove();
     document.removeEventListener('keydown', _onEsc);
-    if (_modalInstance) { _modalInstance.destroy?.(); _modalInstance = null; }
+    if (_modalInstance) {
+      _modalInstance.destroy?.();
+      _modalInstance = null;
+    }
   }
 
   return { mount, openModal, closeModal, JOURNEY_SCENES, JOURNEY_THEME };

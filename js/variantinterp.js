@@ -9,71 +9,341 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.VariantInterp = (function () {
-
   /* ─── Known variant database (Africa-relevant) ─── */
   /* Format: CHROM-POS-REF-ALT → { gene, hgvsc, hgvsp, consequence, clinvar, afGlobal, afAfr, afSaudi, acmgClass, disease, notes } */
   const KNOWN_VARIANTS = {
     /* Sickle cell / haemoglobin */
-    '11-5246956-A-T':     { gene:'HBB', hgvsc:'c.20A>T', hgvsp:'p.Glu7Val', consequence:'missense_variant', clinvar:'Pathogenic', afGlobal:0.003, afAfr:0.12, acmgClass:'Pathogenic', disease:'Sickle Cell Disease', notes:'Highest-frequency pathogenic variant in sub-Saharan Africa. PVS1 does not apply; PS1 strong evidence from multiple affected families.' },
-    '11-5248232-G-A':     { gene:'HBB', hgvsc:'c.92+1G>A', hgvsp:'—', consequence:'splice_donor_variant', clinvar:'Pathogenic', afGlobal:0.0004, afAfr:0.008, acmgClass:'Pathogenic', disease:'Beta-thalassaemia', notes:'IVS-I-1 splice donor. PVS1 applies — predicted loss of function.' },
-    '11-5246994-C-T':     { gene:'HBB', hgvsc:'c.47G>A', hgvsp:'p.Trp16*', consequence:'stop_gained', clinvar:'Pathogenic', afGlobal:0.0001, afAfr:0.002, acmgClass:'Pathogenic', disease:'Beta-thalassaemia', notes:'Nonsense variant — premature stop codon, PVS1 applies.' },
+    '11-5246956-A-T': {
+      gene: 'HBB',
+      hgvsc: 'c.20A>T',
+      hgvsp: 'p.Glu7Val',
+      consequence: 'missense_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.003,
+      afAfr: 0.12,
+      acmgClass: 'Pathogenic',
+      disease: 'Sickle Cell Disease',
+      notes:
+        'Highest-frequency pathogenic variant in sub-Saharan Africa. PVS1 does not apply; PS1 strong evidence from multiple affected families.',
+    },
+    '11-5248232-G-A': {
+      gene: 'HBB',
+      hgvsc: 'c.92+1G>A',
+      hgvsp: '—',
+      consequence: 'splice_donor_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.0004,
+      afAfr: 0.008,
+      acmgClass: 'Pathogenic',
+      disease: 'Beta-thalassaemia',
+      notes: 'IVS-I-1 splice donor. PVS1 applies — predicted loss of function.',
+    },
+    '11-5246994-C-T': {
+      gene: 'HBB',
+      hgvsc: 'c.47G>A',
+      hgvsp: 'p.Trp16*',
+      consequence: 'stop_gained',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.0001,
+      afAfr: 0.002,
+      acmgClass: 'Pathogenic',
+      disease: 'Beta-thalassaemia',
+      notes: 'Nonsense variant — premature stop codon, PVS1 applies.',
+    },
     /* G6PD */
-    'X-154535077-G-A':    { gene:'G6PD', hgvsc:'c.202G>A', hgvsp:'p.Val68Met', consequence:'missense_variant', clinvar:'Pathogenic', afGlobal:0.01, afAfr:0.24, acmgClass:'Pathogenic', disease:'G6PD Deficiency (Class II)', notes:'G6PD A- variant. Most common in West Africa. Associated with haemolytic anaemia with antimalarial drugs.' },
-    'X-154531391-C-T':    { gene:'G6PD', hgvsc:'c.563C>T', hgvsp:'p.Ser188Phe', consequence:'missense_variant', clinvar:'Pathogenic', afGlobal:0.002, afAfr:0.05, acmgClass:'Pathogenic', disease:'G6PD Deficiency (Class I)', notes:'Mediterranean variant. Severe enzyme deficiency.' },
+    'X-154535077-G-A': {
+      gene: 'G6PD',
+      hgvsc: 'c.202G>A',
+      hgvsp: 'p.Val68Met',
+      consequence: 'missense_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.01,
+      afAfr: 0.24,
+      acmgClass: 'Pathogenic',
+      disease: 'G6PD Deficiency (Class II)',
+      notes:
+        'G6PD A- variant. Most common in West Africa. Associated with haemolytic anaemia with antimalarial drugs.',
+    },
+    'X-154531391-C-T': {
+      gene: 'G6PD',
+      hgvsc: 'c.563C>T',
+      hgvsp: 'p.Ser188Phe',
+      consequence: 'missense_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.002,
+      afAfr: 0.05,
+      acmgClass: 'Pathogenic',
+      disease: 'G6PD Deficiency (Class I)',
+      notes: 'Mediterranean variant. Severe enzyme deficiency.',
+    },
     /* BRCA */
-    '17-41245466-G-A':    { gene:'BRCA1', hgvsc:'c.5266dupC', hgvsp:'p.Gln1756ProfsTer74', consequence:'frameshift_variant', clinvar:'Pathogenic', afGlobal:0.0001, afAfr:0.001, acmgClass:'Pathogenic', disease:'Hereditary Breast & Ovarian Cancer', notes:'Founder mutation enriched in Ashkenazi Jewish population. PVS1 applies.' },
-    '13-32929387-C-T':    { gene:'BRCA2', hgvsc:'c.771_775del', hgvsp:'p.Asn258fs', consequence:'frameshift_variant', clinvar:'Pathogenic', afGlobal:0.00005, afAfr:0.0002, acmgClass:'Pathogenic', disease:'Hereditary Breast Cancer', notes:'Frameshift deletion. PVS1 applies — truncating variant in known TSG.' },
+    '17-41245466-G-A': {
+      gene: 'BRCA1',
+      hgvsc: 'c.5266dupC',
+      hgvsp: 'p.Gln1756ProfsTer74',
+      consequence: 'frameshift_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.0001,
+      afAfr: 0.001,
+      acmgClass: 'Pathogenic',
+      disease: 'Hereditary Breast & Ovarian Cancer',
+      notes: 'Founder mutation enriched in Ashkenazi Jewish population. PVS1 applies.',
+    },
+    '13-32929387-C-T': {
+      gene: 'BRCA2',
+      hgvsc: 'c.771_775del',
+      hgvsp: 'p.Asn258fs',
+      consequence: 'frameshift_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.00005,
+      afAfr: 0.0002,
+      acmgClass: 'Pathogenic',
+      disease: 'Hereditary Breast Cancer',
+      notes: 'Frameshift deletion. PVS1 applies — truncating variant in known TSG.',
+    },
     /* Lynch syndrome / colorectal */
-    '2-47806980-C-T':     { gene:'MSH2', hgvsc:'c.1906G>C', hgvsp:'p.Ala636Pro', consequence:'missense_variant', clinvar:'Likely Pathogenic', afGlobal:0.00002, afAfr:0.00005, acmgClass:'Likely Pathogenic', disease:'Lynch Syndrome', notes:'Segregates with colorectal cancer in South African families. PM2 + PP1 moderate.' },
+    '2-47806980-C-T': {
+      gene: 'MSH2',
+      hgvsc: 'c.1906G>C',
+      hgvsp: 'p.Ala636Pro',
+      consequence: 'missense_variant',
+      clinvar: 'Likely Pathogenic',
+      afGlobal: 0.00002,
+      afAfr: 0.00005,
+      acmgClass: 'Likely Pathogenic',
+      disease: 'Lynch Syndrome',
+      notes: 'Segregates with colorectal cancer in South African families. PM2 + PP1 moderate.',
+    },
     /* TB resistance */
-    '1-779085-G-A':       { gene:'rpoB', hgvsc:'c.1349C>T', hgvsp:'p.Ser450Leu', consequence:'missense_variant', clinvar:'Drug Resistance', afGlobal:null, afAfr:null, acmgClass:'Drug Resistance', disease:'Rifampicin-resistant TB', notes:'Most common rpoB mutation conferring rifampicin resistance. Detected in 70–80% of RIF-R M.tb isolates.' },
-    '1-779084-C-T':       { gene:'rpoB', hgvsc:'c.1348G>A', hgvsp:'p.Asp449Glu', consequence:'missense_variant', clinvar:'Drug Resistance', afGlobal:null, afAfr:null, acmgClass:'Drug Resistance', disease:'Rifampicin-resistant TB', notes:'Second most common rpoB mutation in African XDR-TB isolates.' },
+    '1-779085-G-A': {
+      gene: 'rpoB',
+      hgvsc: 'c.1349C>T',
+      hgvsp: 'p.Ser450Leu',
+      consequence: 'missense_variant',
+      clinvar: 'Drug Resistance',
+      afGlobal: null,
+      afAfr: null,
+      acmgClass: 'Drug Resistance',
+      disease: 'Rifampicin-resistant TB',
+      notes:
+        'Most common rpoB mutation conferring rifampicin resistance. Detected in 70–80% of RIF-R M.tb isolates.',
+    },
+    '1-779084-C-T': {
+      gene: 'rpoB',
+      hgvsc: 'c.1348G>A',
+      hgvsp: 'p.Asp449Glu',
+      consequence: 'missense_variant',
+      clinvar: 'Drug Resistance',
+      afGlobal: null,
+      afAfr: null,
+      acmgClass: 'Drug Resistance',
+      disease: 'Rifampicin-resistant TB',
+      notes: 'Second most common rpoB mutation in African XDR-TB isolates.',
+    },
     /* Malaria / kelch13 */
-    'Pf-569877-C-G':      { gene:'kelch13', hgvsc:'c.1687C>G', hgvsp:'p.Arg559Gly', consequence:'missense_variant', clinvar:'Drug Resistance', afGlobal:null, afAfr:null, acmgClass:'Drug Resistance', disease:'Artemisinin partial resistance (P. falciparum)', notes:'WHO validated marker of artemisinin partial resistance. Absent in African isolates as of 2024 — sentinel surveillance important.' },
+    'Pf-569877-C-G': {
+      gene: 'kelch13',
+      hgvsc: 'c.1687C>G',
+      hgvsp: 'p.Arg559Gly',
+      consequence: 'missense_variant',
+      clinvar: 'Drug Resistance',
+      afGlobal: null,
+      afAfr: null,
+      acmgClass: 'Drug Resistance',
+      disease: 'Artemisinin partial resistance (P. falciparum)',
+      notes:
+        'WHO validated marker of artemisinin partial resistance. Absent in African isolates as of 2024 — sentinel surveillance important.',
+    },
     /* Pharmacogenomics */
-    '10-96521657-C-T':    { gene:'CYP2C19', hgvsc:'c.681G>A', hgvsp:'—', consequence:'splice_region_variant', clinvar:'Pathogenic', afGlobal:0.15, afAfr:0.02, acmgClass:'Pathogenic', disease:'Poor metaboliser — clopidogrel, PPIs', notes:'CYP2C19*2 null allele. PGx classification rather than ACMG disease classification.' },
-    '22-42523803-C-A':    { gene:'CYP2D6', hgvsc:'c.100C>T', hgvsp:'p.Pro34Ser', consequence:'missense_variant', clinvar:'Pathogenic', afGlobal:0.01, afAfr:0.03, acmgClass:'Pathogenic', disease:'Poor metaboliser — codeine, tamoxifen', notes:'CYP2D6*10 reduced function allele. Important in African populations for analgesic and oncology drug dosing.' },
+    '10-96521657-C-T': {
+      gene: 'CYP2C19',
+      hgvsc: 'c.681G>A',
+      hgvsp: '—',
+      consequence: 'splice_region_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.15,
+      afAfr: 0.02,
+      acmgClass: 'Pathogenic',
+      disease: 'Poor metaboliser — clopidogrel, PPIs',
+      notes: 'CYP2C19*2 null allele. PGx classification rather than ACMG disease classification.',
+    },
+    '22-42523803-C-A': {
+      gene: 'CYP2D6',
+      hgvsc: 'c.100C>T',
+      hgvsp: 'p.Pro34Ser',
+      consequence: 'missense_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.01,
+      afAfr: 0.03,
+      acmgClass: 'Pathogenic',
+      disease: 'Poor metaboliser — codeine, tamoxifen',
+      notes:
+        'CYP2D6*10 reduced function allele. Important in African populations for analgesic and oncology drug dosing.',
+    },
     /* HIV-related */
-    '6-29910220-A-G':     { gene:'HLA-B', hgvsc:'—', hgvsp:'—', consequence:'regulatory_region_variant', clinvar:'Pathogenic', afGlobal:0.02, afAfr:0.05, acmgClass:'Risk Factor', disease:'Abacavir hypersensitivity', notes:'HLA-B*57:01 — strong risk allele for abacavir hypersensitivity. Pre-treatment genotyping recommended (WHO HIV guidelines).' },
+    '6-29910220-A-G': {
+      gene: 'HLA-B',
+      hgvsc: '—',
+      hgvsp: '—',
+      consequence: 'regulatory_region_variant',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.02,
+      afAfr: 0.05,
+      acmgClass: 'Risk Factor',
+      disease: 'Abacavir hypersensitivity',
+      notes:
+        'HLA-B*57:01 — strong risk allele for abacavir hypersensitivity. Pre-treatment genotyping recommended (WHO HIV guidelines).',
+    },
     /* APOL1 */
-    '22-36265860-G-A':    { gene:'APOL1', hgvsc:'c.1024G>A', hgvsp:'p.Ser342Gly', consequence:'missense_variant', clinvar:'Risk Factor', afGlobal:0.005, afAfr:0.18, acmgClass:'Risk Factor', disease:'FSGS / CKD risk (G1 allele)', notes:'APOL1 G1 risk allele. Frequency up to 35% in West African populations. Bi-allelic G1/G2 increases kidney disease risk 7-29x.' },
-    '22-36265860-G-T':    { gene:'APOL1', hgvsc:'c.1024G>T', hgvsp:'p.Val341Ile', consequence:'missense_variant', clinvar:'Risk Factor', afGlobal:0.003, afAfr:0.15, acmgClass:'Risk Factor', disease:'FSGS / CKD risk (G2 allele)', notes:'APOL1 G2 risk allele (6-bp in-frame deletion in some forms). High frequency in sub-Saharan Africa.' },
+    '22-36265860-G-A': {
+      gene: 'APOL1',
+      hgvsc: 'c.1024G>A',
+      hgvsp: 'p.Ser342Gly',
+      consequence: 'missense_variant',
+      clinvar: 'Risk Factor',
+      afGlobal: 0.005,
+      afAfr: 0.18,
+      acmgClass: 'Risk Factor',
+      disease: 'FSGS / CKD risk (G1 allele)',
+      notes:
+        'APOL1 G1 risk allele. Frequency up to 35% in West African populations. Bi-allelic G1/G2 increases kidney disease risk 7-29x.',
+    },
+    '22-36265860-G-T': {
+      gene: 'APOL1',
+      hgvsc: 'c.1024G>T',
+      hgvsp: 'p.Val341Ile',
+      consequence: 'missense_variant',
+      clinvar: 'Risk Factor',
+      afGlobal: 0.003,
+      afAfr: 0.15,
+      acmgClass: 'Risk Factor',
+      disease: 'FSGS / CKD risk (G2 allele)',
+      notes:
+        'APOL1 G2 risk allele (6-bp in-frame deletion in some forms). High frequency in sub-Saharan Africa.',
+    },
     /* AWI-Gen / Africa-specific GWAS hits */
-    '1-227156227-T-A':    { gene:'LDLR', hgvsc:'c.1646T>A', hgvsp:'p.Leu549*', consequence:'stop_gained', clinvar:'Pathogenic', afGlobal:0.000008, afAfr:0.001, acmgClass:'Pathogenic', disease:'Familial Hypercholesterolaemia', notes:'Founder mutation in South African Afrikaner population. PVS1 applies.' },
-    '7-117559590-A-T':    { gene:'CFTR', hgvsc:'c.1521_1523del', hgvsp:'p.Phe508del', consequence:'inframe_deletion', clinvar:'Pathogenic', afGlobal:0.013, afAfr:0.0004, acmgClass:'Pathogenic', disease:'Cystic Fibrosis', notes:'Most common CF mutation globally but rare in African populations. Low AF in AFR is important clinical context.' },
+    '1-227156227-T-A': {
+      gene: 'LDLR',
+      hgvsc: 'c.1646T>A',
+      hgvsp: 'p.Leu549*',
+      consequence: 'stop_gained',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.000008,
+      afAfr: 0.001,
+      acmgClass: 'Pathogenic',
+      disease: 'Familial Hypercholesterolaemia',
+      notes: 'Founder mutation in South African Afrikaner population. PVS1 applies.',
+    },
+    '7-117559590-A-T': {
+      gene: 'CFTR',
+      hgvsc: 'c.1521_1523del',
+      hgvsp: 'p.Phe508del',
+      consequence: 'inframe_deletion',
+      clinvar: 'Pathogenic',
+      afGlobal: 0.013,
+      afAfr: 0.0004,
+      acmgClass: 'Pathogenic',
+      disease: 'Cystic Fibrosis',
+      notes:
+        'Most common CF mutation globally but rare in African populations. Low AF in AFR is important clinical context.',
+    },
   };
 
   /* ─── ACMG criteria weights ─── */
   /* path_weight: points towards Pathogenic; ben_weight: points towards Benign */
   const ACMG_CRITERIA = {
-    PVS1: { label:'PVS1', desc:'Null variant in gene where LOF is disease mechanism', pathWeight:8 },
-    PS1:  { label:'PS1',  desc:'Same amino acid change as established pathogenic variant', pathWeight:4 },
-    PS2:  { label:'PS2',  desc:'De novo (confirmed) in patient with disease', pathWeight:4 },
-    PS3:  { label:'PS3',  desc:'Functional studies support damaging effect', pathWeight:4 },
-    PS4:  { label:'PS4',  desc:'Prevalence in affected individuals significantly > controls', pathWeight:4 },
-    PM1:  { label:'PM1',  desc:'Located in mutational hotspot or well-established functional domain', pathWeight:2 },
-    PM2:  { label:'PM2',  desc:'Absent from controls in gnomAD (or at extremely low freq in recessive gene)', pathWeight:2 },
-    PM3:  { label:'PM3',  desc:'Detected in trans with pathogenic variant (recessive)', pathWeight:2 },
-    PM4:  { label:'PM4',  desc:'Protein length changes due to in-frame indel', pathWeight:2 },
-    PM5:  { label:'PM5',  desc:'Novel missense where different change at same residue is pathogenic', pathWeight:2 },
-    PM6:  { label:'PM6',  desc:'Assumed de novo (without paternity confirmation)', pathWeight:2 },
-    PP1:  { label:'PP1',  desc:'Cosegregation with disease in multiple affected family members', pathWeight:1 },
-    PP2:  { label:'PP2',  desc:'Missense in gene where missense mutations are a common mechanism', pathWeight:1 },
-    PP3:  { label:'PP3',  desc:'Multiple lines of computational evidence support deleterious effect', pathWeight:1 },
-    PP4:  { label:'PP4',  desc:'Patient phenotype/family history highly specific for disease', pathWeight:1 },
-    PP5:  { label:'PP5',  desc:'Reputable source reports variant as pathogenic', pathWeight:1 },
-    BA1:  { label:'BA1',  desc:'Allele frequency >5% in gnomAD', benWeight:16 },
-    BS1:  { label:'BS1',  desc:'Allele frequency greater than expected for disorder', benWeight:4 },
-    BS2:  { label:'BS2',  desc:'Observed in healthy adult with full penetrance', benWeight:4 },
-    BS3:  { label:'BS3',  desc:'Functional studies show no damaging effect', benWeight:4 },
-    BS4:  { label:'BS4',  desc:'Lack of segregation in affected members', benWeight:4 },
-    BP1:  { label:'BP1',  desc:'Missense in gene where truncating are only mechanism', benWeight:1 },
-    BP2:  { label:'BP2',  desc:'Observed in trans with pathogenic variant (dominant)', benWeight:1 },
-    BP3:  { label:'BP3',  desc:'In-frame indel in repeat region — benign', benWeight:1 },
-    BP4:  { label:'BP4',  desc:'Computational evidence suggests no impact on gene/product', benWeight:1 },
-    BP5:  { label:'BP5',  desc:'Variant found in case with alternate molecular basis', benWeight:1 },
-    BP6:  { label:'BP6',  desc:'Reputable source reports variant as benign', benWeight:1 },
-    BP7:  { label:'BP7',  desc:'Silent variant — no predicted splice impact', benWeight:1 },
+    PVS1: {
+      label: 'PVS1',
+      desc: 'Null variant in gene where LOF is disease mechanism',
+      pathWeight: 8,
+    },
+    PS1: {
+      label: 'PS1',
+      desc: 'Same amino acid change as established pathogenic variant',
+      pathWeight: 4,
+    },
+    PS2: { label: 'PS2', desc: 'De novo (confirmed) in patient with disease', pathWeight: 4 },
+    PS3: { label: 'PS3', desc: 'Functional studies support damaging effect', pathWeight: 4 },
+    PS4: {
+      label: 'PS4',
+      desc: 'Prevalence in affected individuals significantly > controls',
+      pathWeight: 4,
+    },
+    PM1: {
+      label: 'PM1',
+      desc: 'Located in mutational hotspot or well-established functional domain',
+      pathWeight: 2,
+    },
+    PM2: {
+      label: 'PM2',
+      desc: 'Absent from controls in gnomAD (or at extremely low freq in recessive gene)',
+      pathWeight: 2,
+    },
+    PM3: {
+      label: 'PM3',
+      desc: 'Detected in trans with pathogenic variant (recessive)',
+      pathWeight: 2,
+    },
+    PM4: { label: 'PM4', desc: 'Protein length changes due to in-frame indel', pathWeight: 2 },
+    PM5: {
+      label: 'PM5',
+      desc: 'Novel missense where different change at same residue is pathogenic',
+      pathWeight: 2,
+    },
+    PM6: { label: 'PM6', desc: 'Assumed de novo (without paternity confirmation)', pathWeight: 2 },
+    PP1: {
+      label: 'PP1',
+      desc: 'Cosegregation with disease in multiple affected family members',
+      pathWeight: 1,
+    },
+    PP2: {
+      label: 'PP2',
+      desc: 'Missense in gene where missense mutations are a common mechanism',
+      pathWeight: 1,
+    },
+    PP3: {
+      label: 'PP3',
+      desc: 'Multiple lines of computational evidence support deleterious effect',
+      pathWeight: 1,
+    },
+    PP4: {
+      label: 'PP4',
+      desc: 'Patient phenotype/family history highly specific for disease',
+      pathWeight: 1,
+    },
+    PP5: { label: 'PP5', desc: 'Reputable source reports variant as pathogenic', pathWeight: 1 },
+    BA1: { label: 'BA1', desc: 'Allele frequency >5% in gnomAD', benWeight: 16 },
+    BS1: {
+      label: 'BS1',
+      desc: 'Allele frequency greater than expected for disorder',
+      benWeight: 4,
+    },
+    BS2: { label: 'BS2', desc: 'Observed in healthy adult with full penetrance', benWeight: 4 },
+    BS3: { label: 'BS3', desc: 'Functional studies show no damaging effect', benWeight: 4 },
+    BS4: { label: 'BS4', desc: 'Lack of segregation in affected members', benWeight: 4 },
+    BP1: {
+      label: 'BP1',
+      desc: 'Missense in gene where truncating are only mechanism',
+      benWeight: 1,
+    },
+    BP2: {
+      label: 'BP2',
+      desc: 'Observed in trans with pathogenic variant (dominant)',
+      benWeight: 1,
+    },
+    BP3: { label: 'BP3', desc: 'In-frame indel in repeat region — benign', benWeight: 1 },
+    BP4: {
+      label: 'BP4',
+      desc: 'Computational evidence suggests no impact on gene/product',
+      benWeight: 1,
+    },
+    BP5: {
+      label: 'BP5',
+      desc: 'Variant found in case with alternate molecular basis',
+      benWeight: 1,
+    },
+    BP6: { label: 'BP6', desc: 'Reputable source reports variant as benign', benWeight: 1 },
+    BP7: { label: 'BP7', desc: 'Silent variant — no predicted splice impact', benWeight: 1 },
   };
 
   /* ─── Consequence colours ─── */
@@ -96,12 +366,20 @@ OmicsLab.VariantInterp = (function () {
 
   /* ─── Parse VCF line ─── */
   function _parseVcf(text) {
-    const lines = text.trim().split('\n').filter(l => l && !l.startsWith('#'));
+    const lines = text
+      .trim()
+      .split('\n')
+      .filter((l) => l && !l.startsWith('#'));
     if (!lines.length) return null;
     const parts = lines[lines.length - 1].trim().split('\t');
     if (parts.length < 5) return null;
     const [chrom, pos, , ref, alt] = parts;
-    return { chrom: chrom.replace(/^chr/i,''), pos, ref: ref.trim(), alt: alt.trim().split(',')[0] };
+    return {
+      chrom: chrom.replace(/^chr/i, ''),
+      pos,
+      ref: ref.trim(),
+      alt: alt.trim().split(',')[0],
+    };
   }
 
   /* ─── Parse HGVS-like (gene:cDNA) ─── */
@@ -119,7 +397,8 @@ OmicsLab.VariantInterp = (function () {
 
   /* ─── Infer consequence from ref/alt ─── */
   function _inferConsequence(ref, alt) {
-    const refLen = ref.length, altLen = alt.length;
+    const refLen = ref.length,
+      altLen = alt.length;
     if (refLen === 1 && altLen === 1) return 'missense_variant';
     if (altLen > refLen && (altLen - refLen) % 3 !== 0) return 'frameshift_variant';
     if (refLen > altLen && (refLen - altLen) % 3 !== 0) return 'frameshift_variant';
@@ -134,7 +413,14 @@ OmicsLab.VariantInterp = (function () {
 
     if (known) {
       /* Consequence-based */
-      if (['stop_gained','frameshift_variant','splice_donor_variant','splice_acceptor_variant'].includes(known.consequence)) {
+      if (
+        [
+          'stop_gained',
+          'frameshift_variant',
+          'splice_donor_variant',
+          'splice_acceptor_variant',
+        ].includes(known.consequence)
+      ) {
         applied.push('PVS1');
       }
       if (known.clinvar === 'Pathogenic' || known.clinvar === 'Drug Resistance') {
@@ -144,30 +430,41 @@ OmicsLab.VariantInterp = (function () {
       }
       if (known.afAfr !== null && known.afAfr < 0.001) applied.push('PM2');
       if (known.afGlobal !== null && known.afGlobal > 0.05) applied.push('BA1');
-      if (known.afGlobal !== null && known.afGlobal > 0.01 && known.afGlobal <= 0.05) applied.push('BS1');
+      if (known.afGlobal !== null && known.afGlobal > 0.01 && known.afGlobal <= 0.05)
+        applied.push('BS1');
       if (['missense_variant'].includes(known.consequence)) applied.push('PP3');
     } else if (v) {
       /* Unknown variant — infer from allele lengths */
       const cons = _inferConsequence(v.ref, v.alt);
-      if (['stop_gained','frameshift_variant'].includes(cons)) applied.push('PVS1');
+      if (['stop_gained', 'frameshift_variant'].includes(cons)) applied.push('PVS1');
       applied.push('PM2');
       applied.push('PP3');
     }
 
     /* Score */
-    let pathScore = 0, benScore = 0;
+    let pathScore = 0,
+      benScore = 0;
     const unique = [...new Set(applied)];
     for (const c of unique) {
       if (ACMG_CRITERIA[c]?.pathWeight) pathScore += ACMG_CRITERIA[c].pathWeight;
-      if (ACMG_CRITERIA[c]?.benWeight)  benScore  += ACMG_CRITERIA[c].benWeight;
+      if (ACMG_CRITERIA[c]?.benWeight) benScore += ACMG_CRITERIA[c].benWeight;
     }
 
     let classification = 'Uncertain Significance (VUS)';
     let classColor = '#e3b341';
-    if (benScore >= 16)     { classification = 'Benign'; classColor = '#00C4A0'; }
-    else if (benScore >= 4) { classification = 'Likely Benign'; classColor = '#58a6ff'; }
-    else if (pathScore >= 8 || (pathScore >= 4 && unique.includes('PVS1'))) { classification = 'Pathogenic'; classColor = '#ff6b6b'; }
-    else if (pathScore >= 5) { classification = 'Likely Pathogenic'; classColor = '#f97316'; }
+    if (benScore >= 16) {
+      classification = 'Benign';
+      classColor = '#00C4A0';
+    } else if (benScore >= 4) {
+      classification = 'Likely Benign';
+      classColor = '#58a6ff';
+    } else if (pathScore >= 8 || (pathScore >= 4 && unique.includes('PVS1'))) {
+      classification = 'Pathogenic';
+      classColor = '#ff6b6b';
+    } else if (pathScore >= 5) {
+      classification = 'Likely Pathogenic';
+      classColor = '#f97316';
+    }
 
     return { applied: unique, pathScore, benScore, classification, classColor };
   }
@@ -179,7 +476,7 @@ OmicsLab.VariantInterp = (function () {
     if (!out || !input) return;
 
     let parsed = null;
-    let known  = null;
+    let known = null;
     let hgvsParsed = null;
 
     /* Try VCF parse first */
@@ -195,7 +492,8 @@ OmicsLab.VariantInterp = (function () {
         /* Search known by gene + hgvsc */
         for (const [, v] of Object.entries(KNOWN_VARIANTS)) {
           if (v.gene === hgvsParsed.gene && v.hgvsc === hgvsParsed.hgvsc) {
-            known = v; break;
+            known = v;
+            break;
           }
         }
       }
@@ -226,12 +524,16 @@ OmicsLab.VariantInterp = (function () {
     const globalAf = d.afGlobal;
 
     /* ACMG criteria chips */
-    const criteriaHtml = acmg.applied.length ? acmg.applied.map(c => {
-      const cr = ACMG_CRITERIA[c];
-      const isPath = cr?.pathWeight;
-      const chipColor = isPath ? '#ff6b6b' : '#00C4A0';
-      return `<span class="vi-criterion-chip" style="--cc:${chipColor}" title="${cr?.desc || ''}">${c}</span>`;
-    }).join('') : '<span class="vi-criterion-chip" style="--cc:#6E6860">None auto-applied</span>';
+    const criteriaHtml = acmg.applied.length
+      ? acmg.applied
+          .map((c) => {
+            const cr = ACMG_CRITERIA[c];
+            const isPath = cr?.pathWeight;
+            const chipColor = isPath ? '#ff6b6b' : '#00C4A0';
+            return `<span class="vi-criterion-chip" style="--cc:${chipColor}" title="${cr?.desc || ''}">${c}</span>`;
+          })
+          .join('')
+      : '<span class="vi-criterion-chip" style="--cc:#6E6860">None auto-applied</span>';
 
     _lastResult = { variantLabel, d, acmg, afrAf, parsed };
 
@@ -251,7 +553,7 @@ OmicsLab.VariantInterp = (function () {
           <!-- Consequence card -->
           <div class="vi-card">
             <div class="vi-card-title">Molecular Consequence</div>
-            <div class="vi-consequence" style="color:${consColor}">${cons.replace(/_/g,' ')}</div>
+            <div class="vi-consequence" style="color:${consColor}">${cons.replace(/_/g, ' ')}</div>
             ${d.hgvsc ? `<div class="vi-hgvs"><span class="vi-hgvs-lbl">cDNA:</span> <code>${d.hgvsc}</code></div>` : ''}
             ${d.hgvsp && d.hgvsp !== '—' ? `<div class="vi-hgvs"><span class="vi-hgvs-lbl">Protein:</span> <code>${d.hgvsp}</code></div>` : ''}
             ${d.disease ? `<div class="vi-disease-box">${d.disease}</div>` : ''}
@@ -260,35 +562,52 @@ OmicsLab.VariantInterp = (function () {
           <!-- Population frequency card -->
           <div class="vi-card" id="vi-pop-freq-card">
             <div class="vi-card-title">Population Frequency</div>
-            ${afrAf !== null && afrAf !== undefined ? `
+            ${
+              afrAf !== null && afrAf !== undefined
+                ? `
               <div class="vi-af-row">
                 <span class="vi-af-pop">AFR (gnomAD)</span>
                 <span class="vi-af-val">${afrAf.toPrecision(2)}</span>
               </div>
               <div class="vi-af-bar-wrap">
-                <div class="vi-af-bar" style="width:${Math.min(afrPct*5,100)}%;background:${afrPct > 5 ? '#00C4A0' : '#58a6ff'}"></div>
+                <div class="vi-af-bar" style="width:${Math.min(afrPct * 5, 100)}%;background:${afrPct > 5 ? '#00C4A0' : '#58a6ff'}"></div>
               </div>
-            ` : '<div class="vi-af-na">AF not available — novel or pathogen variant</div>'}
-            ${globalAf !== null && globalAf !== undefined ? `
+            `
+                : '<div class="vi-af-na">AF not available — novel or pathogen variant</div>'
+            }
+            ${
+              globalAf !== null && globalAf !== undefined
+                ? `
               <div class="vi-af-row" style="margin-top:.5rem">
                 <span class="vi-af-pop">Global (gnomAD)</span>
                 <span class="vi-af-val">${globalAf.toPrecision(2)}</span>
               </div>
-            ` : ''}
-            ${afrAf > 0.05 ? '<div class="vi-af-note af-common">Common in AFR — BA1 applies</div>' :
-              afrAf !== null && afrAf !== undefined && afrAf <= 0.001 ? '<div class="vi-af-note af-rare">Rare in AFR population — PM2 supportive</div>' : ''}
+            `
+                : ''
+            }
+            ${
+              afrAf > 0.05
+                ? '<div class="vi-af-note af-common">Common in AFR — BA1 applies</div>'
+                : afrAf !== null && afrAf !== undefined && afrAf <= 0.001
+                  ? '<div class="vi-af-note af-rare">Rare in AFR population — PM2 supportive</div>'
+                  : ''
+            }
           </div>
 
           <!-- ClinVar card -->
           <div class="vi-card">
             <div class="vi-card-title">ClinVar / Database Evidence</div>
-            ${d.clinvar ? `
+            ${
+              d.clinvar
+                ? `
               <div class="vi-clinvar-sig" style="color:${acmg.classColor}">${d.clinvar}</div>
               ${d.notes ? `<div class="vi-clinvar-notes">${d.notes}</div>` : ''}
-            ` : `
+            `
+                : `
               <div class="vi-clinvar-na">Not in curated database.</div>
               <div class="vi-clinvar-notes">Submit to ClinVar at ncbi.nlm.nih.gov/clinvar/ to contribute evidence for this variant.</div>
-            `}
+            `
+            }
           </div>
 
           <!-- ACMG criteria card -->
@@ -300,12 +619,14 @@ OmicsLab.VariantInterp = (function () {
               <span>Benign score: <strong style="color:#00C4A0">${acmg.benScore}</strong></span>
             </div>
             <div class="vi-acmg-legend">
-              ${acmg.applied.map(c => {
-                const cr = ACMG_CRITERIA[c];
-                if (!cr) return '';
-                const isPath = cr.pathWeight;
-                return `<div class="vi-acmg-legend-row"><span class="vi-criterion-chip" style="--cc:${isPath?'#ff6b6b':'#00C4A0'};font-size:.65rem">${c}</span><span>${cr.desc}</span></div>`;
-              }).join('')}
+              ${acmg.applied
+                .map((c) => {
+                  const cr = ACMG_CRITERIA[c];
+                  if (!cr) return '';
+                  const isPath = cr.pathWeight;
+                  return `<div class="vi-acmg-legend-row"><span class="vi-criterion-chip" style="--cc:${isPath ? '#ff6b6b' : '#00C4A0'};font-size:.65rem">${c}</span><span>${cr.desc}</span></div>`;
+                })
+                .join('')}
             </div>
             <div class="vi-acmg-disclaimer">Classification is automated and not a clinical report. Confirm with a certified clinical laboratory before any medical decision.</div>
           </div>
@@ -340,7 +661,8 @@ OmicsLab.VariantInterp = (function () {
 
     /* Show "fetching live" badge */
     const titleEl = card.querySelector('.vi-card-title');
-    if (titleEl) titleEl.innerHTML = 'Population Frequency <span class="vi-live-badge">fetching live…</span>';
+    if (titleEl)
+      titleEl.innerHTML = 'Population Frequency <span class="vi-live-badge">fetching live…</span>';
 
     const variantId = `${parsed.chrom}-${parsed.pos}-${parsed.ref}-${parsed.alt}`;
     const query = `{
@@ -374,7 +696,7 @@ OmicsLab.VariantInterp = (function () {
       const pops = source?.populations || [];
 
       /* AFR subpopulation */
-      const afr  = pops.find(p => p.id === 'afr') || pops.find(p => p.id?.startsWith('afr'));
+      const afr = pops.find((p) => p.id === 'afr') || pops.find((p) => p.id?.startsWith('afr'));
       const afrAf = afr?.af ?? null;
 
       /* Population bar chart */
@@ -389,8 +711,8 @@ OmicsLab.VariantInterp = (function () {
         { id: 'oth', label: 'OTH', color: '#354060' },
       ];
 
-      const chartRows = POP_ORDER.map(p => {
-        const pop = pops.find(x => x.id === p.id);
+      const chartRows = POP_ORDER.map((p) => {
+        const pop = pops.find((x) => x.id === p.id);
         if (!pop || !pop.an) return '';
         const pct = Math.min(pop.af * 2000, 100); /* scale so 0.05 = full bar */
         return `
@@ -403,53 +725,66 @@ OmicsLab.VariantInterp = (function () {
           </div>`;
       }).join('');
 
-      const ba1Note = afrAf !== null && afrAf > 0.05
-        ? '<div class="vi-af-note af-common">Common in AFR (>5%) — BA1 applies</div>'
-        : afrAf !== null && afrAf <= 0.001
-          ? '<div class="vi-af-note af-rare">Rare in AFR — PM2 supportive</div>'
-          : '';
+      const ba1Note =
+        afrAf !== null && afrAf > 0.05
+          ? '<div class="vi-af-note af-common">Common in AFR (>5%) — BA1 applies</div>'
+          : afrAf !== null && afrAf <= 0.001
+            ? '<div class="vi-af-note af-rare">Rare in AFR — PM2 supportive</div>'
+            : '';
 
       card.innerHTML = `
         <div class="vi-card-title">
           Population Frequency
           <span class="vi-live-badge vi-live-ok">gnomAD r4 live</span>
         </div>
-        ${afrAf !== null ? `
+        ${
+          afrAf !== null
+            ? `
           <div class="vi-af-row">
             <span class="vi-af-pop vi-af-afr">AFR (gnomAD r4)</span>
             <span class="vi-af-val">${afrAf.toPrecision(3)}</span>
-          </div>` : '<div class="vi-af-na">AFR frequency not available</div>'}
+          </div>`
+            : '<div class="vi-af-na">AFR frequency not available</div>'
+        }
         ${ba1Note}
-        ${globalAf !== null ? `
+        ${
+          globalAf !== null
+            ? `
           <div class="vi-af-row" style="margin-top:.6rem">
             <span class="vi-af-pop">Global AF</span>
             <span class="vi-af-val">${globalAf.toPrecision(3)}</span>
-          </div>` : ''}
+          </div>`
+            : ''
+        }
         ${chartRows ? `<div class="vi-pop-chart" style="margin-top:.75rem">${chartRows}</div>` : ''}
         <div class="vi-gnomad-link-row">
           <a class="vi-gnomad-link" href="https://gnomad.broadinstitute.org/variant/${variantId}" target="_blank" rel="noopener">View on gnomAD</a>
         </div>`;
-
     } catch (err) {
-      if (titleEl) titleEl.innerHTML = 'Population Frequency <span class="vi-live-badge vi-live-err">gnomAD unavailable</span>';
+      if (titleEl)
+        titleEl.innerHTML =
+          'Population Frequency <span class="vi-live-badge vi-live-err">gnomAD unavailable</span>';
     }
   }
 
   /* ─── Example load ─── */
   const EXAMPLES = {
-    hbb_sickle:  { label:'HBB Sickle Cell (VCF)', text:'11\t5246956\t.\tA\tT\t.\t.\t.' },
-    g6pd_a:      { label:'G6PD A- (VCF)', text:'X\t154535077\t.\tG\tA\t.\t.\t.' },
-    brca1:       { label:'BRCA1 frameshift (VCF)', text:'17\t41245466\t.\tG\tA\t.\t.\t.' },
-    rpob:        { label:'rpoB Rifampicin-R TB', text:'1-779085-G-A' },
-    apol1:       { label:'APOL1 G1 CKD risk', text:'22-36265860-G-A' },
-    hgvs:        { label:'HBB c.20A>T (HGVS)', text:'HBB: c.20A>T' },
+    hbb_sickle: { label: 'HBB Sickle Cell (VCF)', text: '11\t5246956\t.\tA\tT\t.\t.\t.' },
+    g6pd_a: { label: 'G6PD A- (VCF)', text: 'X\t154535077\t.\tG\tA\t.\t.\t.' },
+    brca1: { label: 'BRCA1 frameshift (VCF)', text: '17\t41245466\t.\tG\tA\t.\t.\t.' },
+    rpob: { label: 'rpoB Rifampicin-R TB', text: '1-779085-G-A' },
+    apol1: { label: 'APOL1 G1 CKD risk', text: '22-36265860-G-A' },
+    hgvs: { label: 'HBB c.20A>T (HGVS)', text: 'HBB: c.20A>T' },
   };
 
   function _loadExample(key) {
     const ex = EXAMPLES[key];
     if (!ex) return;
     const ta = document.getElementById('vi-input');
-    if (ta) { ta.value = ex.text; _interpret(); }
+    if (ta) {
+      ta.value = ex.text;
+      _interpret();
+    }
   }
 
   /* ─── Ask AI ─── */
@@ -461,7 +796,7 @@ OmicsLab.VariantInterp = (function () {
       '',
       `Variant: ${variantLabel}`,
       `Gene: ${d.gene || 'unknown'}`,
-      `Consequence: ${(d.consequence || 'unknown').replace(/_/g,' ')}`,
+      `Consequence: ${(d.consequence || 'unknown').replace(/_/g, ' ')}`,
       d.hgvsc ? `cDNA: ${d.hgvsc}` : '',
       d.hgvsp && d.hgvsp !== '—' ? `Protein: ${d.hgvsp}` : '',
       `Disease: ${d.disease || 'not specified'}`,
@@ -471,7 +806,9 @@ OmicsLab.VariantInterp = (function () {
       `AFR allele frequency (gnomAD): ${afrAf !== undefined && afrAf !== null ? afrAf : 'not available'}`,
       `ClinVar: ${d.clinvar || 'not in curated database'}`,
       d.notes ? `Database notes: ${d.notes}` : '',
-    ].filter(Boolean).join('\n');
+    ]
+      .filter(Boolean)
+      .join('\n');
     if (OmicsLab.Assistant && OmicsLab.Assistant.setContext) {
       OmicsLab.Assistant.setContext(ctx);
     }
@@ -480,7 +817,10 @@ OmicsLab.VariantInterp = (function () {
 
   /* ─── Generate full AI clinical report ─── */
   async function _generateReport() {
-    if (!_lastResult) { alert('Interpret a variant first.'); return; }
+    if (!_lastResult) {
+      alert('Interpret a variant first.');
+      return;
+    }
     const key = localStorage.getItem('omicslab_anthropic_key');
     if (!key) {
       alert('Add your Claude API key in Settings → API key to use AI features.');
@@ -488,14 +828,17 @@ OmicsLab.VariantInterp = (function () {
     }
 
     const btn = document.getElementById('vi-ai-report-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Generating…';
+    }
 
     const { variantLabel, d, acmg, afrAf } = _lastResult;
     const prompt = [
       `Generate a structured clinical genomics report for the following variant found in an African patient.`,
       ``,
       `**Variant:** ${variantLabel}`,
-      `**Gene:** ${d.gene || 'unknown'}  |  **Consequence:** ${(d.consequence||'unknown').replace(/_/g,' ')}`,
+      `**Gene:** ${d.gene || 'unknown'}  |  **Consequence:** ${(d.consequence || 'unknown').replace(/_/g, ' ')}`,
       d.hgvsc ? `**cDNA:** ${d.hgvsc}` : '',
       d.hgvsp && d.hgvsp !== '—' ? `**Protein:** ${d.hgvsp}` : '',
       `**Disease association:** ${d.disease || 'not specified in local database'}`,
@@ -513,14 +856,17 @@ OmicsLab.VariantInterp = (function () {
       `6. **Recommended Next Steps** (confirmatory testing, family screening, clinical referral)`,
       ``,
       `Be concise and clinically accurate. Use markdown formatting.`,
-    ].filter(Boolean).join('\n');
+    ]
+      .filter(Boolean)
+      .join('\n');
 
     /* Inject a report panel below the AI strip */
     let panel = document.getElementById('vi-report-panel');
     if (!panel) {
       panel = document.createElement('div');
       panel.id = 'vi-report-panel';
-      panel.style.cssText = 'margin:1rem;padding:1rem;background:#0D1524;border:1px solid #243048;border-radius:8px;font-size:.8rem;line-height:1.7;color:#A8A098';
+      panel.style.cssText =
+        'margin:1rem;padding:1rem;background:#0D1524;border:1px solid #243048;border-radius:8px;font-size:.8rem;line-height:1.7;color:#A8A098';
       document.getElementById('vi-output')?.appendChild(panel);
     }
     panel.innerHTML = '<em style="color:#A8A098">Generating clinical report with Fable 5…</em>';
@@ -562,7 +908,10 @@ OmicsLab.VariantInterp = (function () {
       panel.innerHTML = `<span style="color:#f85149">Error: ${err.message || 'Request failed'}</span>`;
     }
 
-    if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #243048;border-radius:3px;padding:0 .25rem;background:#182236">Ctrl R</kbd>`; }
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Generate Report <kbd style="font-size:.62rem;opacity:.7;border:1px solid #243048;border-radius:3px;padding:0 .25rem;background:#182236">Ctrl R</kbd>`;
+    }
   }
 
   /* ─── Init ─── */
@@ -595,9 +944,13 @@ OmicsLab.VariantInterp = (function () {
 
             <div class="vi-examples-card">
               <div class="vi-examples-title">Load Example</div>
-              ${Object.entries(EXAMPLES).map(([k,ex]) => `
+              ${Object.entries(EXAMPLES)
+                .map(
+                  ([k, ex]) => `
                 <button class="vi-ex-btn" onclick="OmicsLab.VariantInterp._loadExample('${k}')">${ex.label}</button>
-              `).join('')}
+              `
+                )
+                .join('')}
             </div>
 
             <div class="vi-acmg-ref-card">
@@ -605,15 +958,25 @@ OmicsLab.VariantInterp = (function () {
               <div class="vi-acmg-ref-grid">
                 <div class="vi-acmg-ref-group">
                   <div class="vi-acmg-ref-head" style="color:#ff6b6b">Pathogenic Evidence</div>
-                  ${Object.entries(ACMG_CRITERIA).filter(([,c]) => c.pathWeight).map(([k,c]) => `
+                  ${Object.entries(ACMG_CRITERIA)
+                    .filter(([, c]) => c.pathWeight)
+                    .map(
+                      ([k, c]) => `
                     <div class="vi-acmg-ref-row"><span class="vi-criterion-chip" style="--cc:#ff6b6b;font-size:.62rem">${k}</span><span class="vi-acmg-ref-desc">${c.desc}</span></div>
-                  `).join('')}
+                  `
+                    )
+                    .join('')}
                 </div>
                 <div class="vi-acmg-ref-group">
                   <div class="vi-acmg-ref-head" style="color:#00C4A0">Benign Evidence</div>
-                  ${Object.entries(ACMG_CRITERIA).filter(([,c]) => c.benWeight).map(([k,c]) => `
+                  ${Object.entries(ACMG_CRITERIA)
+                    .filter(([, c]) => c.benWeight)
+                    .map(
+                      ([k, c]) => `
                     <div class="vi-acmg-ref-row"><span class="vi-criterion-chip" style="--cc:#00C4A0;font-size:.62rem">${k}</span><span class="vi-acmg-ref-desc">${c.desc}</span></div>
-                  `).join('')}
+                  `
+                    )
+                    .join('')}
                 </div>
               </div>
             </div>
@@ -621,7 +984,7 @@ OmicsLab.VariantInterp = (function () {
 
           <div class="vi-right" id="vi-output">
             <div class="vi-empty-state">
-              <div class="vi-empty-icon">${OmicsLab.Icons?.svg('dna',32)||''}</div>
+              <div class="vi-empty-icon">${OmicsLab.Icons?.svg('dna', 32) || ''}</div>
               <div class="vi-empty-text">Paste a variant or load an example to begin ACMG classification</div>
             </div>
           </div>
@@ -630,7 +993,9 @@ OmicsLab.VariantInterp = (function () {
 
     const ta = document.getElementById('vi-input');
     if (ta) {
-      ta.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) _interpret(); });
+      ta.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) _interpret();
+      });
     }
   }
 

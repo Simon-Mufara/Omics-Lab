@@ -9,8 +9,7 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.A11y = (function () {
-
-  let _polite  = null;
+  let _polite = null;
   let _assertive = null;
 
   /* ─── Announce to screen readers ─── */
@@ -19,7 +18,9 @@ OmicsLab.A11y = (function () {
     if (!el) return;
     /* Clear first, then set — forces re-read even if same text */
     el.textContent = '';
-    requestAnimationFrame(() => { el.textContent = msg; });
+    requestAnimationFrame(() => {
+      el.textContent = msg;
+    });
   }
 
   /* ─── Wire existing aria-live regions ─── */
@@ -49,7 +50,7 @@ OmicsLab.A11y = (function () {
 
   /* ─── Patch nav dropdown buttons with aria-expanded ─── */
   function _patchNavDropdowns() {
-    document.querySelectorAll('.nav-group-btn').forEach(btn => {
+    document.querySelectorAll('.nav-group-btn').forEach((btn) => {
       if (btn._a11yPatched) return;
       btn._a11yPatched = true;
       if (!btn.hasAttribute('aria-expanded')) btn.setAttribute('aria-expanded', 'false');
@@ -69,32 +70,34 @@ OmicsLab.A11y = (function () {
   /* ─── Ensure all modals have proper ARIA attributes ─── */
   function _patchModals() {
     const observer = new MutationObserver(() => {
-      document.querySelectorAll(
-        '.mob-modal-overlay, .cal-overlay, .ob-modal-overlay, [class*="modal-overlay"], [class*="overlay"]'
-      ).forEach(el => {
-        if (el._a11yPatched) return;
-        el._a11yPatched = true;
-        if (!el.getAttribute('role')) el.setAttribute('role', 'dialog');
-        if (!el.getAttribute('aria-modal')) el.setAttribute('aria-modal', 'true');
-        /* Find a title element */
-        const title = el.querySelector('h2,h3,[class*="title"],[class*="header"]');
-        if (title && !el.getAttribute('aria-labelledby')) {
-          if (!title.id) title.id = 'modal-title-' + Math.random().toString(36).slice(2, 6);
-          el.setAttribute('aria-labelledby', title.id);
-        }
-        /* Wire focus trap */
-        const sheet = el.querySelector('[class*="modal"],[class*="sheet"],[class*="panel"]');
-        const target = sheet || el;
-        if (!target._ftWired) {
-          target._ftWired = true;
-          const obs2 = new MutationObserver(() => {
-            const isOpen = el.classList.contains('open') || el.style.display !== 'none';
-            if (isOpen) OmicsLab.FocusTrap?.activate(target);
-            else OmicsLab.FocusTrap?.deactivate();
-          });
-          obs2.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
-        }
-      });
+      document
+        .querySelectorAll(
+          '.mob-modal-overlay, .cal-overlay, .ob-modal-overlay, [class*="modal-overlay"], [class*="overlay"]'
+        )
+        .forEach((el) => {
+          if (el._a11yPatched) return;
+          el._a11yPatched = true;
+          if (!el.getAttribute('role')) el.setAttribute('role', 'dialog');
+          if (!el.getAttribute('aria-modal')) el.setAttribute('aria-modal', 'true');
+          /* Find a title element */
+          const title = el.querySelector('h2,h3,[class*="title"],[class*="header"]');
+          if (title && !el.getAttribute('aria-labelledby')) {
+            if (!title.id) title.id = 'modal-title-' + Math.random().toString(36).slice(2, 6);
+            el.setAttribute('aria-labelledby', title.id);
+          }
+          /* Wire focus trap */
+          const sheet = el.querySelector('[class*="modal"],[class*="sheet"],[class*="panel"]');
+          const target = sheet || el;
+          if (!target._ftWired) {
+            target._ftWired = true;
+            const obs2 = new MutationObserver(() => {
+              const isOpen = el.classList.contains('open') || el.style.display !== 'none';
+              if (isOpen) OmicsLab.FocusTrap?.activate(target);
+              else OmicsLab.FocusTrap?.deactivate();
+            });
+            obs2.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
+          }
+        });
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
@@ -102,7 +105,7 @@ OmicsLab.A11y = (function () {
   /* ─── Ensure all interactive SVG icons have aria-hidden ─── */
   function _patchSVGIcons() {
     /* Buttons that contain only an SVG should have an accessible label */
-    document.querySelectorAll('button:not([aria-label]):not([aria-labelledby])').forEach(btn => {
+    document.querySelectorAll('button:not([aria-label]):not([aria-labelledby])').forEach((btn) => {
       if (btn._a11yPatched) return;
       btn._a11yPatched = true;
       const hasText = btn.textContent.trim().length > 0;
@@ -203,7 +206,7 @@ OmicsLab.A11y = (function () {
     const nx = OmicsLab.Notify;
     if (!nx || nx._a11yHooked) return;
     nx._a11yHooked = true;
-    ['success', 'error', 'warning', 'info'].forEach(type => {
+    ['success', 'error', 'warning', 'info'].forEach((type) => {
       const orig = nx[type]?.bind(nx);
       if (!orig) return;
       nx[type] = function (msg, opts) {

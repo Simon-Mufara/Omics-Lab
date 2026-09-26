@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Progress = (function () {
-
   const MODAL_ID = 'progress-modal-overlay';
 
   /* ─── Collect all OmicsLab localStorage keys ─── */
@@ -27,8 +26,11 @@ OmicsLab.Progress = (function () {
   function _stats() {
     const snap = _snapshot();
     const keys = Object.keys(snap.keys);
-    let badges = 0, lessons = 0, workflows = 0, lang = 'en';
-    keys.forEach(k => {
+    let badges = 0,
+      lessons = 0,
+      workflows = 0,
+      lang = 'en';
+    keys.forEach((k) => {
       if (k.includes('badge')) badges++;
       if (k.includes('lesson') || k.includes('curriculum')) lessons++;
       if (k.includes('workflow') || k.includes('completed_wf')) workflows++;
@@ -42,9 +44,9 @@ OmicsLab.Progress = (function () {
     const data = _snapshot();
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
     a.download = `omicslab-progress-${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
@@ -79,14 +81,19 @@ OmicsLab.Progress = (function () {
 
   /* ─── Clear all progress (with confirmation) ─── */
   function clearProgress() {
-    if (!confirm('Are you sure? This will permanently delete ALL your OmicsLab progress, badges, and certificates.')) return;
+    if (
+      !confirm(
+        'Are you sure? This will permanently delete ALL your OmicsLab progress, badges, and certificates.'
+      )
+    )
+      return;
     try {
       const toRemove = [];
       for (let i = 0; i < localStorage.length; i++) {
         const k = localStorage.key(i);
         if (k && k.startsWith('omicslab')) toRemove.push(k);
       }
-      toRemove.forEach(k => localStorage.removeItem(k));
+      toRemove.forEach((k) => localStorage.removeItem(k));
     } catch {}
     _showToast('Progress cleared. Reloading...', true);
     setTimeout(() => location.reload(), 1800);
@@ -195,7 +202,7 @@ OmicsLab.Progress = (function () {
       overlay.id = MODAL_ID;
       overlay.className = 'progress-modal-overlay';
       overlay.setAttribute('role', 'dialog');
-      overlay.addEventListener('click', e => {
+      overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeModal();
       });
       document.body.appendChild(overlay);
@@ -217,7 +224,7 @@ OmicsLab.Progress = (function () {
   }
 
   /* ─── Keyboard close ─── */
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeModal();
   });
 

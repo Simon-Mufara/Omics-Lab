@@ -7,33 +7,33 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.PubMed = (function () {
-
-  const BASE    = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
-  const RETMAX  = 20;
+  const BASE = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils';
+  const RETMAX = 20;
 
   /* Africa keyword filter */
-  const AFRICA_FILTER = '("Africa"[tiab] OR "sub-Saharan"[tiab] OR "Nigeria"[tiab] OR "Kenya"[tiab] OR "South Africa"[tiab] OR "Ethiopia"[tiab] OR "Ghana"[tiab] OR "Uganda"[tiab] OR "Tanzania"[tiab] OR "Zimbabwe"[tiab] OR "Malawi"[tiab] OR "Zambia"[tiab] OR "Senegal"[tiab] OR "Rwanda"[tiab] OR "H3Africa"[tiab] OR "AWI-Gen"[tiab])';
+  const AFRICA_FILTER =
+    '("Africa"[tiab] OR "sub-Saharan"[tiab] OR "Nigeria"[tiab] OR "Kenya"[tiab] OR "South Africa"[tiab] OR "Ethiopia"[tiab] OR "Ghana"[tiab] OR "Uganda"[tiab] OR "Tanzania"[tiab] OR "Zimbabwe"[tiab] OR "Malawi"[tiab] OR "Zambia"[tiab] OR "Senegal"[tiab] OR "Rwanda"[tiab] OR "H3Africa"[tiab] OR "AWI-Gen"[tiab])';
 
   /* Pre-built quick searches */
   const QUICK_SEARCHES = [
-    { label: 'Africa WGS studies',           q: 'whole genome sequencing Africa cohort' },
-    { label: 'Malaria genomics',              q: 'malaria Plasmodium falciparum genomics Africa' },
-    { label: 'Sickle cell disease Africa',   q: 'sickle cell disease HBB Africa genetics' },
-    { label: 'TB drug resistance Africa',    q: 'tuberculosis drug resistance WGS Africa rpoB' },
-    { label: 'H3Africa consortium',          q: 'H3Africa consortium genomics' },
-    { label: 'APOL1 kidney disease',         q: 'APOL1 kidney disease Africa' },
-    { label: 'Nanopore sequencing Africa',   q: 'Oxford Nanopore MinION Africa field sequencing' },
-    { label: 'COVID Africa genomics',        q: 'SARS-CoV-2 Africa variant genomics sequencing' },
+    { label: 'Africa WGS studies', q: 'whole genome sequencing Africa cohort' },
+    { label: 'Malaria genomics', q: 'malaria Plasmodium falciparum genomics Africa' },
+    { label: 'Sickle cell disease Africa', q: 'sickle cell disease HBB Africa genetics' },
+    { label: 'TB drug resistance Africa', q: 'tuberculosis drug resistance WGS Africa rpoB' },
+    { label: 'H3Africa consortium', q: 'H3Africa consortium genomics' },
+    { label: 'APOL1 kidney disease', q: 'APOL1 kidney disease Africa' },
+    { label: 'Nanopore sequencing Africa', q: 'Oxford Nanopore MinION Africa field sequencing' },
+    { label: 'COVID Africa genomics', q: 'SARS-CoV-2 Africa variant genomics sequencing' },
   ];
 
   /* State */
-  let _query    = '';
+  let _query = '';
   let _retstart = 0;
-  let _total    = 0;
+  let _total = 0;
   let _africaOn = true;
-  let _dateRange = '';      /* '' | '5' | '10' */
-  let _artType   = '';      /* '' | 'review' | 'clinical-trial' | 'meta-analysis' */
-  let _debTimer  = null;
+  let _dateRange = ''; /* '' | '5' | '10' */
+  let _artType = ''; /* '' | 'review' | 'clinical-trial' | 'meta-analysis' */
+  let _debTimer = null;
   let _lastResults = [];
 
   /* ─── Build NCBI query string ─── */
@@ -41,10 +41,10 @@ OmicsLab.PubMed = (function () {
     let q = term.trim();
     if (!q) return '';
     if (_africaOn) q += ' AND ' + AFRICA_FILTER;
-    if (_artType === 'review')         q += ' AND "review"[pt]';
+    if (_artType === 'review') q += ' AND "review"[pt]';
     if (_artType === 'clinical-trial') q += ' AND "clinical trial"[pt]';
-    if (_artType === 'meta-analysis')  q += ' AND "meta-analysis"[pt]';
-    if (_dateRange === '5')  q += ' AND ("last 5 years"[pdat])';
+    if (_artType === 'meta-analysis') q += ' AND "meta-analysis"[pt]';
+    if (_dateRange === '5') q += ' AND ("last 5 years"[pdat])';
     if (_dateRange === '10') q += ' AND ("last 10 years"[pdat])';
     return q;
   }
@@ -56,7 +56,7 @@ OmicsLab.PubMed = (function () {
     if (!res.ok) throw new Error('NCBI search failed: ' + res.status);
     const data = await res.json();
     return {
-      ids:   data.esearchresult.idlist || [],
+      ids: data.esearchresult.idlist || [],
       total: parseInt(data.esearchresult.count || '0', 10),
     };
   }
@@ -69,21 +69,26 @@ OmicsLab.PubMed = (function () {
     if (!res.ok) throw new Error('NCBI summary fetch failed');
     const data = await res.json();
     const result = data.result;
-    return ids.map(id => {
-      const a = result[id];
-      if (!a) return null;
-      const authors = (a.authors || []).slice(0, 3).map(au => au.name).join(', ');
-      const moreAuth = (a.authors || []).length > 3 ? ' et al.' : '';
-      return {
-        pmid:     id,
-        title:    a.title || 'No title',
-        authors:  authors + moreAuth,
-        journal:  a.source || '',
-        year:     a.pubdate ? a.pubdate.slice(0, 4) : '',
-        abstract: '', /* fetched separately if needed */
-        doi:      (a.articleids || []).find(x => x.idtype === 'doi')?.value || '',
-      };
-    }).filter(Boolean);
+    return ids
+      .map((id) => {
+        const a = result[id];
+        if (!a) return null;
+        const authors = (a.authors || [])
+          .slice(0, 3)
+          .map((au) => au.name)
+          .join(', ');
+        const moreAuth = (a.authors || []).length > 3 ? ' et al.' : '';
+        return {
+          pmid: id,
+          title: a.title || 'No title',
+          authors: authors + moreAuth,
+          journal: a.source || '',
+          year: a.pubdate ? a.pubdate.slice(0, 4) : '',
+          abstract: '' /* fetched separately if needed */,
+          doi: (a.articleids || []).find((x) => x.idtype === 'doi')?.value || '',
+        };
+      })
+      .filter(Boolean);
   }
 
   /* ─── Fetch abstracts for visible results ─── */
@@ -96,9 +101,9 @@ OmicsLab.PubMed = (function () {
     const parser = new DOMParser();
     const xml = parser.parseFromString(text, 'text/xml');
     const out = {};
-    xml.querySelectorAll('PubmedArticle').forEach(article => {
+    xml.querySelectorAll('PubmedArticle').forEach((article) => {
       const pmid = article.querySelector('PMID')?.textContent;
-      const abs  = article.querySelector('AbstractText')?.textContent || '';
+      const abs = article.querySelector('AbstractText')?.textContent || '';
       if (pmid) out[pmid] = abs.slice(0, 400) + (abs.length > 400 ? '…' : '');
     });
     return out;
@@ -107,7 +112,10 @@ OmicsLab.PubMed = (function () {
   /* ─── Main search ─── */
   async function _doSearch(page = 0) {
     const q = _buildQuery(_query);
-    if (!q) { _renderEmpty('Enter a search term above.'); return; }
+    if (!q) {
+      _renderEmpty('Enter a search term above.');
+      return;
+    }
 
     _retstart = page * RETMAX;
     _renderLoading();
@@ -116,36 +124,47 @@ OmicsLab.PubMed = (function () {
       const { ids, total } = await _searchIds(q, _retstart);
       _total = total;
 
-      if (!ids.length) { _renderEmpty('No results found. Try broadening your search or disabling the Africa filter.'); return; }
+      if (!ids.length) {
+        _renderEmpty(
+          'No results found. Try broadening your search or disabling the Africa filter.'
+        );
+        return;
+      }
 
       const articles = await _fetchSummaries(ids);
       const abstracts = await _fetchAbstracts(ids);
-      articles.forEach(a => { a.abstract = abstracts[a.pmid] || ''; });
+      articles.forEach((a) => {
+        a.abstract = abstracts[a.pmid] || '';
+      });
 
       _lastResults = articles;
       _renderResults(articles, total, page);
-
     } catch (err) {
       _renderError('Could not reach NCBI — check your internet connection. ' + err.message);
     }
   }
 
   /* ─── Render states ─── */
-  function _resultsEl() { return document.getElementById('pm-results'); }
+  function _resultsEl() {
+    return document.getElementById('pm-results');
+  }
 
   function _renderLoading() {
     const el = _resultsEl();
-    if (el) el.innerHTML = `<div class="pm-loading"><div class="pm-spinner"></div> Searching PubMed…</div>`;
+    if (el)
+      el.innerHTML = `<div class="pm-loading"><div class="pm-spinner"></div> Searching PubMed…</div>`;
   }
 
   function _renderEmpty(msg) {
     const el = _resultsEl();
-    if (el) el.innerHTML = `<div class="pm-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
+    if (el)
+      el.innerHTML = `<div class="pm-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
     const el = _resultsEl();
-    if (el) el.innerHTML = `<div class="pm-error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${msg}</div>`;
+    if (el)
+      el.innerHTML = `<div class="pm-error"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${msg}</div>`;
   }
 
   function _renderResults(articles, total, page) {
@@ -153,7 +172,7 @@ OmicsLab.PubMed = (function () {
     if (!el) return;
 
     const totalPages = Math.ceil(total / RETMAX);
-    const current    = page + 1;
+    const current = page + 1;
 
     el.innerHTML = `
       <div class="pm-results-header">
@@ -165,10 +184,12 @@ OmicsLab.PubMed = (function () {
       </div>
 
       <div class="pm-article-list">
-        ${articles.map(a => _articleHtml(a)).join('')}
+        ${articles.map((a) => _articleHtml(a)).join('')}
       </div>
 
-      ${totalPages > 1 ? `
+      ${
+        totalPages > 1
+          ? `
         <div class="pm-pagination">
           <button class="pm-page-btn" onclick="OmicsLab.PubMed._page(${page - 1})" ${page === 0 ? 'disabled' : ''}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
@@ -179,7 +200,9 @@ OmicsLab.PubMed = (function () {
             Next
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
-        </div>` : ''}`;
+        </div>`
+          : ''
+      }`;
   }
 
   function _articleHtml(a) {
@@ -214,7 +237,7 @@ OmicsLab.PubMed = (function () {
 
   /* ─── Actions ─── */
   function saveToPaperHub(pmid) {
-    const a = _lastResults.find(r => r.pmid === pmid);
+    const a = _lastResults.find((r) => r.pmid === pmid);
     if (!a) return;
     /* Add to PaperHub library */
     if (OmicsLab.PaperHub && OmicsLab.PaperHub._addFromPubMed) {
@@ -226,7 +249,7 @@ OmicsLab.PubMed = (function () {
   }
 
   function analyseArticle(pmid) {
-    const a = _lastResults.find(r => r.pmid === pmid);
+    const a = _lastResults.find((r) => r.pmid === pmid);
     if (!a) return;
     const text = [a.title, a.authors, a.journal + ' ' + a.year, a.abstract].join('\n\n');
     /* Navigate to Teams Article Analyser and pre-fill */
@@ -250,14 +273,21 @@ OmicsLab.PubMed = (function () {
   function exportCSV() {
     if (!_lastResults.length) return;
     const rows = [['PMID', 'Title', 'Authors', 'Journal', 'Year', 'DOI']];
-    _lastResults.forEach(a => {
-      rows.push([a.pmid, `"${a.title.replace(/"/g,'""')}"`, `"${a.authors}"`, a.journal, a.year, a.doi]);
+    _lastResults.forEach((a) => {
+      rows.push([
+        a.pmid,
+        `"${a.title.replace(/"/g, '""')}"`,
+        `"${a.authors}"`,
+        a.journal,
+        a.year,
+        a.doi,
+      ]);
     });
-    const csv  = rows.map(r => r.join(',')).join('\n');
+    const csv = rows.map((r) => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url  = URL.createObjectURL(blob);
-    const el   = document.createElement('a');
-    el.href    = url;
+    const url = URL.createObjectURL(blob);
+    const el = document.createElement('a');
+    el.href = url;
     el.download = 'pubmed-results.csv';
     el.click();
     URL.revokeObjectURL(url);
@@ -281,7 +311,7 @@ OmicsLab.PubMed = (function () {
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   function _toggleAfricaFilter() {
@@ -347,8 +377,9 @@ OmicsLab.PubMed = (function () {
 
         <div class="pm-quick-searches">
           <div class="pm-quick-label">Quick searches:</div>
-          ${QUICK_SEARCHES.map(s =>
-            `<button class="pm-quick-btn" onclick="OmicsLab.PubMed._quickSearch('${_esc(s.q)}')">${s.label}</button>`
+          ${QUICK_SEARCHES.map(
+            (s) =>
+              `<button class="pm-quick-btn" onclick="OmicsLab.PubMed._quickSearch('${_esc(s.q)}')">${s.label}</button>`
           ).join('')}
         </div>
 
@@ -365,11 +396,31 @@ OmicsLab.PubMed = (function () {
 
   function _onInput(val) {
     _query = val;
-    _debounce(() => { if (_query.length >= 3) _doSearch(0); }, 350);
+    _debounce(() => {
+      if (_query.length >= 3) _doSearch(0);
+    }, 350);
   }
 
-  function _setDate(val) { _dateRange = val; if (_query) _doSearch(0); }
-  function _setType(val) { _artType   = val; if (_query) _doSearch(0); }
+  function _setDate(val) {
+    _dateRange = val;
+    if (_query) _doSearch(0);
+  }
+  function _setType(val) {
+    _artType = val;
+    if (_query) _doSearch(0);
+  }
 
-  return { init, exportCSV, saveToPaperHub, analyseArticle, _doSearch, _page, _quickSearch, _toggleAfricaFilter, _onInput, _setDate, _setType };
+  return {
+    init,
+    exportCSV,
+    saveToPaperHub,
+    analyseArticle,
+    _doSearch,
+    _page,
+    _quickSearch,
+    _toggleAfricaFilter,
+    _onInput,
+    _setDate,
+    _setType,
+  };
 })();

@@ -7,32 +7,40 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Calendar = (function () {
-
   const STORE_KEY = 'omicslab_calendar_v1';
 
   const TZ_OPTIONS = [
-    { value: 'Africa/Lagos',       label: 'WAT — West Africa Time (Lagos, Accra, Abuja)' },
-    { value: 'Africa/Nairobi',     label: 'EAT — East Africa Time (Nairobi, Kampala, Addis Ababa)' },
-    { value: 'Africa/Harare',      label: 'CAT — Central Africa Time (Harare, Lusaka, Kinshasa)' },
-    { value: 'Africa/Johannesburg',label: 'SAST — South Africa Standard Time (Johannesburg, Cape Town)' },
-    { value: 'Africa/Cairo',       label: 'EET — Eastern European Time (Cairo, Khartoum)' },
-    { value: 'Africa/Casablanca',  label: 'WET — Western European Time (Casablanca, Dakar)' },
-    { value: 'UTC',                label: 'UTC — Coordinated Universal Time' },
+    { value: 'Africa/Lagos', label: 'WAT — West Africa Time (Lagos, Accra, Abuja)' },
+    { value: 'Africa/Nairobi', label: 'EAT — East Africa Time (Nairobi, Kampala, Addis Ababa)' },
+    { value: 'Africa/Harare', label: 'CAT — Central Africa Time (Harare, Lusaka, Kinshasa)' },
+    {
+      value: 'Africa/Johannesburg',
+      label: 'SAST — South Africa Standard Time (Johannesburg, Cape Town)',
+    },
+    { value: 'Africa/Cairo', label: 'EET — Eastern European Time (Cairo, Khartoum)' },
+    { value: 'Africa/Casablanca', label: 'WET — Western European Time (Casablanca, Dakar)' },
+    { value: 'UTC', label: 'UTC — Coordinated Universal Time' },
   ];
 
   const RECURRENCE = [
-    { value: 'once',   label: 'Once' },
-    { value: 'daily',  label: 'Daily' },
+    { value: 'once', label: 'Once' },
+    { value: 'daily', label: 'Daily' },
     { value: 'weekly', label: 'Weekly' },
   ];
 
   /* ─── Data helpers ─── */
   function _load() {
-    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); } catch { return []; }
+    try {
+      return JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    } catch {
+      return [];
+    }
   }
 
   function _save(events) {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(events)); } catch {}
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(events));
+    } catch {}
   }
 
   function _add(event) {
@@ -46,7 +54,9 @@ OmicsLab.Calendar = (function () {
 
   function _getUpcoming(n = 5) {
     const now = Date.now();
-    return _load().filter(e => new Date(e.datetime).getTime() >= now - 3600000).slice(0, n);
+    return _load()
+      .filter((e) => new Date(e.datetime).getTime() >= now - 3600000)
+      .slice(0, n);
   }
 
   /* ─── Upcoming strip (inject above Teams grid) ─── */
@@ -81,7 +91,9 @@ OmicsLab.Calendar = (function () {
           <button class="cal-link" style="margin-left:auto" onclick="OmicsLab.Calendar.openScheduler()">+ Schedule</button>
         </div>
         <div class="cal-strip-list">
-          ${events.map(e => `
+          ${events
+            .map(
+              (e) => `
             <div class="cal-strip-item">
               <div class="cal-strip-time">
                 <span class="cal-strip-date">${_formatDate(e.datetime)}</span>
@@ -94,7 +106,9 @@ OmicsLab.Calendar = (function () {
               <button class="btn btn-ghost btn-sm cal-ics-btn" onclick="OmicsLab.Calendar.downloadICS('${e.id}')" title="Download .ics">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               </button>
-            </div>`).join('')}
+            </div>`
+            )
+            .join('')}
         </div>
       </div>`;
   }
@@ -103,7 +117,9 @@ OmicsLab.Calendar = (function () {
   function openScheduler(opts = {}) {
     _injectStyles();
     let overlay = document.getElementById('cal-modal-overlay');
-    if (overlay) { overlay.remove(); }
+    if (overlay) {
+      overlay.remove();
+    }
 
     const today = new Date().toISOString().slice(0, 10);
     const nowTime = new Date().toTimeString().slice(0, 5);
@@ -125,7 +141,7 @@ OmicsLab.Calendar = (function () {
         <div class="cal-modal-body">
           <div class="cal-field">
             <label class="cal-label" for="cal-title">Meeting title</label>
-            <input class="input" id="cal-title" type="text" placeholder="e.g. African Genomics Lab" value="${_esc(opts.room||'')}">
+            <input class="input" id="cal-title" type="text" placeholder="e.g. African Genomics Lab" value="${_esc(opts.room || '')}">
           </div>
           <div class="cal-field-row">
             <div class="cal-field">
@@ -140,13 +156,13 @@ OmicsLab.Calendar = (function () {
           <div class="cal-field">
             <label class="cal-label" for="cal-tz">Timezone</label>
             <select class="select" id="cal-tz">
-              ${TZ_OPTIONS.map(t => `<option value="${t.value}"${t.value==='Africa/Lagos'?' selected':''}>${_esc(t.label)}</option>`).join('')}
+              ${TZ_OPTIONS.map((t) => `<option value="${t.value}"${t.value === 'Africa/Lagos' ? ' selected' : ''}>${_esc(t.label)}</option>`).join('')}
             </select>
           </div>
           <div class="cal-field">
             <label class="cal-label" for="cal-recur">Recurrence</label>
             <select class="select" id="cal-recur">
-              ${RECURRENCE.map(r => `<option value="${r.value}">${r.label}</option>`).join('')}
+              ${RECURRENCE.map((r) => `<option value="${r.value}">${r.label}</option>`).join('')}
             </select>
           </div>
           <div class="cal-field">
@@ -167,7 +183,9 @@ OmicsLab.Calendar = (function () {
           <button class="btn btn-primary" type="button" onclick="OmicsLab.Calendar._saveEvent()">Save to calendar</button>
         </div>
       </div>`;
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeScheduler(); });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeScheduler();
+    });
     document.body.appendChild(overlay);
     requestAnimationFrame(() => overlay.classList.add('open'));
     document.getElementById('cal-title')?.focus();
@@ -183,24 +201,32 @@ OmicsLab.Calendar = (function () {
     document.removeEventListener('keydown', _onKey);
   }
 
-  function _onKey(e) { if (e.key === 'Escape') closeScheduler(); }
+  function _onKey(e) {
+    if (e.key === 'Escape') closeScheduler();
+  }
 
   function _readForm() {
     return {
-      title:    document.getElementById('cal-title')?.value.trim() || 'Meeting',
-      date:     document.getElementById('cal-date')?.value || new Date().toISOString().slice(0,10),
-      time:     document.getElementById('cal-time')?.value || '10:00',
+      title: document.getElementById('cal-title')?.value.trim() || 'Meeting',
+      date: document.getElementById('cal-date')?.value || new Date().toISOString().slice(0, 10),
+      time: document.getElementById('cal-time')?.value || '10:00',
       timezone: document.getElementById('cal-tz')?.value || 'Africa/Lagos',
-      recur:    document.getElementById('cal-recur')?.value || 'once',
-      agenda:   document.getElementById('cal-agenda')?.value.trim() || '',
-      invites:  (document.getElementById('cal-invites')?.value || '').split(',').map(e=>e.trim()).filter(Boolean),
-      datetime: `${document.getElementById('cal-date')?.value || new Date().toISOString().slice(0,10)}T${document.getElementById('cal-time')?.value || '10:00'}`,
+      recur: document.getElementById('cal-recur')?.value || 'once',
+      agenda: document.getElementById('cal-agenda')?.value.trim() || '',
+      invites: (document.getElementById('cal-invites')?.value || '')
+        .split(',')
+        .map((e) => e.trim())
+        .filter(Boolean),
+      datetime: `${document.getElementById('cal-date')?.value || new Date().toISOString().slice(0, 10)}T${document.getElementById('cal-time')?.value || '10:00'}`,
     };
   }
 
   function _saveEvent() {
     const data = _readForm();
-    if (!data.title) { OmicsLab.Notify?.warning('Please enter a meeting title'); return; }
+    if (!data.title) {
+      OmicsLab.Notify?.warning('Please enter a meeting title');
+      return;
+    }
     _add(data);
     closeScheduler();
     OmicsLab.Notify?.success('Meeting saved to calendar');
@@ -214,7 +240,10 @@ OmicsLab.Calendar = (function () {
 
   function _saveAndDownload() {
     const data = _readForm();
-    if (!data.title) { OmicsLab.Notify?.warning('Please enter a meeting title'); return; }
+    if (!data.title) {
+      OmicsLab.Notify?.warning('Please enter a meeting title');
+      return;
+    }
     const event = _add(data);
     _generateICS(event);
     closeScheduler();
@@ -224,26 +253,27 @@ OmicsLab.Calendar = (function () {
   /* ─── ICS generation ─── */
   function downloadICS(eventId) {
     const events = _load();
-    const event = events.find(e => e.id === eventId);
+    const event = events.find((e) => e.id === eventId);
     if (!event) return;
     _generateICS(event);
   }
 
   function _generateICS(event) {
-    const dt    = new Date(event.datetime);
+    const dt = new Date(event.datetime);
     const dtEnd = new Date(dt.getTime() + 60 * 60 * 1000); /* default 1h */
 
-    const _pad  = n => String(n).padStart(2, '0');
-    const _fmt  = d => `${d.getUTCFullYear()}${_pad(d.getUTCMonth()+1)}${_pad(d.getUTCDate())}T${_pad(d.getUTCHours())}${_pad(d.getUTCMinutes())}00Z`;
-    const now   = _fmt(new Date());
-    const uid   = (event.id || 'ev') + '@omicslab.africa';
+    const _pad = (n) => String(n).padStart(2, '0');
+    const _fmt = (d) =>
+      `${d.getUTCFullYear()}${_pad(d.getUTCMonth() + 1)}${_pad(d.getUTCDate())}T${_pad(d.getUTCHours())}${_pad(d.getUTCMinutes())}00Z`;
+    const now = _fmt(new Date());
+    const uid = (event.id || 'ev') + '@omicslab.africa';
 
     let rrule = '';
-    if (event.recur === 'daily')  rrule = 'RRULE:FREQ=DAILY;COUNT=10\r\n';
+    if (event.recur === 'daily') rrule = 'RRULE:FREQ=DAILY;COUNT=10\r\n';
     if (event.recur === 'weekly') rrule = 'RRULE:FREQ=WEEKLY;COUNT=8\r\n';
 
     let attendees = '';
-    (event.invites || []).forEach(email => {
+    (event.invites || []).forEach((email) => {
       attendees += `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION:mailto:${email}\r\n`;
     });
 
@@ -256,23 +286,27 @@ OmicsLab.Calendar = (function () {
       'BEGIN:VEVENT',
       `UID:${uid}`,
       `DTSTAMP:${now}`,
-      `DTSTART;TZID=${event.timezone || 'Africa/Lagos'}:${_fmt(dt).replace('Z','')}`,
-      `DTEND;TZID=${event.timezone || 'Africa/Lagos'}:${_fmt(dtEnd).replace('Z','')}`,
-      `SUMMARY:${(event.title||'Meeting').replace(/[,;\\]/g, '\\$&')}`,
-      event.agenda ? `DESCRIPTION:${event.agenda.replace(/\n/g, '\\n').replace(/[,;\\]/g,'\\$&')}` : '',
+      `DTSTART;TZID=${event.timezone || 'Africa/Lagos'}:${_fmt(dt).replace('Z', '')}`,
+      `DTEND;TZID=${event.timezone || 'Africa/Lagos'}:${_fmt(dtEnd).replace('Z', '')}`,
+      `SUMMARY:${(event.title || 'Meeting').replace(/[,;\\]/g, '\\$&')}`,
+      event.agenda
+        ? `DESCRIPTION:${event.agenda.replace(/\n/g, '\\n').replace(/[,;\\]/g, '\\$&')}`
+        : '',
       `LOCATION:OmicsLab Teams — omicslab.africa`,
       rrule.trim(),
       attendees.trim(),
       'STATUS:CONFIRMED',
       'END:VEVENT',
       'END:VCALENDAR',
-    ].filter(Boolean).join('\r\n');
+    ]
+      .filter(Boolean)
+      .join('\r\n');
 
     const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `omicslab-meeting-${(event.title||'meeting').toLowerCase().replace(/\s+/g,'-')}.ics`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `omicslab-meeting-${(event.title || 'meeting').toLowerCase().replace(/\s+/g, '-')}.ics`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -286,13 +320,22 @@ OmicsLab.Calendar = (function () {
   function _formatTime(isoDatetime, tz) {
     const d = new Date(isoDatetime);
     try {
-      return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: tz || 'UTC' });
+      return d.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: tz || 'UTC',
+      });
     } catch {
       return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     }
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   function _injectStyles() {
     if (document.getElementById('cal-styles')) return;
@@ -340,10 +383,18 @@ OmicsLab.Calendar = (function () {
     const target = teamsSection.querySelector('.teams-page-wrap, .teams-layout, .teams-wrap, div');
     if (target) renderStrip(target);
     /* Add "Schedule" button to any "Schedule meeting" links in Teams UI */
-    document.querySelectorAll('[data-cal-trigger]').forEach(btn => {
+    document.querySelectorAll('[data-cal-trigger]').forEach((btn) => {
       btn.onclick = () => openScheduler({ room: btn.dataset.calRoom || '' });
     });
   }
 
-  return { init, openScheduler, closeScheduler, renderStrip, downloadICS, _saveEvent, _saveAndDownload };
+  return {
+    init,
+    openScheduler,
+    closeScheduler,
+    renderStrip,
+    downloadICS,
+    _saveEvent,
+    _saveAndDownload,
+  };
 })();

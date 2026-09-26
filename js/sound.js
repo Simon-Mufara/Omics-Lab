@@ -6,11 +6,10 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Sound = (function () {
-
   const PREF_KEY = 'omicslab_sound_enabled';
 
-  let _ctx  = null;
-  let _on   = localStorage.getItem(PREF_KEY) === '1'; /* off by default */
+  let _ctx = null;
+  let _on = localStorage.getItem(PREF_KEY) === '1'; /* off by default */
 
   /* Lazy-init AudioContext (required by browser autoplay policy) */
   function _ctx_() {
@@ -31,7 +30,7 @@ OmicsLab.Sound = (function () {
     /* Resume suspended context (autoplay policy) */
     if (ctx.state === 'suspended') ctx.resume();
 
-    const osc  = ctx.createOscillator();
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
     osc.connect(gain);
@@ -41,10 +40,7 @@ OmicsLab.Sound = (function () {
     osc.frequency.setValueAtTime(freq, ctx.currentTime);
 
     gain.gain.setValueAtTime(gainVal, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      ctx.currentTime + (fadeStart || duration)
-    );
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (fadeStart || duration));
 
     osc.start(ctx.currentTime);
     osc.stop(ctx.currentTime + duration);
@@ -55,7 +51,7 @@ OmicsLab.Sound = (function () {
   /* Step completion — pleasant ascending two-note ding */
   function step() {
     if (!_on) return;
-    _tone(660,  'sine', 0.22, 0.35, 0.25);
+    _tone(660, 'sine', 0.22, 0.35, 0.25);
     setTimeout(() => _tone(880, 'sine', 0.18, 0.45, 0.35), 120);
   }
 
@@ -75,9 +71,9 @@ OmicsLab.Sound = (function () {
   /* Workflow complete — triumphant 3-note chord */
   function complete() {
     if (!_on) return;
-    _tone(523, 'sine', 0.2, 0.7, 0.55);   /* C5 */
-    setTimeout(() => _tone(659, 'sine', 0.16, 0.65, 0.5), 80);   /* E5 */
-    setTimeout(() => _tone(784, 'sine', 0.14, 0.9, 0.75), 160);  /* G5 */
+    _tone(523, 'sine', 0.2, 0.7, 0.55); /* C5 */
+    setTimeout(() => _tone(659, 'sine', 0.16, 0.65, 0.5), 80); /* E5 */
+    setTimeout(() => _tone(784, 'sine', 0.14, 0.9, 0.75), 160); /* G5 */
   }
 
   /* ── Toggle (called by UI button) ───────────────────────────── */
@@ -90,7 +86,9 @@ OmicsLab.Sound = (function () {
     return _on;
   }
 
-  function isOn() { return _on; }
+  function isOn() {
+    return _on;
+  }
 
   /* ── Sync the topbar toggle button state ─────────────────────── */
   function _updateBtn() {
@@ -125,5 +123,4 @@ OmicsLab.Sound = (function () {
   }
 
   return { step, pick, error, complete, toggle, isOn, init };
-
 })();

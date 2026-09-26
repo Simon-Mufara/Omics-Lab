@@ -7,42 +7,42 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Preprints = (function () {
-
   const CROSSREF = 'https://api.crossref.org/works';
-  const BIORXIV  = 'https://api.biorxiv.org/details/biorxiv';
+  const BIORXIV = 'https://api.biorxiv.org/details/biorxiv';
   const PAGE_SIZE = 20;
 
-  const AFRICA_FILTER = '(Africa OR "sub-Saharan" OR Nigeria OR Kenya OR "South Africa" OR Ethiopia OR Ghana OR Uganda OR Tanzania OR H3Africa OR "AWI-Gen" OR Malawi OR Rwanda OR Zambia)';
+  const AFRICA_FILTER =
+    '(Africa OR "sub-Saharan" OR Nigeria OR Kenya OR "South Africa" OR Ethiopia OR Ghana OR Uganda OR Tanzania OR H3Africa OR "AWI-Gen" OR Malawi OR Rwanda OR Zambia)';
 
   /* Pre-built Africa quick searches */
   const QUICK_SEARCHES = [
-    { label: 'Malaria Africa genomics',       q: 'malaria genomics Africa' },
-    { label: 'Sickle cell genetics',           q: 'sickle cell HBB Africa' },
-    { label: 'COVID Africa variants',          q: 'SARS-CoV-2 Africa sequencing' },
+    { label: 'Malaria Africa genomics', q: 'malaria genomics Africa' },
+    { label: 'Sickle cell genetics', q: 'sickle cell HBB Africa' },
+    { label: 'COVID Africa variants', q: 'SARS-CoV-2 Africa sequencing' },
     { label: 'Nanopore Africa field sequencing', q: 'Oxford Nanopore MinION Africa' },
-    { label: 'H3Africa consortium',            q: 'H3Africa genomics' },
-    { label: 'APOL1 kidney Africa',            q: 'APOL1 kidney disease Africa' },
-    { label: 'TB drug resistance Africa',      q: 'tuberculosis drug resistance Africa' },
-    { label: 'Pan-African WGS',               q: 'whole genome sequencing African population' },
+    { label: 'H3Africa consortium', q: 'H3Africa genomics' },
+    { label: 'APOL1 kidney Africa', q: 'APOL1 kidney disease Africa' },
+    { label: 'TB drug resistance Africa', q: 'tuberculosis drug resistance Africa' },
+    { label: 'Pan-African WGS', q: 'whole genome sequencing African population' },
   ];
 
   /* bioRxiv subject categories */
   const CATEGORIES = [
-    { value: '',               label: 'All subjects' },
-    { value: 'genomics',       label: 'Genomics' },
+    { value: '', label: 'All subjects' },
+    { value: 'genomics', label: 'Genomics' },
     { value: 'evolutionary-biology', label: 'Evolutionary Biology' },
     { value: 'bioinformatics', label: 'Bioinformatics' },
-    { value: 'microbiology',   label: 'Microbiology' },
-    { value: 'genetics',       label: 'Genetics' },
-    { value: 'epidemiology',   label: 'Epidemiology (medRxiv)' },
+    { value: 'microbiology', label: 'Microbiology' },
+    { value: 'genetics', label: 'Genetics' },
+    { value: 'epidemiology', label: 'Epidemiology (medRxiv)' },
     { value: 'infectious-diseases', label: 'Infectious Diseases (medRxiv)' },
   ];
 
-  let _query       = '';
-  let _africaOn    = true;
-  let _server      = 'all';  /* 'all' | 'biorxiv' | 'medrxiv' */
-  let _debTimer    = null;
-  let _offset      = 0;
+  let _query = '';
+  let _africaOn = true;
+  let _server = 'all'; /* 'all' | 'biorxiv' | 'medrxiv' */
+  let _debTimer = null;
+  let _offset = 0;
   let _lastResults = [];
 
   /* ─── Build CrossRef query ─── */
@@ -57,16 +57,16 @@ OmicsLab.Preprints = (function () {
     const q = _buildQuery(term);
 
     let filter = 'type:posted-content';
-    if (_server === 'biorxiv')  filter += ',prefix:10.1101';
-    if (_server === 'medrxiv')  filter += ',prefix:10.1101'; /* medRxiv also uses 10.1101 */
+    if (_server === 'biorxiv') filter += ',prefix:10.1101';
+    if (_server === 'medrxiv') filter += ',prefix:10.1101'; /* medRxiv also uses 10.1101 */
 
     const params = new URLSearchParams({
-      query:   q,
-      filter:  filter,
-      rows:    PAGE_SIZE,
-      offset:  offset,
-      sort:    'relevance',
-      select:  'DOI,title,author,posted,abstract,URL,institution,publisher,container-title',
+      query: q,
+      filter: filter,
+      rows: PAGE_SIZE,
+      offset: offset,
+      sort: 'relevance',
+      select: 'DOI,title,author,posted,abstract,URL,institution,publisher,container-title',
     });
 
     const res = await fetch(`${CROSSREF}?${params}`, {
@@ -83,28 +83,35 @@ OmicsLab.Preprints = (function () {
   /* ─── Parse preprint item ─── */
   function _parseItem(item) {
     const title = (Array.isArray(item.title) ? item.title[0] : item.title) || 'Untitled';
-    const authors = (item.author || []).slice(0, 3).map(a =>
-      [a.given, a.family].filter(Boolean).join(' ')
-    ).join(', ') + ((item.author || []).length > 3 ? ' et al.' : '');
+    const authors =
+      (item.author || [])
+        .slice(0, 3)
+        .map((a) => [a.given, a.family].filter(Boolean).join(' '))
+        .join(', ') + ((item.author || []).length > 3 ? ' et al.' : '');
 
     const posted = item.posted?.['date-parts']?.[0];
     const dateStr = posted ? posted.join('-') : '';
-    const year    = posted?.[0] || '';
+    const year = posted?.[0] || '';
 
-    const doi  = item.DOI || '';
-    const url  = item.URL || (doi ? `https://doi.org/${doi}` : '');
-    const abs  = item.abstract || '';
+    const doi = item.DOI || '';
+    const url = item.URL || (doi ? `https://doi.org/${doi}` : '');
+    const abs = item.abstract || '';
     const publisher = item.publisher || '';
 
     /* Determine source server from publisher name */
-    const ismedRxiv = publisher.toLowerCase().includes('medrxiv') || publisher.toLowerCase().includes('cold spring harbor laboratory medRxiv');
+    const ismedRxiv =
+      publisher.toLowerCase().includes('medrxiv') ||
+      publisher.toLowerCase().includes('cold spring harbor laboratory medRxiv');
 
     return { title, authors, dateStr, year, doi, url, abs, publisher, ismedRxiv };
   }
 
   /* ─── Main search ─── */
   async function _doSearch(page = 0) {
-    if (!_query.trim()) { _renderEmpty('Enter a search term above.'); return; }
+    if (!_query.trim()) {
+      _renderEmpty('Enter a search term above.');
+      return;
+    }
     _offset = page * PAGE_SIZE;
     _renderLoading();
 
@@ -118,31 +125,39 @@ OmicsLab.Preprints = (function () {
   }
 
   /* ─── Render ─── */
-  function _el() { return document.getElementById('pp-results'); }
+  function _el() {
+    return document.getElementById('pp-results');
+  }
 
   function _renderLoading() {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pp-loading"><div class="pp-spinner"></div> Searching bioRxiv &amp; medRxiv preprints…</div>`;
+    if (el)
+      el.innerHTML = `<div class="pp-loading"><div class="pp-spinner"></div> Searching bioRxiv &amp; medRxiv preprints…</div>`;
   }
 
   function _renderEmpty(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pp-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>${msg}</div></div>`;
+    if (el)
+      el.innerHTML = `<div class="pp-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><div>${msg}</div></div>`;
   }
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="pp-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${msg}</div>`;
+    if (el)
+      el.innerHTML = `<div class="pp-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${msg}</div>`;
   }
 
   function _renderResults(items, total, page) {
     const el = _el();
     if (!el) return;
 
-    if (!items.length) { _renderEmpty('No preprints found. Try broader terms or disable Africa filter.'); return; }
+    if (!items.length) {
+      _renderEmpty('No preprints found. Try broader terms or disable Africa filter.');
+      return;
+    }
 
     const totalPages = Math.ceil(total / PAGE_SIZE);
-    const current    = page + 1;
+    const current = page + 1;
 
     el.innerHTML = `
       <div class="pp-results-header">
@@ -157,7 +172,9 @@ OmicsLab.Preprints = (function () {
         ${items.map((p, i) => _cardHtml(p, i)).join('')}
       </div>
 
-      ${totalPages > 1 ? `
+      ${
+        totalPages > 1
+          ? `
         <div class="pp-pagination">
           <button class="pp-page-btn" onclick="OmicsLab.Preprints._doSearch(${page - 1})" ${page === 0 ? 'disabled' : ''}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg> Prev
@@ -166,7 +183,9 @@ OmicsLab.Preprints = (function () {
           <button class="pp-page-btn" onclick="OmicsLab.Preprints._doSearch(${page + 1})" ${page >= totalPages - 1 || page >= 49 ? 'disabled' : ''}>
             Next <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
-        </div>` : ''}`;
+        </div>`
+          : ''
+      }`;
   }
 
   function _cardHtml(p, idx) {
@@ -225,19 +244,31 @@ OmicsLab.Preprints = (function () {
   function exportCSV() {
     if (!_lastResults.length) return;
     const rows = [['Title', 'Authors', 'Date', 'DOI', 'URL']];
-    _lastResults.forEach(p => {
-      rows.push([`"${(p.title||'').replace(/"/g,'""')}"`, `"${p.authors}"`, p.dateStr, p.doi, p.url]);
+    _lastResults.forEach((p) => {
+      rows.push([
+        `"${(p.title || '').replace(/"/g, '""')}"`,
+        `"${p.authors}"`,
+        p.dateStr,
+        p.doi,
+        p.url,
+      ]);
     });
-    const csv  = rows.map(r => r.join(',')).join('\n');
+    const csv = rows.map((r) => r.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url; a.download = 'preprints.csv'; a.click();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'preprints.csv';
+    a.click();
     URL.revokeObjectURL(url);
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return (s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
   function _toggleAfrica() {
@@ -265,7 +296,9 @@ OmicsLab.Preprints = (function () {
   function _onInput(val) {
     _query = val;
     clearTimeout(_debTimer);
-    _debTimer = setTimeout(() => { if (_query.length >= 3) _doSearch(0); }, 400);
+    _debTimer = setTimeout(() => {
+      if (_query.length >= 3) _doSearch(0);
+    }, 400);
   }
 
   /* ─── Init ─── */
@@ -304,8 +337,9 @@ OmicsLab.Preprints = (function () {
 
         <div class="pp-quick-searches">
           <div class="pp-quick-label">Quick searches:</div>
-          ${QUICK_SEARCHES.map(s =>
-            `<button class="pp-quick-btn" onclick="OmicsLab.Preprints._quickSearch('${_esc(s.q)}')">${s.label}</button>`
+          ${QUICK_SEARCHES.map(
+            (s) =>
+              `<button class="pp-quick-btn" onclick="OmicsLab.Preprints._quickSearch('${_esc(s.q)}')">${s.label}</button>`
           ).join('')}
         </div>
 
@@ -318,5 +352,14 @@ OmicsLab.Preprints = (function () {
       </div>`;
   }
 
-  return { init, analysePreprint, exportCSV, _doSearch, _toggleAfrica, _setServer, _quickSearch, _onInput };
+  return {
+    init,
+    analysePreprint,
+    exportCSV,
+    _doSearch,
+    _toggleAfrica,
+    _setServer,
+    _quickSearch,
+    _onInput,
+  };
 })();

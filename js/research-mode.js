@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
 
-OmicsLab.ResearchMode = (function() {
+OmicsLab.ResearchMode = (function () {
   let _projects = {};
 
   function _populateSelectors() {
@@ -12,13 +12,19 @@ OmicsLab.ResearchMode = (function() {
     const wsel = document.getElementById('rm-workflow');
     const lsel = document.getElementById('rm-lab');
     if (dsel && OmicsLab.DISEASES) {
-      dsel.innerHTML = Object.entries(OmicsLab.DISEASES).map(([id,d]) => `<option value="${id}">${d.name}</option>`).join('');
+      dsel.innerHTML = Object.entries(OmicsLab.DISEASES)
+        .map(([id, d]) => `<option value="${id}">${d.name}</option>`)
+        .join('');
     }
     if (wsel && OmicsLab.Workflows) {
-      wsel.innerHTML = Object.entries(OmicsLab.Workflows).map(([id,w]) => `<option value="${id}">${w.name}</option>`).join('');
+      wsel.innerHTML = Object.entries(OmicsLab.Workflows)
+        .map(([id, w]) => `<option value="${id}">${w.name}</option>`)
+        .join('');
     }
     if (lsel && OmicsLab.AfricaMap && OmicsLab.AfricaMap.CENTRES) {
-      lsel.innerHTML = OmicsLab.AfricaMap.CENTRES.map(c => `<option value="${c.id}">${c.name} — ${c.country}</option>`).join('');
+      lsel.innerHTML = OmicsLab.AfricaMap.CENTRES.map(
+        (c) => `<option value="${c.id}">${c.name} — ${c.country}</option>`
+      ).join('');
     }
   }
 
@@ -26,22 +32,41 @@ OmicsLab.ResearchMode = (function() {
     const start = document.getElementById('rm-start');
     const exp = document.getElementById('rm-export');
     if (start) start.addEventListener('click', _startProject);
-    if (exp)   exp.addEventListener('click', exportProject);
+    if (exp) exp.addEventListener('click', exportProject);
   }
 
   function _startProject() {
     const did = document.getElementById('rm-disease').value;
-    const wf  = document.getElementById('rm-workflow').value;
+    const wf = document.getElementById('rm-workflow').value;
     const lab = document.getElementById('rm-lab').value;
-    const n   = parseInt(document.getElementById('rm-samples').value || '10', 10);
+    const n = parseInt(document.getElementById('rm-samples').value || '10', 10);
     const pid = 'proj-' + Date.now();
-    const project = { id: pid, disease: did, workflow: wf, lab, samples: n, started: new Date().toISOString() };
+    const project = {
+      id: pid,
+      disease: did,
+      workflow: wf,
+      lab,
+      samples: n,
+      started: new Date().toISOString(),
+    };
     _projects[pid] = project;
 
     // Light-weight simulation: compute expected score average from Engine heuristics
-    const baseQuality = OmicsLab.Engine ? OmicsLab.Engine.computeBaselineQuality ? OmicsLab.Engine.computeBaselineQuality() : 75 : 70;
-    const workflowPenalty = (OmicsLab.Workflows && OmicsLab.Workflows[wf] && OmicsLab.Workflows[wf].difficulty === 'advanced') ? -8 : 0;
-    project.estimatedScore = Math.max(40, Math.round(baseQuality + workflowPenalty - (n>50?5:0)));
+    const baseQuality = OmicsLab.Engine
+      ? OmicsLab.Engine.computeBaselineQuality
+        ? OmicsLab.Engine.computeBaselineQuality()
+        : 75
+      : 70;
+    const workflowPenalty =
+      OmicsLab.Workflows &&
+      OmicsLab.Workflows[wf] &&
+      OmicsLab.Workflows[wf].difficulty === 'advanced'
+        ? -8
+        : 0;
+    project.estimatedScore = Math.max(
+      40,
+      Math.round(baseQuality + workflowPenalty - (n > 50 ? 5 : 0))
+    );
 
     _renderProjectSummary(project);
     // Optionally launch the workflow in the app to let user run steps
@@ -54,7 +79,10 @@ OmicsLab.ResearchMode = (function() {
     const container = document.getElementById('research-summary');
     if (!container) return;
     const disease = OmicsLab.DISEASES && OmicsLab.DISEASES[p.disease];
-    const lab = (OmicsLab.AfricaMap && OmicsLab.AfricaMap.CENTRES) ? OmicsLab.AfricaMap.CENTRES.find(c=>c.id===p.lab) : null;
+    const lab =
+      OmicsLab.AfricaMap && OmicsLab.AfricaMap.CENTRES
+        ? OmicsLab.AfricaMap.CENTRES.find((c) => c.id === p.lab)
+        : null;
     container.innerHTML = `
       <div class="rm-card">
         <div class="rm-card-head">
@@ -64,7 +92,7 @@ OmicsLab.ResearchMode = (function() {
         <div class="rm-body">
           <div><strong>Workflow:</strong> ${OmicsLab.Workflows && OmicsLab.Workflows[p.workflow] ? OmicsLab.Workflows[p.workflow].name : p.workflow}</div>
           <div><strong>Host lab:</strong> ${lab ? lab.name + ' (' + lab.country + ')' : p.lab}</div>
-          <div style="margin-top:0.6rem;color:var(--text-muted)">${disease ? disease.africanContext || disease.description.substring(0,240) : ''}</div>
+          <div style="margin-top:0.6rem;color:var(--text-muted)">${disease ? disease.africanContext || disease.description.substring(0, 240) : ''}</div>
         </div>
         <div class="rm-actions">
           <button class="btn-result-primary" onclick="OmicsLab.ResearchMode.runSimulation('${p.id}')">Run Simulation</button>
@@ -77,7 +105,11 @@ OmicsLab.ResearchMode = (function() {
     const p = _projects[pid];
     if (!p) return alert('Project not found');
     // Simple simulation: run the workflow with randomized mistakes to populate State
-    if (confirm('Simulate the wet-lab run in the active workflow? This will reset current lab state. Continue?')) {
+    if (
+      confirm(
+        'Simulate the wet-lab run in the active workflow? This will reset current lab state. Continue?'
+      )
+    ) {
       OmicsLab.Engine.reset(p.workflow);
       // set a few state knobs to reflect project difficulty
       OmicsLab.State.timerStart = Date.now();
@@ -96,11 +128,21 @@ OmicsLab.ResearchMode = (function() {
     _downloadJSON(latest, `omicslab-project-${latest.id}.json`);
   }
 
-  function exportById(pid) { const p = _projects[pid]; if (!p) return alert('Project not found'); _downloadJSON(p, `omicslab-project-${pid}.json`); }
+  function exportById(pid) {
+    const p = _projects[pid];
+    if (!p) return alert('Project not found');
+    _downloadJSON(p, `omicslab-project-${pid}.json`);
+  }
 
   function _downloadJSON(obj, filename) {
-    const data = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(obj, null, 2));
-    const a = document.createElement('a'); a.href = data; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+    const data =
+      'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(obj, null, 2));
+    const a = document.createElement('a');
+    a.href = data;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   function init() {

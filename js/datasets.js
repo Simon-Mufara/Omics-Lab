@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Datasets = (function () {
-
   /* ─── Dataset catalogue ─── */
   const DATASETS = [
     {
@@ -22,10 +21,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 1400,
       year: 2016,
       tags: ['MalariaGEN', 'Drug resistance', 'Population genomics', 'H3Africa'],
-      abstract: 'Whole-genome sequencing of 7,113 Plasmodium falciparum samples from African field studies to map genetic variation, track drug-resistance alleles, and understand parasite population structure across sub-Saharan Africa.',
+      abstract:
+        'Whole-genome sequencing of 7,113 Plasmodium falciparum samples from African field studies to map genetic variation, track drug-resistance alleles, and understand parasite population structure across sub-Saharan Africa.',
       citation: 'MalariaGEN Network (2021) Nat Genet 53:732–741',
       doi: 'https://doi.org/10.1038/s41588-021-00812-9',
-      labWorkflow: 'WGS', color: '#f97316',
+      labWorkflow: 'WGS',
+      color: '#f97316',
     },
     {
       id: 'agvp',
@@ -40,10 +41,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 780,
       year: 2015,
       tags: ['GWAS', 'Reference panel', 'African diversity', 'H3Africa'],
-      abstract: 'Dense genotyping of 1,481 individuals from diverse African ethnic groups to characterise genomic diversity, build imputation reference panels, and reconstruct population history across sub-Saharan Africa.',
+      abstract:
+        'Dense genotyping of 1,481 individuals from diverse African ethnic groups to characterise genomic diversity, build imputation reference panels, and reconstruct population history across sub-Saharan Africa.',
       citation: 'Gurdasani D et al. (2015) Nature 517:327–332',
       doi: 'https://doi.org/10.1038/nature13997',
-      labWorkflow: 'WGS', color: '#58a6ff',
+      labWorkflow: 'WGS',
+      color: '#58a6ff',
     },
     {
       id: 'tb-east-africa',
@@ -58,10 +61,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 65,
       year: 2021,
       tags: ['MDR-TB', 'XDR-TB', 'Drug resistance', 'Lineage', 'One Health'],
-      abstract: 'WGS of 543 M. tuberculosis clinical isolates from East Africa to characterise lineage distribution, drug-resistance mutations (rpoB, katG, inhA), and transmission clusters across the region.',
+      abstract:
+        'WGS of 543 M. tuberculosis clinical isolates from East Africa to characterise lineage distribution, drug-resistance mutations (rpoB, katG, inhA), and transmission clusters across the region.',
       citation: 'Coll F et al. (2018) Nat Commun 9:4254',
       doi: 'https://doi.org/10.1038/s41467-018-06811-z',
-      labWorkflow: 'WGS', color: '#00C4A0',
+      labWorkflow: 'WGS',
+      color: '#00C4A0',
     },
     {
       id: 'sars-cov2-sa',
@@ -76,10 +81,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 45,
       year: 2021,
       tags: ['Beta', 'Delta', 'Omicron', 'VOC', 'ARTIC', 'NGS-SA', 'H3ABioNet'],
-      abstract: 'ARTIC amplicon sequencing of South African SARS-CoV-2 isolates including the Beta (B.1.351), Delta (B.1.617.2), and Omicron (B.1.1.529) discoveries by the Network for Genomic Surveillance South Africa.',
+      abstract:
+        'ARTIC amplicon sequencing of South African SARS-CoV-2 isolates including the Beta (B.1.351), Delta (B.1.617.2), and Omicron (B.1.1.529) discoveries by the Network for Genomic Surveillance South Africa.',
       citation: 'Tegally H et al. (2021) Nature 592:438–443',
       doi: 'https://doi.org/10.1038/s41586-021-03402-9',
-      labWorkflow: 'WGS', color: '#f85149',
+      labWorkflow: 'WGS',
+      color: '#f85149',
     },
     {
       id: 'hiv-eart-africa',
@@ -94,10 +101,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 12,
       year: 2020,
       tags: ['Drug resistance', 'ART', 'Pol gene', 'APCDR', 'Second-line therapy'],
-      abstract: 'Deep amplicon sequencing of the HIV-1 pol gene in 1,034 patients from East African ART programmes to detect drug-resistance mutations and guide evidence-based second-line therapy decisions.',
+      abstract:
+        'Deep amplicon sequencing of the HIV-1 pol gene in 1,034 patients from East African ART programmes to detect drug-resistance mutations and guide evidence-based second-line therapy decisions.',
       citation: 'Rhee SY et al. (2019) J Int AIDS Soc 22:e25331',
       doi: 'https://doi.org/10.1002/jia2.25331',
-      labWorkflow: 'WGS', color: '#bc8cff',
+      labWorkflow: 'WGS',
+      color: '#bc8cff',
     },
     {
       id: 'malaria-rnaseq',
@@ -112,10 +121,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 48,
       year: 2021,
       tags: ['Transcriptomics', 'K13 mutation', 'Artemisinin', 'Ring stage', 'Resistance'],
-      abstract: 'Bulk RNA-seq of 96 paired clinical isolates from Kenyan malaria patients characterising transcriptional differences between artemisinin-sensitive and K13 mutant tolerant parasites across the intraerythrocytic developmental cycle.',
+      abstract:
+        'Bulk RNA-seq of 96 paired clinical isolates from Kenyan malaria patients characterising transcriptional differences between artemisinin-sensitive and K13 mutant tolerant parasites across the intraerythrocytic developmental cycle.',
       citation: 'Rocamora F et al. (2021) PLOS Pathog 17:e1009438',
       doi: 'https://doi.org/10.1371/journal.ppat.1009438',
-      labWorkflow: 'RNA-seq', color: '#f97316',
+      labWorkflow: 'RNA-seq',
+      color: '#f97316',
     },
     {
       id: 'gut-microbiome',
@@ -130,10 +141,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 210,
       year: 2020,
       tags: ['Hadza', 'San', 'Shotgun', '16S rRNA', 'Diet-microbiome', 'Diversity'],
-      abstract: 'Shotgun and 16S rRNA metagenomics comparing gut microbiomes of Hadza and San hunter-gatherer populations with urban South Africans, revealing links between traditional lifestyles and microbiota richness.',
+      abstract:
+        'Shotgun and 16S rRNA metagenomics comparing gut microbiomes of Hadza and San hunter-gatherer populations with urban South Africans, revealing links between traditional lifestyles and microbiota richness.',
       citation: 'Smits SA et al. (2017) Science 357:802–806',
       doi: 'https://doi.org/10.1126/science.aan4237',
-      labWorkflow: 'Metagenomics', color: '#e3b341',
+      labWorkflow: 'Metagenomics',
+      color: '#e3b341',
     },
     {
       id: 'salmonella-africa',
@@ -148,10 +161,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 95,
       year: 2013,
       tags: ['ST313', 'AMR', 'MLST', 'Bloodstream infection', 'Africa-adapted lineage'],
-      abstract: 'WGS of 714 Salmonella enterica serovar Typhimurium ST313 isolates from African bloodstream infection patients, revealing a distinct Africa-adapted lineage with enhanced virulence and multidrug resistance genes.',
+      abstract:
+        'WGS of 714 Salmonella enterica serovar Typhimurium ST313 isolates from African bloodstream infection patients, revealing a distinct Africa-adapted lineage with enhanced virulence and multidrug resistance genes.',
       citation: 'Okoro CK et al. (2012) Nat Genet 44:1215–1221',
       doi: 'https://doi.org/10.1038/ng.2423',
-      labWorkflow: 'WGS', color: '#58a6ff',
+      labWorkflow: 'WGS',
+      color: '#58a6ff',
     },
     {
       id: 'sickle-cell',
@@ -166,10 +181,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 520,
       year: 2021,
       tags: ['HbSS', 'BCL11A', 'HbF', 'H3Africa', 'Modifier variants', 'Stroke risk'],
-      abstract: 'WGS of 1,127 West African sickle-cell patients identifying genetic modifiers of disease severity including fetal haemoglobin QTLs, pain crisis frequency, and stroke risk alleles in diverse African haplotype backgrounds.',
+      abstract:
+        'WGS of 1,127 West African sickle-cell patients identifying genetic modifiers of disease severity including fetal haemoglobin QTLs, pain crisis frequency, and stroke risk alleles in diverse African haplotype backgrounds.',
       citation: 'Pecker LH et al. (2021) Blood Adv 5:2873',
       doi: 'https://doi.org/10.1182/bloodadvances.2020003637',
-      labWorkflow: 'WGS', color: '#f85149',
+      labWorkflow: 'WGS',
+      color: '#f85149',
     },
     {
       id: 'mpox-drc',
@@ -184,10 +201,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 4,
       year: 2022,
       tags: ['Clade I', 'Orthopoxvirus', 'Zoonosis', 'APOBEC3', 'WHO PHEIC'],
-      abstract: 'WGS of 178 MPXV Clade I isolates from DRC endemic regions characterising within-clade diversity, animal-to-human spillover events, and APOBEC3-driven evolution in sustained human-to-human transmission chains.',
+      abstract:
+        'WGS of 178 MPXV Clade I isolates from DRC endemic regions characterising within-clade diversity, animal-to-human spillover events, and APOBEC3-driven evolution in sustained human-to-human transmission chains.',
       citation: 'Karagoz A et al. (2023) Viruses 15:633',
       doi: 'https://doi.org/10.3390/v15030633',
-      labWorkflow: 'WGS', color: '#f97316',
+      labWorkflow: 'WGS',
+      color: '#f97316',
     },
     {
       id: 'omicron-botswana',
@@ -202,10 +221,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 0.5,
       year: 2021,
       tags: ['Omicron', 'VOC', 'Spike mutations', 'NGS-SA', 'BHP'],
-      abstract: 'The original 24 SARS-CoV-2 Omicron (B.1.1.529) genomes from the Botswana Harvard AIDS Institute Partnership, triggering WHO Variant of Concern designation within 72 hours of sequencing.',
+      abstract:
+        'The original 24 SARS-CoV-2 Omicron (B.1.1.529) genomes from the Botswana Harvard AIDS Institute Partnership, triggering WHO Variant of Concern designation within 72 hours of sequencing.',
       citation: 'Viana R et al. (2022) Nature 603:679–686',
       doi: 'https://doi.org/10.1038/s41586-022-04411-y',
-      labWorkflow: 'WGS', color: '#f85149',
+      labWorkflow: 'WGS',
+      color: '#f85149',
     },
     {
       id: 'yoruba-pop-gen',
@@ -220,10 +241,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 155,
       year: 2020,
       tags: ['1000 Genomes', 'Haplotype phasing', 'West African', 'Reference panel', 'Imputation'],
-      abstract: 'Deep 30× WGS of 340 Yoruba Nigerians building a high-resolution haplotype reference panel for West African GWAS imputation, capturing variants absent from European reference populations.',
+      abstract:
+        'Deep 30× WGS of 340 Yoruba Nigerians building a high-resolution haplotype reference panel for West African GWAS imputation, capturing variants absent from European reference populations.',
       citation: 'Bergström A et al. (2020) Science 369:eaay5012',
       doi: 'https://doi.org/10.1126/science.aay5012',
-      labWorkflow: 'WGS', color: '#00C4A0',
+      labWorkflow: 'WGS',
+      color: '#00C4A0',
     },
     {
       id: 'hiv-sa-rnaseq',
@@ -238,10 +261,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 60,
       year: 2021,
       tags: ['Immune response', 'CD4+ T cells', 'Interferon', 'PBMC', 'ART', 'Transcriptomics'],
-      abstract: 'Bulk RNA-seq of PBMCs from 120 South African HIV-1-infected patients (treatment-naive, virologically suppressed, long-term non-progressors) mapping transcriptomic correlates of viral control and immune dysfunction.',
+      abstract:
+        'Bulk RNA-seq of PBMCs from 120 South African HIV-1-infected patients (treatment-naive, virologically suppressed, long-term non-progressors) mapping transcriptomic correlates of viral control and immune dysfunction.',
       citation: 'Cassol E et al. (2021) J Immunol 207:1183',
       doi: 'https://doi.org/10.4049/jimmunol.2100278',
-      labWorkflow: 'RNA-seq', color: '#bc8cff',
+      labWorkflow: 'RNA-seq',
+      color: '#bc8cff',
     },
     {
       id: 'cholera-drc',
@@ -256,10 +281,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 28,
       year: 2022,
       tags: ['El Tor', 'Pandemic lineage', 'SXT-ICE', 'AMR', '7th pandemic'],
-      abstract: 'WGS of 231 V. cholerae O1 El Tor isolates from endemic DRC tracing 7th pandemic transmission routes and characterising antimicrobial resistance gene cargo on SXT integrative conjugative elements.',
+      abstract:
+        'WGS of 231 V. cholerae O1 El Tor isolates from endemic DRC tracing 7th pandemic transmission routes and characterising antimicrobial resistance gene cargo on SXT integrative conjugative elements.',
       citation: 'Weill FX et al. (2022) Nat Commun 13:4067',
       doi: 'https://doi.org/10.1038/s41467-022-31369-4',
-      labWorkflow: 'WGS', color: '#58a6ff',
+      labWorkflow: 'WGS',
+      color: '#58a6ff',
     },
     {
       id: 'tb-south-africa',
@@ -274,10 +301,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 140,
       year: 2019,
       tags: ['XDR-TB', 'Pre-XDR', 'Lineage 4', 'KwaZulu-Natal', 'Precision medicine'],
-      abstract: 'WGS of 1,169 M. tuberculosis isolates from the KwaZulu-Natal XDR-TB outbreak providing comprehensive drug-resistance characterisation across 9 first- and second-line drugs to guide precision treatment selection.',
+      abstract:
+        'WGS of 1,169 M. tuberculosis isolates from the KwaZulu-Natal XDR-TB outbreak providing comprehensive drug-resistance characterisation across 9 first- and second-line drugs to guide precision treatment selection.',
       citation: 'Ghodousi A et al. (2019) Emerg Infect Dis 25:1519',
       doi: 'https://doi.org/10.3201/eid2508.181410',
-      labWorkflow: 'WGS', color: '#00C4A0',
+      labWorkflow: 'WGS',
+      color: '#00C4A0',
     },
     {
       id: 'placental-malaria',
@@ -292,10 +321,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 36,
       year: 2020,
       tags: ['Dual RNA-seq', 'var genes', 'Placenta', 'Immune evasion', 'Pregnancy'],
-      abstract: 'Dual-species RNA-seq of placental biopsies from 72 Ghanaian pregnant women, simultaneously profiling human immunological expression and P. falciparum var gene transcription to understand immune evasion at the maternal-foetal interface.',
+      abstract:
+        'Dual-species RNA-seq of placental biopsies from 72 Ghanaian pregnant women, simultaneously profiling human immunological expression and P. falciparum var gene transcription to understand immune evasion at the maternal-foetal interface.',
       citation: 'Jensen AR et al. (2020) Front Immunol 11:1456',
       doi: 'https://doi.org/10.3389/fimmu.2020.01456',
-      labWorkflow: 'RNA-seq', color: '#f97316',
+      labWorkflow: 'RNA-seq',
+      color: '#f97316',
     },
     {
       id: 'soil-microbiome-kenya',
@@ -310,10 +341,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 168,
       year: 2020,
       tags: ['16S rRNA', 'Rhizobia', 'N-fixation', 'Soil carbon', 'IITA', 'One Health'],
-      abstract: 'Shotgun and amplicon metagenomics of 280 agricultural soils from the IITA network characterising microbial communities associated with nitrogen fixation and soil organic carbon in African smallholder farming systems.',
+      abstract:
+        'Shotgun and amplicon metagenomics of 280 agricultural soils from the IITA network characterising microbial communities associated with nitrogen fixation and soil organic carbon in African smallholder farming systems.',
       citation: 'Ayuke F et al. (2020) Appl Soil Ecol 156:103709',
       doi: 'https://doi.org/10.1016/j.apsoil.2020.103709',
-      labWorkflow: 'Metagenomics', color: '#e3b341',
+      labWorkflow: 'Metagenomics',
+      color: '#e3b341',
     },
     {
       id: 'venom-kenya',
@@ -328,10 +361,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 9,
       year: 2021,
       tags: ['de novo assembly', 'Venom proteins', 'Antivenoms', 'One Health', 'Toxins'],
-      abstract: 'De novo transcriptome assembly of puff adder venom glands to characterise the full toxin repertoire, geographic venom variation, and epitopes for next-generation African antivenom development.',
+      abstract:
+        'De novo transcriptome assembly of puff adder venom glands to characterise the full toxin repertoire, geographic venom variation, and epitopes for next-generation African antivenom development.',
       citation: 'Kazemi-Lomedasht F et al. (2021) Toxins 13:555',
       doi: 'https://doi.org/10.3390/toxins13080555',
-      labWorkflow: 'RNA-seq', color: '#e3b341',
+      labWorkflow: 'RNA-seq',
+      color: '#e3b341',
     },
     {
       id: 'scrnaseq-malaria',
@@ -346,10 +381,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 76,
       year: 2022,
       tags: ['10x Genomics', 'Hepatocyte invasion', 'Cell atlas', 'Vaccine target', 'Single-cell'],
-      abstract: 'Single-cell RNA-seq of liver biopsies from Gabonese and Kenyan malaria patients constructing the first cell-type-resolved atlas of P. falciparum liver-stage invasion and immune evasion.',
+      abstract:
+        'Single-cell RNA-seq of liver biopsies from Gabonese and Kenyan malaria patients constructing the first cell-type-resolved atlas of P. falciparum liver-stage invasion and immune evasion.',
       citation: 'Howick VM et al. (2022) Cell Host Microbe 32:1',
       doi: 'https://doi.org/10.1016/j.chom.2022.03.001',
-      labWorkflow: 'RNA-seq', color: '#f97316',
+      labWorkflow: 'RNA-seq',
+      color: '#f97316',
     },
     {
       id: 'covid19-nigeria',
@@ -364,10 +401,12 @@ OmicsLab.Datasets = (function () {
       gbApprox: 10,
       year: 2021,
       tags: ['ACEGID', 'West Africa', 'Nanopore', 'ARTIC', 'Lineage tracking'],
-      abstract: 'Nanopore ARTIC sequencing of 487 SARS-CoV-2 genomes from the ACEGID Nigeria surveillance programme, tracking lineage introductions and local transmission chains across Nigerian states from 2020–2021.',
+      abstract:
+        'Nanopore ARTIC sequencing of 487 SARS-CoV-2 genomes from the ACEGID Nigeria surveillance programme, tracking lineage introductions and local transmission chains across Nigerian states from 2020–2021.',
       citation: 'Babatunde OA et al. (2021) eLife 10:e72872',
       doi: 'https://doi.org/10.7554/eLife.72872',
-      labWorkflow: 'WGS', color: '#f85149',
+      labWorkflow: 'WGS',
+      color: '#f85149',
     },
   ];
 
@@ -384,23 +423,27 @@ OmicsLab.Datasets = (function () {
   /* ─── Filter datasets ─── */
   function _filtered() {
     const q = _filter.query.toLowerCase();
-    return DATASETS.filter(d => {
+    return DATASETS.filter((d) => {
       if (_filter.disease !== 'all' && d.disease !== _filter.disease) return false;
       if (_filter.dataType !== 'all' && d.dataType !== _filter.dataType) return false;
-      if (q && !d.title.toLowerCase().includes(q) &&
-              !d.accession.toLowerCase().includes(q) &&
-              !d.organism.toLowerCase().includes(q) &&
-              !d.tags.some(t => t.toLowerCase().includes(q))) return false;
+      if (
+        q &&
+        !d.title.toLowerCase().includes(q) &&
+        !d.accession.toLowerCase().includes(q) &&
+        !d.organism.toLowerCase().includes(q) &&
+        !d.tags.some((t) => t.toLowerCase().includes(q))
+      )
+        return false;
       return true;
     });
   }
 
   /* ─── Render the full page ─── */
   function _render(section) {
-    const diseases = ['all', ...new Set(DATASETS.map(d => d.disease))];
-    const dataTypes = ['all', ...new Set(DATASETS.map(d => d.dataType))];
+    const diseases = ['all', ...new Set(DATASETS.map((d) => d.disease))];
+    const dataTypes = ['all', ...new Set(DATASETS.map((d) => d.dataType))];
     const totalSamples = DATASETS.reduce((s, d) => s + d.samples, 0);
-    const totalCountries = new Set(DATASETS.flatMap(d => d.countries)).size;
+    const totalCountries = new Set(DATASETS.flatMap((d) => d.countries)).size;
 
     section.innerHTML = `
       <div class="ds-wrap">
@@ -445,21 +488,29 @@ OmicsLab.Datasets = (function () {
             <div class="ds-filter-group">
               <span class="ds-filter-label">Data Type</span>
               <div class="ds-chips" id="ds-chips-type">
-                ${dataTypes.map(t => `
-                  <button class="ds-chip${t==='all'?' active':''}"
+                ${dataTypes
+                  .map(
+                    (t) => `
+                  <button class="ds-chip${t === 'all' ? ' active' : ''}"
                           data-val="${t}" onclick="OmicsLab.Datasets._setFilter('dataType','${t}')">
                     ${t === 'all' ? 'All' : t}
-                  </button>`).join('')}
+                  </button>`
+                  )
+                  .join('')}
               </div>
             </div>
             <div class="ds-filter-group">
               <span class="ds-filter-label">Disease</span>
               <div class="ds-chips" id="ds-chips-disease">
-                ${diseases.map(d => `
-                  <button class="ds-chip${d==='all'?' active':''}"
+                ${diseases
+                  .map(
+                    (d) => `
+                  <button class="ds-chip${d === 'all' ? ' active' : ''}"
                           data-val="${d}" onclick="OmicsLab.Datasets._setFilter('disease','${encodeURIComponent(d)}')">
                     ${d === 'all' ? 'All' : d}
-                  </button>`).join('')}
+                  </button>`
+                  )
+                  .join('')}
               </div>
             </div>
           </div>
@@ -492,7 +543,8 @@ OmicsLab.Datasets = (function () {
     if (!grid) return;
 
     const results = _filtered();
-    if (countEl) countEl.textContent = `${results.length} dataset${results.length !== 1 ? 's' : ''}`;
+    if (countEl)
+      countEl.textContent = `${results.length} dataset${results.length !== 1 ? 's' : ''}`;
 
     if (!results.length) {
       grid.innerHTML = `<div class="ds-empty">
@@ -503,7 +555,9 @@ OmicsLab.Datasets = (function () {
       return;
     }
 
-    grid.innerHTML = results.map(ds => `
+    grid.innerHTML = results
+      .map(
+        (ds) => `
       <button class="ds-card${_selected && _selected.id === ds.id ? ' selected' : ''}"
               onclick="OmicsLab.Datasets._selectDataset('${ds.id}')"
               style="--ds-color:${ds.color}">
@@ -520,14 +574,19 @@ OmicsLab.Datasets = (function () {
           </span>
           <span class="ds-card-meta">
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            ${ds.countries.slice(0,3).join(', ')}${ds.countries.length > 3 ? ` +${ds.countries.length - 3}` : ''}
+            ${ds.countries.slice(0, 3).join(', ')}${ds.countries.length > 3 ? ` +${ds.countries.length - 3}` : ''}
           </span>
           <span class="ds-card-meta">${ds.year}</span>
         </div>
         <div class="ds-card-tags">
-          ${ds.tags.slice(0,3).map(t => `<span class="ds-tag">${t}</span>`).join('')}
+          ${ds.tags
+            .slice(0, 3)
+            .map((t) => `<span class="ds-tag">${t}</span>`)
+            .join('')}
         </div>
-      </button>`).join('');
+      </button>`
+      )
+      .join('');
   }
 
   /* ─── Dataset detail panel ─── */
@@ -565,7 +624,7 @@ OmicsLab.Datasets = (function () {
           </div>
           <div class="ds-det-cell">
             <span class="ds-det-cell-label">Size (approx)</span>
-            <span class="ds-det-cell-val">${ds.gbApprox >= 1 ? ds.gbApprox + ' GB' : (ds.gbApprox * 1000) + ' MB'}</span>
+            <span class="ds-det-cell-val">${ds.gbApprox >= 1 ? ds.gbApprox + ' GB' : ds.gbApprox * 1000 + ' MB'}</span>
           </div>
           <div class="ds-det-cell">
             <span class="ds-det-cell-label">Source DB</span>
@@ -580,12 +639,12 @@ OmicsLab.Datasets = (function () {
         <div class="ds-det-countries">
           <span class="ds-det-cell-label">Countries</span>
           <div class="ds-det-country-chips">
-            ${ds.countries.map(c => `<span class="ds-country-chip">${c}</span>`).join('')}
+            ${ds.countries.map((c) => `<span class="ds-country-chip">${c}</span>`).join('')}
           </div>
         </div>
 
         <div class="ds-det-tags">
-          ${ds.tags.map(t => `<span class="ds-tag">${t}</span>`).join('')}
+          ${ds.tags.map((t) => `<span class="ds-tag">${t}</span>`).join('')}
         </div>
 
         <div class="ds-det-citation">
@@ -622,15 +681,15 @@ OmicsLab.Datasets = (function () {
 
   /* ─── Hex → RGB for rgba() usage ─── */
   function _hexToRgb(hex) {
-    const r = parseInt(hex.slice(1,3),16);
-    const g = parseInt(hex.slice(3,5),16);
-    const b = parseInt(hex.slice(5,7),16);
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
     return `${r},${g},${b}`;
   }
 
   /* ─── Public API ─── */
   function _selectDataset(id) {
-    _selected = DATASETS.find(d => d.id === id) || null;
+    _selected = DATASETS.find((d) => d.id === id) || null;
     _renderGrid(); /* re-render cards to update selected state */
     if (_selected) _renderDetail(_selected);
   }
@@ -649,9 +708,10 @@ OmicsLab.Datasets = (function () {
     /* Update chip active state */
     const chipId = key === 'dataType' ? 'ds-chips-type' : 'ds-chips-disease';
     const wrap = document.getElementById(chipId);
-    if (wrap) wrap.querySelectorAll('.ds-chip').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.val === _filter[key]);
-    });
+    if (wrap)
+      wrap.querySelectorAll('.ds-chip').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.val === _filter[key]);
+      });
     _renderGrid();
   }
 
@@ -664,25 +724,31 @@ OmicsLab.Datasets = (function () {
     _filter = { disease: 'all', dataType: 'all', query: '' };
     const search = document.getElementById('ds-search');
     if (search) search.value = '';
-    document.querySelectorAll('.ds-chips .ds-chip').forEach(btn => {
+    document.querySelectorAll('.ds-chips .ds-chip').forEach((btn) => {
       btn.classList.toggle('active', btn.dataset.val === 'all');
     });
     _renderGrid();
   }
 
   function _copyAccession(acc, btn) {
-    navigator.clipboard.writeText(acc).then(() => {
-      const orig = btn.innerHTML;
-      btn.textContent = 'Copied!';
-      btn.style.color = '#00C4A0';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 1800);
-    }).catch(() => {
-      btn.textContent = acc; /* fallback: show accession inline */
-    });
+    navigator.clipboard
+      .writeText(acc)
+      .then(() => {
+        const orig = btn.innerHTML;
+        btn.textContent = 'Copied!';
+        btn.style.color = '#00C4A0';
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.color = '';
+        }, 1800);
+      })
+      .catch(() => {
+        btn.textContent = acc; /* fallback: show accession inline */
+      });
   }
 
   function _loadIntoLab(id) {
-    const ds = DATASETS.find(d => d.id === id);
+    const ds = DATASETS.find((d) => d.id === id);
     if (!ds) return;
     /* These are real SRA/ENA/GISAID accessions, not a wet-lab protocol to
        simulate — the useful next step is analysing real data, not starting
@@ -712,5 +778,14 @@ OmicsLab.Datasets = (function () {
     _render(section);
   }
 
-  return { init, _selectDataset, _closeDetail, _setFilter, _onSearch, _resetFilters, _copyAccession, _loadIntoLab };
+  return {
+    init,
+    _selectDataset,
+    _closeDetail,
+    _setFilter,
+    _onSearch,
+    _resetFilters,
+    _copyAccession,
+    _loadIntoLab,
+  };
 })();

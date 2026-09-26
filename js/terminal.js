@@ -10,21 +10,48 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Terminal = (function () {
-
   /* ─── Virtual filesystem ─── */
   const VFS = {
     '/home/user': { type: 'dir' },
     '/home/user/workspace': { type: 'dir' },
     '/home/user/workspace/data': { type: 'dir' },
-    '/home/user/workspace/data/sample_R1.fastq.gz': { type: 'file', size: '2.1G', desc: 'Raw reads (forward)' },
-    '/home/user/workspace/data/sample_R2.fastq.gz': { type: 'file', size: '2.1G', desc: 'Raw reads (reverse)' },
-    '/home/user/workspace/data/reference.fa': { type: 'file', size: '3.2G', desc: 'GRCh38 reference genome' },
-    '/home/user/workspace/data/variants.vcf': { type: 'file', size: '48M', desc: 'Known variant sites' },
-    '/home/user/workspace/data/annotation.gtf': { type: 'file', size: '880M', desc: 'Ensembl 109 annotation' },
+    '/home/user/workspace/data/sample_R1.fastq.gz': {
+      type: 'file',
+      size: '2.1G',
+      desc: 'Raw reads (forward)',
+    },
+    '/home/user/workspace/data/sample_R2.fastq.gz': {
+      type: 'file',
+      size: '2.1G',
+      desc: 'Raw reads (reverse)',
+    },
+    '/home/user/workspace/data/reference.fa': {
+      type: 'file',
+      size: '3.2G',
+      desc: 'GRCh38 reference genome',
+    },
+    '/home/user/workspace/data/variants.vcf': {
+      type: 'file',
+      size: '48M',
+      desc: 'Known variant sites',
+    },
+    '/home/user/workspace/data/annotation.gtf': {
+      type: 'file',
+      size: '880M',
+      desc: 'Ensembl 109 annotation',
+    },
     '/home/user/workspace/results': { type: 'dir' },
     '/home/user/workspace/scripts': { type: 'dir' },
-    '/home/user/workspace/scripts/wgs_pipeline.sh': { type: 'file', size: '4.2K', desc: 'WGS analysis pipeline' },
-    '/home/user/workspace/scripts/rnaseq_pipeline.sh': { type: 'file', size: '3.8K', desc: 'RNA-seq pipeline' },
+    '/home/user/workspace/scripts/wgs_pipeline.sh': {
+      type: 'file',
+      size: '4.2K',
+      desc: 'WGS analysis pipeline',
+    },
+    '/home/user/workspace/scripts/rnaseq_pipeline.sh': {
+      type: 'file',
+      size: '3.8K',
+      desc: 'RNA-seq pipeline',
+    },
   };
 
   let cwd = '/home/user/workspace';
@@ -46,17 +73,68 @@ OmicsLab.Terminal = (function () {
       desc: 'BWA-MEM2 > GATK HaplotypeCaller',
       cmd: 'run-pipeline wgs',
       steps: [
-        { label: 'FastQC (raw)', fn: _fastqc, args: ['data/sample_R1.fastq.gz', 'data/sample_R2.fastq.gz'] },
-        { label: 'fastp trim',   fn: _fastp,  args: ['data/sample_R1.fastq.gz', 'data/sample_R2.fastq.gz'] },
-        { label: 'BWA-MEM2 align', fn: _bwa, args: ['mem', '-t', '8', 'data/reference.fa', 'results/trimmed_R1.fastq.gz', 'results/trimmed_R2.fastq.gz', '-o', 'results/aligned.sam'] },
-        { label: 'sam→bam+sort', fn: _samtools, args: ['sort', '-o', 'results/aligned.bam', 'results/aligned.sam'] },
+        {
+          label: 'FastQC (raw)',
+          fn: _fastqc,
+          args: ['data/sample_R1.fastq.gz', 'data/sample_R2.fastq.gz'],
+        },
+        {
+          label: 'fastp trim',
+          fn: _fastp,
+          args: ['data/sample_R1.fastq.gz', 'data/sample_R2.fastq.gz'],
+        },
+        {
+          label: 'BWA-MEM2 align',
+          fn: _bwa,
+          args: [
+            'mem',
+            '-t',
+            '8',
+            'data/reference.fa',
+            'results/trimmed_R1.fastq.gz',
+            'results/trimmed_R2.fastq.gz',
+            '-o',
+            'results/aligned.sam',
+          ],
+        },
+        {
+          label: 'sam→bam+sort',
+          fn: _samtools,
+          args: ['sort', '-o', 'results/aligned.bam', 'results/aligned.sam'],
+        },
         { label: 'MarkDuplicates', fn: _picard, args: ['MarkDuplicates'] },
-        { label: 'BQSR', fn: _gatk,    args: ['BaseRecalibrator', '-I', 'results/dedup.bam', '-R', 'data/reference.fa', '--known-sites', 'data/variants.vcf', '-O', 'results/recal.table'] },
-        { label: 'HaplotypeCaller', fn: _gatk, args: ['HaplotypeCaller', '-R', 'data/reference.fa', '-I', 'results/recal.bam', '-O', 'results/raw_variants.vcf'] },
+        {
+          label: 'BQSR',
+          fn: _gatk,
+          args: [
+            'BaseRecalibrator',
+            '-I',
+            'results/dedup.bam',
+            '-R',
+            'data/reference.fa',
+            '--known-sites',
+            'data/variants.vcf',
+            '-O',
+            'results/recal.table',
+          ],
+        },
+        {
+          label: 'HaplotypeCaller',
+          fn: _gatk,
+          args: [
+            'HaplotypeCaller',
+            '-R',
+            'data/reference.fa',
+            '-I',
+            'results/recal.bam',
+            '-O',
+            'results/raw_variants.vcf',
+          ],
+        },
         { label: 'VQSR / filter', fn: _gatk, args: ['VariantFiltration'] },
         { label: 'VEP annotate', fn: _vep, args: [] },
         { label: 'MultiQC report', fn: _multiqc, args: ['results/'] },
-      ]
+      ],
     },
     {
       id: 'rnaseq',
@@ -65,13 +143,13 @@ OmicsLab.Terminal = (function () {
       desc: 'STAR align > Salmon quant > DESeq2',
       cmd: 'run-pipeline rnaseq',
       steps: [
-        { label: 'FastQC (raw)',  fn: _fastqc, args: ['data/sample_R1.fastq.gz'] },
-        { label: 'Trim Galore',  fn: _trimGalore, args: [] },
-        { label: 'STAR align',   fn: _star, args: [] },
-        { label: 'featureCounts',fn: _featureCounts, args: [] },
+        { label: 'FastQC (raw)', fn: _fastqc, args: ['data/sample_R1.fastq.gz'] },
+        { label: 'Trim Galore', fn: _trimGalore, args: [] },
+        { label: 'STAR align', fn: _star, args: [] },
+        { label: 'featureCounts', fn: _featureCounts, args: [] },
         { label: 'Salmon quant', fn: _salmon, args: ['quant'] },
-        { label: 'MultiQC',      fn: _multiqc, args: ['results/'] },
-      ]
+        { label: 'MultiQC', fn: _multiqc, args: ['results/'] },
+      ],
     },
     {
       id: 'variant',
@@ -81,11 +159,11 @@ OmicsLab.Terminal = (function () {
       cmd: 'run-pipeline variant',
       steps: [
         { label: 'HISAT2 align', fn: _hisat2, args: [] },
-        { label: 'sam→bam',     fn: _samtools, args: ['sort'] },
+        { label: 'sam→bam', fn: _samtools, args: ['sort'] },
         { label: 'bcftools mpileup', fn: _bcftools, args: ['mpileup'] },
-        { label: 'bcftools call',    fn: _bcftools, args: ['call'] },
-        { label: 'bgzip+tabix',      fn: _bgzip,    args: [] },
-      ]
+        { label: 'bcftools call', fn: _bcftools, args: ['call'] },
+        { label: 'bgzip+tabix', fn: _bgzip, args: [] },
+      ],
     },
     {
       id: 'meta',
@@ -94,11 +172,11 @@ OmicsLab.Terminal = (function () {
       desc: 'Kraken2 classify > Bracken abundance',
       cmd: 'run-pipeline meta',
       steps: [
-        { label: 'fastp QC',    fn: _fastp,   args: [] },
-        { label: 'Kraken2',     fn: _kraken2, args: [] },
-        { label: 'Bracken',     fn: _bracken, args: [] },
-        { label: 'Krona plot',  fn: _krona,   args: [] },
-      ]
+        { label: 'fastp QC', fn: _fastp, args: [] },
+        { label: 'Kraken2', fn: _kraken2, args: [] },
+        { label: 'Bracken', fn: _bracken, args: [] },
+        { label: 'Krona plot', fn: _krona, args: [] },
+      ],
     },
   ];
 
@@ -117,12 +195,19 @@ OmicsLab.Terminal = (function () {
     div.innerHTML = html;
     _outputEl.appendChild(div);
   }
-  function _blank() { _raw('<div class="to-blank"></div>'); }
-  function _esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function _scroll() { if (_outputEl) _outputEl.scrollTop = _outputEl.scrollHeight; }
+  function _blank() {
+    _raw('<div class="to-blank"></div>');
+  }
+  function _esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function _scroll() {
+    if (_outputEl) _outputEl.scrollTop = _outputEl.scrollHeight;
+  }
 
   function _echoCmd(cmd) {
-    _line('to-line',
+    _line(
+      'to-line',
       ['to-prompt', `user@omicslab:${cwd.replace('/home/user', '~')}$`],
       ['to-cmd', ' ' + cmd]
     );
@@ -155,17 +240,19 @@ OmicsLab.Terminal = (function () {
     }
   }
 
-  function _sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function _sleep(ms) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
 
   /* ─── Tool simulation functions ─── */
   async function _fastqc(args) {
-    const files = args.filter(a => !a.startsWith('-'));
+    const files = args.filter((a) => !a.startsWith('-'));
     _line('to-line', ['to-info', `Started analysis in FastQC v0.12.1`]);
     for (const f of files) {
       await _animateProgress(`Analysing ${f.split('/').pop()}`, 900);
-      const base = f.replace('.fastq.gz','').replace('.fastq','').split('/').pop();
-      _addVFS(`results/${base}_fastqc.html`,'68K','new');
-      _addVFS(`results/${base}_fastqc.zip`,'98K','new');
+      const base = f.replace('.fastq.gz', '').replace('.fastq', '').split('/').pop();
+      _addVFS(`results/${base}_fastqc.html`, '68K', 'new');
+      _addVFS(`results/${base}_fastqc.zip`, '98K', 'new');
       _line('to-line', ['to-success', `[OK] ${base}_fastqc.html written`]);
     }
     _line('to-line', ['to-success', 'Analysis complete for ' + files.length + ' file(s)']);
@@ -175,20 +262,20 @@ OmicsLab.Terminal = (function () {
   async function _fastp(args) {
     _line('to-line', ['to-info', 'fastp v0.23.4 — Ultrafast all-in-one FASTQ preprocessor']);
     await _animateProgress('Detecting adapters', 400);
-    await _animateProgress('Trimming reads',     900);
-    await _animateProgress('Filtering quality',  400);
+    await _animateProgress('Trimming reads', 900);
+    await _animateProgress('Filtering quality', 400);
     _blank();
     _line('to-line', ['to-section', 'Summary:']);
     _line('to-line', ['to-stdout', '  Total reads:    '], ['to-number', '48,312,990']);
     _line('to-line', ['to-stdout', '  Passed filter:  '], ['to-success', '46,718,440 (96.70%)']);
-    _line('to-line', ['to-stdout', '  Low quality:    '], ['to-warn',    '1,248,822  (2.58%)']);
-    _line('to-line', ['to-stdout', '  Adapter trimmed:'], ['to-number',  '3,912,008  (8.10%)']);
+    _line('to-line', ['to-stdout', '  Low quality:    '], ['to-warn', '1,248,822  (2.58%)']);
+    _line('to-line', ['to-stdout', '  Adapter trimmed:'], ['to-number', '3,912,008  (8.10%)']);
     _line('to-line', ['to-stdout', '  Q30 rate:       '], ['to-success', '94.32%']);
     _blank();
-    _addVFS('results/trimmed_R1.fastq.gz','1.9G','new');
-    _addVFS('results/trimmed_R2.fastq.gz','1.9G','new');
-    _addVFS('results/fastp.json','8.2K','new');
-    _addVFS('results/fastp.html','312K','new');
+    _addVFS('results/trimmed_R1.fastq.gz', '1.9G', 'new');
+    _addVFS('results/trimmed_R2.fastq.gz', '1.9G', 'new');
+    _addVFS('results/fastp.json', '8.2K', 'new');
+    _addVFS('results/fastp.html', '312K', 'new');
     _line('to-line', ['to-success', '[OK] fastp complete']);
     return true;
   }
@@ -197,12 +284,12 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-info', 'BWA-MEM2 v2.2.1 (SMEM, AVX512 enabled)']);
     _line('to-line', ['to-stdout', `[M::bwa_idx_load_from_shm] loading BWT index from shm...`]);
     await _animateProgress('Loading index (BWT)', 500);
-    await _animateProgress('Aligning reads',      2200);
-    await _animateProgress('Writing SAM',         600);
+    await _animateProgress('Aligning reads', 2200);
+    await _animateProgress('Writing SAM', 600);
     _blank();
     _line('to-line', ['to-stdout', '[M::mem_process_seqs] Processed 46,718,440 reads in 92.3 sec']);
     _line('to-line', ['to-stdout', '[main] Real time: 97.8 sec; CPU: 771.2 sec']);
-    _addVFS('results/aligned.sam','18.2G','new');
+    _addVFS('results/aligned.sam', '18.2G', 'new');
     _line('to-line', ['to-success', '[OK] Alignment complete']);
     return true;
   }
@@ -211,10 +298,10 @@ OmicsLab.Terminal = (function () {
     const sub = args[0] || 'view';
     if (sub === 'sort') {
       _line('to-line', ['to-info', 'samtools v1.18 — sort']);
-      await _animateProgress('Sorting BAM',   900);
-      await _animateProgress('Building index',300);
-      _addVFS('results/aligned.bam','6.4G','new');
-      _addVFS('results/aligned.bam.bai','2.1M','new');
+      await _animateProgress('Sorting BAM', 900);
+      await _animateProgress('Building index', 300);
+      _addVFS('results/aligned.bam', '6.4G', 'new');
+      _addVFS('results/aligned.bam.bai', '2.1M', 'new');
       _line('to-line', ['to-success', '[OK] Sorted BAM written']);
     } else if (sub === 'flagstat') {
       _line('to-line', ['to-section', 'samtools flagstat:']);
@@ -237,18 +324,18 @@ OmicsLab.Terminal = (function () {
 
   async function _picard(args) {
     _line('to-line', ['to-info', 'Picard v3.1.0 — MarkDuplicates']);
-    await _animateProgress('Sorting reads',        700);
-    await _animateProgress('Marking duplicates',   1100);
-    await _animateProgress('Writing output BAM',   600);
+    await _animateProgress('Sorting reads', 700);
+    await _animateProgress('Marking duplicates', 1100);
+    await _animateProgress('Writing output BAM', 600);
     _blank();
     _line('to-line', ['to-section', 'METRICS SUMMARY:']);
     _line('to-line', ['to-stdout', '  ESTIMATED_LIBRARY_SIZE:    24,150,892']);
     _line('to-line', ['to-stdout', '  PERCENT_DUPLICATION:       '], ['to-warn', '0.0824 (8.24%)']);
     _line('to-line', ['to-stdout', '  READ_PAIRS_EXAMINED:       46,718,440']);
     _line('to-line', ['to-stdout', '  READ_PAIR_DUPLICATES:      3,849,279']);
-    _addVFS('results/dedup.bam','5.9G','new');
-    _addVFS('results/dedup.bam.bai','2.0M','new');
-    _addVFS('results/dup_metrics.txt','1.2K','new');
+    _addVFS('results/dedup.bam', '5.9G', 'new');
+    _addVFS('results/dedup.bam.bai', '2.0M', 'new');
+    _addVFS('results/dup_metrics.txt', '1.2K', 'new');
     _line('to-line', ['to-success', '[OK] MarkDuplicates complete']);
     return true;
   }
@@ -258,11 +345,11 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-info', `GATK v4.5.0.0 — ${sub}`]);
     if (sub === 'BaseRecalibrator') {
       await _animateProgress('Counting covariates', 1200);
-      _addVFS('results/recal.table','28K','new');
+      _addVFS('results/recal.table', '28K', 'new');
       _line('to-line', ['to-success', '[OK] BQSR table written']);
     } else if (sub === 'ApplyBQSR') {
       await _animateProgress('Applying recalibration', 900);
-      _addVFS('results/recal.bam','5.8G','new');
+      _addVFS('results/recal.bam', '5.8G', 'new');
       _line('to-line', ['to-success', '[OK] Recalibrated BAM written']);
     } else if (sub === 'HaplotypeCaller') {
       await _animateProgress('Assembling haplotypes', 2400);
@@ -270,19 +357,19 @@ OmicsLab.Terminal = (function () {
       _line('to-line', ['to-section', 'Variant discovery summary:']);
       _line('to-line', ['to-stdout', '  Total variants:   '], ['to-number', '4,892,341']);
       _line('to-line', ['to-stdout', '  SNPs:             '], ['to-success', '4,312,881']);
-      _line('to-line', ['to-stdout', '  Indels:           '], ['to-warn',    '579,460']);
+      _line('to-line', ['to-stdout', '  Indels:           '], ['to-warn', '579,460']);
       _line('to-line', ['to-stdout', '  Ti/Tv ratio:      '], ['to-success', '2.18']);
-      _addVFS('results/raw_variants.vcf.gz','342M','new');
-      _addVFS('results/raw_variants.vcf.gz.tbi','1.2M','new');
+      _addVFS('results/raw_variants.vcf.gz', '342M', 'new');
+      _addVFS('results/raw_variants.vcf.gz.tbi', '1.2M', 'new');
       _line('to-line', ['to-success', '[OK] HaplotypeCaller complete']);
     } else if (sub === 'VariantFiltration') {
       await _animateProgress('Applying VQSR filters', 700);
-      _addVFS('results/filtered_variants.vcf.gz','298M','new');
+      _addVFS('results/filtered_variants.vcf.gz', '298M', 'new');
       _line('to-line', ['to-success', '[OK] Variant filtration complete']);
       _line('to-line', ['to-stdout', '  PASS variants: '], ['to-success', '4,218,902 (86.2%)']);
     } else if (sub === 'Mutect2') {
       await _animateProgress('Calling somatic variants', 2000);
-      _addVFS('results/somatic_variants.vcf.gz','48M','new');
+      _addVFS('results/somatic_variants.vcf.gz', '48M', 'new');
       _line('to-line', ['to-success', '[OK] Mutect2 complete']);
     } else {
       await _animateProgress(`Running ${sub}`, 1000);
@@ -293,21 +380,21 @@ OmicsLab.Terminal = (function () {
 
   async function _star(args) {
     _line('to-line', ['to-info', 'STAR v2.7.11b — Spliced Transcripts Alignment to a Reference']);
-    await _animateProgress('Loading genome index',  600);
-    await _animateProgress('1st pass alignment',    1400);
+    await _animateProgress('Loading genome index', 600);
+    await _animateProgress('1st pass alignment', 1400);
     await _animateProgress('Splice junction discovery', 500);
-    await _animateProgress('2nd pass alignment',    1200);
-    await _animateProgress('Writing BAM',           500);
+    await _animateProgress('2nd pass alignment', 1200);
+    await _animateProgress('Writing BAM', 500);
     _blank();
     _line('to-line', ['to-section', 'Log summary:']);
     _line('to-line', ['to-stdout', '  Uniquely mapped reads:   '], ['to-success', '94.21%']);
-    _line('to-line', ['to-stdout', '  Multi-mapped reads:      '], ['to-warn',    '3.12%']);
-    _line('to-line', ['to-stdout', '  Unmapped reads:          '], ['to-number',  '2.67%']);
-    _line('to-line', ['to-stdout', '  Splices:                 '], ['to-number',  '28,412,882']);
+    _line('to-line', ['to-stdout', '  Multi-mapped reads:      '], ['to-warn', '3.12%']);
+    _line('to-line', ['to-stdout', '  Unmapped reads:          '], ['to-number', '2.67%']);
+    _line('to-line', ['to-stdout', '  Splices:                 '], ['to-number', '28,412,882']);
     _line('to-line', ['to-stdout', '  % reads with novel junctions: '], ['to-success', '0.54%']);
-    _addVFS('results/Aligned.sortedByCoord.out.bam','4.2G','new');
-    _addVFS('results/SJ.out.tab','2.8M','new');
-    _addVFS('results/Log.final.out','2.4K','new');
+    _addVFS('results/Aligned.sortedByCoord.out.bam', '4.2G', 'new');
+    _addVFS('results/SJ.out.tab', '2.8M', 'new');
+    _addVFS('results/Log.final.out', '2.4K', 'new');
     _line('to-line', ['to-success', '[OK] STAR alignment complete']);
     return true;
   }
@@ -317,16 +404,16 @@ OmicsLab.Terminal = (function () {
     _line('to-line', ['to-info', `Salmon v1.10.2 — ${sub}`]);
     if (sub === 'index') {
       await _animateProgress('Building k-mer index', 1200);
-      _addVFS('results/salmon_index/','—','new');
+      _addVFS('results/salmon_index/', '—', 'new');
       _line('to-line', ['to-success', '[OK] Index built']);
     } else {
-      await _animateProgress('Quasi-mapping reads',  900);
-      await _animateProgress('EM quantification',    600);
+      await _animateProgress('Quasi-mapping reads', 900);
+      await _animateProgress('EM quantification', 600);
       _blank();
       _line('to-line', ['to-stdout', '  Mapping rate: '], ['to-success', '91.34%']);
-      _line('to-line', ['to-stdout', '  Transcripts:  '], ['to-number',  '228,418']);
-      _addVFS('results/salmon_quant/quant.sf','3.8M','new');
-      _addVFS('results/salmon_quant/cmd_info.json','420B','new');
+      _line('to-line', ['to-stdout', '  Transcripts:  '], ['to-number', '228,418']);
+      _addVFS('results/salmon_quant/quant.sf', '3.8M', 'new');
+      _addVFS('results/salmon_quant/cmd_info.json', '420B', 'new');
       _line('to-line', ['to-success', '[OK] Salmon quant complete']);
     }
     return true;
@@ -338,10 +425,10 @@ OmicsLab.Terminal = (function () {
     _blank();
     _line('to-line', ['to-section', 'Assignment summary:']);
     _line('to-line', ['to-stdout', '  Assigned:               '], ['to-success', '87.44%']);
-    _line('to-line', ['to-stdout', '  Unassigned_NoFeatures:  '], ['to-warn',    '9.12%']);
-    _line('to-line', ['to-stdout', '  Unassigned_Ambiguity:   '], ['to-number',  '3.44%']);
-    _addVFS('results/counts.txt','14.2M','new');
-    _addVFS('results/counts.txt.summary','1.1K','new');
+    _line('to-line', ['to-stdout', '  Unassigned_NoFeatures:  '], ['to-warn', '9.12%']);
+    _line('to-line', ['to-stdout', '  Unassigned_Ambiguity:   '], ['to-number', '3.44%']);
+    _addVFS('results/counts.txt', '14.2M', 'new');
+    _addVFS('results/counts.txt.summary', '1.1K', 'new');
     _line('to-line', ['to-success', '[OK] Feature counting complete']);
     return true;
   }
@@ -349,22 +436,22 @@ OmicsLab.Terminal = (function () {
   async function _trimGalore(args) {
     _line('to-line', ['to-info', 'Trim Galore! v0.6.10 (Cutadapt wrapper)']);
     await _animateProgress('Adapter detection', 400);
-    await _animateProgress('Quality trimming',  700);
+    await _animateProgress('Quality trimming', 700);
     _line('to-line', ['to-stdout', '  Reads written (quality):   '], ['to-success', '97.12%']);
-    _line('to-line', ['to-stdout', '  Total bases trimmed:       '], ['to-warn',    '1.24%']);
-    _addVFS('results/trimmed_R1.fastq.gz','1.8G','new');
+    _line('to-line', ['to-stdout', '  Total bases trimmed:       '], ['to-warn', '1.24%']);
+    _addVFS('results/trimmed_R1.fastq.gz', '1.8G', 'new');
     _line('to-line', ['to-success', '[OK] Trim Galore complete']);
     return true;
   }
 
   async function _hisat2(args) {
     _line('to-line', ['to-info', 'HISAT2 v2.2.1']);
-    await _animateProgress('Loading HISAT2 index',    500);
-    await _animateProgress('Aligning reads',          1500);
+    await _animateProgress('Loading HISAT2 index', 500);
+    await _animateProgress('Aligning reads', 1500);
     _blank();
     _line('to-line', ['to-stdout', '  Overall alignment rate: '], ['to-success', '96.84%']);
     _line('to-line', ['to-stdout', '  Concordant pairs:       '], ['to-success', '94.21%']);
-    _addVFS('results/hisat2_aligned.bam','4.8G','new');
+    _addVFS('results/hisat2_aligned.bam', '4.8G', 'new');
     _line('to-line', ['to-success', '[OK] HISAT2 alignment complete']);
     return true;
   }
@@ -375,9 +462,9 @@ OmicsLab.Terminal = (function () {
     if (sub === 'mpileup') {
       await _animateProgress('Computing pileup', 1200);
     } else if (sub === 'call') {
-      await _animateProgress('Calling variants',  900);
+      await _animateProgress('Calling variants', 900);
       _line('to-line', ['to-stdout', '  Variants called: '], ['to-number', '3,241,892']);
-      _addVFS('results/calls.vcf.gz','214M','new');
+      _addVFS('results/calls.vcf.gz', '214M', 'new');
     } else if (sub === 'stats') {
       _line('to-line', ['to-section', 'bcftools stats:']);
       _line('to-line', ['to-stdout', 'SN  number of SNPs:     3,012,882']);
@@ -393,22 +480,26 @@ OmicsLab.Terminal = (function () {
 
   async function _bgzip(args) {
     _line('to-line', ['to-info', 'bgzip + tabix indexing']);
-    await _animateProgress('bgzip compress',  400);
-    await _animateProgress('tabix index',     300);
-    _addVFS('results/calls.vcf.gz.tbi','840K','new');
+    await _animateProgress('bgzip compress', 400);
+    await _animateProgress('tabix index', 300);
+    _addVFS('results/calls.vcf.gz.tbi', '840K', 'new');
     _line('to-line', ['to-success', '[OK] bgzip+tabix done']);
     return true;
   }
 
   async function _kraken2(args) {
     _line('to-line', ['to-info', 'Kraken 2 v2.1.3']);
-    await _animateProgress('Loading database',       800);
-    await _animateProgress('Classifying reads',      1500);
+    await _animateProgress('Loading database', 800);
+    await _animateProgress('Classifying reads', 1500);
     _blank();
-    _line('to-line', ['to-stdout', '  Classified reads:    '], ['to-success', '89.34% (43,102,882)']);
-    _line('to-line', ['to-stdout', '  Unclassified reads:  '], ['to-warn',    '10.66% (5,142,108)']);
-    _addVFS('results/kraken2_output.txt','1.2G','new');
-    _addVFS('results/kraken2_report.txt','48K','new');
+    _line(
+      'to-line',
+      ['to-stdout', '  Classified reads:    '],
+      ['to-success', '89.34% (43,102,882)']
+    );
+    _line('to-line', ['to-stdout', '  Unclassified reads:  '], ['to-warn', '10.66% (5,142,108)']);
+    _addVFS('results/kraken2_output.txt', '1.2G', 'new');
+    _addVFS('results/kraken2_report.txt', '48K', 'new');
     _line('to-line', ['to-success', '[OK] Kraken2 classification done']);
     return true;
   }
@@ -416,9 +507,12 @@ OmicsLab.Terminal = (function () {
   async function _bracken(args) {
     _line('to-line', ['to-info', 'Bracken v2.9 — Bayesian Re-estimation of Abundance']);
     await _animateProgress('Re-estimating species abundance', 700);
-    _addVFS('results/bracken_output.txt','12K','new');
-    _addVFS('results/bracken_species_report.txt','22K','new');
-    _line('to-line', ['to-stdout', '  Top species: Homo sapiens (47.2%), Bacteroides fragilis (8.4%), ...']);
+    _addVFS('results/bracken_output.txt', '12K', 'new');
+    _addVFS('results/bracken_species_report.txt', '22K', 'new');
+    _line('to-line', [
+      'to-stdout',
+      '  Top species: Homo sapiens (47.2%), Bacteroides fragilis (8.4%), ...',
+    ]);
     _line('to-line', ['to-success', '[OK] Bracken re-estimation done']);
     return true;
   }
@@ -426,7 +520,7 @@ OmicsLab.Terminal = (function () {
   async function _krona(args) {
     _line('to-line', ['to-info', 'KronaTools — generating interactive HTML pie']);
     await _animateProgress('Building Krona chart', 400);
-    _addVFS('results/krona_chart.html','2.8M','new');
+    _addVFS('results/krona_chart.html', '2.8M', 'new');
     _line('to-line', ['to-success', '[OK] Krona chart saved > results/krona_chart.html']);
     return true;
   }
@@ -434,14 +528,14 @@ OmicsLab.Terminal = (function () {
   async function _multiqc(args) {
     _line('to-line', ['to-info', 'MultiQC v1.21']);
     _line('to-line', ['to-stdout', '  Searching for supported tools...']);
-    const found = ['FastQC','fastp','STAR','featureCounts','Picard','GATK','Samtools'];
+    const found = ['FastQC', 'fastp', 'STAR', 'featureCounts', 'Picard', 'GATK', 'Samtools'];
     for (const tool of found) {
       await _sleep(80);
       _line('to-line', ['to-info', `  Found ${tool} data`]);
     }
     await _animateProgress('Generating report', 700);
-    _addVFS('results/multiqc_report.html','4.1M','new');
-    _addVFS('results/multiqc_data/','—','new');
+    _addVFS('results/multiqc_report.html', '4.1M', 'new');
+    _addVFS('results/multiqc_data/', '—', 'new');
     _blank();
     _line('to-line', ['to-success', '[OK] MultiQC report: results/multiqc_report.html']);
     return true;
@@ -449,17 +543,17 @@ OmicsLab.Terminal = (function () {
 
   async function _vep(args) {
     _line('to-line', ['to-info', 'Ensembl VEP v111 — Variant Effect Predictor']);
-    await _animateProgress('Loading cache (GRCh38)',    600);
-    await _animateProgress('Annotating variants',       1800);
+    await _animateProgress('Loading cache (GRCh38)', 600);
+    await _animateProgress('Annotating variants', 1800);
     _blank();
     _line('to-line', ['to-section', 'VEP summary:']);
     _line('to-line', ['to-stdout', '  Variants processed:   '], ['to-number', '4,218,902']);
-    _line('to-line', ['to-stdout', '  HIGH impact:          '], ['to-error',  '1,241']);
-    _line('to-line', ['to-stdout', '  MODERATE impact:      '], ['to-warn',   '18,294']);
+    _line('to-line', ['to-stdout', '  HIGH impact:          '], ['to-error', '1,241']);
+    _line('to-line', ['to-stdout', '  MODERATE impact:      '], ['to-warn', '18,294']);
     _line('to-line', ['to-stdout', '  LOW impact:           '], ['to-number', '124,812']);
     _line('to-line', ['to-stdout', '  MODIFIER:             '], ['to-stdout', '4,074,555']);
-    _addVFS('results/vep_annotated.vcf.gz','412M','new');
-    _addVFS('results/vep_summary.html','1.8M','new');
+    _addVFS('results/vep_annotated.vcf.gz', '412M', 'new');
+    _addVFS('results/vep_summary.html', '1.8M', 'new');
     _line('to-line', ['to-success', '[OK] VEP annotation complete']);
     return true;
   }
@@ -467,16 +561,21 @@ OmicsLab.Terminal = (function () {
   /* ─── Unix commands ─── */
   function _ls(args) {
     const path = args[0] ? _resolvePath(args[0]) : cwd;
-    const children = Object.keys(VFS).filter(k =>
-      k.startsWith(path + '/') && k.slice(path.length + 1).indexOf('/') === -1
+    const children = Object.keys(VFS).filter(
+      (k) => k.startsWith(path + '/') && k.slice(path.length + 1).indexOf('/') === -1
     );
     if (!children.length) {
       _line('to-line', ['to-stdout', '(empty)']);
     } else {
-      children.forEach(k => {
+      children.forEach((k) => {
         const name = k.split('/').pop();
         const entry = VFS[k];
-        const cls = entry.type === 'dir' ? 'to-path' : (k.includes('NEW') || entry.desc === 'new') ? 'to-success' : 'to-file';
+        const cls =
+          entry.type === 'dir'
+            ? 'to-path'
+            : k.includes('NEW') || entry.desc === 'new'
+              ? 'to-success'
+              : 'to-file';
         const size = entry.size ? `  ${entry.size}` : '';
         _line('to-line', [cls, name + (entry.type === 'dir' ? '/' : '')], ['to-dim', size]);
       });
@@ -488,7 +587,11 @@ OmicsLab.Terminal = (function () {
     if (VFS[path] && VFS[path].type === 'dir') {
       cwd = path;
       _updatePrompt();
-    } else if (path === '/home/user/workspace/results' || path === '/home/user/workspace/data' || path === '/home/user/workspace/scripts') {
+    } else if (
+      path === '/home/user/workspace/results' ||
+      path === '/home/user/workspace/data' ||
+      path === '/home/user/workspace/scripts'
+    ) {
       cwd = path;
       _updatePrompt();
     } else {
@@ -498,7 +601,10 @@ OmicsLab.Terminal = (function () {
 
   function _cat(args) {
     const path = _resolvePath(args[0] || '');
-    if (!args[0]) { _line('to-line', ['to-error', 'Usage: cat <file>']); return; }
+    if (!args[0]) {
+      _line('to-line', ['to-error', 'Usage: cat <file>']);
+      return;
+    }
     if (path.endsWith('wgs_pipeline.sh')) {
       _showScript(_WGS_SCRIPT);
     } else if (path.endsWith('rnaseq_pipeline.sh')) {
@@ -511,25 +617,46 @@ OmicsLab.Terminal = (function () {
   }
 
   function _showScript(content) {
-    content.split('\n').forEach(l => {
+    content.split('\n').forEach((l) => {
       const cls = l.startsWith('#') ? 'to-dim' : l.startsWith('  ') ? 'to-stdout' : 'to-cmd';
       _line('to-line', [cls, l || ' ']);
     });
   }
 
-  function _pwd() { _line('to-line', ['to-stdout', cwd]); }
-  function _echo(args) { _line('to-line', ['to-stdout', args.join(' ')]); }
+  function _pwd() {
+    _line('to-line', ['to-stdout', cwd]);
+  }
+  function _echo(args) {
+    _line('to-line', ['to-stdout', args.join(' ')]);
+  }
   function _which(args) {
     const tools = {
-      fastqc:'bin/fastqc', bwa:'bin/bwa', samtools:'bin/samtools', gatk:'bin/gatk',
-      star:'bin/STAR', salmon:'bin/salmon', fastp:'bin/fastp', snakemake:'bin/snakemake',
-      nextflow:'bin/nextflow', bcftools:'bin/bcftools', picard:'bin/picard',
-      trim_galore:'bin/trim_galore', hisat2:'bin/hisat2', featureCounts:'bin/featureCounts',
-      multiqc:'bin/multiqc', vep:'bin/vep', kraken2:'bin/kraken2', bracken:'bin/bracken',
-      python:'bin/python', R:'bin/R', perl:'bin/perl', conda:'bin/conda',
+      fastqc: 'bin/fastqc',
+      bwa: 'bin/bwa',
+      samtools: 'bin/samtools',
+      gatk: 'bin/gatk',
+      star: 'bin/STAR',
+      salmon: 'bin/salmon',
+      fastp: 'bin/fastp',
+      snakemake: 'bin/snakemake',
+      nextflow: 'bin/nextflow',
+      bcftools: 'bin/bcftools',
+      picard: 'bin/picard',
+      trim_galore: 'bin/trim_galore',
+      hisat2: 'bin/hisat2',
+      featureCounts: 'bin/featureCounts',
+      multiqc: 'bin/multiqc',
+      vep: 'bin/vep',
+      kraken2: 'bin/kraken2',
+      bracken: 'bin/bracken',
+      python: 'bin/python',
+      R: 'bin/R',
+      perl: 'bin/perl',
+      conda: 'bin/conda',
     };
-    if (tools[args[0]]) { _line('to-line', ['to-path', `/usr/local/${tools[args[0]]}`]); }
-    else _line('to-line', ['to-error', `${args[0]}: not found`]);
+    if (tools[args[0]]) {
+      _line('to-line', ['to-path', `/usr/local/${tools[args[0]]}`]);
+    } else _line('to-line', ['to-error', `${args[0]}: not found`]);
   }
 
   function _conda(args) {
@@ -537,12 +664,24 @@ OmicsLab.Terminal = (function () {
       _line('to-line', ['to-info', 'conda v23.11.0 — (bioinformatics) env active']);
     } else if (args[0] === 'list') {
       const pkgs = [
-        ['fastqc','0.12.1','bioconda'],['bwa','0.7.18','bioconda'],['samtools','1.19','bioconda'],
-        ['gatk4','4.5.0.0','bioconda'],['star','2.7.11b','bioconda'],['salmon','1.10.2','bioconda'],
-        ['fastp','0.23.4','bioconda'],['snakemake','8.4.6','bioconda'],['nextflow','23.10.1','bioconda'],
-        ['bcftools','1.19','bioconda'],['picard','3.1.0','bioconda'],['hisat2','2.2.1','bioconda'],
-        ['subread','2.0.6','bioconda'],['multiqc','1.21','bioconda'],['kraken2','2.1.3','bioconda'],
-        ['bracken','2.9','bioconda'],['trim-galore','0.6.10','bioconda'],['vep','111.0','bioconda'],
+        ['fastqc', '0.12.1', 'bioconda'],
+        ['bwa', '0.7.18', 'bioconda'],
+        ['samtools', '1.19', 'bioconda'],
+        ['gatk4', '4.5.0.0', 'bioconda'],
+        ['star', '2.7.11b', 'bioconda'],
+        ['salmon', '1.10.2', 'bioconda'],
+        ['fastp', '0.23.4', 'bioconda'],
+        ['snakemake', '8.4.6', 'bioconda'],
+        ['nextflow', '23.10.1', 'bioconda'],
+        ['bcftools', '1.19', 'bioconda'],
+        ['picard', '3.1.0', 'bioconda'],
+        ['hisat2', '2.2.1', 'bioconda'],
+        ['subread', '2.0.6', 'bioconda'],
+        ['multiqc', '1.21', 'bioconda'],
+        ['kraken2', '2.1.3', 'bioconda'],
+        ['bracken', '2.9', 'bioconda'],
+        ['trim-galore', '0.6.10', 'bioconda'],
+        ['vep', '111.0', 'bioconda'],
       ];
       _line('to-line', ['to-dim', '# packages in environment at /opt/conda/envs/bioinformatics:']);
       _line('to-line', ['to-dim', '# Name                    Version   Build   Channel']);
@@ -558,15 +697,18 @@ OmicsLab.Terminal = (function () {
     return (async () => {
       _line('to-line', ['to-info', 'Snakemake v8.4.6']);
       if (args.includes('--dag')) {
-        _line('to-line', ['to-info', 'Generating DAG (view with: snakemake --dag | dot -Tpng > dag.png)']);
+        _line('to-line', [
+          'to-info',
+          'Generating DAG (view with: snakemake --dag | dot -Tpng > dag.png)',
+        ]);
         return;
       }
-      const n = parseInt(args.find(a => a.startsWith('-j'))?.slice(2) || '4');
+      const n = parseInt(args.find((a) => a.startsWith('-j'))?.slice(2) || '4');
       _line('to-line', ['to-stdout', `Building DAG with ${n} cores...`]);
-      await _animateProgress('Resolving rules',   400);
-      await _animateProgress('Running jobs',      1800);
-      _addVFS('results/dag.png','48K','new');
-      _addVFS('.snakemake/','—','new');
+      await _animateProgress('Resolving rules', 400);
+      await _animateProgress('Running jobs', 1800);
+      _addVFS('results/dag.png', '48K', 'new');
+      _addVFS('.snakemake/', '—', 'new');
       _line('to-line', ['to-success', '[OK] Snakemake completed successfully']);
     })();
   }
@@ -576,12 +718,15 @@ OmicsLab.Terminal = (function () {
     if (args[0] === 'run') {
       const pipeline = args[1] || 'nf-core/rnaseq';
       _line('to-line', ['to-info', `Pulling ${pipeline}...`]);
-      await _animateProgress('Downloading pipeline',  600);
-      await _animateProgress('Running workflow',      2000);
-      _addVFS('results/pipeline_info/','—','new');
+      await _animateProgress('Downloading pipeline', 600);
+      await _animateProgress('Running workflow', 2000);
+      _addVFS('results/pipeline_info/', '—', 'new');
       _line('to-line', ['to-success', `[OK] ${pipeline} complete`]);
     } else {
-      _line('to-line', ['to-stdout', 'Usage: nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh38']);
+      _line('to-line', [
+        'to-stdout',
+        'Usage: nextflow run nf-core/rnaseq --input samplesheet.csv --genome GRCh38',
+      ]);
     }
   }
 
@@ -623,8 +768,14 @@ OmicsLab.Terminal = (function () {
       ['  help', 'Show this message'],
     ];
     cmds.forEach(([cmd, desc]) => {
-      if (!cmd) { _blank(); return; }
-      if (!desc) { _line('to-line', ['to-section', cmd]); return; }
+      if (!cmd) {
+        _blank();
+        return;
+      }
+      if (!desc) {
+        _line('to-line', ['to-section', cmd]);
+        return;
+      }
       _line('to-line', ['to-info', cmd.padEnd(42)], ['to-dim', desc]);
     });
     _blank();
@@ -651,24 +802,26 @@ OmicsLab.Terminal = (function () {
   function _refreshVFS() {
     if (!_vfsDisplay) return;
     const results = Object.keys(VFS)
-      .filter(k => k.includes('/results/') && !k.endsWith('/results') && !k.endsWith('/results/'))
+      .filter((k) => k.includes('/results/') && !k.endsWith('/results') && !k.endsWith('/results/'))
       .sort();
     if (!results.length) {
       _vfsDisplay.innerHTML = '<span class="to-dim">No output files yet</span>';
       return;
     }
-    _vfsDisplay.innerHTML = results.map(k => {
-      const name = k.split('/').pop();
-      const e = VFS[k];
-      const cls = e.desc === 'new' ? 'vfs-new' : (e.type === 'dir' ? 'vfs-dir' : 'vfs-file');
-      return `<div><span class="${cls}">${name}${e.type==='dir'?'/':''}</span><span class="vfs-size">${e.size||''}</span></div>`;
-    }).join('');
+    _vfsDisplay.innerHTML = results
+      .map((k) => {
+        const name = k.split('/').pop();
+        const e = VFS[k];
+        const cls = e.desc === 'new' ? 'vfs-new' : e.type === 'dir' ? 'vfs-dir' : 'vfs-file';
+        return `<div><span class="${cls}">${name}${e.type === 'dir' ? '/' : ''}</span><span class="vfs-size">${e.size || ''}</span></div>`;
+      })
+      .join('');
   }
 
   /* ─── Prompt update ─── */
   function _updatePrompt() {
     if (_promptEl) {
-      _promptEl.textContent = `user@omicslab:${cwd.replace('/home/user','~')}$`;
+      _promptEl.textContent = `user@omicslab:${cwd.replace('/home/user', '~')}$`;
     }
   }
 
@@ -710,7 +863,10 @@ OmicsLab.Terminal = (function () {
       } else if (tool === 'conda') {
         _conda(args);
       } else if (tool === 'mkdir') {
-        if (args[0]) { _addVFS(args[0]+'/', '—', ''); _line('to-line', ['to-success', `mkdir: created directory '${args[0]}'`]); }
+        if (args[0]) {
+          _addVFS(args[0] + '/', '—', '');
+          _line('to-line', ['to-success', `mkdir: created directory '${args[0]}'`]);
+        }
       } else if (tool === 'fastqc') {
         await _fastqc(args);
       } else if (tool === 'fastp') {
@@ -755,7 +911,10 @@ OmicsLab.Terminal = (function () {
         await _runPipeline(args[0]);
       } else if (tool === 'python' || tool === 'python3') {
         _line('to-line', ['to-info', 'Python 3.11.8 | Conda (bioinformatics) env']);
-        _line('to-line', ['to-stdout', 'Type exit() to quit. Modules: pandas, numpy, scipy, matplotlib, seaborn, biopython...']);
+        _line('to-line', [
+          'to-stdout',
+          'Type exit() to quit. Modules: pandas, numpy, scipy, matplotlib, seaborn, biopython...',
+        ]);
       } else if (tool === 'r' || tool === 'rscript') {
         _line('to-line', ['to-info', 'R version 4.3.2 (2023-10-31)']);
         _line('to-line', ['to-stdout', 'Packages: DESeq2, edgeR, limma, ggplot2, Bioconductor...']);
@@ -779,10 +938,10 @@ OmicsLab.Terminal = (function () {
 
   /* ─── Full pipeline runner ─── */
   async function _runPipeline(name) {
-    const preset = PRESETS.find(p => p.id === name);
+    const preset = PRESETS.find((p) => p.id === name);
     if (!preset) {
       _line('to-line', ['to-error', `Unknown pipeline: ${name}`]);
-      _line('to-line', ['to-dim', `Available: ${PRESETS.map(p=>p.id).join(', ')}`]);
+      _line('to-line', ['to-dim', `Available: ${PRESETS.map((p) => p.id).join(', ')}`]);
       return;
     }
     _blank();
@@ -792,7 +951,7 @@ OmicsLab.Terminal = (function () {
 
     for (let i = 0; i < preset.steps.length; i++) {
       const step = preset.steps[i];
-      _line('to-line', ['to-info', `[${i+1}/${preset.steps.length}] ${step.label}`]);
+      _line('to-line', ['to-info', `[${i + 1}/${preset.steps.length}] ${step.label}`]);
       await step.fn(step.args);
       _blank();
     }
@@ -813,8 +972,11 @@ OmicsLab.Terminal = (function () {
     lines.forEach(([c, t]) => _raw(`<div class="to-line"><span class="${c}">${t}</span></div>`));
     _blank();
     _line('to-line', ['to-success', '[OK] 22 bioinformatics tools available']);
-    _line('to-line', ['to-info',    '  Type help for commands  |  Tab = autocomplete  |  ↑↓ = history']);
-    _line('to-line', ['to-dim',     '  Presets: run-pipeline wgs | rnaseq | variant | meta']);
+    _line('to-line', [
+      'to-info',
+      '  Type help for commands  |  Tab = autocomplete  |  ↑↓ = history',
+    ]);
+    _line('to-line', ['to-dim', '  Presets: run-pipeline wgs | rnaseq | variant | meta']);
     _blank();
     _line('to-line', ['to-dim', `Last login: ${new Date().toUTCString()}`]);
     _blank();
@@ -822,10 +984,40 @@ OmicsLab.Terminal = (function () {
 
   /* ─── Tab completion ─── */
   const ALL_CMDS = [
-    'fastqc','fastp','bwa','samtools','picard','gatk','star','salmon','featureCounts',
-    'trim_galore','hisat2','bcftools','bgzip','tabix','multiqc','vep','kraken2',
-    'bracken','snakemake','nextflow','conda','python','R','Rscript',
-    'run-pipeline','ls','cd','pwd','cat','echo','which','mkdir','help','clear',
+    'fastqc',
+    'fastp',
+    'bwa',
+    'samtools',
+    'picard',
+    'gatk',
+    'star',
+    'salmon',
+    'featureCounts',
+    'trim_galore',
+    'hisat2',
+    'bcftools',
+    'bgzip',
+    'tabix',
+    'multiqc',
+    'vep',
+    'kraken2',
+    'bracken',
+    'snakemake',
+    'nextflow',
+    'conda',
+    'python',
+    'R',
+    'Rscript',
+    'run-pipeline',
+    'ls',
+    'cd',
+    'pwd',
+    'cat',
+    'echo',
+    'which',
+    'mkdir',
+    'help',
+    'clear',
   ];
 
   function _tabComplete(val) {
@@ -834,9 +1026,11 @@ OmicsLab.Terminal = (function () {
     const partial = parts[parts.length - 1];
     let candidates;
     if (parts.length === 1) {
-      candidates = ALL_CMDS.filter(c => c.toLowerCase().startsWith(partial.toLowerCase()));
+      candidates = ALL_CMDS.filter((c) => c.toLowerCase().startsWith(partial.toLowerCase()));
     } else {
-      const paths = Object.keys(VFS).map(k => k.replace(cwd + '/', '')).filter(k => k.startsWith(partial));
+      const paths = Object.keys(VFS)
+        .map((k) => k.replace(cwd + '/', ''))
+        .filter((k) => k.startsWith(partial));
       candidates = paths;
     }
     if (candidates.length === 1) {
@@ -982,7 +1176,9 @@ echo "RNA-seq pipeline complete!"`;
     { icon: 'dna', name: 'WGS Pipeline', content: _WGS_SCRIPT },
     { icon: 'trending-up', name: 'RNA-seq Pipeline', content: _RNASEQ_SCRIPT },
     {
-      icon: 'git-branch', name: 'Snakemake Workflow', content: `# Snakemake WGS Workflow
+      icon: 'git-branch',
+      name: 'Snakemake Workflow',
+      content: `# Snakemake WGS Workflow
 # Run: snakemake -j 8 --use-conda
 
 SAMPLES = ["sample1", "sample2", "sample3"]
@@ -1026,7 +1222,9 @@ rule align:
         "bwa mem -t {threads} {input.ref} {input.r1} {input.r2} | samtools sort -o {output}"`,
     },
     {
-      icon: 'activity', name: 'Nextflow (nf-core)', content: `// nf-core/rnaseq pipeline launch
+      icon: 'activity',
+      name: 'Nextflow (nf-core)',
+      content: `// nf-core/rnaseq pipeline launch
 // Docs: https://nf-co.re/rnaseq
 
 nextflow run nf-core/rnaseq \\
@@ -1058,9 +1256,22 @@ nextflow run nf-core/rnaseq \\
   const NB_STORE_KEY = 'omicslab_nb_state_v1';
   const _nbAutosaveTimers = {};
 
-  function _loadNbStore() { return OmicsLab.Utils?.safeParse(NB_STORE_KEY, {}) || {}; }
-  function _saveNbStore(store) { (OmicsLab.Utils?.safeSet || ((k,v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }))(NB_STORE_KEY, store); }
-  function _getNbState(nbId) { return _loadNbStore()[nbId] || null; }
+  function _loadNbStore() {
+    return OmicsLab.Utils?.safeParse(NB_STORE_KEY, {}) || {};
+  }
+  function _saveNbStore(store) {
+    (
+      OmicsLab.Utils?.safeSet ||
+      ((k, v) => {
+        try {
+          localStorage.setItem(k, JSON.stringify(v));
+        } catch {}
+      })
+    )(NB_STORE_KEY, store);
+  }
+  function _getNbState(nbId) {
+    return _loadNbStore()[nbId] || null;
+  }
 
   function _saveNbState(nbId, patch) {
     const store = _loadNbStore();
@@ -1090,13 +1301,16 @@ nextflow run nf-core/rnaseq \\
       cells[idx] = { ...cells[idx], code };
       _saveNbState(_activeNb, { cells });
       const chip = document.getElementById('nb-autosave-chip');
-      if (chip) chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved just now`;
+      if (chip)
+        chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle', 12) || ''} Autosaved just now`;
     }, 800);
   }
 
   const _NB_DATA = [
     {
-      id: 'seq', name: 'Sequence Analysis', icon: 'dna',
+      id: 'seq',
+      name: 'Sequence Analysis',
+      icon: 'dna',
       desc: 'DNA analysis, GC content, quality metrics, HBB gene',
       dataset: 'HBB Gene Reference (chr11)',
       cells: [
@@ -1120,7 +1334,7 @@ for i,c in enumerate(codons):
     aa = codon_table.get(c, "???")
     print(f"  codon {i+1:2d}: {c} = {aa}")
 print()
-print("SCD mutation: codon 6 GAG→GTG (Glu→Val) causes HbS aggregation")`
+print("SCD mutation: codon 6 GAG→GTG (Glu→Val) causes HbS aggregation")`,
         },
         {
           title: 'Mutation Detection',
@@ -1149,7 +1363,7 @@ print(f"Simulated cohort (N={n}, AF={af_scd}):")
 print(f"  HbAA (normal)         : {HbAA} ({HbAA/n*100:.1f}%)")
 print(f"  HbAS (carrier/trait)  : {HbAS} ({HbAS/n*100:.1f}%)")
 print(f"  HbSS (sickle disease) : {HbSS} ({HbSS/n*100:.1f}%)")
-print(f"  Note: HbAS confers ~50% protection against severe malaria")`
+print(f"  Note: HbAS confers ~50% protection against severe malaria")`,
         },
         {
           title: 'FASTQ Quality Simulation',
@@ -1179,12 +1393,14 @@ for i in range(0, read_len, 15):
     q = pos_means[i]
     bar = '█'*int(q/40*24) + '░'*(24-int(q/40*24))
     flag = 'PASS' if q>=30 else ('WARN' if q>=20 else 'FAIL')
-    print(f"  bp {i+1:3d}: {bar} Q{q:.0f} {flag}")`
-        }
-      ]
+    print(f"  bp {i+1:3d}: {bar} Q{q:.0f} {flag}")`,
+        },
+      ],
     },
     {
-      id: 'variants', name: 'African Variants', icon: 'activity',
+      id: 'variants',
+      name: 'African Variants',
+      icon: 'activity',
       desc: 'Allele frequencies, HWE test, ACMG classification',
       dataset: 'African Variant Panel (H3Africa)',
       cells: [
@@ -1208,7 +1424,7 @@ for v in variants:
     print(f"{v['rsid']:<14} {v['gene']:<7} {v['afr']:>6.3f} {v['eur']:>6.3f} {fold:>6.1f}x  {v['cond']}")
 print()
 print("AFR = African ancestry (gnomAD)   EUR = European ancestry")
-print("Fold = enrichment in African relative to European populations")`
+print("Fold = enrichment in African relative to European populations")`,
         },
         {
           title: 'Hardy-Weinberg Equilibrium',
@@ -1232,7 +1448,7 @@ def hwe(AA, Aa, aa, label):
 
 # Malaria-endemic African cohort
 hwe(845, 100, 55,  "HBB rs334 (SCD) — N=1000, heterozygote advantage")
-hwe(710, 255, 35,  "APOL1 G2 — N=1000, CKD risk variant")`
+hwe(710, 255, 35,  "APOL1 G2 — N=1000, CKD risk variant")`,
         },
         {
           title: 'ACMG/AMP Pathogenicity Scoring',
@@ -1275,12 +1491,14 @@ print(f"Classification: {cls}")
 print()
 print("Criteria details:")
 for c in crit:
-    print(f"  {c}: {LABELS.get(c,'')}")`
-        }
-      ]
+    print(f"  {c}: {LABELS.get(c,'')}")`,
+        },
+      ],
     },
     {
-      id: 'rnaseq', name: 'RNA-seq DEG', icon: 'trending-up',
+      id: 'rnaseq',
+      name: 'RNA-seq DEG',
+      icon: 'trending-up',
       desc: 'Count matrices, fold-change, pathway analysis',
       dataset: 'GEO Bulk RNA-seq Counts',
       cells: [
@@ -1306,7 +1524,7 @@ print(f"{'Gene':<10} {'Ctrl1':>6} {'Ctrl2':>6} {'Ctrl3':>6} | {'Trt1':>6} {'Trt2
 print("-"*52)
 for g in GENES[:12]:
     c = ctrl[g]; t = treat[g]
-    print(f"{g:<10} {c[0]:>6} {c[1]:>6} {c[2]:>6} | {t[0]:>6} {t[1]:>6} {t[2]:>6}")`
+    print(f"{g:<10} {c[0]:>6} {c[1]:>6} {c[2]:>6} | {t[0]:>6} {t[1]:>6} {t[2]:>6}")`,
         },
         {
           title: 'Differential Expression (Log2FC)',
@@ -1335,7 +1553,7 @@ for g,lfc,p in results:
     sig = "***" if p<0.001 else ("*" if p<0.05 else "ns")
     dr = "UP  " if lfc>0 else "DOWN"
     mark = "<-- DEG" if abs(lfc)>1 and p<0.05 else ""
-    print(f"{g:<10} {lfc:>+8.3f} {p:>10.5f}  {sig:>4}  {dr} {mark}")`
+    print(f"{g:<10} {lfc:>+8.3f} {p:>10.5f}  {sig:>4}  {dr} {mark}")`,
         },
         {
           title: 'Pathway Enrichment (ORA)',
@@ -1372,12 +1590,14 @@ print("-"*58)
 for pw, genes in PATHWAYS.items():
     k, p = ora(genes, DEGS)
     sig = "***" if p<0.001 else ("*" if p<0.05 else "ns")
-    print(f"{pw[:34]:<35} {k:>3} {len(genes):>5} {p:>10.5f}  {sig}")`
-        }
-      ]
+    print(f"{pw[:34]:<35} {k:>3} {len(genes):>5} {p:>10.5f}  {sig}")`,
+        },
+      ],
     },
     {
-      id: 'popgen', name: 'Population Genetics', icon: 'globe',
+      id: 'popgen',
+      name: 'Population Genetics',
+      icon: 'globe',
       desc: 'FST, HWE, admixture, African diversity',
       dataset: '1000 Genomes African Superpopulation',
       cells: [
@@ -1416,7 +1636,7 @@ print(f"  Africa vs. East Asia: FST ~ 0.15-0.18")
 print()
 for i,f in enumerate(fsts[:8]):
     bar = '█'*int(f*200) + '░'*(int(0.15*200)-int(f*200))
-    print(f"  SNP {i+1:2d}: {bar} {f:.4f}")`
+    print(f"  SNP {i+1:2d}: {bar} {f:.4f}")`,
         },
         {
           title: 'Admixture Proportions (K=3)',
@@ -1448,12 +1668,14 @@ for s,p in SAMPLES:
     bar = '█'*int(k1*20)+'▓'*int(k2*20)+'░'*int(k3*20)
     print(f"{s:<11} {p:<5}  {k1:>9.3f} {k2:>9.3f} {k3:>10.3f}  {bar}")
 print()
-print("█=West African  ▓=East African  ░=Non-African")`
-        }
-      ]
+print("█=West African  ▓=East African  ░=Non-African")`,
+        },
+      ],
     },
     {
-      id: 'heart-disease', name: 'Heart Disease Prediction', icon: 'heart-pulse',
+      id: 'heart-disease',
+      name: 'Heart Disease Prediction',
+      icon: 'heart-pulse',
       desc: 'Classic Kaggle-style ML tutorial — load, explore, train, evaluate (UCI Cleveland schema)',
       dataset: 'UCI Heart Disease (Cleveland schema, simulated cohort)',
       cells: [
@@ -1493,7 +1715,7 @@ df = pd.DataFrame({
 })
 print(f"{len(df)} patients loaded — {df['target'].sum()} positive ({df['target'].mean()*100:.1f}%)")
 print()
-print(df.head(8))`
+print(df.head(8))`,
         },
         {
           title: 'Explore the data (EDA)',
@@ -1512,7 +1734,7 @@ for feat, c in corr.items():
 print()
 print("Strongest signals here (thalach, exang, oldpeak, cp) are exactly the")
 print("features cardiologists already weight heavily — a sanity check that")
-print("the data behaves the way domain knowledge says it should.")`
+print("the data behaves the way domain knowledge says it should.")`,
         },
         {
           title: 'Train / test split, then train a classifier',
@@ -1536,7 +1758,7 @@ logreg = LogisticRegression(max_iter=1000)
 logreg.fit(X_train, y_train)
 
 print("Both models trained: Random Forest (non-linear, handles feature interactions)")
-print("                      Logistic Regression (linear, interpretable odds ratios)")`
+print("                      Logistic Regression (linear, interpretable odds ratios)")`,
         },
         {
           title: 'Evaluate: accuracy, confusion matrix, feature importance',
@@ -1564,10 +1786,10 @@ for feat, imp in importances[:6]:
 print()
 print("Remember: accuracy alone can mislead on imbalanced data (see the")
 print("AI/ML tool's confusion-matrix lesson) — sensitivity and specificity")
-print("are what actually tell you whether this model is clinically useful.")`
+print("are what actually tell you whether this model is clinically useful.")`,
         },
-      ]
-    }
+      ],
+    },
   ];
 
   /* Reject a promise if it doesn't settle within `ms` — without this,
@@ -1583,24 +1805,38 @@ print("are what actually tell you whether this model is clinically useful.")`
   async function _loadPyodide() {
     if (_py) return _py;
     if (_pyLoading) {
-      await new Promise(r => { const t = setInterval(() => { if (_py || !_pyLoading) { clearInterval(t); r(); } }, 200); });
+      await new Promise((r) => {
+        const t = setInterval(() => {
+          if (_py || !_pyLoading) {
+            clearInterval(t);
+            r();
+          }
+        }, 200);
+      });
       return _py;
     }
     if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-      _setKernelStatus('error', 'You appear to be offline. Connect to the internet once to download the Python kernel — it will then work offline on this device.');
+      _setKernelStatus(
+        'error',
+        'You appear to be offline. Connect to the internet once to download the Python kernel — it will then work offline on this device.'
+      );
       return null;
     }
     _pyLoading = true;
     _setKernelStatus('loading');
     try {
       if (!window.loadPyodide) {
-        await _withTimeout(new Promise((resolve, reject) => {
-          const s = document.createElement('script');
-          s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
-          s.onload = resolve;
-          s.onerror = () => reject(new Error('Failed to load Pyodide from CDN'));
-          document.head.appendChild(s);
-        }), 30000, 'Pyodide script load timed out — check your connection and retry');
+        await _withTimeout(
+          new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/pyodide.js';
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('Failed to load Pyodide from CDN'));
+            document.head.appendChild(s);
+          }),
+          30000,
+          'Pyodide script load timed out — check your connection and retry'
+        );
       }
       /* The runtime download (wasm + stdlib, several more MB on top of the
          initial script) is the slow part on real low-bandwidth connections
@@ -1610,7 +1846,8 @@ print("are what actually tell you whether this model is clinically useful.")`
          original bug) but gives a real African connection room to finish. */
       _py = await _withTimeout(
         window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/' }),
-        180000, 'Python kernel took too long to start (over 3 minutes) — this may be a slow connection or a network/firewall blocking cdn.jsdelivr.net. Retry, or check your network.'
+        180000,
+        'Python kernel took too long to start (over 3 minutes) — this may be a slow connection or a network/firewall blocking cdn.jsdelivr.net. Retry, or check your network.'
       );
       _pyLoading = false;
       _setKernelStatus('ready');
@@ -1625,24 +1862,34 @@ print("are what actually tell you whether this model is clinically useful.")`
   function _setKernelStatus(state, msg) {
     const el = document.getElementById('nb-kernel-status');
     if (el) {
-      const labels = { loading:'Python kernel loading — first time takes ~20s on fast connections, longer on slower ones…', ready:'Kernel ready — Python 3.x via Pyodide', error:'Kernel error — check internet connection' };
-      const colors = { loading:'#e3b341', ready:'#00C4A0', error:'#f85149' };
+      const labels = {
+        loading:
+          'Python kernel loading — first time takes ~20s on fast connections, longer on slower ones…',
+        ready: 'Kernel ready — Python 3.x via Pyodide',
+        error: 'Kernel error — check internet connection',
+      };
+      const colors = { loading: '#e3b341', ready: '#00C4A0', error: '#f85149' };
       el.textContent = msg || labels[state] || state;
       el.style.color = colors[state] || '#A8A098';
       const dot = document.getElementById('nb-kernel-dot');
-      if (dot) { dot.style.background = colors[state] || '#A8A098'; dot.className = 'nb-kernel-dot' + (state==='loading'?' nb-kernel-dot--pulse':''); }
+      if (dot) {
+        dot.style.background = colors[state] || '#A8A098';
+        dot.className = 'nb-kernel-dot' + (state === 'loading' ? ' nb-kernel-dot--pulse' : '');
+      }
     }
     const retryWrap = document.getElementById('nb-kernel-retry');
     if (retryWrap) retryWrap.style.display = state === 'error' ? '' : 'none';
   }
 
   function _renderNotebook(nbId) {
-    const nb = _NB_DATA.find(n => n.id === nbId);
+    const nb = _NB_DATA.find((n) => n.id === nbId);
     if (!nb) return;
     _activeNb = nbId;
 
     /* Update tab active state */
-    document.querySelectorAll('.nb-selector-btn').forEach(b => b.classList.toggle('active', b.dataset.nb === nbId));
+    document
+      .querySelectorAll('.nb-selector-btn')
+      .forEach((b) => b.classList.toggle('active', b.dataset.nb === nbId));
 
     const cells = document.getElementById('nb-cells');
     if (!cells) return;
@@ -1654,8 +1901,8 @@ print("are what actually tell you whether this model is clinically useful.")`
        navigating away and back. First-ever visit seeds persisted state
        from the starter cells so there's something to restore next time. */
     let state = _getNbState(nbId);
-    if (!state) state = _saveNbState(nbId, { cells: nb.cells.map(c => ({ ...c })), runLog: [] });
-    const cellData = (state.cells && state.cells.length) ? state.cells : nb.cells;
+    if (!state) state = _saveNbState(nbId, { cells: nb.cells.map((c) => ({ ...c })), runLog: [] });
+    const cellData = state.cells && state.cells.length ? state.cells : nb.cells;
 
     cells.innerHTML = cellData.map((cell, i) => _cellHTML(cell, i)).join('');
 
@@ -1669,10 +1916,15 @@ print("are what actually tell you whether this model is clinically useful.")`
      starter version — the "your own copy went wrong, start over" escape
      hatch a Kaggle-style persisted notebook needs. */
   function resetNotebook() {
-    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    const nb = _NB_DATA.find((n) => n.id === _activeNb);
     if (!nb) return;
-    if (!confirm('Discard your saved edits and run history for this notebook, and restore the original?')) return;
-    _saveNbState(nb.id, { cells: nb.cells.map(c => ({ ...c })), runLog: [] });
+    if (
+      !confirm(
+        'Discard your saved edits and run history for this notebook, and restore the original?'
+      )
+    )
+      return;
+    _saveNbState(nb.id, { cells: nb.cells.map((c) => ({ ...c })), runLog: [] });
     _renderNotebook(nb.id);
   }
 
@@ -1682,7 +1934,9 @@ print("are what actually tell you whether this model is clinically useful.")`
      which looked fake. Replaced with what's now actually real:
      the fork version, a live autosave timestamp, and a persisted
      run count — see NB_STORE_KEY above. */
-  function _nbVersion(id) { return parseInt(localStorage.getItem('omicslab_nb_version_' + id) || '1', 10); }
+  function _nbVersion(id) {
+    return parseInt(localStorage.getItem('omicslab_nb_version_' + id) || '1', 10);
+  }
 
   function _renderMetaBar(nb) {
     const bar = document.getElementById('nb-meta-bar');
@@ -1692,20 +1946,20 @@ print("are what actually tell you whether this model is clinically useful.")`
     const runCount = (state?.runLog || []).length;
     bar.innerHTML = `
       <div class="nb-meta-left">
-        <span class="nb-input-chip" title="Input dataset">${OmicsLab.Icons?.svg('database',12)||''} ${_esc(nb.dataset || 'Reference data')}</span>
+        <span class="nb-input-chip" title="Input dataset">${OmicsLab.Icons?.svg('database', 12) || ''} ${_esc(nb.dataset || 'Reference data')}</span>
         <span class="nb-version-chip" title="Bumped each time you Copy & Edit">Version ${v}</span>
-        <span class="nb-autosave-chip" id="nb-autosave-chip" title="Your edits save automatically to this browser">${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved ${_relTimeShort(state?.savedAt)}</span>
+        <span class="nb-autosave-chip" id="nb-autosave-chip" title="Your edits save automatically to this browser">${OmicsLab.Icons?.svg('check-circle', 12) || ''} Autosaved ${_relTimeShort(state?.savedAt)}</span>
         <span class="nb-runs-chip" id="nb-runs-chip" title="Persists across reloads and future visits">${runCount} run${runCount === 1 ? '' : 's'} logged</span>
-        <span class="nb-runtime-chip">${OmicsLab.Icons?.svg('cpu',12)||''} Python 3.11 · Pyodide WASM · CPU</span>
+        <span class="nb-runtime-chip">${OmicsLab.Icons?.svg('cpu', 12) || ''} Python 3.11 · Pyodide WASM · CPU</span>
       </div>
       <div class="nb-meta-actions">
-        <button class="nb-reset-btn" onclick="OmicsLab.Terminal.resetNotebook()" title="Discard your edits and restore the original">${OmicsLab.Icons?.svg('rotate-cw',12)||''} Reset</button>
-        <button class="nb-copyedit-btn" onclick="OmicsLab.Terminal.copyAndEdit()">${OmicsLab.Icons?.svg('copy',12)||''} Copy &amp; Edit</button>
+        <button class="nb-reset-btn" onclick="OmicsLab.Terminal.resetNotebook()" title="Discard your edits and restore the original">${OmicsLab.Icons?.svg('rotate-cw', 12) || ''} Reset</button>
+        <button class="nb-copyedit-btn" onclick="OmicsLab.Terminal.copyAndEdit()">${OmicsLab.Icons?.svg('copy', 12) || ''} Copy &amp; Edit</button>
       </div>`;
   }
 
   function copyAndEdit() {
-    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    const nb = _NB_DATA.find((n) => n.id === _activeNb);
     if (!nb) return;
     const v = _nbVersion(nb.id) + 1;
     localStorage.setItem('omicslab_nb_version_' + nb.id, String(v));
@@ -1716,15 +1970,24 @@ print("are what actually tell you whether this model is clinically useful.")`
 
   /* ─── Output / Logs tabs ─── */
   function _switchNbView(view) {
-    document.querySelectorAll('.nb-view-tab').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+    document
+      .querySelectorAll('.nb-view-tab')
+      .forEach((b) => b.classList.toggle('active', b.dataset.view === view));
     const cells = document.getElementById('nb-cells');
-    const logs  = document.getElementById('nb-logs');
+    const logs = document.getElementById('nb-logs');
     if (view === 'logs') {
       if (cells) cells.style.display = 'none';
       if (logs) {
         logs.style.display = '';
         logs.innerHTML = _runLog.length
-          ? _runLog.slice().reverse().map(l => `<div class="nb-log-line"><span class="nb-log-time">${l.time}</span><span class="nb-log-cell">Cell ${l.cell}</span><span class="nb-log-status nb-log-status-${l.status}">${l.status}</span></div>`).join('')
+          ? _runLog
+              .slice()
+              .reverse()
+              .map(
+                (l) =>
+                  `<div class="nb-log-line"><span class="nb-log-time">${l.time}</span><span class="nb-log-cell">Cell ${l.cell}</span><span class="nb-log-status nb-log-status-${l.status}">${l.status}</span></div>`
+              )
+              .join('')
           : '<div class="nb-log-empty">No runs yet this session.</div>';
       }
     } else {
@@ -1740,7 +2003,9 @@ print("are what actually tell you whether this model is clinically useful.")`
     return token ? { Authorization: `Bearer ${token}` } : null;
   }
 
-  function _nbTopicId(nbId) { return localStorage.getItem('omicslab_nb_topicid_' + nbId); }
+  function _nbTopicId(nbId) {
+    return localStorage.getItem('omicslab_nb_topicid_' + nbId);
+  }
 
   async function _renderNbComments(nbId) {
     const el = document.getElementById('nb-comments');
@@ -1758,16 +2023,26 @@ print("are what actually tell you whether this model is clinically useful.")`
     el.innerHTML = `
       <div class="nb-comments-head">${comments.length} Comment${comments.length === 1 ? '' : 's'}</div>
       <div class="nb-comments-list">
-        ${comments.length ? comments.map(c => `
+        ${
+          comments.length
+            ? comments
+                .map(
+                  (c) => `
           <div class="nb-comment">
             <span class="nb-comment-author">${_esc(c.users?.name || 'OmicsLab Member')}</span>
             <span class="nb-comment-text">${_esc(c.body)}</span>
-          </div>`).join('') : '<div class="nb-comments-empty">No comments yet — be the first to discuss this notebook.</div>'}
+          </div>`
+                )
+                .join('')
+            : '<div class="nb-comments-empty">No comments yet — be the first to discuss this notebook.</div>'
+        }
       </div>
-      ${signedIn
-        ? `<textarea class="nb-comment-ta" id="nb-comment-ta" rows="2" placeholder="Add a comment…"></textarea>
+      ${
+        signedIn
+          ? `<textarea class="nb-comment-ta" id="nb-comment-ta" rows="2" placeholder="Add a comment…"></textarea>
            <button class="nb-comment-btn" onclick="OmicsLab.Terminal.submitNbComment()">Post</button>`
-        : `<div class="nb-comments-signin">Please <button class="nb-inline-link" onclick="OmicsLab.AuthClerk.signIn()">sign in</button> to comment.</div>`}`;
+          : `<div class="nb-comments-signin">Please <button class="nb-inline-link" onclick="OmicsLab.AuthClerk.signIn()">sign in</button> to comment.</div>`
+      }`;
   }
 
   async function submitNbComment() {
@@ -1775,15 +2050,23 @@ print("are what actually tell you whether this model is clinically useful.")`
     const body = ta?.value.trim();
     if (!body) return;
     const headers = await _nbAuthHeader();
-    if (!headers) { OmicsLab.AuthClerk?.signIn?.(); return; }
-    const nb = _NB_DATA.find(n => n.id === _activeNb);
+    if (!headers) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
+    const nb = _NB_DATA.find((n) => n.id === _activeNb);
     if (!nb) return;
 
     let topicId = _nbTopicId(nb.id);
     if (!topicId) {
       const res = await fetch('/api/forum-topics', {
-        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category: 'showcase', title: `Notebook: ${nb.name}`, body: `Discussion thread for the ${nb.name} notebook.` }),
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          category: 'showcase',
+          title: `Notebook: ${nb.name}`,
+          body: `Discussion thread for the ${nb.name} notebook.`,
+        }),
       }).catch(() => null);
       if (!res || !res.ok) return;
       const data = await res.json();
@@ -1793,7 +2076,8 @@ print("are what actually tell you whether this model is clinically useful.")`
     if (!topicId) return;
 
     await fetch('/api/forum-comments', {
-      method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic_id: topicId, body }),
     }).catch(() => {});
     await _renderNbComments(nb.id);
@@ -1821,26 +2105,33 @@ print("are what actually tell you whether this model is clinically useful.")`
   async function runCell(btn) {
     const n = parseInt(btn.dataset.cellN);
     const codeEl = document.getElementById('nb-code-' + n);
-    const outEl  = document.getElementById('nb-out-'  + n);
-    const numEl  = document.getElementById('nb-num-'  + n);
+    const outEl = document.getElementById('nb-out-' + n);
+    const numEl = document.getElementById('nb-num-' + n);
     if (!codeEl || !outEl) return;
 
     btn.disabled = true;
-    btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>';
+    btn.innerHTML =
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>';
     outEl.innerHTML = '<div class="nb-running">Running…</div>';
     if (numEl) numEl.textContent = 'In [*]:';
 
     const py = await _loadPyodide();
     if (!py) {
-      outEl.innerHTML = '<div class="nb-out-error">Kernel unavailable. Check internet connection and try again.</div>';
+      outEl.innerHTML =
+        '<div class="nb-out-error">Kernel unavailable. Check internet connection and try again.</div>';
       btn.disabled = false;
-      btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+      btn.innerHTML =
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
       return;
     }
 
     const code = codeEl.value;
     let stdout = '';
-    py.setStdout({ batched: s => { stdout += s + '\n'; } });
+    py.setStdout({
+      batched: (s) => {
+        stdout += s + '\n';
+      },
+    });
 
     /* Auto-load any packages the cell imports (pandas, numpy, scikit-learn,
        etc.) from Pyodide's precompiled package index — without this,
@@ -1851,15 +2142,22 @@ print("are what actually tell you whether this model is clinically useful.")`
     try {
       outEl.innerHTML = '<div class="nb-running">Loading packages…</div>';
       await py.loadPackagesFromImports(code);
-    } catch (e) { /* fall through — runPythonAsync will report the real error */ }
+    } catch (e) {
+      /* fall through — runPythonAsync will report the real error */
+    }
     outEl.innerHTML = '<div class="nb-running">Running…</div>';
 
-    const logTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const logTime = new Date().toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
     let runStatus = 'ok';
     try {
       const result = await py.runPythonAsync(code);
       let out = stdout;
-      if (result !== undefined && result !== null && String(result) !== 'None') out += String(result);
+      if (result !== undefined && result !== null && String(result) !== 'None')
+        out += String(result);
       outEl.innerHTML = out
         ? `<div class="nb-out-stdout"><pre>${_esc(out.trimEnd())}</pre></div>`
         : '<div class="nb-out-empty">Cell executed — no output</div>';
@@ -1878,15 +2176,22 @@ print("are what actually tell you whether this model is clinically useful.")`
     const persistedCells = savedState?.cells ? savedState.cells.slice() : [];
     if (idx >= 0 && persistedCells[idx]) persistedCells[idx] = { ...persistedCells[idx], code };
     const persistedRunLog = (_runLog || []).slice(-50);
-    _saveNbState(_activeNb, { cells: persistedCells, runLog: persistedRunLog, runCount: (savedState?.runCount || 0) + 1 });
+    _saveNbState(_activeNb, {
+      cells: persistedCells,
+      runLog: persistedRunLog,
+      runCount: (savedState?.runCount || 0) + 1,
+    });
     const chip = document.getElementById('nb-autosave-chip');
-    if (chip) chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle',12)||''} Autosaved just now`;
+    if (chip)
+      chip.innerHTML = `${OmicsLab.Icons?.svg('check-circle', 12) || ''} Autosaved just now`;
     const runsChip = document.getElementById('nb-runs-chip');
-    if (runsChip) runsChip.textContent = `${persistedRunLog.length} run${persistedRunLog.length === 1 ? '' : 's'} logged`;
+    if (runsChip)
+      runsChip.textContent = `${persistedRunLog.length} run${persistedRunLog.length === 1 ? '' : 's'} logged`;
 
     if (numEl) numEl.textContent = 'Out[' + n + ']:';
     btn.disabled = false;
-    btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+    btn.innerHTML =
+      '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
     OmicsLab.SkillTree?.awardXP('notebook_run');
   }
 
@@ -1926,12 +2231,17 @@ print("are what actually tell you whether this model is clinically useful.")`
   }
 
   function clearNotebook() {
-    document.querySelectorAll('.nb-output').forEach(el => { el.innerHTML = ''; });
-    document.querySelectorAll('.nb-cell-num').forEach((el,i) => { el.textContent = 'In [' + (i+1) + ']:'; });
+    document.querySelectorAll('.nb-output').forEach((el) => {
+      el.innerHTML = '';
+    });
+    document.querySelectorAll('.nb-cell-num').forEach((el, i) => {
+      el.textContent = 'In [' + (i + 1) + ']:';
+    });
   }
 
   function restartKernel() {
-    _py = null; _pyLoading = false;
+    _py = null;
+    _pyLoading = false;
     clearNotebook();
     _setKernelStatus('loading');
     setTimeout(() => _loadPyodide(), 200);
@@ -1943,10 +2253,10 @@ print("are what actually tell you whether this model is clinically useful.")`
     if (!container) return;
     if (container.querySelector('.terminal-page')) return; /* already init */
     try {
-    container.innerHTML = `
+      container.innerHTML = `
       <div class="terminal-page">
         <div class="terminal-page-header">
-          <div class="terminal-page-title">${OmicsLab.Icons?.svg('cpu',18)||''} Bioinformatics Terminal</div>
+          <div class="terminal-page-title">${OmicsLab.Icons?.svg('cpu', 18) || ''} Bioinformatics Terminal</div>
           <div class="terminal-page-desc">
             Simulate real bioinformatics pipelines in your browser, or launch a full GitHub Codespace
             to run actual tools on real data — no install, cloud-powered, VS Code in the browser.
@@ -1974,15 +2284,15 @@ print("are what actually tell you whether this model is clinically useful.")`
           <!-- Mode rail -->
           <nav class="term-rail" role="tablist" aria-label="Terminal modes">
             <button class="term-mode-tab term-rail-item active" onclick="OmicsLab.Terminal.switchMode('terminal',this)">
-              <span class="term-rail-icon">${OmicsLab.Icons?.svg('cpu',16)||''}</span>
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('cpu', 16) || ''}</span>
               <span class="term-rail-label">Terminal</span>
             </button>
             <button class="term-mode-tab term-rail-item" onclick="OmicsLab.Terminal.switchMode('editor',this)">
-              <span class="term-rail-icon">${OmicsLab.Icons?.svg('file-text',16)||''}</span>
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('file-text', 16) || ''}</span>
               <span class="term-rail-label">Script Editor</span>
             </button>
             <button class="term-mode-tab term-rail-item nb-tab-btn" onclick="OmicsLab.Terminal.switchMode('notebook',this)">
-              <span class="term-rail-icon">${OmicsLab.Icons?.svg('flask',16)||''}</span>
+              <span class="term-rail-icon">${OmicsLab.Icons?.svg('flask', 16) || ''}</span>
               <span class="term-rail-label">Python Notebook</span>
               <span class="nb-badge">NEW</span>
             </button>
@@ -2019,18 +2329,20 @@ print("are what actually tell you whether this model is clinically useful.")`
               <!-- Pipeline presets -->
               <div class="ts-card">
                 <div class="ts-card-header">
-                  <span>${OmicsLab.Icons?.svg('zap',13)||''} Pipeline Presets</span>
+                  <span>${OmicsLab.Icons?.svg('zap', 13) || ''} Pipeline Presets</span>
                 </div>
                 <div class="ts-card-body">
                   <div class="preset-list" id="preset-list">
-                    ${PRESETS.map(p => `
+                    ${PRESETS.map(
+                      (p) => `
                       <button class="preset-btn" onclick="OmicsLab.Terminal.runPreset('${p.id}')">
-                        <span class="preset-icon">${OmicsLab.Icons?.svg(p.icon,16)||''}</span>
+                        <span class="preset-icon">${OmicsLab.Icons?.svg(p.icon, 16) || ''}</span>
                         <span class="preset-info">
                           <span class="preset-name">${p.name}</span>
                           <span class="preset-cmd">${p.desc}</span>
                         </span>
-                      </button>`).join('')}
+                      </button>`
+                    ).join('')}
                   </div>
                 </div>
               </div>
@@ -2038,7 +2350,7 @@ print("are what actually tell you whether this model is clinically useful.")`
               <!-- Output files -->
               <div class="ts-card">
                 <div class="ts-card-header">
-                  <span>${OmicsLab.Icons?.svg('package',13)||''} Output Files</span>
+                  <span>${OmicsLab.Icons?.svg('package', 13) || ''} Output Files</span>
                   <span style="font-size:0.68rem;font-weight:400;color:var(--text-muted)">results/</span>
                 </div>
                 <div class="ts-card-body">
@@ -2053,23 +2365,55 @@ print("are what actually tell you whether this model is clinically useful.")`
                 <div class="ts-card-header">Installed Tools (22)</div>
                 <div class="ts-card-body">
                   <div class="tool-chips">
-                    ${['fastqc','fastp','bwa','samtools','picard','gatk4','star','salmon',
-                       'hisat2','featureCounts','trim-galore','bcftools','vep','multiqc',
-                       'kraken2','bracken','snakemake','nextflow','python','R','conda','bedtools']
-                      .map(t => `<span class="tool-chip tool-chip-active">${t}</span>`).join('')}
+                    ${[
+                      'fastqc',
+                      'fastp',
+                      'bwa',
+                      'samtools',
+                      'picard',
+                      'gatk4',
+                      'star',
+                      'salmon',
+                      'hisat2',
+                      'featureCounts',
+                      'trim-galore',
+                      'bcftools',
+                      'vep',
+                      'multiqc',
+                      'kraken2',
+                      'bracken',
+                      'snakemake',
+                      'nextflow',
+                      'python',
+                      'R',
+                      'conda',
+                      'bedtools',
+                    ]
+                      .map((t) => `<span class="tool-chip tool-chip-active">${t}</span>`)
+                      .join('')}
                   </div>
                 </div>
               </div>
 
               <!-- Codespace CTA -->
               <div class="codespace-cta">
-                <div class="ccs-title">${OmicsLab.Icons?.svg('zap',14)||''} Want to run real data?</div>
+                <div class="ccs-title">${OmicsLab.Icons?.svg('zap', 14) || ''} Want to run real data?</div>
                 <div class="ccs-desc">
                   Open a GitHub Codespace — a full VS Code environment in your browser with all tools pre-installed via conda. Run your own FASTQ files, store results, download reports.
                 </div>
                 <div class="ccs-tools">
-                  ${['BWA-MEM2','GATK4','STAR','Salmon','Nextflow','Snakemake','DESeq2','Seurat'].map(t =>
-                    `<span class="ccs-tool">${t}</span>`).join('')}
+                  ${[
+                    'BWA-MEM2',
+                    'GATK4',
+                    'STAR',
+                    'Salmon',
+                    'Nextflow',
+                    'Snakemake',
+                    'DESeq2',
+                    'Seurat',
+                  ]
+                    .map((t) => `<span class="ccs-tool">${t}</span>`)
+                    .join('')}
                 </div>
                 <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1"
                    target="_blank" rel="noopener" class="ccs-open-btn">
@@ -2088,7 +2432,7 @@ print("are what actually tell you whether this model is clinically useful.")`
               <div class="se-topbar">
                 <span class="se-filename" id="se-filename">pipeline.sh</span>
                 <span class="se-lang-badge">bash</span>
-                <button class="se-action-btn" onclick="OmicsLab.Terminal.copyScript()">${OmicsLab.Icons?.svg('clipboard',13)||''} Copy</button>
+                <button class="se-action-btn" onclick="OmicsLab.Terminal.copyScript()">${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy</button>
                 <button class="se-action-btn" onclick="OmicsLab.Terminal.downloadScript()">Download</button>
                 <a href="https://codespaces.new/Simon-Mufara/Omics-Lab?quickstart=1"
                    target="_blank" rel="noopener" class="se-run-btn">Run in Codespace</a>
@@ -2100,18 +2444,20 @@ print("are what actually tell you whether this model is clinically useful.")`
 
             <div class="term-sidebar">
               <div class="ts-card">
-                <div class="ts-card-header">${OmicsLab.Icons?.svg('file-text',13)||''} Script Templates</div>
+                <div class="ts-card-header">${OmicsLab.Icons?.svg('file-text', 13) || ''} Script Templates</div>
                 <div class="ts-card-body">
                   <div class="script-templates">
-                    ${SCRIPT_TEMPLATES.map((t, i) => `
+                    ${SCRIPT_TEMPLATES.map(
+                      (t, i) => `
                       <button class="st-btn" onclick="OmicsLab.Terminal.loadTemplate(${i})">
-                        ${OmicsLab.Icons?.svg(t.icon,14)||''} ${t.name}
-                      </button>`).join('')}
+                        ${OmicsLab.Icons?.svg(t.icon, 14) || ''} ${t.name}
+                      </button>`
+                    ).join('')}
                   </div>
                 </div>
               </div>
               <div class="codespace-cta">
-                <div class="ccs-title">${OmicsLab.Icons?.svg('lightbulb',14)||''} Run this script</div>
+                <div class="ccs-title">${OmicsLab.Icons?.svg('lightbulb', 14) || ''} Run this script</div>
                 <div class="ccs-desc">
                   Open a Codespace, paste your script, and run it on real data with all tools pre-installed.
                 </div>
@@ -2133,29 +2479,33 @@ print("are what actually tell you whether this model is clinically useful.")`
             <span id="nb-kernel-status" class="nb-kernel-status">Kernel idle — click Run to start Python</span>
             <span id="nb-kernel-retry" style="display:none">
               <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.restartKernel()" title="Retry loading the Python kernel">
-                ${OmicsLab.Icons?.svg('refresh-cw',12)||''} Retry
+                ${OmicsLab.Icons?.svg('refresh-cw', 12) || ''} Retry
               </button>
             </span>
             <span class="nb-kernel-sep"></span>
             <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.clearNotebook()" title="Clear all outputs">
-              ${OmicsLab.Icons?.svg('trash-2',12)||''} Clear outputs
+              ${OmicsLab.Icons?.svg('trash-2', 12) || ''} Clear outputs
             </button>
             <button class="nb-toolbar-btn" onclick="OmicsLab.Terminal.restartKernel()" title="Restart Python kernel">
-              ${OmicsLab.Icons?.svg('refresh-cw',12)||''} Restart kernel
+              ${OmicsLab.Icons?.svg('refresh-cw', 12) || ''} Restart kernel
             </button>
             <button class="nb-toolbar-btn nb-toolbar-btn--add" onclick="OmicsLab.Terminal.addNotebookCell()" title="Add a new code cell">
-              ${OmicsLab.Icons?.svg('plus',12)||''} Add cell
+              ${OmicsLab.Icons?.svg('plus', 12) || ''} Add cell
             </button>
           </div>
 
           <!-- Notebook selectors -->
           <div class="nb-selector-row">
-            ${_NB_DATA.map(nb => `
-              <button class="nb-selector-btn${nb.id==='seq'?' active':''}" data-nb="${nb.id}"
+            ${_NB_DATA
+              .map(
+                (nb) => `
+              <button class="nb-selector-btn${nb.id === 'seq' ? ' active' : ''}" data-nb="${nb.id}"
                 onclick="OmicsLab.Terminal._renderNotebook(this.dataset.nb)">
-                ${OmicsLab.Icons?.svg(nb.icon,14)||''} ${nb.name}
+                ${OmicsLab.Icons?.svg(nb.icon, 14) || ''} ${nb.name}
                 <span class="nb-selector-desc">${nb.desc}</span>
-              </button>`).join('')}
+              </button>`
+              )
+              .join('')}
           </div>
 
           <!-- Kaggle-style kernel meta bar -->
@@ -2163,7 +2513,7 @@ print("are what actually tell you whether this model is clinically useful.")`
 
           <!-- Pyodide info bar -->
           <div class="nb-info-bar">
-            ${OmicsLab.Icons?.svg('info',12)||''}
+            ${OmicsLab.Icons?.svg('info', 12) || ''}
             <span>Real Python executes in your browser via <b>Pyodide</b> (WebAssembly). First run needs internet to download ~10 MB — this browser then caches it, so it works fully offline after that.</span>
           </div>
 
@@ -2186,42 +2536,56 @@ print("are what actually tell you whether this model is clinically useful.")`
           </div>
       </div>`;
 
-    /* Wire up elements */
-    _outputEl = container.querySelector('#term-output');
-    _inputEl  = container.querySelector('#term-input');
-    _promptEl = container.querySelector('#term-prompt');
-    _runBtn   = container.querySelector('#term-run-btn');
-    _vfsDisplay = container.querySelector('#vfs-display');
+      /* Wire up elements */
+      _outputEl = container.querySelector('#term-output');
+      _inputEl = container.querySelector('#term-input');
+      _promptEl = container.querySelector('#term-prompt');
+      _runBtn = container.querySelector('#term-run-btn');
+      _vfsDisplay = container.querySelector('#vfs-display');
 
-    _welcome();
+      _welcome();
 
-    /* Event listeners */
-    _runBtn.addEventListener('click', () => {
-      const v = _inputEl.value.trim();
-      if (v) { _inputEl.value = ''; _run(v); }
-    });
-
-    _inputEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
+      /* Event listeners */
+      _runBtn.addEventListener('click', () => {
         const v = _inputEl.value.trim();
-        if (v) { _inputEl.value = ''; _run(v); }
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        if (histIdx < history.length - 1) { histIdx++; _inputEl.value = history[histIdx]; }
-      } else if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        if (histIdx > 0) { histIdx--; _inputEl.value = history[histIdx]; }
-        else { histIdx = -1; _inputEl.value = ''; }
-      } else if (e.key === 'Tab') {
-        e.preventDefault();
-        _tabComplete(_inputEl.value);
-      }
-    });
+        if (v) {
+          _inputEl.value = '';
+          _run(v);
+        }
+      });
 
-    /* Clicking anywhere on terminal focuses input */
-    const tw = container.querySelector('.term-window');
-    if (tw) tw.addEventListener('click', () => _inputEl && _inputEl.focus());
-    } catch(err) {
+      _inputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const v = _inputEl.value.trim();
+          if (v) {
+            _inputEl.value = '';
+            _run(v);
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (histIdx < history.length - 1) {
+            histIdx++;
+            _inputEl.value = history[histIdx];
+          }
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (histIdx > 0) {
+            histIdx--;
+            _inputEl.value = history[histIdx];
+          } else {
+            histIdx = -1;
+            _inputEl.value = '';
+          }
+        } else if (e.key === 'Tab') {
+          e.preventDefault();
+          _tabComplete(_inputEl.value);
+        }
+      });
+
+      /* Clicking anywhere on terminal focuses input */
+      const tw = container.querySelector('.term-window');
+      if (tw) tw.addEventListener('click', () => _inputEl && _inputEl.focus());
+    } catch (err) {
       container.innerHTML = `<div style="padding:3rem 2rem;text-align:center;color:#f85149;font-family:monospace">
         <div style="font-size:1.4rem;font-weight:700;margin-bottom:1rem">Terminal failed to load</div>
         <div style="font-size:0.9rem;color:#A8A098;max-width:480px;margin:0 auto">${String(err)}</div>
@@ -2237,7 +2601,7 @@ print("are what actually tell you whether this model is clinically useful.")`
 
   /* ─── Public API ─── */
   function runPreset(id) {
-    const preset = PRESETS.find(p => p.id === id);
+    const preset = PRESETS.find((p) => p.id === id);
     if (!preset || _running) return;
     _inputEl.value = '';
     /* Switch to terminal panel if not active */
@@ -2248,7 +2612,10 @@ print("are what actually tell you whether this model is clinically useful.")`
   }
 
   function clearTerminal() {
-    if (_outputEl) { _outputEl.innerHTML = ''; _welcome(); }
+    if (_outputEl) {
+      _outputEl.innerHTML = '';
+      _welcome();
+    }
   }
 
   function focusInput() {
@@ -2256,9 +2623,11 @@ print("are what actually tell you whether this model is clinically useful.")`
   }
 
   function switchMode(mode, btn) {
-    document.querySelectorAll('.term-mode-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.term-mode-tab').forEach((b) => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.terminal-panel, .script-editor-panel, .notebook-panel').forEach(el => el.classList.remove('active'));
+    document
+      .querySelectorAll('.terminal-panel, .script-editor-panel, .notebook-panel')
+      .forEach((el) => el.classList.remove('active'));
     if (mode === 'notebook') {
       const nb = document.getElementById('notebook-panel');
       if (nb) {
@@ -2280,19 +2649,29 @@ print("are what actually tell you whether this model is clinically useful.")`
     const editor = document.getElementById('script-editor');
     const nameEl = document.getElementById('se-filename');
     if (editor) editor.value = t.content;
-    if (nameEl) nameEl.textContent = t.name.toLowerCase().replace(/\s+/g,'_') + (t.name.includes('next') ? '.nf' : '.sh');
+    if (nameEl)
+      nameEl.textContent =
+        t.name.toLowerCase().replace(/\s+/g, '_') + (t.name.includes('next') ? '.nf' : '.sh');
   }
 
   function copyScript() {
     const editor = document.getElementById('script-editor');
     if (!editor) return;
-    navigator.clipboard.writeText(editor.value).then(() => {
-      const btn = document.querySelector('.se-action-btn');
-      if (btn) { btn.innerHTML = `${OmicsLab.Icons?.svg('check',13)||''} Copied!`; setTimeout(() => { btn.innerHTML = `${OmicsLab.Icons?.svg('clipboard',13)||''} Copy`; }, 1800); }
-    }).catch(() => {
-      editor.select();
-      document.execCommand('copy');
-    });
+    navigator.clipboard
+      .writeText(editor.value)
+      .then(() => {
+        const btn = document.querySelector('.se-action-btn');
+        if (btn) {
+          btn.innerHTML = `${OmicsLab.Icons?.svg('check', 13) || ''} Copied!`;
+          setTimeout(() => {
+            btn.innerHTML = `${OmicsLab.Icons?.svg('clipboard', 13) || ''} Copy`;
+          }, 1800);
+        }
+      })
+      .catch(() => {
+        editor.select();
+        document.execCommand('copy');
+      });
   }
 
   function downloadScript() {
@@ -2329,8 +2708,26 @@ print("are what actually tell you whether this model is clinically useful.")`
     }, 150);
   }
 
-  return { init, runPreset, clearTerminal, focusInput, switchMode, loadTemplate, copyScript, downloadScript,
-           runCell, addNotebookCell, clearNotebook, restartKernel, resetNotebook, _renderNotebook,
-           copyAndEdit, _switchNbView, submitNbComment, openStarterSnippet, _autosaveCell,
-           NB_LIST: _NB_DATA.map(n => ({ id: n.id, name: n.name })) };
+  return {
+    init,
+    runPreset,
+    clearTerminal,
+    focusInput,
+    switchMode,
+    loadTemplate,
+    copyScript,
+    downloadScript,
+    runCell,
+    addNotebookCell,
+    clearNotebook,
+    restartKernel,
+    resetNotebook,
+    _renderNotebook,
+    copyAndEdit,
+    _switchNbView,
+    submitNbComment,
+    openStarterSnippet,
+    _autosaveCell,
+    NB_LIST: _NB_DATA.map((n) => ({ id: n.id, name: n.name })),
+  };
 })();

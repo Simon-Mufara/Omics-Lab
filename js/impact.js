@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Impact = (function () {
-
   /* Aggregate illustrative platform metrics */
   const AGGREGATE = {
     users: 14820,
@@ -20,34 +19,34 @@ OmicsLab.Impact = (function () {
     certifications: 3200,
     languages: 21,
     topCountries: [
-      { name:'Nigeria', count:3200, color:'#00C4A0' },
-      { name:'South Africa', count:2800, color:'#58a6ff' },
-      { name:'Kenya', count:2100, color:'#e3b341' },
-      { name:'Ethiopia', count:1500, color:'#f97316' },
-      { name:'Ghana', count:1400, color:'#bc8cff' },
-      { name:'Cameroon', count:780, color:'#79c0ff' },
-      { name:'Uganda', count:720, color:'#ff6b6b' },
-      { name:'Tanzania', count:650, color:'#58a6ff' },
-      { name:'Senegal', count:540, color:'#00C4A0' },
-      { name:'Rwanda', count:410, color:'#e3b341' },
+      { name: 'Nigeria', count: 3200, color: '#00C4A0' },
+      { name: 'South Africa', count: 2800, color: '#58a6ff' },
+      { name: 'Kenya', count: 2100, color: '#e3b341' },
+      { name: 'Ethiopia', count: 1500, color: '#f97316' },
+      { name: 'Ghana', count: 1400, color: '#bc8cff' },
+      { name: 'Cameroon', count: 780, color: '#79c0ff' },
+      { name: 'Uganda', count: 720, color: '#ff6b6b' },
+      { name: 'Tanzania', count: 650, color: '#58a6ff' },
+      { name: 'Senegal', count: 540, color: '#00C4A0' },
+      { name: 'Rwanda', count: 410, color: '#e3b341' },
     ],
     toolUsage: [
-      { tool:'Variant Interpreter', uses:51200, color:'#ff6b6b' },
-      { tool:'AI Assistant', uses:38900, color:'#58a6ff' },
-      { tool:'Grant Generator', uses:22400, color:'#00C4A0' },
-      { tool:'Thesis Coach', uses:19100, color:'#bc8cff' },
-      { tool:'Genome Browser', uses:17800, color:'#e3b341' },
-      { tool:'Population Structure', uses:14600, color:'#f97316' },
-      { tool:'Codon Analysis', uses:12300, color:'#79c0ff' },
-      { tool:'Nanopore QC', uses:10900, color:'#ff6b6b' },
+      { tool: 'Variant Interpreter', uses: 51200, color: '#ff6b6b' },
+      { tool: 'AI Assistant', uses: 38900, color: '#58a6ff' },
+      { tool: 'Grant Generator', uses: 22400, color: '#00C4A0' },
+      { tool: 'Thesis Coach', uses: 19100, color: '#bc8cff' },
+      { tool: 'Genome Browser', uses: 17800, color: '#e3b341' },
+      { tool: 'Population Structure', uses: 14600, color: '#f97316' },
+      { tool: 'Codon Analysis', uses: 12300, color: '#79c0ff' },
+      { tool: 'Nanopore QC', uses: 10900, color: '#ff6b6b' },
     ],
     timeSeries: [
-      { month:'Jan 2025', users:2100 },
-      { month:'Feb 2025', users:3400 },
-      { month:'Mar 2025', users:5200 },
-      { month:'Apr 2025', users:7800 },
-      { month:'May 2025', users:10400 },
-      { month:'Jun 2025', users:14820 },
+      { month: 'Jan 2025', users: 2100 },
+      { month: 'Feb 2025', users: 3400 },
+      { month: 'Mar 2025', users: 5200 },
+      { month: 'Apr 2025', users: 7800 },
+      { month: 'May 2025', users: 10400 },
+      { month: 'Jun 2025', users: 14820 },
     ],
   };
 
@@ -70,43 +69,61 @@ OmicsLab.Impact = (function () {
     _citeActive = fmt;
     const pre = document.getElementById('im-cite-text');
     if (pre) pre.textContent = _citeFormats[fmt];
-    document.querySelectorAll('.im-cite-tab').forEach(t => t.classList.toggle('im-cite-tab--active', t.dataset.fmt === fmt));
+    document
+      .querySelectorAll('.im-cite-tab')
+      .forEach((t) => t.classList.toggle('im-cite-tab--active', t.dataset.fmt === fmt));
   }
 
   function _copyCite() {
-    navigator.clipboard?.writeText(_citeFormats[_citeActive]).then(() => {
-      OmicsLab.Toast?.show('Citation copied', 'success');
-    }).catch(() => {
-      OmicsLab.Toast?.show(_citeFormats[_citeActive].slice(0, 60) + '…', 'info');
-    });
+    navigator.clipboard
+      ?.writeText(_citeFormats[_citeActive])
+      .then(() => {
+        OmicsLab.Toast?.show('Citation copied', 'success');
+      })
+      .catch(() => {
+        OmicsLab.Toast?.show(_citeFormats[_citeActive].slice(0, 60) + '…', 'info');
+      });
   }
 
   function _getLocalStats() {
-    const keys = ['omicslab_labnotebook_entries','omicslab_hackathon_teams','omicslab_certification','omicslab_my_dir_profile','omicslab_my_mentor_profile'];
+    const keys = [
+      'omicslab_labnotebook_entries',
+      'omicslab_hackathon_teams',
+      'omicslab_certification',
+      'omicslab_my_dir_profile',
+      'omicslab_my_mentor_profile',
+    ];
     const nbEntries = (OmicsLab.Utils?.safeParse('omicslab_labnotebook_entries', []) || []).length;
-    const certDone = Object.keys((OmicsLab.Utils?.safeParse('omicslab_certification', {completed:{}}) || {completed:{}}).completed || {}).length;
+    const certDone = Object.keys(
+      (OmicsLab.Utils?.safeParse('omicslab_certification', { completed: {} }) || { completed: {} })
+        .completed || {}
+    ).length;
     return { nbEntries, certDone };
   }
 
   function _renderBarChart(items, maxVal) {
-    return items.map(item => {
-      const pct = (item.uses / maxVal * 100).toFixed(1);
-      return `<div class="im-bar-row">
+    return items
+      .map((item) => {
+        const pct = ((item.uses / maxVal) * 100).toFixed(1);
+        return `<div class="im-bar-row">
         <span class="im-bar-label">${item.tool || item.name}</span>
         <div class="im-bar-track">
           <div class="im-bar-fill" style="width:${pct}%;background:${item.color}"></div>
         </div>
         <span class="im-bar-val">${(item.uses || item.count).toLocaleString()}</span>
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   function _renderGrowthChart() {
     const data = AGGREGATE.timeSeries;
-    const maxU = Math.max(...data.map(d => d.users));
-    const W = 500, H = 120;
-    const pad = { l:40, r:10, t:10, b:28 };
-    const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+    const maxU = Math.max(...data.map((d) => d.users));
+    const W = 500,
+      H = 120;
+    const pad = { l: 40, r: 10, t: 10, b: 28 };
+    const plotW = W - pad.l - pad.r,
+      plotH = H - pad.t - pad.b;
     const pts = data.map((d, i) => {
       const x = pad.l + (i / (data.length - 1)) * plotW;
       const y = pad.t + (1 - d.users / maxU) * plotH;
@@ -123,7 +140,7 @@ OmicsLab.Impact = (function () {
       svg += `<circle cx="${x}" cy="${y}" r="3" fill="#58a6ff"/>`;
       svg += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#A8A098">${d.month.split(' ')[0]}</text>`;
     });
-    svg += `<text x="${pad.l - 4}" y="${pad.t + 4}" text-anchor="end" font-size="9" fill="#A8A098">${(maxU/1000).toFixed(0)}k</text>`;
+    svg += `<text x="${pad.l - 4}" y="${pad.t + 4}" text-anchor="end" font-size="9" fill="#A8A098">${(maxU / 1000).toFixed(0)}k</text>`;
     svg += '</svg>';
     return svg;
   }
@@ -134,8 +151,8 @@ OmicsLab.Impact = (function () {
     section.dataset.imReady = '1';
     const local = _getLocalStats();
     const A = AGGREGATE;
-    const maxTool = Math.max(...A.toolUsage.map(t => t.uses));
-    const maxCountry = Math.max(...A.topCountries.map(t => t.count));
+    const maxTool = Math.max(...A.toolUsage.map((t) => t.uses));
+    const maxCountry = Math.max(...A.topCountries.map((t) => t.count));
     section.innerHTML = `
       <div class="im-wrap">
         <div class="im-header">
@@ -149,8 +166,8 @@ OmicsLab.Impact = (function () {
         <div class="im-hero-grid">
           <div class="im-hero-card im-hero-primary"><span class="im-hero-n">${A.users.toLocaleString()}</span><span class="im-hero-l">Registered users</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#f97316">${A.countries}</span><span class="im-hero-l">African countries</span></div>
-          <div class="im-hero-card"><span class="im-hero-n" style="color:#58a6ff">${(A.analyses/1000).toFixed(1)}k</span><span class="im-hero-l">Analyses run</span></div>
-          <div class="im-hero-card"><span class="im-hero-n" style="color:#bc8cff">${(A.variants/1000).toFixed(0)}k</span><span class="im-hero-l">Variants interpreted</span></div>
+          <div class="im-hero-card"><span class="im-hero-n" style="color:#58a6ff">${(A.analyses / 1000).toFixed(1)}k</span><span class="im-hero-l">Analyses run</span></div>
+          <div class="im-hero-card"><span class="im-hero-n" style="color:#bc8cff">${(A.variants / 1000).toFixed(0)}k</span><span class="im-hero-l">Variants interpreted</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#e3b341">${A.grants.toLocaleString()}</span><span class="im-hero-l">Grants drafted</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#ff6b6b">${A.certifications.toLocaleString()}</span><span class="im-hero-l">Certificates issued</span></div>
           <div class="im-hero-card"><span class="im-hero-n" style="color:#00C4A0">${A.mentorConnections.toLocaleString()}</span><span class="im-hero-l">Mentor connections</span></div>
@@ -169,7 +186,10 @@ OmicsLab.Impact = (function () {
         <div class="im-two-col">
           <div>
             <div class="im-section-label">Top countries</div>
-            <div class="im-bars">${_renderBarChart(A.topCountries.map(c => ({...c, uses:c.count})), maxCountry)}</div>
+            <div class="im-bars">${_renderBarChart(
+              A.topCountries.map((c) => ({ ...c, uses: c.count })),
+              maxCountry
+            )}</div>
           </div>
           <div>
             <div class="im-section-label">Tool usage</div>

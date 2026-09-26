@@ -15,14 +15,14 @@ window.OmicsLab = window.OmicsLab || {};
 OmicsLab.NexusRealtime = (function () {
   'use strict';
 
-  let _client          = null;
-  let _msgChannel      = null;  /* Realtime broadcast channel for messages */
-  let _presenceChannel = null;  /* Realtime presence channel */
+  let _client = null;
+  let _msgChannel = null; /* Realtime broadcast channel for messages */
+  let _presenceChannel = null; /* Realtime presence channel */
   let _activeChannelId = 'general';
-  let _ready           = false;
-  let _selfId          = null;  /* to skip echoing our own broadcast */
-  let _onlineUsers     = {};    /* real cross-device presence, keyed by Clerk user id */
-  let _retrackTimer    = null;  /* periodic online_at refresh so presence never looks stale */
+  let _ready = false;
+  let _selfId = null; /* to skip echoing our own broadcast */
+  let _onlineUsers = {}; /* real cross-device presence, keyed by Clerk user id */
+  let _retrackTimer = null; /* periodic online_at refresh so presence never looks stale */
 
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
@@ -38,7 +38,7 @@ OmicsLab.NexusRealtime = (function () {
     db.onReady(() => {
       _client = db.client;
       _selfId = _getSelfId();
-      _ready  = true;
+      _ready = true;
 
       /* Subscribe to the default channel first */
       _activeChannelId = OmicsLab.Nexus?._getActiveChannel?.() || 'general';
@@ -123,7 +123,7 @@ OmicsLab.NexusRealtime = (function () {
            js/social.js's "who's online" / friend-code lookup can find
            genuinely remote users instead of only same-browser tabs. */
         _onlineUsers = {};
-        Object.values(state).forEach(entries => {
+        Object.values(state).forEach((entries) => {
           /* Supabase Realtime Presence appends a new metadata entry to this
              key's array on every track() call rather than replacing it in
              place — entries[0] is the FIRST-ever track for that key, not
@@ -164,15 +164,17 @@ OmicsLab.NexusRealtime = (function () {
   function _retrack() {
     if (!_presenceChannel || !_ready) return;
     const user = _getDisplayUser();
-    _presenceChannel.track({
-      selfId:      _selfId,
-      userId:      _getDbUserId(),
-      name:        user.name,
-      avatar:      user.avatar,
-      institution: user.institution,
-      country:     user.country,
-      online_at:   new Date().toISOString(),
-    }).catch(() => {});
+    _presenceChannel
+      .track({
+        selfId: _selfId,
+        userId: _getDbUserId(),
+        name: user.name,
+        avatar: user.avatar,
+        institution: user.institution,
+        country: user.country,
+        online_at: new Date().toISOString(),
+      })
+      .catch(() => {});
   }
 
   /* Real cross-device online users (excludes self), for js/social.js.
@@ -183,8 +185,10 @@ OmicsLab.NexusRealtime = (function () {
     return Object.entries(_onlineUsers)
       .filter(([id]) => id && id !== selfDbId)
       .map(([id, meta]) => ({
-        id, name: meta.name || 'OmicsLab User',
-        institution: meta.institution || '', country: meta.country || '',
+        id,
+        name: meta.name || 'OmicsLab User',
+        institution: meta.institution || '',
+        country: meta.country || '',
         t: meta.online_at ? new Date(meta.online_at).getTime() : Date.now(),
       }));
   }
@@ -216,7 +220,7 @@ OmicsLab.NexusRealtime = (function () {
         .from('nexus_messages')
         .select('id, user_id, content, reactions, author_meta, created_at')
         .eq('channel', channelId)
-        .is('thread_id', null)            /* top-level messages only */
+        .is('thread_id', null) /* top-level messages only */
         .order('created_at', { ascending: true })
         .limit(80);
 
@@ -226,29 +230,28 @@ OmicsLab.NexusRealtime = (function () {
          is only needed by DM history (js/social.js needs to tell "mine"
          apart from "theirs" on reload) — harmless extra field for the
          named-channel case, which ignores it. */
-      const msgs = data.map(row => ({
-        id:        row.id,
-        from:      row.user_id,
-        author:    row.author_meta?.name   || 'Community Member',
-        role:      row.author_meta?.role   || '',
-        avatar:    row.author_meta?.avatar || '??',
-        color:     row.author_meta?.color  || '#00C4A0',
-        ts:        new Date(row.created_at).getTime(),
-        text:      row.content,
+      const msgs = data.map((row) => ({
+        id: row.id,
+        from: row.user_id,
+        author: row.author_meta?.name || 'Community Member',
+        role: row.author_meta?.role || '',
+        avatar: row.author_meta?.avatar || '??',
+        color: row.author_meta?.color || '#00C4A0',
+        ts: new Date(row.created_at).getTime(),
+        text: row.content,
         reactions: row.reactions || {},
-        pinned:    false,
-        thread:    [],
+        pinned: false,
+        thread: [],
       }));
 
       /* Inject each message that isn't already in state */
-      msgs.forEach(msg => {
+      msgs.forEach((msg) => {
         if (channelId.startsWith('dm:')) {
           OmicsLab.Social?._onDMMessage?.(msg, channelId, /* fromHistory */ true);
         } else if (OmicsLab.Nexus?._injectMessage) {
           OmicsLab.Nexus._injectMessage(msg, channelId, /* fromHistory */ true);
         }
       });
-
     } catch (err) {
       /* Silently fail — localStorage messages still show */
     }
@@ -259,11 +262,13 @@ OmicsLab.NexusRealtime = (function () {
     if (!_ready || !_msgChannel) return;
 
     /* Broadcast to all other subscribers (instant, no DB needed) */
-    _msgChannel.send({
-      type:    'broadcast',
-      event:   'nexus_message',
-      payload: msg,
-    }).catch(() => {});
+    _msgChannel
+      .send({
+        type: 'broadcast',
+        event: 'nexus_message',
+        payload: msg,
+      })
+      .catch(() => {});
 
     /* Persist via the server (fire-and-forget) — NOT a direct client
        insert. nexus_messages.user_id is a uuid FK into public.users(id),
@@ -281,28 +286,32 @@ OmicsLab.NexusRealtime = (function () {
        service role instead, sidestepping the broken client-side RLS
        path entirely. Guests (no token) simply don't persist, matching
        prior behaviour for them. */
-    OmicsLab.AuthClerk?.getToken?.().then(token => {
-      if (!token) return;
-      fetch('/api/forum-comments', {
-        method:  'POST',
-        headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({
-          type:    'nexus-message',
-          id:      msg.id,
-          channel: channelId,
-          content: msg.text,
-          reactions: msg.reactions || {},
-          authorMeta: {
-            name:   msg.author,
-            avatar: msg.avatar,
-            color:  msg.color,
-            role:   msg.role,
-          },
-        }),
-      }).then(res => {
-        if (!res.ok) console.warn('[NexusRealtime] Message persist failed:', res.status);
-      }).catch(() => {});
-    }).catch(() => {});
+    OmicsLab.AuthClerk?.getToken?.()
+      .then((token) => {
+        if (!token) return;
+        fetch('/api/forum-comments', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            type: 'nexus-message',
+            id: msg.id,
+            channel: channelId,
+            content: msg.text,
+            reactions: msg.reactions || {},
+            authorMeta: {
+              name: msg.author,
+              avatar: msg.avatar,
+              color: msg.color,
+              role: msg.role,
+            },
+          }),
+        })
+          .then((res) => {
+            if (!res.ok) console.warn('[NexusRealtime] Message persist failed:', res.status);
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
   }
 
   /* ── Switch realtime subscription when user changes channel ─── */
@@ -339,7 +348,10 @@ OmicsLab.NexusRealtime = (function () {
   function _getSelfId() {
     const k = 'omicslab_nexus_selfid';
     let id = localStorage.getItem(k);
-    if (!id) { id = 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem(k, id); }
+    if (!id) {
+      id = 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem(k, id);
+    }
     return id;
   }
 
@@ -347,26 +359,53 @@ OmicsLab.NexusRealtime = (function () {
     try {
       const p = JSON.parse(localStorage.getItem('omicslab_user_profile') || '{}');
       let extra = {};
-      try { extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}'); } catch {}
+      try {
+        extra = JSON.parse(localStorage.getItem('omicslab_user') || '{}');
+      } catch {}
       return {
-        name:   p.name   || 'OmicsLab User',
-        avatar: p.name   ? p.name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase() : 'OU',
-        color:  '#00C4A0',
-        role:   p.role   || 'student',
+        name: p.name || 'OmicsLab User',
+        avatar: p.name
+          ? p.name
+              .split(' ')
+              .slice(0, 2)
+              .map((w) => w[0])
+              .join('')
+              .toUpperCase()
+          : 'OU',
+        color: '#00C4A0',
+        role: p.role || 'student',
         institution: extra.institution || '',
-        country:     extra.country || '',
+        country: extra.country || '',
       };
-    } catch { return { name: 'OmicsLab User', avatar: 'OU', color: '#00C4A0', role: 'student', institution: '', country: '' }; }
+    } catch {
+      return {
+        name: 'OmicsLab User',
+        avatar: 'OU',
+        color: '#00C4A0',
+        role: 'student',
+        institution: '',
+        country: '',
+      };
+    }
   }
 
   function _getDbUserId() {
     try {
       const p = JSON.parse(localStorage.getItem('omicslab_user_profile') || '{}');
       return p.id || null;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
 
   /* ── Public API ─────────────────────────────────────────────── */
-  return { init, broadcast, switchChannel, getOnlineUsers, get isReady() { return _ready; } };
-
+  return {
+    init,
+    broadcast,
+    switchChannel,
+    getOnlineUsers,
+    get isReady() {
+      return _ready;
+    },
+  };
 })();

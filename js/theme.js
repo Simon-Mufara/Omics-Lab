@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Theme = (function () {
-
   const KEY = 'omicslab_theme';
 
   /* The three possible stored values */
@@ -40,7 +39,7 @@ OmicsLab.Theme = (function () {
   function apply(mode) {
     const prev = getStored();
     localStorage.setItem(KEY, mode);
-    const resolved = mode === 'system' ? ((_systemIsDark() ? 'dark' : 'light')) : mode;
+    const resolved = mode === 'system' ? (_systemIsDark() ? 'dark' : 'light') : mode;
     document.documentElement.dataset.theme = resolved;
     _updateButton(mode);
     /* Let settings page know if it's open */
