@@ -6,6 +6,7 @@ import Onboarding from './pages/Onboarding.jsx';
 import EditProfile from './pages/EditProfile.jsx';
 import DatasetHub from './pages/DatasetHub.jsx';
 import MemberDirectory from './pages/MemberDirectory.jsx';
+import AdvancedLearningHub from './pages/advanced-learning/AdvancedLearningHub.jsx';
 import Avatar from './components/Avatar.jsx';
 import GlobalSearch from './components/GlobalSearch.jsx';
 
@@ -132,6 +133,7 @@ export default function App() {
         <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/datasets" element={<DatasetHub />} />
         <Route path="/members" element={<MemberDirectory />} />
+        <Route path="/advanced-learning" element={<AdvancedLearningHub />} />
         <Route
           path="/datasets/:slug"
           element={
