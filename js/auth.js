@@ -8,34 +8,61 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Auth = (function () {
-
   /* ─── Configuration ─────────────────────────────────────────
      Set API_BASE to your backend URL in production.
      Leave empty for offline-only (email auth via localStorage).
      Set OAuth client IDs after registering apps with providers. */
   const CFG = {
-    API_BASE: '',                         // e.g. 'https://api.omicslab.africa/v1'
-    GITHUB_CLIENT_ID:   '',              // github.com/settings/apps → New OAuth App
-    GOOGLE_CLIENT_ID:   '',              // console.cloud.google.com → Credentials
-    LINKEDIN_CLIENT_ID: '',              // developer.linkedin.com → Create App
+    API_BASE: '', // e.g. 'https://api.omicslab.africa/v1'
+    GITHUB_CLIENT_ID: '', // github.com/settings/apps → New OAuth App
+    GOOGLE_CLIENT_ID: '', // console.cloud.google.com → Credentials
+    LINKEDIN_CLIENT_ID: '', // developer.linkedin.com → Create App
     REDIRECT_BASE: location.origin + location.pathname,
   };
 
   const S_SESSION = 'omicslab_session_v2';
-  const S_USERS   = 'omicslab_users_v2';
+  const S_USERS = 'omicslab_users_v2';
 
-  let _user    = null;   // { id, name, email, avatar, institution, country, role, linkedAccounts, badges, createdAt }
-  let _session = null;   // { token, expires }
-  let _cbs     = [];
+  let _user = null; // { id, name, email, avatar, institution, country, role, linkedAccounts, badges, createdAt }
+  let _session = null; // { token, expires }
+  let _cbs = [];
 
   /* ─── Persistence ─── */
-  function _loadUsers()  { try { return JSON.parse(localStorage.getItem(S_USERS)  || '[]'); } catch { return []; } }
-  function _saveUsers(u) { try { localStorage.setItem(S_USERS, JSON.stringify(u)); } catch {} }
-  function _loadSession(){ try { return JSON.parse(localStorage.getItem(S_SESSION) || 'null'); } catch { return null; } }
-  function _saveSession(s){ try { localStorage.setItem(S_SESSION, JSON.stringify(s)); } catch {} }
-  function _clearSession(){ localStorage.removeItem(S_SESSION); }
+  function _loadUsers() {
+    try {
+      return JSON.parse(localStorage.getItem(S_USERS) || '[]');
+    } catch {
+      return [];
+    }
+  }
+  function _saveUsers(u) {
+    try {
+      localStorage.setItem(S_USERS, JSON.stringify(u));
+    } catch {}
+  }
+  function _loadSession() {
+    try {
+      return JSON.parse(localStorage.getItem(S_SESSION) || 'null');
+    } catch {
+      return null;
+    }
+  }
+  function _saveSession(s) {
+    try {
+      localStorage.setItem(S_SESSION, JSON.stringify(s));
+    } catch {}
+  }
+  function _clearSession() {
+    localStorage.removeItem(S_SESSION);
+  }
 
-  function _emit() { _cbs.forEach(cb => { try { cb(_user); } catch {} }); }
+  function _emit() {
+    _cbs.forEach((cb) => {
+      try {
+        cb(_user);
+      } catch {}
+    });
+  }
 
   /* ─── Password hashing (demo — use bcrypt on real backend) ─── */
   function _hash(str) {
@@ -60,23 +87,42 @@ OmicsLab.Auth = (function () {
     if (window.OMICSLAB_CONFIG?.clerkPublishableKey) return;
     const s = _loadSession();
     if (!s || !s.token || !s.userId) return;
-    if (s.expires && Date.now() > s.expires) { _clearSession(); return; }
+    if (s.expires && Date.now() > s.expires) {
+      _clearSession();
+      return;
+    }
     const users = _loadUsers();
-    const user = users.find(u => u.id === s.userId);
-    if (user) { _user = user; _session = s; }
+    const user = users.find((u) => u.id === s.userId);
+    if (user) {
+      _user = user;
+      _session = s;
+    }
   }
 
   /* ─── Public: register with email ─── */
-  function register({ name, email, password, institution = '', country = '', role = 'researcher' }) {
+  function register({
+    name,
+    email,
+    password,
+    institution = '',
+    country = '',
+    role = 'researcher',
+  }) {
     const users = _loadUsers();
-    if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+    if (users.find((u) => u.email.toLowerCase() === email.toLowerCase())) {
       return { ok: false, error: 'An account with this email already exists. Sign in instead.' };
     }
     const user = {
-      id: _uuid(), name, email: email.toLowerCase(),
+      id: _uuid(),
+      name,
+      email: email.toLowerCase(),
       passwordHash: _hash(password),
-      avatar: '', institution, country, role,
-      linkedAccounts: {}, badges: [],
+      avatar: '',
+      institution,
+      country,
+      role,
+      linkedAccounts: {},
+      badges: [],
       createdAt: Date.now(),
     };
     users.push(user);
@@ -90,7 +136,7 @@ OmicsLab.Auth = (function () {
   /* ─── Public: sign in with email ─── */
   function signIn({ email, password }) {
     const users = _loadUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
     if (!user) return { ok: false, error: 'No account found with this email. Create one below.' };
     if (user.passwordHash !== _hash(password)) return { ok: false, error: 'Incorrect password.' };
     _startSession(user);
@@ -114,7 +160,7 @@ OmicsLab.Auth = (function () {
   function updateProfile(updates) {
     if (!_user) return { ok: false, error: 'Not signed in' };
     const users = _loadUsers();
-    const idx = users.findIndex(u => u.id === _user.id);
+    const idx = users.findIndex((u) => u.id === _user.id);
     if (idx === -1) return { ok: false, error: 'User not found' };
     Object.assign(users[idx], updates);
     Object.assign(_user, updates);
@@ -127,14 +173,19 @@ OmicsLab.Auth = (function () {
   /* ─── Public: change password ─── */
   function changePassword({ currentPassword, newPassword }) {
     if (!_user) return { ok: false, error: 'Not signed in' };
-    if (_user.passwordHash !== _hash(currentPassword)) return { ok: false, error: 'Current password incorrect' };
+    if (_user.passwordHash !== _hash(currentPassword))
+      return { ok: false, error: 'Current password incorrect' };
     return updateProfile({ passwordHash: _hash(newPassword) });
   }
 
   /* ─── Session helper ─── */
   function _startSession(user) {
     _user = user;
-    _session = { token: _makeToken(user.id), userId: user.id, expires: Date.now() + 30 * 24 * 3600 * 1000 };
+    _session = {
+      token: _makeToken(user.id),
+      userId: user.id,
+      expires: Date.now() + 30 * 24 * 3600 * 1000,
+    };
     _saveSession(_session);
   }
 
@@ -168,13 +219,16 @@ OmicsLab.Auth = (function () {
     fetch(`${CFG.API_BASE}/auth/oauth/${provider}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, redirectUri: CFG.REDIRECT_BASE + '#/auth/callback/' + provider }),
+      body: JSON.stringify({
+        code,
+        redirectUri: CFG.REDIRECT_BASE + '#/auth/callback/' + provider,
+      }),
     })
-      .then(r => r.json())
-      .then(data => {
+      .then((r) => r.json())
+      .then((data) => {
         if (data.user && data.token) {
           const users = _loadUsers();
-          const idx = users.findIndex(u => u.id === data.user.id);
+          const idx = users.findIndex((u) => u.id === data.user.id);
           if (idx === -1) users.push(data.user);
           else Object.assign(users[idx], data.user);
           _saveUsers(users);
@@ -196,17 +250,20 @@ OmicsLab.Auth = (function () {
 
   /* ─── Nav UI ─── */
   function _updateNavUI() {
-    const pill      = document.getElementById('nav-user-pill');
-    const avatar    = document.getElementById('nav-user-avatar');
-    const nameEl    = document.getElementById('nav-user-name');
+    const pill = document.getElementById('nav-user-pill');
+    const avatar = document.getElementById('nav-user-avatar');
+    const nameEl = document.getElementById('nav-user-name');
     const signinBtn = document.getElementById('nav-signin-btn');
-    const mobSignin  = document.getElementById('mob-auth-signin');
+    const mobSignin = document.getElementById('mob-auth-signin');
     const mobAccount = document.getElementById('mob-auth-account');
     const mobSignout = document.getElementById('mob-auth-signout');
-    const mobName    = document.getElementById('mob-auth-username');
+    const mobName = document.getElementById('mob-auth-username');
 
     if (_user) {
-      if (pill)      { pill.style.display = ''; pill.setAttribute('aria-label', `${_user.name} — Account settings`); }
+      if (pill) {
+        pill.style.display = '';
+        pill.setAttribute('aria-label', `${_user.name} — Account settings`);
+      }
       if (signinBtn) signinBtn.style.display = 'none';
       if (avatar) {
         if (_user.avatar) {
@@ -219,21 +276,23 @@ OmicsLab.Auth = (function () {
         const parts = _user.name.trim().split(/\s+/);
         nameEl.textContent = parts[0] + (parts[1] ? ' ' + parts[1][0] + '.' : '');
       }
-      if (mobSignin)  mobSignin.style.display  = 'none';
+      if (mobSignin) mobSignin.style.display = 'none';
       if (mobAccount) mobAccount.style.display = '';
       if (mobSignout) mobSignout.style.display = '';
-      if (mobName)    mobName.textContent = _user.name.trim().split(/\s+/)[0];
+      if (mobName) mobName.textContent = _user.name.trim().split(/\s+/)[0];
     } else {
-      if (pill)      pill.style.display = 'none';
+      if (pill) pill.style.display = 'none';
       if (signinBtn) signinBtn.style.display = '';
-      if (mobSignin)  mobSignin.style.display  = '';
+      if (mobSignin) mobSignin.style.display = '';
       if (mobAccount) mobAccount.style.display = 'none';
       if (mobSignout) mobSignout.style.display = 'none';
     }
   }
 
   /* ─── Modal ─── */
-  function openModal(tab = 'signin') { _showModal(tab); }
+  function openModal(tab = 'signin') {
+    _showModal(tab);
+  }
 
   function closeModal() {
     const overlay = document.getElementById('auth-modal-overlay');
@@ -244,9 +303,13 @@ OmicsLab.Auth = (function () {
     /* Delegate to Clerk when available — covers all internal callers */
     const clerk = window.OmicsLab?.AuthClerk;
     if (clerk) {
-      if (tab === 'account') { clerk.openAccount(); }
-      else if (tab === 'register') { clerk.signUp(); }
-      else { clerk.signIn(); }
+      if (tab === 'account') {
+        clerk.openAccount();
+      } else if (tab === 'register') {
+        clerk.signUp();
+      } else {
+        clerk.signIn();
+      }
       return;
     }
     let overlay = document.getElementById('auth-modal-overlay');
@@ -254,7 +317,9 @@ OmicsLab.Auth = (function () {
       overlay = document.createElement('div');
       overlay.id = 'auth-modal-overlay';
       overlay.className = 'auth-modal-overlay';
-      overlay.onclick = e => { if (e.target === overlay) closeModal(); };
+      overlay.onclick = (e) => {
+        if (e.target === overlay) closeModal();
+      };
       document.body.appendChild(overlay);
     }
     overlay.innerHTML = _modalHtml(tab);
@@ -269,7 +334,10 @@ OmicsLab.Auth = (function () {
 
   function _setFormError(msg) {
     const el = document.getElementById('auth-form-error');
-    if (el) { el.textContent = msg; el.style.display = msg ? '' : 'none'; }
+    if (el) {
+      el.textContent = msg;
+      el.style.display = msg ? '' : 'none';
+    }
   }
 
   function _showOAuthSetup(provider) {
@@ -280,7 +348,8 @@ OmicsLab.Auth = (function () {
 
   /* ─── Modal HTML ─── */
   function _modalHtml(tab) {
-    if (tab === 'loading') return `<div class="auth-modal"><div class="auth-spinner"></div><p style="color:#A8A098;text-align:center;margin-top:1rem">Signing in…</p></div>`;
+    if (tab === 'loading')
+      return `<div class="auth-modal"><div class="auth-spinner"></div><p style="color:#A8A098;text-align:center;margin-top:1rem">Signing in…</p></div>`;
     if (tab === 'oauth-setup') return _oauthSetupHtml();
     if (tab === 'account') return _accountHtml();
     return _authFormHtml(tab);
@@ -306,11 +375,15 @@ OmicsLab.Auth = (function () {
         </div>
 
         <form class="auth-form" onsubmit="event.preventDefault(); OmicsLab.Auth._submitForm('${isSignIn ? 'signin' : 'register'}')">
-          ${!isSignIn ? `
+          ${
+            !isSignIn
+              ? `
           <div class="auth-field">
             <label class="auth-label" for="auth-name">Full name</label>
             <input class="auth-input" id="auth-name" type="text" placeholder="Dr. Amara Osei" required autocomplete="name"/>
-          </div>` : ''}
+          </div>`
+              : ''
+          }
 
           <div class="auth-field">
             <label class="auth-label" for="auth-email">Email address <span class="auth-label-hint">(stored locally — no email sent)</span></label>
@@ -334,12 +407,16 @@ OmicsLab.Auth = (function () {
           </button>
         </form>
 
-        ${isSignIn ? `<div class="auth-footer-links">
+        ${
+          isSignIn
+            ? `<div class="auth-footer-links">
           <button class="auth-link-btn" onclick="OmicsLab.Auth.openModal('register')">New to OmicsLab? Create an account</button>
-        </div>` : `<div class="auth-local-notice">
+        </div>`
+            : `<div class="auth-local-notice">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
           Account saved locally — no email confirmation needed. You can add your institution and country in your profile later.
-        </div>`}
+        </div>`
+        }
       </div>`;
   }
 
@@ -405,9 +482,19 @@ OmicsLab.Auth = (function () {
             <div class="auth-field">
               <label class="auth-label">Role</label>
               <select class="auth-input auth-select" id="acc-role">
-                ${['researcher','student','instructor','clinician','bioinformatician','public-health'].map(r =>
-                  `<option value="${r}" ${u.role === r ? 'selected' : ''}>${_capFirst(r.replace('-',' '))}</option>`
-                ).join('')}
+                ${[
+                  'researcher',
+                  'student',
+                  'instructor',
+                  'clinician',
+                  'bioinformatician',
+                  'public-health',
+                ]
+                  .map(
+                    (r) =>
+                      `<option value="${r}" ${u.role === r ? 'selected' : ''}>${_capFirst(r.replace('-', ' '))}</option>`
+                  )
+                  .join('')}
               </select>
             </div>
           </div>
@@ -419,7 +506,7 @@ OmicsLab.Auth = (function () {
             <div class="auth-field">
               <label class="auth-label">Country</label>
               <select class="auth-input auth-select" id="acc-country">
-                ${AFRICAN_COUNTRIES.map(c => `<option value="${c}" ${u.country === c ? 'selected' : ''}>${c}</option>`).join('')}
+                ${AFRICAN_COUNTRIES.map((c) => `<option value="${c}" ${u.country === c ? 'selected' : ''}>${c}</option>`).join('')}
                 <option value="Other" ${u.country === 'Other' ? 'selected' : ''}>Other</option>
               </select>
             </div>
@@ -429,8 +516,8 @@ OmicsLab.Auth = (function () {
 
           <div class="auth-section-label">Linked accounts</div>
           <div class="auth-linked-row">
-            ${_linkedBtn('github',   u.linkedAccounts?.github)}
-            ${_linkedBtn('google',   u.linkedAccounts?.google)}
+            ${_linkedBtn('github', u.linkedAccounts?.github)}
+            ${_linkedBtn('google', u.linkedAccounts?.google)}
             ${_linkedBtn('linkedin', u.linkedAccounts?.linkedin)}
           </div>
 
@@ -481,25 +568,54 @@ OmicsLab.Auth = (function () {
   function _submitForm(mode) {
     _setFormError('');
     const btn = document.getElementById('auth-submit');
-    if (btn) { btn.disabled = true; btn.textContent = mode === 'signin' ? 'Signing in…' : 'Creating account…'; }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = mode === 'signin' ? 'Signing in…' : 'Creating account…';
+    }
 
     if (mode === 'signin') {
-      const email    = document.getElementById('auth-email')?.value?.trim();
+      const email = document.getElementById('auth-email')?.value?.trim();
       const password = document.getElementById('auth-password')?.value;
       const result = signIn({ email, password });
-      if (btn) { btn.disabled = false; btn.textContent = 'Sign in'; }
-      if (!result.ok) { _setFormError(result.error); return; }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+      }
+      if (!result.ok) {
+        _setFormError(result.error);
+        return;
+      }
       closeModal();
       _showToast('Welcome back, ' + result.user.name.split(' ')[0] + '.');
     } else {
-      const name        = document.getElementById('auth-name')?.value?.trim();
-      const email       = document.getElementById('auth-email')?.value?.trim();
-      const password    = document.getElementById('auth-password')?.value;
-      if (!name || name.length < 2) { _setFormError('Please enter your full name.'); if (btn) { btn.disabled = false; btn.textContent = 'Create account'; } return; }
-      if (password.length < 8) { _setFormError('Password must be at least 8 characters.'); if (btn) { btn.disabled = false; btn.textContent = 'Create account'; } return; }
+      const name = document.getElementById('auth-name')?.value?.trim();
+      const email = document.getElementById('auth-email')?.value?.trim();
+      const password = document.getElementById('auth-password')?.value;
+      if (!name || name.length < 2) {
+        _setFormError('Please enter your full name.');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Create account';
+        }
+        return;
+      }
+      if (password.length < 8) {
+        _setFormError('Password must be at least 8 characters.');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Create account';
+        }
+        return;
+      }
       const result = register({ name, email, password });
-      if (btn) { btn.disabled = false; btn.textContent = 'Create account'; }
-      if (!result.ok) { _setFormError(result.error); return; }
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Create account';
+      }
+      if (!result.ok) {
+        _setFormError(result.error);
+        return;
+      }
       _showRegisterSuccess(result.user);
     }
   }
@@ -525,28 +641,45 @@ OmicsLab.Auth = (function () {
   /* ─── Account save ─── */
   function _saveAccount() {
     const result = updateProfile({
-      name:        document.getElementById('acc-name')?.value?.trim() || _user.name,
+      name: document.getElementById('acc-name')?.value?.trim() || _user.name,
       institution: document.getElementById('acc-institution')?.value?.trim(),
-      country:     document.getElementById('acc-country')?.value,
-      role:        document.getElementById('acc-role')?.value,
+      country: document.getElementById('acc-country')?.value,
+      role: document.getElementById('acc-role')?.value,
     });
     if (result.ok) _showToast('Profile saved');
   }
 
   function _savePassword() {
-    const cur  = document.getElementById('acc-pw-current')?.value;
+    const cur = document.getElementById('acc-pw-current')?.value;
     const next = document.getElementById('acc-pw-new')?.value;
     const conf = document.getElementById('acc-pw-confirm')?.value;
-    const err  = document.getElementById('auth-pw-error');
-    const show = (msg) => { if (err) { err.textContent = msg; err.style.display = ''; } };
-    if (!cur || !next) { show('Enter current and new password'); return; }
-    if (next.length < 8) { show('New password must be at least 8 characters'); return; }
-    if (next !== conf) { show('Passwords do not match'); return; }
+    const err = document.getElementById('auth-pw-error');
+    const show = (msg) => {
+      if (err) {
+        err.textContent = msg;
+        err.style.display = '';
+      }
+    };
+    if (!cur || !next) {
+      show('Enter current and new password');
+      return;
+    }
+    if (next.length < 8) {
+      show('New password must be at least 8 characters');
+      return;
+    }
+    if (next !== conf) {
+      show('Passwords do not match');
+      return;
+    }
     const result = changePassword({ currentPassword: cur, newPassword: next });
-    if (!result.ok) { show(result.error); return; }
+    if (!result.ok) {
+      show(result.error);
+      return;
+    }
     if (err) err.style.display = 'none';
     _showToast('Password updated');
-    ['acc-pw-current','acc-pw-new','acc-pw-confirm'].forEach(id => {
+    ['acc-pw-current', 'acc-pw-new', 'acc-pw-confirm'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
@@ -556,13 +689,17 @@ OmicsLab.Auth = (function () {
   function _uploadAvatar(input) {
     const file = input.files[0];
     if (!file) return;
-    if (file.size > 1024 * 1024) { _showToast('Image must be smaller than 1MB', true); return; }
+    if (file.size > 1024 * 1024) {
+      _showToast('Image must be smaller than 1MB', true);
+      return;
+    }
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       const avatar = e.target.result;
       updateProfile({ avatar });
       const prev = document.getElementById('auth-av-preview');
-      if (prev) prev.innerHTML = `<img src="${avatar}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
+      if (prev)
+        prev.innerHTML = `<img src="${avatar}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover">`;
     };
     reader.readAsDataURL(file);
   }
@@ -585,22 +722,78 @@ OmicsLab.Auth = (function () {
 
   /* ─── Helpers ─── */
   function _initials(name) {
-    return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    return name
+      .split(' ')
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join('')
+      .toUpperCase();
   }
 
-  function _capFirst(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+  function _capFirst(s) {
+    return s ? s[0].toUpperCase() + s.slice(1) : '';
+  }
 
-  function _esc(s) { return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+  function _esc(s) {
+    return (s || '').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
 
   /* ─── African countries list ─── */
   const AFRICAN_COUNTRIES = [
-    'Algeria','Angola','Benin','Botswana','Burkina Faso','Burundi','Cameroon','Cape Verde',
-    'Central African Republic','Chad','Comoros','Congo','Côte d\'Ivoire','DRC','Djibouti',
-    'Egypt','Equatorial Guinea','Eritrea','Eswatini','Ethiopia','Gabon','Gambia','Ghana',
-    'Guinea','Guinea-Bissau','Kenya','Lesotho','Liberia','Libya','Madagascar','Malawi',
-    'Mali','Mauritania','Mauritius','Morocco','Mozambique','Namibia','Niger','Nigeria',
-    'Rwanda','Sao Tome & Principe','Senegal','Seychelles','Sierra Leone','Somalia',
-    'South Africa','South Sudan','Sudan','Tanzania','Togo','Tunisia','Uganda','Zambia','Zimbabwe',
+    'Algeria',
+    'Angola',
+    'Benin',
+    'Botswana',
+    'Burkina Faso',
+    'Burundi',
+    'Cameroon',
+    'Cape Verde',
+    'Central African Republic',
+    'Chad',
+    'Comoros',
+    'Congo',
+    "Côte d'Ivoire",
+    'DRC',
+    'Djibouti',
+    'Egypt',
+    'Equatorial Guinea',
+    'Eritrea',
+    'Eswatini',
+    'Ethiopia',
+    'Gabon',
+    'Gambia',
+    'Ghana',
+    'Guinea',
+    'Guinea-Bissau',
+    'Kenya',
+    'Lesotho',
+    'Liberia',
+    'Libya',
+    'Madagascar',
+    'Malawi',
+    'Mali',
+    'Mauritania',
+    'Mauritius',
+    'Morocco',
+    'Mozambique',
+    'Namibia',
+    'Niger',
+    'Nigeria',
+    'Rwanda',
+    'Sao Tome & Principe',
+    'Senegal',
+    'Seychelles',
+    'Sierra Leone',
+    'Somalia',
+    'South Africa',
+    'South Sudan',
+    'Sudan',
+    'Tanzania',
+    'Togo',
+    'Tunisia',
+    'Uganda',
+    'Zambia',
+    'Zimbabwe',
   ];
 
   /* ─── Init ─── */
@@ -619,7 +812,7 @@ OmicsLab.Auth = (function () {
     /* Inject sign-in button once, before the pill */
     if (!document.getElementById('nav-signin-btn')) {
       const btn = document.createElement('button');
-      btn.id        = 'nav-signin-btn';
+      btn.id = 'nav-signin-btn';
       btn.className = 'nav-signin-btn';
       btn.setAttribute('aria-label', 'Sign in to OmicsLab');
       btn.onclick = () => openModal('signin');
@@ -640,16 +833,39 @@ OmicsLab.Auth = (function () {
   }
 
   /* ─── Public API ─── */
-  function onAuthStateChange(cb) { _cbs.push(cb); cb(_user); }
-  function currentUser() { return _user; }
-  function isSignedIn() { return !!_user; }
-  function getToken() { return _session?.token || null; }
+  function onAuthStateChange(cb) {
+    _cbs.push(cb);
+    cb(_user);
+  }
+  function currentUser() {
+    return _user;
+  }
+  function isSignedIn() {
+    return !!_user;
+  }
+  function getToken() {
+    return _session?.token || null;
+  }
 
   return {
-    init, register, signIn, signOut, updateProfile, changePassword,
-    openModal, closeModal, oauthStart, currentUser, isSignedIn, getToken,
+    init,
+    register,
+    signIn,
+    signOut,
+    updateProfile,
+    changePassword,
+    openModal,
+    closeModal,
+    oauthStart,
+    currentUser,
+    isSignedIn,
+    getToken,
     onAuthStateChange,
     /* internal (called from inline onclick) */
-    _submitForm, _saveAccount, _savePassword, _uploadAvatar, _togglePw,
+    _submitForm,
+    _saveAccount,
+    _savePassword,
+    _uploadAvatar,
+    _togglePw,
   };
 })();

@@ -7,44 +7,358 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Grant = (function () {
-
   /* ─── African Grants Database ─── */
   const GRANTS_DB = [
-    { funder:'NIH Fogarty International Center', name:'D43 International Training Grant', type:'Capacity Building', amount:'Up to $750,000/yr', regions:['Sub-Saharan Africa','North Africa'], focus:'Any health research; LMIC PI co-lead required', deadline:'Rolling (PA-23-077)', url:'https://www.fic.nih.gov/Grants' },
-    { funder:'NIH Fogarty International Center', name:'R21 Exploratory Research (Africa focus)', type:'Research', amount:'Up to $275,000 (2yr)', regions:['Sub-Saharan Africa'], focus:'Infectious disease, genomics, NCD', deadline:'Standard NIH dates (Feb/Jun/Oct)', url:'https://www.fic.nih.gov' },
-    { funder:'NIH NIAID', name:'K43 International Career Development Award', type:'Early Career', amount:'Up to $150,000/yr (5yr)', regions:['Sub-Saharan Africa','Southeast Asia'], focus:'Infectious disease; for mid-career African investigators', deadline:'Feb 12 / Jun 12 / Oct 12', url:'https://grants.nih.gov/grants/guide/pa-files/PAR-23-160.html' },
-    { funder:'Wellcome Trust', name:'Discovery Research Award', type:'Research', amount:'Up to £5,000,000 (5yr)', regions:['Africa','Global'], focus:'Basic science, genomics, global health; Africa LMIC lead eligible', deadline:'Rolling (Expression of Interest first)', url:'https://wellcome.org/grant-funding' },
-    { funder:'Wellcome Trust', name:'Collaborative Award', type:'Research', amount:'Up to £3,000,000 (5yr)', regions:['Africa','Global'], focus:'Multi-team; cross-continental consortia', deadline:'Rolling', url:'https://wellcome.org/grant-funding' },
-    { funder:'Wellcome Trust', name:'Early Career Award', type:'Early Career', amount:'Up to £400,000 (5yr)', regions:['Africa','Global'], focus:'Post-PhD to 5yrs post-fellowship; Africa institutions eligible', deadline:'Jan and Jun annually', url:'https://wellcome.org/grant-funding/schemes/early-career-awards' },
-    { funder:'H3Africa Consortium', name:'H3Africa Collaborative Research Grants', type:'Research', amount:'$500,000–$1.5M/yr', regions:['Sub-Saharan Africa'], focus:'Genomics, population health, biobanking; African PI required', deadline:'Through NIH parent announcements', url:'https://h3africa.org' },
-    { funder:'African Academy of Sciences', name:'DELTAS Africa Phase II', type:'Capacity Building', amount:'Up to £2,000,000 (5yr)', regions:['Sub-Saharan Africa'], focus:'Doctoral training and postdoctoral fellowships; consortium model', deadline:'Closed — watch for Phase III', url:'https://www.aasciences.africa/aas/grants-awards' },
-    { funder:'African Academy of Sciences', name:'AAS-GBSA Grand Challenges Africa', type:'Research', amount:'Up to $100,000 (2yr)', regions:['Sub-Saharan Africa'], focus:'Innovative solutions to African health challenges; early-phase R&D', deadline:'Annual (typically April)', url:'https://www.aasciences.africa' },
-    { funder:'MRC UK / Newton Fund', name:'Newton Advanced Fellowship (Africa)', type:'Early Career', amount:'Up to £110,000 (2yr)', regions:['Kenya','South Africa','Nigeria','Ghana','Ethiopia'], focus:'Any biomedical research; African PI hosts UK collaborator', deadline:'Annual (March/April)', url:'https://royalsociety.org/grants/newton-advanced-fellowships/' },
-    { funder:'Bill & Melinda Gates Foundation', name:'Grand Challenges Explorations', type:'Research', amount:'$100,000 seed; up to $1M phase 2', regions:['Sub-Saharan Africa','South Asia'], focus:'Malaria, TB, NTDs, maternal health, nutrition', deadline:'Biannual rounds', url:'https://gcgh.grandchallenges.org' },
-    { funder:'Bill & Melinda Gates Foundation', name:'Global Health Program (direct grants)', type:'Research', amount:'Variable ($1M–$10M+)', regions:['Africa','South Asia'], focus:'Vaccines, diagnostics, sequencing capacity, outbreak response', deadline:'By invitation / LOI', url:'https://www.gatesfoundation.org/about/how-we-work/grant-seekers' },
-    { funder:'EDCTP', name:'Senior Fellowship', type:'Early Career', amount:'Up to €1,200,000 (5yr)', regions:['Sub-Saharan Africa'], focus:'Sub-Saharan African researchers in clinical trials, infectious disease', deadline:'Annual (varies by call)', url:'https://www.edctp.org/funding/calls' },
-    { funder:'EDCTP', name:'Collaborative Research Project', type:'Research', amount:'Up to €6,000,000 (5yr)', regions:['Sub-Saharan Africa','Europe'], focus:'Clinical trials for poverty-related diseases; African-European partnership', deadline:'Annual (varies by call)', url:'https://www.edctp.org/funding/calls' },
-    { funder:'National Research Foundation (NRF)', name:'Scarce Skills Doctoral Scholarship', type:'Early Career', amount:'ZAR 120,000/yr (3yr)', regions:['South Africa'], focus:'Genomics, bioinformatics, public health; SA nationals or residents', deadline:'Annual (August)', url:'https://www.nrf.ac.za' },
-    { funder:'National Research Foundation (NRF)', name:'Incentive Funding for Rated Researchers', type:'Research', amount:'ZAR 200,000–1,200,000/yr', regions:['South Africa'], focus:'Peer-reviewed research; NRF-rated SA researchers only', deadline:'Annual', url:'https://www.nrf.ac.za' },
-    { funder:'USAID Development Innovation Ventures', name:'DIV Stage 1 / Stage 2', type:'Research', amount:'$25,000–$15,000,000', regions:['Sub-Saharan Africa','Asia'], focus:'Innovative development solutions; health, diagnostics, agriculture', deadline:'Rolling', url:'https://www.usaid.gov/div' },
-    { funder:'Chan Zuckerberg Initiative', name:'CZI Science — Collaborative Pairs', type:'Research', amount:'Up to $2,000,000 (3yr)', regions:['Africa','Global'], focus:'Single-cell biology, infectious disease, rare disease; open-access required', deadline:'Annual LOI round', url:'https://chanzuckerberg.com/science/programs' },
-    { funder:'Merck Foundation', name:'Africa Research Summit Grants', type:'Early Career', amount:'Up to $20,000', regions:['Sub-Saharan Africa'], focus:'NCDs, maternal health, endocrinology; early-career African researchers', deadline:'Annual (June)', url:'https://www.merck-africa-asiaresearch.com' },
-    { funder:'WHO/TDR', name:'TDR Research Grants for Climate Sensitive ID', type:'Research', amount:'Up to $50,000 (2yr)', regions:['Sub-Saharan Africa','Asia-Pacific'], focus:'Infectious diseases linked to climate change; LMIC institutions', deadline:'Annual (March)', url:'https://tdr.who.int/funding' },
-    { funder:'Rockefeller Foundation', name:'Health Initiative Grants', type:'Research', amount:'Variable ($500K–$5M)', regions:['Africa','Asia','Americas'], focus:'Health equity, pandemic preparedness, food systems', deadline:'By invitation / LOI', url:'https://www.rockefellerfoundation.org/grants' },
-    { funder:'IDRC Canada', name:'Research in Developing Regions (Health)', type:'Research', amount:'CAD 500,000–2,500,000', regions:['Sub-Saharan Africa','South Asia'], focus:'Health systems, One Health, genomic surveillance; LMIC PI required', deadline:'Periodic calls + rolling', url:'https://www.idrc.ca/en/funding' },
-    { funder:'European Research Council', name:'Global Challenges Research Fund (GCRF)', type:'Research', amount:'Up to £10,000,000', regions:['ODA-eligible countries (most of Africa)'], focus:'Multi-disciplinary; must address ODA country challenges', deadline:'Annual (UK-based but collaborative)', url:'https://www.ukri.org/councils/esrc/guidance-for-applicants/types-of-funding-we-offer/global-challenges-research-fund' },
-    { funder:'Simons Foundation', name:'SFARI / Math+X (Africa program)', type:'Research', amount:'Up to $500,000 (3yr)', regions:['Africa'], focus:'Basic research; computational biology, mathematical modeling', deadline:'Annual', url:'https://www.simonsfoundation.org/grants' },
-    { funder:'Sida (Sweden)', name:'Health Research Partnerships', type:'Research', amount:'SEK 1,000,000–5,000,000', regions:['East Africa','Southern Africa'], focus:'Infectious disease, maternal health, genomic epidemiology', deadline:'Through Swedish universities', url:'https://www.sida.se/en/for-organisations/research' },
-    { funder:'DFG Germany', name:'Research Grants — Africa Partnership', type:'Research', amount:'€150,000–€800,000 (3yr)', regions:['Sub-Saharan Africa'], focus:'Basic and applied research; German-African co-PI model', deadline:'Rolling', url:'https://www.dfg.de/en/research-funding/funding-opportunities' },
-    { funder:'Wellcome / DBT India Alliance', name:'Margdarshi Fellowship (India-Africa)', type:'Early Career', amount:'Up to INR 30,000,000 (5yr)', regions:['India','Africa'], focus:'Biomedical research; India-Africa collaborative focus', deadline:'Annual', url:'https://www.indiaalliance.org' },
-    { funder:'President\'s Malaria Initiative', name:'PMI Applied Research Grants', type:'Research', amount:'Variable (government)', regions:['Malaria-endemic Africa'], focus:'Malaria epidemiology, vector control, diagnostics', deadline:'Through USAID implementing partners', url:'https://www.pmi.gov' },
-    { funder:'Global Fund', name:'Country Concept Notes — Research Component', type:'Infrastructure', amount:'Variable (country-level)', regions:['Sub-Saharan Africa'], focus:'HIV, TB, malaria; requires national health ministry partnership', deadline:'Country allocation cycles', url:'https://www.theglobalfund.org/en/applying-for-funding' },
-    { funder:'World Bank', name:'Africa Centers of Excellence (ACE) Program', type:'Infrastructure', amount:'$8,000,000–$12,000,000 (5yr)', regions:['West Africa','East Africa'], focus:'STEM capacity building; African university consortia', deadline:'Periodic (through national governments)', url:'https://ace.daad.de' },
-    { funder:'African Development Bank', name:'Higher Education, Science & Technology (HEST)', type:'Infrastructure', amount:'Variable', regions:['Africa'], focus:'University infrastructure, research centres, training programs', deadline:'Through national governments', url:'https://www.afdb.org/en/topics-and-sectors/sectors/education' },
-    { funder:'Open Philanthropy', name:'Global Health & Wellbeing Grants', type:'Research', amount:'Variable ($100K–$5M+)', regions:['Sub-Saharan Africa','Global'], focus:'Neglected diseases, global health R&D, biosecurity', deadline:'By invitation / LOI', url:'https://www.openphilanthropy.org/how-to-apply' },
-    { funder:'Horizon Europe / Africa Initiative', name:'EU-Africa Research Partnership Grants', type:'Research', amount:'€1,000,000–€5,000,000', regions:['Africa (ACP countries)'], focus:'Climate, health, digital transformation; EU-Africa consortium', deadline:'Annual work programme calls', url:'https://ec.europa.eu/info/research-and-innovation/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe' },
-    { funder:'Africa CDC', name:'Africa CDC Fellowships & Research Grants', type:'Early Career', amount:'Up to $50,000', regions:['Sub-Saharan Africa'], focus:'Epidemiology, outbreak response, genomic surveillance', deadline:'Annual', url:'https://africacdc.org' },
-    { funder:'PEPFAR / NIH', name:'NIAID International HIV Research (D43/R01)', type:'Research', amount:'$300,000–$1,500,000', regions:['Sub-Saharan Africa'], focus:'HIV prevention, treatment, comorbidities; African-led required', deadline:'Standard NIH dates', url:'https://www.niaid.nih.gov/grants-contracts' },
+    {
+      funder: 'NIH Fogarty International Center',
+      name: 'D43 International Training Grant',
+      type: 'Capacity Building',
+      amount: 'Up to $750,000/yr',
+      regions: ['Sub-Saharan Africa', 'North Africa'],
+      focus: 'Any health research; LMIC PI co-lead required',
+      deadline: 'Rolling (PA-23-077)',
+      url: 'https://www.fic.nih.gov/Grants',
+    },
+    {
+      funder: 'NIH Fogarty International Center',
+      name: 'R21 Exploratory Research (Africa focus)',
+      type: 'Research',
+      amount: 'Up to $275,000 (2yr)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Infectious disease, genomics, NCD',
+      deadline: 'Standard NIH dates (Feb/Jun/Oct)',
+      url: 'https://www.fic.nih.gov',
+    },
+    {
+      funder: 'NIH NIAID',
+      name: 'K43 International Career Development Award',
+      type: 'Early Career',
+      amount: 'Up to $150,000/yr (5yr)',
+      regions: ['Sub-Saharan Africa', 'Southeast Asia'],
+      focus: 'Infectious disease; for mid-career African investigators',
+      deadline: 'Feb 12 / Jun 12 / Oct 12',
+      url: 'https://grants.nih.gov/grants/guide/pa-files/PAR-23-160.html',
+    },
+    {
+      funder: 'Wellcome Trust',
+      name: 'Discovery Research Award',
+      type: 'Research',
+      amount: 'Up to £5,000,000 (5yr)',
+      regions: ['Africa', 'Global'],
+      focus: 'Basic science, genomics, global health; Africa LMIC lead eligible',
+      deadline: 'Rolling (Expression of Interest first)',
+      url: 'https://wellcome.org/grant-funding',
+    },
+    {
+      funder: 'Wellcome Trust',
+      name: 'Collaborative Award',
+      type: 'Research',
+      amount: 'Up to £3,000,000 (5yr)',
+      regions: ['Africa', 'Global'],
+      focus: 'Multi-team; cross-continental consortia',
+      deadline: 'Rolling',
+      url: 'https://wellcome.org/grant-funding',
+    },
+    {
+      funder: 'Wellcome Trust',
+      name: 'Early Career Award',
+      type: 'Early Career',
+      amount: 'Up to £400,000 (5yr)',
+      regions: ['Africa', 'Global'],
+      focus: 'Post-PhD to 5yrs post-fellowship; Africa institutions eligible',
+      deadline: 'Jan and Jun annually',
+      url: 'https://wellcome.org/grant-funding/schemes/early-career-awards',
+    },
+    {
+      funder: 'H3Africa Consortium',
+      name: 'H3Africa Collaborative Research Grants',
+      type: 'Research',
+      amount: '$500,000–$1.5M/yr',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Genomics, population health, biobanking; African PI required',
+      deadline: 'Through NIH parent announcements',
+      url: 'https://h3africa.org',
+    },
+    {
+      funder: 'African Academy of Sciences',
+      name: 'DELTAS Africa Phase II',
+      type: 'Capacity Building',
+      amount: 'Up to £2,000,000 (5yr)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Doctoral training and postdoctoral fellowships; consortium model',
+      deadline: 'Closed — watch for Phase III',
+      url: 'https://www.aasciences.africa/aas/grants-awards',
+    },
+    {
+      funder: 'African Academy of Sciences',
+      name: 'AAS-GBSA Grand Challenges Africa',
+      type: 'Research',
+      amount: 'Up to $100,000 (2yr)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Innovative solutions to African health challenges; early-phase R&D',
+      deadline: 'Annual (typically April)',
+      url: 'https://www.aasciences.africa',
+    },
+    {
+      funder: 'MRC UK / Newton Fund',
+      name: 'Newton Advanced Fellowship (Africa)',
+      type: 'Early Career',
+      amount: 'Up to £110,000 (2yr)',
+      regions: ['Kenya', 'South Africa', 'Nigeria', 'Ghana', 'Ethiopia'],
+      focus: 'Any biomedical research; African PI hosts UK collaborator',
+      deadline: 'Annual (March/April)',
+      url: 'https://royalsociety.org/grants/newton-advanced-fellowships/',
+    },
+    {
+      funder: 'Bill & Melinda Gates Foundation',
+      name: 'Grand Challenges Explorations',
+      type: 'Research',
+      amount: '$100,000 seed; up to $1M phase 2',
+      regions: ['Sub-Saharan Africa', 'South Asia'],
+      focus: 'Malaria, TB, NTDs, maternal health, nutrition',
+      deadline: 'Biannual rounds',
+      url: 'https://gcgh.grandchallenges.org',
+    },
+    {
+      funder: 'Bill & Melinda Gates Foundation',
+      name: 'Global Health Program (direct grants)',
+      type: 'Research',
+      amount: 'Variable ($1M–$10M+)',
+      regions: ['Africa', 'South Asia'],
+      focus: 'Vaccines, diagnostics, sequencing capacity, outbreak response',
+      deadline: 'By invitation / LOI',
+      url: 'https://www.gatesfoundation.org/about/how-we-work/grant-seekers',
+    },
+    {
+      funder: 'EDCTP',
+      name: 'Senior Fellowship',
+      type: 'Early Career',
+      amount: 'Up to €1,200,000 (5yr)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Sub-Saharan African researchers in clinical trials, infectious disease',
+      deadline: 'Annual (varies by call)',
+      url: 'https://www.edctp.org/funding/calls',
+    },
+    {
+      funder: 'EDCTP',
+      name: 'Collaborative Research Project',
+      type: 'Research',
+      amount: 'Up to €6,000,000 (5yr)',
+      regions: ['Sub-Saharan Africa', 'Europe'],
+      focus: 'Clinical trials for poverty-related diseases; African-European partnership',
+      deadline: 'Annual (varies by call)',
+      url: 'https://www.edctp.org/funding/calls',
+    },
+    {
+      funder: 'National Research Foundation (NRF)',
+      name: 'Scarce Skills Doctoral Scholarship',
+      type: 'Early Career',
+      amount: 'ZAR 120,000/yr (3yr)',
+      regions: ['South Africa'],
+      focus: 'Genomics, bioinformatics, public health; SA nationals or residents',
+      deadline: 'Annual (August)',
+      url: 'https://www.nrf.ac.za',
+    },
+    {
+      funder: 'National Research Foundation (NRF)',
+      name: 'Incentive Funding for Rated Researchers',
+      type: 'Research',
+      amount: 'ZAR 200,000–1,200,000/yr',
+      regions: ['South Africa'],
+      focus: 'Peer-reviewed research; NRF-rated SA researchers only',
+      deadline: 'Annual',
+      url: 'https://www.nrf.ac.za',
+    },
+    {
+      funder: 'USAID Development Innovation Ventures',
+      name: 'DIV Stage 1 / Stage 2',
+      type: 'Research',
+      amount: '$25,000–$15,000,000',
+      regions: ['Sub-Saharan Africa', 'Asia'],
+      focus: 'Innovative development solutions; health, diagnostics, agriculture',
+      deadline: 'Rolling',
+      url: 'https://www.usaid.gov/div',
+    },
+    {
+      funder: 'Chan Zuckerberg Initiative',
+      name: 'CZI Science — Collaborative Pairs',
+      type: 'Research',
+      amount: 'Up to $2,000,000 (3yr)',
+      regions: ['Africa', 'Global'],
+      focus: 'Single-cell biology, infectious disease, rare disease; open-access required',
+      deadline: 'Annual LOI round',
+      url: 'https://chanzuckerberg.com/science/programs',
+    },
+    {
+      funder: 'Merck Foundation',
+      name: 'Africa Research Summit Grants',
+      type: 'Early Career',
+      amount: 'Up to $20,000',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'NCDs, maternal health, endocrinology; early-career African researchers',
+      deadline: 'Annual (June)',
+      url: 'https://www.merck-africa-asiaresearch.com',
+    },
+    {
+      funder: 'WHO/TDR',
+      name: 'TDR Research Grants for Climate Sensitive ID',
+      type: 'Research',
+      amount: 'Up to $50,000 (2yr)',
+      regions: ['Sub-Saharan Africa', 'Asia-Pacific'],
+      focus: 'Infectious diseases linked to climate change; LMIC institutions',
+      deadline: 'Annual (March)',
+      url: 'https://tdr.who.int/funding',
+    },
+    {
+      funder: 'Rockefeller Foundation',
+      name: 'Health Initiative Grants',
+      type: 'Research',
+      amount: 'Variable ($500K–$5M)',
+      regions: ['Africa', 'Asia', 'Americas'],
+      focus: 'Health equity, pandemic preparedness, food systems',
+      deadline: 'By invitation / LOI',
+      url: 'https://www.rockefellerfoundation.org/grants',
+    },
+    {
+      funder: 'IDRC Canada',
+      name: 'Research in Developing Regions (Health)',
+      type: 'Research',
+      amount: 'CAD 500,000–2,500,000',
+      regions: ['Sub-Saharan Africa', 'South Asia'],
+      focus: 'Health systems, One Health, genomic surveillance; LMIC PI required',
+      deadline: 'Periodic calls + rolling',
+      url: 'https://www.idrc.ca/en/funding',
+    },
+    {
+      funder: 'European Research Council',
+      name: 'Global Challenges Research Fund (GCRF)',
+      type: 'Research',
+      amount: 'Up to £10,000,000',
+      regions: ['ODA-eligible countries (most of Africa)'],
+      focus: 'Multi-disciplinary; must address ODA country challenges',
+      deadline: 'Annual (UK-based but collaborative)',
+      url: 'https://www.ukri.org/councils/esrc/guidance-for-applicants/types-of-funding-we-offer/global-challenges-research-fund',
+    },
+    {
+      funder: 'Simons Foundation',
+      name: 'SFARI / Math+X (Africa program)',
+      type: 'Research',
+      amount: 'Up to $500,000 (3yr)',
+      regions: ['Africa'],
+      focus: 'Basic research; computational biology, mathematical modeling',
+      deadline: 'Annual',
+      url: 'https://www.simonsfoundation.org/grants',
+    },
+    {
+      funder: 'Sida (Sweden)',
+      name: 'Health Research Partnerships',
+      type: 'Research',
+      amount: 'SEK 1,000,000–5,000,000',
+      regions: ['East Africa', 'Southern Africa'],
+      focus: 'Infectious disease, maternal health, genomic epidemiology',
+      deadline: 'Through Swedish universities',
+      url: 'https://www.sida.se/en/for-organisations/research',
+    },
+    {
+      funder: 'DFG Germany',
+      name: 'Research Grants — Africa Partnership',
+      type: 'Research',
+      amount: '€150,000–€800,000 (3yr)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Basic and applied research; German-African co-PI model',
+      deadline: 'Rolling',
+      url: 'https://www.dfg.de/en/research-funding/funding-opportunities',
+    },
+    {
+      funder: 'Wellcome / DBT India Alliance',
+      name: 'Margdarshi Fellowship (India-Africa)',
+      type: 'Early Career',
+      amount: 'Up to INR 30,000,000 (5yr)',
+      regions: ['India', 'Africa'],
+      focus: 'Biomedical research; India-Africa collaborative focus',
+      deadline: 'Annual',
+      url: 'https://www.indiaalliance.org',
+    },
+    {
+      funder: "President's Malaria Initiative",
+      name: 'PMI Applied Research Grants',
+      type: 'Research',
+      amount: 'Variable (government)',
+      regions: ['Malaria-endemic Africa'],
+      focus: 'Malaria epidemiology, vector control, diagnostics',
+      deadline: 'Through USAID implementing partners',
+      url: 'https://www.pmi.gov',
+    },
+    {
+      funder: 'Global Fund',
+      name: 'Country Concept Notes — Research Component',
+      type: 'Infrastructure',
+      amount: 'Variable (country-level)',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'HIV, TB, malaria; requires national health ministry partnership',
+      deadline: 'Country allocation cycles',
+      url: 'https://www.theglobalfund.org/en/applying-for-funding',
+    },
+    {
+      funder: 'World Bank',
+      name: 'Africa Centers of Excellence (ACE) Program',
+      type: 'Infrastructure',
+      amount: '$8,000,000–$12,000,000 (5yr)',
+      regions: ['West Africa', 'East Africa'],
+      focus: 'STEM capacity building; African university consortia',
+      deadline: 'Periodic (through national governments)',
+      url: 'https://ace.daad.de',
+    },
+    {
+      funder: 'African Development Bank',
+      name: 'Higher Education, Science & Technology (HEST)',
+      type: 'Infrastructure',
+      amount: 'Variable',
+      regions: ['Africa'],
+      focus: 'University infrastructure, research centres, training programs',
+      deadline: 'Through national governments',
+      url: 'https://www.afdb.org/en/topics-and-sectors/sectors/education',
+    },
+    {
+      funder: 'Open Philanthropy',
+      name: 'Global Health & Wellbeing Grants',
+      type: 'Research',
+      amount: 'Variable ($100K–$5M+)',
+      regions: ['Sub-Saharan Africa', 'Global'],
+      focus: 'Neglected diseases, global health R&D, biosecurity',
+      deadline: 'By invitation / LOI',
+      url: 'https://www.openphilanthropy.org/how-to-apply',
+    },
+    {
+      funder: 'Horizon Europe / Africa Initiative',
+      name: 'EU-Africa Research Partnership Grants',
+      type: 'Research',
+      amount: '€1,000,000–€5,000,000',
+      regions: ['Africa (ACP countries)'],
+      focus: 'Climate, health, digital transformation; EU-Africa consortium',
+      deadline: 'Annual work programme calls',
+      url: 'https://ec.europa.eu/info/research-and-innovation/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-europe',
+    },
+    {
+      funder: 'Africa CDC',
+      name: 'Africa CDC Fellowships & Research Grants',
+      type: 'Early Career',
+      amount: 'Up to $50,000',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'Epidemiology, outbreak response, genomic surveillance',
+      deadline: 'Annual',
+      url: 'https://africacdc.org',
+    },
+    {
+      funder: 'PEPFAR / NIH',
+      name: 'NIAID International HIV Research (D43/R01)',
+      type: 'Research',
+      amount: '$300,000–$1,500,000',
+      regions: ['Sub-Saharan Africa'],
+      focus: 'HIV prevention, treatment, comorbidities; African-led required',
+      deadline: 'Standard NIH dates',
+      url: 'https://www.niaid.nih.gov/grants-contracts',
+    },
   ];
 
   /* ─── Grant section templates ─── */
@@ -118,22 +432,22 @@ Personnel (${d.currency} ${d.budget.toLocaleString()} — ${d.budgetPct.personne
   • Lab Technician (100% effort): Sample processing, library preparation, QC
   • Biostatistician (25% effort): Statistical analysis plan, power calculations, reporting
 
-Direct Laboratory Costs (${d.currency} ${Math.round(d.budget * d.budgetPct.lab / 100).toLocaleString()} — ${d.budgetPct.lab}%)
+Direct Laboratory Costs (${d.currency} ${Math.round((d.budget * d.budgetPct.lab) / 100).toLocaleString()} — ${d.budgetPct.lab}%)
   • Library preparation kits for ${d.samples} samples: estimated at ${d.currency} ${Math.round(d.kitCost * d.samples).toLocaleString()}
   • Sequencing costs at ${d.depth}× depth (${d.samples} samples): estimated at ${d.currency} ${Math.round(d.seqCost * d.samples).toLocaleString()}
   • Consumables (tubes, reagents, tips, PPE): ${d.currency} ${Math.round(d.budget * 0.04).toLocaleString()}
   • Cold-chain shipping and bio-bank storage: ${d.currency} ${Math.round(d.budget * 0.02).toLocaleString()}
 
-Computing Infrastructure (${d.currency} ${Math.round(d.budget * d.budgetPct.compute / 100).toLocaleString()} — ${d.budgetPct.compute}%)
+Computing Infrastructure (${d.currency} ${Math.round((d.budget * d.budgetPct.compute) / 100).toLocaleString()} — ${d.budgetPct.compute}%)
   • Cloud HPC allocation (AWS/Google Batch or local cluster): analysis of ${d.samples} samples at ${d.depth}× depth
   • Data storage (5-year archiving for ${Math.round(d.samples * d.gbPerSample)} GB raw data)
 
-Training and Dissemination (${d.currency} ${Math.round(d.budget * d.budgetPct.training / 100).toLocaleString()} — ${d.budgetPct.training}%)
+Training and Dissemination (${d.currency} ${Math.round((d.budget * d.budgetPct.training) / 100).toLocaleString()} — ${d.budgetPct.training}%)
   • Three training workshops (venue, materials, travel bursaries for 15 trainees each)
   • Open-access publication fees (minimum 2 papers)
   • Conference attendance: ASBCB, H3Africa Consortium Annual Meeting, ESHG
 
-Indirect Costs / Overhead (${d.currency} ${Math.round(d.budget * d.budgetPct.overhead / 100).toLocaleString()} — ${d.budgetPct.overhead}%)
+Indirect Costs / Overhead (${d.currency} ${Math.round((d.budget * d.budgetPct.overhead) / 100).toLocaleString()} — ${d.budgetPct.overhead}%)
   Standard institutional overhead rate applied to direct costs`,
 
     ethics: (d) => `\
@@ -161,46 +475,64 @@ A proportion of any intellectual property generated from this work will be held 
 
   /* ─── Disease burden data (for auto-population) ─── */
   const BURDEN_DATA = {
-    malaria:       'the WHO estimates approximately 249 million cases and 608,000 deaths occur globally each year, with over 95% of the burden concentrated in sub-Saharan Africa',
-    tuberculosis:  'Africa carries nearly 25% of the global TB burden, with an estimated 2.5 million new cases annually and alarming rates of drug-resistant TB emerging across the continent',
-    hiv:           'sub-Saharan Africa accounts for approximately 69% of people living with HIV globally, representing approximately 25.6 million individuals',
-    sickle_cell:   'sickle cell disease affects approximately 300,000 newborns per year in Africa, representing over 75% of the global burden, yet receives a fraction of the research attention of rarer genetic diseases',
-    cancer:        'Africa faces a rapidly growing cancer burden, projected to double to 1.1 million deaths per year by 2030 due to demographic change, limited screening, and late-stage presentation',
-    diabetes:      'Africa has the highest proportion of undiagnosed diabetes globally (~60%), with an estimated 24 million adults affected and projections rising to 55 million by 2045',
-    hypertension:  'hypertension affects approximately 130 million adults in Africa and is the leading attributable risk factor for cardiovascular mortality on the continent',
-    helminth:      'soil-transmitted helminths and schistosomiasis infect an estimated 800 million people in sub-Saharan Africa, with profound impacts on child development and workforce productivity',
+    malaria:
+      'the WHO estimates approximately 249 million cases and 608,000 deaths occur globally each year, with over 95% of the burden concentrated in sub-Saharan Africa',
+    tuberculosis:
+      'Africa carries nearly 25% of the global TB burden, with an estimated 2.5 million new cases annually and alarming rates of drug-resistant TB emerging across the continent',
+    hiv: 'sub-Saharan Africa accounts for approximately 69% of people living with HIV globally, representing approximately 25.6 million individuals',
+    sickle_cell:
+      'sickle cell disease affects approximately 300,000 newborns per year in Africa, representing over 75% of the global burden, yet receives a fraction of the research attention of rarer genetic diseases',
+    cancer:
+      'Africa faces a rapidly growing cancer burden, projected to double to 1.1 million deaths per year by 2030 due to demographic change, limited screening, and late-stage presentation',
+    diabetes:
+      'Africa has the highest proportion of undiagnosed diabetes globally (~60%), with an estimated 24 million adults affected and projections rising to 55 million by 2045',
+    hypertension:
+      'hypertension affects approximately 130 million adults in Africa and is the leading attributable risk factor for cardiovascular mortality on the continent',
+    helminth:
+      'soil-transmitted helminths and schistosomiasis infect an estimated 800 million people in sub-Saharan Africa, with profound impacts on child development and workforce productivity',
   };
 
   /* ─── Method descriptions ─── */
   const METHOD_DESCS = {
-    'Whole Genome Sequencing': 'unbiased, base-resolution characterisation of the entire genome, enabling discovery of SNPs, indels, structural variants, and copy number alterations simultaneously',
-    'RNA-seq': 'genome-wide quantification of gene expression, enabling identification of differentially expressed genes, novel transcripts, and splicing variants relevant to disease pathogenesis',
-    'ATAC-seq': 'mapping of chromatin accessibility at single-nucleotide resolution, revealing regulatory elements and transcription factor binding landscapes that drive disease-relevant gene programs',
-    'ChIP-seq': 'genome-wide mapping of protein–DNA interactions, enabling identification of transcription factor binding sites and histone modification patterns',
-    'Metagenomics': 'culture-independent characterisation of complex microbial communities, enabling taxonomic and functional profiling of the microbiome in health and disease',
-    'Single-cell RNA-seq': 'transcriptomic profiling at single-cell resolution, enabling identification of rare cell populations and cell-type-specific responses that are obscured in bulk analyses',
-    'Proteomics': 'large-scale identification and quantification of the protein complement of a biological sample, enabling discovery of disease biomarkers and therapeutic targets',
-    'Metabolomics': 'comprehensive profiling of small-molecule metabolites in biological fluids, providing a dynamic readout of host–pathogen–microbiome interactions',
+    'Whole Genome Sequencing':
+      'unbiased, base-resolution characterisation of the entire genome, enabling discovery of SNPs, indels, structural variants, and copy number alterations simultaneously',
+    'RNA-seq':
+      'genome-wide quantification of gene expression, enabling identification of differentially expressed genes, novel transcripts, and splicing variants relevant to disease pathogenesis',
+    'ATAC-seq':
+      'mapping of chromatin accessibility at single-nucleotide resolution, revealing regulatory elements and transcription factor binding landscapes that drive disease-relevant gene programs',
+    'ChIP-seq':
+      'genome-wide mapping of protein–DNA interactions, enabling identification of transcription factor binding sites and histone modification patterns',
+    Metagenomics:
+      'culture-independent characterisation of complex microbial communities, enabling taxonomic and functional profiling of the microbiome in health and disease',
+    'Single-cell RNA-seq':
+      'transcriptomic profiling at single-cell resolution, enabling identification of rare cell populations and cell-type-specific responses that are obscured in bulk analyses',
+    Proteomics:
+      'large-scale identification and quantification of the protein complement of a biological sample, enabling discovery of disease biomarkers and therapeutic targets',
+    Metabolomics:
+      'comprehensive profiling of small-molecule metabolites in biological fluids, providing a dynamic readout of host–pathogen–microbiome interactions',
   };
 
   /* ─── Build document data from form ─── */
   function _collectFormData() {
-    const get = id => (document.getElementById(id)?.value || '').trim();
+    const get = (id) => (document.getElementById(id)?.value || '').trim();
     const getN = (id, def) => parseFloat(document.getElementById(id)?.value) || def;
 
     const approach = get('gr-approach') || 'Whole Genome Sequencing';
-    const disease  = get('gr-disease') || 'a priority infectious disease';
-    const country  = get('gr-country') || 'South Africa';
-    const samples  = getN('gr-samples', 100);
-    const budget   = getN('gr-budget', 500000);
+    const disease = get('gr-disease') || 'a priority infectious disease';
+    const country = get('gr-country') || 'South Africa';
+    const samples = getN('gr-samples', 100);
+    const budget = getN('gr-budget', 500000);
     const currency = get('gr-currency') || 'USD';
-    const disKey   = disease.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z_]/g,'');
+    const disKey = disease
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z_]/g, '');
 
     /* Wet lab steps from protocols if available */
     const myProtos = OmicsLab.Utils?.safeParse('omicslab_my_protocols_v1', []) || [];
     const proto = myProtos[0];
     const wetLabSteps = proto
-      ? proto.steps.map(s => `  • Step ${s.n}: ${s.title} — ${s.detail}`).join('\n')
+      ? proto.steps.map((s) => `  • Step ${s.n}: ${s.title} — ${s.detail}`).join('\n')
       : `  • Blood/tissue collection using ${get('gr-sample-type') || 'EDTA blood tubes'} following standard phlebotomy
   • DNA/RNA extraction using column-based or bead-based method validated for African tropical samples
   • Quality control using Qubit fluorometry and Bioanalyzer/TapeStation (RIN ≥ 7 required)
@@ -216,34 +548,40 @@ A proportion of any intellectual property generated from this work will be held 
   Challenge 4 — Compute cost overrun: Contingency: negotiate HPC allocation from CHPC (South Africa) or AWIGEN consortium cloud credits.`;
 
     return {
-      title:       get('gr-title') || `Genomic Epidemiology of ${disease} in ${country}`,
+      title: get('gr-title') || `Genomic Epidemiology of ${disease} in ${country}`,
       disease,
-      region:      get('gr-region') || 'sub-Saharan Africa',
+      region: get('gr-region') || 'sub-Saharan Africa',
       country,
       institution: get('gr-institution') || 'University of Cape Town',
       approach,
-      dataType:    get('gr-datatype') || 'genomic',
+      dataType: get('gr-datatype') || 'genomic',
       samples,
       budget,
       currency,
-      depth:       getN('gr-depth', 30),
-      language:    get('gr-lang') || 'Zulu/Xhosa',
+      depth: getN('gr-depth', 30),
+      language: get('gr-lang') || 'Zulu/Xhosa',
       studyDesign: get('gr-design') || 'prospective case-control',
       recruitment: get('gr-recruitment') || 'outpatient clinic referral',
-      ethics:      get('gr-ethics') || 'University of Cape Town Human Research',
-      kitCost:     300,
-      seqCost:     150,
+      ethics: get('gr-ethics') || 'University of Cape Town Human Research',
+      kitCost: 300,
+      seqCost: 150,
       gbPerSample: 90,
-      burden:      BURDEN_DATA[disKey] || `the disease represents a significant and growing health challenge in ${get('gr-region') || 'Africa'}`,
-      pilotResult: 'adequate library quality with mean insert size 350 bp and duplication rates < 15%',
-      methodDesc:  METHOD_DESCS[approach] || 'systematic characterisation of molecular profiles at scale',
-      libraryPrep: approach.includes('RNA') ? 'Illumina Stranded Total RNA Prep with Ribo-Zero' : 'Illumina DNA PCR-Free Prep',
-      instrument:  'Illumina NovaSeq 6000 (S4 flow cell)',
+      burden:
+        BURDEN_DATA[disKey] ||
+        `the disease represents a significant and growing health challenge in ${get('gr-region') || 'Africa'}`,
+      pilotResult:
+        'adequate library quality with mean insert size 350 bp and duplication rates < 15%',
+      methodDesc:
+        METHOD_DESCS[approach] || 'systematic characterisation of molecular profiles at scale',
+      libraryPrep: approach.includes('RNA')
+        ? 'Illumina Stranded Total RNA Prep with Ribo-Zero'
+        : 'Illumina DNA PCR-Free Prep',
+      instrument: 'Illumina NovaSeq 6000 (S4 flow cell)',
       wetLabSteps,
       bioinfoPipeline,
       pitfalls,
       budgetPct: { personnel: 45, lab: 30, compute: 10, training: 8, overhead: 7 },
-      funder:    get('gr-funder') || 'NIH Fogarty / Wellcome Trust / H3Africa',
+      funder: get('gr-funder') || 'NIH Fogarty / Wellcome Trust / H3Africa',
     };
   }
 
@@ -251,20 +589,25 @@ A proportion of any intellectual property generated from this work will be held 
   function _generate() {
     const d = _collectFormData();
     const sections = _getSelectedSections();
-    if (!sections.length) { _toast('Select at least one section to generate.', true); return; }
+    if (!sections.length) {
+      _toast('Select at least one section to generate.', true);
+      return;
+    }
 
-    const output = sections.map(s => TEMPLATES[s](d)).join('\n\n' + '─'.repeat(72) + '\n\n');
+    const output = sections.map((s) => TEMPLATES[s](d)).join('\n\n' + '─'.repeat(72) + '\n\n');
 
     const outEl = document.getElementById('gr-output');
     if (!outEl) return;
     outEl.textContent = output;
     outEl.parentElement.style.display = '';
-    document.getElementById('gr-output-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document
+      .getElementById('gr-output-panel')
+      .scrollIntoView({ behavior: 'smooth', block: 'start' });
     _toast('Grant text generated — review and edit before submitting');
   }
 
   function _getSelectedSections() {
-    return ['aims','background','methods','budget','ethics'].filter(s => {
+    return ['aims', 'background', 'methods', 'budget', 'ethics'].filter((s) => {
       const el = document.getElementById('gr-sec-' + s);
       return el && el.checked;
     });
@@ -275,7 +618,15 @@ A proportion of any intellectual property generated from this work will be held 
     if (!el || !el.textContent) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
       const btn = document.getElementById('gr-copy-btn');
-      if (btn) { const o = btn.textContent; btn.textContent = 'Copied!'; btn.style.color = '#00C4A0'; setTimeout(() => { btn.textContent = o; btn.style.color = ''; }, 2000); }
+      if (btn) {
+        const o = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.color = '#00C4A0';
+        setTimeout(() => {
+          btn.textContent = o;
+          btn.style.color = '';
+        }, 2000);
+      }
     });
   }
 
@@ -283,9 +634,9 @@ A proportion of any intellectual property generated from this work will be held 
     const el = document.getElementById('gr-output');
     if (!el || !el.textContent) return;
     const blob = new Blob([el.textContent], { type: 'text/plain' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
     a.download = 'OmicsLab_Grant_' + Date.now() + '.txt';
     a.click();
     URL.revokeObjectURL(url);
@@ -299,12 +650,17 @@ A proportion of any intellectual property generated from this work will be held 
   /* ─── Auto-fill from last lab session ─── */
   function _autoFill() {
     const session = OmicsLab.Utils?.safeParse('omicslab_last_session', {}) || {};
-    if (!session.domain) { _toast('No recent lab session found — fill the form manually.', true); return; }
+    if (!session.domain) {
+      _toast('No recent lab session found — fill the form manually.', true);
+      return;
+    }
     const wf = session.workflowName || session.domain || '';
     const di = (session.disease || '').toLowerCase();
 
-    if (wf && document.getElementById('gr-approach')) document.getElementById('gr-approach').value = wf;
-    if (di && document.getElementById('gr-disease'))  document.getElementById('gr-disease').value  = di;
+    if (wf && document.getElementById('gr-approach'))
+      document.getElementById('gr-approach').value = wf;
+    if (di && document.getElementById('gr-disease'))
+      document.getElementById('gr-disease').value = di;
     if (session.score && document.getElementById('gr-pilot')) {
       document.getElementById('gr-pilot').value = `OmicsLab simulation score ${session.score}/100`;
     }
@@ -468,19 +824,39 @@ A proportion of any intellectual property generated from this work will be held 
             <div class="grant-card-title">Sections to Generate</div>
             <div class="grant-sections-grid">
               ${[
-                {id:'aims',       label:'Specific Aims',     desc:'3-aim structure with long-term goal'},
-                {id:'background', label:'Background',        desc:'Burden data, gap analysis, innovation'},
-                {id:'methods',    label:'Approach & Methods',desc:'Study design, wet lab, bioinformatics, stats'},
-                {id:'budget',     label:'Budget Justification',desc:'Personnel, lab, compute, training breakdown'},
-                {id:'ethics',     label:'Ethics & Governance',desc:'Consent, H3Africa framework, benefit sharing'},
-              ].map(s => `
+                { id: 'aims', label: 'Specific Aims', desc: '3-aim structure with long-term goal' },
+                {
+                  id: 'background',
+                  label: 'Background',
+                  desc: 'Burden data, gap analysis, innovation',
+                },
+                {
+                  id: 'methods',
+                  label: 'Approach & Methods',
+                  desc: 'Study design, wet lab, bioinformatics, stats',
+                },
+                {
+                  id: 'budget',
+                  label: 'Budget Justification',
+                  desc: 'Personnel, lab, compute, training breakdown',
+                },
+                {
+                  id: 'ethics',
+                  label: 'Ethics & Governance',
+                  desc: 'Consent, H3Africa framework, benefit sharing',
+                },
+              ]
+                .map(
+                  (s) => `
                 <label class="grant-sec-check">
                   <input type="checkbox" id="gr-sec-${s.id}" ${s.id === 'aims' || s.id === 'methods' ? 'checked' : ''}>
                   <div class="grant-sec-body">
                     <span class="grant-sec-label">${s.label}</span>
                     <span class="grant-sec-desc">${s.desc}</span>
                   </div>
-                </label>`).join('')}
+                </label>`
+                )
+                .join('')}
             </div>
             <div class="grant-actions">
               <button class="grant-autofill-btn" onclick="OmicsLab.Grant._autoFill()">
@@ -577,20 +953,30 @@ A proportion of any intellectual property generated from this work will be held 
   function _renderGrantsList(q, typeFilter) {
     const list = document.getElementById('gr-db-list');
     if (!list) return;
-    const matches = GRANTS_DB.filter(g => {
+    const matches = GRANTS_DB.filter((g) => {
       const txt = (g.funder + g.name + g.focus + g.type + g.regions.join(' ')).toLowerCase();
       return (!q || txt.includes(q)) && (!typeFilter || g.type === typeFilter);
     });
-    if (!matches.length) { list.innerHTML = '<div class="grant-db-empty">No grants match your search.</div>'; return; }
-    const typeColor = { Research:'#58a6ff', 'Capacity Building':'#00C4A0', 'Early Career':'#bc8cff', Infrastructure:'#e3b341' };
-    list.innerHTML = matches.map(g => `
+    if (!matches.length) {
+      list.innerHTML = '<div class="grant-db-empty">No grants match your search.</div>';
+      return;
+    }
+    const typeColor = {
+      Research: '#58a6ff',
+      'Capacity Building': '#00C4A0',
+      'Early Career': '#bc8cff',
+      Infrastructure: '#e3b341',
+    };
+    list.innerHTML = matches
+      .map(
+        (g) => `
       <div class="grant-db-card">
         <div class="grant-db-card-hdr">
           <div>
             <div class="grant-db-funder">${g.funder}</div>
             <div class="grant-db-name">${g.name}</div>
           </div>
-          <span class="grant-db-type-badge" style="color:${typeColor[g.type]||'#A8A098'};border-color:${typeColor[g.type]||'#243048'}">${g.type}</span>
+          <span class="grant-db-type-badge" style="color:${typeColor[g.type] || '#A8A098'};border-color:${typeColor[g.type] || '#243048'}">${g.type}</span>
         </div>
         <div class="grant-db-meta">
           <span class="grant-db-amount">${g.amount}</span>
@@ -601,12 +987,17 @@ A proportion of any intellectual property generated from this work will be held 
           <span class="grant-db-deadline">Deadline: ${g.deadline}</span>
           <a class="grant-db-link" href="${g.url}" target="_blank" rel="noopener">Learn more</a>
         </div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
   }
 
   function _aiPolish() {
     const el = document.getElementById('gr-output');
-    if (!el || !el.textContent.trim()) { _toast('Generate grant text first, then AI Polish.', true); return; }
+    if (!el || !el.textContent.trim()) {
+      _toast('Generate grant text first, then AI Polish.', true);
+      return;
+    }
     const generated = el.textContent.trim().substring(0, 3000);
     const ctx = `The user has generated the following grant text using OmicsLab Grant Generator. Please polish it for clarity, improve the scientific language, and strengthen the Africa-specific framing. Keep all factual content and structure but improve readability and impact:\n\n---\n${generated}\n---`;
     if (OmicsLab.Assistant && OmicsLab.Assistant.setContext) {

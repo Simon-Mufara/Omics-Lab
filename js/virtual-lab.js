@@ -6,13 +6,11 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.VirtualLab = (function () {
-
   /* ──────────────────────────────────────────────────────────────
      LAB STATIONS — each an actual machine with its real appearance
      SVG viewBox: "0 0 380 480" — machine on a dark bench in a lab room
   ────────────────────────────────────────────────────────────── */
   const STATIONS = [
-
     /* 1 ─ Illumina NextSeq 2000 ─────────────────────────────── */
     {
       id: 'illumina-nextseq',
@@ -20,8 +18,15 @@ OmicsLab.VirtualLab = (function () {
       category: 'Short-Read Sequencer',
       color: '#0082c8',
       desc: 'The NextSeq 2000 is a benchtop short-read sequencer producing up to 300 Gb per run at 2×150 bp. Its compact form factor makes it ideal for African genomics cores — used in H3Africa, AWI-Gen, and SARS-CoV-2 national surveillance programs.',
-      specs: ['Output: up to 300 Gb per run', 'Read length: 2×50 / 2×100 / 2×150 bp', 'Run time: 11–29 hours', 'Flow cell: P1, P2, P3 (up to 300 Gb)', 'Applications: WGS, WES, RNA-seq, ATAC-seq, 16S'],
-      usage: 'Core workhorse in H3Africa consortium labs. Used by KEMRI, WACCBIP, and AHRI for whole-genome sequencing of African populations, discovering novel variants absent from Eurocentric databases.',
+      specs: [
+        'Output: up to 300 Gb per run',
+        'Read length: 2×50 / 2×100 / 2×150 bp',
+        'Run time: 11–29 hours',
+        'Flow cell: P1, P2, P3 (up to 300 Gb)',
+        'Applications: WGS, WES, RNA-seq, ATAC-seq, 16S',
+      ],
+      usage:
+        'Core workhorse in H3Africa consortium labs. Used by KEMRI, WACCBIP, and AHRI for whole-genome sequencing of African populations, discovering novel variants absent from Eurocentric databases.',
       svg: `
 <defs>
   <linearGradient id="ng-body" x1="0" y1="0" x2="0" y2="1">
@@ -105,7 +110,7 @@ OmicsLab.VirtualLab = (function () {
 
 <!-- VENTILATION GRILLE (bottom of front panel) -->
 <rect x="96" y="230" width="190" height="18" rx="3" fill="#c4c6c7"/>
-${Array.from({length:18}, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" height="12" rx="1" fill="#b0b2b3"/>`).join('')}
+${Array.from({ length: 18 }, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" height="12" rx="1" fill="#b0b2b3"/>`).join('')}
 
 <!-- ILLUMINA BRANDING strip -->
 <rect x="96" y="252" width="190" height="28" rx="3" fill="#e4e6e8" stroke="#c8cacc"/>
@@ -131,7 +136,7 @@ ${Array.from({length:18}, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" 
 <line x1="286" y1="108" x2="318" y2="105" stroke="#0082c8" stroke-width="0.6"/>
 <text x="320" y="175" fill="#888" font-size="6" font-family="Arial" text-anchor="end">Reagent</text>
 <line x1="286" y1="175" x2="317" y2="175" stroke="#888" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 2 ─ Oxford Nanopore GridION ───────────────────────────── */
@@ -141,8 +146,15 @@ ${Array.from({length:18}, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" 
       category: 'Long-Read Sequencer',
       color: '#f97316',
       desc: 'The GridION hosts up to 5 MinION flow cells simultaneously, generating real-time long reads (10–100 kb). Deployed across 25+ African countries for SARS-CoV-2, Ebola, and mpox surveillance via the ARTIC network.',
-      specs: ['Flow cells: up to 5 simultaneous', 'Read length: 10–100 kb (N50)', 'Real-time basecalling on-board GPU', 'Throughput: up to 250 Gb total (5 × 50 Gb)', 'Applications: structural variants, metagenomics, full-length cDNA, rapid diagnostics'],
-      usage: 'PANDORA-ID-NET deployed GridIONs across Africa for COVID-19 and mpox genomic surveillance. Enables same-day outbreak sequencing in field settings using the ARTIC amplicon protocol.',
+      specs: [
+        'Flow cells: up to 5 simultaneous',
+        'Read length: 10–100 kb (N50)',
+        'Real-time basecalling on-board GPU',
+        'Throughput: up to 250 Gb total (5 × 50 Gb)',
+        'Applications: structural variants, metagenomics, full-length cDNA, rapid diagnostics',
+      ],
+      usage:
+        'PANDORA-ID-NET deployed GridIONs across Africa for COVID-19 and mpox genomic surveillance. Enables same-day outbreak sequencing in field settings using the ARTIC amplicon protocol.',
       svg: `
 <defs>
   <linearGradient id="ont-body" x1="0" y1="0" x2="0" y2="1">
@@ -176,32 +188,38 @@ ${Array.from({length:18}, (_, i) => `<rect x="${99 + i * 10}" y="233" width="7" 
 <text x="190" y="96" fill="#f97316" font-size="6.5" font-family="Arial" text-anchor="middle" font-weight="700">FLOW CELL POSITIONS</text>
 
 <!-- 5 MinION-style ports in a row -->
-${[0,1,2,3,4].map(i => {
-  const x = 96 + i * 39;
-  const active = i < 3;
-  return `
-  <!-- Port ${i+1} -->
+${[0, 1, 2, 3, 4]
+  .map((i) => {
+    const x = 96 + i * 39;
+    const active = i < 3;
+    return `
+  <!-- Port ${i + 1} -->
   <rect x="${x}" y="102" width="32" height="78" rx="4" fill="${active ? '#141a1f' : '#0d1015'}" stroke="${active ? '#f97316' : '#2a2d31'}" stroke-width="${active ? '1.2' : '0.7'}"/>
   <!-- Port opening (MinION slot) -->
-  <rect x="${x+4}" y="106" width="24" height="40" rx="2" fill="#080b0d"/>
-  <rect x="${x+4}" y="106" width="24" height="40" rx="2" fill="none" stroke="${active ? '#f9731680' : '#1a1d2160'}" stroke-width="1"/>
+  <rect x="${x + 4}" y="106" width="24" height="40" rx="2" fill="#080b0d"/>
+  <rect x="${x + 4}" y="106" width="24" height="40" rx="2" fill="none" stroke="${active ? '#f9731680' : '#1a1d2160'}" stroke-width="1"/>
   <!-- Flow cell indicator -->
-  <rect x="${x+6}" y="108" width="20" height="36" rx="1" fill="${active ? '#0d1a0a' : '#0a0a0a'}"/>
-  ${active ? `
-  <text x="${x+16}" y="124" fill="#f97316" font-size="5" font-family="monospace" text-anchor="middle">FC ${i+1}</text>
-  <text x="${x+16}" y="133" fill="#26c45a" font-size="4.5" font-family="monospace" text-anchor="middle">ACTIVE</text>
-  <text x="${x+16}" y="142" fill="#4a7aaa" font-size="4" font-family="monospace" text-anchor="middle">${['R10.4','R10.4','R10.4'][i]}</text>
-  ` : `
-  <text x="${x+16}" y="128" fill="#333" font-size="5" font-family="monospace" text-anchor="middle">FC ${i+1}</text>
-  <text x="${x+16}" y="138" fill="#222" font-size="4.5" font-family="monospace" text-anchor="middle">EMPTY</text>
-  `}
+  <rect x="${x + 6}" y="108" width="20" height="36" rx="1" fill="${active ? '#0d1a0a' : '#0a0a0a'}"/>
+  ${
+    active
+      ? `
+  <text x="${x + 16}" y="124" fill="#f97316" font-size="5" font-family="monospace" text-anchor="middle">FC ${i + 1}</text>
+  <text x="${x + 16}" y="133" fill="#26c45a" font-size="4.5" font-family="monospace" text-anchor="middle">ACTIVE</text>
+  <text x="${x + 16}" y="142" fill="#4a7aaa" font-size="4" font-family="monospace" text-anchor="middle">${['R10.4', 'R10.4', 'R10.4'][i]}</text>
+  `
+      : `
+  <text x="${x + 16}" y="128" fill="#333" font-size="5" font-family="monospace" text-anchor="middle">FC ${i + 1}</text>
+  <text x="${x + 16}" y="138" fill="#222" font-size="4.5" font-family="monospace" text-anchor="middle">EMPTY</text>
+  `
+  }
   <!-- Status LED below port -->
-  <circle cx="${x+16}" cy="${154}" r="4" fill="${active ? '#f97316' : '#1a1a1a'}"/>
-  ${active ? `<circle cx="${x+16}" cy="154" r="6.5" fill="none" stroke="#f97316" stroke-width="0.8" opacity="0.4"/>` : ''}
+  <circle cx="${x + 16}" cy="${154}" r="4" fill="${active ? '#f97316' : '#1a1a1a'}"/>
+  ${active ? `<circle cx="${x + 16}" cy="154" r="6.5" fill="none" stroke="#f97316" stroke-width="0.8" opacity="0.4"/>` : ''}
   <!-- Port number -->
-  <text x="${x+16}" y="175" fill="${active ? '#888' : '#444'}" font-size="5.5" font-family="monospace" text-anchor="middle">${i+1}</text>
+  <text x="${x + 16}" y="175" fill="${active ? '#888' : '#444'}" font-size="5.5" font-family="monospace" text-anchor="middle">${i + 1}</text>
   `;
-}).join('')}
+  })
+  .join('')}
 
 <!-- ── MIDDLE SECTION: Status display ── -->
 <rect x="88" y="195" width="140" height="70" rx="3" fill="#090c0f" stroke="#1e2226"/>
@@ -239,7 +257,7 @@ ${[0,1,2,3,4].map(i => {
 <line x1="80" y1="133" x2="88" y2="133" stroke="#f97316" stroke-width="0.6"/>
 <text x="340" y="210" fill="#888" font-size="5.5" font-family="Arial">GPU basecall</text>
 <line x1="295" y1="228" x2="338" y2="225" stroke="#888" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 3 ─ Oxford Nanopore MinION ─────────────────────────────── */
@@ -248,9 +266,16 @@ ${[0,1,2,3,4].map(i => {
       name: 'Oxford Nanopore MinION',
       category: 'Portable Sequencer',
       color: '#fb923c',
-      desc: 'The MinION is the world\'s smallest sequencer — about the size of a USB stick. It enabled real-time SARS-CoV-2 sequencing across Africa in laboratories, field clinics, and even remote bush hospitals with just a laptop and USB power.',
-      specs: ['Size: 105 × 34 × 23 mm (pocket-sized!)', 'Read length: up to 4 Mb (ultra-long)', 'Throughput: up to 50 Gb per flow cell', 'Power: USB-C only (no mains needed)', 'Applications: outbreak sequencing, field metagenomics, rapid diagnostics'],
-      usage: 'Used by Africa CDC rapid response teams during COVID-19, Ebola, and mpox outbreaks. Can sequence in the field without stable power. KEMRI and AHRI used MinIONs for TB whole-genome sequencing in remote clinics.',
+      desc: "The MinION is the world's smallest sequencer — about the size of a USB stick. It enabled real-time SARS-CoV-2 sequencing across Africa in laboratories, field clinics, and even remote bush hospitals with just a laptop and USB power.",
+      specs: [
+        'Size: 105 × 34 × 23 mm (pocket-sized!)',
+        'Read length: up to 4 Mb (ultra-long)',
+        'Throughput: up to 50 Gb per flow cell',
+        'Power: USB-C only (no mains needed)',
+        'Applications: outbreak sequencing, field metagenomics, rapid diagnostics',
+      ],
+      usage:
+        'Used by Africa CDC rapid response teams during COVID-19, Ebola, and mpox outbreaks. Can sequence in the field without stable power. KEMRI and AHRI used MinIONs for TB whole-genome sequencing in remote clinics.',
       svg: `
 <defs>
   <linearGradient id="mn-body" x1="0" y1="0" x2="0" y2="1">
@@ -284,9 +309,9 @@ ${[0,1,2,3,4].map(i => {
 <text x="255" y="138" fill="#26c45a" font-size="5.5" font-family="monospace" text-anchor="end">R9.4.1 flow cell</text>
 
 <!-- Fake waveform / reads on screen -->
-${Array.from({length:12}, (_,i) => {
-  const h = 8 + (i*17 + 31) % 35;
-  return `<rect x="${62 + i*18}" y="${195-h}" width="14" height="${h}" rx="1" fill="#fb923c" opacity="${0.4 + i*0.05}"/>`;
+${Array.from({ length: 12 }, (_, i) => {
+  const h = 8 + ((i * 17 + 31) % 35);
+  return `<rect x="${62 + i * 18}" y="${195 - h}" width="14" height="${h}" rx="1" fill="#fb923c" opacity="${0.4 + i * 0.05}"/>`;
 }).join('')}
 <text x="175" y="205" fill="#5a7a9a" font-size="5" font-family="monospace" text-anchor="middle">Reads passing: 284,920 · Bases: 1.84 Gb</text>
 <text x="175" y="215" fill="#5a7a9a" font-size="5" font-family="monospace" text-anchor="middle">N50: 22.4 kb · Active pores: 1,247 / 2,048</text>
@@ -330,7 +355,7 @@ ${Array.from({length:12}, (_,i) => {
 <text x="15" y="200" fill="#fb923c" font-size="5.5" font-family="Arial">MinION</text>
 <text x="15" y="208" fill="#fb923c" font-size="5.5" font-family="Arial">device</text>
 <line x1="50" y1="206" x2="290" y2="209" stroke="#fb923c" stroke-width="0.5" stroke-dasharray="3,2"/>
-      `
+      `,
     },
 
     /* 4 ─ PCR Thermocycler (Bio-Rad C1000 Touch) ────────────── */
@@ -340,8 +365,15 @@ ${Array.from({length:12}, (_,i) => {
       category: 'DNA Amplification',
       color: '#00C4A0',
       desc: 'The polymerase chain reaction (PCR) machine amplifies specific DNA sequences using temperature cycling. Essential for library preparation, TB/malaria/COVID diagnostics, genotyping, and as the first step in nearly every NGS workflow.',
-      specs: ['96-well or 384-well block options', 'Temperature range: 4–99°C', 'Ramp rate: up to 6°C/second', 'Gradient capability: ±20°C across block', 'Applications: diagnostic PCR, genotyping, LAMP, RT-PCR, library prep'],
-      usage: 'Every African genomics lab has at least one thermocycler. Used for TB GeneXpert prep, malaria diagnostic PCR, SARS-CoV-2 RT-PCR, and library amplification before sequencing.',
+      specs: [
+        '96-well or 384-well block options',
+        'Temperature range: 4–99°C',
+        'Ramp rate: up to 6°C/second',
+        'Gradient capability: ±20°C across block',
+        'Applications: diagnostic PCR, genotyping, LAMP, RT-PCR, library prep',
+      ],
+      usage:
+        'Every African genomics lab has at least one thermocycler. Used for TB GeneXpert prep, malaria diagnostic PCR, SARS-CoV-2 RT-PCR, and library amplification before sequencing.',
       svg: `
 <defs>
   <linearGradient id="pcr-body" x1="0" y1="0" x2="0" y2="1">
@@ -386,22 +418,26 @@ ${Array.from({length:12}, (_,i) => {
 <!-- 96-WELL PLATE area (top of body, just below lid) -->
 <rect x="102" y="120" width="186" height="100" rx="3" fill="#d8dadc" stroke="#b8babc"/>
 <!-- 96-well grid: 8 rows × 12 columns -->
-${Array.from({length:8}, (_, row) =>
-  Array.from({length:12}, (_, col) => {
-    const wellColor = (row * 12 + col) < 72
-      ? `hsl(${120 + (row*12+col)*2}, 60%, 35%)`
-      : '#c8cacc';
-    return `<circle cx="${109 + col*14}" cy="${127 + row*10}" r="4.5" fill="${wellColor}" stroke="#a0a2a4" stroke-width="0.5"/>`;
+${Array.from({ length: 8 }, (_, row) =>
+  Array.from({ length: 12 }, (_, col) => {
+    const wellColor =
+      row * 12 + col < 72 ? `hsl(${120 + (row * 12 + col) * 2}, 60%, 35%)` : '#c8cacc';
+    return `<circle cx="${109 + col * 14}" cy="${127 + row * 10}" r="4.5" fill="${wellColor}" stroke="#a0a2a4" stroke-width="0.5"/>`;
   }).join('')
 ).join('')}
 
 <!-- Row labels A-H -->
-${['A','B','C','D','E','F','G','H'].map((l,i) =>
-  `<text x="103" y="${131 + i*10}" fill="#666" font-size="5" font-family="monospace" text-anchor="middle">${l}</text>`
-).join('')}
+${['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+  .map(
+    (l, i) =>
+      `<text x="103" y="${131 + i * 10}" fill="#666" font-size="5" font-family="monospace" text-anchor="middle">${l}</text>`
+  )
+  .join('')}
 <!-- Column labels 1-12 -->
-${Array.from({length:12}, (_,i) =>
-  `<text x="${109 + i*14}" y="${123}" fill="#666" font-size="4.5" font-family="monospace" text-anchor="middle">${i+1}</text>`
+${Array.from(
+  { length: 12 },
+  (_, i) =>
+    `<text x="${109 + i * 14}" y="${123}" fill="#666" font-size="4.5" font-family="monospace" text-anchor="middle">${i + 1}</text>`
 ).join('')}
 
 <!-- FRONT DISPLAY PANEL -->
@@ -434,7 +470,7 @@ ${Array.from({length:12}, (_,i) =>
 <text x="25" y="145" fill="#00C4A0" font-size="5.5" font-family="Arial">96-well</text>
 <text x="25" y="153" fill="#00C4A0" font-size="5.5" font-family="Arial">plate</text>
 <line x1="65" y1="147" x2="102" y2="147" stroke="#00C4A0" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 5 ─ Centrifuge (Eppendorf 5424R) ──────────────────────── */
@@ -444,8 +480,15 @@ ${Array.from({length:12}, (_,i) =>
       category: 'Sample Processing',
       color: '#bc8cff',
       desc: 'Centrifuges separate biological components by density using centrifugal force. The Eppendorf 5424R can reach 30,000 RPM (25,000 × g) and cool samples to -9°C. Essential for DNA/RNA extraction, plasma separation, and library clean-up.',
-      specs: ['Max speed: 30,000 RPM (microcentrifuge)', 'Max RCF: 25,200 × g', 'Temperature control: -9°C to +40°C', 'Capacity: 24 × 1.5 mL or 2 mL tubes', 'Applications: DNA extraction, RNA pellets, beadclean-up, plasma separation'],
-      usage: 'DNA and RNA extraction from blood, sputum, and tissue always requires centrifugation. Every African genomics lab runs centrifuges dozens of times daily for sample preparation before sequencing.',
+      specs: [
+        'Max speed: 30,000 RPM (microcentrifuge)',
+        'Max RCF: 25,200 × g',
+        'Temperature control: -9°C to +40°C',
+        'Capacity: 24 × 1.5 mL or 2 mL tubes',
+        'Applications: DNA extraction, RNA pellets, beadclean-up, plasma separation',
+      ],
+      usage:
+        'DNA and RNA extraction from blood, sputum, and tissue always requires centrifugation. Every African genomics lab runs centrifuges dozens of times daily for sample preparation before sequencing.',
       svg: `
 <defs>
   <linearGradient id="cf-body" x1="0" y1="0" x2="0" y2="1">
@@ -519,7 +562,7 @@ ${Array.from({length:12}, (_,i) =>
 <line x1="72" y1="141" x2="130" y2="141" stroke="#bc8cff" stroke-width="0.6"/>
 <text x="340" y="230" fill="#888" font-size="5.5" font-family="Arial" text-anchor="end">4°C cooling</text>
 <line x1="254" y1="234" x2="336" y2="233" stroke="#888" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 6 ─ Agilent Bioanalyzer 2100 ──────────────────────────── */
@@ -529,8 +572,15 @@ ${Array.from({length:12}, (_,i) =>
       category: 'RNA / DNA QC',
       color: '#58a6ff',
       desc: 'The Bioanalyzer 2100 uses microfluidic chips to assess DNA/RNA quality and quantity in just 1 µL of sample. It generates RNA Integrity Numbers (RIN) — a score from 1–10 — that are critical for RNA-seq experiment success.',
-      specs: ['Sample volume: 1 µL per well', 'RIN score: 1–10 (RNA Integrity Number)', 'DNA sizing: 100 bp – 12,000 bp', 'Analysis time: 30–40 min for 12 samples', 'Applications: RNA-seq QC, library QC, cfDNA, gDNA quality'],
-      usage: 'RNA-seq experiments require RIN > 7 to produce high-quality data. H3Africa consortium labs routinely QC all RNA samples on the Bioanalyzer before committing to sequencing runs. Also used for library fragment size verification.',
+      specs: [
+        'Sample volume: 1 µL per well',
+        'RIN score: 1–10 (RNA Integrity Number)',
+        'DNA sizing: 100 bp – 12,000 bp',
+        'Analysis time: 30–40 min for 12 samples',
+        'Applications: RNA-seq QC, library QC, cfDNA, gDNA quality',
+      ],
+      usage:
+        'RNA-seq experiments require RIN > 7 to produce high-quality data. H3Africa consortium labs routinely QC all RNA samples on the Bioanalyzer before committing to sequencing runs. Also used for library fragment size verification.',
       svg: `
 <defs>
   <linearGradient id="ba-body" x1="0" y1="0" x2="0" y2="1">
@@ -563,9 +613,11 @@ ${Array.from({length:12}, (_,i) =>
 <rect x="120" y="138" width="92" height="55" rx="3" fill="#b8babc" stroke="#9a9ca0"/>
 <rect x="126" y="143" width="80" height="45" rx="2" fill="#a8aaad"/>
 <!-- Chip contacts visible inside port -->
-${Array.from({length:4}, (_,i) =>
-  `<circle cx="${135 + i*20}" cy="${155}" r="4" fill="#888" stroke="#666" stroke-width="0.5"/>
-   <circle cx="${135 + i*20}" cy="${175}" r="4" fill="#888" stroke="#666" stroke-width="0.5"/>`
+${Array.from(
+  { length: 4 },
+  (_, i) =>
+    `<circle cx="${135 + i * 20}" cy="${155}" r="4" fill="#888" stroke="#666" stroke-width="0.5"/>
+   <circle cx="${135 + i * 20}" cy="${175}" r="4" fill="#888" stroke="#666" stroke-width="0.5"/>`
 ).join('')}
 <text x="166" y="193" fill="#666" font-size="5" font-family="monospace" text-anchor="middle">Insert Chip ▼</text>
 <!-- Status LED -->
@@ -601,10 +653,13 @@ ${[
   ['S3_RNA', '7.1', '#e3b341'],
   ['S4_RNA', '5.8', '#f85149'],
   ['S5_RNA', '9.0', '#26c45a'],
-].map(([s,r,c], i) =>
-  `<text x="267" y="${132+i*10}" fill="#A8A098" font-size="4.5" font-family="monospace">${s}</text>
-   <text x="330" y="${132+i*10}" fill="${c}" font-size="4.5" font-family="monospace" text-anchor="end">RIN: ${r}</text>`
-).join('')}
+]
+  .map(
+    ([s, r, c], i) =>
+      `<text x="267" y="${132 + i * 10}" fill="#A8A098" font-size="4.5" font-family="monospace">${s}</text>
+   <text x="330" y="${132 + i * 10}" fill="${c}" font-size="4.5" font-family="monospace" text-anchor="end">RIN: ${r}</text>`
+  )
+  .join('')}
 <text x="314" y="182" fill="#666" font-size="5" font-family="monospace" text-anchor="middle">5/5 samples analyzed</text>
 <!-- Laptop base -->
 <rect x="252" y="185" width="124" height="8" rx="2" fill="#1a1d22" stroke="#2a2d31"/>
@@ -617,7 +672,7 @@ ${[
 <line x1="70" y1="163" x2="100" y2="163" stroke="#58a6ff" stroke-width="0.6"/>
 <text x="25" y="255" fill="#888" font-size="5.5" font-family="Arial">Run display</text>
 <line x1="70" y1="253" x2="100" y2="253" stroke="#888" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 7 ─ Biosafety Cabinet Class II ────────────────────────── */
@@ -627,8 +682,16 @@ ${[
       category: 'Containment / Safety',
       color: '#ff7b72',
       desc: 'Class II Biological Safety Cabinets provide personnel, environmental, and product protection when working with BSL-2 pathogens. The HEPA-filtered laminar downflow prevents aerosols from escaping — essential for handling TB sputum, blood, and infectious disease samples.',
-      specs: ['BSL-2 certified (Class II Type A2)', 'HEPA filtration: 99.97% at 0.3 µm', 'Inflow velocity: 0.53 m/s (protection)', 'Downflow velocity: 0.25 m/s (product protection)', 'UV sterilisation lamp (pre-work cycle)', 'Sash opening: 200 mm safe operating height'],
-      usage: 'All clinical sample handling for HIV, TB, malaria, and Ebola genomics must occur in a BSC. H3Africa labs handling patient blood and tissue before DNA extraction use Class II cabinets to protect both researchers and samples.',
+      specs: [
+        'BSL-2 certified (Class II Type A2)',
+        'HEPA filtration: 99.97% at 0.3 µm',
+        'Inflow velocity: 0.53 m/s (protection)',
+        'Downflow velocity: 0.25 m/s (product protection)',
+        'UV sterilisation lamp (pre-work cycle)',
+        'Sash opening: 200 mm safe operating height',
+      ],
+      usage:
+        'All clinical sample handling for HIV, TB, malaria, and Ebola genomics must occur in a BSC. H3Africa labs handling patient blood and tissue before DNA extraction use Class II cabinets to protect both researchers and samples.',
       svg: `
 <defs>
   <linearGradient id="bsc-body" x1="0" y1="0" x2="0" y2="1">
@@ -652,8 +715,10 @@ ${[
 <text x="193" y="55" fill="#555" font-size="6" font-family="Arial" text-anchor="middle">HEPA FILTER HOUSING</text>
 <text x="193" y="66" fill="#888" font-size="5.5" font-family="monospace" text-anchor="middle">99.97% @ 0.3µm · Downflow active</text>
 <!-- Airflow arrows on HEPA housing -->
-${Array.from({length:5}, (_,i) =>
-  `<text x="${65 + i*52}" y="61" fill="#58a6ff" font-size="8" font-family="Arial" text-anchor="middle" opacity="0.6">↓</text>`
+${Array.from(
+  { length: 5 },
+  (_, i) =>
+    `<text x="${65 + i * 52}" y="61" fill="#58a6ff" font-size="8" font-family="Arial" text-anchor="middle" opacity="0.6">↓</text>`
 ).join('')}
 
 <!-- Main cabinet body (stainless/white outer) -->
@@ -676,8 +741,10 @@ ${Array.from({length:5}, (_,i) =>
 <!-- Lab supplies visible inside cabinet -->
 <!-- Tube rack with eppendorf tubes -->
 <rect x="65" y="165" width="30" height="35" rx="2" fill="#1a2a1a" stroke="#333"/>
-${Array.from({length:6}, (_,i) =>
-  `<rect x="${68+i*4}" y="${175}" width="3" height="20" rx="1" fill="hsl(${i*40},60%,40%)"/>`
+${Array.from(
+  { length: 6 },
+  (_, i) =>
+    `<rect x="${68 + i * 4}" y="${175}" width="3" height="20" rx="1" fill="hsl(${i * 40},60%,40%)"/>`
 ).join('')}
 <text x="80" y="207" fill="#666" font-size="4.5" font-family="Arial" text-anchor="middle">1.5mL</text>
 <text x="80" y="212" fill="#666" font-size="4.5" font-family="Arial" text-anchor="middle">tubes</text>
@@ -731,7 +798,7 @@ ${Array.from({length:6}, (_,i) =>
 <line x1="36" y1="58" x2="38" y2="58" stroke="#58a6ff" stroke-width="0.6"/>
 <text x="348" y="148" fill="#888" font-size="5.5" font-family="Arial">Glass sash</text>
 <line x1="344" y1="150" x2="340" y2="150" stroke="#888" stroke-width="0.6"/>
-      `
+      `,
     },
 
     /* 8 ─ Fluorescence Microscope (Zeiss Axio style) ─────────── */
@@ -741,8 +808,15 @@ ${Array.from({length:6}, (_,i) =>
       category: 'Cell Biology / Imaging',
       color: '#a371f7',
       desc: 'Fluorescence microscopes excite fluorescent dyes with specific wavelengths of light, enabling visualisation of cellular structures, parasites, and tagged proteins. Essential for malaria smear reading, cell counting before RNA extraction, and spatial transcriptomics validation.',
-      specs: ['Objectives: 4×, 10×, 40×, 100× (oil)', 'Filter sets: DAPI, FITC, TRITC, Cy5', 'Light source: LED (multi-band, low heat)', 'Camera: monochrome sCMOS (high sensitivity)', 'Applications: malaria smears, immunofluorescence, spatial omics'],
-      usage: 'Used in every African infectious disease lab for malaria thick/thin smear reading (Plasmodium detection), counting cells before RNA extraction, and validating FISH probes. Spatial transcriptomics at KEMRI uses high-resolution fluorescence imaging.',
+      specs: [
+        'Objectives: 4×, 10×, 40×, 100× (oil)',
+        'Filter sets: DAPI, FITC, TRITC, Cy5',
+        'Light source: LED (multi-band, low heat)',
+        'Camera: monochrome sCMOS (high sensitivity)',
+        'Applications: malaria smears, immunofluorescence, spatial omics',
+      ],
+      usage:
+        'Used in every African infectious disease lab for malaria thick/thin smear reading (Plasmodium detection), counting cells before RNA extraction, and validating FISH probes. Spatial transcriptomics at KEMRI uses high-resolution fluorescence imaging.',
       svg: `
 <defs>
   <linearGradient id="mic-body" x1="0" y1="0" x2="0" y2="1">
@@ -821,13 +895,16 @@ ${Array.from({length:6}, (_,i) =>
 <!-- Filter cubes visible through a window -->
 <rect x="160" y="100" width="29" height="50" rx="2" fill="#0a0c0f"/>
 ${[
-  ['DAPI','#8888ff','108'],
-  ['FITC','#26c45a','118'],
-  ['TRITC','#ff7744','128'],
-].map(([n,c,y]) =>
-  `<rect x="163" y="${y}" width="23" height="8" rx="1" fill="${c}" opacity="0.25" stroke="${c}" stroke-width="0.5"/>
-   <text x="174" y="${+y+6}" fill="${c}" font-size="4.5" font-family="monospace" text-anchor="middle">${n}</text>`
-).join('')}
+  ['DAPI', '#8888ff', '108'],
+  ['FITC', '#26c45a', '118'],
+  ['TRITC', '#ff7744', '128'],
+]
+  .map(
+    ([n, c, y]) =>
+      `<rect x="163" y="${y}" width="23" height="8" rx="1" fill="${c}" opacity="0.25" stroke="${c}" stroke-width="0.5"/>
+   <text x="174" y="${+y + 6}" fill="${c}" font-size="4.5" font-family="monospace" text-anchor="middle">${n}</text>`
+  )
+  .join('')}
 <!-- LED indicator (light on) -->
 <circle cx="185" cy="155" r="4" fill="#a371f7"/>
 <circle cx="185" cy="155" r="6" fill="none" stroke="#a371f7" stroke-width="1" opacity="0.4"/>
@@ -842,11 +919,11 @@ ${[
 <!-- Fluorescence image on screen — dark background, colored cells -->
 <rect x="244" y="94" width="110" height="82" rx="2" fill="#02030a"/>
 <!-- Simulated DAPI-stained nuclei (blue dots) -->
-${Array.from({length:20}, (_,i) => {
-  const x = 250 + (i*23 + 11) % 98;
-  const y = 98 + (i*17 + 7) % 72;
-  const size = 3 + i % 4;
-  const colors = ['rgba(100,100,255,0.9)','rgba(60,200,60,0.7)','rgba(255,60,60,0.6)'];
+${Array.from({ length: 20 }, (_, i) => {
+  const x = 250 + ((i * 23 + 11) % 98);
+  const y = 98 + ((i * 17 + 7) % 72);
+  const size = 3 + (i % 4);
+  const colors = ['rgba(100,100,255,0.9)', 'rgba(60,200,60,0.7)', 'rgba(255,60,60,0.6)'];
   const c = colors[i % 3];
   return `<circle cx="${x}" cy="${y}" r="${size}" fill="${c}"/>`;
 }).join('')}
@@ -863,26 +940,26 @@ ${Array.from({length:20}, (_,i) => {
 <line x1="75" y1="198" x2="104" y2="200" stroke="#00C4A0" stroke-width="0.6"/>
 <text x="30" y="215" fill="#888" font-size="5.5" font-family="Arial">Slide stage</text>
 <line x1="75" y1="213" x2="88" y2="213" stroke="#888" stroke-width="0.6"/>
-      `
-    }
+      `,
+    },
   ];
 
   /* ── State ── */
-  let _angle       = 0;
-  let _tilt        = 0;
+  let _angle = 0;
+  let _tilt = 0;
   let _targetAngle = 0;
-  let _targetTilt  = 0;
-  let _dragging    = false;
-  let _lastX       = 0;
-  let _lastY       = 0;
-  let _animRaf     = null;
+  let _targetTilt = 0;
+  let _dragging = false;
+  let _lastX = 0;
+  let _lastY = 0;
+  let _animRaf = null;
   let _activeStation = null;
-  let _sceneEl     = null;
-  let _infoEl      = null;
-  let _idleTimer   = null;
+  let _sceneEl = null;
+  let _infoEl = null;
+  let _idleTimer = null;
 
-  const N      = STATIONS.length;
-  const STEP   = 360 / N;
+  const N = STATIONS.length;
+  const STEP = 360 / N;
   const PANEL_W = 380;
   const PANEL_H = 480;
   /* Radius: inward panorama — large so panels nearly fill the viewport */
@@ -891,12 +968,11 @@ ${Array.from({length:20}, (_,i) => {
   /* ── Smooth animation loop ── */
   function _tick() {
     const da = _targetAngle - _angle;
-    const dt = _targetTilt  - _tilt;
+    const dt = _targetTilt - _tilt;
     _angle += da * 0.1;
-    _tilt  += dt * 0.1;
+    _tilt += dt * 0.1;
     if (_sceneEl) {
-      _sceneEl.style.transform =
-        `rotateX(${_tilt.toFixed(2)}deg) rotateY(${_angle.toFixed(2)}deg)`;
+      _sceneEl.style.transform = `rotateX(${_tilt.toFixed(2)}deg) rotateY(${_angle.toFixed(2)}deg)`;
     }
     _syncDots();
     if (Math.abs(da) > 0.05 || Math.abs(dt) > 0.05) {
@@ -919,8 +995,9 @@ ${Array.from({length:20}, (_,i) => {
 
   function _syncDots() {
     const idx = _currentIdx();
-    document.querySelectorAll('.vl-dot').forEach((d, i) =>
-      d.classList.toggle('vl-dot-active', i === idx));
+    document
+      .querySelectorAll('.vl-dot')
+      .forEach((d, i) => d.classList.toggle('vl-dot-active', i === idx));
   }
 
   /* ── Navigate to station index ── */
@@ -936,7 +1013,7 @@ ${Array.from({length:20}, (_,i) => {
 
   /* ── Select station by ID ── */
   function select(id) {
-    const idx = STATIONS.findIndex(s => s.id === id);
+    const idx = STATIONS.findIndex((s) => s.id === id);
     if (idx < 0) return;
     goTo(idx);
   }
@@ -949,12 +1026,13 @@ ${Array.from({length:20}, (_,i) => {
 
   /* ── Show info panel for a station ── */
   function _showStation(id) {
-    const st = STATIONS.find(s => s.id === id);
+    const st = STATIONS.find((s) => s.id === id);
     if (!st || !_infoEl) return;
     _activeStation = id;
 
-    document.querySelectorAll('.vl-panel').forEach(p =>
-      p.classList.toggle('vl-panel-active', p.dataset.id === id));
+    document
+      .querySelectorAll('.vl-panel')
+      .forEach((p) => p.classList.toggle('vl-panel-active', p.dataset.id === id));
 
     _infoEl.innerHTML = `
       <button class="vl-info-close" onclick="OmicsLab.VirtualLab.closeInfo()" title="Close">
@@ -966,7 +1044,7 @@ ${Array.from({length:20}, (_,i) => {
       <div class="vl-info-name">${st.name}</div>
       <p class="vl-info-desc">${st.desc}</p>
       <div class="vl-info-sub">Specifications</div>
-      <ul class="vl-info-specs">${st.specs.map(s => `<li>${s}</li>`).join('')}</ul>
+      <ul class="vl-info-specs">${st.specs.map((s) => `<li>${s}</li>`).join('')}</ul>
       <div class="vl-info-sub">Use in African Genomics</div>
       <p class="vl-info-usage">${st.usage}</p>
     `;
@@ -976,7 +1054,7 @@ ${Array.from({length:20}, (_,i) => {
   /* ── Close info panel ── */
   function closeInfo() {
     if (_infoEl) _infoEl.classList.remove('vl-info-open');
-    document.querySelectorAll('.vl-panel').forEach(p => p.classList.remove('vl-panel-active'));
+    document.querySelectorAll('.vl-panel').forEach((p) => p.classList.remove('vl-panel-active'));
     _activeStation = null;
   }
 
@@ -1002,8 +1080,9 @@ ${Array.from({length:20}, (_,i) => {
         </div>`;
     }).join('');
 
-    const dots = STATIONS.map((st, i) =>
-      `<button class="vl-dot" data-idx="${i}"
+    const dots = STATIONS.map(
+      (st, i) =>
+        `<button class="vl-dot" data-idx="${i}"
          style="border-color:${st.color}" title="${st.name}"
          onclick="OmicsLab.VirtualLab.goTo(${i})"></button>`
     ).join('');
@@ -1056,12 +1135,14 @@ ${Array.from({length:20}, (_,i) => {
             </div>
 
             <div class="vl-station-counter" id="vl-counter">
-              ${STATIONS.map((st,i) => `
+              ${STATIONS.map(
+                (st, i) => `
                 <button class="vl-counter-item" onclick="OmicsLab.VirtualLab.goTo(${i})"
                   style="border-left:3px solid ${st.color}">
-                  <span class="vl-counter-num" style="color:${st.color}">${String(i+1).padStart(2,'0')}</span>
+                  <span class="vl-counter-num" style="color:${st.color}">${String(i + 1).padStart(2, '0')}</span>
                   <span class="vl-counter-name">${st.name}</span>
-                </button>`).join('')}
+                </button>`
+              ).join('')}
             </div>
           </div>
 
@@ -1080,11 +1161,11 @@ ${Array.from({length:20}, (_,i) => {
     `;
 
     _sceneEl = document.getElementById('vl-scene');
-    _infoEl  = document.getElementById('vl-info');
+    _infoEl = document.getElementById('vl-info');
     const room = document.getElementById('vl-room');
 
     /* ── Pointer drag (looking around) ── */
-    room.addEventListener('pointerdown', e => {
+    room.addEventListener('pointerdown', (e) => {
       if (e.target.closest('button') || e.target.closest('.vl-station-counter')) return;
       _dragging = true;
       _lastX = e.clientX;
@@ -1097,7 +1178,7 @@ ${Array.from({length:20}, (_,i) => {
       if (hint) hint.style.opacity = '0';
     });
 
-    room.addEventListener('pointermove', e => {
+    room.addEventListener('pointermove', (e) => {
       if (!_dragging) return;
       const dx = e.clientX - _lastX;
       const dy = e.clientY - _lastY;
@@ -1105,7 +1186,7 @@ ${Array.from({length:20}, (_,i) => {
       _lastY = e.clientY;
       /* Drag RIGHT = look right = scene rotates left = angle decreases */
       _targetAngle -= dx * 0.35;
-      _targetTilt   = Math.max(-15, Math.min(8, _targetTilt + dy * 0.15));
+      _targetTilt = Math.max(-15, Math.min(8, _targetTilt + dy * 0.15));
       _startTick();
     });
 
@@ -1122,19 +1203,29 @@ ${Array.from({length:20}, (_,i) => {
     });
 
     /* Mouse wheel = look left/right */
-    room.addEventListener('wheel', e => {
-      e.preventDefault();
-      _targetAngle -= e.deltaY * 0.25;
-      _startTick();
-      _stopIdle();
-      _startIdleAfterDelay();
-    }, { passive: false });
+    room.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        _targetAngle -= e.deltaY * 0.25;
+        _startTick();
+        _stopIdle();
+        _startIdleAfterDelay();
+      },
+      { passive: false }
+    );
 
     /* Keyboard navigation */
-    document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft')  { _targetAngle += STEP; _startTick(); }
-      if (e.key === 'ArrowRight') { _targetAngle -= STEP; _startTick(); }
-      if (e.key === 'Escape')     closeInfo();
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        _targetAngle += STEP;
+        _startTick();
+      }
+      if (e.key === 'ArrowRight') {
+        _targetAngle -= STEP;
+        _startTick();
+      }
+      if (e.key === 'Escape') closeInfo();
     });
 
     /* Start with a slow auto-tour */
@@ -1155,8 +1246,14 @@ ${Array.from({length:20}, (_,i) => {
   }
 
   function _stopIdle() {
-    if (_idleTimer) { clearInterval(_idleTimer); _idleTimer = null; }
-    if (_idleDelay) { clearTimeout(_idleDelay);  _idleDelay = null; }
+    if (_idleTimer) {
+      clearInterval(_idleTimer);
+      _idleTimer = null;
+    }
+    if (_idleDelay) {
+      clearTimeout(_idleDelay);
+      _idleDelay = null;
+    }
   }
 
   function _startIdleAfterDelay() {
@@ -1165,5 +1262,4 @@ ${Array.from({length:20}, (_,i) => {
   }
 
   return { init, select, goTo, rotate, closeInfo };
-
 })();

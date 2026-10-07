@@ -15,7 +15,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Entitlements = (function () {
-
   const RANKS = ['free', 'scholar', 'practitioner', 'campus', 'enterprise'];
 
   /* Kept in sync with lib/entitlements.js — this copy exists purely so
@@ -23,23 +22,35 @@ OmicsLab.Entitlements = (function () {
      for the common case (feature list rarely changes mid-session). */
   const FEATURES = {
     'variant-interpreter.custom-data': 'scholar',
-    'scrna.unlimited':                 'scholar',
-    'scrna.export':                    'scholar',
-    'certificate.verified':            'scholar',
-    'ai-tutor.unlimited':              'scholar',
-    'sandbox.export':                  'practitioner',
-    'grant-generator':                 'practitioner',
-    'thesis-coach':                    'practitioner',
-    'ai-tutor.priority':               'practitioner',
+    'scrna.unlimited': 'scholar',
+    'scrna.export': 'scholar',
+    'certificate.verified': 'scholar',
+    'ai-tutor.unlimited': 'scholar',
+    'sandbox.export': 'practitioner',
+    'grant-generator': 'practitioner',
+    'thesis-coach': 'practitioner',
+    'ai-tutor.priority': 'practitioner',
   };
 
-  const TIER_LABEL = { scholar: 'Scholar', practitioner: 'Practitioner', campus: 'Campus', enterprise: 'Enterprise' };
-  const TIER_COLOR = { scholar: '#00C4A0', practitioner: '#bc8cff', campus: '#58a6ff', enterprise: '#bc8cff' };
+  const TIER_LABEL = {
+    scholar: 'Scholar',
+    practitioner: 'Practitioner',
+    campus: 'Campus',
+    enterprise: 'Enterprise',
+  };
+  const TIER_COLOR = {
+    scholar: '#00C4A0',
+    practitioner: '#bc8cff',
+    campus: '#58a6ff',
+    enterprise: '#bc8cff',
+  };
 
   let _state = { plan: 'free', billingPeriod: null, studentVerified: false, ready: false };
   let _fetchPromise = null;
 
-  function tier() { return _state.plan; }
+  function tier() {
+    return _state.plan;
+  }
 
   function hasAccess(feature) {
     const required = FEATURES[feature];
@@ -48,14 +59,22 @@ OmicsLab.Entitlements = (function () {
   }
 
   async function _fetchMe() {
-    if (!OmicsLab.AuthClerk?.getUser?.()) { _state = { plan: 'free', billingPeriod: null, studentVerified: false, ready: true }; return; }
+    if (!OmicsLab.AuthClerk?.getUser?.()) {
+      _state = { plan: 'free', billingPeriod: null, studentVerified: false, ready: true };
+      return;
+    }
     try {
       const token = await OmicsLab.AuthClerk.getToken();
       if (!token) throw new Error('no token');
       const res = await fetch('/api/me', { headers: { Authorization: `Bearer ${token}` } });
       if (!res.ok) throw new Error('me fetch failed');
       const data = await res.json();
-      _state = { plan: data.plan || 'free', billingPeriod: data.billingPeriod, studentVerified: !!data.studentVerified, ready: true };
+      _state = {
+        plan: data.plan || 'free',
+        billingPeriod: data.billingPeriod,
+        studentVerified: !!data.studentVerified,
+        ready: true,
+      };
     } catch {
       _state = { plan: 'free', billingPeriod: null, studentVerified: false, ready: true };
     }
@@ -63,7 +82,9 @@ OmicsLab.Entitlements = (function () {
 
   function init() {
     _fetchPromise = _fetchMe();
-    OmicsLab.AuthClerk?.onAuthChange?.(() => { _fetchPromise = _fetchMe(); });
+    OmicsLab.AuthClerk?.onAuthChange?.(() => {
+      _fetchPromise = _fetchMe();
+    });
   }
 
   async function ready() {
@@ -80,7 +101,10 @@ OmicsLab.Entitlements = (function () {
     if (!container) return;
     opts = opts || {};
 
-    if (hasAccess(feature)) { container.classList.remove('ol-gated'); return; }
+    if (hasAccess(feature)) {
+      container.classList.remove('ol-gated');
+      return;
+    }
 
     const required = FEATURES[feature] || 'scholar';
     const label = TIER_LABEL[required] || 'Scholar';

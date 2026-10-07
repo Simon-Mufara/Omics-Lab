@@ -5,7 +5,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.MobileNav = (function () {
-
   /* The 5 bottom-bar tabs */
   const TABS = [
     {
@@ -22,7 +21,7 @@ OmicsLab.MobileNav = (function () {
       id: '_tools',
       label: 'Tools',
       icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
-      sheet: true, /* opens tool picker sheet */
+      sheet: true /* opens tool picker sheet */,
     },
     {
       id: 'research',
@@ -47,17 +46,22 @@ OmicsLab.MobileNav = (function () {
     const modules = OmicsLab.UserGuide?.getModules?.();
     const cats = OmicsLab.UserGuide?.getCats?.();
     if (!modules || !cats) {
-      return [{ label: null, items: [
-        { id: 'analysis', name: 'Analysis Suite', color: '#e3b341' },
-        { id: 'variantinterp', name: 'Variant Interpreter', color: '#bc8cff' },
-        { id: 'terminal', name: 'Terminal', color: '#00C4A0' },
-        { id: 'ai', name: 'AI Assistant', color: '#58a6ff' },
-      ] }];
+      return [
+        {
+          label: null,
+          items: [
+            { id: 'analysis', name: 'Analysis Suite', color: '#e3b341' },
+            { id: 'variantinterp', name: 'Variant Interpreter', color: '#bc8cff' },
+            { id: 'terminal', name: 'Terminal', color: '#00C4A0' },
+            { id: 'ai', name: 'AI Assistant', color: '#58a6ff' },
+          ],
+        },
+      ];
     }
     return cats
-      .filter(c => c.id !== 'all')
-      .map(c => ({ label: c.label, items: modules.filter(m => m.cat === c.id) }))
-      .filter(g => g.items.length > 0);
+      .filter((c) => c.id !== 'all')
+      .map((c) => ({ label: c.label, items: modules.filter((m) => m.cat === c.id) }))
+      .filter((g) => g.items.length > 0);
   }
 
   let _active = 'home';
@@ -72,7 +76,8 @@ OmicsLab.MobileNav = (function () {
     bar.setAttribute('aria-label', 'Mobile primary navigation');
     bar.setAttribute('role', 'navigation');
 
-    bar.innerHTML = TABS.map(tab => `
+    bar.innerHTML = TABS.map(
+      (tab) => `
       <button
         class="mob-tab${tab.id === _active ? ' active' : ''}"
         id="mob-tab-${tab.id}"
@@ -84,7 +89,8 @@ OmicsLab.MobileNav = (function () {
           ${tab.icon}
         </span>
         <span class="mob-tab-label">${tab.label}</span>
-      </button>`).join('');
+      </button>`
+    ).join('');
 
     document.body.appendChild(bar);
   }
@@ -101,7 +107,7 @@ OmicsLab.MobileNav = (function () {
 
   function _setActive(page) {
     _active = page;
-    document.querySelectorAll('.mob-tab').forEach(btn => {
+    document.querySelectorAll('.mob-tab').forEach((btn) => {
       btn.classList.toggle('active', btn.id === `mob-tab-${page}`);
     });
   }
@@ -121,10 +127,14 @@ OmicsLab.MobileNav = (function () {
         <div class="mob-modal-sheet" role="document">
           <div class="mob-modal-handle"></div>
           <div class="mob-modal-title">Tools</div>
-          ${groups.map(g => `
+          ${groups
+            .map(
+              (g) => `
             ${g.label ? `<div class="mob-tool-group-label">${_esc(g.label)}</div>` : ''}
             <div style="padding:.25rem .75rem .75rem;display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-              ${g.items.map(t => `
+              ${g.items
+                .map(
+                  (t) => `
                 <button
                   class="mob-tool-item"
                   style="--tool-color:${t.color}"
@@ -133,11 +143,17 @@ OmicsLab.MobileNav = (function () {
                 >
                   <span class="mob-tool-dot" style="background:${t.color}"></span>
                   ${_esc(t.name || t.label)}
-                </button>`).join('')}
-            </div>`).join('')}
+                </button>`
+                )
+                .join('')}
+            </div>`
+            )
+            .join('')}
         </div>`;
       /* Close on backdrop click */
-      overlay.addEventListener('click', e => { if (e.target === overlay) _closeSheet(); });
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) _closeSheet();
+      });
       document.body.appendChild(overlay);
       _injectSheetStyles();
     }
@@ -153,7 +169,9 @@ OmicsLab.MobileNav = (function () {
     }
   }
 
-  function _onSheetKey(e) { if (e.key === 'Escape') _closeSheet(); }
+  function _onSheetKey(e) {
+    if (e.key === 'Escape') _closeSheet();
+  }
 
   function _pickTool(id) {
     _closeSheet();
@@ -192,22 +210,76 @@ OmicsLab.MobileNav = (function () {
     /* Map page → tab id */
     const tabMap = {
       home: 'home',
-      lab: 'lab', 'virtual-lab': 'lab', outbreak: 'lab', debugger: 'lab',
-      profile: 'profile', settings: 'profile', guide: 'profile',
-      research: 'research', africa: 'research', datasets: 'research',
-      nexus: 'research', paperhub: 'research', teams: 'research',
-      grants: 'research', alerts: 'research', labnotebook: 'research',
-      'output-tracker': 'research', collab: 'research', impact: 'research',
+      lab: 'lab',
+      'virtual-lab': 'lab',
+      outbreak: 'lab',
+      debugger: 'lab',
+      profile: 'profile',
+      settings: 'profile',
+      guide: 'profile',
+      research: 'research',
+      africa: 'research',
+      datasets: 'research',
+      nexus: 'research',
+      paperhub: 'research',
+      teams: 'research',
+      grants: 'research',
+      alerts: 'research',
+      labnotebook: 'research',
+      'output-tracker': 'research',
+      collab: 'research',
+      impact: 'research',
     };
     const tools = [
-      'analysis','variantinterp','primerdesign','phylo','heatmap','study',
-      'qualitypredictor','knowledge-graph','gene-lookup','pathways','pubmed',
-      'terminal','codon','nanopore','amr','kraken','popstruct','genome-browser','gatk',
-      'uniprot','protein','string','preprints','sra','pipeline-gen','metaanalysis',
-      'citations','bionlp','assistant','ask','learn','glossary','case-files',
-      'seq-align','pipeline-visual','journalclub','quizbattle','epigenomics',
-      'crispr','proteomics','ai-ml-bio','stats-genomics','gwas','pharmacogenomics',
-      'single-cell','assembly','enrichment','recombination','alignment-viewer',
+      'analysis',
+      'variantinterp',
+      'primerdesign',
+      'phylo',
+      'heatmap',
+      'study',
+      'qualitypredictor',
+      'knowledge-graph',
+      'gene-lookup',
+      'pathways',
+      'pubmed',
+      'terminal',
+      'codon',
+      'nanopore',
+      'amr',
+      'kraken',
+      'popstruct',
+      'genome-browser',
+      'gatk',
+      'uniprot',
+      'protein',
+      'string',
+      'preprints',
+      'sra',
+      'pipeline-gen',
+      'metaanalysis',
+      'citations',
+      'bionlp',
+      'assistant',
+      'ask',
+      'learn',
+      'glossary',
+      'case-files',
+      'seq-align',
+      'pipeline-visual',
+      'journalclub',
+      'quizbattle',
+      'epigenomics',
+      'crispr',
+      'proteomics',
+      'ai-ml-bio',
+      'stats-genomics',
+      'gwas',
+      'pharmacogenomics',
+      'single-cell',
+      'assembly',
+      'enrichment',
+      'recombination',
+      'alignment-viewer',
     ];
 
     if (tools.includes(page)) {
@@ -221,7 +293,12 @@ OmicsLab.MobileNav = (function () {
     _setActive(tabId);
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   /* ─── Init ─── */
   function init() {

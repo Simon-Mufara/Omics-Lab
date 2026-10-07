@@ -8,7 +8,6 @@ window.OmicsLab = window.OmicsLab || {};
    PART 1 — Text-to-Speech (existing, unchanged)
    ───────────────────────────────────────────────────────────── */
 OmicsLab.Voice = (function () {
-
   const TTS_LANGS = {
     zu: ['zu-ZA', 'zu'],
     xh: ['xh-ZA', 'xh'],
@@ -24,7 +23,7 @@ OmicsLab.Voice = (function () {
     if (!tags) return null;
     const voices = speechSynthesis.getVoices();
     for (const tag of tags) {
-      const match = voices.find(v => v.lang.toLowerCase().startsWith(tag.toLowerCase()));
+      const match = voices.find((v) => v.lang.toLowerCase().startsWith(tag.toLowerCase()));
       if (match) return match;
     }
     return null;
@@ -46,14 +45,18 @@ OmicsLab.Voice = (function () {
     const titleEl = document.getElementById('step-title');
     if (!titleEl) return;
     let btn = document.getElementById('voice-speak-btn');
-    if (!_voice) { if (btn) btn.remove(); return; }
+    if (!_voice) {
+      if (btn) btn.remove();
+      return;
+    }
     if (!btn) {
       btn = document.createElement('button');
       btn.id = 'voice-speak-btn';
       btn.className = 'voice-speak-btn';
       btn.setAttribute('aria-label', 'Read step aloud');
       btn.title = 'Read step aloud';
-      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
+      btn.innerHTML =
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>';
       btn.onclick = () => speak(titleEl.textContent);
       titleEl.parentElement.insertBefore(btn, titleEl.nextSibling);
     }
@@ -64,11 +67,17 @@ OmicsLab.Voice = (function () {
     if (_speaking) speechSynthesis.cancel();
     const utt = new SpeechSynthesisUtterance(text.trim());
     utt.voice = _voice;
-    utt.lang  = _voice.lang;
-    utt.rate  = 0.9;
-    utt.onstart = () => { _speaking = true; };
-    utt.onend   = () => { _speaking = false; };
-    utt.onerror = () => { _speaking = false; };
+    utt.lang = _voice.lang;
+    utt.rate = 0.9;
+    utt.onstart = () => {
+      _speaking = true;
+    };
+    utt.onend = () => {
+      _speaking = false;
+    };
+    utt.onerror = () => {
+      _speaking = false;
+    };
     speechSynthesis.speak(utt);
   }
 
@@ -91,14 +100,12 @@ OmicsLab.Voice = (function () {
   return { speak, announceStep, onLangChange };
 })();
 
-
 /* ─────────────────────────────────────────────────────────────
    PART 2 — Voice Command Control (Prompt 8)
    Uses Web Speech API SpeechRecognition for STT.
    Maps spoken phrases → OmicsLab.Router.navigate() or actions.
    ───────────────────────────────────────────────────────────── */
 OmicsLab.VoiceControl = (function () {
-
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const supported = !!SpeechRecognition;
 
@@ -108,37 +115,94 @@ OmicsLab.VoiceControl = (function () {
 
   /* ─── Command map: phrase fragments → action ─── */
   const COMMANDS = [
-    { phrases: ['home', 'go home', 'back home', 'main menu', 'start'],           action: () => _nav('home') },
-    { phrases: ['lab', 'go to lab', 'open lab', 'simulation', 'experiment'],     action: () => _nav('lab') },
-    { phrases: ['learn', 'learning', 'curriculum', 'disease explorer', 'tool explorer'], action: () => _nav('learn') },
-    { phrases: ['research', 'research mode', 'study'],                            action: () => _nav('research') },
-    { phrases: ['africa', 'africa hub', 'genomics map', 'africa science'],        action: () => _nav('africa') },
-    { phrases: ['analysis', 'analysis studio', 'fastq', 'vcf'],                   action: () => _nav('analysis') },
-    { phrases: ['terminal', 'pipeline terminal', 'command line'],                  action: () => _nav('terminal') },
-    { phrases: ['ask', 'question', 'q and a', 'q&a'],                             action: () => _nav('ask') },
-    { phrases: ['mentor', 'ai mentor', 'expert'],                                  action: () => _nav('mentor') },
-    { phrases: ['outbreak', 'outbreak simulator', 'epidemic'],                     action: () => _nav('outbreak') },
-    { phrases: ['datasets', 'data browser', 'dataset browser', 'sra', 'ena'],     action: () => _nav('datasets') },
-    { phrases: ['career', 'career pathfinder', 'career quiz', 'job'],             action: () => _nav('career') },
-    { phrases: ['protocols', 'protocol sharing', 'community protocol'],            action: () => _nav('protocols') },
-    { phrases: ['collaborate', 'collaboration', 'collab', 'live session', 'webrtc'], action: () => _nav('collab') },
-    { phrases: ['grant', 'grant generator', 'grant writing', 'funding', 'application'], action: () => _nav('grant') },
-    { phrases: ['leaderboard', 'rankings', 'rank', 'scores', 'competition', 'cohort map'], action: () => _nav('leaderboard') },
-    { phrases: ['debugger', 'debug', 'protocol debugger', 'diagnose', 'qc failure', 'troubleshoot'], action: () => _nav('debugger') },
-    { phrases: ['search', 'find', 'look up'],                                     action: (t) => _openSearch(t) },
-    { phrases: ['help', 'what can i say', 'commands', 'voice commands'],          action: () => _toggleHelp() },
-    { phrases: ['stop listening', 'stop', 'cancel', 'quiet', 'off'],              action: () => stop() },
-    { phrases: ['scroll down', 'page down'],                                      action: () => window.scrollBy({top:400,behavior:'smooth'}) },
-    { phrases: ['scroll up', 'page up', 'top'],                                   action: () => window.scrollTo({top:0,behavior:'smooth'}) },
-    { phrases: ['profile', 'my profile', 'my progress'],                          action: () => _nav('profile') },
+    { phrases: ['home', 'go home', 'back home', 'main menu', 'start'], action: () => _nav('home') },
+    {
+      phrases: ['lab', 'go to lab', 'open lab', 'simulation', 'experiment'],
+      action: () => _nav('lab'),
+    },
+    {
+      phrases: ['learn', 'learning', 'curriculum', 'disease explorer', 'tool explorer'],
+      action: () => _nav('learn'),
+    },
+    { phrases: ['research', 'research mode', 'study'], action: () => _nav('research') },
+    {
+      phrases: ['africa', 'africa hub', 'genomics map', 'africa science'],
+      action: () => _nav('africa'),
+    },
+    { phrases: ['analysis', 'analysis studio', 'fastq', 'vcf'], action: () => _nav('analysis') },
+    { phrases: ['terminal', 'pipeline terminal', 'command line'], action: () => _nav('terminal') },
+    { phrases: ['ask', 'question', 'q and a', 'q&a'], action: () => _nav('ask') },
+    { phrases: ['mentor', 'ai mentor', 'expert'], action: () => _nav('mentor') },
+    { phrases: ['outbreak', 'outbreak simulator', 'epidemic'], action: () => _nav('outbreak') },
+    {
+      phrases: ['datasets', 'data browser', 'dataset browser', 'sra', 'ena'],
+      action: () => _nav('datasets'),
+    },
+    {
+      phrases: ['career', 'career pathfinder', 'career quiz', 'job'],
+      action: () => _nav('career'),
+    },
+    {
+      phrases: ['protocols', 'protocol sharing', 'community protocol'],
+      action: () => _nav('protocols'),
+    },
+    {
+      phrases: ['collaborate', 'collaboration', 'collab', 'live session', 'webrtc'],
+      action: () => _nav('collab'),
+    },
+    {
+      phrases: ['grant', 'grant generator', 'grant writing', 'funding', 'application'],
+      action: () => _nav('grant'),
+    },
+    {
+      phrases: ['leaderboard', 'rankings', 'rank', 'scores', 'competition', 'cohort map'],
+      action: () => _nav('leaderboard'),
+    },
+    {
+      phrases: ['debugger', 'debug', 'protocol debugger', 'diagnose', 'qc failure', 'troubleshoot'],
+      action: () => _nav('debugger'),
+    },
+    { phrases: ['search', 'find', 'look up'], action: (t) => _openSearch(t) },
+    {
+      phrases: ['help', 'what can i say', 'commands', 'voice commands'],
+      action: () => _toggleHelp(),
+    },
+    { phrases: ['stop listening', 'stop', 'cancel', 'quiet', 'off'], action: () => stop() },
+    {
+      phrases: ['scroll down', 'page down'],
+      action: () => window.scrollBy({ top: 400, behavior: 'smooth' }),
+    },
+    {
+      phrases: ['scroll up', 'page up', 'top'],
+      action: () => window.scrollTo({ top: 0, behavior: 'smooth' }),
+    },
+    { phrases: ['profile', 'my profile', 'my progress'], action: () => _nav('profile') },
     /* ── New module commands (Prompts 41-60) ── */
-    { phrases: ['skill tree', 'skills', 'xp', 'my xp', 'experience'],             action: () => _nav('skill-tree') },
-    { phrases: ['variant atlas', 'african variants', 'allele frequency', 'snps'],  action: () => _nav('variant-atlas') },
-    { phrases: ['clinical decision', 'clinical genomics', 'phenotype', 'hpo'],     action: () => _nav('clinical-decision') },
-    { phrases: ['one health', 'zoonotic', 'outbreak surveillance', 'surveillance'], action: () => _nav('one-health') },
-    { phrases: ['institution', 'cohort', 'admin', 'institution mode'],             action: () => _nav('institution') },
-    { phrases: ['read aloud', 'read page', 'tts', 'speak page'],                  action: () => _readPageAloud() },
-    { phrases: ['command palette', 'open palette', 'quick nav'],                   action: () => OmicsLab.PWA?.openCommandPalette() },
+    {
+      phrases: ['skill tree', 'skills', 'xp', 'my xp', 'experience'],
+      action: () => _nav('skill-tree'),
+    },
+    {
+      phrases: ['variant atlas', 'african variants', 'allele frequency', 'snps'],
+      action: () => _nav('variant-atlas'),
+    },
+    {
+      phrases: ['clinical decision', 'clinical genomics', 'phenotype', 'hpo'],
+      action: () => _nav('clinical-decision'),
+    },
+    {
+      phrases: ['one health', 'zoonotic', 'outbreak surveillance', 'surveillance'],
+      action: () => _nav('one-health'),
+    },
+    {
+      phrases: ['institution', 'cohort', 'admin', 'institution mode'],
+      action: () => _nav('institution'),
+    },
+    { phrases: ['read aloud', 'read page', 'tts', 'speak page'], action: () => _readPageAloud() },
+    {
+      phrases: ['command palette', 'open palette', 'quick nav'],
+      action: () => OmicsLab.PWA?.openCommandPalette(),
+    },
   ];
 
   function _nav(page) {
@@ -148,9 +212,16 @@ OmicsLab.VoiceControl = (function () {
 
   /* ── TTS read-aloud for visible page content ── */
   function _readPageAloud() {
-    if (!window.speechSynthesis) { _toast('TTS not supported in this browser', true); return; }
-    const visible = Array.from(document.querySelectorAll('[id$="-section"]')).find(el => el.style.display !== 'none');
-    const text = visible ? (visible.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 2000) : document.title;
+    if (!window.speechSynthesis) {
+      _toast('TTS not supported in this browser', true);
+      return;
+    }
+    const visible = Array.from(document.querySelectorAll('[id$="-section"]')).find(
+      (el) => el.style.display !== 'none'
+    );
+    const text = visible
+      ? (visible.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 2000)
+      : document.title;
     const utt = new SpeechSynthesisUtterance(text);
     utt.lang = OmicsLab.I18n?.current?.startsWith('sw') ? 'sw-KE' : utt.lang;
     utt.rate = 0.95;
@@ -165,7 +236,10 @@ OmicsLab.VoiceControl = (function () {
     if (query) {
       setTimeout(() => {
         const input = document.getElementById('search-input');
-        if (input) { input.value = query; input.dispatchEvent(new Event('input')); }
+        if (input) {
+          input.value = query;
+          input.dispatchEvent(new Event('input'));
+        }
       }, 300);
     }
     _toast(query ? 'Searching for: ' + query : 'Opening search');
@@ -176,7 +250,14 @@ OmicsLab.VoiceControl = (function () {
 
   function _stripWakeWord(t) {
     for (const w of WAKE_WORDS) {
-      if (t.startsWith(w)) return { woken: true, cmd: t.slice(w.length).replace(/^[,\s]+/, '').trim() };
+      if (t.startsWith(w))
+        return {
+          woken: true,
+          cmd: t
+            .slice(w.length)
+            .replace(/^[,\s]+/, '')
+            .trim(),
+        };
     }
     return { woken: false, cmd: t };
   }
@@ -187,7 +268,7 @@ OmicsLab.VoiceControl = (function () {
     const { woken, cmd: t } = _stripWakeWord(raw);
 
     /* In always-on mode, require wake word; otherwise match freely */
-    const haystack = (_alwaysOn && !woken) ? null : t;
+    const haystack = _alwaysOn && !woken ? null : t;
     if (!haystack) return null;
 
     for (const cmd of COMMANDS) {
@@ -208,7 +289,10 @@ OmicsLab.VoiceControl = (function () {
     OmicsLab.Router?.navigate('mentor');
     setTimeout(() => {
       const inp = document.querySelector('#mentor-search, #mentor-input, [data-mentor-input]');
-      if (inp) { inp.value = query; inp.dispatchEvent(new Event('input')); }
+      if (inp) {
+        inp.value = query;
+        inp.dispatchEvent(new Event('input'));
+      }
     }, 400);
     _toast('Asking AI Mentor: "' + query + '"');
   }
@@ -227,7 +311,9 @@ OmicsLab.VoiceControl = (function () {
     if (!btn) return;
     btn.classList.toggle('listening', _listening);
     btn.setAttribute('aria-pressed', _listening ? 'true' : 'false');
-    btn.title = _listening ? 'Voice control: listening… (click to stop)' : 'Voice control (click to start)';
+    btn.title = _listening
+      ? 'Voice control: listening… (click to stop)'
+      : 'Voice control (click to start)';
   }
 
   /* ─── Inject mic button into nav ─── */
@@ -251,14 +337,14 @@ OmicsLab.VoiceControl = (function () {
       </svg>
       <span class="vc-mic-ring" aria-hidden="true"></span>`;
 
-    btn.onclick = () => _listening ? stop() : start();
+    btn.onclick = () => (_listening ? stop() : start());
 
     const searchBtn = navRight.querySelector('.nav-search-btn');
     if (searchBtn) navRight.insertBefore(btn, searchBtn);
     else navRight.prepend(btn);
 
     /* Keyboard shortcut: Ctrl+Shift+V */
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.shiftKey && e.key === 'V') {
         e.preventDefault();
         _listening ? stop() : start();
@@ -275,7 +361,7 @@ OmicsLab.VoiceControl = (function () {
     r.maxAlternatives = 3;
 
     /* Show interim transcript in mic btn */
-    r.onresult = e => {
+    r.onresult = (e) => {
       const results = e.results;
       let interim = '';
       let final = '';
@@ -288,7 +374,7 @@ OmicsLab.VoiceControl = (function () {
       if (final) _processCommand(final);
     };
 
-    r.onerror = e => {
+    r.onerror = (e) => {
       _setListening(false);
       if (e.error === 'no-speech') {
         _toast('No speech detected — try again', true);
@@ -304,7 +390,9 @@ OmicsLab.VoiceControl = (function () {
     r.onend = () => {
       /* Restart automatically if still in listening mode (continuous simulation) */
       if (_listening) {
-        try { _recognition.start(); } catch {}
+        try {
+          _recognition.start();
+        } catch {}
       }
     };
 
@@ -329,7 +417,10 @@ OmicsLab.VoiceControl = (function () {
   /* ─── Mic denied panel ─── */
   function _showMicDeniedPanel() {
     let panel = document.getElementById('vc-mic-denied');
-    if (panel) { panel.style.display = ''; return; }
+    if (panel) {
+      panel.style.display = '';
+      return;
+    }
 
     panel = document.createElement('div');
     panel.id = 'vc-mic-denied';
@@ -339,10 +430,22 @@ OmicsLab.VoiceControl = (function () {
     const isSafari = /Safari/i.test(ua) && !/Chrome/i.test(ua);
     const isFF = /Firefox/i.test(ua);
     const steps = isSafari
-      ? ['Open <strong>Safari → Settings → Websites → Microphone</strong>.', 'Set this site to <strong>Allow</strong>.', 'Reload the page, then click the microphone button again.']
+      ? [
+          'Open <strong>Safari → Settings → Websites → Microphone</strong>.',
+          'Set this site to <strong>Allow</strong>.',
+          'Reload the page, then click the microphone button again.',
+        ]
       : isFF
-      ? ['Click the <strong>microphone icon</strong> in the Firefox address bar.', 'Select <strong>Allow</strong> for this website.', 'Click the microphone button below to try again.']
-      : ['Click the <strong>camera/mic icon</strong> on the right of your address bar.', 'Select <strong>Always allow</strong> for microphone.', 'Click Try again below — no reload needed.'];
+        ? [
+            'Click the <strong>microphone icon</strong> in the Firefox address bar.',
+            'Select <strong>Allow</strong> for this website.',
+            'Click the microphone button below to try again.',
+          ]
+        : [
+            'Click the <strong>camera/mic icon</strong> on the right of your address bar.',
+            'Select <strong>Always allow</strong> for microphone.',
+            'Click Try again below — no reload needed.',
+          ];
 
     panel.innerHTML = `
       <div class="vc-denied-icon">
@@ -350,7 +453,7 @@ OmicsLab.VoiceControl = (function () {
       </div>
       <div class="vc-denied-title">Microphone access denied</div>
       <div class="vc-denied-steps">
-        ${steps.map((s, i) => `<div class="vc-denied-step"><span class="vc-denied-num">${i+1}</span><span>${s}</span></div>`).join('')}
+        ${steps.map((s, i) => `<div class="vc-denied-step"><span class="vc-denied-num">${i + 1}</span><span>${s}</span></div>`).join('')}
       </div>
       <div class="vc-denied-btns">
         <button class="vc-denied-retry" onclick="document.getElementById('vc-mic-denied').style.display='none'; OmicsLab.Voice && OmicsLab.Voice.start()">
@@ -368,7 +471,9 @@ OmicsLab.VoiceControl = (function () {
     _alwaysOn = !_alwaysOn;
     const btn = document.getElementById('vc-mic-btn');
     if (btn) {
-      btn.title = _alwaysOn ? 'Voice control: Always-On — Ctrl+Shift+V' : 'Voice control — Ctrl+Shift+V';
+      btn.title = _alwaysOn
+        ? 'Voice control: Always-On — Ctrl+Shift+V'
+        : 'Voice control — Ctrl+Shift+V';
     }
     if (_alwaysOn && !_listening) start();
     _toast(_alwaysOn ? 'Always-On: say "OmicsLab, [command]"' : 'Always-On disabled');
@@ -395,7 +500,11 @@ OmicsLab.VoiceControl = (function () {
   function stop() {
     if (!_listening) return;
     _setListening(false);
-    if (_recognition) { try { _recognition.stop(); } catch {} }
+    if (_recognition) {
+      try {
+        _recognition.stop();
+      } catch {}
+    }
     _removeTranscriptBubble();
     _toast('Voice control stopped');
   }
@@ -426,43 +535,69 @@ OmicsLab.VoiceControl = (function () {
   }
 
   function _openHelp() {
-    if (document.getElementById('vc-help-overlay')) { _closeHelp(); return; }
+    if (document.getElementById('vc-help-overlay')) {
+      _closeHelp();
+      return;
+    }
     _helpOpen = true;
     const overlay = document.createElement('div');
     overlay.id = 'vc-help-overlay';
     overlay.className = 'vc-help-overlay';
-    overlay.onclick = e => { if (e.target === overlay) _closeHelp(); };
+    overlay.onclick = (e) => {
+      if (e.target === overlay) _closeHelp();
+    };
 
     const GROUPED = [
-      { label: 'Navigation', commands: [
-        '"go home" / "home"', '"open lab" / "lab"', '"learn" / "curriculum"',
-        '"research" / "research mode"', '"africa" / "africa hub"',
-        '"analysis" / "analysis studio"', '"terminal"', '"outbreak"',
-        '"datasets" / "data browser"', '"career" / "career quiz"',
-        '"protocols" / "protocol sharing"', '"collaborate" / "collab"',
-        '"mentor" / "ai mentor"', '"ask" / "q and a"', '"profile"',
-      ]},
-      { label: 'Actions', commands: [
-        '"search [query]" — open search with a term',
-        '"scroll down" / "scroll up"',
-        '"read aloud" / "read page" — TTS for visible content',
-        '"command palette" / "quick nav" — open Cmd+K palette',
-        '"help" / "commands" — show this panel',
-        '"stop listening" / "stop"',
-      ]},
-      { label: 'New Modules', commands: [
-        '"skill tree" / "my xp" — Skill Tree & XP',
-        '"variant atlas" / "african variants" — Variant Atlas',
-        '"clinical decision" / "phenotype" — Clinical Genomics',
-        '"one health" / "zoonotic" — One Health Dashboard',
-        '"institution" / "cohort" — Institution Mode',
-      ]},
-      { label: 'Wake Word Mode', commands: [
-        '"OmicsLab, go to lab" — navigate anywhere',
-        '"OmicsLab, show analysis" — open any page',
-        '"OmicsLab, search malaria" — open search',
-        '"OmicsLab, [any question]" — ask AI Mentor',
-      ]},
+      {
+        label: 'Navigation',
+        commands: [
+          '"go home" / "home"',
+          '"open lab" / "lab"',
+          '"learn" / "curriculum"',
+          '"research" / "research mode"',
+          '"africa" / "africa hub"',
+          '"analysis" / "analysis studio"',
+          '"terminal"',
+          '"outbreak"',
+          '"datasets" / "data browser"',
+          '"career" / "career quiz"',
+          '"protocols" / "protocol sharing"',
+          '"collaborate" / "collab"',
+          '"mentor" / "ai mentor"',
+          '"ask" / "q and a"',
+          '"profile"',
+        ],
+      },
+      {
+        label: 'Actions',
+        commands: [
+          '"search [query]" — open search with a term',
+          '"scroll down" / "scroll up"',
+          '"read aloud" / "read page" — TTS for visible content',
+          '"command palette" / "quick nav" — open Cmd+K palette',
+          '"help" / "commands" — show this panel',
+          '"stop listening" / "stop"',
+        ],
+      },
+      {
+        label: 'New Modules',
+        commands: [
+          '"skill tree" / "my xp" — Skill Tree & XP',
+          '"variant atlas" / "african variants" — Variant Atlas',
+          '"clinical decision" / "phenotype" — Clinical Genomics',
+          '"one health" / "zoonotic" — One Health Dashboard',
+          '"institution" / "cohort" — Institution Mode',
+        ],
+      },
+      {
+        label: 'Wake Word Mode',
+        commands: [
+          '"OmicsLab, go to lab" — navigate anywhere',
+          '"OmicsLab, show analysis" — open any page',
+          '"OmicsLab, search malaria" — open search',
+          '"OmicsLab, [any question]" — ask AI Mentor',
+        ],
+      },
     ];
 
     overlay.innerHTML = `
@@ -478,22 +613,26 @@ OmicsLab.VoiceControl = (function () {
           </div>
         </div>
         <div class="vc-help-desc">Speak any phrase — partial matches work (e.g. "datasets" or "career"). Commands are case-insensitive.</div>
-        ${GROUPED.map(g => `
+        ${GROUPED.map(
+          (g) => `
           <div class="vc-help-group">
             <div class="vc-help-group-label">${g.label}</div>
             <div class="vc-help-commands">
-              ${g.commands.map(c => `<div class="vc-help-cmd">${c}</div>`).join('')}
+              ${g.commands.map((c) => `<div class="vc-help-cmd">${c}</div>`).join('')}
             </div>
-          </div>`).join('')}
+          </div>`
+        ).join('')}
         <div class="vc-help-footer">
           <div class="vc-help-compat">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
             Requires Chrome, Edge, or Safari 15+ with microphone permission
           </div>
           <div class="vc-help-btns">
-            ${_listening
-              ? `<button class="vc-help-action-btn vc-stop-btn" onclick="OmicsLab.VoiceControl.stop();OmicsLab.VoiceControl._closeHelp()">Stop Listening</button>`
-              : `<button class="vc-help-action-btn vc-start-btn" onclick="OmicsLab.VoiceControl.start();OmicsLab.VoiceControl._closeHelp()">Start Listening</button>`}
+            ${
+              _listening
+                ? `<button class="vc-help-action-btn vc-stop-btn" onclick="OmicsLab.VoiceControl.stop();OmicsLab.VoiceControl._closeHelp()">Stop Listening</button>`
+                : `<button class="vc-help-action-btn vc-start-btn" onclick="OmicsLab.VoiceControl.start();OmicsLab.VoiceControl._closeHelp()">Start Listening</button>`
+            }
             <button class="vc-help-action-btn vc-stop-btn" style="font-size:.75rem" onclick="OmicsLab.VoiceControl.toggleAlwaysOn();OmicsLab.VoiceControl._closeHelp()">${_alwaysOn ? 'Disable' : 'Enable'} Always-On</button>
           </div>
           <div style="font-size:.68rem;color:#6E6860;margin-top:.5rem">Always-On mode keeps the mic open and only responds after the wake word <em>"OmicsLab"</em>.</div>

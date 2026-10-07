@@ -11,7 +11,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.PWA = (function () {
-
   let _installPrompt = null;
   let _installed = false;
   let _lastInteraction = Date.now();
@@ -47,7 +46,9 @@ OmicsLab.PWA = (function () {
   function _dismissBanner() {
     const banner = document.getElementById('pwa-install-banner');
     if (banner) banner.style.display = 'none';
-    try { localStorage.setItem('omicslab_pwa_dismissed', Date.now()); } catch {}
+    try {
+      localStorage.setItem('omicslab_pwa_dismissed', Date.now());
+    } catch {}
   }
 
   async function _triggerInstall() {
@@ -65,9 +66,9 @@ OmicsLab.PWA = (function () {
   /* ─── Web Share API ─── */
   async function share(opts = {}) {
     const data = {
-      title: opts.title || 'OmicsLab — Africa\'s Omics Training Platform',
-      text:  opts.text  || 'Interactive omics training for African researchers',
-      url:   opts.url   || location.href,
+      title: opts.title || "OmicsLab — Africa's Omics Training Platform",
+      text: opts.text || 'Interactive omics training for African researchers',
+      url: opts.url || location.href,
     };
     if (navigator.share) {
       try {
@@ -107,7 +108,11 @@ OmicsLab.PWA = (function () {
 
   /* ─── Periodic Background Sync ─── */
   async function _registerPeriodicSync() {
-    if (!('serviceWorker' in navigator) || !('periodicSync' in (await navigator.serviceWorker.ready))) return;
+    if (
+      !('serviceWorker' in navigator) ||
+      !('periodicSync' in (await navigator.serviceWorker.ready))
+    )
+      return;
     try {
       const sw = await navigator.serviceWorker.ready;
       await sw.periodicSync.register('outbreak-check', { minInterval: 4 * 60 * 60 * 1000 });
@@ -120,16 +125,21 @@ OmicsLab.PWA = (function () {
     if (!hash.startsWith('#/share')) return;
     const params = new URLSearchParams(location.search);
     const title = params.get('title') || '';
-    const text  = params.get('text')  || '';
-    const url   = params.get('url')   || '';
+    const text = params.get('text') || '';
+    const url = params.get('url') || '';
     const compose = [title, text, url].filter(Boolean).join('\n');
     if (!compose) return;
     /* Navigate to Nexus with pre-filled composer */
     setTimeout(() => {
       OmicsLab.Router?.navigate('nexus');
       setTimeout(() => {
-        const input = document.querySelector('.nx-input, .nx-composer-input, textarea[data-nx-compose]');
-        if (input) { input.value = compose; input.focus(); }
+        const input = document.querySelector(
+          '.nx-input, .nx-composer-input, textarea[data-nx-compose]'
+        );
+        if (input) {
+          input.value = compose;
+          input.focus();
+        }
       }, 300);
     }, 200);
   }
@@ -186,7 +196,7 @@ OmicsLab.PWA = (function () {
   /* ─── Init ─── */
   function init() {
     /* Capture install prompt */
-    window.addEventListener('beforeinstallprompt', e => {
+    window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       _installPrompt = e;
       /* Don't show if dismissed in last 7 days */
@@ -203,7 +213,9 @@ OmicsLab.PWA = (function () {
       _installed = true;
       _dismissBanner();
       OmicsLab.Notify?.success('OmicsLab is now installed and offline-ready!');
-      try { localStorage.setItem('omicslab_pwa_installed', '1'); } catch {}
+      try {
+        localStorage.setItem('omicslab_pwa_installed', '1');
+      } catch {}
     });
 
     /* Handle share target on load */
@@ -219,8 +231,10 @@ OmicsLab.PWA = (function () {
     _registerPeriodicSync();
 
     /* Track last user interaction so we know if it's safe to auto-reload */
-    const _touch = () => { _lastInteraction = Date.now(); };
-    ['click', 'keydown', 'scroll', 'touchstart', 'mousemove'].forEach(ev =>
+    const _touch = () => {
+      _lastInteraction = Date.now();
+    };
+    ['click', 'keydown', 'scroll', 'touchstart', 'mousemove'].forEach((ev) =>
       document.addEventListener(ev, _touch, { passive: true, capture: true })
     );
 
@@ -302,11 +316,11 @@ OmicsLab.PWA = (function () {
     try {
       const last = parseInt(localStorage.getItem(LAST_KEY) || '0', 10);
       const seen = parseInt(localStorage.getItem(SEEN_KEY) || '0', 10);
-      const now  = Date.now();
+      const now = Date.now();
       localStorage.setItem(LAST_KEY, now);
       const gap = now - last;
-      if (!last || gap < 3 * 24 * 60 * 60 * 1000) return;   /* < 3 days — skip */
-      if (now - seen < 7 * 24 * 60 * 60 * 1000) return;     /* shown within 7 days — skip */
+      if (!last || gap < 3 * 24 * 60 * 60 * 1000) return; /* < 3 days — skip */
+      if (now - seen < 7 * 24 * 60 * 60 * 1000) return; /* shown within 7 days — skip */
       localStorage.setItem(SEEN_KEY, now);
       const days = Math.floor(gap / (24 * 60 * 60 * 1000));
       setTimeout(() => _showReEngageScreen(days), 1500);
@@ -322,7 +336,14 @@ OmicsLab.PWA = (function () {
     overlay.setAttribute('aria-label', 'Welcome back to OmicsLab');
     overlay.style.cssText = `position:fixed;inset:0;z-index:7000;background:rgba(8,12,16,.88);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)`;
 
-    const xp = (() => { try { const s = JSON.parse(localStorage.getItem('omicslab_xp_v1')||'{}'); return s.total||0; } catch { return 0; } })();
+    const xp = (() => {
+      try {
+        const s = JSON.parse(localStorage.getItem('omicslab_xp_v1') || '{}');
+        return s.total || 0;
+      } catch {
+        return 0;
+      }
+    })();
     overlay.innerHTML = `
       <div style="background:var(--bg-surface,#111B2E);border:1px solid var(--border,#243048);border-radius:12px;padding:2rem;max-width:420px;width:92%;text-align:center">
         <div style="font-size:2.4rem;margin-bottom:.75rem">
@@ -345,21 +366,21 @@ OmicsLab.PWA = (function () {
      Quick-jump to any page with keyboard
      ══════════════════════════════════════════════════════════════ */
   const _CP_PAGES = [
-    { label: 'Lab Simulator',     page: 'lab',              icon: 'beaker' },
-    { label: 'Skill Tree',        page: 'skill-tree',       icon: 'zap' },
-    { label: 'Analysis Studio',   page: 'analysis',         icon: 'bar-chart' },
-    { label: 'Variant Atlas',     page: 'variant-atlas',    icon: 'dna' },
-    { label: 'Clinical Decision', page: 'clinical-decision',icon: 'activity' },
-    { label: 'One Health',        page: 'one-health',       icon: 'globe' },
-    { label: 'Institution',       page: 'institution',      icon: 'users' },
-    { label: 'Nexus',             page: 'nexus',            icon: 'message-circle' },
-    { label: 'Outbreak Game',     page: 'outbreak',         icon: 'virus' },
-    { label: 'Mentorship',        page: 'mentorship',       icon: 'link' },
-    { label: 'AI Assistant',      page: 'ai',               icon: 'brain' },
-    { label: 'Certification',     page: 'certification',    icon: 'award' },
-    { label: 'Knowledge Graph',   page: 'knowledge-graph',  icon: 'git-branch' },
-    { label: 'Settings',          page: 'settings',         icon: 'cpu' },
-    { label: 'Impact',            page: 'impact',           icon: 'globe' },
+    { label: 'Lab Simulator', page: 'lab', icon: 'beaker' },
+    { label: 'Skill Tree', page: 'skill-tree', icon: 'zap' },
+    { label: 'Analysis Studio', page: 'analysis', icon: 'bar-chart' },
+    { label: 'Variant Atlas', page: 'variant-atlas', icon: 'dna' },
+    { label: 'Clinical Decision', page: 'clinical-decision', icon: 'activity' },
+    { label: 'One Health', page: 'one-health', icon: 'globe' },
+    { label: 'Institution', page: 'institution', icon: 'users' },
+    { label: 'Nexus', page: 'nexus', icon: 'message-circle' },
+    { label: 'Outbreak Game', page: 'outbreak', icon: 'virus' },
+    { label: 'Mentorship', page: 'mentorship', icon: 'link' },
+    { label: 'AI Assistant', page: 'ai', icon: 'brain' },
+    { label: 'Certification', page: 'certification', icon: 'award' },
+    { label: 'Knowledge Graph', page: 'knowledge-graph', icon: 'git-branch' },
+    { label: 'Settings', page: 'settings', icon: 'cpu' },
+    { label: 'Impact', page: 'impact', icon: 'globe' },
   ];
 
   let _cpOpen = false;
@@ -385,42 +406,85 @@ OmicsLab.PWA = (function () {
     document.body.appendChild(overlay);
 
     const input = overlay.querySelector('#pwa-cp-input');
-    const list  = overlay.querySelector('#pwa-cp-list');
+    const list = overlay.querySelector('#pwa-cp-list');
     let _sel = 0;
 
     function _render(query) {
       const q = query.toLowerCase();
-      const filtered = _CP_PAGES.filter(p => p.label.toLowerCase().includes(q));
-      list.innerHTML = filtered.map((p, i) => `
+      const filtered = _CP_PAGES.filter((p) => p.label.toLowerCase().includes(q));
+      list.innerHTML = filtered
+        .map(
+          (p, i) => `
         <li role="option" aria-selected="${i === _sel}" data-page="${p.page}"
-          style="padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;font-size:.9rem;color:var(--text-${i===_sel?'primary':'secondary'},${i===_sel?'#E4DDD2':'#A8A098'});background:${i===_sel?'var(--bg-overlay,#182236)':'transparent'}">
+          style="padding:.6rem 1rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;font-size:.9rem;color:var(--text-${i === _sel ? 'primary' : 'secondary'},${i === _sel ? '#E4DDD2' : '#A8A098'});background:${i === _sel ? 'var(--bg-overlay,#182236)' : 'transparent'}">
           <span style="color:var(--text-muted,#6E6860);font-size:.75rem">${p.label}</span>
-        </li>`).join('');
-      list.querySelectorAll('li').forEach(li => {
-        li.onmouseenter = () => { _sel = [...list.children].indexOf(li); _render(input.value); };
+        </li>`
+        )
+        .join('');
+      list.querySelectorAll('li').forEach((li) => {
+        li.onmouseenter = () => {
+          _sel = [...list.children].indexOf(li);
+          _render(input.value);
+        };
         li.onclick = () => _nav(li.dataset.page);
       });
     }
 
-    function _nav(page) { overlay.remove(); _cpOpen = false; OmicsLab.Router?.navigate(page); }
+    function _nav(page) {
+      overlay.remove();
+      _cpOpen = false;
+      OmicsLab.Router?.navigate(page);
+    }
 
     _render('');
-    input.addEventListener('input', () => { _sel = 0; _render(input.value); });
-    input.addEventListener('keydown', e => {
-      const items = list.querySelectorAll('li');
-      if (e.key === 'ArrowDown') { _sel = Math.min(_sel + 1, items.length - 1); _render(input.value); e.preventDefault(); }
-      if (e.key === 'ArrowUp')   { _sel = Math.max(_sel - 1, 0); _render(input.value); e.preventDefault(); }
-      if (e.key === 'Enter')     { const sel = list.querySelector(`li:nth-child(${_sel + 1})`); if (sel) _nav(sel.dataset.page); }
-      if (e.key === 'Escape')    { overlay.remove(); _cpOpen = false; }
+    input.addEventListener('input', () => {
+      _sel = 0;
+      _render(input.value);
     });
-    overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.remove(); _cpOpen = false; } });
+    input.addEventListener('keydown', (e) => {
+      const items = list.querySelectorAll('li');
+      if (e.key === 'ArrowDown') {
+        _sel = Math.min(_sel + 1, items.length - 1);
+        _render(input.value);
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowUp') {
+        _sel = Math.max(_sel - 1, 0);
+        _render(input.value);
+        e.preventDefault();
+      }
+      if (e.key === 'Enter') {
+        const sel = list.querySelector(`li:nth-child(${_sel + 1})`);
+        if (sel) _nav(sel.dataset.page);
+      }
+      if (e.key === 'Escape') {
+        overlay.remove();
+        _cpOpen = false;
+      }
+    });
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+        _cpOpen = false;
+      }
+    });
   }
 
   function _initCommandPalette() {
-    document.addEventListener('keydown', e => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); _openCommandPalette(); }
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        _openCommandPalette();
+      }
     });
   }
 
-  return { init, share, setBadge, buildShareButton, openCommandPalette: _openCommandPalette, _handleUpdateAvailable };
+  return {
+    init,
+    share,
+    setBadge,
+    buildShareButton,
+    openCommandPalette: _openCommandPalette,
+    _handleUpdateAvailable,
+  };
 })();

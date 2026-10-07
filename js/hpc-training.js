@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.HPCTraining = (function () {
-
   /* ─── SLURM script generator ─── */
   function _buildSlurmScript(cfg) {
     const pipelineCmd = _pipelineCmdFor(cfg.step);
@@ -31,7 +30,7 @@ OmicsLab.HPCTraining = (function () {
       '# Pipeline step: ' + cfg.step,
       pipelineCmd,
       '',
-      'echo "Job $SLURM_JOB_ID finished on $(date)"'
+      'echo "Job $SLURM_JOB_ID finished on $(date)"',
     ];
     return lines.join('\n');
   }
@@ -47,7 +46,7 @@ OmicsLab.HPCTraining = (function () {
       'Duplicate Marking + BQSR':
         'picard MarkDuplicates \\\n  I=bam/${SAMPLE}.sorted.bam \\\n  O=bam/${SAMPLE}.dedup.bam \\\n  M=qc/${SAMPLE}.dup_metrics.txt\ngatk BaseRecalibrator -R resources/GRCh38.fa -I bam/${SAMPLE}.dedup.bam \\\n  --known-sites resources/known_sites.vcf.gz -O bam/${SAMPLE}.recal.table\ngatk ApplyBQSR -R resources/GRCh38.fa -I bam/${SAMPLE}.dedup.bam \\\n  --bqsr-recal-file bam/${SAMPLE}.recal.table -O bam/${SAMPLE}.bqsr.bam',
       'Variant Calling + Annotation':
-        'gatk HaplotypeCaller -R resources/GRCh38.fa \\\n  -I bam/${SAMPLE}.bqsr.bam \\\n  -O vcf/${SAMPLE}.g.vcf.gz -ERC GVCF\nvep -i vcf/${SAMPLE}.g.vcf.gz -o report/${SAMPLE}.vep.tsv --tab'
+        'gatk HaplotypeCaller -R resources/GRCh38.fa \\\n  -I bam/${SAMPLE}.bqsr.bam \\\n  -O vcf/${SAMPLE}.g.vcf.gz -ERC GVCF\nvep -i vcf/${SAMPLE}.g.vcf.gz -o report/${SAMPLE}.vep.tsv --tab',
     };
     return cmds[step] || 'echo "Running ' + step + '"';
   }
@@ -57,23 +56,28 @@ OmicsLab.HPCTraining = (function () {
   let _jobCounter = 1000;
 
   function _estimateWait(cpus, mem, partition) {
-    if (partition === 'gpu')     return Math.floor(Math.random() * 20 + 10);
+    if (partition === 'gpu') return Math.floor(Math.random() * 20 + 10);
     if (cpus >= 16 || mem >= 64) return Math.floor(Math.random() * 15 + 5);
-    if (cpus >= 8  || mem >= 32) return Math.floor(Math.random() * 8  + 2);
+    if (cpus >= 8 || mem >= 32) return Math.floor(Math.random() * 8 + 2);
     return Math.floor(Math.random() * 3 + 1);
   }
 
   function _estimateRuntime(step, cpus, mem) {
-    const base = { 'FastQC + MultiQC': 12, 'Read Trimming': 25, 'Alignment + Sort': 90,
-                   'Duplicate Marking + BQSR': 60, 'Variant Calling + Annotation': 120 };
+    const base = {
+      'FastQC + MultiQC': 12,
+      'Read Trimming': 25,
+      'Alignment + Sort': 90,
+      'Duplicate Marking + BQSR': 60,
+      'Variant Calling + Annotation': 120,
+    };
     const mins = (base[step] || 30) * (16 / cpus);
     return Math.round(mins);
   }
 
   function _submitJob(cfg) {
     const jid = ++_jobCounter;
-    const waitMins  = _estimateWait(cfg.cpus, cfg.mem, cfg.partition);
-    const runMins   = _estimateRuntime(cfg.step, cfg.cpus, cfg.mem);
+    const waitMins = _estimateWait(cfg.cpus, cfg.mem, cfg.partition);
+    const runMins = _estimateRuntime(cfg.step, cfg.cpus, cfg.mem);
     const job = { jid, cfg, waitMins, runMins, status: 'PENDING', submitted: new Date() };
     _queue.unshift(job);
     return job;
@@ -85,38 +89,61 @@ OmicsLab.HPCTraining = (function () {
       label: 'Successful Run',
       description: 'All resources sufficient — job completes cleanly.',
       lines: (cfg) => [
-        { t: '00:00', cls: 'hpc-sim-info', msg: `Submitted batch job ${1001 + _jobCounter % 50}` },
-        { t: '00:01', cls: 'hpc-sim-warn', msg: `PENDING — waiting for ${_estimateWait(cfg.cpus, cfg.mem, cfg.partition)} min in queue` },
+        {
+          t: '00:00',
+          cls: 'hpc-sim-info',
+          msg: `Submitted batch job ${1001 + (_jobCounter % 50)}`,
+        },
+        {
+          t: '00:01',
+          cls: 'hpc-sim-warn',
+          msg: `PENDING — waiting for ${_estimateWait(cfg.cpus, cfg.mem, cfg.partition)} min in queue`,
+        },
         { t: '+wait', cls: 'hpc-sim-info', msg: 'RUNNING — allocated on node compute-01' },
-        { t: '+03m',  cls: 'hpc-sim-ok',   msg: `[QC]  FastQC complete: Q30 = 94.2%, adapter = 1.1%` },
-        { t: '+12m',  cls: 'hpc-sim-ok',   msg: `[ALN] BWA-MEM2 alignment: 98.7% mapped` },
-        { t: '+' + _estimateRuntime(cfg.step, cfg.cpus, cfg.mem) + 'm',
-          cls: 'hpc-sim-ok', msg: 'COMPLETED — exit code 0. Results in results/' }
-      ]
+        { t: '+03m', cls: 'hpc-sim-ok', msg: `[QC]  FastQC complete: Q30 = 94.2%, adapter = 1.1%` },
+        { t: '+12m', cls: 'hpc-sim-ok', msg: `[ALN] BWA-MEM2 alignment: 98.7% mapped` },
+        {
+          t: '+' + _estimateRuntime(cfg.step, cfg.cpus, cfg.mem) + 'm',
+          cls: 'hpc-sim-ok',
+          msg: 'COMPLETED — exit code 0. Results in results/',
+        },
+      ],
     },
     oom: {
       label: 'Out of Memory (OOM)',
       description: 'Job killed by the scheduler when it exceeds its memory limit.',
       lines: () => [
         { t: '00:00', cls: 'hpc-sim-info', msg: 'Submitted batch job 10042' },
-        { t: '+02m',  cls: 'hpc-sim-info', msg: 'RUNNING on node compute-04' },
-        { t: '+08m',  cls: 'hpc-sim-warn', msg: 'Memory usage approaching limit (95%)' },
-        { t: '+09m',  cls: 'hpc-sim-err',  msg: 'slurmstepd: error: Exceeded job memory limit' },
-        { t: '+09m',  cls: 'hpc-sim-err',  msg: 'FAILED — OOM Kill (signal 9). Increase --mem' },
-        { t: '',      cls: 'hpc-sim-info', msg: '→ Tip: re-submit with --mem 64G or stream with pipes to reduce peak memory' }
-      ]
+        { t: '+02m', cls: 'hpc-sim-info', msg: 'RUNNING on node compute-04' },
+        { t: '+08m', cls: 'hpc-sim-warn', msg: 'Memory usage approaching limit (95%)' },
+        { t: '+09m', cls: 'hpc-sim-err', msg: 'slurmstepd: error: Exceeded job memory limit' },
+        { t: '+09m', cls: 'hpc-sim-err', msg: 'FAILED — OOM Kill (signal 9). Increase --mem' },
+        {
+          t: '',
+          cls: 'hpc-sim-info',
+          msg: '→ Tip: re-submit with --mem 64G or stream with pipes to reduce peak memory',
+        },
+      ],
     },
     timeout: {
       label: 'Time Limit Exceeded',
       description: 'Job killed because it ran past its requested wall-clock time.',
       lines: () => [
         { t: '00:00', cls: 'hpc-sim-info', msg: 'Submitted batch job 10055' },
-        { t: '+05m',  cls: 'hpc-sim-info', msg: 'RUNNING on node compute-07' },
-        { t: '+59m',  cls: 'hpc-sim-warn', msg: '1 min remaining — checkpoint if possible' },
-        { t: '+60m',  cls: 'hpc-sim-err',  msg: 'DUE TIME: slurmstepd: Timeout reached' },
-        { t: '+60m',  cls: 'hpc-sim-err',  msg: 'FAILED — TIMEOUT. Increase --time or split the job' },
-        { t: '',      cls: 'hpc-sim-info', msg: '→ Tip: use --time 4:00:00 and consider checkpointing with GATK scatter/gather' }
-      ]
+        { t: '+05m', cls: 'hpc-sim-info', msg: 'RUNNING on node compute-07' },
+        { t: '+59m', cls: 'hpc-sim-warn', msg: '1 min remaining — checkpoint if possible' },
+        { t: '+60m', cls: 'hpc-sim-err', msg: 'DUE TIME: slurmstepd: Timeout reached' },
+        {
+          t: '+60m',
+          cls: 'hpc-sim-err',
+          msg: 'FAILED — TIMEOUT. Increase --time or split the job',
+        },
+        {
+          t: '',
+          cls: 'hpc-sim-info',
+          msg: '→ Tip: use --time 4:00:00 and consider checkpointing with GATK scatter/gather',
+        },
+      ],
     },
     optimize: {
       label: 'Runtime Optimization',
@@ -125,48 +152,112 @@ OmicsLab.HPCTraining = (function () {
         { t: '', cls: 'hpc-sim-info', msg: '── Profile A: --cpus-per-task=4 --mem=16G ──' },
         { t: '', cls: 'hpc-sim-warn', msg: 'Alignment runtime: ~95 min  |  Queue wait: ~2 min' },
         { t: '', cls: 'hpc-sim-info', msg: '── Profile B: --cpus-per-task=16 --mem=64G ──' },
-        { t: '', cls: 'hpc-sim-ok',   msg: 'Alignment runtime: ~24 min  |  Queue wait: ~12 min' },
+        { t: '', cls: 'hpc-sim-ok', msg: 'Alignment runtime: ~24 min  |  Queue wait: ~12 min' },
         { t: '', cls: 'hpc-sim-info', msg: '── Verdict ──' },
-        { t: '', cls: 'hpc-sim-ok',   msg: 'Profile B is 4× faster in wall time. If the queue is short, the extra wait is worth it.' },
-        { t: '', cls: 'hpc-sim-warn', msg: '→ Tip: use "seff <jobid>" after a run to see actual CPU and memory efficiency' }
-      ]
-    }
+        {
+          t: '',
+          cls: 'hpc-sim-ok',
+          msg: 'Profile B is 4× faster in wall time. If the queue is short, the extra wait is worth it.',
+        },
+        {
+          t: '',
+          cls: 'hpc-sim-warn',
+          msg: '→ Tip: use "seff <jobid>" after a run to see actual CPU and memory efficiency',
+        },
+      ],
+    },
   };
 
   /* ─── Workflow engines data ─── */
   const ENGINES = [
-    { name: 'Snakemake', tag: 'Python-based', points: [
-      'Rules define inputs → outputs', 'Auto-parallelises on HPC/cloud',
-      'Native SLURM integration via --cluster', 'Large bioinformatics community',
-      'Same Snakefile works locally and on HPC'
-    ]},
-    { name: 'Nextflow', tag: 'Groovy/DSL2', points: [
-      'Dataflow concurrency model', 'nf-core: 100+ curated pipelines',
-      'First-class Docker/Singularity support', 'Built-in AWS/Google Batch',
-      'Excellent for large-scale production'
-    ]},
-    { name: 'WDL', tag: 'Workflow Description Language', points: [
-      'Cromwell or MiniWDL as executor', 'Enforced input/output typing',
-      'Used by GATK Best Practices', 'Terra/GCP native',
-      'Verbose but very explicit'
-    ]},
-    { name: 'Nextflow (nf-core)', tag: 'Community pipelines', points: [
-      'nf-core/sarek — WGS/somatic', 'nf-core/rnaseq — RNA-Seq',
-      'nf-core/mag — metagenomics', 'Lint/CI enforced standards',
-      'Drop-in SLURM config profiles'
-    ]}
+    {
+      name: 'Snakemake',
+      tag: 'Python-based',
+      points: [
+        'Rules define inputs → outputs',
+        'Auto-parallelises on HPC/cloud',
+        'Native SLURM integration via --cluster',
+        'Large bioinformatics community',
+        'Same Snakefile works locally and on HPC',
+      ],
+    },
+    {
+      name: 'Nextflow',
+      tag: 'Groovy/DSL2',
+      points: [
+        'Dataflow concurrency model',
+        'nf-core: 100+ curated pipelines',
+        'First-class Docker/Singularity support',
+        'Built-in AWS/Google Batch',
+        'Excellent for large-scale production',
+      ],
+    },
+    {
+      name: 'WDL',
+      tag: 'Workflow Description Language',
+      points: [
+        'Cromwell or MiniWDL as executor',
+        'Enforced input/output typing',
+        'Used by GATK Best Practices',
+        'Terra/GCP native',
+        'Verbose but very explicit',
+      ],
+    },
+    {
+      name: 'Nextflow (nf-core)',
+      tag: 'Community pipelines',
+      points: [
+        'nf-core/sarek — WGS/somatic',
+        'nf-core/rnaseq — RNA-Seq',
+        'nf-core/mag — metagenomics',
+        'Lint/CI enforced standards',
+        'Drop-in SLURM config profiles',
+      ],
+    },
   ];
 
   /* ─── SLURM concepts ─── */
   const CONCEPTS = [
-    { icon: 'cpu',       title: 'sbatch', body: 'Submits a batch script to SLURM. The scheduler reads the #SBATCH directives and places the job in a queue.' },
-    { icon: 'clipboard', title: 'squeue', body: 'Lists jobs in the queue. Use squeue -u $USER to see your own jobs and their status (PENDING, RUNNING, COMPLETED).' },
-    { icon: 'x-circle',  title: 'scancel', body: 'Cancels a queued or running job by job ID. Usage: scancel <jobid>. Stops execution immediately.' },
-    { icon: 'server',    title: 'sinfo', body: 'Shows available partitions and node states (idle, alloc, drain). Tells you which nodes are free.' },
-    { icon: 'bar-chart', title: 'seff', body: 'After a job completes, shows CPU and memory efficiency. A common result: 20% CPU efficiency means you over-requested.' },
-    { icon: 'package',   title: 'Singularity/Apptainer', body: 'HPC-safe containers. Unlike Docker, they run without root. Use singularity exec biotools.sif <cmd> inside your SLURM script.' },
-    { icon: 'database',  title: '--mem vs --mem-per-cpu', body: '--mem sets total job memory; --mem-per-cpu sets per-core memory (total = cpus × mem-per-cpu). Never request more than the node has.' },
-    { icon: 'clock',     title: 'Wall time', body: 'The maximum clock time your job is allowed. Format: D-HH:MM:SS or HH:MM:SS. Jobs exceeding this are killed automatically.' }
+    {
+      icon: 'cpu',
+      title: 'sbatch',
+      body: 'Submits a batch script to SLURM. The scheduler reads the #SBATCH directives and places the job in a queue.',
+    },
+    {
+      icon: 'clipboard',
+      title: 'squeue',
+      body: 'Lists jobs in the queue. Use squeue -u $USER to see your own jobs and their status (PENDING, RUNNING, COMPLETED).',
+    },
+    {
+      icon: 'x-circle',
+      title: 'scancel',
+      body: 'Cancels a queued or running job by job ID. Usage: scancel <jobid>. Stops execution immediately.',
+    },
+    {
+      icon: 'server',
+      title: 'sinfo',
+      body: 'Shows available partitions and node states (idle, alloc, drain). Tells you which nodes are free.',
+    },
+    {
+      icon: 'bar-chart',
+      title: 'seff',
+      body: 'After a job completes, shows CPU and memory efficiency. A common result: 20% CPU efficiency means you over-requested.',
+    },
+    {
+      icon: 'package',
+      title: 'Singularity/Apptainer',
+      body: 'HPC-safe containers. Unlike Docker, they run without root. Use singularity exec biotools.sif <cmd> inside your SLURM script.',
+    },
+    {
+      icon: 'database',
+      title: '--mem vs --mem-per-cpu',
+      body: '--mem sets total job memory; --mem-per-cpu sets per-core memory (total = cpus × mem-per-cpu). Never request more than the node has.',
+    },
+    {
+      icon: 'clock',
+      title: 'Wall time',
+      body: 'The maximum clock time your job is allowed. Format: D-HH:MM:SS or HH:MM:SS. Jobs exceeding this are killed automatically.',
+    },
   ];
 
   /* ─── Render helpers ─── */
@@ -178,23 +269,33 @@ OmicsLab.HPCTraining = (function () {
     return script
       .replace(/^(#SBATCH.*)/gm, '<span class="hpc-directive">$1</span>')
       .replace(/^(#.*)/gm, '<span class="hpc-comment">$1</span>')
-      .replace(/^(echo|module|source|bwa|samtools|fastqc|multiqc|fastp|picard|gatk|vep)(.*)/gm,
-               '<span class="hpc-cmd">$1$2</span>');
+      .replace(
+        /^(echo|module|source|bwa|samtools|fastqc|multiqc|fastp|picard|gatk|vep)(.*)/gm,
+        '<span class="hpc-cmd">$1$2</span>'
+      );
   }
 
   function _renderSimOutput(lines) {
-    return lines.map(l =>
-      `<div class="hpc-sim-line">
+    return lines
+      .map(
+        (l) =>
+          `<div class="hpc-sim-line">
         <span class="hpc-sim-time">${l.t}</span>
         <span class="${l.cls}">${l.msg}</span>
       </div>`
-    ).join('');
+      )
+      .join('');
   }
 
   /* ─── Panel builders ─── */
   function _buildJobSubmitPanel() {
-    const steps = ['FastQC + MultiQC', 'Read Trimming', 'Alignment + Sort',
-                   'Duplicate Marking + BQSR', 'Variant Calling + Annotation'];
+    const steps = [
+      'FastQC + MultiQC',
+      'Read Trimming',
+      'Alignment + Sort',
+      'Duplicate Marking + BQSR',
+      'Variant Calling + Annotation',
+    ];
     const partitions = ['standard', 'highmem', 'gpu', 'shortrun'];
 
     return `
@@ -207,7 +308,7 @@ OmicsLab.HPCTraining = (function () {
           </div>
           <div class="hpc-field">
             <label>Pipeline Step</label>
-            <select id="hpc-step">${steps.map(s => `<option>${s}</option>`).join('')}</select>
+            <select id="hpc-step">${steps.map((s) => `<option>${s}</option>`).join('')}</select>
           </div>
           <div class="hpc-field">
             <label>CPUs per task</label>
@@ -241,7 +342,7 @@ OmicsLab.HPCTraining = (function () {
           </div>
           <div class="hpc-field">
             <label>Partition</label>
-            <select id="hpc-partition">${partitions.map(p => `<option>${p}</option>`).join('')}</select>
+            <select id="hpc-partition">${partitions.map((p) => `<option>${p}</option>`).join('')}</select>
           </div>
           <button class="hpc-submit-btn" onclick="OmicsLab.HPCTraining.generateScript()">Generate Script</button>
         </div>
@@ -254,10 +355,13 @@ OmicsLab.HPCTraining = (function () {
           <div class="hpc-form-card">
             <h3>Simulate Job Submission</h3>
             <div class="hpc-scenario-row" id="hpc-scenario-row">
-              ${Object.entries(SCENARIOS).map(([k, s]) =>
-                `<button class="hpc-scenario-btn" data-scenario="${k}"
+              ${Object.entries(SCENARIOS)
+                .map(
+                  ([k, s]) =>
+                    `<button class="hpc-scenario-btn" data-scenario="${k}"
                    onclick="OmicsLab.HPCTraining.runScenario('${k}',this)">${s.label}</button>`
-              ).join('')}
+                )
+                .join('')}
             </div>
             <div id="hpc-scenario-desc" style="font-size:0.83rem;color:var(--text-muted);margin-bottom:0.5rem"></div>
             <div id="hpc-sim-out" class="hpc-sim-output">Click a scenario above to simulate job execution.</div>
@@ -295,12 +399,14 @@ OmicsLab.HPCTraining = (function () {
   }
 
   function _buildConceptsPanel() {
-    const cards = CONCEPTS.map(c => `
+    const cards = CONCEPTS.map(
+      (c) => `
       <div class="hpc-concept-card">
         <div class="hpc-concept-icon">${OmicsLab.Icons?.svg(c.icon, 22) || ''}</div>
         <div class="hpc-concept-title">${c.title}</div>
         <div class="hpc-concept-body">${c.body}</div>
-      </div>`).join('');
+      </div>`
+    ).join('');
     return `
       <h3 style="margin-bottom:0.5rem">Essential SLURM Commands &amp; Concepts</h3>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">
@@ -320,12 +426,14 @@ ST codes: R=RUNNING  PD=PENDING  CG=COMPLETING  F=FAILED  TO=TIMEOUT</pre>
   }
 
   function _buildEnginesPanel() {
-    const cards = ENGINES.map(e => `
+    const cards = ENGINES.map(
+      (e) => `
       <div class="hpc-engine-card">
         <div class="hpc-engine-name">${e.name}</div>
         <div class="hpc-engine-tag">${e.tag}</div>
-        <ul class="hpc-engine-list">${e.points.map(p => `<li>• ${p}</li>`).join('')}</ul>
-      </div>`).join('');
+        <ul class="hpc-engine-list">${e.points.map((p) => `<li>• ${p}</li>`).join('')}</ul>
+      </div>`
+    ).join('');
     return `
       <h3 style="margin-bottom:0.5rem">Workflow Engines for HPC</h3>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem">
@@ -443,7 +551,7 @@ echo "Done: $(date)"</pre>
   }
 
   function runScenario(key, btn) {
-    document.querySelectorAll('.hpc-scenario-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelectorAll('.hpc-scenario-btn').forEach((b) => b.classList.remove('selected'));
     if (btn) btn.classList.add('selected');
     const scenario = SCENARIOS[key];
     if (!scenario) return;
@@ -488,13 +596,20 @@ echo "Done: $(date)"</pre>
     const tbody = document.getElementById('hpc-queue-tbody');
     if (!tbody) return;
     if (_queue.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="color:var(--text-muted);padding:1rem">No jobs in queue.</td></tr>';
+      tbody.innerHTML =
+        '<tr><td colspan="8" style="color:var(--text-muted);padding:1rem">No jobs in queue.</td></tr>';
       return;
     }
-    tbody.innerHTML = _queue.map(j => {
-      const stClass = { PENDING: 'hpc-status-pending', RUNNING: 'hpc-status-running',
-                        COMPLETED: 'hpc-status-done', FAILED: 'hpc-status-failed' }[j.status] || '';
-      return `<tr>
+    tbody.innerHTML = _queue
+      .map((j) => {
+        const stClass =
+          {
+            PENDING: 'hpc-status-pending',
+            RUNNING: 'hpc-status-running',
+            COMPLETED: 'hpc-status-done',
+            FAILED: 'hpc-status-failed',
+          }[j.status] || '';
+        return `<tr>
         <td>${j.jid}</td>
         <td>${j.cfg.jobName}</td>
         <td>${j.cfg.partition}</td>
@@ -504,24 +619,29 @@ echo "Done: $(date)"</pre>
         <td>~${j.waitMins}m</td>
         <td><span class="hpc-status-badge ${stClass}">${j.status}</span></td>
       </tr>`;
-    }).join('');
+      })
+      .join('');
   }
 
   function _readForm() {
     return {
-      jobName:   (document.getElementById('hpc-job-name')  || {}).value || 'omicslab_wgs',
-      step:      (document.getElementById('hpc-step')      || {}).value || 'Alignment + Sort',
-      cpus:      parseInt((document.getElementById('hpc-cpus')      || {}).value || '8'),
-      mem:       parseInt((document.getElementById('hpc-mem')       || {}).value || '32'),
-      time:      (document.getElementById('hpc-time')      || {}).value || '04:00:00',
-      partition: (document.getElementById('hpc-partition') || {}).value || 'standard'
+      jobName: (document.getElementById('hpc-job-name') || {}).value || 'omicslab_wgs',
+      step: (document.getElementById('hpc-step') || {}).value || 'Alignment + Sort',
+      cpus: parseInt((document.getElementById('hpc-cpus') || {}).value || '8'),
+      mem: parseInt((document.getElementById('hpc-mem') || {}).value || '32'),
+      time: (document.getElementById('hpc-time') || {}).value || '04:00:00',
+      partition: (document.getElementById('hpc-partition') || {}).value || 'standard',
     };
   }
 
   /* ─── Tab switching ─── */
   function switchTab(id) {
-    document.querySelectorAll('.hpc-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === id));
-    document.querySelectorAll('.hpc-panel').forEach(p => p.classList.toggle('active', p.id === 'hpc-panel-' + id));
+    document
+      .querySelectorAll('.hpc-tab')
+      .forEach((t) => t.classList.toggle('active', t.dataset.tab === id));
+    document
+      .querySelectorAll('.hpc-panel')
+      .forEach((p) => p.classList.toggle('active', p.id === 'hpc-panel-' + id));
   }
 
   /* ─── Init ─── */
@@ -530,25 +650,33 @@ echo "Done: $(date)"</pre>
     if (!container) return;
 
     const tabs = [
-      { id: 'submit',     label: 'Job Builder' },
-      { id: 'queue',      label: 'Queue Monitor' },
-      { id: 'concepts',   label: 'SLURM Concepts' },
-      { id: 'engines',    label: 'Workflow Engines' },
-      { id: 'containers', label: 'Containers' }
+      { id: 'submit', label: 'Job Builder' },
+      { id: 'queue', label: 'Queue Monitor' },
+      { id: 'concepts', label: 'SLURM Concepts' },
+      { id: 'engines', label: 'Workflow Engines' },
+      { id: 'containers', label: 'Containers' },
     ];
 
-    const tabBar = tabs.map(t =>
-      `<button class="hpc-tab${t.id === 'submit' ? ' active' : ''}" data-tab="${t.id}"
+    const tabBar = tabs
+      .map(
+        (t) =>
+          `<button class="hpc-tab${t.id === 'submit' ? ' active' : ''}" data-tab="${t.id}"
          onclick="OmicsLab.HPCTraining.switchTab('${t.id}')">${t.label}</button>`
-    ).join('');
+      )
+      .join('');
 
     const panels = [
-      { id: 'submit',     html: _buildJobSubmitPanel() },
-      { id: 'queue',      html: _buildQueuePanel() },
-      { id: 'concepts',   html: _buildConceptsPanel() },
-      { id: 'engines',    html: _buildEnginesPanel() },
-      { id: 'containers', html: _buildContainersPanel() }
-    ].map(p => `<div id="hpc-panel-${p.id}" class="hpc-panel${p.id === 'submit' ? ' active' : ''}">${p.html}</div>`).join('');
+      { id: 'submit', html: _buildJobSubmitPanel() },
+      { id: 'queue', html: _buildQueuePanel() },
+      { id: 'concepts', html: _buildConceptsPanel() },
+      { id: 'engines', html: _buildEnginesPanel() },
+      { id: 'containers', html: _buildContainersPanel() },
+    ]
+      .map(
+        (p) =>
+          `<div id="hpc-panel-${p.id}" class="hpc-panel${p.id === 'submit' ? ' active' : ''}">${p.html}</div>`
+      )
+      .join('');
 
     container.innerHTML = `<div class="hpc-tab-bar">${tabBar}</div>${panels}`;
   }

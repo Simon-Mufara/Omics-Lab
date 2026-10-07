@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.LearningPath = (function () {
-
   const PROGRESS_KEY = 'omicslab_learning_progress';
 
   /* ─── Track definitions ─── */
@@ -19,12 +18,48 @@ OmicsLab.LearningPath = (function () {
       description: 'Whole-genome sequencing from sample to variant calls',
       cert: 'WGS Fundamentals Certificate',
       nodes: [
-        { id: 'dna-extraction',   label: 'DNA Extraction',     page: 'lab',              time: '30 min', desc: 'Buffer chemistry, yield and purity metrics' },
-        { id: 'library-prep',     label: 'Library Prep',       page: 'lab',              time: '45 min', desc: 'End-repair, A-tailing, adapter ligation' },
-        { id: 'qc-metrics',       label: 'QC Metrics',         page: 'qualitypredictor', time: '20 min', desc: 'GATK thresholds, H3Africa standards' },
-        { id: 'alignment',        label: 'BWA Alignment',      page: 'analysis',         time: '30 min', desc: 'BWA-MEM2, samtools flagstat' },
-        { id: 'variant-calling',  label: 'Variant Calling',    page: 'variantinterp',    time: '40 min', desc: 'GATK HaplotypeCaller, ACMG criteria' },
-        { id: 'wgs-report',       label: 'Final Report',       page: 'output-tracker',   time: '15 min', desc: 'Archive your WGS analysis output' },
+        {
+          id: 'dna-extraction',
+          label: 'DNA Extraction',
+          page: 'lab',
+          time: '30 min',
+          desc: 'Buffer chemistry, yield and purity metrics',
+        },
+        {
+          id: 'library-prep',
+          label: 'Library Prep',
+          page: 'lab',
+          time: '45 min',
+          desc: 'End-repair, A-tailing, adapter ligation',
+        },
+        {
+          id: 'qc-metrics',
+          label: 'QC Metrics',
+          page: 'qualitypredictor',
+          time: '20 min',
+          desc: 'GATK thresholds, H3Africa standards',
+        },
+        {
+          id: 'alignment',
+          label: 'BWA Alignment',
+          page: 'analysis',
+          time: '30 min',
+          desc: 'BWA-MEM2, samtools flagstat',
+        },
+        {
+          id: 'variant-calling',
+          label: 'Variant Calling',
+          page: 'variantinterp',
+          time: '40 min',
+          desc: 'GATK HaplotypeCaller, ACMG criteria',
+        },
+        {
+          id: 'wgs-report',
+          label: 'Final Report',
+          page: 'output-tracker',
+          time: '15 min',
+          desc: 'Archive your WGS analysis output',
+        },
       ],
     },
     {
@@ -34,11 +69,41 @@ OmicsLab.LearningPath = (function () {
       description: 'Differential gene expression from FASTQ to biological insight',
       cert: 'RNA-seq Analysis Certificate',
       nodes: [
-        { id: 'rnaseq-qc',        label: 'FASTQ QC',           page: 'analysis',         time: '25 min', desc: 'FastQC interpretation, adapter trimming' },
-        { id: 'star-align',       label: 'STAR Alignment',     page: 'analysis',         time: '30 min', desc: '2-pass alignment, splice junctions' },
-        { id: 'deseq2',           label: 'DESeq2 DE',          page: 'heatmap',          time: '35 min', desc: 'Normalisation, DE testing, shrinkage' },
-        { id: 'volcano',          label: 'Volcano Plot',       page: 'heatmap',          time: '20 min', desc: 'Fold-change vs p-value visualisation' },
-        { id: 'pathway-enrich',   label: 'Pathway Enrichment', page: 'pathways',         time: '30 min', desc: 'KEGG, Reactome — Africa disease focus' },
+        {
+          id: 'rnaseq-qc',
+          label: 'FASTQ QC',
+          page: 'analysis',
+          time: '25 min',
+          desc: 'FastQC interpretation, adapter trimming',
+        },
+        {
+          id: 'star-align',
+          label: 'STAR Alignment',
+          page: 'analysis',
+          time: '30 min',
+          desc: '2-pass alignment, splice junctions',
+        },
+        {
+          id: 'deseq2',
+          label: 'DESeq2 DE',
+          page: 'heatmap',
+          time: '35 min',
+          desc: 'Normalisation, DE testing, shrinkage',
+        },
+        {
+          id: 'volcano',
+          label: 'Volcano Plot',
+          page: 'heatmap',
+          time: '20 min',
+          desc: 'Fold-change vs p-value visualisation',
+        },
+        {
+          id: 'pathway-enrich',
+          label: 'Pathway Enrichment',
+          page: 'pathways',
+          time: '30 min',
+          desc: 'KEGG, Reactome — Africa disease focus',
+        },
       ],
     },
     {
@@ -48,11 +113,41 @@ OmicsLab.LearningPath = (function () {
       description: 'Reconstruct evolutionary histories and trace outbreak clades',
       cert: 'Phylogenomics Certificate',
       nodes: [
-        { id: 'msa',              label: 'Multiple Alignment', page: 'analysis',         time: '25 min', desc: 'MUSCLE · MAFFT · gapped alignment' },
-        { id: 'tree-build',       label: 'Tree Building',      page: 'phylo',            time: '40 min', desc: 'NJ, UPGMA algorithms, bootstrapping' },
-        { id: 'tree-interpret',   label: 'Tree Interpretation',page: 'phylo',            time: '30 min', desc: 'Clades, monophyly, bootstrap support' },
-        { id: 'outbreak-phylo',   label: 'Outbreak Phylo',     page: 'outbreak',         time: '35 min', desc: 'Mpox Clade I — trace the index case' },
-        { id: 'knowledge-net',    label: 'Knowledge Network',  page: 'knowledge-graph',  time: '20 min', desc: 'Africa genomics disease-gene graph' },
+        {
+          id: 'msa',
+          label: 'Multiple Alignment',
+          page: 'analysis',
+          time: '25 min',
+          desc: 'MUSCLE · MAFFT · gapped alignment',
+        },
+        {
+          id: 'tree-build',
+          label: 'Tree Building',
+          page: 'phylo',
+          time: '40 min',
+          desc: 'NJ, UPGMA algorithms, bootstrapping',
+        },
+        {
+          id: 'tree-interpret',
+          label: 'Tree Interpretation',
+          page: 'phylo',
+          time: '30 min',
+          desc: 'Clades, monophyly, bootstrap support',
+        },
+        {
+          id: 'outbreak-phylo',
+          label: 'Outbreak Phylo',
+          page: 'outbreak',
+          time: '35 min',
+          desc: 'Mpox Clade I — trace the index case',
+        },
+        {
+          id: 'knowledge-net',
+          label: 'Knowledge Network',
+          page: 'knowledge-graph',
+          time: '20 min',
+          desc: 'Africa genomics disease-gene graph',
+        },
       ],
     },
     {
@@ -62,31 +157,73 @@ OmicsLab.LearningPath = (function () {
       description: 'Population genetics, governance, and field sequencing for Africa',
       cert: 'Africa Genomics Specialist Certificate',
       nodes: [
-        { id: 'africa-map',       label: 'Africa Genome Map',  page: 'africa',           time: '20 min', desc: 'AWI-Gen, H3Africa project landscape' },
-        { id: 'pop-struct',       label: 'Pop Structure',      page: 'popstruct',        time: '35 min', desc: 'ADMIXTURE, PCA for African cohorts' },
-        { id: 'sra-data',         label: 'African Datasets',   page: 'sra',              time: '25 min', desc: 'NCBI SRA, EBI ENA — Africa cohorts' },
-        { id: 'nanopore-field',   label: 'Nanopore Field QC',  page: 'nanopore',         time: '25 min', desc: 'ONT MinION field sequencing standards' },
-        { id: 'amr-africa',       label: 'AMR in Africa',      page: 'amr',              time: '30 min', desc: 'MDR-TB, CRE resistance profiling' },
-        { id: 'africa-pathogen',  label: 'Pathogen Tracking',  page: 'pathogen-tracker', time: '20 min', desc: 'Mpox, cholera, malaria surveillance' },
+        {
+          id: 'africa-map',
+          label: 'Africa Genome Map',
+          page: 'africa',
+          time: '20 min',
+          desc: 'AWI-Gen, H3Africa project landscape',
+        },
+        {
+          id: 'pop-struct',
+          label: 'Pop Structure',
+          page: 'popstruct',
+          time: '35 min',
+          desc: 'ADMIXTURE, PCA for African cohorts',
+        },
+        {
+          id: 'sra-data',
+          label: 'African Datasets',
+          page: 'sra',
+          time: '25 min',
+          desc: 'NCBI SRA, EBI ENA — Africa cohorts',
+        },
+        {
+          id: 'nanopore-field',
+          label: 'Nanopore Field QC',
+          page: 'nanopore',
+          time: '25 min',
+          desc: 'ONT MinION field sequencing standards',
+        },
+        {
+          id: 'amr-africa',
+          label: 'AMR in Africa',
+          page: 'amr',
+          time: '30 min',
+          desc: 'MDR-TB, CRE resistance profiling',
+        },
+        {
+          id: 'africa-pathogen',
+          label: 'Pathogen Tracking',
+          page: 'pathogen-tracker',
+          time: '20 min',
+          desc: 'Mpox, cholera, malaria surveillance',
+        },
       ],
     },
   ];
 
   /* ─── Get / set progress ─── */
   function _getProgress() {
-    try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}'); } catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}');
+    } catch {
+      return {};
+    }
   }
 
   function _markComplete(nodeId) {
     const p = _getProgress();
     p[nodeId] = { done: true, at: Date.now() };
-    try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch {}
+    try {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+    } catch {}
   }
 
   function _nodeState(nodeId, trackNodes, progress) {
     if (progress[nodeId]?.done) return 'complete';
     /* A node is available if it's the first OR the previous node is complete */
-    const idx = trackNodes.findIndex(n => n.id === nodeId);
+    const idx = trackNodes.findIndex((n) => n.id === nodeId);
     if (idx === 0) return 'available';
     const prevId = trackNodes[idx - 1].id;
     if (progress[prevId]?.done) return 'available';
@@ -104,15 +241,15 @@ OmicsLab.LearningPath = (function () {
           <div class="lp-title">Your Learning Path</div>
           <div class="lp-sub">Complete modules in order to unlock certificates</div>
         </div>
-        ${TRACKS.map(track => _renderTrack(track, progress)).join('')}
+        ${TRACKS.map((track) => _renderTrack(track, progress)).join('')}
       </div>`;
 
     /* Wire node clicks */
-    container.querySelectorAll('[data-lp-node]').forEach(btn => {
+    container.querySelectorAll('[data-lp-node]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const nodeId = btn.dataset.lpNode;
-        const page   = btn.dataset.lpPage;
-        const state  = btn.dataset.lpState;
+        const page = btn.dataset.lpPage;
+        const state = btn.dataset.lpState;
         if (state === 'locked') {
           OmicsLab.Notify?.warning('Complete the previous module first');
           return;
@@ -123,14 +260,14 @@ OmicsLab.LearningPath = (function () {
     });
 
     /* Wire cert buttons */
-    container.querySelectorAll('[data-lp-cert]').forEach(btn => {
+    container.querySelectorAll('[data-lp-cert]').forEach((btn) => {
       btn.addEventListener('click', () => _downloadCert(btn.dataset.lpCert, btn.dataset.lpTrack));
     });
   }
 
   function _renderTrack(track, progress) {
     const nodes = track.nodes;
-    const completedCount = nodes.filter(n => progress[n.id]?.done).length;
+    const completedCount = nodes.filter((n) => progress[n.id]?.done).length;
     const isTrackDone = completedCount === nodes.length;
     const percent = Math.round((completedCount / nodes.length) * 100);
 
@@ -143,10 +280,14 @@ OmicsLab.LearningPath = (function () {
           </div>
           <div class="lp-track-meta">
             <span class="lp-track-progress">${completedCount}/${nodes.length}</span>
-            ${isTrackDone ? `<button class="btn btn-primary btn-sm lp-cert-btn" data-lp-cert="${_esc(track.cert)}" data-lp-track="${track.id}">
+            ${
+              isTrackDone
+                ? `<button class="btn btn-primary btn-sm lp-cert-btn" data-lp-cert="${_esc(track.cert)}" data-lp-track="${track.id}">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               Certificate
-            </button>` : ''}
+            </button>`
+                : ''
+            }
           </div>
         </div>
         <div class="lp-progress-bar"><div class="lp-progress-fill" style="width:${percent}%"></div></div>
@@ -154,30 +295,32 @@ OmicsLab.LearningPath = (function () {
           ${_renderSVGTrack(nodes, progress)}
         </div>
         <div class="lp-nodes-labels">
-          ${nodes.map((node, i) => {
-            const state = _nodeState(node.id, nodes, progress);
-            return `
+          ${nodes
+            .map((node, i) => {
+              const state = _nodeState(node.id, nodes, progress);
+              return `
               <button class="lp-node-label lp-node-label-${state}" type="button"
                 data-lp-node="${node.id}" data-lp-page="${node.page}" data-lp-state="${state}"
                 title="${_esc(node.desc)} · ${_esc(node.time)}">
                 <span class="lp-node-label-text">${_esc(node.label)}</span>
                 <span class="lp-node-label-time">${_esc(node.time)}</span>
               </button>`;
-          }).join('')}
+            })
+            .join('')}
         </div>
       </div>`;
   }
 
   function _renderSVGTrack(nodes, progress) {
-    const W  = 72;   /* node pitch */
-    const CX = 32;   /* node centre x within slot */
-    const R  = 16;   /* node radius */
-    const Y  = 28;
+    const W = 72; /* node pitch */
+    const CX = 32; /* node centre x within slot */
+    const R = 16; /* node radius */
+    const Y = 28;
     const total = nodes.length;
     const svgW = total * W;
 
     let circles = '';
-    let lines   = '';
+    let lines = '';
 
     nodes.forEach((node, i) => {
       const state = _nodeState(node.id, nodes, progress);
@@ -186,16 +329,16 @@ OmicsLab.LearningPath = (function () {
       /* Connector line to next node */
       if (i < total - 1) {
         const nextCx = (i + 1) * W + CX;
-        const nextState = _nodeState(nodes[i+1].id, nodes, progress);
-        const lineColor = (state === 'complete') ? 'var(--track-color,#00C4A0)' : '#243048';
-        lines += `<line x1="${cx + R}" y1="${Y}" x2="${nextCx - R}" y2="${Y}" stroke="${lineColor}" stroke-width="2" stroke-dasharray="${nextState==='locked'?'4,3':'none'}"/>`;
+        const nextState = _nodeState(nodes[i + 1].id, nodes, progress);
+        const lineColor = state === 'complete' ? 'var(--track-color,#00C4A0)' : '#243048';
+        lines += `<line x1="${cx + R}" y1="${Y}" x2="${nextCx - R}" y2="${Y}" stroke="${lineColor}" stroke-width="2" stroke-dasharray="${nextState === 'locked' ? '4,3' : 'none'}"/>`;
       }
 
       /* Node circle */
       if (state === 'complete') {
         circles += `
           <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--track-color,#00C4A0)" stroke="var(--track-color,#00C4A0)" stroke-width="2"/>
-          <path d="M${cx-7} ${Y} l5 5 9-9" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
+          <path d="M${cx - 7} ${Y} l5 5 9-9" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`;
       } else if (state === 'available') {
         circles += `
           <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#111B2E)" stroke="var(--track-color,#00C4A0)" stroke-width="2.5"/>
@@ -203,7 +346,7 @@ OmicsLab.LearningPath = (function () {
       } else {
         circles += `
           <circle cx="${cx}" cy="${Y}" r="${R}" fill="var(--bg-surface,#111B2E)" stroke="#243048" stroke-width="2"/>
-          <path d="M${cx-5} ${Y-2} a5 5 0 0 1 10 0 v3 H${cx-5}z M${cx-7} ${Y+1} h14 v6 a2 2 0 0 1-2 2 H${cx-5} a2 2 0 0 1-2-2z" fill="#354060"/>`;
+          <path d="M${cx - 5} ${Y - 2} a5 5 0 0 1 10 0 v3 H${cx - 5}z M${cx - 7} ${Y + 1} h14 v6 a2 2 0 0 1-2 2 H${cx - 5} a2 2 0 0 1-2-2z" fill="#354060"/>`;
       }
     });
 
@@ -217,10 +360,14 @@ OmicsLab.LearningPath = (function () {
 
   /* ─── Certificate download ─── */
   function _downloadCert(certName, trackId) {
-    const track = TRACKS.find(t => t.id === trackId);
+    const track = TRACKS.find((t) => t.id === trackId);
     if (!track) return;
     const name = localStorage.getItem('omicslab_profile_name') || 'OmicsLab Learner';
-    const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const date = new Date().toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
 
     const html = `<!DOCTYPE html>
 <html>
@@ -262,16 +409,21 @@ OmicsLab.LearningPath = (function () {
 </html>`;
 
     const blob = new Blob([html], { type: 'text/html' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
     a.download = `omicslab-${trackId}-certificate.html`;
     a.click();
     URL.revokeObjectURL(url);
     OmicsLab.Notify?.success('Certificate downloaded — open in browser and print to PDF');
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   function _injectStyles() {
     if (document.getElementById('lp-styles')) return;
@@ -323,43 +475,153 @@ OmicsLab.LearningPath = (function () {
     wgs: {
       title: 'Whole-Genome Sequencing — Sample to Variant',
       weeks: [
-        { title:'Lab & QC Foundations',  modules:['lab','qualitypredictor'],  goal:'Complete DNA extraction + interpret QC report', reading:'Andrews et al. FastQC documentation · Broad GATK best practices' },
-        { title:'Read Alignment',         modules:['analysis'],                goal:'Run BWA alignment · interpret flagstat', reading:'Li & Durbin (2009) BWA paper · samtools manual' },
-        { title:'Variant Calling',        modules:['variantinterp'],           goal:'HaplotypeCaller on example data · review GVCF', reading:'McKenna et al. (2010) GATK · GATK4 docs' },
-        { title:'ACMG Classification',    modules:['variantinterp','variant-atlas'], goal:'Classify 5 Africa-relevant variants with ACMG criteria', reading:'Richards et al. (2015) ACMG guidelines' },
-        { title:'Population Context',     modules:['popstruct','h3africa'],    goal:'Run PCA on African samples · explore H3Africa', reading:'H3Africa consortium publications' },
-        { title:'Reporting & Documentation', modules:['labnotebook','output-tracker'], goal:'Write complete analysis notebook entry', reading:'FAIR data principles — Wilkinson et al. (2016)' },
+        {
+          title: 'Lab & QC Foundations',
+          modules: ['lab', 'qualitypredictor'],
+          goal: 'Complete DNA extraction + interpret QC report',
+          reading: 'Andrews et al. FastQC documentation · Broad GATK best practices',
+        },
+        {
+          title: 'Read Alignment',
+          modules: ['analysis'],
+          goal: 'Run BWA alignment · interpret flagstat',
+          reading: 'Li & Durbin (2009) BWA paper · samtools manual',
+        },
+        {
+          title: 'Variant Calling',
+          modules: ['variantinterp'],
+          goal: 'HaplotypeCaller on example data · review GVCF',
+          reading: 'McKenna et al. (2010) GATK · GATK4 docs',
+        },
+        {
+          title: 'ACMG Classification',
+          modules: ['variantinterp', 'variant-atlas'],
+          goal: 'Classify 5 Africa-relevant variants with ACMG criteria',
+          reading: 'Richards et al. (2015) ACMG guidelines',
+        },
+        {
+          title: 'Population Context',
+          modules: ['popstruct', 'h3africa'],
+          goal: 'Run PCA on African samples · explore H3Africa',
+          reading: 'H3Africa consortium publications',
+        },
+        {
+          title: 'Reporting & Documentation',
+          modules: ['labnotebook', 'output-tracker'],
+          goal: 'Write complete analysis notebook entry',
+          reading: 'FAIR data principles — Wilkinson et al. (2016)',
+        },
       ],
     },
     rnaseq: {
       title: 'RNA-seq Analysis — Expression to Pathways',
       weeks: [
-        { title:'RNA Quality & QC',       modules:['analysis','qualitypredictor'], goal:'FastQC on RNA-seq data · assess RIN score criteria', reading:'ENCODE RNA-seq standards · Conesa et al. (2016)' },
-        { title:'Alignment & Counting',   modules:['analysis'],                goal:'STAR 2-pass · featureCounts', reading:'Dobin et al. (2013) STAR paper · Anders et al. featureCounts' },
-        { title:'Differential Expression',modules:['heatmap'],                 goal:'DESeq2 analysis · volcano plot interpretation', reading:'Love, Huber & Anders (2014) DESeq2' },
-        { title:'Pathway Enrichment',     modules:['pathways'],                goal:'KEGG + Reactome enrichment · Africa disease focus', reading:'Kanehisa & Goto KEGG · GSEA methodology' },
-        { title:'Publication Figure',     modules:['heatmap','citations'],     goal:'Create publication-quality heatmap + citation list', reading:'Ten simple rules for better figures — Rougier et al.' },
+        {
+          title: 'RNA Quality & QC',
+          modules: ['analysis', 'qualitypredictor'],
+          goal: 'FastQC on RNA-seq data · assess RIN score criteria',
+          reading: 'ENCODE RNA-seq standards · Conesa et al. (2016)',
+        },
+        {
+          title: 'Alignment & Counting',
+          modules: ['analysis'],
+          goal: 'STAR 2-pass · featureCounts',
+          reading: 'Dobin et al. (2013) STAR paper · Anders et al. featureCounts',
+        },
+        {
+          title: 'Differential Expression',
+          modules: ['heatmap'],
+          goal: 'DESeq2 analysis · volcano plot interpretation',
+          reading: 'Love, Huber & Anders (2014) DESeq2',
+        },
+        {
+          title: 'Pathway Enrichment',
+          modules: ['pathways'],
+          goal: 'KEGG + Reactome enrichment · Africa disease focus',
+          reading: 'Kanehisa & Goto KEGG · GSEA methodology',
+        },
+        {
+          title: 'Publication Figure',
+          modules: ['heatmap', 'citations'],
+          goal: 'Create publication-quality heatmap + citation list',
+          reading: 'Ten simple rules for better figures — Rougier et al.',
+        },
       ],
     },
     phylo: {
       title: 'Phylogenomics & Outbreak Investigation',
       weeks: [
-        { title:'Sequence Alignment',     modules:['analysis'],                goal:'Run MUSCLE/MAFFT on example sequences', reading:'Edgar (2004) MUSCLE · Katoh (2002) MAFFT' },
-        { title:'Tree Building',          modules:['phylo'],                   goal:'Build NJ and UPGMA trees · interpret bootstrap values', reading:'Saitou & Nei (1987) NJ · Studier & Keppler UPGMA' },
-        { title:'Outbreak Simulation',    modules:['outbreak'],                goal:'Run Mpox Clade I simulation to completion', reading:'Mbala-Kingebeni et al. (2023) mpox Africa' },
-        { title:'Africa Genomic Epi',     modules:['h3africa','alerts'],       goal:'Explore H3Africa surveillance + interpret 3 outbreak alerts', reading:'H3Africa consortium overview' },
-        { title:'Final Case Study',       modules:['phylo','peerreview'],      goal:'Peer review a phylogenomics paper · present findings', reading:'Murray et al. (2022) genomic epi methods' },
+        {
+          title: 'Sequence Alignment',
+          modules: ['analysis'],
+          goal: 'Run MUSCLE/MAFFT on example sequences',
+          reading: 'Edgar (2004) MUSCLE · Katoh (2002) MAFFT',
+        },
+        {
+          title: 'Tree Building',
+          modules: ['phylo'],
+          goal: 'Build NJ and UPGMA trees · interpret bootstrap values',
+          reading: 'Saitou & Nei (1987) NJ · Studier & Keppler UPGMA',
+        },
+        {
+          title: 'Outbreak Simulation',
+          modules: ['outbreak'],
+          goal: 'Run Mpox Clade I simulation to completion',
+          reading: 'Mbala-Kingebeni et al. (2023) mpox Africa',
+        },
+        {
+          title: 'Africa Genomic Epi',
+          modules: ['h3africa', 'alerts'],
+          goal: 'Explore H3Africa surveillance + interpret 3 outbreak alerts',
+          reading: 'H3Africa consortium overview',
+        },
+        {
+          title: 'Final Case Study',
+          modules: ['phylo', 'peerreview'],
+          goal: 'Peer review a phylogenomics paper · present findings',
+          reading: 'Murray et al. (2022) genomic epi methods',
+        },
       ],
     },
     africa: {
       title: 'Africa Genomics Specialist',
       weeks: [
-        { title:'Africa Genomics Landscape', modules:['africa','h3africa'], goal:'Map key African genomics institutions and initiatives', reading:'Nembaware et al. H3ABioNet · Mulder et al. (2016)' },
-        { title:'Population Genomics',    modules:['popstruct'],              goal:'Interpret ADMIXTURE plots for African populations', reading:'Gurdasani et al. (2019) Uganda cohort · Choudhury et al. (2017)' },
-        { title:'Africa-Specific Variants',modules:['variant-atlas'],         goal:'Study 10 variants unique to African populations', reading:'African Genome Variation Project (Gurdasani 2015)' },
-        { title:'Pathogen Genomics',      modules:['outbreak','pathogen-tracker'], goal:'Complete outbreak + review 5 pathogen genomes', reading:'Happi et al. (2022) Africa genomics capacity' },
-        { title:'One Health & AMR',       modules:['one-health','amr'],       goal:'Map 3 zoonotic transmission chains · profile AMR gene', reading:'WHO AMR Global Action Plan' },
-        { title:'Data Governance',        modules:['research'],               goal:'Complete FAIR scoring on a real African dataset', reading:'H3Africa Data Access Policy · Abayomi et al. ethics' },
+        {
+          title: 'Africa Genomics Landscape',
+          modules: ['africa', 'h3africa'],
+          goal: 'Map key African genomics institutions and initiatives',
+          reading: 'Nembaware et al. H3ABioNet · Mulder et al. (2016)',
+        },
+        {
+          title: 'Population Genomics',
+          modules: ['popstruct'],
+          goal: 'Interpret ADMIXTURE plots for African populations',
+          reading: 'Gurdasani et al. (2019) Uganda cohort · Choudhury et al. (2017)',
+        },
+        {
+          title: 'Africa-Specific Variants',
+          modules: ['variant-atlas'],
+          goal: 'Study 10 variants unique to African populations',
+          reading: 'African Genome Variation Project (Gurdasani 2015)',
+        },
+        {
+          title: 'Pathogen Genomics',
+          modules: ['outbreak', 'pathogen-tracker'],
+          goal: 'Complete outbreak + review 5 pathogen genomes',
+          reading: 'Happi et al. (2022) Africa genomics capacity',
+        },
+        {
+          title: 'One Health & AMR',
+          modules: ['one-health', 'amr'],
+          goal: 'Map 3 zoonotic transmission chains · profile AMR gene',
+          reading: 'WHO AMR Global Action Plan',
+        },
+        {
+          title: 'Data Governance',
+          modules: ['research'],
+          goal: 'Complete FAIR scoring on a real African dataset',
+          reading: 'H3Africa Data Access Policy · Abayomi et al. ethics',
+        },
       ],
     },
   };
@@ -373,14 +635,22 @@ OmicsLab.LearningPath = (function () {
     }
   }
 
-  function _loadPlan()  { try { return JSON.parse(localStorage.getItem(PLAN_KEY)); } catch { return null; } }
-  function _savePlan(p) { localStorage.setItem(PLAN_KEY, JSON.stringify(p)); }
+  function _loadPlan() {
+    try {
+      return JSON.parse(localStorage.getItem(PLAN_KEY));
+    } catch {
+      return null;
+    }
+  }
+  function _savePlan(p) {
+    localStorage.setItem(PLAN_KEY, JSON.stringify(p));
+  }
 
   function _renderPlanBuilder(container) {
     container.innerHTML = `
       <div class="sp-wrap">
         <div class="sp-hero">
-          <div class="sp-hero-icon">${OmicsLab.Icons?.svg('target',28)||''}</div>
+          <div class="sp-hero-icon">${OmicsLab.Icons?.svg('target', 28) || ''}</div>
           <div>
             <h3 class="sp-hero-title">AI Study Plan Generator</h3>
             <p class="sp-hero-sub">Tell us your goal and we'll build a personalised week-by-week plan with OmicsLab modules, reading materials, and weekly objectives.</p>
@@ -411,7 +681,7 @@ OmicsLab.LearningPath = (function () {
             </div>
           </div>
           <button class="btn btn-primary" onclick="OmicsLab.LearningPath.generatePlan()" style="gap:.5rem">
-            ${OmicsLab.Icons?.svg('zap',14)||''} Generate Study Plan
+            ${OmicsLab.Icons?.svg('zap', 14) || ''} Generate Study Plan
           </button>
         </div>
       </div>
@@ -419,20 +689,26 @@ OmicsLab.LearningPath = (function () {
   }
 
   function generatePlan() {
-    const goal  = document.getElementById('sp-goal')?.value.trim() || '';
+    const goal = document.getElementById('sp-goal')?.value.trim() || '';
     const level = document.getElementById('sp-level')?.value || 'intermediate';
     const hours = parseInt(document.getElementById('sp-hours')?.value || '5');
 
     /* Simple keyword-based plan selector */
     const lgoal = goal.toLowerCase();
     let template = PLAN_TEMPLATES.wgs;
-    if (lgoal.includes('rna') || lgoal.includes('expression') || lgoal.includes('deseq')) template = PLAN_TEMPLATES.rnaseq;
-    else if (lgoal.includes('phylo') || lgoal.includes('outbreak') || lgoal.includes('tree')) template = PLAN_TEMPLATES.phylo;
-    else if (lgoal.includes('africa') || lgoal.includes('population') || lgoal.includes('gwas')) template = PLAN_TEMPLATES.africa;
+    if (lgoal.includes('rna') || lgoal.includes('expression') || lgoal.includes('deseq'))
+      template = PLAN_TEMPLATES.rnaseq;
+    else if (lgoal.includes('phylo') || lgoal.includes('outbreak') || lgoal.includes('tree'))
+      template = PLAN_TEMPLATES.phylo;
+    else if (lgoal.includes('africa') || lgoal.includes('population') || lgoal.includes('gwas'))
+      template = PLAN_TEMPLATES.africa;
 
     /* Adjust week count based on hours */
     const weeksPerModule = hours >= 10 ? 0.5 : hours >= 5 ? 1 : 2;
-    const totalWeeks = Math.ceil(template.weeks.length / weeksPerModule * (level === 'beginner' ? 1.4 : level === 'advanced' ? 0.7 : 1));
+    const totalWeeks = Math.ceil(
+      (template.weeks.length / weeksPerModule) *
+        (level === 'beginner' ? 1.4 : level === 'advanced' ? 0.7 : 1)
+    );
 
     const plan = {
       title: template.title,
@@ -444,7 +720,10 @@ OmicsLab.LearningPath = (function () {
       weeks: template.weeks.map((w, i) => ({
         ...w,
         weekNum: i + 1,
-        startDate: new Date(Date.now() + i * 7 * 86400000).toLocaleDateString('en-GB', { day:'numeric', month:'short' }),
+        startDate: new Date(Date.now() + i * 7 * 86400000).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'short',
+        }),
         done: false,
       })),
     };
@@ -456,8 +735,8 @@ OmicsLab.LearningPath = (function () {
   }
 
   function _renderPlanView(container, plan) {
-    const doneCount = plan.weeks.filter(w => w.done).length;
-    const pct = Math.round(doneCount / plan.weeks.length * 100);
+    const doneCount = plan.weeks.filter((w) => w.done).length;
+    const pct = Math.round((doneCount / plan.weeks.length) * 100);
     container.innerHTML = `
       <div class="sp-wrap">
         <div class="sp-plan-header">
@@ -474,29 +753,37 @@ OmicsLab.LearningPath = (function () {
           <span class="sp-prog-label">${doneCount}/${plan.weeks.length} weeks complete · ${pct}%</span>
         </div>
         <div class="sp-week-list">
-          ${plan.weeks.map((w, i) => `
-            <div class="sp-week${w.done?' sp-week-done':''}">
+          ${plan.weeks
+            .map(
+              (w, i) => `
+            <div class="sp-week${w.done ? ' sp-week-done' : ''}">
               <div class="sp-week-num">Week ${w.weekNum}</div>
               <div class="sp-week-body">
                 <div class="sp-week-title">${w.title}</div>
                 <div class="sp-week-date">${w.startDate}</div>
-                <div class="sp-week-goal">${OmicsLab.Icons?.svg('target',11)||''} ${w.goal}</div>
-                <div class="sp-week-modules">${w.modules.map(m => `
-                  <button class="btn btn-ghost btn-xs" onclick="OmicsLab.Router?.navigate('${m}')">${m.replace(/-/g,' ')}</button>
-                `).join('')}</div>
-                <div class="sp-week-reading">${OmicsLab.Icons?.svg('file-text',11)||''} <em>${w.reading}</em></div>
+                <div class="sp-week-goal">${OmicsLab.Icons?.svg('target', 11) || ''} ${w.goal}</div>
+                <div class="sp-week-modules">${w.modules
+                  .map(
+                    (m) => `
+                  <button class="btn btn-ghost btn-xs" onclick="OmicsLab.Router?.navigate('${m}')">${m.replace(/-/g, ' ')}</button>
+                `
+                  )
+                  .join('')}</div>
+                <div class="sp-week-reading">${OmicsLab.Icons?.svg('file-text', 11) || ''} <em>${w.reading}</em></div>
               </div>
-              <button class="sp-week-check${w.done?' sp-check-done':''}"
+              <button class="sp-week-check${w.done ? ' sp-check-done' : ''}"
                 onclick="OmicsLab.LearningPath.toggleWeekDone(${i})"
-                title="${w.done?'Mark incomplete':'Mark complete'}" aria-label="Mark week ${w.weekNum} ${w.done?'incomplete':'complete'}">
-                ${w.done ? (OmicsLab.Icons?.svg('check-circle',16)||'[OK]') : (OmicsLab.Icons?.svg('check',16)||'○')}
+                title="${w.done ? 'Mark incomplete' : 'Mark complete'}" aria-label="Mark week ${w.weekNum} ${w.done ? 'incomplete' : 'complete'}">
+                ${w.done ? OmicsLab.Icons?.svg('check-circle', 16) || '[OK]' : OmicsLab.Icons?.svg('check', 16) || '○'}
               </button>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
         <div class="sp-export-row">
           <button class="btn btn-ghost btn-sm" onclick="OmicsLab.LearningPath.exportPlan()">
-            ${OmicsLab.Icons?.svg('package',12)||''} Export Plan
+            ${OmicsLab.Icons?.svg('package', 12) || ''} Export Plan
           </button>
         </div>
       </div>
@@ -521,17 +808,19 @@ OmicsLab.LearningPath = (function () {
       `Goal: ${plan.goal}`,
       `Level: ${plan.level} · ${plan.hours}h/week`,
       '',
-      ...plan.weeks.map(w => [
-        `Week ${w.weekNum}: ${w.title} (${w.startDate}) — ${w.done?'DONE':'pending'}`,
-        `  Objective: ${w.goal}`,
-        `  Modules: ${w.modules.join(', ')}`,
-        `  Reading: ${w.reading}`,
-      ].join('\n')),
+      ...plan.weeks.map((w) =>
+        [
+          `Week ${w.weekNum}: ${w.title} (${w.startDate}) — ${w.done ? 'DONE' : 'pending'}`,
+          `  Objective: ${w.goal}`,
+          `  Modules: ${w.modules.join(', ')}`,
+          `  Reading: ${w.reading}`,
+        ].join('\n')
+      ),
     ];
     const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `omicslab-study-plan-${new Date().toISOString().slice(0,10)}.txt`;
+    a.download = `omicslab-study-plan-${new Date().toISOString().slice(0, 10)}.txt`;
     a.click();
     URL.revokeObjectURL(a.href);
   }
@@ -553,5 +842,14 @@ OmicsLab.LearningPath = (function () {
     }
   }
 
-  return { init, render, renderStudyPlan, generatePlan, toggleWeekDone, exportPlan, _markComplete, _getProgress };
+  return {
+    init,
+    render,
+    renderStudyPlan,
+    generatePlan,
+    toggleWeekDone,
+    exportPlan,
+    _markComplete,
+    _getProgress,
+  };
 })();

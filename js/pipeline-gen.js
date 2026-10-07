@@ -6,13 +6,21 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.PipelineGen = (function () {
-
   const PIPELINES = {
     wgs_gatk: {
       label: 'WGS Variant Calling (GATK4)',
       desc: 'Whole-genome sequencing variant calling: FastQC → Trim Galore → BWA-MEM → GATK HaplotypeCaller → VQSR → annotation.',
-      steps: ['FastQC (QC)','Trim Galore (trimming)','BWA-MEM2 (alignment)','SAMtools sort/markdup','GATK HaplotypeCaller (gVCF)','GATK GenotypeGVCFs','VQSR (variant filtering)','ANNOVAR / VEP (annotation)'],
-      tools: ['FastQC','Trim Galore','BWA-MEM2','SAMtools','GATK4','ANNOVAR'],
+      steps: [
+        'FastQC (QC)',
+        'Trim Galore (trimming)',
+        'BWA-MEM2 (alignment)',
+        'SAMtools sort/markdup',
+        'GATK HaplotypeCaller (gVCF)',
+        'GATK GenotypeGVCFs',
+        'VQSR (variant filtering)',
+        'ANNOVAR / VEP (annotation)',
+      ],
+      tools: ['FastQC', 'Trim Galore', 'BWA-MEM2', 'SAMtools', 'GATK4', 'ANNOVAR'],
       ref: 'GRCh38',
       smk: (cfg) => `# ══════════════════════════════════════════════
 # OmicsLab WGS GATK4 Pipeline (Snakemake DSL2)
@@ -155,8 +163,15 @@ workflow {
     rnaseq: {
       label: 'RNA-seq Differential Expression',
       desc: 'Bulk RNA-seq: FastQC → Trim → STAR → featureCounts → DESeq2 (R).',
-      steps: ['FastQC','Trim Galore','STAR alignment','SAMtools sort','featureCounts','DESeq2 (R)'],
-      tools: ['FastQC','Trim Galore','STAR','SAMtools','subread/featureCounts','DESeq2'],
+      steps: [
+        'FastQC',
+        'Trim Galore',
+        'STAR alignment',
+        'SAMtools sort',
+        'featureCounts',
+        'DESeq2 (R)',
+      ],
+      tools: ['FastQC', 'Trim Galore', 'STAR', 'SAMtools', 'subread/featureCounts', 'DESeq2'],
       ref: 'GRCh38',
       smk: (cfg) => `# ══════════════════════════════════════════════
 # OmicsLab RNA-seq Pipeline (Snakemake DSL2)
@@ -241,8 +256,16 @@ workflow {
     gwas: {
       label: 'GWAS QC + Association (Africa)',
       desc: 'African GWAS: sample QC → SNP QC → PCA → population stratification → SAIGE/PLINK2 association.',
-      steps: ['Sample QC (PLINK2)','SNP QC (PLINK2)','LD pruning','PCA (PLINK2/FLASHPCA)','Ancestry check','SAIGE GWAS','Clumping + LocusZoom'],
-      tools: ['PLINK2','FlashPCA','SAIGE','R','ANNOVAR'],
+      steps: [
+        'Sample QC (PLINK2)',
+        'SNP QC (PLINK2)',
+        'LD pruning',
+        'PCA (PLINK2/FLASHPCA)',
+        'Ancestry check',
+        'SAIGE GWAS',
+        'Clumping + LocusZoom',
+      ],
+      tools: ['PLINK2', 'FlashPCA', 'SAIGE', 'R', 'ANNOVAR'],
       ref: 'GRCh38',
       smk: (cfg) => `# ══════════════════════════════════════════════
 # OmicsLab Africa GWAS Pipeline (Snakemake DSL2)
@@ -336,14 +359,21 @@ workflow {
   };
 
   let _activePipe = 'wgs_gatk';
-  let _activeFw   = 'smk';
+  let _activeFw = 'smk';
 
   /* ══════════════════════════════════════════════
      FILE WIZARD — users describe their data, get
      a ready-to-run Linux bash script
      ══════════════════════════════════════════════ */
   let _wiz = {
-    fileType: '', goal: '', samples: '', ref: '', threads: '8', env: 'conda', outDir: 'results', generated: ''
+    fileType: '',
+    goal: '',
+    samples: '',
+    ref: '',
+    threads: '8',
+    env: 'conda',
+    outDir: 'results',
+    generated: '',
   };
 
   function _wizRender() {
@@ -369,14 +399,21 @@ workflow {
             <div class="pg-wiz-label">What files do you have?</div>
             <div class="pg-wiz-chips" id="pg-wiz-filetype">
               ${[
-                ['fastq-pe','FASTQ paired-end (R1 + R2)'],
-                ['fastq-se','FASTQ single-end'],
-                ['bam','BAM files (already aligned)'],
-                ['vcf','VCF files (variants)'],
-                ['fasta','FASTA sequences'],
-                ['counts','Count matrix (RNA-seq)'],
-              ].map(([v,l]) => `<button class="pg-wiz-chip${_wiz.fileType===v?' pg-wiz-chip-active':''}"
-                onclick="OmicsLab.PipelineGen._wizSet('fileType','${v}')">${l}</button>`).join('')}
+                ['fastq-pe', 'FASTQ paired-end (R1 + R2)'],
+                ['fastq-se', 'FASTQ single-end'],
+                ['bam', 'BAM files (already aligned)'],
+                ['vcf', 'VCF files (variants)'],
+                ['fasta', 'FASTA sequences'],
+                ['counts', 'Count matrix (RNA-seq)'],
+              ]
+                .map(
+                  ([
+                    v,
+                    l,
+                  ]) => `<button class="pg-wiz-chip${_wiz.fileType === v ? ' pg-wiz-chip-active' : ''}"
+                onclick="OmicsLab.PipelineGen._wizSet('fileType','${v}')">${l}</button>`
+                )
+                .join('')}
             </div>
           </div>
         </div>
@@ -388,16 +425,23 @@ workflow {
             <div class="pg-wiz-label">What do you want to do?</div>
             <div class="pg-wiz-chips" id="pg-wiz-goal">
               ${[
-                ['variant','Call SNPs/Indels (GATK)'],
-                ['rnaseq-de','Differential gene expression'],
-                ['gwas','GWAS association testing'],
-                ['assembly','De novo genome assembly'],
-                ['metagenomics','Metagenomics / 16S'],
-                ['phylo','Build a phylogenetic tree'],
-                ['qc','QC only (FastQC + MultiQC)'],
-                ['amr','AMR resistance calling'],
-              ].map(([v,l]) => `<button class="pg-wiz-chip${_wiz.goal===v?' pg-wiz-chip-active':''}"
-                onclick="OmicsLab.PipelineGen._wizSet('goal','${v}')">${l}</button>`).join('')}
+                ['variant', 'Call SNPs/Indels (GATK)'],
+                ['rnaseq-de', 'Differential gene expression'],
+                ['gwas', 'GWAS association testing'],
+                ['assembly', 'De novo genome assembly'],
+                ['metagenomics', 'Metagenomics / 16S'],
+                ['phylo', 'Build a phylogenetic tree'],
+                ['qc', 'QC only (FastQC + MultiQC)'],
+                ['amr', 'AMR resistance calling'],
+              ]
+                .map(
+                  ([
+                    v,
+                    l,
+                  ]) => `<button class="pg-wiz-chip${_wiz.goal === v ? ' pg-wiz-chip-active' : ''}"
+                onclick="OmicsLab.PipelineGen._wizSet('goal','${v}')">${l}</button>`
+                )
+                .join('')}
             </div>
           </div>
         </div>
@@ -438,10 +482,10 @@ workflow {
               <div>
                 <div class="pg-wiz-config-label">Environment manager</div>
                 <select class="pg-wiz-input" id="pg-wiz-env" onchange="OmicsLab.PipelineGen._wizSave()">
-                  <option value="conda" ${_wiz.env==='conda'?'selected':''}>conda / mamba</option>
-                  <option value="module" ${_wiz.env==='module'?'selected':''}>SLURM modules</option>
-                  <option value="docker" ${_wiz.env==='docker'?'selected':''}>Docker / Singularity</option>
-                  <option value="none" ${_wiz.env==='none'?'selected':''}>Tools already in PATH</option>
+                  <option value="conda" ${_wiz.env === 'conda' ? 'selected' : ''}>conda / mamba</option>
+                  <option value="module" ${_wiz.env === 'module' ? 'selected' : ''}>SLURM modules</option>
+                  <option value="docker" ${_wiz.env === 'docker' ? 'selected' : ''}>Docker / Singularity</option>
+                  <option value="none" ${_wiz.env === 'none' ? 'selected' : ''}>Tools already in PATH</option>
                 </select>
               </div>
             </div>
@@ -454,7 +498,9 @@ workflow {
         Generate My Script
       </button>
 
-      ${_wiz.generated ? `
+      ${
+        _wiz.generated
+          ? `
       <div class="pg-wiz-output-wrap">
         <div class="pg-wiz-output-hdr">
           <span class="pg-wiz-output-label">Your custom pipeline script</span>
@@ -464,7 +510,9 @@ workflow {
           </div>
         </div>
         <pre class="pg-output" id="pg-wiz-output">${_wiz.generated}</pre>
-      </div>` : ''}
+      </div>`
+          : ''
+      }
     </div>`;
   }
 
@@ -475,42 +523,58 @@ workflow {
 
   function _wizSave() {
     _wiz.samples = document.getElementById('pg-wiz-samples')?.value || _wiz.samples;
-    _wiz.ref     = document.getElementById('pg-wiz-ref')?.value     || _wiz.ref;
-    _wiz.outDir  = document.getElementById('pg-wiz-outdir')?.value  || _wiz.outDir;
+    _wiz.ref = document.getElementById('pg-wiz-ref')?.value || _wiz.ref;
+    _wiz.outDir = document.getElementById('pg-wiz-outdir')?.value || _wiz.outDir;
     _wiz.threads = document.getElementById('pg-wiz-threads')?.value || _wiz.threads;
-    _wiz.env     = document.getElementById('pg-wiz-env')?.value     || _wiz.env;
+    _wiz.env = document.getElementById('pg-wiz-env')?.value || _wiz.env;
   }
 
   function _wizGenerate() {
     _wizSave();
-    if (!_wiz.fileType) { OmicsLab.Notify?.error('Please select what files you have (Step 1)'); return; }
-    if (!_wiz.goal)     { OmicsLab.Notify?.error('Please select your analysis goal (Step 2)'); return; }
-    const samples = _wiz.samples.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
-    if (!samples.length) { OmicsLab.Notify?.error('Please enter at least one sample name (Step 3)'); return; }
+    if (!_wiz.fileType) {
+      OmicsLab.Notify?.error('Please select what files you have (Step 1)');
+      return;
+    }
+    if (!_wiz.goal) {
+      OmicsLab.Notify?.error('Please select your analysis goal (Step 2)');
+      return;
+    }
+    const samples = _wiz.samples
+      .split(/[\n,]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (!samples.length) {
+      OmicsLab.Notify?.error('Please enter at least one sample name (Step 3)');
+      return;
+    }
     _wiz.generated = _buildScript(samples);
     _wizRender();
-    setTimeout(() => document.getElementById('pg-wiz-output')?.scrollIntoView({ behavior: 'smooth' }), 100);
+    setTimeout(
+      () => document.getElementById('pg-wiz-output')?.scrollIntoView({ behavior: 'smooth' }),
+      100
+    );
   }
 
   function _buildScript(samples) {
-    const ref    = _wiz.ref     || '/path/to/reference.fa';
-    const outDir = _wiz.outDir  || 'results';
-    const cpu    = _wiz.threads || '8';
+    const ref = _wiz.ref || '/path/to/reference.fa';
+    const outDir = _wiz.outDir || 'results';
+    const cpu = _wiz.threads || '8';
     const envMgr = _wiz.env;
-    const now    = new Date().toISOString().slice(0, 10);
+    const now = new Date().toISOString().slice(0, 10);
 
-    const envBlock = {
-      conda:  `# Activate conda environment\nsource "$(conda info --base)/etc/profile.d/conda.sh"\nconda activate omicslab  # or your env name`,
-      module: `# Load HPC modules\nmodule purge\nmodule load FastQC Trimmomatic BWA SAMtools GATK`,
-      docker: `# Note: use singularity exec or docker run per tool\nSINGULARITY_IMG=/path/to/bioinfo.sif`,
-      none:   `# Using tools already in PATH`,
-    }[envMgr] || '';
+    const envBlock =
+      {
+        conda: `# Activate conda environment\nsource "$(conda info --base)/etc/profile.d/conda.sh"\nconda activate omicslab  # or your env name`,
+        module: `# Load HPC modules\nmodule purge\nmodule load FastQC Trimmomatic BWA SAMtools GATK`,
+        docker: `# Note: use singularity exec or docker run per tool\nSINGULARITY_IMG=/path/to/bioinfo.sif`,
+        none: `# Using tools already in PATH`,
+      }[envMgr] || '';
 
-    const sampleList = samples.map(s => `    "${s}"`).join('\n');
+    const sampleList = samples.map((s) => `    "${s}"`).join('\n');
 
     /* Goal-specific script blocks */
     const scripts = {
-      'variant': `
+      variant: `
 # ═══════════════════════════════════════════════════════
 # WGS VARIANT CALLING PIPELINE — GATK4 HaplotypeCaller
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -714,7 +778,7 @@ RSCRIPT
 Rscript "$OUTDIR/deseq2_analysis.R"
 echo "✓ RNA-seq pipeline complete. DEGs in $OUTDIR/DEGs_significant.csv"`,
 
-      'gwas': `
+      gwas: `
 # ═══════════════════════════════════════════════════════
 # GWAS PIPELINE — PLINK2 + SAIGE (Africa-optimised)
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -795,7 +859,7 @@ RSCRIPT
 Rscript "$OUTDIR/manhattan_plot.R"
 echo "✓ GWAS complete. Results in $OUTDIR/gwas/"`,
 
-      'qc': `
+      qc: `
 # ═══════════════════════════════════════════════════════
 # QC PIPELINE — FastQC + Trimmomatic + MultiQC
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -833,7 +897,7 @@ done
 multiqc "$OUTDIR/" -o "$OUTDIR/" --quiet
 echo "✓ QC complete. See $OUTDIR/multiqc_report.html"`,
 
-      'phylo': `
+      phylo: `
 # ═══════════════════════════════════════════════════════
 # PHYLOGENETIC ANALYSIS PIPELINE
 # MAFFT alignment + IQ-TREE maximum likelihood
@@ -879,7 +943,7 @@ echo "✓ Phylogenetics complete."
 echo "  Tree: $OUTDIR/trees/ml_tree.treefile"
 echo "  View with FigTree or MEGA"`,
 
-      'metagenomics': `
+      metagenomics: `
 # ═══════════════════════════════════════════════════════
 # METAGENOMICS PIPELINE — Kraken2 + Bracken + KrakenTools
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -922,7 +986,7 @@ python3 $(which KrakenTools/DiversityTools/alpha_diversity.py) \\
 
 echo "✓ Metagenomics complete. Results in $OUTDIR/"`,
 
-      'assembly': `
+      assembly: `
 # ═══════════════════════════════════════════════════════
 # DE NOVO GENOME ASSEMBLY PIPELINE — SPAdes / Flye
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -957,7 +1021,7 @@ for SAMPLE in "\${SAMPLES[@]}"; do
 done
 echo "✓ Assembly complete. Check $OUTDIR/quast/ for N50/L50 statistics"`,
 
-      'amr': `
+      amr: `
 # ═══════════════════════════════════════════════════════
 # AMR RESISTANCE CALLING PIPELINE — ABRicate + CARD
 # Generated by OmicsLab Pipeline Generator — ${now}
@@ -994,7 +1058,9 @@ abricate --summary "$OUTDIR/amr/"*_card.txt > "$OUTDIR/amr/summary_card.txt"
 echo "✓ AMR screening complete. See $OUTDIR/amr/summary_card.txt"`,
     };
 
-    const script = scripts[_wiz.goal] || `# Script for goal '${_wiz.goal}' with file type '${_wiz.fileType}'
+    const script =
+      scripts[_wiz.goal] ||
+      `# Script for goal '${_wiz.goal}' with file type '${_wiz.fileType}'
 # Generated by OmicsLab — ${now}
 set -euo pipefail
 echo "Custom pipeline — add your commands here"`;
@@ -1003,7 +1069,9 @@ echo "Custom pipeline — add your commands here"`;
   }
 
   function _wizCopy() {
-    navigator.clipboard.writeText(_wiz.generated).then(() => OmicsLab.Notify?.success('Script copied'));
+    navigator.clipboard
+      .writeText(_wiz.generated)
+      .then(() => OmicsLab.Notify?.success('Script copied'));
   }
 
   function _wizDownload() {
@@ -1018,16 +1086,20 @@ echo "Custom pipeline — add your commands here"`;
 
   /* ── NLP pipeline suggestion (Prompt 46) ── */
   const NLP_MAP = [
-    { patterns: /wgs|whole.genome|gatk|variant.call|snp.*indel/i,   pipe: 'wgs_gatk' },
-    { patterns: /rna.?seq|expression|deseq|edger|transcript/i,       pipe: 'rnaseq' },
-    { patterns: /gwas|population|admixture|plink|ancestry|struct/i,  pipe: 'gwas_africa' },
+    { patterns: /wgs|whole.genome|gatk|variant.call|snp.*indel/i, pipe: 'wgs_gatk' },
+    { patterns: /rna.?seq|expression|deseq|edger|transcript/i, pipe: 'rnaseq' },
+    { patterns: /gwas|population|admixture|plink|ancestry|struct/i, pipe: 'gwas_africa' },
   ];
 
   function _nlpSuggest() {
     const q = (document.getElementById('pg-nlp-input')?.value || '').trim();
     if (!q) return;
     for (const { patterns, pipe } of NLP_MAP) {
-      if (patterns.test(q)) { _selectPipe(pipe); OmicsLab.Toast?.show('Suggested: ' + PIPELINES[pipe].label, 'info'); return; }
+      if (patterns.test(q)) {
+        _selectPipe(pipe);
+        OmicsLab.Toast?.show('Suggested: ' + PIPELINES[pipe].label, 'info');
+        return;
+      }
     }
     OmicsLab.Toast?.show('Could not auto-detect — please select a pipeline manually', 'info');
   }
@@ -1064,7 +1136,12 @@ ${code}`;
       ref: document.getElementById('pg-ref')?.value || 'hg38.fa',
       maf: document.getElementById('pg-maf')?.value || '0.01',
     };
-    let code = _activeFw === 'smk' ? pipe.smk(cfg) : _activeFw === 'slurm' ? _wrapSlurm(pipe.smk(cfg), cfg) : pipe.nxf(cfg);
+    let code =
+      _activeFw === 'smk'
+        ? pipe.smk(cfg)
+        : _activeFw === 'slurm'
+          ? _wrapSlurm(pipe.smk(cfg), cfg)
+          : pipe.nxf(cfg);
     document.getElementById('pg-output').textContent = code;
     document.getElementById('pg-output-wrap').style.display = '';
   }
@@ -1073,28 +1150,41 @@ ${code}`;
     const code = document.getElementById('pg-output')?.textContent || '';
     navigator.clipboard.writeText(code).catch(() => {});
     const btn = document.getElementById('pg-copy-btn');
-    if (btn) { btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 1500); }
+    if (btn) {
+      btn.textContent = 'Copied!';
+      setTimeout(() => (btn.textContent = 'Copy'), 1500);
+    }
   }
 
   function _download() {
     const code = document.getElementById('pg-output')?.textContent || '';
-    const ext = _activeFw === 'smk' ? 'Snakefile' : _activeFw === 'slurm' ? 'run_pipeline.sh' : 'main.nf';
-    const blob = new Blob([code], { type:'text/plain' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = ext; a.click();
+    const ext =
+      _activeFw === 'smk' ? 'Snakefile' : _activeFw === 'slurm' ? 'run_pipeline.sh' : 'main.nf';
+    const blob = new Blob([code], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = ext;
+    a.click();
   }
 
   function _selectPipe(id) {
     _activePipe = id;
-    document.querySelectorAll('.pg-pipe-btn').forEach(b => b.classList.toggle('pg-pipe-active', b.dataset.pid === id));
+    document
+      .querySelectorAll('.pg-pipe-btn')
+      .forEach((b) => b.classList.toggle('pg-pipe-active', b.dataset.pid === id));
     const p = PIPELINES[id];
     document.getElementById('pg-pipe-desc').textContent = p?.desc || '';
-    document.getElementById('pg-steps').innerHTML = (p?.steps || []).map(s => `<div class="pg-step">${s}</div>`).join('<div class="pg-step-arrow">→</div>');
+    document.getElementById('pg-steps').innerHTML = (p?.steps || [])
+      .map((s) => `<div class="pg-step">${s}</div>`)
+      .join('<div class="pg-step-arrow">→</div>');
     document.getElementById('pg-output-wrap').style.display = 'none';
   }
 
   function _selectFw(fw) {
     _activeFw = fw;
-    document.querySelectorAll('.pg-fw-btn').forEach(b => b.classList.toggle('pg-fw-active', b.dataset.fw === fw));
+    document
+      .querySelectorAll('.pg-fw-btn')
+      .forEach((b) => b.classList.toggle('pg-fw-active', b.dataset.fw === fw));
     document.getElementById('pg-output-wrap').style.display = 'none';
   }
 
@@ -1134,7 +1224,12 @@ ${code}`;
             <div class="pg-left">
               <div class="pg-section-label">Workflow</div>
               <div class="pg-pipe-list">
-                ${Object.entries(PIPELINES).map(([id, p]) => `<button class="pg-pipe-btn${id===_activePipe?' pg-pipe-active':''}" data-pid="${id}" onclick="OmicsLab.PipelineGen._selectPipe('${id}')">${p.label}</button>`).join('')}
+                ${Object.entries(PIPELINES)
+                  .map(
+                    ([id, p]) =>
+                      `<button class="pg-pipe-btn${id === _activePipe ? ' pg-pipe-active' : ''}" data-pid="${id}" onclick="OmicsLab.PipelineGen._selectPipe('${id}')">${p.label}</button>`
+                  )
+                  .join('')}
               </div>
               <div class="pg-section-label" style="margin-top:1rem">Framework</div>
               <div class="pg-fw-row">
@@ -1164,7 +1259,7 @@ ${code}`;
             </div>
             <div class="pg-right">
               <div class="pg-pipe-desc" id="pg-pipe-desc">${p0.desc}</div>
-              <div class="pg-steps" id="pg-steps">${p0.steps.map(s => `<div class="pg-step">${s}</div>`).join('<div class="pg-step-arrow">→</div>')}</div>
+              <div class="pg-steps" id="pg-steps">${p0.steps.map((s) => `<div class="pg-step">${s}</div>`).join('<div class="pg-step-arrow">→</div>')}</div>
               <div class="pg-output-wrap" id="pg-output-wrap" style="display:none">
                 <div class="pg-output-hdr">
                   <span class="pg-output-label">Generated Template</span>
@@ -1184,6 +1279,18 @@ ${code}`;
     setTimeout(() => _wizRender(), 0);
   }
 
-  return { init, _generate, _copy, _download, _selectPipe, _selectFw, _nlpSuggest,
-           _wizSet, _wizSave, _wizGenerate, _wizCopy, _wizDownload };
+  return {
+    init,
+    _generate,
+    _copy,
+    _download,
+    _selectPipe,
+    _selectFw,
+    _nlpSuggest,
+    _wizSet,
+    _wizSave,
+    _wizGenerate,
+    _wizCopy,
+    _wizDownload,
+  };
 })();

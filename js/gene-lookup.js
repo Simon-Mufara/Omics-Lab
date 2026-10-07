@@ -7,21 +7,35 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.GeneLookup = (function () {
-
   const ENSEMBL = 'https://rest.ensembl.org';
 
   /* Pre-loaded African disease genes */
   const AFRICA_GENES = [
-    { symbol: 'HBB',     desc: 'Haemoglobin subunit beta — sickle cell disease, beta-thalassemia' },
-    { symbol: 'G6PD',    desc: 'Glucose-6-phosphate dehydrogenase — malaria protection, G6PD deficiency' },
-    { symbol: 'APOL1',   desc: 'Apolipoprotein L1 — CKD risk in African populations, trypanosome resistance' },
-    { symbol: 'KCNJ11',  desc: 'Potassium channel — type 2 diabetes, elevated risk in West Africa' },
-    { symbol: 'HLA-B',   desc: 'HLA class I — drug hypersensitivity, malaria susceptibility' },
-    { symbol: 'CYP2D6',  desc: 'Cytochrome P450 — drug metabolism variation in African populations' },
-    { symbol: 'LMNA',    desc: 'Lamin A/C — dilated cardiomyopathy, higher prevalence in Africa' },
-    { symbol: 'BRCA1',   desc: 'Breast cancer 1 — BRCA1 variants prevalent in South African cohorts' },
-    { symbol: 'MYH7',    desc: 'Myosin heavy chain — hypertrophic cardiomyopathy in African athletes' },
-    { symbol: 'rpoB',    desc: 'RNA polymerase beta (M. tuberculosis) — rifampicin resistance' },
+    { symbol: 'HBB', desc: 'Haemoglobin subunit beta — sickle cell disease, beta-thalassemia' },
+    {
+      symbol: 'G6PD',
+      desc: 'Glucose-6-phosphate dehydrogenase — malaria protection, G6PD deficiency',
+    },
+    {
+      symbol: 'APOL1',
+      desc: 'Apolipoprotein L1 — CKD risk in African populations, trypanosome resistance',
+    },
+    { symbol: 'KCNJ11', desc: 'Potassium channel — type 2 diabetes, elevated risk in West Africa' },
+    { symbol: 'HLA-B', desc: 'HLA class I — drug hypersensitivity, malaria susceptibility' },
+    {
+      symbol: 'CYP2D6',
+      desc: 'Cytochrome P450 — drug metabolism variation in African populations',
+    },
+    { symbol: 'LMNA', desc: 'Lamin A/C — dilated cardiomyopathy, higher prevalence in Africa' },
+    {
+      symbol: 'BRCA1',
+      desc: 'Breast cancer 1 — BRCA1 variants prevalent in South African cohorts',
+    },
+    {
+      symbol: 'MYH7',
+      desc: 'Myosin heavy chain — hypertrophic cardiomyopathy in African athletes',
+    },
+    { symbol: 'rpoB', desc: 'RNA polymerase beta (M. tuberculosis) — rifampicin resistance' },
   ];
 
   let _lastGene = null;
@@ -40,7 +54,9 @@ OmicsLab.GeneLookup = (function () {
       const res = await fetch(url);
       if (!res.ok) return [];
       return res.json();
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   async function _lookupVariants(ensemblId) {
@@ -50,20 +66,53 @@ OmicsLab.GeneLookup = (function () {
       if (!res.ok) return [];
       const data = await res.json();
       return Array.isArray(data) ? data.slice(0, 25) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   }
 
   /* ─── DisGeNET curated data for Africa-priority genes ─── */
   const DISGENET_CURATED = {
-    HBB:   [{ dis:'Anemia, Sickle Cell', score:.98, ei:.97, src:'UniProt/ClinVar' },{ dis:'beta-Thalassemia', score:.95, ei:.94, src:'UniProt' },{ dis:'Malaria, resistance', score:.61, ei:.65, src:'GWAS catalog' }],
-    G6PD:  [{ dis:'Glucosephosphate Dehydrogenase Deficiency', score:.97, ei:.96, src:'UniProt' },{ dis:'Malaria, resistance', score:.72, ei:.68, src:'GWAS/literature' },{ dis:'Hemolytic Anemia', score:.88, ei:.85, src:'ClinVar' }],
-    APOL1: [{ dis:'Focal Segmental Glomerulosclerosis', score:.95, ei:.93, src:'ClinVar/GWAS' },{ dis:'Kidney Failure, Chronic', score:.91, ei:.90, src:'H3Africa/GWAS' },{ dis:'Sleeping Sickness Resistance', score:.78, ei:.72, src:'Literature' }],
-    KCNJ11:[{ dis:'Diabetes Mellitus, Type 2', score:.92, ei:.89, src:'GWAS catalog' },{ dis:'Hyperinsulinism', score:.86, ei:.83, src:'ClinVar' }],
-    CYP2D6:[{ dis:'Drug Metabolism Deficiency', score:.89, ei:.88, src:'PharmGKB' },{ dis:'Codeine Toxicity', score:.82, ei:.81, src:'CPIC/PharmGKB' }],
-    TNF:   [{ dis:'Malaria, Cerebral', score:.79, ei:.77, src:'GWAS/Literature' },{ dis:'Rheumatoid Arthritis', score:.93, ei:.91, src:'GWAS catalog' },{ dis:'Tuberculosis susceptibility', score:.75, ei:.72, src:'Literature' }],
-    BRCA1: [{ dis:'Breast Neoplasms', score:.99, ei:.98, src:'ClinVar/OMIM' },{ dis:'Ovarian Neoplasms', score:.97, ei:.96, src:'ClinVar' }],
-    CCR5:  [{ dis:'HIV Infections', score:.94, ei:.93, src:'PharmGKB/ClinVar' },{ dis:'West Nile Fever susceptibility', score:.68, ei:.65, src:'Literature' }],
-    TLR4:  [{ dis:'Sepsis susceptibility', score:.76, ei:.74, src:'GWAS/Literature' },{ dis:'Malaria, severe', score:.71, ei:.68, src:'H3Africa GWAS' }],
+    HBB: [
+      { dis: 'Anemia, Sickle Cell', score: 0.98, ei: 0.97, src: 'UniProt/ClinVar' },
+      { dis: 'beta-Thalassemia', score: 0.95, ei: 0.94, src: 'UniProt' },
+      { dis: 'Malaria, resistance', score: 0.61, ei: 0.65, src: 'GWAS catalog' },
+    ],
+    G6PD: [
+      { dis: 'Glucosephosphate Dehydrogenase Deficiency', score: 0.97, ei: 0.96, src: 'UniProt' },
+      { dis: 'Malaria, resistance', score: 0.72, ei: 0.68, src: 'GWAS/literature' },
+      { dis: 'Hemolytic Anemia', score: 0.88, ei: 0.85, src: 'ClinVar' },
+    ],
+    APOL1: [
+      { dis: 'Focal Segmental Glomerulosclerosis', score: 0.95, ei: 0.93, src: 'ClinVar/GWAS' },
+      { dis: 'Kidney Failure, Chronic', score: 0.91, ei: 0.9, src: 'H3Africa/GWAS' },
+      { dis: 'Sleeping Sickness Resistance', score: 0.78, ei: 0.72, src: 'Literature' },
+    ],
+    KCNJ11: [
+      { dis: 'Diabetes Mellitus, Type 2', score: 0.92, ei: 0.89, src: 'GWAS catalog' },
+      { dis: 'Hyperinsulinism', score: 0.86, ei: 0.83, src: 'ClinVar' },
+    ],
+    CYP2D6: [
+      { dis: 'Drug Metabolism Deficiency', score: 0.89, ei: 0.88, src: 'PharmGKB' },
+      { dis: 'Codeine Toxicity', score: 0.82, ei: 0.81, src: 'CPIC/PharmGKB' },
+    ],
+    TNF: [
+      { dis: 'Malaria, Cerebral', score: 0.79, ei: 0.77, src: 'GWAS/Literature' },
+      { dis: 'Rheumatoid Arthritis', score: 0.93, ei: 0.91, src: 'GWAS catalog' },
+      { dis: 'Tuberculosis susceptibility', score: 0.75, ei: 0.72, src: 'Literature' },
+    ],
+    BRCA1: [
+      { dis: 'Breast Neoplasms', score: 0.99, ei: 0.98, src: 'ClinVar/OMIM' },
+      { dis: 'Ovarian Neoplasms', score: 0.97, ei: 0.96, src: 'ClinVar' },
+    ],
+    CCR5: [
+      { dis: 'HIV Infections', score: 0.94, ei: 0.93, src: 'PharmGKB/ClinVar' },
+      { dis: 'West Nile Fever susceptibility', score: 0.68, ei: 0.65, src: 'Literature' },
+    ],
+    TLR4: [
+      { dis: 'Sepsis susceptibility', score: 0.76, ei: 0.74, src: 'GWAS/Literature' },
+      { dis: 'Malaria, severe', score: 0.71, ei: 0.68, src: 'H3Africa GWAS' },
+    ],
   };
 
   /* ─── DisGeNET live API ─── */
@@ -90,13 +139,24 @@ OmicsLab.GeneLookup = (function () {
 
     el.innerHTML = '<div class="gl-loading">Fetching DisGeNET associations…</div>';
     try {
-      const res = await fetch(`https://www.disgenet.org/api/gda/gene/symbol/${encodeURIComponent(symbol)}?limit=10&format=json`, {
-        headers: { Authorization: `Bearer ${apiKey}` },
-      });
+      const res = await fetch(
+        `https://www.disgenet.org/api/gda/gene/symbol/${encodeURIComponent(symbol)}?limit=10&format=json`,
+        {
+          headers: { Authorization: `Bearer ${apiKey}` },
+        }
+      );
       if (!res.ok) throw new Error('DisGeNET API ' + res.status);
       const data = await res.json();
-      if (!data?.length) { el.innerHTML = `<div class="gl-section"><div class="gl-section-title">DisGeNET</div><div class="gl-dgn-empty">No disease associations found for ${_esc(symbol)}.</div></div>`; return; }
-      const rows = data.map(d => ({ dis: d.disease_name || d.diseaseName, score: d.score, ei: d.ei, src: d.source }));
+      if (!data?.length) {
+        el.innerHTML = `<div class="gl-section"><div class="gl-section-title">DisGeNET</div><div class="gl-dgn-empty">No disease associations found for ${_esc(symbol)}.</div></div>`;
+        return;
+      }
+      const rows = data.map((d) => ({
+        dis: d.disease_name || d.diseaseName,
+        score: d.score,
+        ei: d.ei,
+        src: d.source,
+      }));
       el.innerHTML = _renderDisGeNETPanel(symbol, rows, true);
     } catch {
       /* Fall back to curated */
@@ -110,7 +170,17 @@ OmicsLab.GeneLookup = (function () {
   }
 
   function _renderDisGeNETPanel(symbol, rows, isLive) {
-    const afr = ['Anemia, Sickle Cell','beta-Thalassemia','Glucosephosphate Dehydrogenase Deficiency','Focal Segmental Glomerulosclerosis','Kidney Failure, Chronic','Malaria','Sleeping Sickness','Tuberculosis','HIV'];
+    const afr = [
+      'Anemia, Sickle Cell',
+      'beta-Thalassemia',
+      'Glucosephosphate Dehydrogenase Deficiency',
+      'Focal Segmental Glomerulosclerosis',
+      'Kidney Failure, Chronic',
+      'Malaria',
+      'Sleeping Sickness',
+      'Tuberculosis',
+      'HIV',
+    ];
     return `<div class="gl-section">
       <div class="gl-section-title">
         DisGeNET — Disease Associations
@@ -119,9 +189,10 @@ OmicsLab.GeneLookup = (function () {
       <table class="gl-dgn-table">
         <thead><tr><th>Disease</th><th title="DisGeNET score">Score</th><th>Source</th></tr></thead>
         <tbody>
-          ${rows.map(r => {
-            const isAfr = afr.some(a => (r.dis || '').toLowerCase().includes(a.toLowerCase()));
-            return `<tr class="${isAfr ? 'gl-dgn-afr-row' : ''}">
+          ${rows
+            .map((r) => {
+              const isAfr = afr.some((a) => (r.dis || '').toLowerCase().includes(a.toLowerCase()));
+              return `<tr class="${isAfr ? 'gl-dgn-afr-row' : ''}">
               <td>
                 ${isAfr ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="#f97316" aria-hidden="true"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"/></svg>' : ''}
                 <a class="gl-dgn-dis-link" href="https://www.disgenet.com/search?disease=${encodeURIComponent(r.dis || '')}" target="_blank" rel="noopener">${_esc(r.dis || '—')}</a>
@@ -129,12 +200,13 @@ OmicsLab.GeneLookup = (function () {
               <td>
                 <div class="gl-dgn-score-row">
                   <span class="gl-dgn-score-val">${typeof r.score === 'number' ? r.score.toFixed(3) : '—'}</span>
-                  ${typeof r.score === 'number' ? `<div class="gl-dgn-score-bar"><div class="gl-dgn-score-fill" style="width:${Math.round(r.score*100)}%"></div></div>` : ''}
+                  ${typeof r.score === 'number' ? `<div class="gl-dgn-score-bar"><div class="gl-dgn-score-fill" style="width:${Math.round(r.score * 100)}%"></div></div>` : ''}
                 </div>
               </td>
               <td class="gl-dgn-src">${_esc(r.src || '—')}</td>
             </tr>`;
-          }).join('')}
+            })
+            .join('')}
         </tbody>
       </table>
       <div class="gl-dgn-footer">
@@ -166,36 +238,52 @@ OmicsLab.GeneLookup = (function () {
   }
 
   /* ─── Render ─── */
-  function _el() { return document.getElementById('gl-result'); }
+  function _el() {
+    return document.getElementById('gl-result');
+  }
 
   function _renderLoading(symbol) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="gl-loading"><div class="gl-spinner"></div> Looking up ${_esc(symbol)} in Ensembl…</div>`;
+    if (el)
+      el.innerHTML = `<div class="gl-loading"><div class="gl-spinner"></div> Looking up ${_esc(symbol)} in Ensembl…</div>`;
   }
 
   function _renderError(msg) {
     const el = _el();
-    if (el) el.innerHTML = `<div class="gl-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
+    if (el)
+      el.innerHTML = `<div class="gl-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
   }
 
   function _renderGene(gene, phenotypes, variants) {
     const el = _el();
     if (!el) return;
 
-    const kb    = Math.round(Math.abs((gene.end - gene.start)) / 1000);
+    const kb = Math.round(Math.abs(gene.end - gene.start) / 1000);
     const trans = (gene.Transcript || []).slice(0, 10);
     const phens = (phenotypes || []).slice(0, 8);
 
     /* Cross-links */
     const symbol = gene.display_name || gene.id;
     const links = [
-      { label: 'Ensembl',   url: `https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=${gene.id}` },
-      { label: 'gnomAD',    url: `https://gnomad.broadinstitute.org/gene/${gene.id}` },
-      { label: 'OMIM',      url: `https://www.omim.org/search?search=${encodeURIComponent(symbol)}` },
-      { label: 'ClinVar',   url: `https://www.ncbi.nlm.nih.gov/clinvar/?term=${encodeURIComponent(symbol)}[gene]` },
-      { label: 'UniProt',   url: `https://www.uniprot.org/uniprot/?query=gene:${encodeURIComponent(symbol)}+AND+organism:9606` },
-      { label: 'AlphaFold', url: `https://alphafold.ebi.ac.uk/search/text/${encodeURIComponent(symbol)}` },
-      { label: 'GeneCards', url: `https://www.genecards.org/cgi-bin/carddisp.pl?gene=${encodeURIComponent(symbol)}` },
+      { label: 'Ensembl', url: `https://www.ensembl.org/Homo_sapiens/Gene/Summary?g=${gene.id}` },
+      { label: 'gnomAD', url: `https://gnomad.broadinstitute.org/gene/${gene.id}` },
+      { label: 'OMIM', url: `https://www.omim.org/search?search=${encodeURIComponent(symbol)}` },
+      {
+        label: 'ClinVar',
+        url: `https://www.ncbi.nlm.nih.gov/clinvar/?term=${encodeURIComponent(symbol)}[gene]`,
+      },
+      {
+        label: 'UniProt',
+        url: `https://www.uniprot.org/uniprot/?query=gene:${encodeURIComponent(symbol)}+AND+organism:9606`,
+      },
+      {
+        label: 'AlphaFold',
+        url: `https://alphafold.ebi.ac.uk/search/text/${encodeURIComponent(symbol)}`,
+      },
+      {
+        label: 'GeneCards',
+        url: `https://www.genecards.org/cgi-bin/carddisp.pl?gene=${encodeURIComponent(symbol)}`,
+      },
     ];
 
     el.innerHTML = `
@@ -236,54 +324,78 @@ OmicsLab.GeneLookup = (function () {
         </div>
 
         <div class="gl-gene-links">
-          ${links.map(l => `<a class="gl-ext-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
+          ${links.map((l) => `<a class="gl-ext-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('')}
           <button class="gl-ext-link gl-protein-btn" onclick="OmicsLab.GeneLookup._openAlphaFold('${_esc(symbol)}')">
             View protein structure
           </button>
         </div>
 
-        ${trans.length ? `
+        ${
+          trans.length
+            ? `
           <div class="gl-section">
             <div class="gl-section-title">Transcripts (${(gene.Transcript || []).length} total)</div>
             <div class="gl-transcript-list">
-              ${trans.map(t => `
+              ${trans
+                .map(
+                  (t) => `
                 <div class="gl-transcript-row">
                   <span class="gl-mono">${_esc(t.id)}</span>
                   <span class="gl-biotype-tag">${_esc(t.biotype)}</span>
-                  <span class="gl-tx-len">${t.length ? (t.length).toLocaleString() + ' bp' : ''}</span>
-                </div>`).join('')}
+                  <span class="gl-tx-len">${t.length ? t.length.toLocaleString() + ' bp' : ''}</span>
+                </div>`
+                )
+                .join('')}
             </div>
-          </div>` : ''}
+          </div>`
+            : ''
+        }
 
-        ${phens.length ? `
+        ${
+          phens.length
+            ? `
           <div class="gl-section">
             <div class="gl-section-title">Associated phenotypes</div>
             <div class="gl-phenotype-list">
-              ${phens.map(p => `
+              ${phens
+                .map(
+                  (p) => `
                 <div class="gl-phenotype-item">
                   <span class="gl-phen-name">${_esc(p.description || p.trait || '')}</span>
                   ${p.source ? `<span class="gl-phen-source">${_esc(p.source)}</span>` : ''}
-                </div>`).join('')}
+                </div>`
+                )
+                .join('')}
             </div>
-          </div>` : ''}
+          </div>`
+            : ''
+        }
 
-        ${variants.length ? `
+        ${
+          variants.length
+            ? `
           <div class="gl-section">
             <div class="gl-section-title">Known variants (top ${variants.length})</div>
             <div class="gl-variant-table-wrap">
               <table class="gl-variant-table">
                 <thead><tr><th>rsID</th><th>Type</th><th>Position</th></tr></thead>
                 <tbody>
-                  ${variants.map(v => `
+                  ${variants
+                    .map(
+                      (v) => `
                     <tr>
                       <td><a href="https://www.ncbi.nlm.nih.gov/snp/${_esc(v.id)}" target="_blank" rel="noopener" class="gl-snp-link">${_esc(v.id || '—')}</a></td>
                       <td>${_esc(v.feature_type || '')}</td>
-                      <td class="gl-mono">${_esc(String(v.seq_region_name))}:${(v.start||0).toLocaleString()}</td>
-                    </tr>`).join('')}
+                      <td class="gl-mono">${_esc(String(v.seq_region_name))}:${(v.start || 0).toLocaleString()}</td>
+                    </tr>`
+                    )
+                    .join('')}
                 </tbody>
               </table>
             </div>
-          </div>` : ''}
+          </div>`
+            : ''
+        }
 
         <!-- DisGeNET panel injected async after Ensembl renders -->
         <div id="gl-disgenet-panel"></div>
@@ -327,8 +439,9 @@ OmicsLab.GeneLookup = (function () {
 
         <div class="gl-africa-genes">
           <div class="gl-africa-label">African disease genes:</div>
-          ${AFRICA_GENES.map(g =>
-            `<button class="gl-gene-chip" onclick="OmicsLab.GeneLookup._quickLookup('${g.symbol}')" title="${_esc(g.desc)}">${g.symbol}</button>`
+          ${AFRICA_GENES.map(
+            (g) =>
+              `<button class="gl-gene-chip" onclick="OmicsLab.GeneLookup._quickLookup('${g.symbol}')" title="${_esc(g.desc)}">${g.symbol}</button>`
           ).join('')}
         </div>
 
@@ -348,7 +461,7 @@ OmicsLab.GeneLookup = (function () {
   }
 
   function _esc(s) {
-    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   return { init, lookup, _quickLookup, _openAlphaFold, _fetchDisGeNET };

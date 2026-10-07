@@ -10,14 +10,23 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.WasmTools = (function () {
-
   const MODE_KEY = 'omicslab_wasm_mode';
   let _mode = localStorage.getItem(MODE_KEY) || 'simulation';
 
-  function getMode()       { return _mode; }
-  function isRealMode()    { return _mode === 'real'; }
-  function setMode(m)      { _mode = m; localStorage.setItem(MODE_KEY, m); }
-  function toggleMode()    { setMode(_mode === 'real' ? 'simulation' : 'real'); return _mode; }
+  function getMode() {
+    return _mode;
+  }
+  function isRealMode() {
+    return _mode === 'real';
+  }
+  function setMode(m) {
+    _mode = m;
+    localStorage.setItem(MODE_KEY, m);
+  }
+  function toggleMode() {
+    setMode(_mode === 'real' ? 'simulation' : 'real');
+    return _mode;
+  }
 
   /* ══════════════════════════════════════════════════════════════
      FASTA / FASTQ tools (seqtk-equivalent, pure JS)
@@ -28,8 +37,8 @@ OmicsLab.WasmTools = (function () {
     const records = [];
     const lines = text.trim().split(/\r?\n/);
     for (let i = 0; i < lines.length - 3; i += 4) {
-      const id   = lines[i].slice(1).trim();
-      const seq  = lines[i + 1].trim();
+      const id = lines[i].slice(1).trim();
+      const seq = lines[i + 1].trim();
       const qual = lines[i + 3].trim();
       if (id && seq && qual.length === seq.length) records.push({ id, seq, qual });
     }
@@ -57,33 +66,54 @@ OmicsLab.WasmTools = (function () {
     const records = parseFASTQ(text);
     /* Seeded pseudo-random (LCG) */
     let rng = seed;
-    const next = () => { rng = (rng * 1664525 + 1013904223) & 0xffffffff; return (rng >>> 0) / 0xffffffff; };
+    const next = () => {
+      rng = (rng * 1664525 + 1013904223) & 0xffffffff;
+      return (rng >>> 0) / 0xffffffff;
+    };
     const sampled = records.filter(() => next() < fraction);
-    return sampled.map(r => `@${r.id}\n${r.seq}\n+\n${r.qual}`).join('\n');
+    return sampled.map((r) => `@${r.id}\n${r.seq}\n+\n${r.qual}`).join('\n');
   }
 
   /* ─── FASTQ → FASTA conversion ─── */
   function fastqToFasta(text) {
-    return parseFASTQ(text).map(r => `>${r.id}\n${r.seq}`).join('\n');
+    return parseFASTQ(text)
+      .map((r) => `>${r.id}\n${r.seq}`)
+      .join('\n');
   }
 
   /* ─── Reverse complement ─── */
   function reverseComplement(seq) {
-    const comp = { A:'T', T:'A', G:'C', C:'G', N:'N', U:'A', a:'t', t:'a', g:'c', c:'g', n:'n' };
-    return seq.split('').reverse().map(b => comp[b] || 'N').join('');
+    const comp = {
+      A: 'T',
+      T: 'A',
+      G: 'C',
+      C: 'G',
+      N: 'N',
+      U: 'A',
+      a: 't',
+      t: 'a',
+      g: 'c',
+      c: 'g',
+      n: 'n',
+    };
+    return seq
+      .split('')
+      .reverse()
+      .map((b) => comp[b] || 'N')
+      .join('');
   }
 
   /* ─── GC content ─── */
   function gcContent(seq) {
     const upper = seq.toUpperCase();
     const gc = (upper.match(/[GC]/g) || []).length;
-    return upper.length ? (gc / upper.length * 100).toFixed(1) : '0.0';
+    return upper.length ? ((gc / upper.length) * 100).toFixed(1) : '0.0';
   }
 
   /* ─── N50 calculation ─── */
   function n50(sequences) {
-    const lengths = sequences.map(s => s.seq.length).sort((a, b) => b - a);
-    const total   = lengths.reduce((s, l) => s + l, 0);
+    const lengths = sequences.map((s) => s.seq.length).sort((a, b) => b - a);
+    const total = lengths.reduce((s, l) => s + l, 0);
     let cum = 0;
     for (const l of lengths) {
       cum += l;
@@ -96,9 +126,9 @@ OmicsLab.WasmTools = (function () {
   function fastqStats(text) {
     const records = parseFASTQ(text);
     if (!records.length) return null;
-    const readLengths = records.map(r => r.seq.length);
-    const avgPhred = records.map(r => {
-      const q = r.qual.split('').map(c => c.charCodeAt(0) - 33);
+    const readLengths = records.map((r) => r.seq.length);
+    const avgPhred = records.map((r) => {
+      const q = r.qual.split('').map((c) => c.charCodeAt(0) - 33);
       return q.reduce((s, v) => s + v, 0) / q.length;
     });
     const totalBases = readLengths.reduce((s, l) => s + l, 0);
@@ -109,11 +139,15 @@ OmicsLab.WasmTools = (function () {
       minLength: Math.min(...readLengths),
       maxLength: Math.max(...readLengths),
       avgQ: (avgPhred.reduce((s, v) => s + v, 0) / avgPhred.length).toFixed(1),
-      q30Pct: (records.filter(r => {
-        const q = r.qual.split('').map(c => c.charCodeAt(0) - 33);
-        return q.every(v => v >= 30);
-      }).length / records.length * 100).toFixed(1),
-      gcContent: gcContent(records.map(r => r.seq).join('')),
+      q30Pct: (
+        (records.filter((r) => {
+          const q = r.qual.split('').map((c) => c.charCodeAt(0) - 33);
+          return q.every((v) => v >= 30);
+        }).length /
+          records.length) *
+        100
+      ).toFixed(1),
+      gcContent: gcContent(records.map((r) => r.seq).join('')),
     };
   }
 
@@ -122,41 +156,67 @@ OmicsLab.WasmTools = (function () {
      ══════════════════════════════════════════════════════════════ */
 
   function smithWaterman(seqA, seqB, opts = {}) {
-    const MATCH    = opts.match    || 2;
+    const MATCH = opts.match || 2;
     const MISMATCH = opts.mismatch || -1;
-    const GAP      = opts.gap      || -2;
+    const GAP = opts.gap || -2;
 
-    const m = seqA.length, n = seqB.length;
+    const m = seqA.length,
+      n = seqB.length;
     const H = Array.from({ length: m + 1 }, () => new Int16Array(n + 1));
-    let maxScore = 0, maxI = 0, maxJ = 0;
+    let maxScore = 0,
+      maxI = 0,
+      maxJ = 0;
 
     for (let i = 1; i <= m; i++) {
       for (let j = 1; j <= n; j++) {
-        const diag = H[i-1][j-1] + (seqA[i-1] === seqB[j-1] ? MATCH : MISMATCH);
-        const up   = H[i-1][j]   + GAP;
-        const left = H[i][j-1]   + GAP;
+        const diag = H[i - 1][j - 1] + (seqA[i - 1] === seqB[j - 1] ? MATCH : MISMATCH);
+        const up = H[i - 1][j] + GAP;
+        const left = H[i][j - 1] + GAP;
         H[i][j] = Math.max(0, diag, up, left);
-        if (H[i][j] > maxScore) { maxScore = H[i][j]; maxI = i; maxJ = j; }
+        if (H[i][j] > maxScore) {
+          maxScore = H[i][j];
+          maxI = i;
+          maxJ = j;
+        }
       }
     }
 
     /* Traceback */
-    let i = maxI, j = maxJ;
-    let alignA = '', alignB = '', match = '';
+    let i = maxI,
+      j = maxJ;
+    let alignA = '',
+      alignB = '',
+      match = '';
     while (i > 0 && j > 0 && H[i][j] > 0) {
-      if (H[i][j] === H[i-1][j-1] + (seqA[i-1] === seqB[j-1] ? MATCH : MISMATCH)) {
-        alignA = seqA[i-1] + alignA; alignB = seqB[j-1] + alignB;
-        match = (seqA[i-1] === seqB[j-1] ? '|' : '.') + match;
-        i--; j--;
-      } else if (H[i][j] === H[i-1][j] + GAP) {
-        alignA = seqA[i-1] + alignA; alignB = '-' + alignB; match = ' ' + match; i--;
+      if (H[i][j] === H[i - 1][j - 1] + (seqA[i - 1] === seqB[j - 1] ? MATCH : MISMATCH)) {
+        alignA = seqA[i - 1] + alignA;
+        alignB = seqB[j - 1] + alignB;
+        match = (seqA[i - 1] === seqB[j - 1] ? '|' : '.') + match;
+        i--;
+        j--;
+      } else if (H[i][j] === H[i - 1][j] + GAP) {
+        alignA = seqA[i - 1] + alignA;
+        alignB = '-' + alignB;
+        match = ' ' + match;
+        i--;
       } else {
-        alignA = '-' + alignA; alignB = seqB[j-1] + alignB; match = ' ' + match; j--;
+        alignA = '-' + alignA;
+        alignB = seqB[j - 1] + alignB;
+        match = ' ' + match;
+        j--;
       }
     }
 
-    const identity = (match.split('|').length - 1) / Math.max(alignA.length, 1) * 100;
-    return { score: maxScore, alignA, alignB, matchStr: match, identity: identity.toFixed(1), startI: i, startJ: j };
+    const identity = ((match.split('|').length - 1) / Math.max(alignA.length, 1)) * 100;
+    return {
+      score: maxScore,
+      alignA,
+      alignB,
+      matchStr: match,
+      identity: identity.toFixed(1),
+      startI: i,
+      startJ: j,
+    };
   }
 
   /* ──────────────────────────────────────────────────
@@ -177,9 +237,11 @@ OmicsLab.WasmTools = (function () {
     const qKmers = kmerSketch(query, k);
     const tKmers = kmerSketch(target, k);
     let hits = 0;
-    qKmers.forEach((qpos, km) => { if (tKmers.has(km)) hits += Math.min(qpos.length, tKmers.get(km).length); });
+    qKmers.forEach((qpos, km) => {
+      if (tKmers.has(km)) hits += Math.min(qpos.length, tKmers.get(km).length);
+    });
     const possible = Math.max(query.length - k + 1, 1);
-    const identity = Math.min(100, (hits / possible * 100 * 1.8)).toFixed(1);
+    const identity = Math.min(100, (hits / possible) * 100 * 1.8).toFixed(1);
     return { hits, possible, identity, aligned: hits > 3 };
   }
 
@@ -188,21 +250,36 @@ OmicsLab.WasmTools = (function () {
      ══════════════════════════════════════════════════════════════ */
 
   function parseSAMFlagstat(samText) {
-    const lines = samText.split(/\r?\n/).filter(l => l && !l.startsWith('@'));
-    let total = 0, mapped = 0, paired = 0, properPaired = 0, qcFail = 0, dup = 0;
+    const lines = samText.split(/\r?\n/).filter((l) => l && !l.startsWith('@'));
+    let total = 0,
+      mapped = 0,
+      paired = 0,
+      properPaired = 0,
+      qcFail = 0,
+      dup = 0;
     for (const line of lines) {
       const cols = line.split('\t');
       if (cols.length < 11) continue;
       const flag = parseInt(cols[1]);
       total++;
-      if (flag & 0x4)   { /* unmapped */ } else mapped++;
-      if (flag & 0x1)   paired++;
-      if (flag & 0x2)   properPaired++;
+      if (flag & 0x4) {
+        /* unmapped */
+      } else mapped++;
+      if (flag & 0x1) paired++;
+      if (flag & 0x2) properPaired++;
       if (flag & 0x200) qcFail++;
       if (flag & 0x400) dup++;
     }
-    return { total, mapped, unmapped: total - mapped, paired, properPaired, qcFail, dup,
-      mappedPct: total ? (mapped / total * 100).toFixed(1) : '0.0' };
+    return {
+      total,
+      mapped,
+      unmapped: total - mapped,
+      paired,
+      properPaired,
+      qcFail,
+      dup,
+      mappedPct: total ? ((mapped / total) * 100).toFixed(1) : '0.0',
+    };
   }
 
   /* ══════════════════════════════════════════════════════════════
@@ -237,12 +314,24 @@ OmicsLab.WasmTools = (function () {
 
   /* ─── Public API ─── */
   return {
-    getMode, isRealMode, setMode, toggleMode, renderModeBadge,
+    getMode,
+    isRealMode,
+    setMode,
+    toggleMode,
+    renderModeBadge,
     /* FASTA/FASTQ */
-    parseFASTQ, parseFASTA, fastqToFasta, subsampleFASTQ, fastqStats,
-    reverseComplement, gcContent, n50,
+    parseFASTQ,
+    parseFASTA,
+    fastqToFasta,
+    subsampleFASTQ,
+    fastqStats,
+    reverseComplement,
+    gcContent,
+    n50,
     /* Alignment */
-    smithWaterman, quickAlign, kmerSketch,
+    smithWaterman,
+    quickAlign,
+    kmerSketch,
     /* SAM */
     parseSAMFlagstat,
   };

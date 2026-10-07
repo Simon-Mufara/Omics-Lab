@@ -5,39 +5,38 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Equipment = {
-
   /* Sim duration per equipment type (ms) — real duration shown as label */
   _simDurations: {
-    'sample-prep':  0,       // static — no timer needed
-    'centrifuge':   3500,    // real: 10 min · 12,000 × g · 4°C
-    'covaris':      3000,    // real: 10 min · 175 W AFA
-    'thermocycler': 4000,    // real: 30–90 min · 30–35 cycles
-    'bioanalyzer':  3500,    // real: 30 min electrophoresis
-    'tn5-reaction': 3000,    // real: 30 min · 37°C
-    'chromium':     4500,    // real: 18 min GEM generation
-    'sequencer':    5000,    // real: 24–48 h SBS
-    'mass-spec':    4500,    // real: 30–90 min per sample
-    'hplc':         4000,    // real: 90 min LC gradient
-    'qpcr':         4500,    // real: 90 min · 40 cycles
-    'magnet':       2000,    // real: 2–5 min
-    'sonicator':    3000,    // real: 30 min · 30s on/off
-    'hemocytometer':2500,    // real: 5 min
-    'bead-beat':    2500,    // real: 45 s · 6,500 rpm
-    'ip-tube':      3000,    // real: overnight · 4°C
-    'ice-bucket':   2500,    // real: 30 min on ice
-    'wash-station': 2000,    // real: 5 min
-    'bench-prep':   2000,    // real: 10 min
-    'tube-spin':    3000,    // real: 30 min dissociation
-    'computer':     3500,    // real: minutes–hours on HPC
-    'robot':        3500,    // real: 1–2 h automated extraction
-    'generic':      2500,
+    'sample-prep': 0, // static — no timer needed
+    centrifuge: 3500, // real: 10 min · 12,000 × g · 4°C
+    covaris: 3000, // real: 10 min · 175 W AFA
+    thermocycler: 4000, // real: 30–90 min · 30–35 cycles
+    bioanalyzer: 3500, // real: 30 min electrophoresis
+    'tn5-reaction': 3000, // real: 30 min · 37°C
+    chromium: 4500, // real: 18 min GEM generation
+    sequencer: 5000, // real: 24–48 h SBS
+    'mass-spec': 4500, // real: 30–90 min per sample
+    hplc: 4000, // real: 90 min LC gradient
+    qpcr: 4500, // real: 90 min · 40 cycles
+    magnet: 2000, // real: 2–5 min
+    sonicator: 3000, // real: 30 min · 30s on/off
+    hemocytometer: 2500, // real: 5 min
+    'bead-beat': 2500, // real: 45 s · 6,500 rpm
+    'ip-tube': 3000, // real: overnight · 4°C
+    'ice-bucket': 2500, // real: 30 min on ice
+    'wash-station': 2000, // real: 5 min
+    'bench-prep': 2000, // real: 10 min
+    'tube-spin': 3000, // real: 30 min dissociation
+    computer: 3500, // real: minutes–hours on HPC
+    robot: 3500, // real: 1–2 h automated extraction
+    generic: 2500,
   },
 
   /* Returns HTML for a given equipment type */
   render(type, params) {
-    const fn  = this._renderers[type];
+    const fn = this._renderers[type];
     const html = fn ? fn(params || {}) : this._renderers.generic(params || {});
-    const ms   = this._simDurations[type];
+    const ms = this._simDurations[type];
     if (!ms) return html;
     return html.replace('class="equip-visual', `class="equip-visual" data-sim-duration="${ms}"`);
   },
@@ -46,60 +45,97 @@ OmicsLab.Equipment = {
   resolveType(stepId, phase) {
     const map = {
       // By step ID
-      'dna-source':'sample-prep',  'rna-sample':'sample-prep',
-      'dna-extraction':'centrifuge', 'rna-extraction':'centrifuge',
-      'meta-extraction':'bead-beat', '16s-dna':'bead-beat',
-      'viral-rna':'centrifuge',
-      'atac-lysis':'centrifuge',   'prot-lysis':'centrifuge',
-      'meta-sample':'centrifuge',  'protein-precip':'centrifuge',
-      'fragment-size':'covaris',   'frag-time':'thermocycler',
-      'rin-check':'bioanalyzer',
-      'tn5-conc':'tn5-reaction',   'tagment-time':'thermocycler',
-      'fixation':'thermocycler',   'wash-salt':'magnet',
-      'cdna-cycles':'thermocycler','pcr-rna':'thermocycler',
-      'pcr-16s':'thermocycler',    'pcr-cycles-wgs':'thermocycler',
-      'pcr-atac':'thermocycler',   'atac-pcr':'thermocycler',
-      'cell-load':'chromium',      'gem-chip':'chromium',
-      'cite-chip':'chromium',      'dissociation':'tube-spin',
-      'viability':'hemocytometer',
-      'sequencer-wgs':'sequencer', 'ms-acquisition':'mass-spec',
-      'lc-column':'hplc',          'on-target':'sequencer',
-      'ct-threshold':'qpcr',       'artic-primers':'thermocycler',
-      'library-viral':'thermocycler',
-      'alignment':'computer',      'aligner-rna':'computer',
-      'variant-caller':'computer', 'de-method':'computer',
-      'deseq-method':'computer',   'tax-classifier':'computer',
-      'functional':'computer',     'normalization':'computer',
-      'doublet-removal':'computer','batch-correction':'computer',
-      'peak-caller':'computer',    'motif-analysis':'computer',
-      'mito-filter':'computer',    'idr-chip':'computer',
-      'annotation-wes':'computer', 'asv-otu':'computer',
-      'feature-detect':'computer', 'prot-quant':'computer',
-      'lineage':'computer',        'cite-integration':'computer',
+      'dna-source': 'sample-prep',
+      'rna-sample': 'sample-prep',
+      'dna-extraction': 'centrifuge',
+      'rna-extraction': 'centrifuge',
+      'meta-extraction': 'bead-beat',
+      '16s-dna': 'bead-beat',
+      'viral-rna': 'centrifuge',
+      'atac-lysis': 'centrifuge',
+      'prot-lysis': 'centrifuge',
+      'meta-sample': 'centrifuge',
+      'protein-precip': 'centrifuge',
+      'fragment-size': 'covaris',
+      'frag-time': 'thermocycler',
+      'rin-check': 'bioanalyzer',
+      'tn5-conc': 'tn5-reaction',
+      'tagment-time': 'thermocycler',
+      fixation: 'thermocycler',
+      'wash-salt': 'magnet',
+      'cdna-cycles': 'thermocycler',
+      'pcr-rna': 'thermocycler',
+      'pcr-16s': 'thermocycler',
+      'pcr-cycles-wgs': 'thermocycler',
+      'pcr-atac': 'thermocycler',
+      'atac-pcr': 'thermocycler',
+      'cell-load': 'chromium',
+      'gem-chip': 'chromium',
+      'cite-chip': 'chromium',
+      dissociation: 'tube-spin',
+      viability: 'hemocytometer',
+      'sequencer-wgs': 'sequencer',
+      'ms-acquisition': 'mass-spec',
+      'lc-column': 'hplc',
+      'on-target': 'sequencer',
+      'ct-threshold': 'qpcr',
+      'artic-primers': 'thermocycler',
+      'library-viral': 'thermocycler',
+      alignment: 'computer',
+      'aligner-rna': 'computer',
+      'variant-caller': 'computer',
+      'de-method': 'computer',
+      'deseq-method': 'computer',
+      'tax-classifier': 'computer',
+      functional: 'computer',
+      normalization: 'computer',
+      'doublet-removal': 'computer',
+      'batch-correction': 'computer',
+      'peak-caller': 'computer',
+      'motif-analysis': 'computer',
+      'mito-filter': 'computer',
+      'idr-chip': 'computer',
+      'annotation-wes': 'computer',
+      'asv-otu': 'computer',
+      'feature-detect': 'computer',
+      'prot-quant': 'computer',
+      lineage: 'computer',
+      'cite-integration': 'computer',
       /* rt-qpcr steps */
-      'rna-source-qpcr':'sample-prep', 'rna-kit-qpcr':'centrifuge',
-      'cdna-synthesis':'thermocycler', 'qpcr-chem':'qpcr',
-      'pcr-cycles-qpcr':'qpcr',        'anneal-temp':'qpcr',
-      'norm-method':'computer',
+      'rna-source-qpcr': 'sample-prep',
+      'rna-kit-qpcr': 'centrifuge',
+      'cdna-synthesis': 'thermocycler',
+      'qpcr-chem': 'qpcr',
+      'pcr-cycles-qpcr': 'qpcr',
+      'anneal-temp': 'qpcr',
+      'norm-method': 'computer',
       /* ampli-seq steps */
-      'dna-source-amp':'sample-prep',  'dna-ext-amp':'centrifuge',
-      'amp-lib-prep':'thermocycler',   'target-depth':'sequencer',
-      'variant-caller-amp':'computer',
+      'dna-source-amp': 'sample-prep',
+      'dna-ext-amp': 'centrifuge',
+      'amp-lib-prep': 'thermocycler',
+      'target-depth': 'sequencer',
+      'variant-caller-amp': 'computer',
       /* misc */
-      'istd':'bench-prep',         'antibody':'ip-tube',
-      'chipgrade-ab':'ip-tube',    'sonication':'sonicator',
-      'ip-stringency':'magnet',    'wash-cycles':'wash-station',
-      'cite-ab':'ice-bucket',      '16s-primers':'thermocycler',
+      istd: 'bench-prep',
+      antibody: 'ip-tube',
+      'chipgrade-ab': 'ip-tube',
+      sonication: 'sonicator',
+      'ip-stringency': 'magnet',
+      'wash-cycles': 'wash-station',
+      'cite-ab': 'ice-bucket',
+      '16s-primers': 'thermocycler',
     };
-    return map[stepId] || (phase && phase.toLowerCase().includes('bioinformatics') ? 'computer' : 'generic');
+    return (
+      map[stepId] ||
+      (phase && phase.toLowerCase().includes('bioinformatics') ? 'computer' : 'generic')
+    );
   },
 
   _renderers: {
-
     /* ── Sample preparation bench ── */
     'sample-prep': (p) => `
       <div class="equip-visual">
-        <div class="equip-icon-large">${OmicsLab.Icons.svg('snowflake',40)}</div>
+        <div class="equip-icon-large">${OmicsLab.Icons.svg('snowflake', 40)}</div>
         <div class="equip-name-label">Sample Preparation Bench</div>
         <div class="sp-rack">
           <div class="sp-tube t-blue"></div>
@@ -111,7 +147,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Centrifuge ── */
-    'centrifuge': (p) => `
+    centrifuge: (p) => `
       <div class="equip-visual centrifuge-eq">
         <div class="centrifuge-body">
           <div class="centrifuge-lid">
@@ -138,7 +174,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Covaris sonicator ── */
-    'covaris': (p) => `
+    covaris: (p) => `
       <div class="equip-visual">
         <div class="covaris-body">
           <div class="covaris-water-bath">
@@ -157,7 +193,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Thermocycler / PCR machine ── */
-    'thermocycler': (p) => `
+    thermocycler: (p) => `
       <div class="equip-visual thermocycler-eq">
         <div class="tc-body">
           <div class="tc-lid-area">
@@ -165,7 +201,7 @@ OmicsLab.Equipment = {
           </div>
           <div class="tc-block-area">
             <div class="tc-block">
-              ${Array.from({length:48},(_,i)=>`<div class="tc-well w-${i%4}" title="Well ${i+1}"></div>`).join('')}
+              ${Array.from({ length: 48 }, (_, i) => `<div class="tc-well w-${i % 4}" title="Well ${i + 1}"></div>`).join('')}
             </div>
           </div>
           <div class="tc-display">
@@ -181,13 +217,13 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Bioanalyzer / TapeStation ── */
-    'bioanalyzer': (p) => `
+    bioanalyzer: (p) => `
       <div class="equip-visual bioanalyzer-eq">
         <div class="ba-chip">
           <div class="ba-chip-body">
             <div class="ba-chip-label">RNA 6000 Nano Chip</div>
             <div class="ba-wells-row">
-              ${Array.from({length:12},(_,i)=>`<div class="ba-well" style="animation-delay:${i*0.15}s"></div>`).join('')}
+              ${Array.from({ length: 12 }, (_, i) => `<div class="ba-well" style="animation-delay:${i * 0.15}s"></div>`).join('')}
             </div>
           </div>
         </div>
@@ -210,11 +246,11 @@ OmicsLab.Equipment = {
         <div class="tn5-visual">
           <div class="dna-helix-wrap">
             <div class="dna-strand ds1">
-              ${Array.from({length:8},()=>`<div class="dna-base"></div>`).join('')}
+              ${Array.from({ length: 8 }, () => `<div class="dna-base"></div>`).join('')}
             </div>
-            <div class="tn5-enzyme">${OmicsLab.Icons.svg('scissors',22)}</div>
+            <div class="tn5-enzyme">${OmicsLab.Icons.svg('scissors', 22)}</div>
             <div class="dna-strand ds2">
-              ${Array.from({length:8},()=>`<div class="dna-base b2"></div>`).join('')}
+              ${Array.from({ length: 8 }, () => `<div class="dna-base b2"></div>`).join('')}
             </div>
           </div>
           <div class="tn5-adapter-insert">
@@ -228,14 +264,14 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── 10x Chromium ── */
-    'chromium': (p) => `
+    chromium: (p) => `
       <div class="equip-visual chromium-eq">
         <div class="chromium-body">
           <div class="chromium-slot">
             <div class="chip-card">
               <div class="chip-label">Chromium Chip K</div>
               <div class="chip-lanes">
-                ${Array.from({length:8},(_,i)=>`<div class="chip-lane" style="animation-delay:${i*0.2}s"><div class="gem-drop"></div></div>`).join('')}
+                ${Array.from({ length: 8 }, (_, i) => `<div class="chip-lane" style="animation-delay:${i * 0.2}s"><div class="gem-drop"></div></div>`).join('')}
               </div>
             </div>
           </div>
@@ -249,19 +285,22 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Illumina sequencer ── */
-    'sequencer': (p) => `
+    sequencer: (p) => `
       <div class="equip-visual sequencer-eq">
         <div class="seq-body">
           <div class="seq-flow-cell-slot">
             <div class="flow-cell">
               <div class="fc-label">Flow Cell</div>
               <div class="fc-lanes">
-                ${Array.from({length:4},(_,i)=>`
+                ${Array.from(
+                  { length: 4 },
+                  (_, i) => `
                   <div class="fc-lane">
-                    <div class="base-stream" style="animation-delay:${i*0.4}s">
-                      ${Array.from({length:12},()=>`<span class="base-call b-${['A','T','G','C'][Math.floor(Math.random()*4)]}"></span>`).join('')}
+                    <div class="base-stream" style="animation-delay:${i * 0.4}s">
+                      ${Array.from({ length: 12 }, () => `<span class="base-call b-${['A', 'T', 'G', 'C'][Math.floor(Math.random() * 4)]}"></span>`).join('')}
                     </div>
-                  </div>`).join('')}
+                  </div>`
+                ).join('')}
               </div>
             </div>
           </div>
@@ -304,7 +343,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── HPLC ── */
-    'hplc': (p) => `
+    hplc: (p) => `
       <div class="equip-visual hplc-eq">
         <div class="hplc-body">
           <div class="hplc-pump">Quaternary Pump</div>
@@ -330,11 +369,11 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── qPCR machine ── */
-    'qpcr': (p) => `
+    qpcr: (p) => `
       <div class="equip-visual qpcr-eq">
         <div class="qpcr-body">
           <div class="qpcr-plate">
-            ${Array.from({length:24},(_,i)=>`<div class="qpcr-well ${i<8?'positive':'negative'}"></div>`).join('')}
+            ${Array.from({ length: 24 }, (_, i) => `<div class="qpcr-well ${i < 8 ? 'positive' : 'negative'}"></div>`).join('')}
           </div>
           <div class="qpcr-curves">
             <div class="amplification-curve ac1"></div>
@@ -347,17 +386,20 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Magnetic rack / bead cleanup ── */
-    'magnet': (p) => `
+    magnet: (p) => `
       <div class="equip-visual magnet-eq">
         <div class="magnet-rack">
-          <div class="magnet-bar">${OmicsLab.Icons.svg('zap',28)}</div>
+          <div class="magnet-bar">${OmicsLab.Icons.svg('zap', 28)}</div>
           <div class="mag-tube-row">
-            ${Array.from({length:6},(_,i)=>`
+            ${Array.from(
+              { length: 6 },
+              (_, i) => `
               <div class="mag-tube-wrap">
                 <div class="mag-tube">
-                  <div class="bead-pellet" style="animation-delay:${i*0.2}s"></div>
+                  <div class="bead-pellet" style="animation-delay:${i * 0.2}s"></div>
                 </div>
-              </div>`).join('')}
+              </div>`
+            ).join('')}
           </div>
         </div>
         <div class="equip-name-label">DynaMag-2 Magnetic Rack</div>
@@ -365,7 +407,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Sonicator / Bioruptor ── */
-    'sonicator': (p) => `
+    sonicator: (p) => `
       <div class="equip-visual sonicator-eq">
         <div class="sonicator-body">
           <div class="sonic-bath">
@@ -383,20 +425,23 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Hemocytometer / cell counter ── */
-    'hemocytometer': (p) => `
+    hemocytometer: (p) => `
       <div class="equip-visual hemo-eq">
         <div class="hemo-grid">
-          ${Array.from({length:25},(_,i)=>`
+          ${Array.from(
+            { length: 25 },
+            (_, i) => `
             <div class="hemo-sq">
-              ${Math.random()>0.4?'<div class="cell-dot '+(Math.random()>0.15?'live':'dead')+'"></div>':''}
-            </div>`).join('')}
+              ${Math.random() > 0.4 ? '<div class="cell-dot ' + (Math.random() > 0.15 ? 'live' : 'dead') + '"></div>' : ''}
+            </div>`
+          ).join('')}
         </div>
         <div class="hemo-count">
           <span class="hemo-live">● Live</span>
           <span class="hemo-dead">● Dead</span>
         </div>
         <div class="viability-bar-wrap">
-          <div class="viability-bar-fill" style="width:${p.viability||85}%"></div>
+          <div class="viability-bar-fill" style="width:${p.viability || 85}%"></div>
         </div>
         <div class="equip-name-label">Hemocytometer / Luna-FL Cell Counter</div>
       </div>`,
@@ -407,10 +452,10 @@ OmicsLab.Equipment = {
         <div class="bead-beater">
           <div class="bb-tube">
             <div class="bb-beads">
-              ${Array.from({length:12},()=>`<div class="bead"></div>`).join('')}
+              ${Array.from({ length: 12 }, () => `<div class="bead"></div>`).join('')}
             </div>
           </div>
-          <div class="bb-motor spin-fast" style="animation-duration:0.3s">${OmicsLab.Icons.svg('cpu',24)}</div>
+          <div class="bb-motor spin-fast" style="animation-duration:0.3s">${OmicsLab.Icons.svg('cpu', 24)}</div>
         </div>
         <div class="equip-name-label">PowerLyzer Bead Beater</div>
         <div class="equip-sub">6,500 rpm · 45s · 4°C · Breaks gram-positive cell walls</div>
@@ -422,7 +467,7 @@ OmicsLab.Equipment = {
         <div class="ip-tube-vis">
           <div class="ip-tube-body">
             <div class="ip-chromatin"></div>
-            <div class="ip-antibody ab-float">${OmicsLab.Icons.svg('key',14)} Ab</div>
+            <div class="ip-antibody ab-float">${OmicsLab.Icons.svg('key', 14)} Ab</div>
             <div class="ip-beads-vis">
               <div class="ip-bead b1"></div>
               <div class="ip-bead b2"></div>
@@ -438,13 +483,13 @@ OmicsLab.Equipment = {
     'ice-bucket': (p) => `
       <div class="equip-visual ice-eq">
         <div class="ice-bucket-vis">
-          ${OmicsLab.Icons.svg('snowflake',36)}
+          ${OmicsLab.Icons.svg('snowflake', 36)}
           <div class="cell-suspension">
             <div class="cell-dots">
-              ${Array.from({length:8},()=>`<div class="cell-d" style="left:${Math.random()*80}%;top:${Math.random()*80}%"></div>`).join('')}
+              ${Array.from({ length: 8 }, () => `<div class="cell-d" style="left:${Math.random() * 80}%;top:${Math.random() * 80}%"></div>`).join('')}
             </div>
             <div class="ab-label-dots">
-              ${Array.from({length:5},()=>`<div class="ab-d" style="left:${Math.random()*80}%;top:${Math.random()*80}%"></div>`).join('')}
+              ${Array.from({ length: 5 }, () => `<div class="ab-d" style="left:${Math.random() * 80}%;top:${Math.random() * 80}%"></div>`).join('')}
             </div>
           </div>
         </div>
@@ -469,9 +514,9 @@ OmicsLab.Equipment = {
     'bench-prep': (p) => `
       <div class="equip-visual bench-eq">
         <div class="bench-items">
-          <div class="bench-item">${OmicsLab.Icons.svg('scale',16)} Balance</div>
-          <div class="bench-item">${OmicsLab.Icons.svg('flask',16)} Standards</div>
-          <div class="bench-item">${OmicsLab.Icons.svg('microscope',16)} Sample</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('scale', 16)} Balance</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('flask', 16)} Standards</div>
+          <div class="bench-item">${OmicsLab.Icons.svg('microscope', 16)} Sample</div>
         </div>
         <div class="equip-name-label">Analytical Balance + Preparation Bench</div>
       </div>`,
@@ -483,7 +528,7 @@ OmicsLab.Equipment = {
           <div class="ts-tube spin-slow">
             <div class="ts-liquid"></div>
             <div class="ts-cells">
-              ${Array.from({length:6},()=>`<div class="ts-cell"></div>`).join('')}
+              ${Array.from({ length: 6 }, () => `<div class="ts-cell"></div>`).join('')}
             </div>
           </div>
         </div>
@@ -492,7 +537,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Computer / bioinformatics ── */
-    'computer': (p) => `
+    computer: (p) => `
       <div class="equip-visual computer-eq">
         <div class="terminal">
           <div class="terminal-bar">
@@ -513,14 +558,14 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Oxford Nanopore MinION ── */
-    'nanopore': (p) => `
+    nanopore: (p) => `
       <div class="equip-visual nanopore-eq">
         <div class="nanopore-body">
           <div class="nanopore-fc-slot">
             <div class="nanopore-fc">
               <div class="nanopore-fc-label">Flow Cell R10.4.1</div>
               <div class="nanopore-pore-grid">
-                ${Array.from({length:16},(_,i)=>`<div class="npore" style="animation-delay:${(i*0.18).toFixed(2)}s"></div>`).join('')}
+                ${Array.from({ length: 16 }, (_, i) => `<div class="npore" style="animation-delay:${(i * 0.18).toFixed(2)}s"></div>`).join('')}
               </div>
             </div>
           </div>
@@ -535,13 +580,13 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── PacBio SMRT / Revio ── */
-    'pacbio': (p) => `
+    pacbio: (p) => `
       <div class="equip-visual pacbio-eq">
         <div class="pacbio-body">
           <div class="smrt-cell-wrap">
             <div class="smrt-cell-label">SMRT Cell</div>
             <div class="smrt-grid">
-              ${Array.from({length:25},(_,i)=>`<div class="zmw-well" style="animation-delay:${(i*0.09).toFixed(2)}s"></div>`).join('')}
+              ${Array.from({ length: 25 }, (_, i) => `<div class="zmw-well" style="animation-delay:${(i * 0.09).toFixed(2)}s"></div>`).join('')}
             </div>
           </div>
           <div class="pacbio-readout">
@@ -554,7 +599,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── NanoDrop spectrophotometer ── */
-    'nanodrop': (p) => `
+    nanodrop: (p) => `
       <div class="equip-visual nanodrop-eq">
         <div class="nanodrop-body">
           <div class="nd-arm">
@@ -578,7 +623,7 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Qubit Fluorometer ── */
-    'qubit': (p) => `
+    qubit: (p) => `
       <div class="equip-visual qubit-eq">
         <div class="qubit-body">
           <div class="qubit-screen">
@@ -599,13 +644,13 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── FACS Cell Sorter ── */
-    'facs': (p) => `
+    facs: (p) => `
       <div class="equip-visual facs-eq">
         <div class="facs-body">
           <div class="facs-flow-path">
             <div class="facs-sheath">Sheath fluid</div>
             <div class="facs-stream">
-              ${Array.from({length:8},(_,i)=>`<div class="facs-drop" style="animation-delay:${(i*0.25).toFixed(2)}s"></div>`).join('')}
+              ${Array.from({ length: 8 }, (_, i) => `<div class="facs-drop" style="animation-delay:${(i * 0.25).toFixed(2)}s"></div>`).join('')}
             </div>
             <div class="facs-laser-block">
               <div class="facs-laser-beam"></div>
@@ -626,20 +671,20 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Liquid-handling robot / automation workstation ── */
-    'robot': (p) => `
+    robot: (p) => `
       <div class="equip-visual robot-eq">
         <div class="robot-body">
           <div class="robot-arm-track">
             <div class="robot-arm slide-lr">
               <div class="robot-head">${OmicsLab.Icons.svg('cpu', 20)}</div>
               <div class="robot-pipette-array">
-                ${Array.from({length:8},(_,i)=>`<div class="rp-tip" style="animation-delay:${(i*0.12).toFixed(2)}s"></div>`).join('')}
+                ${Array.from({ length: 8 }, (_, i) => `<div class="rp-tip" style="animation-delay:${(i * 0.12).toFixed(2)}s"></div>`).join('')}
               </div>
             </div>
           </div>
           <div class="robot-deck">
             <div class="robot-plate">
-              ${Array.from({length:24},(_,i)=>`<div class="rplate-well ${i<8?'filled':''}"></div>`).join('')}
+              ${Array.from({ length: 24 }, (_, i) => `<div class="rplate-well ${i < 8 ? 'filled' : ''}"></div>`).join('')}
             </div>
             <div class="robot-reagent-block">
               <div class="rrb-tube"></div>
@@ -657,11 +702,11 @@ OmicsLab.Equipment = {
       </div>`,
 
     /* ── Generic fallback ── */
-    'generic': (p) => `
+    generic: (p) => `
       <div class="equip-visual">
         <div class="equip-icon-large">${p.icon || OmicsLab.Icons.svg('microscope', 48)}</div>
         <div class="equip-name-label">${p.name || 'Lab Equipment'}</div>
         <div class="equip-sub">${p.desc || ''}</div>
       </div>`,
-  }
+  },
 };

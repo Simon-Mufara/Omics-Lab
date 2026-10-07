@@ -6,17 +6,56 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Notifications = (function () {
-
   const STORE_KEY = 'omicslab_notifications';
   const MAX_STORED = 60;
 
   /* ─── Seed notifications on first load ─── */
   const SEED = [
-    { id:'n-seed-1', cat:'badge',    title:'Welcome Badge Earned', body:'You opened OmicsLab for the first time. Your "Explorer" badge has been awarded.', ts: Date.now() - 60000*5, read: false, link:'badges' },
-    { id:'n-seed-2', cat:'research', title:'H3Africa AWI-Gen Dataset Available', body:'11,011 samples from the H3Africa AWI-Gen cohort are now browsable in the SRA Browser.', ts: Date.now() - 60000*30, read: false, link:'sra' },
-    { id:'n-seed-3', cat:'outbreak', title:'Mpox Clade I — DRC Outbreak Update', body:'WHO reports 1,247 new confirmed cases in DRC for epidemiological week 22. Genomic data available.', ts: Date.now() - 3600000*2, read: false, link:'alerts' },
-    { id:'n-seed-4', cat:'system',   title:'Offline Mode Active', body:'OmicsLab is cached and works without internet. All 55 tools are available offline.', ts: Date.now() - 3600000*4, read: true,  link:null },
-    { id:'n-seed-5', cat:'update',   title:'Platform v46 Deployed', body:'Knowledge Graph, Settings page, global Notify system, and Error boundary are now live.', ts: Date.now() - 3600000*6, read: true,  link:'knowledge-graph' },
+    {
+      id: 'n-seed-1',
+      cat: 'badge',
+      title: 'Welcome Badge Earned',
+      body: 'You opened OmicsLab for the first time. Your "Explorer" badge has been awarded.',
+      ts: Date.now() - 60000 * 5,
+      read: false,
+      link: 'badges',
+    },
+    {
+      id: 'n-seed-2',
+      cat: 'research',
+      title: 'H3Africa AWI-Gen Dataset Available',
+      body: '11,011 samples from the H3Africa AWI-Gen cohort are now browsable in the SRA Browser.',
+      ts: Date.now() - 60000 * 30,
+      read: false,
+      link: 'sra',
+    },
+    {
+      id: 'n-seed-3',
+      cat: 'outbreak',
+      title: 'Mpox Clade I — DRC Outbreak Update',
+      body: 'WHO reports 1,247 new confirmed cases in DRC for epidemiological week 22. Genomic data available.',
+      ts: Date.now() - 3600000 * 2,
+      read: false,
+      link: 'alerts',
+    },
+    {
+      id: 'n-seed-4',
+      cat: 'system',
+      title: 'Offline Mode Active',
+      body: 'OmicsLab is cached and works without internet. All 55 tools are available offline.',
+      ts: Date.now() - 3600000 * 4,
+      read: true,
+      link: null,
+    },
+    {
+      id: 'n-seed-5',
+      cat: 'update',
+      title: 'Platform v46 Deployed',
+      body: 'Knowledge Graph, Settings page, global Notify system, and Error boundary are now live.',
+      ts: Date.now() - 3600000 * 6,
+      read: true,
+      link: 'knowledge-graph',
+    },
   ];
 
   let _panel = null;
@@ -36,18 +75,20 @@ OmicsLab.Notifications = (function () {
   }
 
   function _save(items) {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(items.slice(0, MAX_STORED))); } catch {}
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(items.slice(0, MAX_STORED)));
+    } catch {}
   }
 
   function _unreadCount() {
-    return _load().filter(n => !n.read).length;
+    return _load().filter((n) => !n.read).length;
   }
 
   /* ─── Add a notification programmatically ─── */
   function add(title, body, options = {}) {
     const items = _load();
     const n = {
-      id: 'n-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
+      id: 'n-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
       cat: options.cat || 'system',
       title,
       body,
@@ -69,7 +110,9 @@ OmicsLab.Notifications = (function () {
       _badge.textContent = count > 9 ? '9+' : count;
       _badge.style.display = count > 0 ? '' : 'none';
     }
-    try { navigator.setAppBadge?.(count); } catch {}
+    try {
+      navigator.setAppBadge?.(count);
+    } catch {}
   }
 
   /* ─── Bell button (injected into nav) ─── */
@@ -109,21 +152,37 @@ OmicsLab.Notifications = (function () {
     document.body.appendChild(_panel);
 
     /* Close on outside click */
-    document.addEventListener('click', e => {
-      if (_open && !_panel.contains(e.target) && !document.getElementById('nt-bell-btn')?.contains(e.target)) close();
+    document.addEventListener('click', (e) => {
+      if (
+        _open &&
+        !_panel.contains(e.target) &&
+        !document.getElementById('nt-bell-btn')?.contains(e.target)
+      )
+        close();
     });
   }
 
   function _renderList() {
     const items = _load();
-    const unread = items.filter(n => !n.read).length;
-    const CAT_COLOR = { system:'#58a6ff', badge:'#e3b341', research:'#00C4A0', outbreak:'#ff6b6b', update:'#bc8cff' };
+    const unread = items.filter((n) => !n.read).length;
+    const CAT_COLOR = {
+      system: '#58a6ff',
+      badge: '#e3b341',
+      research: '#00C4A0',
+      outbreak: '#ff6b6b',
+      update: '#bc8cff',
+    };
     const CAT_ICON = {
-      system:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-      badge:    '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
-      research: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-      outbreak: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-      update:   '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+      system:
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+      badge:
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>',
+      research:
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+      outbreak:
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      update:
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
     };
 
     _panel.innerHTML = `
@@ -141,14 +200,17 @@ OmicsLab.Notifications = (function () {
         </div>
       </div>
       <div class="nt-panel-list">
-        ${items.length === 0 ? '<div class="nt-panel-empty">No notifications yet</div>' :
-          items.map(n => {
-            const col = CAT_COLOR[n.cat] || '#A8A098';
-            const icon = CAT_ICON[n.cat] || CAT_ICON.system;
-            const ago = _timeAgo(n.ts);
-            return `
+        ${
+          items.length === 0
+            ? '<div class="nt-panel-empty">No notifications yet</div>'
+            : items
+                .map((n) => {
+                  const col = CAT_COLOR[n.cat] || '#A8A098';
+                  const icon = CAT_ICON[n.cat] || CAT_ICON.system;
+                  const ago = _timeAgo(n.ts);
+                  return `
               <div class="nt-panel-item${n.read ? '' : ' nt-unread'}" data-id="${n.id}"
-                   onclick="OmicsLab.Notifications._onItemClick('${n.id}','${n.link||''}')">
+                   onclick="OmicsLab.Notifications._onItemClick('${n.id}','${n.link || ''}')">
                 <div class="nt-item-icon" style="color:${col};background:${col}18">${icon}</div>
                 <div class="nt-item-body">
                   <div class="nt-item-title">${_esc(n.title)}</div>
@@ -160,7 +222,8 @@ OmicsLab.Notifications = (function () {
                 </div>
                 ${!n.read ? '<div class="nt-item-dot"></div>' : ''}
               </div>`;
-          }).join('')
+                })
+                .join('')
         }
       </div>`;
   }
@@ -168,15 +231,22 @@ OmicsLab.Notifications = (function () {
   function _timeAgo(ts) {
     const s = Math.floor((Date.now() - ts) / 1000);
     if (s < 60) return 'just now';
-    if (s < 3600) return Math.floor(s/60) + 'm ago';
-    if (s < 86400) return Math.floor(s/3600) + 'h ago';
-    return Math.floor(s/86400) + 'd ago';
+    if (s < 3600) return Math.floor(s / 60) + 'm ago';
+    if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+    return Math.floor(s / 86400) + 'd ago';
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   /* ─── Public API ─── */
-  function toggle() { _open ? close() : open(); }
+  function toggle() {
+    _open ? close() : open();
+  }
 
   function open() {
     _createPanel();
@@ -191,18 +261,20 @@ OmicsLab.Notifications = (function () {
   }
 
   function markAllRead() {
-    const items = _load().map(n => ({ ...n, read: true }));
+    const items = _load().map((n) => ({ ...n, read: true }));
     _save(items);
     _updateBadge();
     _renderList();
   }
 
   function _onItemClick(id, link) {
-    const items = _load().map(n => n.id === id ? { ...n, read: true } : n);
+    const items = _load().map((n) => (n.id === id ? { ...n, read: true } : n));
     _save(items);
     _updateBadge();
-    if (link) { close(); OmicsLab.Router?.navigate(link); }
-    else _renderList();
+    if (link) {
+      close();
+      OmicsLab.Router?.navigate(link);
+    } else _renderList();
   }
 
   function init() {

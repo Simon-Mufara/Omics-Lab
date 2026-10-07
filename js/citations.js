@@ -6,42 +6,100 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Citations = (function () {
-
   const STORE_KEY = 'omicslab_citations';
   const FORMATS = ['APA 7th', 'Vancouver', 'Nature', 'BibTeX', 'RIS'];
 
   /* ─── Pre-loaded African genomics classics ─── */
   const PRELOADED = [
-    { id: 'pre1', doi: '10.1038/s41586-022-04411-y', title: 'Emergence of SARS-CoV-2 Omicron', authors: 'Viana R, Moyo S, Amoako DG, et al.', journal: 'Nature', year: 2021, volume: '603', pages: '679–686', url: '', tags: ['COVID-19','Omicron','WGS'] },
-    { id: 'pre2', doi: '10.1038/ng.2744', title: 'The genomic and phenotypic diversity of Schizosaccharomyces pombe', authors: 'Comas I, Coscolla M, Luo T, et al.', journal: 'Nature Genetics', year: 2013, volume: '45', pages: '1176–1182', url: '', tags: ['TB','Phylogenomics'] },
-    { id: 'pre3', doi: '10.1186/s13059-014-0550-8', title: 'Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2', authors: 'Love MI, Huber W, Anders S.', journal: 'Genome Biology', year: 2014, volume: '15', pages: '550', url: '', tags: ['DESeq2','RNA-seq','Methods'] },
-    { id: 'pre4', doi: '10.1093/bioinformatics/btp324', title: 'Fast and accurate short read alignment with Burrows-Wheeler Aligner', authors: 'Li H, Durbin R.', journal: 'Bioinformatics', year: 2009, volume: '25', pages: '1754–1760', url: '', tags: ['BWA','Alignment','Methods'] },
-    { id: 'pre5', doi: '10.1038/nmeth.1474', title: 'A framework for variant discovery using next-generation DNA sequencing data', authors: 'DePristo MA, Banks E, Poplin R, et al.', journal: 'Nature Methods', year: 2011, volume: '8', pages: '398–404', url: '', tags: ['GATK','Variant calling','Methods'] },
+    {
+      id: 'pre1',
+      doi: '10.1038/s41586-022-04411-y',
+      title: 'Emergence of SARS-CoV-2 Omicron',
+      authors: 'Viana R, Moyo S, Amoako DG, et al.',
+      journal: 'Nature',
+      year: 2021,
+      volume: '603',
+      pages: '679–686',
+      url: '',
+      tags: ['COVID-19', 'Omicron', 'WGS'],
+    },
+    {
+      id: 'pre2',
+      doi: '10.1038/ng.2744',
+      title: 'The genomic and phenotypic diversity of Schizosaccharomyces pombe',
+      authors: 'Comas I, Coscolla M, Luo T, et al.',
+      journal: 'Nature Genetics',
+      year: 2013,
+      volume: '45',
+      pages: '1176–1182',
+      url: '',
+      tags: ['TB', 'Phylogenomics'],
+    },
+    {
+      id: 'pre3',
+      doi: '10.1186/s13059-014-0550-8',
+      title: 'Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2',
+      authors: 'Love MI, Huber W, Anders S.',
+      journal: 'Genome Biology',
+      year: 2014,
+      volume: '15',
+      pages: '550',
+      url: '',
+      tags: ['DESeq2', 'RNA-seq', 'Methods'],
+    },
+    {
+      id: 'pre4',
+      doi: '10.1093/bioinformatics/btp324',
+      title: 'Fast and accurate short read alignment with Burrows-Wheeler Aligner',
+      authors: 'Li H, Durbin R.',
+      journal: 'Bioinformatics',
+      year: 2009,
+      volume: '25',
+      pages: '1754–1760',
+      url: '',
+      tags: ['BWA', 'Alignment', 'Methods'],
+    },
+    {
+      id: 'pre5',
+      doi: '10.1038/nmeth.1474',
+      title: 'A framework for variant discovery using next-generation DNA sequencing data',
+      authors: 'DePristo MA, Banks E, Poplin R, et al.',
+      journal: 'Nature Methods',
+      year: 2011,
+      volume: '8',
+      pages: '398–404',
+      url: '',
+      tags: ['GATK', 'Variant calling', 'Methods'],
+    },
   ];
 
   /* ─── Load / save ─── */
   function _load() {
     try {
       const raw = localStorage.getItem(STORE_KEY);
-      if (!raw) return PRELOADED.map(p => ({ ...p }));
+      if (!raw) return PRELOADED.map((p) => ({ ...p }));
       const saved = JSON.parse(raw);
       return saved;
-    } catch { return PRELOADED.map(p => ({ ...p })); }
+    } catch {
+      return PRELOADED.map((p) => ({ ...p }));
+    }
   }
 
   function _save(refs) {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(refs)); } catch {}
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(refs));
+    } catch {}
   }
 
   /* ─── Format one reference ─── */
   function _format(ref, style) {
     const authors = ref.authors || 'Unknown author';
-    const year    = ref.year    || 'n.d.';
-    const title   = ref.title   || 'Untitled';
+    const year = ref.year || 'n.d.';
+    const title = ref.title || 'Untitled';
     const journal = ref.journal || '';
-    const vol     = ref.volume  ? `${ref.volume}` : '';
-    const pages   = ref.pages   || '';
-    const doi     = ref.doi     ? `https://doi.org/${ref.doi}` : (ref.url || '');
+    const vol = ref.volume ? `${ref.volume}` : '';
+    const pages = ref.pages || '';
+    const doi = ref.doi ? `https://doi.org/${ref.doi}` : ref.url || '';
 
     if (style === 'APA 7th') {
       const pg = pages ? `, ${pages}` : '';
@@ -61,11 +119,14 @@ OmicsLab.Citations = (function () {
       return `${authors} ${title}. *${journal}* **${vol}**${pg} (${year}).${doiPart}`;
     }
     if (style === 'BibTeX') {
-      const key = (authors.split(',')[0].trim().replace(/\s/g,'') + year).replace(/[^a-zA-Z0-9]/g,'');
+      const key = (authors.split(',')[0].trim().replace(/\s/g, '') + year).replace(
+        /[^a-zA-Z0-9]/g,
+        ''
+      );
       return `@article{${key},\n  author={${authors}},\n  title={${title}},\n  journal={${journal}},\n  year={${year}},\n  volume={${vol}},\n  pages={${pages}}${doi ? `,\n  doi={${ref.doi}}` : ''}\n}`;
     }
     if (style === 'RIS') {
-      return `TY  - JOUR\nAU  - ${authors}\nTI  - ${title}\nJO  - ${journal}\nPY  - ${year}\nVL  - ${vol}\nSP  - ${(pages.split('–')[0]||'').trim()}\nEP  - ${(pages.split('–')[1]||'').trim()}${doi ? `\nDO  - ${ref.doi}` : ''}\nER  -`;
+      return `TY  - JOUR\nAU  - ${authors}\nTI  - ${title}\nJO  - ${journal}\nPY  - ${year}\nVL  - ${vol}\nSP  - ${(pages.split('–')[0] || '').trim()}\nEP  - ${(pages.split('–')[1] || '').trim()}${doi ? `\nDO  - ${ref.doi}` : ''}\nER  -`;
     }
     return title;
   }
@@ -73,16 +134,24 @@ OmicsLab.Citations = (function () {
   /* ─── Add reference ─── */
   function _add() {
     const refs = _load();
-    const title   = document.getElementById('cit-title')?.value?.trim();
+    const title = document.getElementById('cit-title')?.value?.trim();
     const authors = document.getElementById('cit-authors')?.value?.trim();
     const journal = document.getElementById('cit-journal')?.value?.trim();
-    const year    = document.getElementById('cit-year')?.value?.trim();
-    const vol     = document.getElementById('cit-volume')?.value?.trim();
-    const pages   = document.getElementById('cit-pages')?.value?.trim();
-    const doi     = document.getElementById('cit-doi')?.value?.trim().replace(/^https?:\/\/doi\.org\//,'');
-    const url     = document.getElementById('cit-url')?.value?.trim();
+    const year = document.getElementById('cit-year')?.value?.trim();
+    const vol = document.getElementById('cit-volume')?.value?.trim();
+    const pages = document.getElementById('cit-pages')?.value?.trim();
+    const doi = document
+      .getElementById('cit-doi')
+      ?.value?.trim()
+      .replace(/^https?:\/\/doi\.org\//, '');
+    const url = document.getElementById('cit-url')?.value?.trim();
     const tagsRaw = document.getElementById('cit-tags')?.value?.trim();
-    const tags    = tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [];
+    const tags = tagsRaw
+      ? tagsRaw
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : [];
 
     if (!title || !authors) {
       const s = document.getElementById('cit-add-status');
@@ -90,25 +159,53 @@ OmicsLab.Citations = (function () {
       return;
     }
 
-    const ref = { id: Date.now().toString(), title, authors, journal: journal||'', year: year||'', volume: vol||'', pages: pages||'', doi: doi||'', url: url||'', tags, addedAt: new Date().toISOString() };
+    const ref = {
+      id: Date.now().toString(),
+      title,
+      authors,
+      journal: journal || '',
+      year: year || '',
+      volume: vol || '',
+      pages: pages || '',
+      doi: doi || '',
+      url: url || '',
+      tags,
+      addedAt: new Date().toISOString(),
+    };
     refs.push(ref);
     _save(refs);
 
     /* Clear form */
-    ['cit-title','cit-authors','cit-journal','cit-year','cit-volume','cit-pages','cit-doi','cit-url','cit-tags'].forEach(id => {
+    [
+      'cit-title',
+      'cit-authors',
+      'cit-journal',
+      'cit-year',
+      'cit-volume',
+      'cit-pages',
+      'cit-doi',
+      'cit-url',
+      'cit-tags',
+    ].forEach((id) => {
       const el = document.getElementById(id);
       if (el) el.value = '';
     });
 
     const s = document.getElementById('cit-add-status');
-    if (s) { s.textContent = `[OK] Added: ${title.slice(0,50)}`; s.style.color = '#00C4A0'; setTimeout(() => { s.textContent=''; }, 3000); }
+    if (s) {
+      s.textContent = `[OK] Added: ${title.slice(0, 50)}`;
+      s.style.color = '#00C4A0';
+      setTimeout(() => {
+        s.textContent = '';
+      }, 3000);
+    }
 
     _refreshLibrary();
   }
 
   /* ─── Delete reference ─── */
   function _delete(id) {
-    const refs = _load().filter(r => r.id !== id);
+    const refs = _load().filter((r) => r.id !== id);
     _save(refs);
     _refreshLibrary();
   }
@@ -118,28 +215,46 @@ OmicsLab.Citations = (function () {
     const refs = _load();
     const style = document.querySelector('input[name="cit-format"]:checked')?.value || 'APA 7th';
     const sep = style === 'BibTeX' || style === 'RIS' ? '\n\n' : '\n\n';
-    const text = refs.map((r,i) => {
-      const n = style === 'BibTeX' || style === 'RIS' ? '' : `[${i+1}] `;
-      return n + _format(r, style);
-    }).join(sep);
+    const text = refs
+      .map((r, i) => {
+        const n = style === 'BibTeX' || style === 'RIS' ? '' : `[${i + 1}] `;
+        return n + _format(r, style);
+      })
+      .join(sep);
 
-    const ext = { APA: 'txt', Vancouver: 'txt', Nature: 'txt', BibTeX: 'bib', RIS: 'ris' }[style.split(' ')[0]] || 'txt';
+    const ext =
+      { APA: 'txt', Vancouver: 'txt', Nature: 'txt', BibTeX: 'bib', RIS: 'ris' }[
+        style.split(' ')[0]
+      ] || 'txt';
     const blob = new Blob([text], { type: 'text/plain' });
-    const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `omicslab_references.${ext}` });
+    const a = Object.assign(document.createElement('a'), {
+      href: URL.createObjectURL(blob),
+      download: `omicslab_references.${ext}`,
+    });
     a.click();
 
     const s = document.getElementById('cit-export-status');
-    if (s) { s.textContent = `[OK] Exported ${refs.length} references as ${style}`; setTimeout(() => { s.textContent=''; }, 3000); }
+    if (s) {
+      s.textContent = `[OK] Exported ${refs.length} references as ${style}`;
+      setTimeout(() => {
+        s.textContent = '';
+      }, 3000);
+    }
   }
 
   /* ─── Copy all in selected format ─── */
   function _copyAll() {
     const refs = _load();
     const style = document.querySelector('input[name="cit-format"]:checked')?.value || 'APA 7th';
-    const text = refs.map((r,i) => `[${i+1}] ` + _format(r, style)).join('\n\n');
+    const text = refs.map((r, i) => `[${i + 1}] ` + _format(r, style)).join('\n\n');
     navigator.clipboard.writeText(text).then(() => {
       const s = document.getElementById('cit-export-status');
-      if (s) { s.textContent = `[OK] Copied ${refs.length} references to clipboard`; setTimeout(() => { s.textContent=''; }, 3000); }
+      if (s) {
+        s.textContent = `[OK] Copied ${refs.length} references to clipboard`;
+        setTimeout(() => {
+          s.textContent = '';
+        }, 3000);
+      }
     });
   }
 
@@ -153,13 +268,16 @@ OmicsLab.Citations = (function () {
     if (count) count.textContent = `${refs.length} references`;
 
     if (!refs.length) {
-      list.innerHTML = '<div class="cit-empty">No references yet. Add your first reference above.</div>';
+      list.innerHTML =
+        '<div class="cit-empty">No references yet. Add your first reference above.</div>';
       return;
     }
 
-    list.innerHTML = refs.map((ref, i) => `
+    list.innerHTML = refs
+      .map(
+        (ref, i) => `
       <div class="cit-ref-card" id="cit-ref-${ref.id}">
-        <div class="cit-ref-num">[${i+1}]</div>
+        <div class="cit-ref-num">[${i + 1}]</div>
         <div class="cit-ref-body">
           <div class="cit-ref-title">${ref.title}</div>
           <div class="cit-ref-authors">${ref.authors}</div>
@@ -170,7 +288,7 @@ OmicsLab.Citations = (function () {
             ${ref.pages ? `<span class="cit-pages">pp. ${ref.pages}</span>` : ''}
             ${ref.doi ? `<a href="https://doi.org/${ref.doi}" target="_blank" rel="noopener" class="cit-doi">doi:${ref.doi}</a>` : ''}
           </div>
-          ${ref.tags?.length ? `<div class="cit-ref-tags">${ref.tags.map(t=>`<span class="cit-tag">${t}</span>`).join('')}</div>` : ''}
+          ${ref.tags?.length ? `<div class="cit-ref-tags">${ref.tags.map((t) => `<span class="cit-tag">${t}</span>`).join('')}</div>` : ''}
           <div class="cit-ref-formatted">${_format(ref, style)}</div>
         </div>
         <div class="cit-ref-actions">
@@ -181,12 +299,14 @@ OmicsLab.Citations = (function () {
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
           </button>
         </div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
   }
 
   function _copySingle(id) {
     const refs = _load();
-    const ref = refs.find(r => r.id === id);
+    const ref = refs.find((r) => r.id === id);
     if (!ref) return;
     const style = document.querySelector('input[name="cit-format"]:checked')?.value || 'APA 7th';
     navigator.clipboard.writeText(_format(ref, style));
@@ -234,7 +354,7 @@ OmicsLab.Citations = (function () {
             <div class="cit-card-title">
               <span>My Library <span id="cit-lib-count" class="cit-lib-count"></span></span>
               <div class="cit-export-row">
-                ${FORMATS.map(f => `<label class="cit-fmt-opt"><input type="radio" name="cit-format" value="${f}"${f==='APA 7th'?' checked':''}> ${f}</label>`).join('')}
+                ${FORMATS.map((f) => `<label class="cit-fmt-opt"><input type="radio" name="cit-format" value="${f}"${f === 'APA 7th' ? ' checked' : ''}> ${f}</label>`).join('')}
               </div>
             </div>
             <div class="cit-export-actions">
@@ -253,18 +373,45 @@ OmicsLab.Citations = (function () {
           <div class="cit-info-title">Citation format guide</div>
           <div class="cit-info-grid">
             ${[
-              { f:'APA 7th', u:'Psychology, Education, Social Science, WHO reports', ex:'Smith J, Jones A. (2021). Title. *Journal*, *12*(3), 45–67.' },
-              { f:'Vancouver', u:'Medicine, Public Health, Clinical genomics, Lancet', ex:'Smith J, Jones A. Title. Journal. 2021;12:45–67.' },
-              { f:'Nature', u:'Nature journals, basic science, genomics papers', ex:'Smith, J. & Jones, A. Title. *Journal* **12**, 45–67 (2021).' },
-              { f:'BibTeX', u:'LaTeX documents, thesis writing, Overleaf', ex:'@article{Smith2021, author={Smith J...}, ...}' },
-              { f:'RIS', u:'Zotero, Mendeley, EndNote, RefWorks import', ex:'TY  - JOUR\\nAU  - Smith J\\n...' },
-            ].map(c => `<div class="cit-fmt-card"><div class="cit-fmt-name">${c.f}</div><div class="cit-fmt-use">Used in: ${c.u}</div><div class="cit-fmt-ex">${c.ex}</div></div>`).join('')}
+              {
+                f: 'APA 7th',
+                u: 'Psychology, Education, Social Science, WHO reports',
+                ex: 'Smith J, Jones A. (2021). Title. *Journal*, *12*(3), 45–67.',
+              },
+              {
+                f: 'Vancouver',
+                u: 'Medicine, Public Health, Clinical genomics, Lancet',
+                ex: 'Smith J, Jones A. Title. Journal. 2021;12:45–67.',
+              },
+              {
+                f: 'Nature',
+                u: 'Nature journals, basic science, genomics papers',
+                ex: 'Smith, J. & Jones, A. Title. *Journal* **12**, 45–67 (2021).',
+              },
+              {
+                f: 'BibTeX',
+                u: 'LaTeX documents, thesis writing, Overleaf',
+                ex: '@article{Smith2021, author={Smith J...}, ...}',
+              },
+              {
+                f: 'RIS',
+                u: 'Zotero, Mendeley, EndNote, RefWorks import',
+                ex: 'TY  - JOUR\\nAU  - Smith J\\n...',
+              },
+            ]
+              .map(
+                (c) =>
+                  `<div class="cit-fmt-card"><div class="cit-fmt-name">${c.f}</div><div class="cit-fmt-use">Used in: ${c.u}</div><div class="cit-fmt-ex">${c.ex}</div></div>`
+              )
+              .join('')}
           </div>
         </div>
       </div>`;
 
     /* Refresh on format change */
-    document.querySelectorAll('input[name="cit-format"]').forEach(r => r.addEventListener('change', _refreshLibrary));
+    document
+      .querySelectorAll('input[name="cit-format"]')
+      .forEach((r) => r.addEventListener('change', _refreshLibrary));
     _refreshLibrary();
   }
 

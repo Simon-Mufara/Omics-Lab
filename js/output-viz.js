@@ -8,24 +8,30 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.OutputViz = (function () {
-
   /* Workflow domain → illustrative output shape. Keyed by workflow id
      (js/workflows.js). Grouped by the shape of data that workflow
      family actually produces, not 1:1 per workflow. */
   const CATEGORY_BY_WF = {
-    'wgs':'variants', 'wes':'variants', 'viral-wgs':'variants', 'ampli-seq':'variants',
-    'rna-seq':'counts', 'rt-qpcr':'qpcr',
-    'scrna-seq':'single-cell', 'cite-seq':'single-cell',
-    'atac-seq':'peaks', 'chip-seq':'peaks',
-    'shotgun-meta':'microbiome', '16s-amplicon':'microbiome',
-    'lc-ms':'massspec', 'proteomics':'massspec',
+    wgs: 'variants',
+    wes: 'variants',
+    'viral-wgs': 'variants',
+    'ampli-seq': 'variants',
+    'rna-seq': 'counts',
+    'rt-qpcr': 'qpcr',
+    'scrna-seq': 'single-cell',
+    'cite-seq': 'single-cell',
+    'atac-seq': 'peaks',
+    'chip-seq': 'peaks',
+    'shotgun-meta': 'microbiome',
+    '16s-amplicon': 'microbiome',
+    'lc-ms': 'massspec',
+    proteomics: 'massspec',
   };
 
   const CATEGORY_SNIPPETS = {
     variants: {
       label: 'Variant table',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative shape of a variant table (VCF-derived) for this workflow —
 # the simulator scores wet-lab/pipeline quality rather than emitting real
@@ -46,8 +52,7 @@ print(variants.set_index("gene")["vaf"])`,
     },
     counts: {
       label: 'Expression count matrix',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative bulk RNA-seq count matrix shape — swap this for your own
 # featureCounts / salmon output (genes x samples).
@@ -66,8 +71,7 @@ print(fc.round(2))`,
     },
     'single-cell': {
       label: 'Cell x gene matrix (sparse)',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative single-cell shape — a tiny dense slice of what would
 # normally be a large sparse cell x gene matrix from Cell Ranger / STARsolo.
@@ -84,8 +88,7 @@ print(cells[cells["pct_mito"] > 20])`,
     },
     peaks: {
       label: 'Peak / bin table (BED-like)',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative peak-calling output shape (ATAC-seq / ChIP-seq) —
 # swap for your own MACS2 narrowPeak / broadPeak export.
@@ -103,8 +106,7 @@ print(peaks[peaks["score"] > 100])`,
     },
     microbiome: {
       label: 'Taxa abundance table',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative taxonomic abundance table (16S / shotgun metagenomics) —
 # swap for your own Kraken2/QIIME2 relative-abundance export.
@@ -124,8 +126,7 @@ print(round(shannon, 3))`,
     },
     massspec: {
       label: 'Feature intensity table',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative LC-MS / proteomics feature table — swap for your own
 # MaxQuant / MZmine export (features or proteins x samples).
@@ -144,8 +145,7 @@ print(features[["id","log2fc"]])`,
     },
     qpcr: {
       label: 'Ct value table (ΔΔCt)',
-      code:
-`import pandas as pd
+      code: `import pandas as pd
 
 # Illustrative RT-qPCR Ct table — swap for your own instrument export.
 ct = pd.DataFrame({
@@ -176,8 +176,7 @@ print(ct)`,
       ['Contamination', q.contamination],
     ];
     const dictLines = metrics.map(([k, v]) => `    "${k}": ${v},`).join('\n');
-    const code =
-`import pandas as pd
+    const code = `import pandas as pd
 import matplotlib.pyplot as plt
 
 # Your actual QC results from this "${wf.name}" run (score: ${score}/100)
@@ -201,7 +200,7 @@ plt.show()`;
   }
 
   function _escAttr(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+    return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   }
 
   function panelHTML(wf, q, score) {
@@ -209,26 +208,29 @@ plt.show()`;
     /* Stash on the module rather than serialising into onclick= — code
        strings contain quotes/newlines that would break inline HTML attrs. */
     _pending = cells;
-    const preview = cells.map(c =>
-      `<div class="oviz-cell">
+    const preview = cells
+      .map(
+        (c) =>
+          `<div class="oviz-cell">
         <div class="oviz-cell-title">${_escAttr(c.title)}</div>
         <pre class="oviz-code">${_escAttr(c.code)}</pre>
         <button class="oviz-copy-btn" data-code-idx="${cells.indexOf(c)}" onclick="OmicsLab.OutputViz._copy(${cells.indexOf(c)})">
-          ${OmicsLab.Icons?.svg('clipboard',12) || ''} Copy code
+          ${OmicsLab.Icons?.svg('clipboard', 12) || ''} Copy code
         </button>
       </div>`
-    ).join('');
+      )
+      .join('');
 
     return `
       <div class="results-card oviz-card">
-        <div class="results-card-title">${OmicsLab.Icons?.svg('bar-chart',16) || ''} Next step: visualize this in Python</div>
+        <div class="results-card-title">${OmicsLab.Icons?.svg('bar-chart', 16) || ''} Next step: visualize this in Python</div>
         <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem">
           This platform scores your wet-lab and pipeline decisions rather than generating raw reads — but the numbers above are real.
-          Here's how you'd load and plot them (and a typical ${(CATEGORY_SNIPPETS[CATEGORY_BY_WF[wf.id]||'counts']||{}).label || 'output'} table for this workflow family) in actual Python, right in your browser.
+          Here's how you'd load and plot them (and a typical ${(CATEGORY_SNIPPETS[CATEGORY_BY_WF[wf.id] || 'counts'] || {}).label || 'output'} table for this workflow family) in actual Python, right in your browser.
         </p>
         ${preview}
         <button class="btn-result-primary" style="margin-top:.75rem" onclick="OmicsLab.OutputViz.openInNotebook()">
-          ${OmicsLab.Icons?.svg('cpu',15) || ''} Open in the real Python Notebook
+          ${OmicsLab.Icons?.svg('cpu', 15) || ''} Open in the real Python Notebook
         </button>
       </div>`;
   }
@@ -238,9 +240,12 @@ plt.show()`;
   function _copy(idx) {
     const cell = _pending[idx];
     if (!cell) return;
-    navigator.clipboard?.writeText(cell.code).then(() => {
-      OmicsLab.Notify?.success('Code copied');
-    }).catch(() => {});
+    navigator.clipboard
+      ?.writeText(cell.code)
+      .then(() => {
+        OmicsLab.Notify?.success('Code copied');
+      })
+      .catch(() => {});
   }
 
   function openInNotebook() {

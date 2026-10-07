@@ -8,17 +8,20 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Community = (function () {
-
   const CATS = [
-    { id: 'all',      label: 'All Topics' },
-    { id: 'general',  label: 'General' },
-    { id: 'help',     label: 'Help' },
+    { id: 'all', label: 'All Topics' },
+    { id: 'general', label: 'General' },
+    { id: 'help', label: 'Help' },
     { id: 'showcase', label: 'Showcase' },
-    { id: 'africa',   label: 'African Genomics' },
-    { id: 'careers',  label: 'Careers' },
+    { id: 'africa', label: 'African Genomics' },
+    { id: 'careers', label: 'Careers' },
   ];
 
-  let _cat = 'all', _sort = 'new', _topics = [], _activeTopic = null, _comments = [];
+  let _cat = 'all',
+    _sort = 'new',
+    _topics = [],
+    _activeTopic = null,
+    _comments = [];
   let _containerId = 'community-section'; /* overridden when mounted inside Nexus's "Forum" tab */
 
   /* ── Helpers ── */
@@ -38,10 +41,20 @@ OmicsLab.Community = (function () {
   }
 
   function _initials(name) {
-    return (name || 'O L').trim().split(/\s+/).slice(0, 2).map(s => s[0]?.toUpperCase() || '').join('');
+    return (name || 'O L')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((s) => s[0]?.toUpperCase() || '')
+      .join('');
   }
 
-  function _esc(s) { return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   async function _authHeader() {
     if (!OmicsLab.AuthClerk?.isSignedIn?.()) return null;
@@ -58,7 +71,9 @@ OmicsLab.Community = (function () {
       const res = await fetch('/api/forum-topics?' + q.toString());
       const data = await res.json();
       _topics = data.topics || [];
-    } catch { _topics = []; }
+    } catch {
+      _topics = [];
+    }
   }
 
   async function _fetchComments(topicId) {
@@ -66,7 +81,9 @@ OmicsLab.Community = (function () {
       const res = await fetch('/api/forum-comments?topic_id=' + encodeURIComponent(topicId));
       const data = await res.json();
       _comments = data.comments || [];
-    } catch { _comments = []; }
+    } catch {
+      _comments = [];
+    }
   }
 
   /* ── Render: list ── */
@@ -75,7 +92,7 @@ OmicsLab.Community = (function () {
     const avatar = t.users?.avatar_url;
     const meFlag = OmicsLab.AuthClerk?.getUser?.()?.id === t.user_id ? '' : '';
     const reacted = (t.reacted_by || []).includes(OmicsLab.AuthClerk?.getUser?.()?.id);
-    const catMeta = CATS.find(c => c.id === t.category) || CATS[1];
+    const catMeta = CATS.find((c) => c.id === t.category) || CATS[1];
     return `
 <div class="comm-card" onclick="OmicsLab.Community.openTopic('${t.id}')">
   <div class="comm-card-vote" onclick="event.stopPropagation();OmicsLab.Community.react('topic','${t.id}')">
@@ -121,7 +138,7 @@ OmicsLab.Community = (function () {
 
   <div class="comm-toolbar">
     <div class="comm-cats">
-      ${CATS.map(c => `<button class="comm-cat-btn${c.id === _cat ? ' comm-cat-active' : ''}" onclick="OmicsLab.Community.onCat('${c.id}')">${c.label}</button>`).join('')}
+      ${CATS.map((c) => `<button class="comm-cat-btn${c.id === _cat ? ' comm-cat-active' : ''}" onclick="OmicsLab.Community.onCat('${c.id}')">${c.label}</button>`).join('')}
     </div>
     <div class="comm-sorts">
       <button class="comm-sort-btn${_sort === 'new' ? ' comm-sort-active' : ''}" onclick="OmicsLab.Community.onSort('new')">New</button>
@@ -148,7 +165,7 @@ OmicsLab.Community = (function () {
     const author = c.users?.name || 'OmicsLab Member';
     const avatar = c.users?.avatar_url;
     const reacted = (c.reacted_by || []).includes(OmicsLab.AuthClerk?.getUser?.()?.id);
-    const replies = _comments.filter(r => r.parent_comment_id === c.id);
+    const replies = _comments.filter((r) => r.parent_comment_id === c.id);
     return `
 <div class="comm-comment" id="comm-c-${c.id}">
   <span class="comm-avatar comm-avatar-sm">${avatar ? `<img src="${avatar}" alt="">` : _initials(author)}</span>
@@ -163,7 +180,7 @@ OmicsLab.Community = (function () {
       <button class="comm-reply-mini" onclick="OmicsLab.Community.toggleReplyBox('${c.id}')">Reply</button>
     </div>
     <div class="comm-reply-box" id="comm-reply-${c.id}" style="display:none"></div>
-    ${replies.length ? `<div class="comm-replies-nested">${replies.map(r => _commentHtml(r)).join('')}</div>` : ''}
+    ${replies.length ? `<div class="comm-replies-nested">${replies.map((r) => _commentHtml(r)).join('')}</div>` : ''}
   </div>
 </div>`;
   }
@@ -174,9 +191,9 @@ OmicsLab.Community = (function () {
     const author = topic.users?.name || 'OmicsLab Member';
     const avatar = topic.users?.avatar_url;
     const reacted = (topic.reacted_by || []).includes(OmicsLab.AuthClerk?.getUser?.()?.id);
-    const catMeta = CATS.find(c => c.id === topic.category) || CATS[1];
+    const catMeta = CATS.find((c) => c.id === topic.category) || CATS[1];
     const signedIn = !!OmicsLab.AuthClerk?.isSignedIn?.();
-    const topLevel = _comments.filter(c => !c.parent_comment_id);
+    const topLevel = _comments.filter((c) => !c.parent_comment_id);
 
     el.innerHTML = `
 <div class="comm-wrap">
@@ -205,54 +222,78 @@ OmicsLab.Community = (function () {
 
   <div class="comm-comments-head">${_comments.length} Comment${_comments.length === 1 ? '' : 's'}</div>
 
-  ${signedIn ? `
+  ${
+    signedIn
+      ? `
   <div class="comm-composer">
     <textarea id="comm-new-comment" class="comm-composer-ta" rows="3" placeholder="Share your thoughts or answer this question…"></textarea>
     <button class="comm-composer-btn" onclick="OmicsLab.Community.submitComment('${topic.id}', null)">Post Comment</button>
-  </div>` : `<div class="comm-signin-note">Please <button class="comm-inline-link" onclick="OmicsLab.AuthClerk.signIn()">sign in</button> to reply to this topic.</div>`}
+  </div>`
+      : `<div class="comm-signin-note">Please <button class="comm-inline-link" onclick="OmicsLab.AuthClerk.signIn()">sign in</button> to reply to this topic.</div>`
+  }
 
   <div id="comm-thread" class="comm-thread">
-    ${topLevel.length ? topLevel.map(c => _commentHtml(c)).join('') : '<div class="comm-empty">No comments yet — start the conversation.</div>'}
+    ${topLevel.length ? topLevel.map((c) => _commentHtml(c)).join('') : '<div class="comm-empty">No comments yet — start the conversation.</div>'}
   </div>
 </div>`;
   }
 
   /* ── Public: navigation ── */
   async function openTopic(id) {
-    const topic = _topics.find(t => t.id === id);
+    const topic = _topics.find((t) => t.id === id);
     if (!topic) return;
     _activeTopic = topic;
     await _fetchComments(id);
     _renderDetail(topic);
   }
 
-  function backToList() { _activeTopic = null; _renderList(); }
+  function backToList() {
+    _activeTopic = null;
+    _renderList();
+  }
 
-  function onCat(id) { _cat = id; _renderList(); }
-  function onSort(id) { _sort = id; _renderList(); }
+  function onCat(id) {
+    _cat = id;
+    _renderList();
+  }
+  function onSort(id) {
+    _sort = id;
+    _renderList();
+  }
 
   /* ── Public: react ── */
   async function react(targetType, targetId) {
     const headers = await _authHeader();
-    if (!headers) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    if (!headers) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
     try {
       const res = await fetch('/api/forum-react', {
-        method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+        method: 'POST',
+        headers: { ...headers, 'Content-Type': 'application/json' },
         body: JSON.stringify({ targetType, targetId }),
       });
       if (!res.ok) return;
       const { reacted } = await res.json();
       const myId = OmicsLab.AuthClerk?.getUser?.()?.id;
       if (targetType === 'topic') {
-        const t = _topics.find(x => x.id === targetId) || (_activeTopic?.id === targetId ? _activeTopic : null);
+        const t =
+          _topics.find((x) => x.id === targetId) ||
+          (_activeTopic?.id === targetId ? _activeTopic : null);
         if (t) {
-          t.reacted_by = reacted ? [...(t.reacted_by || []).filter(id => id !== myId), myId] : (t.reacted_by || []).filter(id => id !== myId);
+          t.reacted_by = reacted
+            ? [...(t.reacted_by || []).filter((id) => id !== myId), myId]
+            : (t.reacted_by || []).filter((id) => id !== myId);
           if (_activeTopic?.id === targetId) _activeTopic.reacted_by = t.reacted_by;
         }
         _activeTopic ? _renderDetail(_activeTopic) : _renderList();
       } else {
-        const c = _comments.find(x => x.id === targetId);
-        if (c) c.reacted_by = reacted ? [...(c.reacted_by || []).filter(id => id !== myId), myId] : (c.reacted_by || []).filter(id => id !== myId);
+        const c = _comments.find((x) => x.id === targetId);
+        if (c)
+          c.reacted_by = reacted
+            ? [...(c.reacted_by || []).filter((id) => id !== myId), myId]
+            : (c.reacted_by || []).filter((id) => id !== myId);
         _renderDetail(_activeTopic);
       }
     } catch {}
@@ -260,13 +301,18 @@ OmicsLab.Community = (function () {
 
   /* ── Public: new topic composer ── */
   function openComposer() {
-    if (!OmicsLab.AuthClerk?.isSignedIn?.()) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    if (!OmicsLab.AuthClerk?.isSignedIn?.()) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
     let overlay = document.getElementById('comm-composer-overlay');
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.id = 'comm-composer-overlay';
       overlay.className = 'comm-modal-overlay';
-      overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+      overlay.onclick = (e) => {
+        if (e.target === overlay) overlay.remove();
+      };
       document.body.appendChild(overlay);
     }
     overlay.innerHTML = `
@@ -276,7 +322,9 @@ OmicsLab.Community = (function () {
     <button class="comm-modal-close" onclick="document.getElementById('comm-composer-overlay').remove()">×</button>
   </div>
   <select id="comm-new-cat" class="comm-modal-select">
-    ${CATS.filter(c => c.id !== 'all').map(c => `<option value="${c.id}">${c.label}</option>`).join('')}
+    ${CATS.filter((c) => c.id !== 'all')
+      .map((c) => `<option value="${c.id}">${c.label}</option>`)
+      .join('')}
   </select>
   <input id="comm-new-title" class="comm-modal-input" type="text" maxlength="200" placeholder="Title — be specific">
   <textarea id="comm-new-body" class="comm-modal-textarea" rows="6" maxlength="5000" placeholder="Share details, context, or your question…"></textarea>
@@ -293,23 +341,38 @@ OmicsLab.Community = (function () {
     const body = document.getElementById('comm-new-body')?.value.trim();
     if (!title || !body) return;
     const headers = await _authHeader();
-    if (!headers) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    if (!headers) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
 
     const res = await fetch('/api/forum-topics', {
-      method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify({ category, title, body }),
     }).catch(() => null);
 
     document.getElementById('comm-composer-overlay')?.remove();
-    if (res && res.ok) { _cat = 'all'; _sort = 'new'; _renderList(); }
+    if (res && res.ok) {
+      _cat = 'all';
+      _sort = 'new';
+      _renderList();
+    }
   }
 
   /* ── Public: comments ── */
   function toggleReplyBox(commentId) {
     const box = document.getElementById('comm-reply-' + commentId);
     if (!box) return;
-    if (box.style.display !== 'none') { box.style.display = 'none'; box.innerHTML = ''; return; }
-    if (!OmicsLab.AuthClerk?.isSignedIn?.()) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    if (box.style.display !== 'none') {
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+    if (!OmicsLab.AuthClerk?.isSignedIn?.()) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
     box.style.display = 'block';
     box.innerHTML = `
 <textarea class="comm-composer-ta comm-composer-ta-sm" id="comm-reply-ta-${commentId}" rows="2" placeholder="Write a reply…"></textarea>
@@ -322,16 +385,23 @@ OmicsLab.Community = (function () {
     const body = ta?.value.trim();
     if (!body) return;
     const headers = await _authHeader();
-    if (!headers) { OmicsLab.AuthClerk?.signIn?.(); return; }
+    if (!headers) {
+      OmicsLab.AuthClerk?.signIn?.();
+      return;
+    }
 
     const res = await fetch('/api/forum-comments', {
-      method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic_id: topicId, body, parent_comment_id: parentId || null }),
     }).catch(() => null);
 
     if (res && res.ok) {
       await _fetchComments(topicId);
-      if (_activeTopic) { _activeTopic.comment_count = _comments.length; _renderDetail(_activeTopic); }
+      if (_activeTopic) {
+        _activeTopic.comment_count = _comments.length;
+        _renderDetail(_activeTopic);
+      }
     }
   }
 
@@ -366,5 +436,17 @@ OmicsLab.Community = (function () {
     _activeTopic ? _renderDetail(_activeTopic) : _renderList();
   }
 
-  return { init, mountInto, onCat, onSort, openTopic, backToList, react, openComposer, submitTopic, toggleReplyBox, submitComment };
+  return {
+    init,
+    mountInto,
+    onCat,
+    onSort,
+    openTopic,
+    backToList,
+    react,
+    openComposer,
+    submitTopic,
+    toggleReplyBox,
+    submitComment,
+  };
 })();

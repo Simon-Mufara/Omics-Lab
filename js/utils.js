@@ -9,7 +9,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Utils = (function () {
-
   /* Parse a JSON value out of localStorage. On any failure (missing
      key, corrupted/old-shaped JSON, localStorage blocked in private
      mode) return `fallback` and drop the bad key so it can't keep
@@ -21,7 +20,9 @@ OmicsLab.Utils = (function () {
       return JSON.parse(raw);
     } catch (e) {
       console.warn('[Utils] safeParse: bad value for "' + key + '", resetting', e);
-      try { localStorage.removeItem(key); } catch (e2) {}
+      try {
+        localStorage.removeItem(key);
+      } catch (e2) {}
       return fallback;
     }
   }
@@ -47,7 +48,9 @@ OmicsLab.Utils = (function () {
       fn();
     } catch (e) {
       console.error('[Utils] init failed: ' + name, e);
-      try { window.Sentry?.captureException?.(e); } catch (e2) {}
+      try {
+        window.Sentry?.captureException?.(e);
+      } catch (e2) {}
     }
   }
 

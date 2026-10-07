@@ -7,38 +7,57 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.LabNotebook = (function () {
-
   const KEY = 'omicslab_labnotebook_entries';
   let _editingId = null;
 
-  function _getEntries() { return OmicsLab.Utils?.safeParse(KEY, []) || []; }
-  function _saveEntries(e) { (OmicsLab.Utils?.safeSet || function(k,v){localStorage.setItem(k, JSON.stringify(v));})(KEY, e); }
+  function _getEntries() {
+    return OmicsLab.Utils?.safeParse(KEY, []) || [];
+  }
+  function _saveEntries(e) {
+    (
+      OmicsLab.Utils?.safeSet ||
+      function (k, v) {
+        localStorage.setItem(k, JSON.stringify(v));
+      }
+    )(KEY, e);
+  }
 
   const ENTRY_TYPES = [
-    { value:'experiment', label:'Experiment', color:'#58a6ff' },
-    { value:'analysis', label:'Analysis', color:'#00C4A0' },
-    { value:'result', label:'Result', color:'#e3b341' },
-    { value:'protocol', label:'Protocol', color:'#bc8cff' },
-    { value:'meeting', label:'Meeting', color:'#f97316' },
-    { value:'idea', label:'Idea', color:'#79c0ff' },
+    { value: 'experiment', label: 'Experiment', color: '#58a6ff' },
+    { value: 'analysis', label: 'Analysis', color: '#00C4A0' },
+    { value: 'result', label: 'Result', color: '#e3b341' },
+    { value: 'protocol', label: 'Protocol', color: '#bc8cff' },
+    { value: 'meeting', label: 'Meeting', color: '#f97316' },
+    { value: 'idea', label: 'Idea', color: '#79c0ff' },
   ];
 
-  function _typeColor(type) { return ENTRY_TYPES.find(t => t.value === type)?.color || '#A8A098'; }
+  function _typeColor(type) {
+    return ENTRY_TYPES.find((t) => t.value === type)?.color || '#A8A098';
+  }
 
   function _renderList(q = '', tag = '', type = '') {
-    const entries = _getEntries().filter(e => {
-      const txt = [e.title, e.content, ...(e.tags || [])].join(' ').toLowerCase();
-      return (!q || txt.includes(q.toLowerCase()))
-        && (!tag || (e.tags || []).includes(tag))
-        && (!type || e.type === type);
-    }).sort((a, b) => b.date.localeCompare(a.date));
+    const entries = _getEntries()
+      .filter((e) => {
+        const txt = [e.title, e.content, ...(e.tags || [])].join(' ').toLowerCase();
+        return (
+          (!q || txt.includes(q.toLowerCase())) &&
+          (!tag || (e.tags || []).includes(tag)) &&
+          (!type || e.type === type)
+        );
+      })
+      .sort((a, b) => b.date.localeCompare(a.date));
     const el = document.getElementById('ln-list');
     if (!el) return;
-    if (!entries.length) { el.innerHTML = '<div class="ln-empty">No entries yet. Click "New Entry" to start.</div>'; return; }
-    el.innerHTML = entries.map(e => {
-      const col = _typeColor(e.type);
-      const preview = e.content.replace(/[#*`]/g,'').slice(0,140) + (e.content.length > 140 ? '…' : '');
-      return `<div class="ln-card" style="border-left-color:${col}" onclick="OmicsLab.LabNotebook._viewEntry('${e.id}')">
+    if (!entries.length) {
+      el.innerHTML = '<div class="ln-empty">No entries yet. Click "New Entry" to start.</div>';
+      return;
+    }
+    el.innerHTML = entries
+      .map((e) => {
+        const col = _typeColor(e.type);
+        const preview =
+          e.content.replace(/[#*`]/g, '').slice(0, 140) + (e.content.length > 140 ? '…' : '');
+        return `<div class="ln-card" style="border-left-color:${col}" onclick="OmicsLab.LabNotebook._viewEntry('${e.id}')">
         <div class="ln-card-hdr">
           <span class="ln-card-title">${e.title || 'Untitled'}</span>
           <div class="ln-card-meta">
@@ -47,9 +66,10 @@ OmicsLab.LabNotebook = (function () {
           </div>
         </div>
         <div class="ln-card-preview">${preview}</div>
-        ${e.tags?.length ? `<div class="ln-card-tags">${e.tags.map(t => `<span class="ln-tag">${t}</span>`).join('')}</div>` : ''}
+        ${e.tags?.length ? `<div class="ln-card-tags">${e.tags.map((t) => `<span class="ln-tag">${t}</span>`).join('')}</div>` : ''}
       </div>`;
-    }).join('');
+      })
+      .join('');
   }
 
   function _filter() {
@@ -59,11 +79,13 @@ OmicsLab.LabNotebook = (function () {
     _renderList(q, tag, type);
   }
 
-  function _getAllTags() { return [...new Set(_getEntries().flatMap(e => e.tags || []))].sort(); }
+  function _getAllTags() {
+    return [...new Set(_getEntries().flatMap((e) => e.tags || []))].sort();
+  }
 
   function _showEditor(id = null) {
     _editingId = id;
-    const entry = id ? _getEntries().find(e => e.id === id) : null;
+    const entry = id ? _getEntries().find((e) => e.id === id) : null;
     const overlay = document.createElement('div');
     overlay.className = 'ln-editor-overlay';
     overlay.id = 'ln-editor-overlay';
@@ -78,13 +100,13 @@ OmicsLab.LabNotebook = (function () {
         <div class="ln-editor-row">
           <input class="ln-editor-input" id="ln-e-title" placeholder="Entry title" value="${entry?.title || ''}">
           <select class="ln-editor-sel" id="ln-e-type">
-            ${ENTRY_TYPES.map(t => `<option value="${t.value}" ${entry?.type===t.value?'selected':''}>${t.label}</option>`).join('')}
+            ${ENTRY_TYPES.map((t) => `<option value="${t.value}" ${entry?.type === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
           </select>
         </div>
         <textarea class="ln-editor-textarea" id="ln-e-content" placeholder="Write your notes here. Supports plain markdown formatting.">${entry?.content || ''}</textarea>
         <div class="ln-editor-row">
           <input class="ln-editor-input" id="ln-e-tags" placeholder="Tags (comma-separated)" value="${(entry?.tags || []).join(', ')}">
-          <input class="ln-editor-input" id="ln-e-date" type="date" value="${entry?.date || new Date().toISOString().slice(0,10)}">
+          <input class="ln-editor-input" id="ln-e-date" type="date" value="${entry?.date || new Date().toISOString().slice(0, 10)}">
         </div>
         <div class="ln-editor-actions">
           ${id ? `<button class="ln-delete-btn" onclick="OmicsLab.LabNotebook._deleteEntry('${id}')">Delete</button>` : '<span></span>'}
@@ -102,14 +124,35 @@ OmicsLab.LabNotebook = (function () {
     const title = document.getElementById('ln-e-title')?.value.trim() || 'Untitled';
     const content = document.getElementById('ln-e-content')?.value.trim() || '';
     const type = document.getElementById('ln-e-type')?.value || 'experiment';
-    const tags = (document.getElementById('ln-e-tags')?.value || '').split(',').map(t => t.trim()).filter(Boolean);
-    const date = document.getElementById('ln-e-date')?.value || new Date().toISOString().slice(0,10);
+    const tags = (document.getElementById('ln-e-tags')?.value || '')
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const date =
+      document.getElementById('ln-e-date')?.value || new Date().toISOString().slice(0, 10);
     const entries = _getEntries();
     if (_editingId) {
-      const idx = entries.findIndex(e => e.id === _editingId);
-      if (idx >= 0) entries[idx] = { ...entries[idx], title, content, type, tags, date, updatedAt: new Date().toISOString() };
+      const idx = entries.findIndex((e) => e.id === _editingId);
+      if (idx >= 0)
+        entries[idx] = {
+          ...entries[idx],
+          title,
+          content,
+          type,
+          tags,
+          date,
+          updatedAt: new Date().toISOString(),
+        };
     } else {
-      entries.push({ id: 'ln_' + Date.now(), title, content, type, tags, date, createdAt: new Date().toISOString() });
+      entries.push({
+        id: 'ln_' + Date.now(),
+        title,
+        content,
+        type,
+        tags,
+        date,
+        createdAt: new Date().toISOString(),
+      });
     }
     _saveEntries(entries);
     document.getElementById('ln-editor-overlay')?.remove();
@@ -123,7 +166,7 @@ OmicsLab.LabNotebook = (function () {
 
   function _deleteEntry(id) {
     if (!confirm('Delete this entry?')) return;
-    const entries = _getEntries().filter(e => e.id !== id);
+    const entries = _getEntries().filter((e) => e.id !== id);
     _saveEntries(entries);
     document.getElementById('ln-editor-overlay')?.remove();
     _refreshTagFilter();
@@ -135,24 +178,30 @@ OmicsLab.LabNotebook = (function () {
     if (!sel) return;
     const cur = sel.value;
     const tags = _getAllTags();
-    sel.innerHTML = `<option value="">All tags</option>` + tags.map(t => `<option ${t===cur?'selected':''}>${t}</option>`).join('');
+    sel.innerHTML =
+      `<option value="">All tags</option>` +
+      tags.map((t) => `<option ${t === cur ? 'selected' : ''}>${t}</option>`).join('');
   }
 
   /* ── FAIR / ISA-Tab JSON Export (Prompt 47) ── */
   function _exportISATab() {
     const entries = _getEntries().sort((a, b) => b.date.localeCompare(a.date));
-    if (!entries.length) { OmicsLab.Toast?.show('No entries to export', 'info'); return; }
+    if (!entries.length) {
+      OmicsLab.Toast?.show('No entries to export', 'info');
+      return;
+    }
 
     const isa = {
       '@context': 'https://schema.org/',
       '@type': 'Dataset',
       name: 'OmicsLab Lab Notebook',
-      description: 'Lab notebook entries exported from OmicsLab Simulator in ISA-Tab/JSON-LD format',
+      description:
+        'Lab notebook entries exported from OmicsLab Simulator in ISA-Tab/JSON-LD format',
       creator: { '@type': 'Person', name: 'OmicsLab User' },
       dateCreated: new Date().toISOString(),
       license: 'https://creativecommons.org/licenses/by/4.0/',
       isAccessibleForFree: true,
-      hasPart: entries.map(e => ({
+      hasPart: entries.map((e) => ({
         '@type': 'CreativeWork',
         identifier: e.id,
         name: e.title,
@@ -168,26 +217,42 @@ OmicsLab.LabNotebook = (function () {
         description: 'Exported from OmicsLab Lab Notebook',
         submissionDate: new Date().toISOString().slice(0, 10),
         publicReleaseDate: new Date().toISOString().slice(0, 10),
-        studies: entries.filter(e => e.type === 'experiment').map(e => ({
-          identifier: e.id,
-          title: e.title,
-          description: e.content,
-          studyDesignDescriptor: { term: e.type, termAccessionNumber: '', termSourceRef: 'OBO' },
-        })),
+        studies: entries
+          .filter((e) => e.type === 'experiment')
+          .map((e) => ({
+            identifier: e.id,
+            title: e.title,
+            description: e.content,
+            studyDesignDescriptor: { term: e.type, termAccessionNumber: '', termSourceRef: 'OBO' },
+          })),
       },
     };
 
     const blob = new Blob([JSON.stringify(isa, null, 2)], { type: 'application/ld+json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lab-notebook-isa.jsonld'; a.click();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lab-notebook-isa.jsonld';
+    a.click();
     OmicsLab.Toast?.show('Exported ISA-Tab JSON-LD', 'success');
   }
 
   function _exportMarkdown() {
     const entries = _getEntries().sort((a, b) => b.date.localeCompare(a.date));
     if (!entries.length) return;
-    const md = entries.map(e => `## ${e.date} — ${e.title} (${e.type})\n\n${e.content}\n\n${e.tags?.length ? '_Tags: ' + e.tags.join(', ') + '_' : ''}`).join('\n\n---\n\n');
-    const blob = new Blob([`# OmicsLab Lab Notebook Export\nExported: ${new Date().toLocaleString()}\n\n---\n\n` + md], { type:'text/markdown' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'lab-notebook.md'; a.click();
+    const md = entries
+      .map(
+        (e) =>
+          `## ${e.date} — ${e.title} (${e.type})\n\n${e.content}\n\n${e.tags?.length ? '_Tags: ' + e.tags.join(', ') + '_' : ''}`
+      )
+      .join('\n\n---\n\n');
+    const blob = new Blob(
+      [`# OmicsLab Lab Notebook Export\nExported: ${new Date().toLocaleString()}\n\n---\n\n` + md],
+      { type: 'text/markdown' }
+    );
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'lab-notebook.md';
+    a.click();
   }
 
   function init() {
@@ -223,7 +288,7 @@ OmicsLab.LabNotebook = (function () {
           <input class="ln-search" id="ln-q" placeholder="Search entries..." oninput="OmicsLab.LabNotebook._filter()">
           <select class="ln-filter-sel" id="ln-type-filter" onchange="OmicsLab.LabNotebook._filter()">
             <option value="">All types</option>
-            ${ENTRY_TYPES.map(t => `<option value="${t.value}">${t.label}</option>`).join('')}
+            ${ENTRY_TYPES.map((t) => `<option value="${t.value}">${t.label}</option>`).join('')}
           </select>
           <select class="ln-filter-sel" id="ln-tag-filter" onchange="OmicsLab.LabNotebook._filter()">
             <option value="">All tags</option>
@@ -235,5 +300,14 @@ OmicsLab.LabNotebook = (function () {
     _renderList();
   }
 
-  return { init, _showEditor, _saveEntry, _deleteEntry, _viewEntry, _exportMarkdown, _exportISATab, _filter };
+  return {
+    init,
+    _showEditor,
+    _saveEntry,
+    _deleteEntry,
+    _viewEntry,
+    _exportMarkdown,
+    _exportISATab,
+    _filter,
+  };
 })();

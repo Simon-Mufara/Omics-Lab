@@ -6,27 +6,31 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.FocusTrap = (function () {
-
   const FOCUSABLE = [
-    'a[href]', 'button:not([disabled])', 'input:not([disabled])',
-    'select:not([disabled])', 'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])', 'details > summary',
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+    'details > summary',
   ].join(',');
 
-  let _active    = null;   /* current container */
-  let _trigger   = null;   /* element that opened the trap */
-  let _handler   = null;   /* stored keydown listener */
+  let _active = null; /* current container */
+  let _trigger = null; /* element that opened the trap */
+  let _handler = null; /* stored keydown listener */
 
   function activate(container, trigger) {
     if (!container) return;
     deactivate();
 
-    _active  = container;
+    _active = container;
     _trigger = trigger || document.activeElement;
 
-    const focusables = () => Array.from(_active.querySelectorAll(FOCUSABLE)).filter(
-      el => !el.closest('[hidden]') && getComputedStyle(el).display !== 'none'
-    );
+    const focusables = () =>
+      Array.from(_active.querySelectorAll(FOCUSABLE)).filter(
+        (el) => !el.closest('[hidden]') && getComputedStyle(el).display !== 'none'
+      );
 
     /* Focus first focusable element */
     const first = focusables()[0];
@@ -34,10 +38,13 @@ OmicsLab.FocusTrap = (function () {
 
     _handler = function (e) {
       if (e.key !== 'Tab') return;
-      const all   = focusables();
-      if (!all.length) { e.preventDefault(); return; }
+      const all = focusables();
+      if (!all.length) {
+        e.preventDefault();
+        return;
+      }
       const first = all[0];
-      const last  = all[all.length - 1];
+      const last = all[all.length - 1];
       if (e.shiftKey) {
         /* Shift+Tab — if on first, wrap to last */
         if (document.activeElement === first || !_active.contains(document.activeElement)) {
@@ -66,20 +73,22 @@ OmicsLab.FocusTrap = (function () {
       _handler = null;
     }
     if (_trigger && typeof _trigger.focus === 'function') {
-      try { _trigger.focus(); } catch {}
+      try {
+        _trigger.focus();
+      } catch {}
     }
-    _active  = null;
+    _active = null;
     _trigger = null;
   }
 
   /* ─── Wire to any element with data-focus-trap="true" ─── */
   function wireAll() {
-    document.querySelectorAll('[data-focus-trap="true"]').forEach(el => {
+    document.querySelectorAll('[data-focus-trap="true"]').forEach((el) => {
       if (el._ftWired) return;
       el._ftWired = true;
       /* Activate when element becomes visible */
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) activate(el);
           else deactivate();
         });

@@ -4,27 +4,109 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Proteomics = (function () {
-
   const IONIZATION = [
-    { method:'ESI (Electrospray Ionisation)', type:'Liquid-based', use:'LC-MS/MS · proteins · peptides · metabolites · large biomolecules', chars:'Soft ionisation (minimal fragmentation) · produces multiply charged ions [M+nH]ⁿ⁺ · compatible with online LC', africa:'Standard for HIV protease inhibitor pharmacokinetics in African patient cohorts' },
-    { method:'MALDI (Matrix-Assisted Laser Desorption)', type:'Solid/plate', use:'Intact protein fingerprinting · MALDI-TOF for pathogen ID · imaging mass spec', chars:'Single charge [M+H]⁺ typical · robust · high throughput · incompatible with LC online', africa:'MALDI-TOF used in TB clinical diagnostics at NHLS (South Africa) — identifies 97% of M. tuberculosis within 2h' },
-    { method:'APCI (Atmospheric Pressure Chemical Ionisation)', type:'Gas-phase', use:'Small molecules · lipids · drugs · metabolites under 1500 Da', chars:'Proton transfer ionisation · handles non-polar compounds poorly ionised by ESI', africa:'Malaria drug (artemisinin) quantification in dried blood spots from African trial participants' },
-    { method:'NanoESI', type:'Chip / nanospray', use:'Ultra-low input proteomics · single-cell · clinical biopsies · rare samples', chars:'Flow rate 20–200 nL/min · higher sensitivity than standard ESI · reduced sample consumption', africa:'Single-cell proteomics of P. falciparum ring-stage parasites — requires nanospray for parasite mass ≤45 fL' },
+    {
+      method: 'ESI (Electrospray Ionisation)',
+      type: 'Liquid-based',
+      use: 'LC-MS/MS · proteins · peptides · metabolites · large biomolecules',
+      chars:
+        'Soft ionisation (minimal fragmentation) · produces multiply charged ions [M+nH]ⁿ⁺ · compatible with online LC',
+      africa: 'Standard for HIV protease inhibitor pharmacokinetics in African patient cohorts',
+    },
+    {
+      method: 'MALDI (Matrix-Assisted Laser Desorption)',
+      type: 'Solid/plate',
+      use: 'Intact protein fingerprinting · MALDI-TOF for pathogen ID · imaging mass spec',
+      chars:
+        'Single charge [M+H]⁺ typical · robust · high throughput · incompatible with LC online',
+      africa:
+        'MALDI-TOF used in TB clinical diagnostics at NHLS (South Africa) — identifies 97% of M. tuberculosis within 2h',
+    },
+    {
+      method: 'APCI (Atmospheric Pressure Chemical Ionisation)',
+      type: 'Gas-phase',
+      use: 'Small molecules · lipids · drugs · metabolites under 1500 Da',
+      chars: 'Proton transfer ionisation · handles non-polar compounds poorly ionised by ESI',
+      africa:
+        'Malaria drug (artemisinin) quantification in dried blood spots from African trial participants',
+    },
+    {
+      method: 'NanoESI',
+      type: 'Chip / nanospray',
+      use: 'Ultra-low input proteomics · single-cell · clinical biopsies · rare samples',
+      chars:
+        'Flow rate 20–200 nL/min · higher sensitivity than standard ESI · reduced sample consumption',
+      africa:
+        'Single-cell proteomics of P. falciparum ring-stage parasites — requires nanospray for parasite mass ≤45 fL',
+    },
   ];
 
   const QUANT_METHODS = [
-    { name:'Label-Free Quantification (LFQ)', type:'Label-Free', color:'#00C4A0', desc:'Peptide peak areas compared across LC-MS runs without chemical labels. Simplest and cheapest — no labelling reagent cost. Requires excellent chromatographic reproducibility (CV <5%) and alignment algorithms (MaxQuant LFQ or FlashLFQ).', use:'Discovery proteomics · serum biomarkers · clinical sample series · >12 conditions', limit:'Run-to-run variation · missing values · requires more replicates' },
-    { name:'TMT (Tandem Mass Tags)', type:'Isobaric Labels', color:'#58a6ff', desc:'Chemical tags of identical mass label peptides from different samples. Mixed in equal amounts, co-isolated for fragmentation. Tag reporter ions (126–135 Da) quantified in MS3 or MS2. Up to 18-plex (TMTpro 18) enables very high sample throughput.', use:'Time-course · drug response · large clinical cohorts · phosphoproteomics', limit:'Co-isolation interference (ratio compression) · high reagent cost' },
-    { name:'SILAC (Stable Isotope Labelling)', type:'Metabolic Labels', color:'#e3b341', desc:'Cells grown in ¹³C/¹⁵N-labelled amino acids (heavy Lys/Arg) — label incorporated into all newly synthesised proteins. Heavy and light samples mixed 1:1, measured in MS1. Gold standard for cell culture proteomics.', use:'Cell biology · signalling · protein turnover · SILAC mouse', limit:'Not applicable to primary patient samples or tissues · expensive heavy amino acids' },
-    { name:'Targeted MRM/PRM', type:'Targeted', color:'#bc8cff', desc:'Pre-selected peptide transitions monitored in multiple reaction monitoring (triple-quadrupole) or parallel reaction monitoring (high-res Orbitrap). Extremely high sensitivity and reproducibility (CV 2–5%). Ideal for biomarker verification.', use:'Biomarker validation · clinical diagnostics · drug PK/PD · specific protein quantification in complex matrices', limit:'Low multiplexing (30–200 peptides) · requires prior knowledge of targets' },
+    {
+      name: 'Label-Free Quantification (LFQ)',
+      type: 'Label-Free',
+      color: '#00C4A0',
+      desc: 'Peptide peak areas compared across LC-MS runs without chemical labels. Simplest and cheapest — no labelling reagent cost. Requires excellent chromatographic reproducibility (CV <5%) and alignment algorithms (MaxQuant LFQ or FlashLFQ).',
+      use: 'Discovery proteomics · serum biomarkers · clinical sample series · >12 conditions',
+      limit: 'Run-to-run variation · missing values · requires more replicates',
+    },
+    {
+      name: 'TMT (Tandem Mass Tags)',
+      type: 'Isobaric Labels',
+      color: '#58a6ff',
+      desc: 'Chemical tags of identical mass label peptides from different samples. Mixed in equal amounts, co-isolated for fragmentation. Tag reporter ions (126–135 Da) quantified in MS3 or MS2. Up to 18-plex (TMTpro 18) enables very high sample throughput.',
+      use: 'Time-course · drug response · large clinical cohorts · phosphoproteomics',
+      limit: 'Co-isolation interference (ratio compression) · high reagent cost',
+    },
+    {
+      name: 'SILAC (Stable Isotope Labelling)',
+      type: 'Metabolic Labels',
+      color: '#e3b341',
+      desc: 'Cells grown in ¹³C/¹⁵N-labelled amino acids (heavy Lys/Arg) — label incorporated into all newly synthesised proteins. Heavy and light samples mixed 1:1, measured in MS1. Gold standard for cell culture proteomics.',
+      use: 'Cell biology · signalling · protein turnover · SILAC mouse',
+      limit: 'Not applicable to primary patient samples or tissues · expensive heavy amino acids',
+    },
+    {
+      name: 'Targeted MRM/PRM',
+      type: 'Targeted',
+      color: '#bc8cff',
+      desc: 'Pre-selected peptide transitions monitored in multiple reaction monitoring (triple-quadrupole) or parallel reaction monitoring (high-res Orbitrap). Extremely high sensitivity and reproducibility (CV 2–5%). Ideal for biomarker verification.',
+      use: 'Biomarker validation · clinical diagnostics · drug PK/PD · specific protein quantification in complex matrices',
+      limit: 'Low multiplexing (30–200 peptides) · requires prior knowledge of targets',
+    },
   ];
 
   const AFRICA_PROT = [
-    { study:'Plasmodium falciparum Proteome', finding:'Complete intraerythrocytic developmental proteome mapped — 3,208 proteins quantified across 6 developmental stages (ring, trophozoite, schizont, gametocyte). Identifies drug targets in metabolic stages absent from genome annotation.', doi:'10.1126/science.1260403' },
-    { study:'TB Serum Biomarkers (SA)', finding:'Discovery of 4-protein signature (NCAM1, CXCL10, CD14, LILRB2) in serum of active TB patients vs latent TB vs healthy controls in South African cohort — 96% sensitivity, 92% specificity. Validated in 350-person Uganda cohort.', doi:'10.1016/j.chom.2021.09.005' },
-    { study:'HIV-1 Host Proteome', finding:'Quantitative proteomics of CD4+ T cells from viremic vs suppressed HIV patients in Durban identifies 285 differentially abundant proteins; SAMHD1 and BST-2 restriction factors restored under ART — potential predictors of viral rebound.', doi:'10.1016/j.celrep.2022.110756' },
-    { study:'Sickle Cell Erythrocyte Proteome', finding:'Sickle erythrocyte proteome (Nigeria/UCT cohort) shows 162 proteins differentially abundant vs normal — vesicle proteins (flotillin-1, stomatin), oxidative stress markers, and complement regulators changed. Links to vaso-occlusive crisis frequency.', doi:'10.1182/blood.2020010240' },
-    { study:'African Cancer Proteogenomics (IARC/H3Africa)', finding:'Proteogenomic profiling of triple-negative breast cancer in 82 Nigerian women reveals African-specific molecular subtype driven by BRCA2 loss and alternative splicing — different from TCGA profiles, requires Africa-specific therapeutic strategy.', doi:'10.1016/j.ccell.2024.02.001' },
+    {
+      study: 'Plasmodium falciparum Proteome',
+      finding:
+        'Complete intraerythrocytic developmental proteome mapped — 3,208 proteins quantified across 6 developmental stages (ring, trophozoite, schizont, gametocyte). Identifies drug targets in metabolic stages absent from genome annotation.',
+      doi: '10.1126/science.1260403',
+    },
+    {
+      study: 'TB Serum Biomarkers (SA)',
+      finding:
+        'Discovery of 4-protein signature (NCAM1, CXCL10, CD14, LILRB2) in serum of active TB patients vs latent TB vs healthy controls in South African cohort — 96% sensitivity, 92% specificity. Validated in 350-person Uganda cohort.',
+      doi: '10.1016/j.chom.2021.09.005',
+    },
+    {
+      study: 'HIV-1 Host Proteome',
+      finding:
+        'Quantitative proteomics of CD4+ T cells from viremic vs suppressed HIV patients in Durban identifies 285 differentially abundant proteins; SAMHD1 and BST-2 restriction factors restored under ART — potential predictors of viral rebound.',
+      doi: '10.1016/j.celrep.2022.110756',
+    },
+    {
+      study: 'Sickle Cell Erythrocyte Proteome',
+      finding:
+        'Sickle erythrocyte proteome (Nigeria/UCT cohort) shows 162 proteins differentially abundant vs normal — vesicle proteins (flotillin-1, stomatin), oxidative stress markers, and complement regulators changed. Links to vaso-occlusive crisis frequency.',
+      doi: '10.1182/blood.2020010240',
+    },
+    {
+      study: 'African Cancer Proteogenomics (IARC/H3Africa)',
+      finding:
+        'Proteogenomic profiling of triple-negative breast cancer in 82 Nigerian women reveals African-specific molecular subtype driven by BRCA2 loss and alternative splicing — different from TCGA profiles, requires Africa-specific therapeutic strategy.',
+      doi: '10.1016/j.ccell.2024.02.001',
+    },
   ];
 
   function init() {
@@ -49,26 +131,30 @@ OmicsLab.Proteomics = (function () {
   <div id="prot-panel-quant" hidden>${_quantPanel()}</div>
   <div id="prot-panel-africa" hidden>${_africaPanel()}</div>
 </div>`;
-    } catch(e) { container.innerHTML = `<p style="color:#f85149;padding:2rem">Proteomics module error: ${e}</p>`; }
+    } catch (e) {
+      container.innerHTML = `<p style="color:#f85149;padding:2rem">Proteomics module error: ${e}</p>`;
+    }
   }
 
   function setTab(id, btn) {
-    document.querySelectorAll('.prot-tab').forEach(t => t.classList.toggle('active', t === btn));
-    ['ms','workflow','quant','africa'].forEach(p => {
+    document.querySelectorAll('.prot-tab').forEach((t) => t.classList.toggle('active', t === btn));
+    ['ms', 'workflow', 'quant', 'africa'].forEach((p) => {
       const el = document.getElementById('prot-panel-' + p);
-      if (el) el.hidden = (p !== id);
+      if (el) el.hidden = p !== id;
     });
   }
 
   function _msPanel() {
-    const iCards = IONIZATION.map(i => `
+    const iCards = IONIZATION.map(
+      (i) => `
       <div class="prot-ion-card">
         <div class="prot-ion-name">${i.method}</div>
         <div class="prot-ion-type">${i.type}</div>
         <div class="prot-ion-row"><span class="prot-il">Use</span>${i.use}</div>
         <div class="prot-ion-row"><span class="prot-il">Characteristics</span>${i.chars}</div>
         <div class="prot-ion-africa"><span class="prot-il">Africa context</span>${i.africa}</div>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     const specSvg = _drawSpectrum();
 
@@ -97,48 +183,96 @@ OmicsLab.Proteomics = (function () {
   }
 
   function _drawSpectrum() {
-    const W = 500, H = 160;
+    const W = 500,
+      H = 160;
     const peaks = [
-      {mz:175,int:0.95,ion:'y1',col:'#f97316'},{mz:274,int:0.72,ion:'y2',col:'#f97316'},
-      {mz:387,int:0.55,ion:'y3',col:'#f97316'},{mz:458,int:0.88,ion:'y4',col:'#f97316'},
-      {mz:129,int:0.6, ion:'b1',col:'#58a6ff'},{mz:242,int:0.45,ion:'b2',col:'#58a6ff'},
-      {mz:355,int:0.78,ion:'b3',col:'#58a6ff'},{mz:468,int:0.5, ion:'b4',col:'#58a6ff'},
-      {mz:576,int:0.35,ion:'b5',col:'#58a6ff'},{mz:620,int:0.25,ion:'',col:'#6E6860'},
+      { mz: 175, int: 0.95, ion: 'y1', col: '#f97316' },
+      { mz: 274, int: 0.72, ion: 'y2', col: '#f97316' },
+      { mz: 387, int: 0.55, ion: 'y3', col: '#f97316' },
+      { mz: 458, int: 0.88, ion: 'y4', col: '#f97316' },
+      { mz: 129, int: 0.6, ion: 'b1', col: '#58a6ff' },
+      { mz: 242, int: 0.45, ion: 'b2', col: '#58a6ff' },
+      { mz: 355, int: 0.78, ion: 'b3', col: '#58a6ff' },
+      { mz: 468, int: 0.5, ion: 'b4', col: '#58a6ff' },
+      { mz: 576, int: 0.35, ion: 'b5', col: '#58a6ff' },
+      { mz: 620, int: 0.25, ion: '', col: '#6E6860' },
     ];
-    const maxMZ = 680, pad = { l:30, r:10, t:20, b:30 };
-    const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
-    const xs = mz => pad.l + (mz / maxMZ) * pw;
-    const ys = i  => pad.t + ph * (1 - i);
+    const maxMZ = 680,
+      pad = { l: 30, r: 10, t: 20, b: 30 };
+    const pw = W - pad.l - pad.r,
+      ph = H - pad.t - pad.b;
+    const xs = (mz) => pad.l + (mz / maxMZ) * pw;
+    const ys = (i) => pad.t + ph * (1 - i);
 
-    const lines = peaks.map(p => {
-      const x = xs(p.mz);
-      return `<line x1="${x}" y1="${ys(0)}" x2="${x}" y2="${ys(p.int)}" stroke="${p.col}" stroke-width="${p.int > 0.7 ? 2 : 1.2}"/>
+    const lines = peaks
+      .map((p) => {
+        const x = xs(p.mz);
+        return `<line x1="${x}" y1="${ys(0)}" x2="${x}" y2="${ys(p.int)}" stroke="${p.col}" stroke-width="${p.int > 0.7 ? 2 : 1.2}"/>
         ${p.ion ? `<text x="${x}" y="${ys(p.int) - 4}" text-anchor="middle" fill="${p.col}" font-size="8" font-family="monospace">${p.ion}</text>` : ''}`;
-    }).join('');
+      })
+      .join('');
 
-    const xLabels = [100,200,300,400,500,600].map(v =>
-      `<text x="${xs(v)}" y="${H - pad.b + 12}" text-anchor="middle" fill="#6E6860" font-size="8">${v}</text>`
-    ).join('');
+    const xLabels = [100, 200, 300, 400, 500, 600]
+      .map(
+        (v) =>
+          `<text x="${xs(v)}" y="${H - pad.b + 12}" text-anchor="middle" fill="#6E6860" font-size="8">${v}</text>`
+      )
+      .join('');
 
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;display:block;margin:0 auto" aria-label="Simulated MS/MS spectrum">
-      <line x1="${pad.l}" y1="${ys(0)}" x2="${W-pad.r}" y2="${ys(0)}" stroke="#182236" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${ys(0)}" x2="${W - pad.r}" y2="${ys(0)}" stroke="#182236" stroke-width="1"/>
       ${lines}${xLabels}
-      <text x="${W/2}" y="${H}" text-anchor="middle" fill="#6E6860" font-size="9">m/z</text>
-      <text x="8" y="${H/2}" text-anchor="middle" fill="#6E6860" font-size="9" transform="rotate(-90,8,${H/2})">Intensity</text>
-      <rect x="${W-90}" y="4" width="8" height="8" fill="#58a6ff"/><text x="${W-78}" y="12" fill="#58a6ff" font-size="8">b-ions</text>
-      <rect x="${W-90}" y="16" width="8" height="8" fill="#f97316"/><text x="${W-78}" y="24" fill="#f97316" font-size="8">y-ions</text>
+      <text x="${W / 2}" y="${H}" text-anchor="middle" fill="#6E6860" font-size="9">m/z</text>
+      <text x="8" y="${H / 2}" text-anchor="middle" fill="#6E6860" font-size="9" transform="rotate(-90,8,${H / 2})">Intensity</text>
+      <rect x="${W - 90}" y="4" width="8" height="8" fill="#58a6ff"/><text x="${W - 78}" y="12" fill="#58a6ff" font-size="8">b-ions</text>
+      <rect x="${W - 90}" y="16" width="8" height="8" fill="#f97316"/><text x="${W - 78}" y="24" fill="#f97316" font-size="8">y-ions</text>
     </svg>`;
   }
 
   function _workflowPanel() {
     const steps = [
-      { n:'1', title:'Sample Preparation', col:'#00C4A0', body:'Cell lysis (RIPA/SDS), protein extraction, quantification (BCA/Bradford). Critical: consistent lysis conditions across samples. Filter-aided sample preparation (FASP) or S-trap columns remove detergents and concentrate proteins.' },
-      { n:'2', title:'Protein Digestion', col:'#58a6ff', body:'Trypsin cleaves after Lys/Arg (not before Pro) producing peptides 7–25 AA — ideal for LC-MS. Reduction (DTT 10 mM) + alkylation (iodoacetamide 55 mM) before digestion prevents cysteine re-bridging. LysC + Trypsin sequential digest improves missed cleavage rate.' },
-      { n:'3', title:'Peptide Desalting &amp; Fractionation', col:'#e3b341', body:'C18 StageTips or Sep-Pak cartridges remove salts and detergents. High-pH reverse-phase fractionation (HPRP) or strong cation exchange (SCX) pre-fractionation increases proteome depth 3–5× by reducing sample complexity per LC-MS run.' },
-      { n:'4', title:'nanoLC Separation', col:'#bc8cff', body:'75 µm ID reverse-phase C18 column (50 cm EASY-Spray), 300 nL/min flow, 2–95% acetonitrile gradient over 60–240 min. Peptides elute by hydrophobicity. Column temperature 50°C for reproducibility. DIA: all peptides fragmented; DDA: top-N most intense precursors selected.' },
-      { n:'5', title:'MS Acquisition', col:'#f97316', body:'DDA (Data-Dependent Acquisition): survey MS1 scan, then fragment top 10–20 precursors. DIA (Data-Independent Acquisition): all precursors in isolation windows fragmented simultaneously — reproducible quantification, no missing values, preferred for clinical biomarker studies.' },
-      { n:'6', title:'Database Search &amp; Protein ID', col:'#f85149', body:'MSFragger, Mascot, or SEQUEST matches MS2 spectra to in-silico tryptic peptides from FASTA database (UniProt, custom African variant database). FDR ≤ 1% at peptide level (target-decoy approach). Protein inference: MaxQuant, Percolator, PeptideShaker.' },
-      { n:'7', title:'Quantification &amp; Statistics', col:'#58a6ff', body:'LFQ intensities, TMT reporter ratios, or MRM areas extracted. Log₂ transformation → median normalisation → imputation of missing values (KNN or MinProb). limma or t-test for differential abundance. Volcano plot, heatmap, GO enrichment of significant proteins.' },
+      {
+        n: '1',
+        title: 'Sample Preparation',
+        col: '#00C4A0',
+        body: 'Cell lysis (RIPA/SDS), protein extraction, quantification (BCA/Bradford). Critical: consistent lysis conditions across samples. Filter-aided sample preparation (FASP) or S-trap columns remove detergents and concentrate proteins.',
+      },
+      {
+        n: '2',
+        title: 'Protein Digestion',
+        col: '#58a6ff',
+        body: 'Trypsin cleaves after Lys/Arg (not before Pro) producing peptides 7–25 AA — ideal for LC-MS. Reduction (DTT 10 mM) + alkylation (iodoacetamide 55 mM) before digestion prevents cysteine re-bridging. LysC + Trypsin sequential digest improves missed cleavage rate.',
+      },
+      {
+        n: '3',
+        title: 'Peptide Desalting &amp; Fractionation',
+        col: '#e3b341',
+        body: 'C18 StageTips or Sep-Pak cartridges remove salts and detergents. High-pH reverse-phase fractionation (HPRP) or strong cation exchange (SCX) pre-fractionation increases proteome depth 3–5× by reducing sample complexity per LC-MS run.',
+      },
+      {
+        n: '4',
+        title: 'nanoLC Separation',
+        col: '#bc8cff',
+        body: '75 µm ID reverse-phase C18 column (50 cm EASY-Spray), 300 nL/min flow, 2–95% acetonitrile gradient over 60–240 min. Peptides elute by hydrophobicity. Column temperature 50°C for reproducibility. DIA: all peptides fragmented; DDA: top-N most intense precursors selected.',
+      },
+      {
+        n: '5',
+        title: 'MS Acquisition',
+        col: '#f97316',
+        body: 'DDA (Data-Dependent Acquisition): survey MS1 scan, then fragment top 10–20 precursors. DIA (Data-Independent Acquisition): all precursors in isolation windows fragmented simultaneously — reproducible quantification, no missing values, preferred for clinical biomarker studies.',
+      },
+      {
+        n: '6',
+        title: 'Database Search &amp; Protein ID',
+        col: '#f85149',
+        body: 'MSFragger, Mascot, or SEQUEST matches MS2 spectra to in-silico tryptic peptides from FASTA database (UniProt, custom African variant database). FDR ≤ 1% at peptide level (target-decoy approach). Protein inference: MaxQuant, Percolator, PeptideShaker.',
+      },
+      {
+        n: '7',
+        title: 'Quantification &amp; Statistics',
+        col: '#58a6ff',
+        body: 'LFQ intensities, TMT reporter ratios, or MRM areas extracted. Log₂ transformation → median normalisation → imputation of missing values (KNN or MinProb). limma or t-test for differential abundance. Volcano plot, heatmap, GO enrichment of significant proteins.',
+      },
     ];
 
     return `
@@ -146,14 +280,18 @@ OmicsLab.Proteomics = (function () {
   <div class="prot-concept-title">Bottom-Up Proteomics Workflow</div>
   <p class="prot-concept-body">Bottom-up (shotgun) proteomics digests proteins into peptides before MS analysis — the dominant approach for global proteome quantification. The workflow converts a complex protein mixture into a reproducible set of tryptic peptides detectable by LC-MS/MS. Each step must be optimised carefully: variability introduced early propagates through the entire experiment.</p>
 </div>
-<div class="prot-workflow-steps">${steps.map(s => `
+<div class="prot-workflow-steps">${steps
+      .map(
+        (s) => `
   <div class="prot-wf-step">
     <div class="prot-wf-num" style="background:${s.col}20;color:${s.col};border-color:${s.col}">${s.n}</div>
     <div>
       <div class="prot-wf-title" style="color:${s.col}">${s.title}</div>
       <p class="prot-wf-body">${s.body}</p>
     </div>
-  </div>`).join('')}</div>`;
+  </div>`
+      )
+      .join('')}</div>`;
   }
 
   function _quantPanel() {
@@ -162,14 +300,16 @@ OmicsLab.Proteomics = (function () {
   <div class="prot-concept-title">Protein Quantification Strategies</div>
   <p class="prot-concept-body">Choosing the right quantification strategy depends on sample type, number of conditions, required accuracy, budget, and whether the experiment is discovery or targeted. All strategies measure peptide abundance as a proxy for protein abundance — protein inference from peptides remains a fundamental challenge in proteomics.</p>
 </div>
-<div class="prot-quant-grid">${QUANT_METHODS.map(q => `
+<div class="prot-quant-grid">${QUANT_METHODS.map(
+      (q) => `
   <div class="prot-quant-card" style="border-top-color:${q.color}">
     <div class="prot-qc-name" style="color:${q.color}">${q.name}</div>
     <div class="prot-qc-type">${q.type}</div>
     <p class="prot-qc-desc">${q.desc}</p>
     <div class="prot-qc-use"><span class="prot-qc-lbl">Best for</span>${q.use}</div>
     <div class="prot-qc-limit"><span class="prot-qc-lbl">Limitations</span>${q.limit}</div>
-  </div>`).join('')}</div>
+  </div>`
+    ).join('')}</div>
 <div class="prot-fdr-card">
   <div class="prot-sb-title">Protein Identification FDR — Target-Decoy Approach</div>
   <div class="prot-fdr-steps">
@@ -184,11 +324,13 @@ OmicsLab.Proteomics = (function () {
   }
 
   function _africaPanel() {
-    const cards = AFRICA_PROT.map(s => `
+    const cards = AFRICA_PROT.map(
+      (s) => `
       <div class="prot-africa-card">
         <div class="prot-af-study">${s.study}</div>
         <p class="prot-af-finding">${s.finding}</p>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     return `
 <div class="prot-concept-box">

@@ -4,33 +4,141 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Epigenomics = (function () {
-
   const HISTONE_MARKS = [
-    { mark:'H3K4me3',  type:'Active Promoter',            color:'#00C4A0', assoc:'RNA Pol II binding · TSS enrichment · high CpG density promoters', example:'BRCA1 promoter · HBB locus · rRNA genes' },
-    { mark:'H3K4me1',  type:'Enhancer',                   color:'#e3b341', assoc:'Distal regulatory elements · poised or active enhancers · p300 co-factor binding', example:'Super-enhancers in T-cells · malaria invasion gene enhancers' },
-    { mark:'H3K27ac',  type:'Active Enhancer',            color:'#58a6ff', assoc:'Active transcription · open chromatin · marks active over poised enhancers', example:'Active erythroid enhancers controlling HBB/HBG locus' },
-    { mark:'H3K36me3', type:'Gene Body',                  color:'#bc8cff', assoc:'Transcribed gene bodies · splicing regulation · SETD2 writer · active elongation', example:'Highly expressed housekeeping genes · CYP2D6 in liver' },
-    { mark:'H3K27me3', type:'Polycomb Repression',        color:'#f85149', assoc:'Gene silencing · developmental repression · PRC2 complex · bivalent in stem cells', example:'HOX genes in non-expressing tissues · tumour suppressor silencing' },
-    { mark:'H3K9me3',  type:'Constitutive Heterochromatin',color:'#A8A098',assoc:'Centromeres · telomeres · silenced transposons · HP1 protein binding', example:'Pericentromeric repeats · silenced transposable elements' },
-    { mark:'H3K9ac',   type:'Active Gene',                color:'#f97316', assoc:'Rapid gene activation · signal-responsive genes · early response loci', example:'Immune response genes in macrophages · IFN-stimulated genes' },
-    { mark:'H3K4me2',  type:'Poised Enhancer',            color:'#79c0ff', assoc:'Primed but inactive enhancers · bivalent with H3K27me3 in pluripotent stem cells', example:'Developmental lineage enhancers in iPSCs and ES cells' },
+    {
+      mark: 'H3K4me3',
+      type: 'Active Promoter',
+      color: '#00C4A0',
+      assoc: 'RNA Pol II binding · TSS enrichment · high CpG density promoters',
+      example: 'BRCA1 promoter · HBB locus · rRNA genes',
+    },
+    {
+      mark: 'H3K4me1',
+      type: 'Enhancer',
+      color: '#e3b341',
+      assoc: 'Distal regulatory elements · poised or active enhancers · p300 co-factor binding',
+      example: 'Super-enhancers in T-cells · malaria invasion gene enhancers',
+    },
+    {
+      mark: 'H3K27ac',
+      type: 'Active Enhancer',
+      color: '#58a6ff',
+      assoc: 'Active transcription · open chromatin · marks active over poised enhancers',
+      example: 'Active erythroid enhancers controlling HBB/HBG locus',
+    },
+    {
+      mark: 'H3K36me3',
+      type: 'Gene Body',
+      color: '#bc8cff',
+      assoc: 'Transcribed gene bodies · splicing regulation · SETD2 writer · active elongation',
+      example: 'Highly expressed housekeeping genes · CYP2D6 in liver',
+    },
+    {
+      mark: 'H3K27me3',
+      type: 'Polycomb Repression',
+      color: '#f85149',
+      assoc: 'Gene silencing · developmental repression · PRC2 complex · bivalent in stem cells',
+      example: 'HOX genes in non-expressing tissues · tumour suppressor silencing',
+    },
+    {
+      mark: 'H3K9me3',
+      type: 'Constitutive Heterochromatin',
+      color: '#A8A098',
+      assoc: 'Centromeres · telomeres · silenced transposons · HP1 protein binding',
+      example: 'Pericentromeric repeats · silenced transposable elements',
+    },
+    {
+      mark: 'H3K9ac',
+      type: 'Active Gene',
+      color: '#f97316',
+      assoc: 'Rapid gene activation · signal-responsive genes · early response loci',
+      example: 'Immune response genes in macrophages · IFN-stimulated genes',
+    },
+    {
+      mark: 'H3K4me2',
+      type: 'Poised Enhancer',
+      color: '#79c0ff',
+      assoc: 'Primed but inactive enhancers · bivalent with H3K27me3 in pluripotent stem cells',
+      example: 'Developmental lineage enhancers in iPSCs and ES cells',
+    },
   ];
 
   const METH_CONTEXTS = [
-    { ctx:'CpG (5mC)',  pct:70,  desc:'Most common mammalian mark. Promoter CpG methylation → gene silencing. Gene-body methylation → active transcription. Written by DNMT1/3A/3B; removed by TET enzyme oxidation chain.', africa:'CpG hypomethylation in P. falciparum-infected erythrocytes alters cytoadherence gene expression at PfEMP1 var loci.' },
-    { ctx:'CHG',        pct:10,  desc:'Predominant in plants. CMT3 enzyme. Critical for silencing transposable elements and maintaining genome stability in crop species.', africa:'CMT3 silences drought-responsive transposons in sorghum and millet grown across the Sahel and East Africa.' },
-    { ctx:'CHH',        pct:5,   desc:'Plant-dominant context; rare in mammals. Found in neurons and embryonic stem cells as a non-CG methylation form.', africa:'CHH methylation in Arabidopsis under drought stress — relevant to African crop resilience and climate adaptation breeding.' },
-    { ctx:'5hmC',       pct:2,   desc:'TET enzyme oxidation intermediate of 5mC. Enriched in brain, embryo, and ES cells. Active demethylation step via BER pathway. Potential gene activation mark.', africa:'5hmC depletion in malaria-associated Burkitt lymphoma versus endemic Burkitt tumour — potential diagnostic biomarker.' },
-    { ctx:'m6A (RNA)',  pct:3,   desc:'N6-methyladenosine in mRNA. DRACH motif. METTL3/14 writers; FTO/ALKBH5 erasers; YTHDF1/2/3 readers. Regulates mRNA stability, splicing, and translation efficiency.', africa:'m6A reader YTHDF2 regulates P. falciparum mRNA stability during schizogony — drug target under active investigation.' },
-    { ctx:'5fC / 5caC', pct:0.1, desc:'TET oxidation intermediates → base excision repair → demethylation. Enriched at active enhancers during cellular reprogramming and early embryogenesis.', africa:'Emerging epigenomic biomarkers in African cancer cohorts (H3Africa CancerEpi initiative, 2023–2026).' },
+    {
+      ctx: 'CpG (5mC)',
+      pct: 70,
+      desc: 'Most common mammalian mark. Promoter CpG methylation → gene silencing. Gene-body methylation → active transcription. Written by DNMT1/3A/3B; removed by TET enzyme oxidation chain.',
+      africa:
+        'CpG hypomethylation in P. falciparum-infected erythrocytes alters cytoadherence gene expression at PfEMP1 var loci.',
+    },
+    {
+      ctx: 'CHG',
+      pct: 10,
+      desc: 'Predominant in plants. CMT3 enzyme. Critical for silencing transposable elements and maintaining genome stability in crop species.',
+      africa:
+        'CMT3 silences drought-responsive transposons in sorghum and millet grown across the Sahel and East Africa.',
+    },
+    {
+      ctx: 'CHH',
+      pct: 5,
+      desc: 'Plant-dominant context; rare in mammals. Found in neurons and embryonic stem cells as a non-CG methylation form.',
+      africa:
+        'CHH methylation in Arabidopsis under drought stress — relevant to African crop resilience and climate adaptation breeding.',
+    },
+    {
+      ctx: '5hmC',
+      pct: 2,
+      desc: 'TET enzyme oxidation intermediate of 5mC. Enriched in brain, embryo, and ES cells. Active demethylation step via BER pathway. Potential gene activation mark.',
+      africa:
+        '5hmC depletion in malaria-associated Burkitt lymphoma versus endemic Burkitt tumour — potential diagnostic biomarker.',
+    },
+    {
+      ctx: 'm6A (RNA)',
+      pct: 3,
+      desc: 'N6-methyladenosine in mRNA. DRACH motif. METTL3/14 writers; FTO/ALKBH5 erasers; YTHDF1/2/3 readers. Regulates mRNA stability, splicing, and translation efficiency.',
+      africa:
+        'm6A reader YTHDF2 regulates P. falciparum mRNA stability during schizogony — drug target under active investigation.',
+    },
+    {
+      ctx: '5fC / 5caC',
+      pct: 0.1,
+      desc: 'TET oxidation intermediates → base excision repair → demethylation. Enriched at active enhancers during cellular reprogramming and early embryogenesis.',
+      africa:
+        'Emerging epigenomic biomarkers in African cancer cohorts (H3Africa CancerEpi initiative, 2023–2026).',
+    },
   ];
 
   const AFRICA_EPI = [
-    { study:'H3Africa Epigenomics Consortium', finding:'Genome-wide methylation profiling across 12 African countries — HIV, TB, sickle cell, and cardiometabolic cohorts — building the first African epigenomic reference atlas (>5,000 samples).', doi:'10.1038/s41586-024-07798-0' },
-    { study:'Malaria Epigenome (Broad / Wellcome Sanger)', finding:'P. falciparum chromatin organises into two transcriptional compartments during intraerythrocytic development. var gene switching (antigenic variation) is regulated by H3K9me3 boundaries at subtelomeric domains.', doi:'10.1016/j.cell.2019.10.023' },
-    { study:'Sickle Cell & γ-Globin Reactivation', finding:'BCL11A erythroid enhancer (+62 kb intron 2) carries H3K27ac in erythroid progenitors. CRISPR disruption reactivates HbF to therapeutic levels (>20% HbF) — basis for Casgevy gene therapy.', doi:'10.1056/NEJMoa2032054' },
-    { study:'TB Host Epigenetics (KEMRI / Wellcome)', finding:'M. tuberculosis reprograms host macrophage methylome at inflammatory loci within 72 h. HDAC inhibitors synergise with antibiotics to enhance killing in murine model — potential adjunct therapy.', doi:'10.1038/s41591-023-02451-9' },
-    { study:'African Ancestry Methylation QTLs', finding:'meQTL analysis in AWI-Gen (11,000+ Africans, 6 sites) identifies 23 loci with ancestry-specific DNA methylation effects on cardiometabolic phenotypes not detected in European cohorts.', doi:'10.1016/j.ajhg.2023.05.007' },
+    {
+      study: 'H3Africa Epigenomics Consortium',
+      finding:
+        'Genome-wide methylation profiling across 12 African countries — HIV, TB, sickle cell, and cardiometabolic cohorts — building the first African epigenomic reference atlas (>5,000 samples).',
+      doi: '10.1038/s41586-024-07798-0',
+    },
+    {
+      study: 'Malaria Epigenome (Broad / Wellcome Sanger)',
+      finding:
+        'P. falciparum chromatin organises into two transcriptional compartments during intraerythrocytic development. var gene switching (antigenic variation) is regulated by H3K9me3 boundaries at subtelomeric domains.',
+      doi: '10.1016/j.cell.2019.10.023',
+    },
+    {
+      study: 'Sickle Cell & γ-Globin Reactivation',
+      finding:
+        'BCL11A erythroid enhancer (+62 kb intron 2) carries H3K27ac in erythroid progenitors. CRISPR disruption reactivates HbF to therapeutic levels (>20% HbF) — basis for Casgevy gene therapy.',
+      doi: '10.1056/NEJMoa2032054',
+    },
+    {
+      study: 'TB Host Epigenetics (KEMRI / Wellcome)',
+      finding:
+        'M. tuberculosis reprograms host macrophage methylome at inflammatory loci within 72 h. HDAC inhibitors synergise with antibiotics to enhance killing in murine model — potential adjunct therapy.',
+      doi: '10.1038/s41591-023-02451-9',
+    },
+    {
+      study: 'African Ancestry Methylation QTLs',
+      finding:
+        'meQTL analysis in AWI-Gen (11,000+ Africans, 6 sites) identifies 23 loci with ancestry-specific DNA methylation effects on cardiometabolic phenotypes not detected in European cohorts.',
+      doi: '10.1016/j.ajhg.2023.05.007',
+    },
   ];
 
   function init() {
@@ -55,23 +163,25 @@ OmicsLab.Epigenomics = (function () {
   <div id="epi-panel-chromatin" hidden>${_buildChromatinPanel()}</div>
   <div id="epi-panel-africa" hidden>${_buildAfricaPanel()}</div>
 </div>`;
-    } catch(e) { container.innerHTML = `<p style="color:#f85149;padding:2rem">Epigenomics load error: ${e}</p>`; }
+    } catch (e) {
+      container.innerHTML = `<p style="color:#f85149;padding:2rem">Epigenomics load error: ${e}</p>`;
+    }
   }
 
   function setTab(id, btn) {
-    document.querySelectorAll('.epi-tab').forEach(t => t.classList.toggle('active', t === btn));
-    ['methylation','histones','chromatin','africa'].forEach(p => {
+    document.querySelectorAll('.epi-tab').forEach((t) => t.classList.toggle('active', t === btn));
+    ['methylation', 'histones', 'chromatin', 'africa'].forEach((p) => {
       const el = document.getElementById('epi-panel-' + p);
-      if (el) el.hidden = (p !== id);
+      if (el) el.hidden = p !== id;
     });
   }
 
   function _buildMethPanel() {
-    const bars = METH_CONTEXTS.map(c => {
+    const bars = METH_CONTEXTS.map((c) => {
       const col = c.pct > 20 ? '#00C4A0' : c.pct > 4 ? '#e3b341' : '#58a6ff';
       return `<div class="epi-meth-row">
         <div class="epi-meth-ctx">${c.ctx}</div>
-        <div class="epi-meth-bar-wrap"><div class="epi-meth-bar" style="width:${Math.min(100,c.pct*1.3)}%;background:${col}"></div></div>
+        <div class="epi-meth-bar-wrap"><div class="epi-meth-bar" style="width:${Math.min(100, c.pct * 1.3)}%;background:${col}"></div></div>
         <div class="epi-meth-pct">${c.pct}%</div>
       </div>
       <div class="epi-meth-body"><p class="epi-meth-desc">${c.desc}</p><p class="epi-meth-africa">${c.africa}</p></div>`;
@@ -99,13 +209,15 @@ OmicsLab.Epigenomics = (function () {
   }
 
   function _buildHistonePanel() {
-    const cards = HISTONE_MARKS.map(h => `
+    const cards = HISTONE_MARKS.map(
+      (h) => `
       <div class="epi-histone-card" style="border-top-color:${h.color}">
         <div class="epi-histone-mark" style="color:${h.color}">${h.mark}</div>
         <div class="epi-histone-type">${h.type}</div>
         <p class="epi-histone-assoc">${h.assoc}</p>
         <div class="epi-histone-eg"><span class="epi-eg-lbl">Example</span>${h.example}</div>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     return `
 <div class="epi-concept-box">
@@ -127,25 +239,33 @@ OmicsLab.Epigenomics = (function () {
   }
 
   function _buildChromatinPanel() {
-    const W = 340, H = 155;
-    function gauss(x, mu, sig, amp) { return amp * Math.exp(-0.5 * ((x-mu)/sig)**2); }
+    const W = 340,
+      H = 155;
+    function gauss(x, mu, sig, amp) {
+      return amp * Math.exp(-0.5 * ((x - mu) / sig) ** 2);
+    }
     const pts = [];
     for (let x = 0; x <= W; x += 2) {
-      let y = gauss(x,170,16,78) + gauss(x,108,20,38) + gauss(x,232,20,32) + gauss(x,55,18,18) + gauss(x,285,17,15);
+      let y =
+        gauss(x, 170, 16, 78) +
+        gauss(x, 108, 20, 38) +
+        gauss(x, 232, 20, 32) +
+        gauss(x, 55, 18, 18) +
+        gauss(x, 285, 17, 15);
       pts.push({ x, y: H - 22 - y });
     }
-    const path  = 'M' + pts.map(p => `${p.x},${p.y.toFixed(1)}`).join('L');
-    const fill  = path + `L${W},${H-22}L0,${H-22}Z`;
+    const path = 'M' + pts.map((p) => `${p.x},${p.y.toFixed(1)}`).join('L');
+    const fill = path + `L${W},${H - 22}L0,${H - 22}Z`;
 
     const atacSvg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="width:100%;display:block" aria-label="ATAC-seq simulated peak track">
       <defs><linearGradient id="eg-atac" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#58a6ff" stop-opacity=".55"/><stop offset="100%" stop-color="#58a6ff" stop-opacity=".04"/></linearGradient></defs>
-      <line x1="0" y1="${H-22}" x2="${W}" y2="${H-22}" stroke="#182236" stroke-width="1"/>
+      <line x1="0" y1="${H - 22}" x2="${W}" y2="${H - 22}" stroke="#182236" stroke-width="1"/>
       <path d="${fill}" fill="url(#eg-atac)"/>
       <path d="${path}" fill="none" stroke="#58a6ff" stroke-width="1.6"/>
       <text x="170" y="11" text-anchor="middle" fill="#58a6ff" font-size="9" font-family="monospace">NFR</text>
       <line x1="170" y1="14" x2="170" y2="42" stroke="#58a6ff" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="108" y="${H-6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">−1 nuc</text>
-      <text x="232" y="${H-6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">+1 nuc</text>
+      <text x="108" y="${H - 6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">−1 nuc</text>
+      <text x="232" y="${H - 6}" text-anchor="middle" fill="#6E6860" font-size="8" font-family="monospace">+1 nuc</text>
     </svg>`;
 
     return `
@@ -182,11 +302,13 @@ OmicsLab.Epigenomics = (function () {
   }
 
   function _buildAfricaPanel() {
-    const cards = AFRICA_EPI.map(s => `
+    const cards = AFRICA_EPI.map(
+      (s) => `
       <div class="epi-africa-card">
         <div class="epi-af-study">${s.study}</div>
         <p class="epi-af-finding">${s.finding}</p>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     return `
 <div class="epi-concept-box">

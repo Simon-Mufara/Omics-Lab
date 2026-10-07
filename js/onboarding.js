@@ -5,37 +5,108 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Onboarding = (function () {
-
-  const FLAG     = 'omicslab_onboarded';
+  const FLAG = 'omicslab_onboarded';
   const ROLE_KEY = 'omicslab_onboarding_role';
 
-  let _step  = 1;
-  let _role  = null;
-  let _dest  = null;
-  let _overlay      = null;
+  let _step = 1;
+  let _role = null;
+  let _dest = null;
+  let _overlay = null;
   let _confettiDone = false;
 
   /* ─── Role → 3 curated starting points ─── */
   const ROLE_OPTIONS = {
     student: [
-      { label: 'WGS Step-by-Step',    desc: 'Walk through a whole-genome sequencing protocol. No experience needed.',        page: 'lab',         color: '#00C4A0', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg>' },
-      { label: 'RNA-seq Terminal',     desc: 'Run a live pipeline — STAR, DESeq2, volcano plots — step by step.',            page: 'terminal',    color: '#58a6ff', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>' },
-      { label: 'Genomics Glossary',    desc: 'Learn 200+ key terms — DNA, SNP, variant, allele — with simple definitions.', page: 'glossary',    color: '#bc8cff', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
+      {
+        label: 'WGS Step-by-Step',
+        desc: 'Walk through a whole-genome sequencing protocol. No experience needed.',
+        page: 'lab',
+        color: '#00C4A0',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M2 9c6.667 6 13.333 0 20 6"/></svg>',
+      },
+      {
+        label: 'RNA-seq Terminal',
+        desc: 'Run a live pipeline — STAR, DESeq2, volcano plots — step by step.',
+        page: 'terminal',
+        color: '#58a6ff',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',
+      },
+      {
+        label: 'Genomics Glossary',
+        desc: 'Learn 200+ key terms — DNA, SNP, variant, allele — with simple definitions.',
+        page: 'glossary',
+        color: '#bc8cff',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      },
     ],
     researcher: [
-      { label: 'Analysis Suite',       desc: 'FASTQ QC, VCF explorer, RNA-seq expression matrix, and variant interpretation.', page: 'analysis',     color: '#58a6ff', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>' },
-      { label: 'Variant Interpreter',  desc: 'Classify VCF variants with ACMG criteria and gnomAD African frequencies.',     page: 'variantinterp',color: '#bc8cff', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>' },
-      { label: 'Africa Hub',           desc: 'H3Africa datasets, population structure, AMR, and pathogen surveillance.',      page: 'africa',       color: '#f97316', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>' },
+      {
+        label: 'Analysis Suite',
+        desc: 'FASTQ QC, VCF explorer, RNA-seq expression matrix, and variant interpretation.',
+        page: 'analysis',
+        color: '#58a6ff',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+      },
+      {
+        label: 'Variant Interpreter',
+        desc: 'Classify VCF variants with ACMG criteria and gnomAD African frequencies.',
+        page: 'variantinterp',
+        color: '#bc8cff',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>',
+      },
+      {
+        label: 'Africa Hub',
+        desc: 'H3Africa datasets, population structure, AMR, and pathogen surveillance.',
+        page: 'africa',
+        color: '#f97316',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+      },
     ],
     instructor: [
-      { label: 'Curriculum Tracks',    desc: 'Structured learning tracks across 12 omics domains for your students.',          page: 'learn',       color: '#bc8cff', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
-      { label: 'Skill Tree',           desc: 'Track student XP, badge progress, and unlock bioinformatics milestones.',       page: 'skill-tree',  color: '#f97316', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' },
-      { label: 'Lab Protocols',        desc: '14 interactive protocols — assign specific modules to your class.',              page: 'lab',         color: '#00C4A0', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0l-2 2h14l-2-2M9 14H3l2.5 4.5M15 14h6l-2.5 4.5"/></svg>' },
+      {
+        label: 'Curriculum Tracks',
+        desc: 'Structured learning tracks across 12 omics domains for your students.',
+        page: 'learn',
+        color: '#bc8cff',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      },
+      {
+        label: 'Skill Tree',
+        desc: 'Track student XP, badge progress, and unlock bioinformatics milestones.',
+        page: 'skill-tree',
+        color: '#f97316',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+      },
+      {
+        label: 'Lab Protocols',
+        desc: '14 interactive protocols — assign specific modules to your class.',
+        page: 'lab',
+        color: '#00C4A0',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v11m0 0l-2 2h14l-2-2M9 14H3l2.5 4.5M15 14h6l-2.5 4.5"/></svg>',
+      },
     ],
     healthcare: [
-      { label: 'Disease Explorer',     desc: 'Plain-language disease profiles — genes, mutations, and what they mean clinically.', page: 'learn',    color: '#ff6b6b', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' },
-      { label: 'Genomics Glossary',    desc: '200+ terms explained simply — no biology degree required.',                         page: 'glossary', color: '#e3b341', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>' },
-      { label: 'AI Mentor',            desc: 'Ask any clinical genomics question in plain English — available 24/7.',             page: 'mentor',   color: '#00C4A0', icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>' },
+      {
+        label: 'Disease Explorer',
+        desc: 'Plain-language disease profiles — genes, mutations, and what they mean clinically.',
+        page: 'learn',
+        color: '#ff6b6b',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+      },
+      {
+        label: 'Genomics Glossary',
+        desc: '200+ terms explained simply — no biology degree required.',
+        page: 'glossary',
+        color: '#e3b341',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      },
+      {
+        label: 'AI Mentor',
+        desc: 'Ask any clinical genomics question in plain English — available 24/7.',
+        page: 'mentor',
+        color: '#00C4A0',
+        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+      },
     ],
   };
 
@@ -46,7 +117,12 @@ OmicsLab.Onboarding = (function () {
     setTimeout(_showStep1, 600);
   }
 
-  function _esc(s) { return String(s||'').replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
+  function _esc(s) {
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
+  }
 
   /* ─── Overlay helpers ─── */
   function _modal(content) {
@@ -75,8 +151,9 @@ OmicsLab.Onboarding = (function () {
 
   /* ─── Step dots (3 total) ─── */
   function _dots(current) {
-    return `<div class="ob-dots" aria-label="Step ${current} of 3">${[1,2,3].map(i =>
-      `<span class="ob-dot${i===current?' ob-dot-active':''}"></span>`).join('')}</div>`;
+    return `<div class="ob-dots" aria-label="Step ${current} of 3">${[1, 2, 3]
+      .map((i) => `<span class="ob-dot${i === current ? ' ob-dot-active' : ''}"></span>`)
+      .join('')}</div>`;
   }
 
   /* ═══════════════════════════════════════════
@@ -126,7 +203,9 @@ OmicsLab.Onboarding = (function () {
   function _pickRole(role, btn) {
     _role = role;
     localStorage.setItem(ROLE_KEY, role);
-    _overlay.querySelectorAll('.ob-role-card').forEach(c => c.classList.remove('ob-role-selected'));
+    _overlay
+      .querySelectorAll('.ob-role-card')
+      .forEach((c) => c.classList.remove('ob-role-selected'));
     btn.classList.add('ob-role-selected');
     setTimeout(_showStep2, 320);
   }
@@ -142,7 +221,9 @@ OmicsLab.Onboarding = (function () {
       <div class="ob-step-title">Where do you want to start?</div>
       <div class="ob-step-sub">Pick one — you can change this any time from the nav.</div>
       <div class="ob-options">
-        ${options.map((o, i) => `
+        ${options
+          .map(
+            (o, i) => `
           <button class="ob-option" onclick="OmicsLab.Onboarding._pickDest('${o.page}', this)">
             <span class="ob-option-icon" style="color:${o.color}">${o.icon}</span>
             <span class="ob-option-body">
@@ -150,7 +231,9 @@ OmicsLab.Onboarding = (function () {
               <span class="ob-option-desc">${_esc(o.desc)}</span>
             </span>
             <svg class="ob-option-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>`).join('')}
+          </button>`
+          )
+          .join('')}
       </div>
       <button class="ob-skip-btn ob-skip-center" onclick="OmicsLab.Onboarding._showStep3()">I'll explore on my own</button>
       ${_dots(2)}
@@ -160,7 +243,9 @@ OmicsLab.Onboarding = (function () {
 
   function _pickDest(page, btn) {
     _dest = page;
-    _overlay.querySelectorAll('.ob-option').forEach(o => o.classList.remove('ob-option-selected'));
+    _overlay
+      .querySelectorAll('.ob-option')
+      .forEach((o) => o.classList.remove('ob-option-selected'));
     btn.classList.add('ob-option-selected');
     OmicsLab.Router?.navigate(page);
     setTimeout(_showStep3, 280);
@@ -171,7 +256,9 @@ OmicsLab.Onboarding = (function () {
   ═══════════════════════════════════════════ */
   function _showStep3() {
     _step = 3;
-    const isSignedIn = !!(localStorage.getItem('omicslab_user') || window.OmicsLab?.AuthClerk?.getUser?.());
+    const isSignedIn = !!(
+      localStorage.getItem('omicslab_user') || window.OmicsLab?.AuthClerk?.getUser?.()
+    );
     _modal(`
       <div class="ob-confetti" id="ob-confetti"></div>
       <div class="ob-ready-icon">
@@ -182,14 +269,18 @@ OmicsLab.Onboarding = (function () {
       </div>
       <div class="ob-welcome-title">You're all set!</div>
       <div class="ob-welcome-sub">Everything runs in your browser — no install, no cost. 54 African nations already training here.</div>
-      ${!isSignedIn ? `
+      ${
+        !isSignedIn
+          ? `
         <div class="ob-account-nudge">
           <div class="ob-nudge-label">Save your progress across devices</div>
           <button class="ob-btn ob-btn-account" onclick="OmicsLab.AuthClerk?OmicsLab.AuthClerk.signUp():OmicsLab.Auth&&OmicsLab.Auth.openModal('register');OmicsLab.Onboarding.done()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Create free account
           </button>
-        </div>` : ''}
+        </div>`
+          : ''
+      }
       <div class="ob-step-actions">
         <button class="ob-btn ob-btn-primary" onclick="OmicsLab.Onboarding.done()">
           Start exploring →
@@ -206,11 +297,11 @@ OmicsLab.Onboarding = (function () {
     _confettiDone = true;
     const container = document.getElementById('ob-confetti');
     if (!container) return;
-    const COLORS = ['#00C4A0','#58a6ff','#bc8cff','#f97316','#e3b341','#ff6b6b'];
+    const COLORS = ['#00C4A0', '#58a6ff', '#bc8cff', '#f97316', '#e3b341', '#ff6b6b'];
     for (let i = 0; i < 52; i++) {
       const p = document.createElement('div');
       p.className = 'ob-confetti-piece';
-      p.style.cssText = `left:${Math.random()*100}%;background:${COLORS[i%COLORS.length]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*700}ms;animation-duration:${900+Math.random()*600}ms;`;
+      p.style.cssText = `left:${Math.random() * 100}%;background:${COLORS[i % COLORS.length]};width:${6 + Math.random() * 8}px;height:${6 + Math.random() * 8}px;border-radius:${Math.random() > 0.5 ? '50%' : '2px'};animation-delay:${Math.random() * 700}ms;animation-duration:${900 + Math.random() * 600}ms;`;
       container.appendChild(p);
     }
   }
@@ -223,7 +314,7 @@ OmicsLab.Onboarding = (function () {
 
   function done() {
     localStorage.setItem(FLAG, '1');
-    const dest = _dest || (ROLE_OPTIONS[_role]?.[0]?.page) || 'lab';
+    const dest = _dest || ROLE_OPTIONS[_role]?.[0]?.page || 'lab';
     _close();
     if (dest && !_dest) OmicsLab.Router?.navigate(dest);
   }

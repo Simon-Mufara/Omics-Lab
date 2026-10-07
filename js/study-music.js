@@ -7,26 +7,25 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.StudyMusic = (function () {
-
-  const PREF_MODE   = 'omicslab_music_mode';
-  const PREF_VOL    = 'omicslab_music_vol';
+  const PREF_MODE = 'omicslab_music_mode';
+  const PREF_VOL = 'omicslab_music_vol';
   const PREF_ACTIVE = 'omicslab_music_active';
 
   const MODES = [
-    { id: 'pink',     label: 'Pink Noise',      icon: '〰', desc: 'Balanced focus noise' },
-    { id: 'brown',    label: 'Brown Noise',      icon: '🌊', desc: 'Deep rumble for flow' },
-    { id: 'rain',     label: 'Rain',             icon: '🌧', desc: 'Gentle steady rain' },
-    { id: 'ocean',    label: 'Ocean Waves',      icon: '🌊', desc: 'Rhythmic wave crests' },
-    { id: 'binaural', label: 'Binaural Focus',   icon: '🧠', desc: '40 Hz gamma for concentration' },
+    { id: 'pink', label: 'Pink Noise', icon: '〰', desc: 'Balanced focus noise' },
+    { id: 'brown', label: 'Brown Noise', icon: '🌊', desc: 'Deep rumble for flow' },
+    { id: 'rain', label: 'Rain', icon: '🌧', desc: 'Gentle steady rain' },
+    { id: 'ocean', label: 'Ocean Waves', icon: '🌊', desc: 'Rhythmic wave crests' },
+    { id: 'binaural', label: 'Binaural Focus', icon: '🧠', desc: '40 Hz gamma for concentration' },
   ];
 
-  let _ctx     = null;
-  let _master  = null;   /* master GainNode */
-  let _nodes   = [];     /* active source / effect nodes for teardown */
+  let _ctx = null;
+  let _master = null; /* master GainNode */
+  let _nodes = []; /* active source / effect nodes for teardown */
   let _playing = false;
-  let _mode    = localStorage.getItem(PREF_MODE)   || 'pink';
-  let _vol     = parseFloat(localStorage.getItem(PREF_VOL) || '0.35');
-  let _widget  = null;
+  let _mode = localStorage.getItem(PREF_MODE) || 'pink';
+  let _vol = parseFloat(localStorage.getItem(PREF_VOL) || '0.35');
+  let _widget = null;
 
   /* ── AudioContext (lazy, resumed on first user gesture) ── */
   function _ctx_() {
@@ -43,9 +42,13 @@ OmicsLab.StudyMusic = (function () {
 
   /* ── Tear down all running nodes ── */
   function _stop() {
-    _nodes.forEach(n => {
-      try { n.stop?.(); } catch {}
-      try { n.disconnect(); } catch {}
+    _nodes.forEach((n) => {
+      try {
+        n.stop?.();
+      } catch {}
+      try {
+        n.disconnect();
+      } catch {}
     });
     _nodes = [];
     _playing = false;
@@ -59,7 +62,7 @@ OmicsLab.StudyMusic = (function () {
   function _whiteNoiseBuffer(ctx, duration = 2) {
     const len = Math.floor(ctx.sampleRate * duration);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-    const d   = buf.getChannelData(0);
+    const d = buf.getChannelData(0);
     for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     return buf;
   }
@@ -68,17 +71,23 @@ OmicsLab.StudyMusic = (function () {
   function _pinkNoiseBuffer(ctx, duration = 2) {
     const len = Math.floor(ctx.sampleRate * duration);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-    const d   = buf.getChannelData(0);
-    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    const d = buf.getChannelData(0);
+    let b0 = 0,
+      b1 = 0,
+      b2 = 0,
+      b3 = 0,
+      b4 = 0,
+      b5 = 0,
+      b6 = 0;
     for (let i = 0; i < len; i++) {
       const w = Math.random() * 2 - 1;
-      b0 = 0.99886*b0 + w*0.0555179;
-      b1 = 0.99332*b1 + w*0.0750759;
-      b2 = 0.96900*b2 + w*0.1538520;
-      b3 = 0.86650*b3 + w*0.3104856;
-      b4 = 0.55000*b4 + w*0.5329522;
-      b5 = -0.7616*b5 - w*0.0168980;
-      d[i] = (b0+b1+b2+b3+b4+b5+b6 + w*0.5362) / 6;
+      b0 = 0.99886 * b0 + w * 0.0555179;
+      b1 = 0.99332 * b1 + w * 0.0750759;
+      b2 = 0.969 * b2 + w * 0.153852;
+      b3 = 0.8665 * b3 + w * 0.3104856;
+      b4 = 0.55 * b4 + w * 0.5329522;
+      b5 = -0.7616 * b5 - w * 0.016898;
+      d[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) / 6;
       b6 = w * 0.115926;
     }
     return buf;
@@ -88,7 +97,7 @@ OmicsLab.StudyMusic = (function () {
   function _brownNoiseBuffer(ctx, duration = 2) {
     const len = Math.floor(ctx.sampleRate * duration);
     const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-    const d   = buf.getChannelData(0);
+    const d = buf.getChannelData(0);
     let last = 0;
     for (let i = 0; i < len; i++) {
       const w = Math.random() * 2 - 1;
@@ -105,14 +114,14 @@ OmicsLab.StudyMusic = (function () {
   function _playPink() {
     const ctx = _ctx_();
     if (!ctx) return;
-    const src  = ctx.createBufferSource();
+    const src = ctx.createBufferSource();
     src.buffer = _pinkNoiseBuffer(ctx);
-    src.loop   = true;
+    src.loop = true;
     /* gentle high-shelf cut to soften harshness */
     const eq = ctx.createBiquadFilter();
-    eq.type      = 'highshelf';
+    eq.type = 'highshelf';
     eq.frequency.value = 6000;
-    eq.gain.value      = -6;
+    eq.gain.value = -6;
     src.connect(eq);
     eq.connect(_master);
     src.start();
@@ -122,14 +131,14 @@ OmicsLab.StudyMusic = (function () {
   function _playBrown() {
     const ctx = _ctx_();
     if (!ctx) return;
-    const src  = ctx.createBufferSource();
+    const src = ctx.createBufferSource();
     src.buffer = _brownNoiseBuffer(ctx);
-    src.loop   = true;
+    src.loop = true;
     /* boost low-mids for warmth */
     const eq = ctx.createBiquadFilter();
-    eq.type            = 'lowpass';
+    eq.type = 'lowpass';
     eq.frequency.value = 900;
-    eq.Q.value         = 0.5;
+    eq.Q.value = 0.5;
     src.connect(eq);
     eq.connect(_master);
     src.start();
@@ -143,13 +152,13 @@ OmicsLab.StudyMusic = (function () {
     /* Base layer: filtered white noise for rain texture */
     const base = ctx.createBufferSource();
     base.buffer = _whiteNoiseBuffer(ctx, 3);
-    base.loop   = true;
+    base.loop = true;
     const lp = ctx.createBiquadFilter();
-    lp.type            = 'lowpass';
+    lp.type = 'lowpass';
     lp.frequency.value = 3500;
-    lp.Q.value         = 1;
+    lp.Q.value = 1;
     const hp = ctx.createBiquadFilter();
-    hp.type            = 'highpass';
+    hp.type = 'highpass';
     hp.frequency.value = 300;
     base.connect(lp);
     lp.connect(hp);
@@ -160,11 +169,11 @@ OmicsLab.StudyMusic = (function () {
     let _dripTimeout = null;
     function _drip() {
       if (!_playing) return;
-      const osc   = ctx.createOscillator();
-      const gn    = ctx.createGain();
-      const freq  = 800 + Math.random() * 1200;
-      osc.type              = 'sine';
-      osc.frequency.value   = freq;
+      const osc = ctx.createOscillator();
+      const gn = ctx.createGain();
+      const freq = 800 + Math.random() * 1200;
+      osc.type = 'sine';
+      osc.frequency.value = freq;
       gn.gain.setValueAtTime(0.025 * Math.random(), ctx.currentTime);
       gn.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.08);
       osc.connect(gn);
@@ -187,9 +196,9 @@ OmicsLab.StudyMusic = (function () {
     /* Filtered noise for surf texture */
     const surf = ctx.createBufferSource();
     surf.buffer = _whiteNoiseBuffer(ctx, 4);
-    surf.loop   = true;
+    surf.loop = true;
     const lp = ctx.createBiquadFilter();
-    lp.type            = 'lowpass';
+    lp.type = 'lowpass';
     lp.frequency.value = 1800;
     surf.connect(lp);
     lp.connect(_master);
@@ -197,10 +206,10 @@ OmicsLab.StudyMusic = (function () {
 
     /* LFO-modulated wave swell (~6 second period) */
     const lfo = ctx.createOscillator();
-    lfo.type             = 'sine';
-    lfo.frequency.value  = 1 / 6;  /* one wave per 6 seconds */
+    lfo.type = 'sine';
+    lfo.frequency.value = 1 / 6; /* one wave per 6 seconds */
     const lfoGain = ctx.createGain();
-    lfoGain.gain.value   = 0.25;
+    lfoGain.gain.value = 0.25;
     lfo.connect(lfoGain);
     lfoGain.connect(_master.gain);
     lfo.start();
@@ -222,12 +231,12 @@ OmicsLab.StudyMusic = (function () {
     merger.connect(_master);
 
     function _tone(freq, channelIndex) {
-      const osc  = ctx.createOscillator();
+      const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      const pan  = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-      osc.type            = 'sine';
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      osc.type = 'sine';
       osc.frequency.value = freq;
-      gain.gain.value     = 0.12;
+      gain.gain.value = 0.12;
       osc.connect(gain);
       if (pan) {
         pan.pan.value = channelIndex === 0 ? -1 : 1;
@@ -241,13 +250,13 @@ OmicsLab.StudyMusic = (function () {
       if (pan) _nodes.push(pan);
     }
 
-    _tone(200, 0);   /* left  */
-    _tone(240, 1);   /* right */
+    _tone(200, 0); /* left  */
+    _tone(240, 1); /* right */
 
     /* Soft pink noise bed at very low volume for context */
     const bed = ctx.createBufferSource();
     bed.buffer = _pinkNoiseBuffer(ctx);
-    bed.loop   = true;
+    bed.loop = true;
     const bedGain = ctx.createGain();
     bedGain.gain.value = 0.04;
     bed.connect(bedGain);
@@ -271,18 +280,29 @@ OmicsLab.StudyMusic = (function () {
     _master.gain.value = _vol;
     _master.connect(ctx.destination);
 
-    _mode    = mode || _mode;
+    _mode = mode || _mode;
     _playing = true;
-    localStorage.setItem(PREF_MODE,   _mode);
+    localStorage.setItem(PREF_MODE, _mode);
     localStorage.setItem(PREF_ACTIVE, '1');
 
     switch (_mode) {
-      case 'pink':     _playPink();     break;
-      case 'brown':    _playBrown();    break;
-      case 'rain':     _playRain();     break;
-      case 'ocean':    _playOcean();    break;
-      case 'binaural': _playBinaural(); break;
-      default:         _playPink();
+      case 'pink':
+        _playPink();
+        break;
+      case 'brown':
+        _playBrown();
+        break;
+      case 'rain':
+        _playRain();
+        break;
+      case 'ocean':
+        _playOcean();
+        break;
+      case 'binaural':
+        _playBinaural();
+        break;
+      default:
+        _playPink();
     }
 
     _updateWidget();
@@ -296,7 +316,8 @@ OmicsLab.StudyMusic = (function () {
   }
 
   function toggle() {
-    if (_playing) stop(); else play();
+    if (_playing) stop();
+    else play();
   }
 
   function setVolume(v) {
@@ -309,10 +330,15 @@ OmicsLab.StudyMusic = (function () {
   function setMode(m) {
     _mode = m;
     if (_playing) play(_mode);
-    else { _updateWidget(); localStorage.setItem(PREF_MODE, m); }
+    else {
+      _updateWidget();
+      localStorage.setItem(PREF_MODE, m);
+    }
   }
 
-  function isPlaying() { return _playing; }
+  function isPlaying() {
+    return _playing;
+  }
 
   /* ─────────────────────────────────────────────────────────────
      WIDGET UI
@@ -421,7 +447,10 @@ OmicsLab.StudyMusic = (function () {
     /* Button is static in index.html (#sm-btn) — just wire it up */
     const btn = document.getElementById('sm-btn');
     if (!btn) return;
-    btn.addEventListener('click', (e) => { e.stopPropagation(); _togglePanel(); });
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      _togglePanel();
+    });
 
     /* ── Floating panel ── */
     const panel = document.createElement('div');
@@ -451,10 +480,10 @@ OmicsLab.StudyMusic = (function () {
           </svg>
         </span>
         <input type="range" class="sm-vol-slider" id="sm-vol-slider"
-          min="0" max="100" value="${Math.round(_vol*100)}"
-          style="--pct:${Math.round(_vol*100)}%"
+          min="0" max="100" value="${Math.round(_vol * 100)}"
+          style="--pct:${Math.round(_vol * 100)}%"
           aria-label="Volume">
-        <span class="sm-vol-val" id="sm-vol-val">${Math.round(_vol*100)}%</span>
+        <span class="sm-vol-val" id="sm-vol-val">${Math.round(_vol * 100)}%</span>
       </div>
 
       <button class="sm-play-btn" id="sm-play-btn" onclick="OmicsLab.StudyMusic.toggle()">
@@ -467,12 +496,14 @@ OmicsLab.StudyMusic = (function () {
 
     /* Build mode buttons */
     const grid = panel.querySelector('#sm-mode-grid');
-    MODES.forEach(m => {
+    MODES.forEach((m) => {
       const b = document.createElement('button');
       b.className = 'sm-mode-btn' + (m.id === _mode ? ' sm-mode-active' : '');
       b.dataset.mode = m.id;
       b.innerHTML = `<span class="sm-mode-name">${m.icon} ${m.label}</span><span class="sm-mode-desc">${m.desc}</span>`;
-      b.addEventListener('click', () => { OmicsLab.StudyMusic.setMode(m.id); });
+      b.addEventListener('click', () => {
+        OmicsLab.StudyMusic.setMode(m.id);
+      });
       grid.appendChild(b);
     });
 
@@ -487,8 +518,12 @@ OmicsLab.StudyMusic = (function () {
 
     /* Close on outside click */
     document.addEventListener('click', (e) => {
-      if (_widget && _widget.panel.classList.contains('sm-open') &&
-          !_widget.panel.contains(e.target) && e.target !== _widget.btn) {
+      if (
+        _widget &&
+        _widget.panel.classList.contains('sm-open') &&
+        !_widget.panel.contains(e.target) &&
+        e.target !== _widget.btn
+      ) {
         _closePanel();
       }
     });
@@ -520,11 +555,14 @@ OmicsLab.StudyMusic = (function () {
     /* Topbar button state */
     _widget.btn.classList.toggle('sm-playing', _playing);
     const smLabel = _widget.btn.querySelector('.sm-label');
-    if (smLabel) smLabel.textContent = _playing ? (MODES.find(m => m.id === _mode)?.label || 'Playing') : 'Focus';
+    if (smLabel)
+      smLabel.textContent = _playing
+        ? MODES.find((m) => m.id === _mode)?.label || 'Playing'
+        : 'Focus';
 
     /* Play button */
-    const playBtn   = _widget.panel.querySelector('#sm-play-btn');
-    const playIcon  = _widget.panel.querySelector('#sm-play-icon');
+    const playBtn = _widget.panel.querySelector('#sm-play-btn');
+    const playIcon = _widget.panel.querySelector('#sm-play-icon');
     const playLabel = _widget.panel.querySelector('#sm-play-label');
     if (playBtn) playBtn.classList.toggle('sm-btn-playing', _playing);
     if (playLabel) playLabel.textContent = _playing ? 'Stop' : 'Play';
@@ -535,7 +573,7 @@ OmicsLab.StudyMusic = (function () {
     }
 
     /* Mode active state */
-    _widget.panel.querySelectorAll('.sm-mode-btn').forEach(b => {
+    _widget.panel.querySelectorAll('.sm-mode-btn').forEach((b) => {
       b.classList.toggle('sm-mode-active', b.dataset.mode === _mode);
     });
 
@@ -563,5 +601,4 @@ OmicsLab.StudyMusic = (function () {
   }
 
   return { init, play, stop, toggle, setMode, setVolume, isPlaying, _closePanel, _togglePanel };
-
 })();

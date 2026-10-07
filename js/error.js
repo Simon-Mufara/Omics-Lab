@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Error = (function () {
-
   function renderPageError(sectionId, moduleName, err) {
     const section = document.getElementById(sectionId);
     if (!section) return;
@@ -46,16 +45,29 @@ OmicsLab.Error = (function () {
           <div class="er-msg">The route <code class="er-code">#/${_esc(page)}</code> doesn't exist.</div>
           <div class="er-suggest-label">Suggested pages:</div>
           <div class="er-suggest-grid">
-            ${[['Home','home'],['Lab','lab'],['Analysis','analysis'],['Variant Interpreter','variantinterp'],['AI Assistant','ai'],['PubMed','pubmed']].map(([label,route]) =>
-              `<button class="er-suggest-btn" onclick="OmicsLab.Router.navigate('${route}')">${_esc(label)}</button>`
-            ).join('')}
+            ${[
+              ['Home', 'home'],
+              ['Lab', 'lab'],
+              ['Analysis', 'analysis'],
+              ['Variant Interpreter', 'variantinterp'],
+              ['AI Assistant', 'ai'],
+              ['PubMed', 'pubmed'],
+            ]
+              .map(
+                ([label, route]) =>
+                  `<button class="er-suggest-btn" onclick="OmicsLab.Router.navigate('${route}')">${_esc(label)}</button>`
+              )
+              .join('')}
           </div>
         </div>
       </div>`;
   }
 
   function _esc(s) {
-    return String(s || '').replace(/[<>&"']/g, c => ({ '<':'&lt;', '>':'&gt;', '&':'&amp;', '"':'&quot;', "'":'&#39;' }[c]));
+    return String(s || '').replace(
+      /[<>&"']/g,
+      (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' })[c]
+    );
   }
 
   function _injectStyles() {
@@ -94,7 +106,7 @@ OmicsLab.Error = (function () {
       OmicsLab.Notify?.error(`An error occurred. ${err?.message || msg}`, { duration: 0 });
       return false;
     };
-    window.onunhandledrejection = e => {
+    window.onunhandledrejection = (e) => {
       console.error('[OmicsLab Unhandled Rejection]', e.reason);
       const msg = e.reason?.message || String(e.reason) || 'Unhandled promise rejection';
       if (msg.includes('Network') || msg.includes('fetch') || msg.includes('CORS')) return;

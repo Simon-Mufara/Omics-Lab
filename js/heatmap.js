@@ -8,7 +8,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Heatmap = (function () {
-
   /* ─── Example DESeq2 output (gene, baseMean, log2FC, lfcSE, stat, pvalue, padj) ─── */
   const EXAMPLE_DESEQ2 = `gene\tbaseMean\tlog2FoldChange\tlfcSE\tstat\tpvalue\tpadj
 HBA1\t4821.3\t3.82\t0.21\t18.2\t0.0000000001\t0.000000002
@@ -46,19 +45,22 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     if (lines.length < 2) return null;
 
     const sep = lines[0].includes('\t') ? '\t' : ',';
-    const header = lines[0].split(sep).map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+    const header = lines[0].split(sep).map((h) => h.trim().replace(/^"|"$/g, '').toLowerCase());
 
     /* Flexible column mapping */
     const colIdx = {};
     const ALIASES = {
-      gene:   ['gene', 'geneid', 'gene_id', 'gene_name', 'name', 'symbol', 'id'],
+      gene: ['gene', 'geneid', 'gene_id', 'gene_name', 'name', 'symbol', 'id'],
       log2fc: ['log2foldchange', 'log2fc', 'logfc', 'lfc', 'fold_change', 'foldchange'],
-      padj:   ['padj', 'adj.p.val', 'p.adj', 'q.value', 'fdr', 'p_adj', 'adj_pvalue'],
-      pval:   ['pvalue', 'p.value', 'p_value', 'pval', 'rawp'],
-      mean:   ['basemean', 'mean_expr', 'avgexpr', 'a', 'logcpm'],
+      padj: ['padj', 'adj.p.val', 'p.adj', 'q.value', 'fdr', 'p_adj', 'adj_pvalue'],
+      pval: ['pvalue', 'p.value', 'p_value', 'pval', 'rawp'],
+      mean: ['basemean', 'mean_expr', 'avgexpr', 'a', 'logcpm'],
     };
     for (const [key, aliases] of Object.entries(ALIASES)) {
-      colIdx[key] = aliases.reduce((found, alias) => found !== -1 ? found : header.indexOf(alias), -1);
+      colIdx[key] = aliases.reduce(
+        (found, alias) => (found !== -1 ? found : header.indexOf(alias)),
+        -1
+      );
     }
 
     if (colIdx.gene === -1 || colIdx.log2fc === -1) return null;
@@ -67,11 +69,11 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
 
     const rows = [];
     for (let i = 1; i < lines.length; i++) {
-      const parts = lines[i].split(sep).map(v => v.trim().replace(/^"|"$/g, ''));
-      const gene   = parts[colIdx.gene] || `gene${i}`;
+      const parts = lines[i].split(sep).map((v) => v.trim().replace(/^"|"$/g, ''));
+      const gene = parts[colIdx.gene] || `gene${i}`;
       const log2fc = parseFloat(parts[colIdx.log2fc]);
-      const padj   = parseFloat(parts[padjCol]);
-      const mean   = colIdx.mean !== -1 ? parseFloat(parts[colIdx.mean]) || 0 : 0;
+      const padj = parseFloat(parts[padjCol]);
+      const mean = colIdx.mean !== -1 ? parseFloat(parts[colIdx.mean]) || 0 : 0;
       if (isNaN(log2fc) || isNaN(padj) || padj <= 0) continue;
       rows.push({ gene, log2fc, padj, mean });
     }
@@ -79,44 +81,46 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
   }
 
   /* ─── Clamp / log helpers ─── */
-  const LOG10 = x => -Math.log10(Math.max(x, 1e-300));
+  const LOG10 = (x) => -Math.log10(Math.max(x, 1e-300));
 
   /* ─── Colour by fold-change + significance ─── */
   function _dotColor(row, fc, pa) {
     const sig = row.padj < pa;
-    const up   = row.log2fc >=  fc;
+    const up = row.log2fc >= fc;
     const down = row.log2fc <= -fc;
     if (!sig) return '#243048';
-    if (up)   return '#ff6b6b';
+    if (up) return '#ff6b6b';
     if (down) return '#58a6ff';
     return '#e3b341';
   }
 
   /* ─── Render volcano plot (SVG) ─── */
   function _renderVolcano(genes, fc, pa) {
-    const W = 620, H = 420;
+    const W = 620,
+      H = 420;
     const PAD = { l: 55, r: 20, t: 40, b: 50 };
     const iW = W - PAD.l - PAD.r;
     const iH = H - PAD.t - PAD.b;
 
-    const xs = genes.map(g => g.log2fc);
-    const ys = genes.map(g => LOG10(g.padj));
+    const xs = genes.map((g) => g.log2fc);
+    const ys = genes.map((g) => LOG10(g.padj));
 
     const xMin = Math.min(-5, Math.min(...xs) - 0.5);
-    const xMax = Math.max(5,  Math.max(...xs) + 0.5);
-    const yMax = Math.max(5,  Math.max(...ys) + 1);
+    const xMax = Math.max(5, Math.max(...xs) + 0.5);
+    const yMax = Math.max(5, Math.max(...ys) + 1);
 
-    const toX = v => PAD.l + ((v - xMin) / (xMax - xMin)) * iW;
-    const toY = v => PAD.t + (1 - v / yMax) * iH;
+    const toX = (v) => PAD.l + ((v - xMin) / (xMax - xMin)) * iW;
+    const toY = (v) => PAD.t + (1 - v / yMax) * iH;
 
     const logPA = LOG10(pa);
 
     /* Threshold lines */
-    const vLine1 = toX(-fc), vLine2 = toX(fc);
-    const hLine  = toY(logPA);
+    const vLine1 = toX(-fc),
+      vLine2 = toX(fc);
+    const hLine = toY(logPA);
 
     /* Dots */
-    const dots = genes.map(g => {
+    const dots = genes.map((g) => {
       const cx = toX(g.log2fc);
       const cy = toY(LOG10(g.padj));
       const col = _dotColor(g, fc, pa);
@@ -126,9 +130,11 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     });
 
     /* Labels for top genes */
-    const labelled = genes.filter(g => g.padj < pa && Math.abs(g.log2fc) >= fc)
-      .sort((a, b) => LOG10(a.padj) - LOG10(b.padj)).slice(0, 12);
-    const labelEls = labelled.map(g => {
+    const labelled = genes
+      .filter((g) => g.padj < pa && Math.abs(g.log2fc) >= fc)
+      .sort((a, b) => LOG10(a.padj) - LOG10(b.padj))
+      .slice(0, 12);
+    const labelEls = labelled.map((g) => {
       const cx = toX(g.log2fc);
       const cy = toY(LOG10(g.padj));
       const col = g.log2fc > 0 ? '#ff6b6b' : '#58a6ff';
@@ -141,32 +147,40 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const xTicks = [];
     for (let v = Math.ceil(xMin); v <= Math.floor(xMax); v++) {
       const x = toX(v);
-      xTicks.push(`<line x1="${x}" y1="${PAD.t + iH}" x2="${x}" y2="${PAD.t + iH + 4}" stroke="#243048" stroke-width="1"/>`);
-      xTicks.push(`<text x="${x}" y="${PAD.t + iH + 14}" fill="#6E6860" font-size="9" text-anchor="middle">${v}</text>`);
+      xTicks.push(
+        `<line x1="${x}" y1="${PAD.t + iH}" x2="${x}" y2="${PAD.t + iH + 4}" stroke="#243048" stroke-width="1"/>`
+      );
+      xTicks.push(
+        `<text x="${x}" y="${PAD.t + iH + 14}" fill="#6E6860" font-size="9" text-anchor="middle">${v}</text>`
+      );
     }
     /* Y-axis ticks */
     const yTicks = [];
     for (let v = 0; v <= Math.floor(yMax); v += 5) {
       const y = toY(v);
-      yTicks.push(`<line x1="${PAD.l - 4}" y1="${y}" x2="${PAD.l}" y2="${y}" stroke="#243048" stroke-width="1"/>`);
-      yTicks.push(`<text x="${PAD.l - 7}" y="${y + 3}" fill="#6E6860" font-size="9" text-anchor="end">${v}</text>`);
+      yTicks.push(
+        `<line x1="${PAD.l - 4}" y1="${y}" x2="${PAD.l}" y2="${y}" stroke="#243048" stroke-width="1"/>`
+      );
+      yTicks.push(
+        `<text x="${PAD.l - 7}" y="${y + 3}" fill="#6E6860" font-size="9" text-anchor="end">${v}</text>`
+      );
     }
 
     /* Counts */
-    const up   = genes.filter(g => g.padj < pa && g.log2fc >= fc).length;
-    const down = genes.filter(g => g.padj < pa && g.log2fc <= -fc).length;
-    const ns   = genes.length - up - down;
+    const up = genes.filter((g) => g.padj < pa && g.log2fc >= fc).length;
+    const down = genes.filter((g) => g.padj < pa && g.log2fc <= -fc).length;
+    const ns = genes.length - up - down;
 
     return `<div class="hm-volcano-wrap">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="max-width:100%">
         <rect width="${W}" height="${H}" fill="#0D1524" rx="8"/>
         <!-- Grid -->
-        <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t+iH}" stroke="#182236" stroke-width="1"/>
-        <line x1="${PAD.l}" y1="${PAD.t+iH}" x2="${PAD.l+iW}" y2="${PAD.t+iH}" stroke="#182236" stroke-width="1"/>
+        <line x1="${PAD.l}" y1="${PAD.t}" x2="${PAD.l}" y2="${PAD.t + iH}" stroke="#182236" stroke-width="1"/>
+        <line x1="${PAD.l}" y1="${PAD.t + iH}" x2="${PAD.l + iW}" y2="${PAD.t + iH}" stroke="#182236" stroke-width="1"/>
         <!-- Threshold lines -->
-        <line x1="${vLine1.toFixed(1)}" y1="${PAD.t}" x2="${vLine1.toFixed(1)}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="${vLine2.toFixed(1)}" y1="${PAD.t}" x2="${vLine2.toFixed(1)}" y2="${PAD.t+iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="${PAD.l}" y1="${hLine.toFixed(1)}" x2="${PAD.l+iW}" y2="${hLine.toFixed(1)}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${vLine1.toFixed(1)}" y1="${PAD.t}" x2="${vLine1.toFixed(1)}" y2="${PAD.t + iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${vLine2.toFixed(1)}" y1="${PAD.t}" x2="${vLine2.toFixed(1)}" y2="${PAD.t + iH}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="${PAD.l}" y1="${hLine.toFixed(1)}" x2="${PAD.l + iW}" y2="${hLine.toFixed(1)}" stroke="#243048" stroke-width="1" stroke-dasharray="4,3"/>
         <!-- Ticks -->
         ${xTicks.join('')}${yTicks.join('')}
         <!-- Dots -->
@@ -174,10 +188,10 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
         <!-- Labels -->
         ${labelEls.join('')}
         <!-- Axis labels -->
-        <text x="${PAD.l + iW/2}" y="${H - 6}" fill="#A8A098" font-size="10" text-anchor="middle">log₂ Fold Change</text>
-        <text x="10" y="${PAD.t + iH/2}" fill="#A8A098" font-size="10" text-anchor="middle" transform="rotate(-90,10,${PAD.t + iH/2})">–log₁₀ (p-adj)</text>
+        <text x="${PAD.l + iW / 2}" y="${H - 6}" fill="#A8A098" font-size="10" text-anchor="middle">log₂ Fold Change</text>
+        <text x="10" y="${PAD.t + iH / 2}" fill="#A8A098" font-size="10" text-anchor="middle" transform="rotate(-90,10,${PAD.t + iH / 2})">–log₁₀ (p-adj)</text>
         <!-- Title -->
-        <text x="${W/2}" y="18" fill="#E4DDD2" font-size="11" font-weight="600" text-anchor="middle">Volcano Plot</text>
+        <text x="${W / 2}" y="18" fill="#E4DDD2" font-size="11" font-weight="600" text-anchor="middle">Volcano Plot</text>
         <!-- Legend -->
         <circle cx="${PAD.l + 10}" cy="${PAD.t + 12}" r="4" fill="#ff6b6b"/>
         <text x="${PAD.l + 17}" y="${PAD.t + 16}" fill="#ff6b6b" font-size="8">Up (${up})</text>
@@ -193,24 +207,27 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
   function _zScore(values) {
     const mean = values.reduce((s, v) => s + v, 0) / values.length;
     const sd = Math.sqrt(values.reduce((s, v) => s + (v - mean) ** 2, 0) / values.length) || 1;
-    return values.map(v => (v - mean) / sd);
+    return values.map((v) => (v - mean) / sd);
   }
 
   /* ─── Heatmap: top N DE genes by padj, showing log2FC as a 1-sample column ─── */
   function _renderHeatmap(genes, fc, pa, topN) {
-    const sig = genes.filter(g => g.padj < pa && Math.abs(g.log2fc) >= fc)
-      .sort((a, b) => a.padj - b.padj).slice(0, topN);
+    const sig = genes
+      .filter((g) => g.padj < pa && Math.abs(g.log2fc) >= fc)
+      .sort((a, b) => a.padj - b.padj)
+      .slice(0, topN);
 
-    if (!sig.length) return '<div class="hm-empty-inner">No significant genes match current thresholds.</div>';
+    if (!sig.length)
+      return '<div class="hm-empty-inner">No significant genes match current thresholds.</div>';
 
-    const maxFC = Math.max(...sig.map(g => Math.abs(g.log2fc)));
+    const maxFC = Math.max(...sig.map((g) => Math.abs(g.log2fc)));
     const ROW_H = 22;
     const COL_W = 60;
     const LABEL_W = 120;
     const W = LABEL_W + COL_W + 80;
     const H = sig.length * ROW_H + 60;
 
-    const colorScale = v => {
+    const colorScale = (v) => {
       /* Blue → White → Red for FC */
       const t = v / maxFC; /* -1…1 normalized */
       if (t > 0) return `hsl(${0 + (1 - t) * 30},${70 + t * 30}%,${55 - t * 25}%)`;
@@ -224,7 +241,7 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
       return `
         <text x="${LABEL_W - 4}" y="${y + 15}" fill="${g.log2fc > 0 ? '#ff9090' : '#90b8ff'}" font-size="10" text-anchor="end" font-family="JetBrains Mono, monospace">${g.gene}</text>
         <rect x="${LABEL_W}" y="${y}" width="${COL_W}" height="${ROW_H - 2}" fill="${col}" rx="2"/>
-        <text x="${LABEL_W + COL_W/2}" y="${y + 14}" fill="${textCol}" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">${g.log2fc.toFixed(2)}</text>
+        <text x="${LABEL_W + COL_W / 2}" y="${y + 14}" fill="${textCol}" font-size="9" text-anchor="middle" font-family="JetBrains Mono, monospace">${g.log2fc.toFixed(2)}</text>
         <text x="${LABEL_W + COL_W + 5}" y="${y + 14}" fill="#6E6860" font-size="8">${g.padj.toExponential(1)}</text>`;
     });
 
@@ -239,12 +256,12 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H + 40}" width="${W}" height="${H + 40}" style="max-width:100%;min-width:280px">
         <rect width="${W}" height="${H + 40}" fill="#0D1524" rx="8"/>
         ${barGrad}
-        <text x="${LABEL_W + COL_W/2}" y="18" fill="#E4DDD2" font-size="10" font-weight="600" text-anchor="middle">log₂FC</text>
+        <text x="${LABEL_W + COL_W / 2}" y="18" fill="#E4DDD2" font-size="10" font-weight="600" text-anchor="middle">log₂FC</text>
         ${rows.join('')}
         <!-- Colour scale bar -->
         <rect x="${LABEL_W}" y="${H + 5}" width="${COL_W}" height="8" fill="url(#fc-grad)" rx="3"/>
         <text x="${LABEL_W}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">${(-maxFC).toFixed(1)}</text>
-        <text x="${LABEL_W + COL_W/2}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">0</text>
+        <text x="${LABEL_W + COL_W / 2}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">0</text>
         <text x="${LABEL_W + COL_W}" y="${H + 26}" fill="#6E6860" font-size="8" text-anchor="middle">${maxFC.toFixed(1)}</text>
       </svg>
     </div>`;
@@ -252,14 +269,21 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
 
   /* ─── DE summary table ─── */
   function _renderTable(genes, fc, pa) {
-    const sig = genes.filter(g => g.padj < pa && Math.abs(g.log2fc) >= fc)
-      .sort((a, b) => a.padj - b.padj).slice(0, 30);
+    const sig = genes
+      .filter((g) => g.padj < pa && Math.abs(g.log2fc) >= fc)
+      .sort((a, b) => a.padj - b.padj)
+      .slice(0, 30);
 
-    if (!sig.length) return '<div class="hm-empty-inner">No significant genes at current thresholds.</div>';
+    if (!sig.length)
+      return '<div class="hm-empty-inner">No significant genes at current thresholds.</div>';
 
-    const rows = sig.map(g => {
-      const dir = g.log2fc > 0 ? `<span style="color:#ff6b6b">▲ UP</span>` : `<span style="color:#58a6ff">▼ DOWN</span>`;
-      return `<tr>
+    const rows = sig
+      .map((g) => {
+        const dir =
+          g.log2fc > 0
+            ? `<span style="color:#ff6b6b">▲ UP</span>`
+            : `<span style="color:#58a6ff">▼ DOWN</span>`;
+        return `<tr>
         <td class="hm-t-gene">${g.gene}</td>
         <td>${g.log2fc.toFixed(3)}</td>
         <td>${(2 ** Math.abs(g.log2fc)).toFixed(2)}×</td>
@@ -267,7 +291,8 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
         <td>${g.mean ? g.mean.toFixed(1) : '—'}</td>
         <td>${dir}</td>
       </tr>`;
-    }).join('');
+      })
+      .join('');
 
     return `<div class="hm-table-wrap">
       <table class="hm-table">
@@ -289,23 +314,32 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const pa = parseFloat(paEl?.value) || 0.05;
     const topN = parseInt(tnEl?.value) || 40;
 
-    if (!text) { if (statusEl) statusEl.textContent = 'Paste your DE results above.'; return; }
+    if (!text) {
+      if (statusEl) statusEl.textContent = 'Paste your DE results above.';
+      return;
+    }
 
     const genes = _parse(text);
-    if (!genes) { if (statusEl) statusEl.textContent = 'Could not parse input — expected TSV/CSV with gene, log2FoldChange, and padj columns.'; return; }
+    if (!genes) {
+      if (statusEl)
+        statusEl.textContent =
+          'Could not parse input — expected TSV/CSV with gene, log2FoldChange, and padj columns.';
+      return;
+    }
 
-    const up   = genes.filter(g => g.padj < pa && g.log2fc >= fc).length;
-    const down = genes.filter(g => g.padj < pa && g.log2fc <= -fc).length;
+    const up = genes.filter((g) => g.padj < pa && g.log2fc >= fc).length;
+    const down = genes.filter((g) => g.padj < pa && g.log2fc <= -fc).length;
 
-    if (statusEl) statusEl.textContent = `${genes.length} genes parsed · ${up} up · ${down} down (padj < ${pa}, |FC| ≥ ${fc})`;
+    if (statusEl)
+      statusEl.textContent = `${genes.length} genes parsed · ${up} up · ${down} down (padj < ${pa}, |FC| ≥ ${fc})`;
 
     const volc = document.getElementById('hm-volcano');
     const heat = document.getElementById('hm-heatmap');
-    const tbl  = document.getElementById('hm-table');
+    const tbl = document.getElementById('hm-table');
 
     if (volc) volc.innerHTML = _renderVolcano(genes, fc, pa);
     if (heat) heat.innerHTML = _renderHeatmap(genes, fc, pa, topN);
-    if (tbl)  tbl.innerHTML  = _renderTable(genes, fc, pa);
+    if (tbl) tbl.innerHTML = _renderTable(genes, fc, pa);
   }
 
   /* ─── Init ─── */
@@ -379,18 +413,44 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
 
         <div class="hm-info-grid">
           ${[
-            { t: 'Volcano Plot', d: 'x = log₂FC (magnitude of change), y = –log₁₀(p-adj) (confidence). Top-right = high-confidence upregulated genes. Dotted lines mark chosen thresholds.' },
-            { t: 'Heatmap colour', d: 'Red = upregulated (positive log₂FC). Blue = downregulated. Intensity corresponds to magnitude of fold change. Genes sorted by adjusted p-value.' },
-            { t: 'p-adj vs p-value', d: 'Always use the adjusted p-value (Benjamini-Hochberg FDR). The raw p-value inflates false discovery rate when testing thousands of genes simultaneously.' },
-            { t: 'DESeq2 output', d: 'Run: results(dds, contrast=c("condition","treated","control")) then write.csv(as.data.frame(res), "deseq2_results.csv"). Paste the CSV here.' },
-            { t: 'edgeR output', d: 'Run: tt <- topTags(et, n=Inf); write.csv(tt$table, "edger_results.csv"). Column names auto-detected (logFC → log2FoldChange, FDR → padj).' },
-            { t: 'Dot size', d: 'Dot radius scales with baseMean expression — larger dots represent more highly expressed genes, which generally have better-estimated fold changes.' },
-          ].map(c => `<div class="hm-info-card"><div class="hm-info-t">${c.t}</div><div class="hm-info-d">${c.d}</div></div>`).join('')}
+            {
+              t: 'Volcano Plot',
+              d: 'x = log₂FC (magnitude of change), y = –log₁₀(p-adj) (confidence). Top-right = high-confidence upregulated genes. Dotted lines mark chosen thresholds.',
+            },
+            {
+              t: 'Heatmap colour',
+              d: 'Red = upregulated (positive log₂FC). Blue = downregulated. Intensity corresponds to magnitude of fold change. Genes sorted by adjusted p-value.',
+            },
+            {
+              t: 'p-adj vs p-value',
+              d: 'Always use the adjusted p-value (Benjamini-Hochberg FDR). The raw p-value inflates false discovery rate when testing thousands of genes simultaneously.',
+            },
+            {
+              t: 'DESeq2 output',
+              d: 'Run: results(dds, contrast=c("condition","treated","control")) then write.csv(as.data.frame(res), "deseq2_results.csv"). Paste the CSV here.',
+            },
+            {
+              t: 'edgeR output',
+              d: 'Run: tt <- topTags(et, n=Inf); write.csv(tt$table, "edger_results.csv"). Column names auto-detected (logFC → log2FoldChange, FDR → padj).',
+            },
+            {
+              t: 'Dot size',
+              d: 'Dot radius scales with baseMean expression — larger dots represent more highly expressed genes, which generally have better-estimated fold changes.',
+            },
+          ]
+            .map(
+              (c) =>
+                `<div class="hm-info-card"><div class="hm-info-t">${c.t}</div><div class="hm-info-d">${c.d}</div></div>`
+            )
+            .join('')}
         </div>
       </div>`;
 
-    document.getElementById('hm-input')?.addEventListener('keydown', e => {
-      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); _run(); }
+    document.getElementById('hm-input')?.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        _run();
+      }
     });
   }
 
@@ -398,7 +458,9 @@ RSAD2\t389.1\t-4.34\t0.26\t-16.7\t0.0000000001\t0.0000000001`;
     const ta = document.getElementById('hm-input');
     if (ta) ta.value = EXAMPLE_DESEQ2;
     const s = document.getElementById('hm-status');
-    if (s) s.textContent = 'Loaded: DESeq2 example — Sickle Cell erythrocyte vs interferon response genes';
+    if (s)
+      s.textContent =
+        'Loaded: DESeq2 example — Sickle Cell erythrocyte vs interferon response genes';
   }
 
   return { init, _run, _loadExample };

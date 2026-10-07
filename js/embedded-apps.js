@@ -5,7 +5,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.EmbeddedApps = (function () {
-
   const APPS = {
     'scrna-explorer': {
       name: 'scRNA-seq Clinical Explorer',
@@ -14,7 +13,13 @@ OmicsLab.EmbeddedApps = (function () {
       url: 'https://scrna-analysis.streamlit.app/?embed=true',
       urlFull: 'https://scrna-analysis.streamlit.app',
       desc: 'Interactive single-cell RNA-seq analysis — UMAP visualization, clustering, differential expression, and cell-type annotation built for clinical and research cohorts.',
-      features: ['UMAP / PCA dimensionality reduction', 'Leiden/Louvain clustering', 'Differential expression (DESeq2/Wilcoxon)', 'Cell-type annotation', 'Marker gene dotplots'],
+      features: [
+        'UMAP / PCA dimensionality reduction',
+        'Leiden/Louvain clustering',
+        'Differential expression (DESeq2/Wilcoxon)',
+        'Cell-type annotation',
+        'Marker gene dotplots',
+      ],
       color: '#bc8cff',
       bgColor: 'rgba(188,140,255,0.06)',
       borderColor: 'rgba(188,140,255,0.2)',
@@ -27,7 +32,13 @@ OmicsLab.EmbeddedApps = (function () {
       url: 'https://simon-variants.streamlit.app/?embed=true',
       urlFull: 'https://simon-variants.streamlit.app',
       desc: 'Clinical-grade genomic variant analysis — VCF ingestion, variant annotation, population frequency lookup, ACMG classification, and interactive filtering for NGS data.',
-      features: ['VCF upload & parsing', 'Variant annotation (SnpEff/VEP)', 'gnomAD population frequencies', 'ACMG pathogenicity scoring', 'Filterable variant table & export'],
+      features: [
+        'VCF upload & parsing',
+        'Variant annotation (SnpEff/VEP)',
+        'gnomAD population frequencies',
+        'ACMG pathogenicity scoring',
+        'Filterable variant table & export',
+      ],
       color: '#58a6ff',
       bgColor: 'rgba(88,166,255,0.06)',
       borderColor: 'rgba(88,166,255,0.2)',
@@ -65,15 +76,15 @@ OmicsLab.EmbeddedApps = (function () {
       </div>
 
       <div class="ea-features-bar">
-        ${app.features.map(f => `<span class="ea-feature-chip" style="border-color:${app.borderColor};color:${app.badgeColor}">${f}</span>`).join('')}
+        ${app.features.map((f) => `<span class="ea-feature-chip" style="border-color:${app.borderColor};color:${app.badgeColor}">${f}</span>`).join('')}
       </div>
 
-      <div class="ea-frame-wrap" id="ea-frame-wrap-${app.badge.replace(/\s/g,'-')}">
-        <div class="ea-loading" id="ea-loading-${app.badge.replace(/\s/g,'-')}">
+      <div class="ea-frame-wrap" id="ea-frame-wrap-${app.badge.replace(/\s/g, '-')}">
+        <div class="ea-loading" id="ea-loading-${app.badge.replace(/\s/g, '-')}">
           <div class="ea-spinner" style="border-top-color:${app.color}"></div>
           <div class="ea-loading-msg">Loading ${app.name}…</div>
         </div>
-        <div class="ea-fallback" id="ea-fallback-${app.badge.replace(/\s/g,'-')}" style="display:none">
+        <div class="ea-fallback" id="ea-fallback-${app.badge.replace(/\s/g, '-')}" style="display:none">
           <div class="ea-fallback-icon" style="border-color:${app.borderColor};background:${app.bgColor}">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="${app.color}" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
           </div>
@@ -86,13 +97,13 @@ OmicsLab.EmbeddedApps = (function () {
         </div>
         <iframe
           class="ea-iframe"
-          id="ea-iframe-${app.badge.replace(/\s/g,'-')}"
+          id="ea-iframe-${app.badge.replace(/\s/g, '-')}"
           src="${app.url}"
           title="${app.name}"
           allow="camera; microphone; clipboard-write; fullscreen"
           loading="lazy"
-          onload="OmicsLab.EmbeddedApps._onLoad('${app.badge.replace(/\s/g,'-')}')"
-          onerror="OmicsLab.EmbeddedApps._onError('${app.badge.replace(/\s/g,'-')}')"
+          onload="OmicsLab.EmbeddedApps._onLoad('${app.badge.replace(/\s/g, '-')}')"
+          onerror="OmicsLab.EmbeddedApps._onError('${app.badge.replace(/\s/g, '-')}')"
           style="display:none">
         </iframe>
       </div>
@@ -100,24 +111,29 @@ OmicsLab.EmbeddedApps = (function () {
 
     /* Timeout fallback — if iframe hasn't loaded in 12s, show fallback */
     setTimeout(() => {
-      const iframe = document.getElementById(`ea-iframe-${app.badge.replace(/\s/g,'-')}`);
+      const iframe = document.getElementById(`ea-iframe-${app.badge.replace(/\s/g, '-')}`);
       if (iframe && iframe.style.display === 'none') {
-        _onError(app.badge.replace(/\s/g,'-'));
+        _onError(app.badge.replace(/\s/g, '-'));
       }
     }, 12000);
   }
 
   function _onLoad(key) {
     const loading = document.getElementById(`ea-loading-${key}`);
-    const iframe  = document.getElementById(`ea-iframe-${key}`);
+    const iframe = document.getElementById(`ea-iframe-${key}`);
     const fallback = document.getElementById(`ea-fallback-${key}`);
     if (!loading || !iframe) return;
 
     /* Try to detect X-Frame-Options block — if blocked, contentDocument is null */
     try {
       const blocked = !iframe.contentWindow || !iframe.contentWindow.location;
-      if (blocked) { _onError(key); return; }
-    } catch { /* cross-origin — assume it loaded fine */ }
+      if (blocked) {
+        _onError(key);
+        return;
+      }
+    } catch {
+      /* cross-origin — assume it loaded fine */
+    }
 
     loading.style.display = 'none';
     if (fallback) fallback.style.display = 'none';
@@ -125,11 +141,11 @@ OmicsLab.EmbeddedApps = (function () {
   }
 
   function _onError(key) {
-    const loading  = document.getElementById(`ea-loading-${key}`);
-    const iframe   = document.getElementById(`ea-iframe-${key}`);
+    const loading = document.getElementById(`ea-loading-${key}`);
+    const iframe = document.getElementById(`ea-iframe-${key}`);
     const fallback = document.getElementById(`ea-fallback-${key}`);
-    if (loading)  loading.style.display = 'none';
-    if (iframe)   iframe.style.display = 'none';
+    if (loading) loading.style.display = 'none';
+    if (iframe) iframe.style.display = 'none';
     if (fallback) fallback.style.display = '';
   }
 

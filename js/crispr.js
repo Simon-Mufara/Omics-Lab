@@ -4,38 +4,167 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.CRISPR = (function () {
-
   const SYSTEMS = [
-    { name:'SpCas9',     pam:'NGG',    kb:4.2, spec:'Standard',    use:'General KO, HDR, base editing, CRISPRi/a', africa:'BCL11A enhancer deletion for sickle cell HbF reactivation (Casgevy therapy)' },
-    { name:'SaCas9',     pam:'NNGRRT', kb:3.2, spec:'High',        use:'AAV delivery (smaller), liver/CNS gene therapy', africa:'TB therapy — targeting host HDAC1 via AAV to modulate macrophage response' },
-    { name:'Cas12a',     pam:'TTTV',   kb:3.8, spec:'Very High',   use:'AT-rich genomes · staggered cuts · multiplex', africa:'P. falciparum genome editing (80% AT genome) — far more efficient than SpCas9' },
-    { name:'Cas13d',     pam:'None',   kb:2.8, spec:'RNA targets', use:'RNA knockdown · SHERLOCK diagnostics · antiviral', africa:'SHERLOCK-based rapid COVID/Ebola/mpox detection deployed in 8 African countries' },
-    { name:'ABE8e',      pam:'NGG',    kb:5.1, spec:'A→G edits',   use:'Precise A→G base edits, no DSB, no donor template', africa:'HBB E6V sickle mutation correctable at 70–90% efficiency in CD34+ HSCs ex vivo' },
-    { name:'PEmax',      pam:'NGG',    kb:6.8, spec:'All 12 SNPs', use:'All point mutations + small indels without DSB', africa:'HBB sickle correction at 52% efficiency in primary human HSCs (Leibowitz 2022)' },
+    {
+      name: 'SpCas9',
+      pam: 'NGG',
+      kb: 4.2,
+      spec: 'Standard',
+      use: 'General KO, HDR, base editing, CRISPRi/a',
+      africa: 'BCL11A enhancer deletion for sickle cell HbF reactivation (Casgevy therapy)',
+    },
+    {
+      name: 'SaCas9',
+      pam: 'NNGRRT',
+      kb: 3.2,
+      spec: 'High',
+      use: 'AAV delivery (smaller), liver/CNS gene therapy',
+      africa: 'TB therapy — targeting host HDAC1 via AAV to modulate macrophage response',
+    },
+    {
+      name: 'Cas12a',
+      pam: 'TTTV',
+      kb: 3.8,
+      spec: 'Very High',
+      use: 'AT-rich genomes · staggered cuts · multiplex',
+      africa: 'P. falciparum genome editing (80% AT genome) — far more efficient than SpCas9',
+    },
+    {
+      name: 'Cas13d',
+      pam: 'None',
+      kb: 2.8,
+      spec: 'RNA targets',
+      use: 'RNA knockdown · SHERLOCK diagnostics · antiviral',
+      africa: 'SHERLOCK-based rapid COVID/Ebola/mpox detection deployed in 8 African countries',
+    },
+    {
+      name: 'ABE8e',
+      pam: 'NGG',
+      kb: 5.1,
+      spec: 'A→G edits',
+      use: 'Precise A→G base edits, no DSB, no donor template',
+      africa: 'HBB E6V sickle mutation correctable at 70–90% efficiency in CD34+ HSCs ex vivo',
+    },
+    {
+      name: 'PEmax',
+      pam: 'NGG',
+      kb: 6.8,
+      spec: 'All 12 SNPs',
+      use: 'All point mutations + small indels without DSB',
+      africa: 'HBB sickle correction at 52% efficiency in primary human HSCs (Leibowitz 2022)',
+    },
   ];
 
   const OUTCOMES = [
-    { name:'NHEJ — Knockout', freq:'60–90%', color:'#f85149', desc:'Error-prone end-joining creates random indels → frameshift → premature stop codon → protein loss-of-function. Fast and efficient but unpredictable sequence outcome.', use:'Disrupting repressors (BCL11A → HbF reactivation), disabling viral receptors (CCR5 for HIV resistance), functional genomic screens' },
-    { name:'HDR — Precise Edit', freq:'1–10%', color:'#00C4A0', desc:'Homology-directed repair copies sequence from a donor template (ssODN or AAV6) to make exact changes. Requires S/G2 phase. Enriched by small molecule cell cycle synchronisation (nocodazole) or HDR enhancers (RS-1, M3814).', use:'Correcting point mutations (HBB E6V), knock-in reporters, adding protein tags, creating disease models' },
-    { name:'Base Editing (CBE/ABE)', freq:'20–80%', color:'#e3b341', desc:'A catalytically impaired Cas9 nickase tethered to a deaminase enzyme edits single bases within a 4–8 nt activity window without creating a DSB. CBE: C→T; ABE: A→G. No donor template needed — dramatically simpler delivery.', use:'All single-nucleotide corrections approachable as C→T or A→G. HBB E6V (A→T in coding strand) correctable by ABE8e targeting non-template strand' },
-    { name:'Prime Editing', freq:'5–50%', color:'#bc8cff', desc:'A PEgRNA encodes both the spacer and a reverse transcriptase template. PE2 (Cas9-H840A + MLV-RT) nicks the non-target strand and synthesises a DNA flap from the RT template. Enables all 12 point mutations and small indels (inserts ≤44 bp, deletions ≤80 bp) without DSB.', use:'Complex corrections unreachable by CBE/ABE, insertions/deletions, therapeutic corrections where bystander edits are problematic' },
-    { name:'CRISPRi / CRISPRa', freq:'50–99% modulation', color:'#58a6ff', desc:'Dead Cas9 (dCas9) fused to KRAB repressor (CRISPRi) silences target genes transcriptionally without cutting DNA. dCas9-VP64/p65/Rta (CRISPRa) activates gene expression. Reversible — ideal for functional studies without permanent genome alteration.', use:'Essential gene studies, drug target validation, genome-wide screens (Perturb-seq), reactivating silenced tumour suppressors or HbF' },
-    { name:'Gene Drive', freq:'99%+ population spread', color:'#f97316', desc:'A homing construct encoding Cas9 + sgRNA copies itself into homologous chromosomes during meiosis via HDR, spreading faster than Mendelian inheritance. Daisy-chain and split-drive designs improve confinement. Requires extensive biosafety review.', use:'Anopheles gambiae sterility for malaria vector control; Aedes aegypti dengue suppression; crop pest control — all requiring international regulatory framework' },
+    {
+      name: 'NHEJ — Knockout',
+      freq: '60–90%',
+      color: '#f85149',
+      desc: 'Error-prone end-joining creates random indels → frameshift → premature stop codon → protein loss-of-function. Fast and efficient but unpredictable sequence outcome.',
+      use: 'Disrupting repressors (BCL11A → HbF reactivation), disabling viral receptors (CCR5 for HIV resistance), functional genomic screens',
+    },
+    {
+      name: 'HDR — Precise Edit',
+      freq: '1–10%',
+      color: '#00C4A0',
+      desc: 'Homology-directed repair copies sequence from a donor template (ssODN or AAV6) to make exact changes. Requires S/G2 phase. Enriched by small molecule cell cycle synchronisation (nocodazole) or HDR enhancers (RS-1, M3814).',
+      use: 'Correcting point mutations (HBB E6V), knock-in reporters, adding protein tags, creating disease models',
+    },
+    {
+      name: 'Base Editing (CBE/ABE)',
+      freq: '20–80%',
+      color: '#e3b341',
+      desc: 'A catalytically impaired Cas9 nickase tethered to a deaminase enzyme edits single bases within a 4–8 nt activity window without creating a DSB. CBE: C→T; ABE: A→G. No donor template needed — dramatically simpler delivery.',
+      use: 'All single-nucleotide corrections approachable as C→T or A→G. HBB E6V (A→T in coding strand) correctable by ABE8e targeting non-template strand',
+    },
+    {
+      name: 'Prime Editing',
+      freq: '5–50%',
+      color: '#bc8cff',
+      desc: 'A PEgRNA encodes both the spacer and a reverse transcriptase template. PE2 (Cas9-H840A + MLV-RT) nicks the non-target strand and synthesises a DNA flap from the RT template. Enables all 12 point mutations and small indels (inserts ≤44 bp, deletions ≤80 bp) without DSB.',
+      use: 'Complex corrections unreachable by CBE/ABE, insertions/deletions, therapeutic corrections where bystander edits are problematic',
+    },
+    {
+      name: 'CRISPRi / CRISPRa',
+      freq: '50–99% modulation',
+      color: '#58a6ff',
+      desc: 'Dead Cas9 (dCas9) fused to KRAB repressor (CRISPRi) silences target genes transcriptionally without cutting DNA. dCas9-VP64/p65/Rta (CRISPRa) activates gene expression. Reversible — ideal for functional studies without permanent genome alteration.',
+      use: 'Essential gene studies, drug target validation, genome-wide screens (Perturb-seq), reactivating silenced tumour suppressors or HbF',
+    },
+    {
+      name: 'Gene Drive',
+      freq: '99%+ population spread',
+      color: '#f97316',
+      desc: 'A homing construct encoding Cas9 + sgRNA copies itself into homologous chromosomes during meiosis via HDR, spreading faster than Mendelian inheritance. Daisy-chain and split-drive designs improve confinement. Requires extensive biosafety review.',
+      use: 'Anopheles gambiae sterility for malaria vector control; Aedes aegypti dengue suppression; crop pest control — all requiring international regulatory framework',
+    },
   ];
 
   const AFRICA = [
-    { disease:'Sickle Cell Disease',    gene:'HBB / BCL11A', color:'#f85149', strategy:'ABE8e base editing of HBB E6V codon (A→T on non-template strand) OR Cas9 disruption of BCL11A +62 kb erythroid enhancer to reactivate fetal hemoglobin (HbF). Both achieve >80% HbF in CD34+ HSC models.', status:'Phase III trial (CLIMB-SCD-121, Casgevy) — first African patients enrolled at WITS/Charlotte Maxeke Hospital, Johannesburg 2024. FDA/EMA approved November 2023.' },
-    { disease:'Malaria (P. falciparum)', gene:'PfCRT / kelch13 / gene drive', color:'#e3b341', strategy:'Cas12a (preferred over SpCas9 for AT-rich P. falciparum genome, ~80% AT) used for drug resistance gene characterisation. Split gene drives targeting Anopheles gambiae fertility genes (AGAP005958) under field evaluation.', status:'Gene drive field biosafety evaluation ongoing. Phase I contained release planned in Mali and Burkina Faso through Target Malaria consortium (Bill & Melinda Gates funded).' },
-    { disease:'HIV-1',                  gene:'CCR5 / CXCR4 / integrated provirus', color:'#bc8cff', strategy:'CCR5Δ32 mimicry in autologous CD34+ HSCs using SpCas9 + AAV6 HDR donor. Dual sgRNA excision of integrated HIV-1 provirus from CD4+ T cells. Functional cure aim — eliminate latent reservoir.', status:'Phase I trial at Johannesburg Wits HIV clinic — 6/12 patients showed sustained CCR5 disruption at 24 weeks with preserved CD4 counts. Scale-up manufacturing challenge for Africa.' },
-    { disease:'Cassava Brown Streak',   gene:'eIF4E alleles', color:'#00C4A0', strategy:'Knockout of eIF4E susceptibility gene in cassava using SpCas9 — confers broad resistance to CBSV without introducing foreign DNA (regulatory-compliant). Staple food for 800M Africans in sub-Saharan Africa.', status:'Uganda contained field trial 2023: 100% CBSV resistance in T0 knock-out plants. National Biosafety Authority (NBA Uganda) approval pending regulatory review. Kenya and Tanzania trial sites queued.' },
-    { disease:'Sleeping Sickness (HAT)',gene:'VSG loci / bloodstream essential genes', color:'#58a6ff', strategy:'DiCre-based conditional knockouts and CRISPR screens in Trypanosoma brucei bloodstream forms for drug target validation. 420 essential genes identified; 3 compounds in hit-to-lead phase for neglected tropical disease pipeline.', status:'Target validation complete (Alsford lab / LSTM / Wellcome). Drug-like hits advancing through DNDI pipeline with African site co-investigators in Uganda and DRC.' },
+    {
+      disease: 'Sickle Cell Disease',
+      gene: 'HBB / BCL11A',
+      color: '#f85149',
+      strategy:
+        'ABE8e base editing of HBB E6V codon (A→T on non-template strand) OR Cas9 disruption of BCL11A +62 kb erythroid enhancer to reactivate fetal hemoglobin (HbF). Both achieve >80% HbF in CD34+ HSC models.',
+      status:
+        'Phase III trial (CLIMB-SCD-121, Casgevy) — first African patients enrolled at WITS/Charlotte Maxeke Hospital, Johannesburg 2024. FDA/EMA approved November 2023.',
+    },
+    {
+      disease: 'Malaria (P. falciparum)',
+      gene: 'PfCRT / kelch13 / gene drive',
+      color: '#e3b341',
+      strategy:
+        'Cas12a (preferred over SpCas9 for AT-rich P. falciparum genome, ~80% AT) used for drug resistance gene characterisation. Split gene drives targeting Anopheles gambiae fertility genes (AGAP005958) under field evaluation.',
+      status:
+        'Gene drive field biosafety evaluation ongoing. Phase I contained release planned in Mali and Burkina Faso through Target Malaria consortium (Bill & Melinda Gates funded).',
+    },
+    {
+      disease: 'HIV-1',
+      gene: 'CCR5 / CXCR4 / integrated provirus',
+      color: '#bc8cff',
+      strategy:
+        'CCR5Δ32 mimicry in autologous CD34+ HSCs using SpCas9 + AAV6 HDR donor. Dual sgRNA excision of integrated HIV-1 provirus from CD4+ T cells. Functional cure aim — eliminate latent reservoir.',
+      status:
+        'Phase I trial at Johannesburg Wits HIV clinic — 6/12 patients showed sustained CCR5 disruption at 24 weeks with preserved CD4 counts. Scale-up manufacturing challenge for Africa.',
+    },
+    {
+      disease: 'Cassava Brown Streak',
+      gene: 'eIF4E alleles',
+      color: '#00C4A0',
+      strategy:
+        'Knockout of eIF4E susceptibility gene in cassava using SpCas9 — confers broad resistance to CBSV without introducing foreign DNA (regulatory-compliant). Staple food for 800M Africans in sub-Saharan Africa.',
+      status:
+        'Uganda contained field trial 2023: 100% CBSV resistance in T0 knock-out plants. National Biosafety Authority (NBA Uganda) approval pending regulatory review. Kenya and Tanzania trial sites queued.',
+    },
+    {
+      disease: 'Sleeping Sickness (HAT)',
+      gene: 'VSG loci / bloodstream essential genes',
+      color: '#58a6ff',
+      strategy:
+        'DiCre-based conditional knockouts and CRISPR screens in Trypanosoma brucei bloodstream forms for drug target validation. 420 essential genes identified; 3 compounds in hit-to-lead phase for neglected tropical disease pipeline.',
+      status:
+        'Target validation complete (Alsford lab / LSTM / Wellcome). Drug-like hits advancing through DNDI pipeline with African site co-investigators in Uganda and DRC.',
+    },
   ];
 
   const PRESETS = [
-    { label:'HBB — Sickle E6V', seq:'CTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAA' },
-    { label:'BCL11A Enhancer (+62 kb)', seq:'GATAAACAGTTCACCTCAGTGGCAGAGGCAGAGCCATCTATTGCTTACATTTGCTTCTGA' },
-    { label:'CCR5 Exon 3 — HIV', seq:'AGGAGCTCAAGGGTGATCGAGGAGAGCTTCATCTTTCAGTTCATTGACAGCATCTTCCTC' },
-    { label:'PfCRT — Chloroquine (Malaria)', seq:'ATGATTATGGAATAAATAAAACTTTTGCAATAATTTTTGCTGTTTTAATATTTATTTATT' },
+    {
+      label: 'HBB — Sickle E6V',
+      seq: 'CTGACTCCTGAGGAGAAGTCTGCCGTTACTGCCCTGTGGGGCAAGGTGAACGTGGATGAA',
+    },
+    {
+      label: 'BCL11A Enhancer (+62 kb)',
+      seq: 'GATAAACAGTTCACCTCAGTGGCAGAGGCAGAGCCATCTATTGCTTACATTTGCTTCTGA',
+    },
+    {
+      label: 'CCR5 Exon 3 — HIV',
+      seq: 'AGGAGCTCAAGGGTGATCGAGGAGAGCTTCATCTTTCAGTTCATTGACAGCATCTTCCTC',
+    },
+    {
+      label: 'PfCRT — Chloroquine (Malaria)',
+      seq: 'ATGATTATGGAATAAATAAAACTTTTGCAATAATTTTTGCTGTTTTAATATTTATTTATT',
+    },
   ];
 
   function init() {
@@ -62,55 +191,67 @@ OmicsLab.CRISPR = (function () {
   <div id="crispr-panel-systems" hidden>${_systemsPanel()}</div>
   <div id="crispr-panel-africa" hidden>${_africaPanel()}</div>
 </div>`;
-    } catch(e) { container.innerHTML = `<p style="color:#f85149;padding:2rem">CRISPR module error: ${e}</p>`; }
+    } catch (e) {
+      container.innerHTML = `<p style="color:#f85149;padding:2rem">CRISPR module error: ${e}</p>`;
+    }
   }
 
   function setTab(id, btn) {
-    document.querySelectorAll('.crispr-tab').forEach(t => t.classList.toggle('active', t === btn));
-    ['mechanism','guide','outcomes','systems','africa'].forEach(p => {
+    document
+      .querySelectorAll('.crispr-tab')
+      .forEach((t) => t.classList.toggle('active', t === btn));
+    ['mechanism', 'guide', 'outcomes', 'systems', 'africa'].forEach((p) => {
       const el = document.getElementById('crispr-panel-' + p);
-      if (el) el.hidden = (p !== id);
+      if (el) el.hidden = p !== id;
     });
   }
 
   function designGuide() {
     const raw = document.getElementById('crispr-seq-input')?.value || '';
-    const seq = raw.toUpperCase().replace(/[^ATCG]/g,'');
+    const seq = raw.toUpperCase().replace(/[^ATCG]/g, '');
     const out = document.getElementById('crispr-guide-out');
     if (!out) return;
     if (seq.length < 23) {
-      out.innerHTML = '<div class="crispr-err">Enter at least 23 bp (20 nt spacer + NGG PAM). Only A/T/C/G characters.</div>';
+      out.innerHTML =
+        '<div class="crispr-err">Enter at least 23 bp (20 nt spacer + NGG PAM). Only A/T/C/G characters.</div>';
       return;
     }
     const guides = [];
     for (let i = 0; i <= seq.length - 23; i++) {
-      const tri = seq.slice(i+20, i+23);
-      if (tri[1]==='G' && tri[2]==='G') {
-        const sp = seq.slice(i, i+20);
-        const gc = ((sp.match(/[GC]/g)||[]).length / 20 * 100).toFixed(0);
+      const tri = seq.slice(i + 20, i + 23);
+      if (tri[1] === 'G' && tri[2] === 'G') {
+        const sp = seq.slice(i, i + 20);
+        const gc = (((sp.match(/[GC]/g) || []).length / 20) * 100).toFixed(0);
         let score = 50;
         if (+gc >= 40 && +gc <= 70) score += 20;
         if (sp.endsWith('TTTT')) score -= 15;
         if (/AAAA|CCCC|GGGG/.test(sp)) score -= 10;
-        if (sp[18]==='G') score += 5;
-        if (sp[17]==='C') score += 5;
-        if (sp[0]!=='G') score -= 5;
+        if (sp[18] === 'G') score += 5;
+        if (sp[17] === 'C') score += 5;
+        if (sp[0] !== 'G') score -= 5;
         score = Math.max(10, Math.min(95, score));
-        guides.push({ pos:i+1, sp, pam:tri, gc, score });
+        guides.push({ pos: i + 1, sp, pam: tri, gc, score });
       }
     }
-    if (!guides.length) { out.innerHTML = '<div class="crispr-err">No NGG PAM sites found. Try a longer sequence or different region.</div>'; return; }
-    const rows = guides.slice(0,10).map(g => {
-      const c = g.score>=70?'#00C4A0':g.score>=50?'#e3b341':'#f85149';
-      const v = g.score>=70?'Recommended':g.score>=50?'Acceptable':'Poor';
-      return `<tr>
+    if (!guides.length) {
+      out.innerHTML =
+        '<div class="crispr-err">No NGG PAM sites found. Try a longer sequence or different region.</div>';
+      return;
+    }
+    const rows = guides
+      .slice(0, 10)
+      .map((g) => {
+        const c = g.score >= 70 ? '#00C4A0' : g.score >= 50 ? '#e3b341' : '#f85149';
+        const v = g.score >= 70 ? 'Recommended' : g.score >= 50 ? 'Acceptable' : 'Poor';
+        return `<tr>
         <td>${g.pos}</td>
         <td><code style="color:#A8A098">${g.sp}</code> <code style="color:#58a6ff">${g.pam}</code></td>
         <td>${g.gc}%</td>
         <td style="color:${c};font-weight:700">${g.score}</td>
         <td style="color:${c}">${v}</td>
       </tr>`;
-    }).join('');
+      })
+      .join('');
     out.innerHTML = `<div class="crispr-sb-title" style="margin-top:1.25rem">Guide Candidates — SpCas9 / NGG PAM (${guides.length} found, showing first 10)</div>
       <div class="crispr-tbl-wrap"><table class="crispr-tbl">
         <thead><tr><th>Pos</th><th>Spacer + PAM</th><th>GC%</th><th>Score</th><th>Verdict</th></tr></thead>
@@ -120,7 +261,8 @@ OmicsLab.CRISPR = (function () {
   }
 
   function _mechPanel() {
-    const svgW = 580, svgH = 155;
+    const svgW = 580,
+      svgH = 155;
     const svg = `<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}" style="width:100%;max-width:${svgW}px;display:block;margin:0 auto" aria-label="Cas9 cleavage schematic">
       <text x="14" y="57" fill="#6E6860" font-size="9">5'</text>
       <line x1="28" y1="54" x2="375" y2="54" stroke="#00C4A0" stroke-width="2"/>
@@ -157,8 +299,9 @@ OmicsLab.CRISPR = (function () {
   }
 
   function _guidePanel() {
-    const presetBtns = PRESETS.map(p =>
-      `<button class="crispr-preset-btn" onclick="document.getElementById('crispr-seq-input').value='${p.seq}'">${p.label}</button>`
+    const presetBtns = PRESETS.map(
+      (p) =>
+        `<button class="crispr-preset-btn" onclick="document.getElementById('crispr-seq-input').value='${p.seq}'">${p.label}</button>`
     ).join('');
 
     return `
@@ -188,24 +331,32 @@ OmicsLab.CRISPR = (function () {
   }
 
   function _outcomesPanel() {
-    return '<div class="crispr-outcomes-grid">' + OUTCOMES.map(o => `
+    return (
+      '<div class="crispr-outcomes-grid">' +
+      OUTCOMES.map(
+        (o) => `
       <div class="crispr-oc-card" style="border-top-color:${o.color}">
         <div class="crispr-oc-title" style="color:${o.color}">${o.name}</div>
         <div class="crispr-oc-freq">Typical frequency: ${o.freq}</div>
         <p class="crispr-oc-desc">${o.desc}</p>
         <div class="crispr-oc-use"><span class="crispr-oc-lbl">Best for</span>${o.use}</div>
-      </div>`).join('') + '</div>';
+      </div>`
+      ).join('') +
+      '</div>'
+    );
   }
 
   function _systemsPanel() {
-    const rows = SYSTEMS.map(s => `<tr>
+    const rows = SYSTEMS.map(
+      (s) => `<tr>
       <td style="font-weight:700;color:#A8A098;font-family:monospace">${s.name}</td>
       <td><code style="color:#e3b341">${s.pam}</code></td>
       <td>${s.kb} kb</td>
       <td>${s.spec}</td>
       <td style="font-size:0.72rem;color:#A8A098">${s.use}</td>
       <td style="font-size:0.68rem;color:#f97316">${s.africa}</td>
-    </tr>`).join('');
+    </tr>`
+    ).join('');
 
     return `
 <div class="crispr-concept-box">
@@ -219,13 +370,15 @@ OmicsLab.CRISPR = (function () {
   }
 
   function _africaPanel() {
-    const cards = AFRICA.map(a => `
+    const cards = AFRICA.map(
+      (a) => `
       <div class="crispr-af-card" style="border-left-color:${a.color}">
         <div class="crispr-af-disease" style="color:${a.color}">${a.disease}</div>
         <div class="crispr-af-gene"><span class="crispr-af-lbl">Target</span>${a.gene}</div>
         <p class="crispr-af-strategy">${a.strategy}</p>
         <div class="crispr-af-status"><span class="crispr-af-lbl">Status</span>${a.status}</div>
-      </div>`).join('');
+      </div>`
+    ).join('');
 
     return `
 <div class="crispr-concept-box">

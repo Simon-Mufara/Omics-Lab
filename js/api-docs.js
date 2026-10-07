@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.APIDocs = (function () {
-
   const SECTIONS = [
     {
       id: 'overview',
@@ -24,7 +23,8 @@ All modules follow the same pattern:
 1. Register on \`window.OmicsLab\` as an IIFE.
 2. Expose an \`init()\` function that renders HTML into a section element.
 3. Expose any other public methods needed for interactivity.
-      `},
+      `,
+    },
     {
       id: 'router',
       title: 'OmicsLab.Router',
@@ -47,7 +47,8 @@ OmicsLab.Router.PAGES;
 //   ...
 // }
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'assistant',
       title: 'OmicsLab.Assistant',
@@ -69,7 +70,8 @@ OmicsLab.Assistant.init();
 \`\`\`
 
 **API key**: stored only in \`localStorage.getItem('omicslab_anthropic_key')\`. Never sent to any server other than \`api.anthropic.com\`.
-      `},
+      `,
+    },
     {
       id: 'variantinterp',
       title: 'OmicsLab.VariantInterp',
@@ -88,7 +90,8 @@ OmicsLab.VariantInterp._loadExample();
 OmicsLab.VariantInterp._askAI();
 // → navigates to #/ai with ACMG context pre-loaded
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'idb',
       title: 'OmicsLab.IDB',
@@ -119,7 +122,8 @@ await OmicsLab.IDB.clearAll();
 const { used, quota, pct } = await OmicsLab.IDB.estimateUsage();
 console.log(\`Using \${pct}% of quota (\${(used/1e6).toFixed(1)} MB)\`);
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'grants',
       title: 'OmicsLab.Grant',
@@ -139,7 +143,8 @@ OmicsLab.Grant._generate();
 // Polish generated text with Claude AI (navigates to #/ai)
 OmicsLab.Grant._aiPolish();
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'glossary',
       title: 'OmicsLab.Glossary',
@@ -154,7 +159,8 @@ OmicsLab.Glossary._filter();
 OmicsLab.Glossary._toggleLang('yo'); // show/hide Yoruba
 OmicsLab.Glossary._toggleLang('am'); // show/hide Amharic
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'events',
       title: 'Custom Events',
@@ -177,7 +183,8 @@ window.addEventListener('omicslab:ai-done', e => {
   console.log('AI response complete:', e.detail.text.substring(0, 80));
 });
 \`\`\`
-      `},
+      `,
+    },
     {
       id: 'embedding',
       title: 'Embedding OmicsLab',
@@ -203,19 +210,22 @@ To embed a single OmicsLab module in an external page:
 \`\`\`
 
 All modules are self-contained and will render into their designated section element. There are no peer dependencies beyond the modules themselves.
-      `},
+      `,
+    },
   ];
 
   let _activeSection = 'overview';
 
   function _selectSection(id) {
     _activeSection = id;
-    document.querySelectorAll('.ad-nav-item').forEach(el => el.classList.toggle('ad-nav-active', el.dataset.sid === id));
-    const content = SECTIONS.find(s => s.id === id);
+    document
+      .querySelectorAll('.ad-nav-item')
+      .forEach((el) => el.classList.toggle('ad-nav-active', el.dataset.sid === id));
+    const content = SECTIONS.find((s) => s.id === id);
     const el = document.getElementById('ad-content');
     if (!el || !content) return;
     el.innerHTML = `<h2 class="ad-content-title">${content.title}</h2><div class="ad-content-body">${_renderMd(content.content)}</div>`;
-    el.querySelectorAll('pre code, pre').forEach(block => block.classList.add('ad-code-block'));
+    el.querySelectorAll('pre code, pre').forEach((block) => block.classList.add('ad-code-block'));
   }
 
   function _renderMd(text) {
@@ -244,7 +254,7 @@ All modules are self-contained and will render into their designated section ele
         </div>
         <div class="ad-layout">
           <nav class="ad-nav">
-            ${SECTIONS.map(s => `<button class="ad-nav-item${s.id===_activeSection?' ad-nav-active':''}" data-sid="${s.id}" onclick="OmicsLab.APIDocs._selectSection('${s.id}')">${s.title}</button>`).join('')}
+            ${SECTIONS.map((s) => `<button class="ad-nav-item${s.id === _activeSection ? ' ad-nav-active' : ''}" data-sid="${s.id}" onclick="OmicsLab.APIDocs._selectSection('${s.id}')">${s.title}</button>`).join('')}
           </nav>
           <div id="ad-content" class="ad-content"></div>
         </div>

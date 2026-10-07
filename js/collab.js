@@ -7,7 +7,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Collab = (function () {
-
   const ICE = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
@@ -15,10 +14,10 @@ OmicsLab.Collab = (function () {
   ];
 
   /* ─── State ─── */
-  let _bc    = null;   // BroadcastChannel
-  let _pc    = null;   // RTCPeerConnection
-  let _dc    = null;   // RTCDataChannel
-  let _bcId  = null;
+  let _bc = null; // BroadcastChannel
+  let _pc = null; // RTCPeerConnection
+  let _dc = null; // RTCDataChannel
+  let _bcId = null;
   let _myName = '';
   let _peers = [];
   let _iceDone = false;
@@ -37,13 +36,20 @@ OmicsLab.Collab = (function () {
 
   function _handleMsg(raw) {
     let msg;
-    try { msg = typeof raw === 'string' ? JSON.parse(raw) : raw; } catch { return; }
-    if (msg.type === 'chat')       _appendChat(msg.from, msg.data.text, false);
-    if (msg.type === 'join')       _onPeerJoin(msg.from);
-    if (msg.type === 'leave')      _onPeerLeave(msg.from);
-    if (msg.type === 'ping')       _broadcastState('pong', {});
-    if (msg.type === 'lab_step')   _appendSystemMsg(`${msg.from} started: ${msg.data.step}`);
-    if (msg.type === 'nav')        { if (OmicsLab.Router) OmicsLab.Router.navigate(msg.data.page); _appendSystemMsg(`${msg.from} navigated to ${msg.data.page}`); }
+    try {
+      msg = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    } catch {
+      return;
+    }
+    if (msg.type === 'chat') _appendChat(msg.from, msg.data.text, false);
+    if (msg.type === 'join') _onPeerJoin(msg.from);
+    if (msg.type === 'leave') _onPeerLeave(msg.from);
+    if (msg.type === 'ping') _broadcastState('pong', {});
+    if (msg.type === 'lab_step') _appendSystemMsg(`${msg.from} started: ${msg.data.step}`);
+    if (msg.type === 'nav') {
+      if (OmicsLab.Router) OmicsLab.Router.navigate(msg.data.page);
+      _appendSystemMsg(`${msg.from} navigated to ${msg.data.page}`);
+    }
     _renderActivity(msg);
   }
 
@@ -54,17 +60,20 @@ OmicsLab.Collab = (function () {
   }
 
   function _onPeerLeave(name) {
-    _peers = _peers.filter(p => p !== name);
+    _peers = _peers.filter((p) => p !== name);
     _updateMemberList();
     _appendSystemMsg(`${name} left the session`);
   }
 
   /* ─── Mode A: BroadcastChannel ─── */
   function _joinBC(id) {
-    if (_bc) { _bc.close(); _bc = null; }
+    if (_bc) {
+      _bc.close();
+      _bc = null;
+    }
     _bcId = id;
     _bc = new BroadcastChannel('omicslab_' + id);
-    _bc.onmessage = e => _handleMsg(e.data);
+    _bc.onmessage = (e) => _handleMsg(e.data);
     _broadcastState('join', { name: _myName });
     _setConnected(true, 'bc');
     _updateMemberList();
@@ -76,15 +85,18 @@ OmicsLab.Collab = (function () {
   function _openVideo(code) {
     const room = 'OmicsLab-' + code;
     const userName = _myName || 'OmicsLab User';
-    const jitsiUrl = 'https://meet.jit.si/' + room
-      + '#userInfo.displayName=' + encodeURIComponent(userName)
-      + '&config.prejoinPageEnabled=false';
+    const jitsiUrl =
+      'https://meet.jit.si/' +
+      room +
+      '#userInfo.displayName=' +
+      encodeURIComponent(userName) +
+      '&config.prejoinPageEnabled=false';
 
     /* Update share link row */
     const linkEl = document.getElementById('collab-video-link');
-    const rowEl  = document.getElementById('collab-video-row');
+    const rowEl = document.getElementById('collab-video-row');
     if (linkEl) linkEl.textContent = 'meet.jit.si/' + room;
-    if (rowEl)  rowEl.style.display = '';
+    if (rowEl) rowEl.style.display = '';
 
     /* Embed iframe inside the Mode B card */
     let embedEl = document.getElementById('collab-jitsi-embed');
@@ -116,7 +128,9 @@ OmicsLab.Collab = (function () {
       </iframe>`;
     embedEl.style.display = '';
 
-    _appendSystemMsg('Video session started — code "' + code + '" — anyone entering this code joins the same call');
+    _appendSystemMsg(
+      'Video session started — code "' + code + '" — anyone entering this code joins the same call'
+    );
     _setConnected(true, 'jitsi');
     document.getElementById('collab-live-panel').style.display = '';
   }
@@ -130,8 +144,11 @@ OmicsLab.Collab = (function () {
     let candidates = [];
     _iceDone = false;
 
-    _pc.onicecandidate = e => {
-      if (e.candidate) { candidates.push(e.candidate); return; }
+    _pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        candidates.push(e.candidate);
+        return;
+      }
       /* Gathering complete */
       _iceDone = true;
       const sdp = JSON.stringify(_pc.localDescription);
@@ -167,10 +184,13 @@ OmicsLab.Collab = (function () {
   async function _rtcAnswer(offerJson) {
     const offer = JSON.parse(offerJson);
     _pc = new RTCPeerConnection({ iceServers: ICE });
-    _pc.ondatachannel = e => { _dc = e.channel; _setupDC(_dc); };
+    _pc.ondatachannel = (e) => {
+      _dc = e.channel;
+      _setupDC(_dc);
+    };
 
     _iceDone = false;
-    _pc.onicecandidate = e => {
+    _pc.onicecandidate = (e) => {
       if (e.candidate) return;
       _iceDone = true;
       document.getElementById('collab-answer-out').value = JSON.stringify(_pc.localDescription);
@@ -207,9 +227,12 @@ OmicsLab.Collab = (function () {
       _setProgress('connected');
       document.getElementById('collab-live-panel').style.display = '';
     };
-    dc.onclose  = () => { _setConnected(false, 'rtc'); _appendSystemMsg('Peer disconnected'); };
-    dc.onmessage = e => _handleMsg(e.data);
-    dc.onerror  = () => _appendSystemMsg('Connection error — check network and try again');
+    dc.onclose = () => {
+      _setConnected(false, 'rtc');
+      _appendSystemMsg('Peer disconnected');
+    };
+    dc.onmessage = (e) => _handleMsg(e.data);
+    dc.onerror = () => _appendSystemMsg('Connection error — check network and try again');
   }
 
   /* ─── Chat ─── */
@@ -247,22 +270,30 @@ OmicsLab.Collab = (function () {
     if (!feed) return;
     const d = document.createElement('div');
     d.className = 'collab-act-item';
-    d.innerHTML = `<span class="collab-act-time">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>
+    d.innerHTML = `<span class="collab-act-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
       <span class="collab-act-who">${_esc(msg.from)}</span>
-      <span class="collab-act-what">${msg.type.replace(/_/g,' ')}</span>`;
+      <span class="collab-act-what">${msg.type.replace(/_/g, ' ')}</span>`;
     feed.insertBefore(d, feed.firstChild);
     while (feed.children.length > 25) feed.removeChild(feed.lastChild);
   }
 
   /* ─── UI helpers ─── */
   function _setConnected(yes, mode) {
-    const dot   = document.getElementById('collab-status-dot');
+    const dot = document.getElementById('collab-status-dot');
     const label = document.getElementById('collab-status-label');
     const badge = document.getElementById('collab-mode-badge');
-    if (dot)   { dot.className = 'collab-status-dot' + (yes ? ' connected' : ''); }
-    if (label) { label.textContent = yes ? 'Connected' : 'Disconnected'; }
+    if (dot) {
+      dot.className = 'collab-status-dot' + (yes ? ' connected' : '');
+    }
+    if (label) {
+      label.textContent = yes ? 'Connected' : 'Disconnected';
+    }
     if (badge && yes) {
-      const LABELS = { bc: 'SAME-DEVICE SYNC', rtc: 'PEER-TO-PEER LINK', jitsi: 'VIDEO SESSION ACTIVE' };
+      const LABELS = {
+        bc: 'SAME-DEVICE SYNC',
+        rtc: 'PEER-TO-PEER LINK',
+        jitsi: 'VIDEO SESSION ACTIVE',
+      };
       badge.textContent = LABELS[mode] || 'CONNECTED';
       badge.style.display = '';
     }
@@ -271,31 +302,43 @@ OmicsLab.Collab = (function () {
   function _updateMemberList() {
     const el = document.getElementById('collab-members');
     if (!el) return;
-    const all = [{ name: _myName, me: true }, ..._peers.map(n => ({ name: n, me: false }))];
-    el.innerHTML = all.map(p => `
+    const all = [{ name: _myName, me: true }, ..._peers.map((n) => ({ name: n, me: false }))];
+    el.innerHTML = all
+      .map(
+        (p) => `
       <div class="collab-member">
         <div class="collab-member-av">${p.name.charAt(0).toUpperCase()}</div>
         <div class="collab-member-name">${_esc(p.name)}${p.me ? '<span class="collab-me-tag">you</span>' : ''}</div>
-      </div>`).join('');
+      </div>`
+      )
+      .join('');
   }
 
   function _showStep(id) {
-    ['collab-rtc-step2','collab-rtc-step3','collab-rtc-step3-guest'].forEach(s => {
+    ['collab-rtc-step2', 'collab-rtc-step3', 'collab-rtc-step3-guest'].forEach((s) => {
       const el = document.getElementById(s);
       if (el) el.style.display = s === id ? '' : 'none';
     });
   }
 
   function _setProgress(state) {
-    const bar  = document.getElementById('collab-rtc-progress');
+    const bar = document.getElementById('collab-rtc-progress');
     const label = document.getElementById('collab-rtc-progress-label');
     if (!bar) return;
     const MAP = {
-      gathering:    { w:'40%',  text:'Gathering connection info…', color:'#e3b341' },
-      'offer-ready':{ w:'65%',  text:'Offer ready — share it with your partner', color:'#58a6ff' },
-      'answer-ready':{ w:'65%', text:'Answer ready — send it back to the host', color:'#58a6ff' },
-      connecting:   { w:'85%',  text:'Connecting to peer…', color:'#f97316' },
-      connected:    { w:'100%', text:'Connected!', color:'#00C4A0' },
+      gathering: { w: '40%', text: 'Gathering connection info…', color: '#e3b341' },
+      'offer-ready': {
+        w: '65%',
+        text: 'Offer ready — share it with your partner',
+        color: '#58a6ff',
+      },
+      'answer-ready': {
+        w: '65%',
+        text: 'Answer ready — send it back to the host',
+        color: '#58a6ff',
+      },
+      connecting: { w: '85%', text: 'Connecting to peer…', color: '#f97316' },
+      connected: { w: '100%', text: 'Connected!', color: '#00C4A0' },
     };
     const s = MAP[state] || {};
     bar.style.width = s.w || '0%';
@@ -310,11 +353,16 @@ OmicsLab.Collab = (function () {
       const orig = btn.innerHTML;
       btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
       btn.style.color = '#00C4A0';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.color = '';
+      }, 2000);
     });
   }
 
-  function _esc(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function _esc(s) {
+    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
 
   /* ─── Broadcast nav event ─── */
   function shareNav(page) {
@@ -460,15 +508,15 @@ OmicsLab.Collab = (function () {
             <div class="collab-shared-tools">
               <div style="font-size:.72rem;font-weight:600;color:#A8A098;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Broadcast lab events</div>
               <div class="collab-tools-row">
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'DNA Extraction',status:'started'})">${OmicsLab.Icons?.svg('flask',12)||''} DNA Extraction</button>
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Library Prep',status:'started'})">${OmicsLab.Icons?.svg('package',12)||''} Library Prep</button>
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Sequencing',status:'started'})">${OmicsLab.Icons?.svg('microscope',12)||''} Sequencing</button>
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'QC',status:'started'})">${OmicsLab.Icons?.svg('bar-chart',12)||''} Run QC</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'DNA Extraction',status:'started'})">${OmicsLab.Icons?.svg('flask', 12) || ''} DNA Extraction</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Library Prep',status:'started'})">${OmicsLab.Icons?.svg('package', 12) || ''} Library Prep</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'Sequencing',status:'started'})">${OmicsLab.Icons?.svg('microscope', 12) || ''} Sequencing</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab._broadcastState('lab_step',{step:'QC',status:'started'})">${OmicsLab.Icons?.svg('bar-chart', 12) || ''} Run QC</button>
               </div>
               <div class="collab-tools-row" style="margin-top:.3rem">
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('lab')" style="color:#00C4A0">${OmicsLab.Icons?.svg('flask',12)||''} Send to Lab</button>
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('africa')" style="color:#f97316">${OmicsLab.Icons?.svg('globe',12)||''} Send to Africa Hub</button>
-                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('analysis')" style="color:#e3b341">${OmicsLab.Icons?.svg('bar-chart',12)||''} Send to Analysis</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('lab')" style="color:#00C4A0">${OmicsLab.Icons?.svg('flask', 12) || ''} Send to Lab</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('africa')" style="color:#f97316">${OmicsLab.Icons?.svg('globe', 12) || ''} Send to Africa Hub</button>
+                <button class="collab-tool-btn" onclick="OmicsLab.Collab.shareNav('analysis')" style="color:#e3b341">${OmicsLab.Icons?.svg('bar-chart', 12) || ''} Send to Analysis</button>
               </div>
             </div>
           </div>
@@ -505,7 +553,10 @@ OmicsLab.Collab = (function () {
   /* ─── Flow handlers ─── */
   function _confirmName() {
     const name = document.getElementById('collab-name')?.value?.trim();
-    if (!name) { OmicsLab.Notify.error('Please enter your display name'); return; }
+    if (!name) {
+      OmicsLab.Notify.error('Please enter your display name');
+      return;
+    }
     _myName = name;
     document.getElementById('collab-name-row').innerHTML = `
       <div style="display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:#A8A098">
@@ -538,12 +589,17 @@ OmicsLab.Collab = (function () {
 
   function _bcJoin() {
     const code = (document.getElementById('collab-bc-join-code')?.value || '').trim().toUpperCase();
-    if (code.length < 4) { OmicsLab.Notify.error('Enter a valid session code'); return; }
+    if (code.length < 4) {
+      OmicsLab.Notify.error('Enter a valid session code');
+      return;
+    }
     _joinBC(code);
   }
 
   function _startVideo() {
-    const code = (document.getElementById('collab-video-code')?.value || '').trim().toUpperCase() || _genCode();
+    const code =
+      (document.getElementById('collab-video-code')?.value || '').trim().toUpperCase() ||
+      _genCode();
     _openVideo(code);
   }
 
@@ -553,7 +609,7 @@ OmicsLab.Collab = (function () {
     document.getElementById('collab-rtc-host-btn').classList.add('active');
     document.getElementById('collab-rtc-guest-btn').classList.remove('active');
     document.getElementById('collab-rtc-progress-wrap').style.display = '';
-    _rtcHost().catch(e => _appendSystemMsg('WebRTC error: ' + e.message));
+    _rtcHost().catch((e) => _appendSystemMsg('WebRTC error: ' + e.message));
   }
 
   function _rtcStartGuest() {
@@ -567,42 +623,68 @@ OmicsLab.Collab = (function () {
 
   function _rtcGuestAnswer() {
     const json = document.getElementById('collab-offer-in')?.value?.trim();
-    if (!json) { OmicsLab.Notify.error('Paste the host offer first'); return; }
+    if (!json) {
+      OmicsLab.Notify.error('Paste the host offer first');
+      return;
+    }
     try {
-      _rtcAnswer(json).catch(e => OmicsLab.Notify.error('Invalid offer: ' + e.message));
-    } catch(e) { OmicsLab.Notify.error('Could not parse offer — make sure you pasted the full text'); }
+      _rtcAnswer(json).catch((e) => OmicsLab.Notify.error('Invalid offer: ' + e.message));
+    } catch (e) {
+      OmicsLab.Notify.error('Could not parse offer — make sure you pasted the full text');
+    }
   }
 
   function _rtcFinish() {
     const json = document.getElementById('collab-answer-in')?.value?.trim();
-    if (!json) { OmicsLab.Notify.error('Paste the answer first'); return; }
+    if (!json) {
+      OmicsLab.Notify.error('Paste the answer first');
+      return;
+    }
     document.getElementById('collab-rtc-step3').style.display = '';
     try {
-      _rtcAcceptAnswer(json).catch(e => OmicsLab.Notify.error('Could not accept answer: ' + e.message));
-    } catch(e) { OmicsLab.Notify.error('Invalid answer — make sure you pasted the full text'); }
+      _rtcAcceptAnswer(json).catch((e) =>
+        OmicsLab.Notify.error('Could not accept answer: ' + e.message)
+      );
+    } catch (e) {
+      OmicsLab.Notify.error('Invalid answer — make sure you pasted the full text');
+    }
   }
 
   /* Expose _copyField so inline onclick can call it */
   function _copyField(id, btn) {
     const el = document.getElementById(id);
     if (!el || !el.value) return;
-    navigator.clipboard.writeText(el.value).then(() => {
-      const orig = btn.innerHTML;
-      btn.innerHTML = `${OmicsLab.Icons?.svg('check',12)||''} Copied!`;
-      btn.style.color = '#00C4A0';
-      setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
-    }).catch(() => {
-      el.select();
-      document.execCommand('copy');
-    });
+    navigator.clipboard
+      .writeText(el.value)
+      .then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `${OmicsLab.Icons?.svg('check', 12) || ''} Copied!`;
+        btn.style.color = '#00C4A0';
+        setTimeout(() => {
+          btn.innerHTML = orig;
+          btn.style.color = '';
+        }, 2000);
+      })
+      .catch(() => {
+        el.select();
+        document.execCommand('copy');
+      });
   }
 
   return {
-    init, sendChat, shareNav,
-    _confirmName, _resetName,
-    _bcCreate, _bcJoin,
+    init,
+    sendChat,
+    shareNav,
+    _confirmName,
+    _resetName,
+    _bcCreate,
+    _bcJoin,
     _startVideo,
-    _rtcStartHost, _rtcStartGuest, _rtcGuestAnswer, _rtcFinish,
-    _broadcastState, _copyField,
+    _rtcStartHost,
+    _rtcStartGuest,
+    _rtcGuestAnswer,
+    _rtcFinish,
+    _broadcastState,
+    _copyField,
   };
 })();

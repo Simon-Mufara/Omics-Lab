@@ -6,7 +6,6 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.Skeleton = (function () {
-
   /* Skeleton templates per route/section */
   const TEMPLATES = {
     /* Two-column tool layout */
@@ -23,7 +22,7 @@ OmicsLab.Skeleton = (function () {
       </div>`,
 
     /* List layout */
-    _list: (title, rows=5) => `
+    _list: (title, rows = 5) => `
       <div class="skeleton-page">
         <div class="skeleton-header">
           <div class="sk-line sk-w-40 sk-h-xl sk-shimmer"></div>
@@ -33,25 +32,31 @@ OmicsLab.Skeleton = (function () {
             <div class="sk-line sk-w-20 sk-h-sm sk-shimmer" style="border-radius:99px"></div>
           </div>
         </div>
-        ${Array.from({length:rows},()=>`
+        ${Array.from(
+          { length: rows },
+          () => `
           <div class="skeleton-row" style="background:var(--bg-surface);border:1px solid var(--border-default);border-radius:9px;padding:.75rem;margin-bottom:.5rem">
             <div class="sk-block sk-shimmer" style="width:36px;height:36px;border-radius:50%;flex-shrink:0"></div>
             <div style="flex:1">
               <div class="sk-line sk-w-60 sk-h-md sk-shimmer"></div>
               <div class="sk-line sk-w-80 sk-h-sm sk-shimmer" style="margin-top:.35rem"></div>
             </div>
-          </div>`).join('')}
+          </div>`
+        ).join('')}
       </div>`,
 
     /* Grid of cards */
-    _cardGrid: (cols=3, cards=6) => `
+    _cardGrid: (cols = 3, cards = 6) => `
       <div class="skeleton-page">
         <div class="skeleton-header">
           <div class="sk-line sk-w-40 sk-h-xl sk-shimmer"></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(${cols},1fr);gap:.75rem">
-          ${Array.from({length:cards},()=>`
-            <div class="sk-block sk-shimmer" style="height:140px;border-radius:10px"></div>`).join('')}
+          ${Array.from(
+            { length: cards },
+            () => `
+            <div class="sk-block sk-shimmer" style="height:140px;border-radius:10px"></div>`
+          ).join('')}
         </div>
       </div>`,
 
@@ -67,49 +72,49 @@ OmicsLab.Skeleton = (function () {
 
   /* Per-section skeleton type */
   const SECTION_TYPE = {
-    'phylo-section':              'canvas',
-    'heatmap-section':            'canvas',
-    'knowledge-graph-section':    'canvas',
-    'genome-browser-section':     'canvas',
-    'popstruct-section':          'canvas',
-    'pubmed-section':             'list',
-    'sra-section':                'list',
-    'preprints-section':          'list',
-    'paperhub-section':           'list',
-    'journalclub-section':        'list',
-    'citations-section':          'list',
-    'output-tracker-section':     'list',
-    'directory-section':          'list',
-    'leaderboard-section':        'list',
-    'datasets-section':           'list',
-    'alerts-section':             'list',
-    'variantinterp-section':      'twoCol',
-    'qualitypredictor-section':   'twoCol',
-    'primerdesign-section':       'twoCol',
-    'gene-lookup-section':        'twoCol',
-    'protein-section':            'twoCol',
-    'uniprot-section':            'twoCol',
-    'open-targets-section':       'twoCol',
-    'string-section':             'twoCol',
-    'pathways-section':           'twoCol',
-    'nexus-section':              'twoCol',
-    'teams-section':              'twoCol',
-    'codon-section':              'twoCol',
-    'nanopore-section':           'twoCol',
-    'amr-section':                'twoCol',
-    'kraken-section':             'twoCol',
-    'career-section':             'cardGrid',
-    'hackathon-section':          'cardGrid',
-    'badges-section':             'cardGrid',
-    'labnotebook-section':        'twoCol',
-    'settings-section':           'twoCol',
+    'phylo-section': 'canvas',
+    'heatmap-section': 'canvas',
+    'knowledge-graph-section': 'canvas',
+    'genome-browser-section': 'canvas',
+    'popstruct-section': 'canvas',
+    'pubmed-section': 'list',
+    'sra-section': 'list',
+    'preprints-section': 'list',
+    'paperhub-section': 'list',
+    'journalclub-section': 'list',
+    'citations-section': 'list',
+    'output-tracker-section': 'list',
+    'directory-section': 'list',
+    'leaderboard-section': 'list',
+    'datasets-section': 'list',
+    'alerts-section': 'list',
+    'variantinterp-section': 'twoCol',
+    'qualitypredictor-section': 'twoCol',
+    'primerdesign-section': 'twoCol',
+    'gene-lookup-section': 'twoCol',
+    'protein-section': 'twoCol',
+    'uniprot-section': 'twoCol',
+    'open-targets-section': 'twoCol',
+    'string-section': 'twoCol',
+    'pathways-section': 'twoCol',
+    'nexus-section': 'twoCol',
+    'teams-section': 'twoCol',
+    'codon-section': 'twoCol',
+    'nanopore-section': 'twoCol',
+    'amr-section': 'twoCol',
+    'kraken-section': 'twoCol',
+    'career-section': 'cardGrid',
+    'hackathon-section': 'cardGrid',
+    'badges-section': 'cardGrid',
+    'labnotebook-section': 'twoCol',
+    'settings-section': 'twoCol',
   };
 
   function _html(sectionId) {
     const type = SECTION_TYPE[sectionId] || 'twoCol';
-    if (type === 'list')     return TEMPLATES._list();
+    if (type === 'list') return TEMPLATES._list();
     if (type === 'cardGrid') return TEMPLATES._cardGrid();
-    if (type === 'canvas')   return TEMPLATES._canvas();
+    if (type === 'canvas') return TEMPLATES._canvas();
     return TEMPLATES._twoCol();
   }
 

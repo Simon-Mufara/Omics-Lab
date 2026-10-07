@@ -5,18 +5,18 @@
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.HomeHero = (function () {
-  let _raf   = null;
-  let _t     = 0;
+  let _raf = null;
+  let _t = 0;
   let _canvas = null;
 
   /* ── Nucleotide palette (A T G C) ── */
   const BASES = [
-    { label:'A', full:'Adenine',  c:'#00C4A0', r:[63,185,80]  },
-    { label:'T', full:'Thymine',  c:'#58a6ff', r:[88,166,255] },
-    { label:'G', full:'Guanine',  c:'#bc8cff', r:[188,140,255]},
-    { label:'C', full:'Cytosine', c:'#f97316', r:[249,115,22] },
+    { label: 'A', full: 'Adenine', c: '#00C4A0', r: [63, 185, 80] },
+    { label: 'T', full: 'Thymine', c: '#58a6ff', r: [88, 166, 255] },
+    { label: 'G', full: 'Guanine', c: '#bc8cff', r: [188, 140, 255] },
+    { label: 'C', full: 'Cytosine', c: '#f97316', r: [249, 115, 22] },
   ];
-  const NC = BASES.map(b => b.c);
+  const NC = BASES.map((b) => b.c);
 
   /* Complementary pairs: A-T (idx 0↔1), G-C (idx 2↔3) */
   const COMP = [1, 0, 3, 2];
@@ -25,101 +25,129 @@ OmicsLab.HomeHero = (function () {
   function _frame(ctx, W, H, t) {
     ctx.clearRect(0, 0, W, H);
 
-    const cx      = W / 2;
-    const r       = Math.min(W * 0.28, 80);   /* helix radius */
-    const pitch   = 110;                        /* px per full turn */
-    const bpStep  = 18;                         /* px between base pairs */
-    const STEP    = 1.5;                        /* strand curve smoothness */
+    const cx = W / 2;
+    const pulse = 1 + 0.05 * Math.sin(t * 0.5);
+    const r = Math.min(W * 0.28, 80) * pulse; /* helix radius with gentle pulse */
+    const pitch = 110; /* px per full turn */
+    const bpStep = 18; /* px between base pairs */
+    const STEP = 1.5; /* strand curve smoothness */
 
     /* ── Faint centreline glow ── */
     const glowGrad = ctx.createLinearGradient(cx, 0, cx, H);
-    glowGrad.addColorStop(0,   'rgba(88,166,255,0)');
+    glowGrad.addColorStop(0, 'rgba(88,166,255,0)');
     glowGrad.addColorStop(0.5, 'rgba(88,166,255,0.03)');
-    glowGrad.addColorStop(1,   'rgba(88,166,255,0)');
+    glowGrad.addColorStop(1, 'rgba(88,166,255,0)');
     ctx.fillStyle = glowGrad;
     ctx.fillRect(cx - r, 0, r * 2, H);
 
     /* ── Build strand point arrays ── */
-    const s1 = [], s2 = [];
+    const s1 = [],
+      s2 = [];
     for (let y = -STEP * 2; y <= H + STEP * 2; y += STEP) {
       const θ = (y / pitch) * Math.PI * 2 + t;
-      s1.push({ x: cx + r * Math.cos(θ),           y, z: Math.sin(θ) });
-      s2.push({ x: cx + r * Math.cos(θ + Math.PI), y, z: Math.sin(θ + Math.PI) });
+      const offsetX = Math.sin(t * 0.4 + y * 0.02) * 0.2;
+      const offsetY = Math.cos(t * 0.5 + y * 0.02) * 0.2;
+      s1.push({ x: cx + r * Math.cos(θ) + offsetX, y + offsetY, z: Math.sin(θ) });
+      s2.push({ x: cx + r * Math.cos(θ + Math.PI) + offsetX, y + offsetY, z: Math.sin(θ + Math.PI) });
     }
 
     /* ── Build base pair descriptors ── */
     const bps = [];
     for (let y = bpStep; y <= H - bpStep; y += bpStep) {
-      const θ   = (y / pitch) * Math.PI * 2 + t;
-      const z1  = Math.sin(θ);
-      const z2  = Math.sin(θ + Math.PI);
+      const θ = (y / pitch) * Math.PI * 2 + t;
+      const offsetX = Math.sin(t * 0.3 + y * 0.015) * 0.15;
+      const offsetY = Math.cos(t * 0.3 + y * 0.015) * 0.15;
+      const z1 = Math.sin(θ);
+      const z2 = Math.sin(θ + Math.PI);
       const idx = Math.floor(y / bpStep) % 4;
-      bps.push({ y, idx, cIdx: COMP[idx],
-        x1: cx + r * Math.cos(θ),
-        x2: cx + r * Math.cos(θ + Math.PI),
-        z1, z2, avgZ: (z1 + z2) / 2 });
+      bps.push({
+        y: y + offsetY,
+        idx,
+        cIdx: COMP[idx],
+        x1: cx + r * Math.cos(θ) + offsetX,
+        x2: cx + r * Math.cos(θ + Math.PI) + offsetX,
+        z1,
+        z2,
+        avgZ: (z1 + z2) / 2,
+      });
     }
 
-    const bpBack  = bps.filter(b => b.avgZ <  0);
-    const bpFront = bps.filter(b => b.avgZ >= 0);
+    const bpBack = bps.filter((b) => b.avgZ < 0);
+    const bpFront = bps.filter((b) => b.avgZ >= 0);
 
     /* ── Draw one base pair ── */
     function _drawBP(bp) {
-      const depthF = (bp.avgZ + 1) * 0.5;   /* 0 = far back, 1 = front */
+      const depthF = (bp.avgZ + 1) * 0.5; /* 0 = far back, 1 = front */
 
       /* Hydrogen-bond connecting rung */
       const rungA = 0.06 + depthF * 0.22;
-      const grad  = ctx.createLinearGradient(bp.x1, bp.y, bp.x2, bp.y);
-      grad.addColorStop(0,   `rgba(${BASES[bp.idx].r},${rungA})`);
+      const grad = ctx.createLinearGradient(bp.x1, bp.y, bp.x2, bp.y);
+      grad.addColorStop(0, `rgba(${BASES[bp.idx].r},${rungA})`);
       grad.addColorStop(0.5, `rgba(200,220,255,${rungA * 0.5})`);
-      grad.addColorStop(1,   `rgba(${BASES[bp.cIdx].r},${rungA})`);
+      grad.addColorStop(1, `rgba(${BASES[bp.cIdx].r},${rungA})`);
       ctx.beginPath();
       ctx.moveTo(bp.x1, bp.y);
       ctx.lineTo(bp.x2, bp.y);
       ctx.strokeStyle = grad;
-      ctx.lineWidth   = 1 + depthF * 1.2;
+      ctx.lineWidth = 1 + depthF * 1.2;
       ctx.stroke();
 
       /* Nucleotide spheres */
       [
-        { x: bp.x1, z: bp.z1, base: BASES[bp.idx]  },
+        { x: bp.x1, z: bp.z1, base: BASES[bp.idx] },
         { x: bp.x2, z: bp.z2, base: BASES[bp.cIdx] },
       ].forEach(({ x, z, base }) => {
         const depth = (z + 1) * 0.5;
-        const radius  = 4 + depth * 6;          /* 4–10 px */
-        const alpha   = 0.25 + depth * 0.65;    /* 0.25–0.90 */
+        const radius = 4 + depth * 6; /* 4–10 px */
+        const alpha = 0.25 + depth * 0.65; /* 0.25–0.90 */
         const [rr, gg, bb] = base.r;
 
         /* wide outer glow */
         const glow = ctx.createRadialGradient(x, bp.y, 0, x, bp.y, radius * 3.2);
-        glow.addColorStop(0,   `rgba(${rr},${gg},${bb},${alpha * 0.35})`);
+        glow.addColorStop(0, `rgba(${rr},${gg},${bb},${alpha * 0.35})`);
         glow.addColorStop(0.5, `rgba(${rr},${gg},${bb},${alpha * 0.12})`);
-        glow.addColorStop(1,   `rgba(${rr},${gg},${bb},0)`);
-        ctx.beginPath(); ctx.arc(x, bp.y, radius * 3.2, 0, Math.PI * 2);
-        ctx.fillStyle = glow; ctx.fill();
+        glow.addColorStop(1, `rgba(${rr},${gg},${bb},0)`);
+        ctx.beginPath();
+        ctx.arc(x, bp.y, radius * 3.2, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
 
         /* mid halo */
         const halo = ctx.createRadialGradient(x, bp.y, 0, x, bp.y, radius * 1.8);
-        halo.addColorStop(0,   `rgba(${rr},${gg},${bb},${alpha * 0.6})`);
-        halo.addColorStop(1,   `rgba(${rr},${gg},${bb},0)`);
-        ctx.beginPath(); ctx.arc(x, bp.y, radius * 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = halo; ctx.fill();
+        halo.addColorStop(0, `rgba(${rr},${gg},${bb},${alpha * 0.6})`);
+        halo.addColorStop(1, `rgba(${rr},${gg},${bb},0)`);
+        ctx.beginPath();
+        ctx.arc(x, bp.y, radius * 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = halo;
+        ctx.fill();
 
         /* core sphere */
-        const sphere = ctx.createRadialGradient(x - radius * 0.3, bp.y - radius * 0.3, radius * 0.1, x, bp.y, radius);
-        sphere.addColorStop(0,   `rgba(255,255,255,${alpha * 0.55})`);
+        const sphere = ctx.createRadialGradient(
+          x - radius * 0.3,
+          bp.y - radius * 0.3,
+          radius * 0.1,
+          x,
+          bp.y,
+          radius
+        );
+        sphere.addColorStop(0, `rgba(255,255,255,${alpha * 0.55})`);
         sphere.addColorStop(0.4, `rgba(${rr},${gg},${bb},${alpha})`);
-        sphere.addColorStop(1,   `rgba(${Math.max(0,rr-60)},${Math.max(0,gg-60)},${Math.max(0,bb-60)},${alpha})`);
-        ctx.beginPath(); ctx.arc(x, bp.y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = sphere; ctx.fill();
+        sphere.addColorStop(
+          1,
+          `rgba(${Math.max(0, rr - 60)},${Math.max(0, gg - 60)},${Math.max(0, bb - 60)},${alpha})`
+        );
+        ctx.beginPath();
+        ctx.arc(x, bp.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = sphere;
+        ctx.fill();
 
         /* base letter label — only on front-facing atoms */
         if (depth > 0.55 && radius > 6.5) {
           const fs = Math.round(radius * 0.95);
-          ctx.font        = `700 ${fs}px -apple-system,sans-serif`;
-          ctx.textAlign   = 'center';
-          ctx.textBaseline= 'middle';
-          ctx.fillStyle   = `rgba(255,255,255,${alpha * 0.9})`;
+          ctx.font = `700 ${fs}px -apple-system,sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = `rgba(255,255,255,${alpha * 0.9})`;
           ctx.fillText(base.label, x, bp.y);
         }
       });
@@ -130,35 +158,36 @@ OmicsLab.HomeHero = (function () {
       if (pts.length < 2) return;
       /* Draw as series of short bezier segments, width = f(z) */
       for (let i = 1; i < pts.length; i++) {
-        const p   = pts[i], pp = pts[i - 1];
-        const z   = (p.z + pp.z) / 2;
-        const depth   = (z + 1) * 0.5;
-        const alpha   = alphaBase + depth * 0.72;
-        const lw      = 1.5 + depth * 7;   /* 1.5 – 8.5 px */
+        const p = pts[i],
+          pp = pts[i - 1];
+        const z = (p.z + pp.z) / 2;
+        const depth = (z + 1) * 0.5;
+        const alpha = alphaBase + depth * 0.72;
+        const lw = 1.5 + depth * 7; /* 1.5 – 8.5 px */
 
         /* strand gradient — lighter highlight on top face */
-        const perp    = lw * 0.5;
+        const perp = lw * 0.5;
         const gStrand = ctx.createLinearGradient(pp.x - perp, pp.y, pp.x + perp, pp.y);
-        gStrand.addColorStop(0,   `rgba(${rgb},${alpha * 0.5})`);
-        gStrand.addColorStop(0.35,`rgba(255,255,255,${alpha * 0.25})`);
-        gStrand.addColorStop(0.65,`rgba(${rgb},${alpha})`);
-        gStrand.addColorStop(1,   `rgba(${rgb},${alpha * 0.5})`);
+        gStrand.addColorStop(0, `rgba(${rgb},${alpha * 0.5})`);
+        gStrand.addColorStop(0.35, `rgba(255,255,255,${alpha * 0.25})`);
+        gStrand.addColorStop(0.65, `rgba(${rgb},${alpha})`);
+        gStrand.addColorStop(1, `rgba(${rgb},${alpha * 0.5})`);
 
         ctx.beginPath();
         ctx.moveTo(pp.x, pp.y);
-        ctx.lineTo(p.x,  p.y);
+        ctx.lineTo(p.x, p.y);
         ctx.strokeStyle = gStrand;
-        ctx.lineWidth   = lw;
-        ctx.lineCap     = 'round';
+        ctx.lineWidth = lw;
+        ctx.lineCap = 'round';
         ctx.stroke();
 
         /* bright specular highlight line */
         if (depth > 0.55) {
           ctx.beginPath();
           ctx.moveTo(pp.x, pp.y);
-          ctx.lineTo(p.x,  p.y);
+          ctx.lineTo(p.x, p.y);
           ctx.strokeStyle = `rgba(${highlight},${depth * 0.28})`;
-          ctx.lineWidth   = lw * 0.22;
+          ctx.lineWidth = lw * 0.22;
           ctx.stroke();
         }
       }
@@ -166,7 +195,7 @@ OmicsLab.HomeHero = (function () {
 
     /* ── Depth-ordered render: back BPs → strands → front BPs ── */
     bpBack.forEach(_drawBP);
-    _drawStrand(s1, '63,185,80',  0.08, '200,255,210');
+    _drawStrand(s1, '63,185,80', 0.08, '200,255,210');
     _drawStrand(s2, '88,166,255', 0.08, '200,230,255');
     bpFront.forEach(_drawBP);
   }
@@ -186,7 +215,10 @@ OmicsLab.HomeHero = (function () {
 
   /* ── Stop on navigation away ── */
   function stop() {
-    if (_raf) { cancelAnimationFrame(_raf); _raf = null; }
+    if (_raf) {
+      cancelAnimationFrame(_raf);
+      _raf = null;
+    }
   }
 
   /* ── Central dogma section ── */
@@ -326,14 +358,70 @@ OmicsLab.HomeHero = (function () {
   /* ── Platform categories grid ── */
   function _catsHtml() {
     const CATS = [
-      { name:'Lab Simulations',          n:14, c:'#00C4A0', p:'lab',            ic:'flask',        d:'14 wet-lab protocols · live QC · error cascade' },
-      { name:'Genomics & Sequencing',    n:12, c:'#58a6ff', p:'analysis',       ic:'layers',       d:'FASTQ QC · alignment · variant calling · assembly' },
-      { name:'Variant & Clinical',       n:7,  c:'#bc8cff', p:'variantinterp',  ic:'dna',          d:'ACMG classification · GWAS · pharmacogenomics' },
-      { name:'Expression & Proteomics',  n:6,  c:'#f85149', p:'heatmap',        ic:'activity',     d:'Heatmaps · RNA atlas · single-cell · mass-spec' },
-      { name:'Bioinformatics Pipelines', n:8,  c:'#e3b341', p:'pipeline-visual',ic:'git-branch',   d:'Pipeline builder · terminal · script generator' },
-      { name:'African Genomics',         n:10, c:'#f97316', p:'africa',         ic:'globe',        d:'Africa Hub · H3Africa · population structure' },
-      { name:'Research & Writing',       n:8,  c:'#58a6ff', p:'grant',          ic:'file-text',    d:'Lab notebook · grant writer · thesis coach' },
-      { name:'Training & Community',     n:10, c:'#00C4A0', p:'certification',  ic:'award',        d:'Certification · quiz battle · case files · social' },
+      {
+        name: 'Lab Simulations',
+        n: 14,
+        c: '#00C4A0',
+        p: 'lab',
+        ic: 'flask',
+        d: '14 wet-lab protocols · live QC · error cascade',
+      },
+      {
+        name: 'Genomics & Sequencing',
+        n: 12,
+        c: '#58a6ff',
+        p: 'analysis',
+        ic: 'layers',
+        d: 'FASTQ QC · alignment · variant calling · assembly',
+      },
+      {
+        name: 'Variant & Clinical',
+        n: 7,
+        c: '#bc8cff',
+        p: 'variantinterp',
+        ic: 'dna',
+        d: 'ACMG classification · GWAS · pharmacogenomics',
+      },
+      {
+        name: 'Expression & Proteomics',
+        n: 6,
+        c: '#f85149',
+        p: 'heatmap',
+        ic: 'activity',
+        d: 'Heatmaps · RNA atlas · single-cell · mass-spec',
+      },
+      {
+        name: 'Bioinformatics Pipelines',
+        n: 8,
+        c: '#e3b341',
+        p: 'pipeline-visual',
+        ic: 'git-branch',
+        d: 'Pipeline builder · terminal · script generator',
+      },
+      {
+        name: 'African Genomics',
+        n: 10,
+        c: '#f97316',
+        p: 'africa',
+        ic: 'globe',
+        d: 'Africa Hub · H3Africa · population structure',
+      },
+      {
+        name: 'Research & Writing',
+        n: 8,
+        c: '#58a6ff',
+        p: 'grant',
+        ic: 'file-text',
+        d: 'Lab notebook · grant writer · thesis coach',
+      },
+      {
+        name: 'Training & Community',
+        n: 10,
+        c: '#00C4A0',
+        p: 'certification',
+        ic: 'award',
+        d: 'Certification · quiz battle · case files · social',
+      },
     ];
 
     return `
@@ -344,7 +432,8 @@ OmicsLab.HomeHero = (function () {
     <p class="hv-section-sub">Every module is interconnected — progress in one domain deepens understanding across all others.</p>
 
     <div class="hv-cats-grid">
-      ${CATS.map(c => `
+      ${CATS.map(
+        (c) => `
         <button class="hv-cat-card" onclick="OmicsLab.Router.navigate('${c.p}')" style="--cc:${c.c}">
           <div class="hv-cat-top">
             <div class="hv-cat-icon">${OmicsLab.Icons?.svg(c.ic, 18) || ''}</div>
@@ -352,7 +441,8 @@ OmicsLab.HomeHero = (function () {
           </div>
           <div class="hv-cat-name">${c.name}</div>
           <div class="hv-cat-desc">${c.d}</div>
-        </button>`).join('')}
+        </button>`
+      ).join('')}
     </div>
 
     <div class="hv-cats-footer">
@@ -419,7 +509,7 @@ OmicsLab.HomeHero = (function () {
           <div class="hv-canvas-glow-bot"></div>
         </div>
         <div class="hv-dna-legend">
-          ${BASES.map(b => `<span class="hv-leg"><span class="hv-leg-dot" style="background:${b.c};box-shadow:0 0 6px ${b.c}88"></span>${b.full} <em>(${b.label})</em></span>`).join('')}
+          ${BASES.map((b) => `<span class="hv-leg"><span class="hv-leg-dot" style="background:${b.c};box-shadow:0 0 6px ${b.c}88"></span>${b.full} <em>(${b.label})</em></span>`).join('')}
         </div>
         <div class="hv-dna-pairs-note">A–T &nbsp;·&nbsp; G–C &nbsp; Watson-Crick base pairing</div>
       </div>
@@ -463,10 +553,10 @@ OmicsLab.HomeHero = (function () {
     function _resize() {
       const wrap = canvas.parentElement;
       if (!wrap) return;
-      const w = wrap.clientWidth  || 320;
+      const w = wrap.clientWidth || 320;
       const h = wrap.clientHeight || 520;
       if (canvas.width !== w || canvas.height !== h) {
-        canvas.width  = w;
+        canvas.width = w;
         canvas.height = h;
       }
     }
