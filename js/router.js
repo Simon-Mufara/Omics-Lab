@@ -1899,6 +1899,7 @@ OmicsLab.Router = (function () {
         <div class="prh-tagline">${p.tagline || ''}</div>
       </div>`;
     OmicsLab.RealData?.render(page);
+    OmicsLab.DataWorkspace?.render(page);
   }
 
   /* ─── Render full home page content ─── */

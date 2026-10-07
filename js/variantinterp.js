@@ -997,6 +997,16 @@ OmicsLab.VariantInterp = (function () {
         if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) _interpret();
       });
     }
+    document.addEventListener('omicslab:data-ready', (event) => {
+      if (event.detail?.kind !== 'VCF' || !event.detail.text || !ta) return;
+      const firstVariant = event.detail.text.split(/\r?\n/).find((line) => line && !line.startsWith('#'));
+      if (firstVariant) {
+        ta.value = firstVariant;
+        ta.focus();
+        const output = document.getElementById('vi-output');
+        if (output) output.insertAdjacentHTML('afterbegin', '<div class="vi-import-note">Imported VCF line loaded. Review it, then select Interpret Variant.</div>');
+      }
+    }, { once: false });
   }
 
   return { init, _interpret, _loadExample, _askAI, _generateReport };
