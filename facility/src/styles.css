@@ -29,4 +29,8 @@ body { min-height: 100vh; }
 .facility-procedure div { display: flex; gap: .35rem; flex-wrap: wrap; }
 .facility-procedure button { border: 1px solid #40526e; border-radius: 999px; background: #111d2e; color: #cbd5e1; padding: .3rem .55rem; cursor: pointer; }
 .facility-procedure button:hover, .facility-procedure button:focus-visible { border-color: #00c4a0; color: #00c4a0; }
+.facility-interaction { position: fixed; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: .35rem; width: min(22rem, calc(100vw - 2rem)); padding: 1rem; border: 1px solid #00c4a0; border-radius: 10px; background: rgba(7,16,29,.96); box-shadow: 0 12px 40px rgba(0,0,0,.45); }
+.facility-interaction strong { color: #00c4a0; }
+.facility-interaction span { color: #d8e2ef; font-size: .82rem; line-height: 1.4; }
+.facility-interaction button { justify-self: start; margin-top: .3rem; border: 1px solid #40526e; border-radius: 999px; background: #111d2e; color: #cbd5e1; padding: .3rem .65rem; cursor: pointer; }
 @media (max-width: 700px) { .facility-fallback { right: .5rem; left: .5rem; bottom: 4.6rem; max-width: none; max-height: 30vh; overflow: auto; } .facility-minimap { left: .5rem; right: .5rem; top: 5.6rem; width: auto; } .facility-ppe { right: .5rem; left: .5rem; top: auto; bottom: .5rem; } .facility-lock-prompt { display: none; } }

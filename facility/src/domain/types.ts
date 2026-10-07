@@ -19,6 +19,31 @@ export type RoomDefinition = {
   requiredPpe?: PpeItem[];
 };
 
+export type EquipmentKind = 'intake-desk' | 'centrifuge' | 'freezer' | 'clean-bench' | 'thermocycler' | 'sequencer' | 'workstation' | 'chair';
+
+export type EquipmentDefinition = {
+  id: string;
+  roomId: RoomId;
+  label: string;
+  kind: EquipmentKind;
+  position: [number, number, number];
+  scale?: number;
+  color?: string;
+  prompt: string;
+};
+
+export type StaffDefinition = {
+  id: string;
+  roomId: RoomId;
+  name: string;
+  role: string;
+  position: [number, number, number];
+  patrolRange: number;
+  speed: number;
+  phase: number;
+  color: string;
+};
+
 export type FacilityProgress = {
   roomId: RoomId;
   ppe: PpeItem[];
