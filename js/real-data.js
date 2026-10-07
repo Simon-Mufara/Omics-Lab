@@ -28,6 +28,16 @@ OmicsLab.RealData = (function () {
       { label: 'SRA Run Selector', description: 'Choose runs and download metadata', url: 'https://www.ncbi.nlm.nih.gov/Traces/study/' },
       { label: 'Galaxy FASTQ QC', description: 'Run FastQC and MultiQC on real reads', url: 'https://usegalaxy.org/' },
     ],
+    'genome-browser': [
+      { label: 'Ensembl Region', description: 'Inspect reference sequence and annotations', url: 'https://www.ensembl.org/index.html' },
+      { label: 'ClinVar', description: 'Compare variants with public submissions', url: 'https://www.ncbi.nlm.nih.gov/clinvar/' },
+      { label: 'gnomAD', description: 'Review population frequencies', url: 'https://gnomad.broadinstitute.org/' },
+    ],
+    datasets: [
+      { label: 'NCBI SRA', description: 'Public sequencing studies and runs', url: 'https://www.ncbi.nlm.nih.gov/sra' },
+      { label: 'ENA Browser', description: 'Public reads with downloadable metadata', url: 'https://www.ebi.ac.uk/ena/browser/home' },
+      { label: 'GEO', description: 'Public expression studies', url: 'https://www.ncbi.nlm.nih.gov/geo/' },
+    ],
     'pipeline-gen': [
       { label: 'nf-core pipelines', description: 'Download tested Nextflow workflows', url: 'https://nf-co.re/pipelines' },
       { label: 'Snakemake workflows', description: 'Reusable workflow catalog', url: 'https://snakemake.github.io/snakemake-workflow-catalog/' },
@@ -111,4 +121,3 @@ OmicsLab.RealData = (function () {
 
   return { render, linksFor };
 })();
-
