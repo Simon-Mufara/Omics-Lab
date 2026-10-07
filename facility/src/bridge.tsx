@@ -46,6 +46,9 @@ export function createFacilityBridge(): FacilityBridge {
         roomId: state.roomId,
         ppe: state.ppe,
         completedObjectives: state.completedObjectives,
+        sample: state.sample,
+        notebook: state.notebook,
+        score: state.score,
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
       return progress;
@@ -71,6 +74,17 @@ export function loadSavedFacilityProgress(): FacilityProgress | null {
       completedObjectives: parsed.completedObjectives.filter(
         (objective): objective is string => typeof objective === 'string',
       ),
+      sample: parsed.sample ?? {
+        id: 'OMX-2026-001',
+        type: 'whole-blood',
+        volumeMl: 6,
+        temperatureC: 22,
+        location: parsed.roomId as FacilityProgress['roomId'],
+        custody: ['Restored from saved progress'],
+        status: 'received',
+      },
+      notebook: Array.isArray(parsed.notebook) ? parsed.notebook : [],
+      score: typeof parsed.score === 'number' ? parsed.score : 0,
     };
   } catch {
     return null;

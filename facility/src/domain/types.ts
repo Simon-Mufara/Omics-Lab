@@ -23,4 +23,24 @@ export type FacilityProgress = {
   roomId: RoomId;
   ppe: PpeItem[];
   completedObjectives: string[];
+  sample: SampleState;
+  notebook: NotebookEntry[];
+  score: number;
+};
+
+export type SampleState = {
+  id: string;
+  type: 'whole-blood' | 'saliva' | 'tissue';
+  volumeMl: number;
+  temperatureC: number;
+  location: RoomId;
+  custody: string[];
+  status: 'received' | 'collected' | 'processing' | 'sequencing' | 'complete';
+};
+
+export type NotebookEntry = {
+  id: string;
+  message: string;
+  severity: 'info' | 'warning' | 'error';
+  timestamp: string;
 };

@@ -33,6 +33,13 @@ OmicsLab.Router = (function () {
          sections (see navigate() below) — it owns no sections of its own. */
       sections: [],
     },
+    facility: {
+      label: '3D Facility',
+      icon: 'box',
+      color: '#00C4A0',
+      tagline: 'Explore the connected genomics facility and practise the sample-to-sequence workflow',
+      sections: ['facility-section'],
+    },
     sandbox: {
       label: 'Pipeline Sandbox',
       icon: 'hexagon',
@@ -77,8 +84,13 @@ OmicsLab.Router = (function () {
       label: 'Research',
       icon: 'search',
       color: '#bc8cff',
-      tagline: 'Design studies, submit metadata, run workshops',
-      sections: ['research-mode-section', 'repro-hub-section', 'workshop-section'],
+      tagline: 'Write research in your own order, then use tools and datasets when you need them',
+      sections: [
+        'research-workspace-section',
+        'research-mode-section',
+        'repro-hub-section',
+        'workshop-section',
+      ],
     },
     africa: {
       label: 'Africa',
@@ -285,6 +297,13 @@ OmicsLab.Router = (function () {
       tagline:
         'African genomics research library — browse, search, save, cite, and discuss 10+ landmark papers across WGS, outbreak genomics, and population genetics',
       sections: ['paperhub-section'],
+    },
+    'research-workspace': {
+      label: 'Research Workspace',
+      icon: 'file-text',
+      color: '#00C4A0',
+      tagline: 'Write papers, search literature, and keep your research workflow in one place',
+      sections: ['research-workspace-section'],
     },
     profile: {
       label: 'Profile',
@@ -1067,6 +1086,7 @@ OmicsLab.Router = (function () {
     nexus: ['css/nexus.css', 'css/community.css', 'css/social.css'],
     teams: ['css/teams.css'],
     paperhub: ['css/paperhub.css'],
+    'research-workspace': ['css/research-workspace.css'],
     pubmed: ['css/pubmed.css'],
     'gene-lookup': ['css/gene-lookup.css'],
     protein: ['css/protein-viewer.css'],
@@ -1681,6 +1701,8 @@ OmicsLab.Router = (function () {
     }
     if (page === 'paperhub' && OmicsLab.PaperHub)
       _si(OmicsLab.PaperHub, 'paperhub-section', 'PaperHub');
+    if ((page === 'research' || page === 'research-workspace') && OmicsLab.ResearchWorkspace)
+      _si(OmicsLab.ResearchWorkspace, 'research-workspace-section', 'Research Workspace');
     if (page === 'teams' && OmicsLab.Teams) {
       _si(OmicsLab.Teams, 'teams-section', 'Teams');
       setTimeout(() => OmicsLab.Calendar?.init(), 200);

@@ -729,7 +729,28 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.6rem); }
 /* Step progress bar */
 .step-progress {
   display: flex; align-items: center; gap: 0.5rem;
-  font-size: 0.78rem; color: var(--text-muted);
+  font-size: 0.78rem;   color: var(--text-muted);
+}
+
+.facility-launch-card {
+  overflow: hidden;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
+  border-radius: 1rem;
+  background: #07101d;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.22);
+}
+
+.facility-launch-card iframe {
+  display: block;
+  width: 100%;
+  min-height: min(76vh, 54rem);
+  border: 0;
+}
+
+@media (max-width: 700px) {
+  .facility-launch-card iframe {
+    min-height: 78vh;
+  }
 }
 .step-dots {
   display: flex; gap: 4px;
@@ -2936,6 +2957,10 @@ mark.qa-highlight {
 .research-mode-section {
   padding: 4rem 2rem; max-width: 1100px; margin: 0 auto; width: 100%;
 }
+.rm-help { display: block; margin-top: 0.35rem; color: var(--text-muted); font-size: 0.78rem; }
+.rm-select[multiple] { min-height: 8rem; }
+.rm-writing-note { margin: 1rem 0 0; padding: 0.8rem 1rem; border-left: 3px solid var(--success); background: rgba(0, 196, 160, 0.08); color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+.rm-writing-note strong { color: var(--text); }
 
 /* ── HPC Training Layer ───────────────────────────────────────── */
 .hpc-training-section {
