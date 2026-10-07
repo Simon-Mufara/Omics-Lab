@@ -1,0 +1,73 @@
+{
+  "module_name": "Omics-Wide Association Studies",
+  "description": "Comprehensive guide to association studies from GWAS to multi-omic analyses",
+  "topics": [
+    {
+      "id": "t1-gwas",
+      "number": 1,
+      "title": "GWAS (Genome-Wide Association Studies)",
+      "shortcode": "T1",
+      "question": "Which common variants contribute to disease?",
+      "focus": "SNP-trait association across genome",
+      "workflow": "QC → association → significance → annotation",
+      "tools": [
+        { "id": "gwas-qc", "name": "GWAS QC Module" },
+        { "id": "manhattan-plot", "name": "Manhattan Plot Builder" },
+        { "id": "locus-annotator", "name": "Locus Annotation Tool" }
+      ],
+      "contentLinks": {
+        "glossary": ["GWAS", "SNP", "association", "locus", "FDR"],
+        "figures": ["manhattan-plot", "qq-plot", "ld-heatmap"],
+        "equations": ["chiSq-test", "odds-ratio", "fdr-correction"],
+        "casesStudies": ["gwas-schizophrenia", "gwas-t2d"]
+      },
+      "difficulty": "intermediate",
+      "prerequisites": ["statistics", "population-genetics"],
+      "estimatedTime": 45,
+      "memoryHooks": [
+        "GWAS = 'Shotgun genome search with millions of gunshots'",
+        "Manhattan plot = 'If SNP is significant, it's a skyscraper'"
+      ],
+      "commonErrors": [
+        {
+          "error": "Forgetting to correct for multiple testing",
+          "consequence": "False positives (p < 0.05 for 1M SNPs → 50,000 false hits)",
+          "fix": "Use FDR (BH) or Bonferroni correction"
+        }
+      ]
+    },
+    {
+      "id": "t2-heritability",
+      "number": 2,
+      "title": "Heritability Estimation (LDSC, GREML)",
+      "shortcode": "T2",
+      "question": "How much of trait variation is due to genetics?",
+      "focus": "Quantifying genetic contribution to trait variance",
+      "workflow": "Genotype data → relatedness matrix → variance component estimation",
+      "tools": [
+        { "id": "heritability-calculator", "name": "Heritability Calculator" },
+        { "id": "ldsc-tool", "name": "LD Score Regression Tool" }
+      ],
+      "contentLinks": {
+        "glossary": ["heritability", "h2", "LDSC", "GREML", "SNP-h2"],
+        "figures": ["heritability-estimates", "ld-score-plot"],
+        "equations": ["falconer-formula", "ldsc-equation", "gremal-equation"],
+        "casesStudies": ["height-heritability", "bmi-heritability"]
+      },
+      "difficulty": "advanced",
+      "prerequisites": ["statistics", "population-genetics", "linear-algebra"],
+      "estimatedTime": 50,
+      "memoryHooks": [
+        "Heritability = proportion of variance due to genetics",
+        "LDSC uses summary statistics, GREML uses individual-level data"
+      ],
+      "commonErrors": [
+        {
+          "error": "Confusing broad-sense (H2) and narrow-sense (h2) heritability",
+          "consequence": "Misinterpreting genetic vs environmental contributions",
+          "fix": "h2 = VA/VP (additive genetic variance/total phenotypic variance)"
+        }
+      ]
+    }
+  ]
+}

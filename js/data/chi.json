@@ -1,0 +1,70 @@
+{
+  "module_name": "Computational Health Informatics",
+  "description": "Guide to drug metabolism, pharmacokinetics, pharmacogenomics, and AI in drug discovery",
+  "topics": [
+    {
+      "id": "chi-1-drug-metabolism",
+      "number": 1,
+      "title": "Drug Metabolism (Phase I/II/III)",
+      "question": "How is a drug modified and eliminated from the body?",
+      "focus": "Enzymatic modification and clearance of xenobiotics",
+      "workflow": "Substrate → Phase I (oxidation/reduction/hydrolysis) → Phase II (conjugation) → Elimination",
+      "tools": [
+        { "id": "cyp450-simulator", "name": "CYP450 Activity Visualizer" },
+        { "id": "metabolism-calculator", "name": "Metabolism Calculator" }
+      ],
+      "contentLinks": {
+        "glossary": ["CYP450", "Phase I", "Phase II", "metabolite", "clearance"],
+        "figures": ["cyp450-cycle", "phase-reactions"],
+        "equations": ["michaelis-menten", "clearance-equation"],
+        "casesStudies": ["warfarin-metabolism", "clopidogrel-activation"]
+      },
+      "difficulty": "intermediate",
+      "prerequisites": ["biochemistry", "basic-biology"],
+      "estimatedTime": 40,
+      "memoryHooks": [
+        "Phase I: functionalization (adds or exposes a functional group)",
+        "Phase II: conjugation (adds a large hydrophilic group)"
+      ],
+      "commonErrors": [
+        {
+          "error": "Assuming all drugs follow the same metabolic pathway",
+          "consequence": "Incorrect prediction of metabolites and drug interactions",
+          "fix": "Consider enzyme polymorphisms and varying substrate specificity"
+        }
+      ]
+    },
+    {
+      "id": "chi-2-pk",
+      "number": 2,
+      "title": "Pharmacokinetics (PK)",
+      "question": "What does the body do to the drug over time?",
+      "focus": "ADME: Absorption, Distribution, Metabolism, Excretion",
+      "workflow": "Drug input → absorption into bloodstream → distribution to tissues → metabolism → excretion",
+      "tools": [
+        { "id": "pk-calculator", "name": "PK Parameter Estimator" },
+        { "id": "adme-simulator", "name": "ADME Process Simulator" }
+      ],
+      "contentLinks": {
+        "glossary": ["AUC", "half-life", "clearance", "volume of distribution", "bioavailability"],
+        "figures": ["concentration-time-curve", "multi-compartment-model"],
+        "equations": ["auc-equation", "half-life-equation", "clearance-equation"],
+        "casesStudies": ["oral-admin-pk", "iv-admin-pk"]
+      },
+      "difficulty": "intermediate",
+      "prerequisites": ["basic-math", "exponential-functions"],
+      "estimatedTime": 45,
+      "memoryHooks": [
+        "AUC = total drug exposure over time",
+        "Half-life = time for concentration to reduce by half"
+      ],
+      "commonErrors": [
+        {
+          "error": "Ignoring distribution phase when calculating half-life",
+          "consequence": "Overestimation of drug elimination speed",
+          "fix": "Use terminal slope of log-concentration vs time curve"
+        }
+      ]
+    }
+  ]
+}
