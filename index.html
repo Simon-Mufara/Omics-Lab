@@ -33,7 +33,7 @@
     "logo": "https://omicsdatalab.tech/og-image.png",
     "description": "Africa's free omics training platform — 14 interactive workflows, 20 real instruments, bioinformatics pipelines. Built for African genomics researchers.",
     "areaServed": {"@type": "Place", "name": "Africa"},
-    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock"},
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "ZAR", "availability": "https://schema.org/InStock"},
     "hasCourse": [
       {"@type": "Course", "name": "RNA-seq Analysis", "description": "FastQC → STAR → featureCounts → DESeq2 pipeline"},
       {"@type": "Course", "name": "Whole Genome Sequencing", "description": "FastQC → BWA-MEM → GATK4 variant calling"},
@@ -79,6 +79,7 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/real-data.css">
   <link rel="stylesheet" href="css/enhancements.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/mobile-nav.css">
@@ -2288,6 +2289,7 @@
 
 <!-- OmicsLab service layer — must run before feature modules -->
 <script defer src="js/config.js"></script>
+<script defer src="js/real-data.js"></script>
 <script defer src="js/utils.js"></script>
 <script defer src="js/db.js"></script>
 

@@ -1898,6 +1898,7 @@ OmicsLab.Router = (function () {
         </div>
         <div class="prh-tagline">${p.tagline || ''}</div>
       </div>`;
+    OmicsLab.RealData?.render(page);
   }
 
   /* ─── Render full home page content ─── */
