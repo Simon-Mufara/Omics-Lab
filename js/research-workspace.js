@@ -5,6 +5,7 @@ window.OmicsLab = window.OmicsLab || {};
 OmicsLab.ResearchWorkspace = (function () {
   const KEY = 'omicslab_research_workspace_v1';
   const DRAFT_KEY = 'omicslab_research_draft_v1';
+  const SHARED_KEY = 'omicslab_shared_papers_v1';
   const AUTOSAVE_MS = 700;
   let saveTimer = null;
   let activeId = null;
@@ -93,6 +94,12 @@ OmicsLab.ResearchWorkspace = (function () {
       title: 'Untitled research paper',
       authors: '',
       keywords: '',
+      studyType: 'Original research',
+      journalTarget: '',
+      preregistration: '',
+      dataAvailability: '',
+      codeAvailability: '',
+      shareStatus: 'private',
       abstract: '',
       sections: Object.fromEntries(SECTIONS.map(([id]) => [id, ''])),
       references: '',
@@ -113,6 +120,15 @@ OmicsLab.ResearchWorkspace = (function () {
 
   function papers() {
     return read(KEY, []);
+  }
+
+  function sharedPapers() { return read(SHARED_KEY, []); }
+
+  function updateSharing(paper, status) {
+    paper.shareStatus = status;
+    const shared = sharedPapers().filter((item) => item.id !== paper.id);
+    if (status === 'shared') write(SHARED_KEY, [paper, ...shared]);
+    else write(SHARED_KEY, shared);
   }
 
   function currentDraft() {
@@ -208,6 +224,12 @@ OmicsLab.ResearchWorkspace = (function () {
       title: existing.title || '',
       authors: existing.authors || '',
       keywords: existing.keywords || '',
+      studyType: existing.studyType || 'Original research',
+      journalTarget: existing.journalTarget || '',
+      preregistration: existing.preregistration || '',
+      dataAvailability: existing.dataAvailability || '',
+      codeAvailability: existing.codeAvailability || '',
+      shareStatus: existing.shareStatus || 'private',
       sections: { ...(existing.sections || {}) },
       references: existing.references || '',
     };
@@ -267,6 +289,17 @@ OmicsLab.ResearchWorkspace = (function () {
           <label class="rw-label">Authors<input data-rw-field="authors" value="${escapeHtml(paper.authors)}" placeholder="Names and affiliations"></label>
           <label class="rw-label">Keywords<input data-rw-field="keywords" value="${escapeHtml(paper.keywords)}" placeholder="omics, genomics, Africa"></label>
         </div>
+        <details class="rw-metadata"><summary>Study metadata & reproducibility</summary>
+          <div class="rw-grid-two">
+            <label class="rw-label">Study type<select data-rw-field="studyType"><option ${paper.studyType === 'Original research' ? 'selected' : ''}>Original research</option><option ${paper.studyType === 'Systematic review' ? 'selected' : ''}>Systematic review</option><option ${paper.studyType === 'Meta-analysis' ? 'selected' : ''}>Meta-analysis</option><option ${paper.studyType === 'Methods paper' ? 'selected' : ''}>Methods paper</option><option ${paper.studyType === 'Case study' ? 'selected' : ''}>Case study</option></select></label>
+            <label class="rw-label">Target journal<input data-rw-field="journalTarget" value="${escapeHtml(paper.journalTarget)}" placeholder="Optional journal or style"></label>
+          </div>
+          <div class="rw-grid-two">
+            <label class="rw-label">Preregistration / protocol<input data-rw-field="preregistration" value="${escapeHtml(paper.preregistration)}" placeholder="OSF, PROSPERO, protocol DOI"></label>
+            <label class="rw-label">Data availability<input data-rw-field="dataAvailability" value="${escapeHtml(paper.dataAvailability)}" placeholder="Accession, repository, or access note"></label>
+          </div>
+          <label class="rw-label">Code and workflow availability<input data-rw-field="codeAvailability" value="${escapeHtml(paper.codeAvailability)}" placeholder="GitHub, workflow version, container or notebook"></label>
+        </details>
       </div>
       <div class="rw-format-toolbar" role="toolbar" aria-label="Document formatting">
         <button type="button" class="rw-tool-icon" data-rw-command="undo" title="Undo">↶</button>
@@ -297,6 +330,7 @@ OmicsLab.ResearchWorkspace = (function () {
       </div>
       <div class="rw-ruler" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <div class="rw-writing-heading"><div><span class="rw-eyebrow">Write in any order</span><h3>${currentLabel}</h3></div><span class="rw-progress">${completedCount}/${WRITING_SECTIONS.length} sections drafted</span></div>
+      <div class="rw-share-row"><span>${paper.shareStatus === 'shared' ? 'Shared with the OmicsLab community' : 'Private draft'}</span><button type="button" class="rw-secondary" id="rw-share">${paper.shareStatus === 'shared' ? 'Stop sharing' : 'Share paper'}</button></div>
       <label class="rw-label rw-focus-field">${currentLabel}<textarea data-rw-field="${current[0] === 'abstract' || current[0] === 'references' ? current[0] : `section.${current[0]}`}" rows="18" autofocus placeholder="Write your ${currentLabel.toLowerCase()} here...">${escapeHtml(currentValue)}</textarea></label>
       <div class="rw-section-actions">
         <button type="button" class="rw-secondary" id="rw-prev">← Previous</button>
@@ -307,6 +341,13 @@ OmicsLab.ResearchWorkspace = (function () {
     editor.querySelector('#rw-new').addEventListener('click', () => openPaper());
     editor.querySelector('#rw-export').addEventListener('click', exportMarkdown);
     editor.querySelector('#rw-print').addEventListener('click', () => window.print());
+    editor.querySelector('#rw-share').addEventListener('click', () => {
+      const next = collect(editor);
+      updateSharing(next, next.shareStatus === 'shared' ? 'private' : 'shared');
+      persist(next);
+      renderEditor(next);
+      OmicsLab.Toast?.show(next.shareStatus === 'shared' ? 'Paper shared with the community' : 'Paper is private again', 'success');
+    });
     editor.querySelector('#rw-template').addEventListener('change', (event) => {
       if (event.target.value) fromTemplate(event.target.value);
     });
@@ -394,7 +435,7 @@ OmicsLab.ResearchWorkspace = (function () {
   }
 
   function openPaper(id) {
-    const saved = id ? papers().find((paper) => paper.id === id) : null;
+    const saved = id ? (papers().find((paper) => paper.id === id) || sharedPapers().find((paper) => paper.id === id)) : null;
     const draft = !id && currentDraft();
     const paper = saved || draft || emptyPaper();
     activeId = paper.id;
@@ -434,12 +475,28 @@ OmicsLab.ResearchWorkspace = (function () {
   function openSearch(provider) {
     const query = document.getElementById('rw-search-query')?.value.trim();
     if (!query) return;
-    const urls = {
-      pubmed: `https://pubmed.ncbi.nlm.nih.gov/?term=${encodeURIComponent(query)}`,
-      google: `https://scholar.google.com/scholar?q=${encodeURIComponent(query)}`,
-      web: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-    };
-    window.open(urls[provider], '_blank', 'noopener,noreferrer');
+    if (provider !== 'pubmed') {
+      renderSearchResults([{ title: `${provider === 'google' ? 'Scholar' : 'Web'} search`, summary: 'External search providers cannot be embedded safely. Use PubMed inside OmicsLab or save this query to your paper.', url: `https://www.google.com/search?q=${encodeURIComponent(query)}` }]);
+      return;
+    }
+    const panel = document.getElementById('rw-search-results');
+    if (panel) panel.innerHTML = '<p class="rw-muted">Searching PubMed…</p>';
+    fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=6&term=${encodeURIComponent(query)}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const ids = data?.esearchresult?.idlist || [];
+        if (!ids.length) return renderSearchResults([{ title: 'No PubMed results', summary: 'Try a broader topic, gene, disease, or population term.' }]);
+        return fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&id=${ids.join(',')}`)
+          .then((response) => response.json())
+          .then((summary) => renderSearchResults(ids.map((id) => ({ title: summary.result?.[id]?.title || `PubMed article ${id}`, summary: summary.result?.[id]?.sortfirstauthor || 'PubMed record', url: `https://pubmed.ncbi.nlm.nih.gov/${id}/` }))));
+      })
+      .catch(() => renderSearchResults([{ title: 'PubMed is temporarily unavailable', summary: 'Your draft is safe. Try the search again shortly.' }]));
+  }
+
+  function renderSearchResults(results) {
+    const panel = document.getElementById('rw-search-results');
+    if (!panel) return;
+    panel.innerHTML = results.map((item) => `<article class="rw-result"><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.summary || '')}</small>${item.url ? `<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">Open record</a>` : ''}</article>`).join('');
   }
 
   function init() {
@@ -454,15 +511,26 @@ OmicsLab.ResearchWorkspace = (function () {
           <div class="rw-cloud-note">${signedIn ? 'Cloud sync ready' : 'Local-first autosave'}<br><small>${signedIn ? 'Your signed-in workspace syncs to Supabase' : 'Sign in to sync across devices'}</small>${signedIn ? '' : '<button class="rw-login-link" id="rw-login">Sign in for cloud sync</button>'}<span id="rw-data-attachment" class="rw-data-attachment" role="status"></span></div>
         </header>
         <div class="rw-search-bar">
-          <input id="rw-search-query" placeholder="Search literature without leaving your workspace" aria-label="Literature search query">
+          <input id="rw-search-query" placeholder="Search PubMed inside your workspace" aria-label="Literature search query">
           <button data-rw-search="pubmed">PubMed</button><button data-rw-search="google">Scholar</button><button data-rw-search="web">Web</button>
+          <div id="rw-search-results" class="rw-search-results" aria-live="polite"><p class="rw-muted">Search results will appear here without replacing your paper.</p></div>
         </div>
         <div class="rw-layout">
-          <aside class="rw-sidebar"><div class="rw-sidebar-title">My papers <button id="rw-new-side" aria-label="Create new paper">+</button></div><div id="rw-documents"></div><div class="rw-section-nav"><strong>Paper sections</strong><div id="rw-section-list"></div></div><div class="rw-shortcuts"><strong>Research shortcuts</strong><button onclick="OmicsLab.Router.navigate('paperhub')">PaperHub library</button><button onclick="OmicsLab.Router.navigate('labnotebook')">Lab notebook</button><button onclick="OmicsLab.Router.navigate('pubmed')">PubMed search</button><button onclick="OmicsLab.Router.navigate('datasets')">Datasets</button></div></aside>
+          <aside class="rw-sidebar"><div class="rw-sidebar-title">My papers <button id="rw-new-side" aria-label="Create new paper">+</button></div><div id="rw-documents"></div><div class="rw-section-nav"><strong>Paper sections</strong><div id="rw-section-list"></div></div><div class="rw-shortcuts"><strong>Research room</strong><button type="button" id="rw-guide-toggle">Research structures & publishing guide</button><button type="button" id="rw-shared-toggle">Community papers</button><button onclick="OmicsLab.Router.navigate('labnotebook')">Lab notebook</button><button onclick="OmicsLab.Router.navigate('datasets')">Datasets</button></div><div id="rw-resource-panel" class="rw-resource-panel"></div></aside>
           <main id="rw-editor" class="rw-editor" aria-live="polite"></main>
         </div>
       </div>`;
     section.querySelector('#rw-new-side').addEventListener('click', () => openPaper());
+    section.querySelector('#rw-guide-toggle').addEventListener('click', () => {
+      const panel = section.querySelector('#rw-resource-panel');
+      panel.innerHTML = '<strong>Publication guide</strong><p><b>Original research:</b> Introduction, Methods, Results, Discussion.</p><p><b>Systematic review:</b> protocol, search strategy, screening, PRISMA flow, synthesis.</p><p><b>Methods paper:</b> rationale, protocol, validation, limitations, reproducibility.</p><p>Keep a versioned dataset, analysis script, environment, accession IDs, and a clear data/code availability statement.</p>';
+    });
+    section.querySelector('#rw-shared-toggle').addEventListener('click', () => {
+      const panel = section.querySelector('#rw-resource-panel');
+      const items = sharedPapers();
+      panel.innerHTML = `<strong>Community papers</strong>${items.length ? items.map((item) => `<button type="button" class="rw-community-paper" data-rw-community="${escapeHtml(item.id)}">${escapeHtml(item.title)}</button>`).join('') : '<p class="rw-muted">No papers have been shared yet.</p>'}`;
+      panel.querySelectorAll('[data-rw-community]').forEach((button) => button.addEventListener('click', () => openPaper(button.dataset.rwCommunity)));
+    });
     section.querySelector('#rw-login')?.addEventListener('click', () => {
       if (OmicsLab.AuthClerk?.signIn) OmicsLab.AuthClerk.signIn();
       else OmicsLab.Auth?.openModal?.('signin');
