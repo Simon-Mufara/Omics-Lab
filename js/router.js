@@ -1027,6 +1027,7 @@ OmicsLab.Router = (function () {
       'css/enrichment.css',
     ],
     research: [
+      'css/research-workspace.css',
       'css/research-mode.css',
       'css/research-wizard.css',
       'css/datasets.css',
