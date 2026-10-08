@@ -1,0 +1,30 @@
+
+> omicslab-simulator@1.0.0 validate
+> node scripts/validate-html.js
+
+
+OmicsLab HTML Validator
+────────────────────────────────────────
+  ✓ Meta: charset
+  ✓ Meta: viewport
+  ✓ Meta: og:title
+  ✓ Meta: canonical
+  ✓ Meta: manifest
+  ✓ Meta: theme-color
+  ✓ Script order: config.js before db.js
+  ⚠ WARN: js/analytics.js loads after js/app.js
+  ✓ Element: #main-nav
+  ✓ Element: #a11y-announcer
+  ✓ Element: #nav-progress
+  ✓ No secret: Stripe live secret key
+  ✓ No secret: Stripe test secret key
+  ✓ No secret: Supabase service role key
+  ✓ No secret: PRIVATE_KEY literal
+  ✓ PWA: service worker present
+  ✓ .env.example exists
+  ✓ api/ functions: cache.js, create-checkout.js, create-paystack-checkout.js, forum-comments.js, forum-react.js, forum-topics.js, me.js, paystack-webhook.js, score-challenge.js, semantic-search.js, send-email.js, stripe-webhook.js
+
+────────────────────────────────────────
+Result: 0 error(s), 1 warning(s)
+
+Validation PASSED.

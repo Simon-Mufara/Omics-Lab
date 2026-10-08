@@ -358,10 +358,11 @@ OmicsLab.AuthClerk = (function () {
     }
   }
 
-  /* ── Inactivity session guard ───────────────────────────────── */
-  /* Auto sign-out after 15 min of no user interaction.
-     Warning modal appears at 14 min; staying active resets the clock. */
-  const _IDLE_WARN_MS = 14 * 60 * 1000; /* show warning after 14 min */
+  /* ── Session guard ─────────────────────────────────────────── */
+  /* Keep research sessions available for a full working day. Clerk's own
+     session lifetime remains authoritative on the server; this client guard
+     prevents an unexpectedly long local session and gives the user notice. */
+  const _IDLE_WARN_MS = 23 * 60 * 60 * 1000;
   const _IDLE_GRACE_MS = 60 * 1000; /* sign out 60 s after warning */
   let _idleTimer = null;
   let _graceTimer = null;
@@ -392,7 +393,7 @@ OmicsLab.AuthClerk = (function () {
         </div>
         <h2 style="font-size:1.05rem;font-weight:700;color:var(--text-primary,#E4DDD2);margin:0 0 .5rem">Still there?</h2>
         <p style="font-size:.85rem;color:var(--text-secondary,#A8A098);margin:0 0 1.25rem;line-height:1.55">
-          You've been inactive for 14 minutes. For your security, you'll be signed out in <strong id="ol-idle-secs" style="color:#e3b341">60</strong> seconds.
+          Your 24-hour research session is about to expire. You'll be signed out in <strong id="ol-idle-secs" style="color:#e3b341">60</strong> seconds.
         </p>
         <div style="display:flex;gap:.6rem;justify-content:center">
           <button id="ol-idle-stay" style="flex:1;background:var(--accent,#00C4A0);color:#060A14;border:none;border-radius:8px;padding:.65rem 1rem;font-weight:700;font-size:.85rem;cursor:pointer">

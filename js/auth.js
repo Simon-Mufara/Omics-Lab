@@ -184,7 +184,7 @@ OmicsLab.Auth = (function () {
     _session = {
       token: _makeToken(user.id),
       userId: user.id,
-      expires: Date.now() + 30 * 24 * 3600 * 1000,
+      expires: Date.now() + 24 * 3600 * 1000,
     };
     _saveSession(_session);
   }

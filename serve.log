@@ -1,0 +1,339 @@
+ INFO  Accepting connections at http://localhost:4000
+ HTTP  2026/09/21 11:30:09 ::1 GET /
+ HTTP  2026/09/21 11:30:09 ::1 Returned 200 in 578 ms
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/notify-C4pJsaQO.js
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/icons-CDsf1QTP.js
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/router-KPvJCvKQ.js
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 11 ms
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 20 ms
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/index-MmFrfjX9.css
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/app-BCP7CCrx.js
+ HTTP  2026/09/21 11:30:10 ::1 GET /assets/simon-mufara-DwrlXS_g.jpg
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 23 ms
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 28 ms
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 56 ms
+ HTTP  2026/09/21 11:30:10 ::1 Returned 200 in 106 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/config.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/utils.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/db.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/notify.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/icons.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/qa.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 13 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 16 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 18 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 18 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 21 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /assets/manifest-BAOFytkC.json
+ HTTP  2026/09/21 11:30:11 ::1 Returned 200 in 9 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/workflows.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/diseases.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/disease-learning.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/gallery.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/equipment.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 13 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 10 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/engine.ts
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/bench.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 9 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/compare.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/quiz.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/africa-geo.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/africa-map.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 10 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/troubleshoot.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/sandbox.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 21 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/research-mode.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/hpc-training.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/repro-hub.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 142 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/curriculum.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 142 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 140 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 167 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/badges.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/africa-hub.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 164 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 88 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/workshop.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/i18n.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 43 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/progress.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 61 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/search.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 43 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/changelog.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 52 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/analysis.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 39 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 38 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/virtual-lab.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/gwas.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/pharmacogenomics.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 37 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 34 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 29 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/network-hub.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/rna-atlas.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 20 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/terminal.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/profile.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 25 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 25 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/tour.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/testimonials.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 28 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 27 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/sound.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 16 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/voice.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/outbreak.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 16 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 10 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/datasets.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/career.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/mentor.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/protocols.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 16 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/collab.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/grant.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/leaderboard.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 9 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/debugger.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/alerts.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 9 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/phylo.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/peerreview.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 3 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/heatmap.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 3 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/journalclub.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/citations.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/quizbattle.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/qualitypredictor.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/variantinterp.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/primerdesign.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/nexus.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/paperhub.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/auth.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/auth-clerk.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/entitlements.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/teams.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 9 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/pubmed.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/gene-lookup.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/protein-viewer.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/uniprot.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/open-targets.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/string-net.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/preprints.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/pathways.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/sra-browser.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/assistant.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/thesis-coach.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/bionlp.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/codon.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/nanopore.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/amr.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 34 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 33 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 26 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/gatk.js
+ HTTP  2026/09/21 11:30:11 ::1 GET /js/kraken.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/popstruct.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/genomebrowser.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/directory.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/hackathon.js
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 21 ms
+ HTTP  2026/09/21 11:30:11 ::1 Returned 404 in 20 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 19 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 25 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/mentorship.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 34 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 31 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/h3africa.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/pathogen-tracker.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/glossary.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 25 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/offline-data.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/labnotebook.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 27 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/pipeline-gen.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/metaanalysis.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/idb-manager.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/api-docs.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/certification.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/impact.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 11 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/partners.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/fastqc.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/single-cell.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/assembly.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 10 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/bioethics.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/enrichment.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 19 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/pipeline-visual.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 20 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/case-files.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/ai-ml-bio.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/stats-genomics.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 18 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/seq-align.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/epigenomics.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/crispr.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/proteomics.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 15 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/research-wizard.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 14 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/alignment-viewer.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/recombination.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/social.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/community.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 16 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/embedded-apps.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 20 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 18 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/pricing.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/home-hero.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 28 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 24 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/explainer.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/user-guide.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 19 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 24 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/study-pack.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/wasm-tools.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 26 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 20 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/skill-tree.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/variant-atlas.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 19 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 21 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/clinical-decision.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/one-health.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 19 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/institution.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/error.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 23 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 22 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 21 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/skeleton.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/settings.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/knowledge-graph.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/notifications.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/offline-indicator.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/output-tracker.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 10 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 12 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 17 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/output-viz.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/study-music.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/theme.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/dashboard.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/mobile-nav.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/shortcuts.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 4 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/pwa.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/learning-path.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/calendar.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/focus-trap.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 4 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 4 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/a11y.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/nexus-attachments.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 5 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/nexus-realtime.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/whiteboard.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/voice-compose.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/data-import.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/legal.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/analytics.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 8 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 6 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/locales/en.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/router.js
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 GET /js/app.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /_vercel/insights/script.js
+ HTTP  2026/09/21 11:30:12 ::1 GET /assets/print-h0J7wO6_.css
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 9 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 404 in 7 ms
+ HTTP  2026/09/21 11:30:12 ::1 Returned 200 in 13 ms

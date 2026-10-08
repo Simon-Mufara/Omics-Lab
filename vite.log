@@ -1,0 +1,719 @@
+
+> omicslab-simulator@1.0.0 dev
+> vite
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vite.config.js:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+  [32m[1mVITE[22m v8.3.0[39m  [2mready in [0m[1m1890[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m11:18:28[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [optimizer] scanning dependencies...
+[2m11:18:39[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:18:41[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:22:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:22:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:22:45[22m [36m[1m[vite][22m[39m changed tsconfig file detected: C:/Users/kayka/Downloads/Coding/omics-data/omics-data/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+[2m11:22:51[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:22:53[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:23:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:23:17[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:24:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:24:08[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:24:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/engine.js[22m
+[2m11:24:54[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:24:55[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:24:55[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:24:56[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:24:58[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:25:01[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:01[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:01[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:25:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m11:25:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:25:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:25:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:25:09[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:25:09[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:09[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:14[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:14[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:15[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:25:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 158 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:158:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:155:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:119:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:2708:24)
+[2m11:25:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:158:20
+    156 |        const y = yRow(i);
+    157 |        const x0 = xScale(s.ci95lo), x1 = xScale(s.ci95hi), xc = xScale(s.beta);
+    158 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    159 |        const sqSz = Math.min(10, Math.max(3, 3 + 7 * (maxW / studies.reduce((a, b) => a + b.w, 0) * studies.length)));
+    160 |        svg += `<text x="${labelW - 8}" y="${y + 4}" text-anchor="end" font-size="11" fill="#A8A098">${s.name}</text>`;
+ > _renderForestPlot js/metaanalysis.js:155:13
+ > Object._run js/metaanalysis.js:119:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:2708:24
+
+[2m11:26:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:26:17[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:27:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:27:16[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:121:7)
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/a11y.js[22m
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/africa-geo.js[22m
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/africa-hub.js[22m
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/africa-map.js[22m
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/ai-ml-bio.js[22m
+[2m11:27:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/alerts.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/alignment-viewer.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/amr.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/analysis.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/analytics.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/api-docs.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/app.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/assembly.js[22m
+[2m11:27:35[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/assistant.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/auth-clerk.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/auth.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/badges.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/bench.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/bioethics.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/bionlp.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/calendar.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/career.js[22m
+[2m11:27:36[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/case-files.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/certification.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/changelog.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/citations.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/clinical-decision.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/clinical-decision.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/codon.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/collab.js[22m
+[2m11:27:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/community.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/compare.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/config.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/crispr.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/crispr.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/curriculum.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/dashboard.js[22m
+[2m11:27:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/data-import.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/datasets.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/db.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/debugger.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/directory.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/disease-learning.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/diseases.js[22m
+[2m11:27:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/diseases.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/embedded-apps.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/engine.ts[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/enrichment.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/entitlements.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/epigenomics.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/equipment.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/error.js[22m
+[2m11:27:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/explainer.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/fastqc.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/focus-trap.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/gallery.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/gatk.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/gene-lookup.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/genomebrowser.js[22m
+[2m11:27:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/glossary.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/grant.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/grant.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/h3africa.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/gwas.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/hackathon.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/heatmap.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/home-hero.js[22m
+[2m11:27:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/hpc-training.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/i18n.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/icons.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/idb-manager.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/impact.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/institution.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/journalclub.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/knowledge-graph.js[22m
+[2m11:27:43[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/kraken.js[22m
+[2m11:27:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/labnotebook.js[22m
+[2m11:27:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/leaderboard.js[22m
+[2m11:27:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/learning-path.js[22m
+[2m11:27:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/legal.js[22m
+[2m11:27:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/locales/en.js[22m
+[2m11:27:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/mentor.js[22m
+[2m11:27:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/mentorship.js[22m
+[2m11:27:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/metaanalysis.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/mobile-nav.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/nanopore.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/network-hub.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/nexus-attachments.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/nexus-realtime.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/nexus.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/notifications.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/notify.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/offline-data.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/offline-indicator.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/one-health.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/open-targets.js[22m
+[2m11:27:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/outbreak.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/output-tracker.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/output-viz.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/paperhub.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/partners.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pathogen-tracker.js[22m
+[2m11:27:50[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pathways.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/peerreview.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pharmacogenomics.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/phylo.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pipeline-gen.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pipeline-visual.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/popstruct.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/preprints.js[22m
+[2m11:27:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pricing.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/primerdesign.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/profile.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/progress.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/protein-viewer.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/proteomics.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/protocols.js[22m
+[2m11:27:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/protocols.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pubmed.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pubmed.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/pwa.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/qa.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/qualitypredictor.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/quiz.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/quizbattle.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/recombination.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/recombination.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/repro-hub.js[22m
+[2m11:27:53[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/research-mode.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/research-wizard.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/research-wizard.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/rna-atlas.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/router.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/sandbox.js[22m
+[2m11:27:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/search.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/seq-align.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/settings.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/shortcuts.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/single-cell.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/skeleton.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/skill-tree.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/social.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/social.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/sound.js[22m
+[2m11:27:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/sra-browser.js[22m
+[2m11:27:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/stats-genomics.js[22m
+[2m11:27:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/string-net.js[22m
+[2m11:27:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/study-music.js[22m
+[2m11:27:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/study-pack.js[22m
+[2m11:27:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/teams.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/terminal.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/testimonials.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/theme.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/thesis-coach.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/tour.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/troubleshoot.js[22m
+[2m11:27:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/uniprot.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/user-guide.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/utils.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/variant-atlas.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/variantinterp.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/virtual-lab.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/voice-compose.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/voice.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/wasm-tools.js[22m
+[2m11:27:58[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/whiteboard.js[22m
+[2m11:27:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/workflows.js[22m
+[2m11:27:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/workshop.js[22m
+[2m11:28:02[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:28:05[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js?t=1789982856110:125:7)
+[2m11:28:14[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:28:17[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:29:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:29:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:30:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:30:14[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:31:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:31:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:32:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:32:13[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:33:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:33:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:35:09[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:35:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js?t=1789982856110:125:7)
+[2m11:36:08[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:36:10[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js?t=1789982856110:125:7)
+[2m11:39:09[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m11:39:11[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)
+[2m11:39:20[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:188:20
+    186 |          x1 = xScale(s.ci95hi),
+    187 |          xc = xScale(s.beta);
+    188 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    189 |        const sqSz = Math.min(
+    190 |          10,
+ > _renderForestPlot js/metaanalysis.js:183:13
+ > Object._run js/metaanalysis.js:127:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:1:23
+
+[2m11:39:20[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 188 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:188:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:183:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:127:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:1:23)
+[2m11:39:21[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:188:20
+    186 |          x1 = xScale(s.ci95hi),
+    187 |          xc = xScale(s.beta);
+    188 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    189 |        const sqSz = Math.min(
+    190 |          10,
+ > _renderForestPlot js/metaanalysis.js:183:13
+ > Object._run js/metaanalysis.js:127:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:1:23
+
+[2m11:39:21[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 188 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:188:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:183:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:127:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:1:23)
+[2m11:39:22[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mReferenceError[22m: model is not defined
+[39m > js/metaanalysis.js:188:20
+    186 |          x1 = xScale(s.ci95hi),
+    187 |          xc = xScale(s.beta);
+    188 |        const maxW = model === 'random' && s.wRE ? s.wRE : s.w;
+        |                      ^
+    189 |        const sqSz = Math.min(
+    190 |          10,
+ > _renderForestPlot js/metaanalysis.js:183:13
+ > Object._run js/metaanalysis.js:127:5
+ > HTMLButtonElement.onclick ../../../../../../metaanalysis:1:23
+
+[2m11:39:22[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[OmicsLab Error] Uncaught ReferenceError: model is not defined http://localhost:3000/js/metaanalysis.js 188 20 ReferenceError: model is not defined
+    at http://localhost:3000/js/metaanalysis.js:188:20
+    at Array.forEach (<anonymous>)
+    at _renderForestPlot (http://localhost:3000/js/metaanalysis.js:183:13)
+    at Object._run (http://localhost:3000/js/metaanalysis.js:127:5)
+    at HTMLButtonElement.onclick (http://localhost:3000/metaanalysis:1:23)
+[2m17:42:56[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m17:48:14[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m17:48:20[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js?t=1789982856110:125:7)
+[2m18:04:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m18:04:37[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m18:07:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m18:32:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/data-loader.js[22m
+[2m18:34:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m18:46:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mjs/study-pack.js[22m

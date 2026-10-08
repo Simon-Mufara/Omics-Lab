@@ -12,7 +12,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23080c10'/%3E%3Ctext x='90' y='120' text-anchor='middle' font-size='100'%3E%F0%9F%A7%AC%3C/text%3E%3C/svg%3E">
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./assets/manifest-BAOFytkC.json">
   <meta name="theme-color" content="#00C4A0">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
     "logo": "https://omicsdatalab.tech/og-image.png",
     "description": "Africa's free omics training platform — 14 interactive workflows, 20 real instruments, bioinformatics pipelines. Built for African genomics researchers.",
     "areaServed": {"@type": "Place", "name": "Africa"},
-    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "ZAR", "availability": "https://schema.org/InStock"},
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock"},
     "hasCourse": [
       {"@type": "Course", "name": "RNA-seq Analysis", "description": "FastQC → STAR → featureCounts → DESeq2 pipeline"},
       {"@type": "Course", "name": "Whole Genome Sequencing", "description": "FastQC → BWA-MEM → GATK4 variant calling"},
@@ -69,29 +69,15 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans:wght@400;500;700&family=Noto+Sans+Ethiopic:wght@400;700&family=Sora:wght@400;600;700;800&display=swap"></noscript>
 
   <!-- Resource hints for critical scripts -->
-  <link rel="preload" href="js/notify.js" as="script">
-  <link rel="preload" href="js/icons.js" as="script">
-  <link rel="preload" href="js/router.js" as="script">
-  <link rel="preload" href="js/app.js" as="script">
+  <link rel="preload" href="./assets/notify-C4pJsaQO.js" as="script">
+  <link rel="preload" href="./assets/icons-CDsf1QTP.js" as="script">
+  <link rel="preload" href="./assets/router-KPvJCvKQ.js" as="script">
+  <link rel="preload" href="./assets/app-DAxjtzni.js" as="script">
 
-  <!-- Critical CSS: design system, tokens, layout, nav, auth, home (default route) -->
-  <link rel="stylesheet" href="css/design-system.css">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="css/real-data.css">
-  <link rel="stylesheet" href="css/data-workspace.css">
-  <link rel="stylesheet" href="css/enhancements.css">
-  <link rel="stylesheet" href="css/nav.css">
-  <link rel="stylesheet" href="css/mobile-nav.css">
-  <link rel="stylesheet" href="css/auth.css">
-  <link rel="stylesheet" href="css/home.css">
-  <link rel="stylesheet" href="css/home-hero.css">
-  <link rel="stylesheet" href="css/explainer.css">
-  <link rel="stylesheet" href="css/testimonials.css">
-  <link rel="stylesheet" href="css/ui-polish.css">
-  <link rel="stylesheet" href="css/print.css" media="print">
+  <!-- Critical CSS: tokens, layout, nav, auth, home (default route) -->
+  <link rel="stylesheet" href="./assets/print-h0J7wO6_.css" media="print">
   <!-- All other page CSS is lazy-loaded by router.js on first navigation -->
+  <link rel="stylesheet" crossorigin href="./assets/index-DAQYfYSx.css">
 </head>
 <body>
 <div id="nav-progress" role="progressbar" aria-hidden="true"></div>
@@ -146,10 +132,6 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('virtual-lab')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Virtual Lab</span><span class="nmd-desc">360° tour of real genomics instruments</span></span>
-            </button>
-            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('facility')">
-              <span class="nmd-icon" style="background:rgba(0,196,160,0.1)">3D</span>
-              <span class="nmd-text"><span class="nmd-name">3D Facility</span><span class="nmd-desc">Walk through the sample-to-sequence lab</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('outbreak')">
               <span class="nmd-icon" style="background:rgba(249,115,22,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></span>
@@ -370,10 +352,6 @@
               <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">PaperHub</span><span class="nmd-desc">African genomics research library · cite</span></span>
             </button>
-            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('research')">
-              <span class="nmd-icon" style="background:rgba(0,196,160,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h6M8 16h8"/></svg></span>
-              <span class="nmd-text"><span class="nmd-name">Research Workspace</span><span class="nmd-desc">Write papers · autosave · search literature</span></span>
-            </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('thesis')">
               <span class="nmd-icon" style="background:rgba(188,140,255,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Thesis Coach</span><span class="nmd-desc">AI-powered thesis drafting · 5 chapters</span></span>
@@ -565,10 +543,6 @@
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('virtual-lab')">
               <span class="nmd-icon" style="background:rgba(63,185,80,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
               <span class="nmd-text"><span class="nmd-name">Virtual Lab</span><span class="nmd-desc">360 tour of genomics instruments</span></span>
-            </button>
-            <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('facility')">
-              <span class="nmd-icon" style="background:rgba(0,196,160,0.1)">3D</span>
-              <span class="nmd-text"><span class="nmd-name">3D Facility</span><span class="nmd-desc">Walk through the sample-to-sequence lab</span></span>
             </button>
             <button class="nmd-item" role="menuitem" onclick="OmicsLab.Router.navigate('debugger')">
               <span class="nmd-icon" style="background:rgba(255,107,107,0.1)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/><path d="M3 16h4M17 16h4M4 20l4-2M16 18l4 2M4 12l4 2M16 14l4-2"/></svg></span>
@@ -974,10 +948,6 @@
           <span class="mob-nav-item-icon" style="background:rgba(63,185,80,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
           <span class="mob-nav-item-text"><span class="mob-nav-item-name">Virtual Lab</span><span class="mob-nav-item-desc">360 tour of genomics instruments</span></span>
         </button>
-        <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('facility');OmicsLab.Nav.close()">
-          <span class="mob-nav-item-icon" style="background:rgba(0,196,160,0.12)">3D</span>
-          <span class="mob-nav-item-text"><span class="mob-nav-item-name">3D Facility</span><span class="mob-nav-item-desc">Walk through the sample-to-sequence lab</span></span>
-        </button>
         <button class="mob-nav-item" onclick="OmicsLab.Router.navigate('debugger');OmicsLab.Nav.close()">
           <span class="mob-nav-item-icon" style="background:rgba(255,107,107,0.12)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11V9a3 3 0 1 1 6 0v2"/><rect x="9" y="11" width="6" height="10"/></svg></span>
           <span class="mob-nav-item-text"><span class="mob-nav-item-name">Protocol Debugger</span><span class="mob-nav-item-desc">200+ rules · QC paste → root cause</span></span>
@@ -1314,19 +1284,50 @@
     </div>
   </div>
 
-  <!-- Research Workspace -->
-  <div class="reveal" id="research-workspace-section"></div>
+  <!-- Research Project Mode -->
+  <div class="research-mode-section reveal" id="research-mode-section">
+    <div class="section-label">Design a study</div>
+    <h2 class="section-title">Research Project Mode</h2>
+    <p class="section-desc">Orchestrate a reproducible project: pick a disease, choose workflows and a partner lab, then run a simulated study that ties wet-lab choices to analysis and interpretation.</p>
+
+    <div class="research-builder" id="research-builder">
+      <div class="rm-row">
+        <label for="rm-disease">Disease</label>
+        <select id="rm-disease" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-workflow">Primary workflow</label>
+        <select id="rm-workflow" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-lab">Host lab</label>
+        <select id="rm-lab" class="rm-select"></select>
+      </div>
+      <div class="rm-row">
+        <label for="rm-samples">Sample count</label>
+        <input id="rm-samples" type="number" min="1" max="200" value="10" />
+      </div>
+      <div class="rm-actions">
+        <button class="btn-result-primary" id="rm-start">Start Project</button>
+        <button class="btn-result-secondary" id="rm-export">Export Project</button>
+      </div>
+    </div>
+
+    <div id="research-summary" class="research-summary"></div>
+  </div>
 
   <!-- Research Metadata & Reproducibility Hub -->
-  <details class="repro-hub-section reveal" id="repro-hub-section">
-    <summary class="repro-hub-summary">
-      <span><span class="section-label">Reproducible omics science</span><strong class="section-title">Research Metadata &amp; Reproducibility Hub</strong><small>Open to submit, browse, validate, and reproduce studies.</small></span>
-      <span aria-hidden="true">＋</span>
-    </summary>
+  <div class="repro-hub-section reveal" id="repro-hub-section">
+    <div class="section-label">Reproducible omics science</div>
+    <h2 class="section-title">Research Metadata &amp; Reproducibility Hub</h2>
+    <p class="section-desc">
+      Submit studies with full metadata and get instant Reproducibility, Completeness, and FAIR scores.
+      Browse, fork, validate, and reproduce community submissions.
+    </p>
     <div id="repro-hub-content">
       <!-- Populated by repro-hub.js -->
     </div>
-  </details>
+  </div>
 
   <!-- Africa Science Hub -->
   <div class="africa-hub-section reveal" id="africa-hub-section">
@@ -1334,6 +1335,14 @@
     <h2 class="section-title" data-i18n="section.africahub.title">Africa Science Hub</h2>
     <p class="section-desc">Data governance, population genomics, One Health surveillance, grant alignment, and real training opportunities — everything that makes omics research in Africa distinct and important.</p>
     <div id="africa-hub-content"><!-- Populated by africa-hub.js --></div>
+  </div>
+
+  <!-- Workshop & Instructor Mode -->
+  <div class="workshop-section reveal" id="workshop-section">
+    <div class="section-label" data-i18n="section.workshop.label">Train your cohort</div>
+    <h2 class="section-title" data-i18n="section.workshop.title">Workshop &amp; Instructor Mode</h2>
+    <p class="section-desc">Create a workshop session, share the code with students, and track completion across all OmicsLab modules. Export attendance and progress reports for grant reporting.</p>
+    <div id="workshop-content"><!-- Populated by workshop.js --></div>
   </div>
 
   <!-- Badges & Certificates -->
@@ -1646,22 +1655,6 @@
     <div id="virtual-lab-content"><!-- Populated by virtual-lab.js --></div>
   </div>
 
-  <section id="facility-section" class="reveal" aria-labelledby="facility-heading">
-    <div class="section-heading">
-      <span class="eyebrow">New learning environment</span>
-      <h2 id="facility-heading">Connected 3D genomics facility</h2>
-      <p>Open the facility in its own surface so the existing Lab remains available while the new simulation grows.</p>
-    </div>
-    <div class="facility-launch-card">
-      <iframe
-        title="OmicsLab connected 3D facility"
-        src="/3d-facility/index.html"
-        loading="lazy"
-        allow="fullscreen; gamepad"
-        referrerpolicy="same-origin"></iframe>
-    </div>
-  </section>
-
   <!-- Outbreak Simulator -->
   <div class="outbreak-sim-section reveal" id="outbreak-sim-section">
     <!-- Populated by outbreak.js on route 'outbreak' -->
@@ -1766,6 +1759,7 @@
   <div class="reveal" id="paperhub-section">
     <!-- Populated by paperhub.js on route 'paperhub' -->
   </div>
+
   <!-- Teams -->
   <div class="reveal" id="teams-section">
     <!-- Populated by teams.js on route 'teams' -->
@@ -1932,7 +1926,7 @@
     </div>
 
     <div style="display:flex;align-items:center;justify-content:center;gap:.6rem;color:var(--text-muted);font-size:0.82rem;text-align:center;flex-wrap:wrap">
-      <img src="images/simon-mufara.jpg" alt="Simon Mufara" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:50% 15%;border:1.5px solid rgba(0,196,160,0.4);flex-shrink:0">
+      <img src="./assets/simon-mufara-DwrlXS_g.jpg" alt="Simon Mufara" style="width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:50% 15%;border:1.5px solid rgba(0,196,160,0.4);flex-shrink:0">
       Built by <a href="https://github.com/Simon-Mufara" style="color:var(--green);text-decoration:none" target="_blank" rel="noopener">Simon Mufara</a>
       &nbsp;·&nbsp; Computational Biologist &amp; Bioinformatician &nbsp;·&nbsp; UCT
     </div>
@@ -2247,8 +2241,6 @@
 
 <!-- OmicsLab service layer — must run before feature modules -->
 <script defer src="js/config.js"></script>
-<script defer src="js/real-data.js"></script>
-<script defer src="js/data-workspace.js"></script>
 <script defer src="js/utils.js"></script>
 <script defer src="js/db.js"></script>
 
@@ -2314,7 +2306,6 @@
 <script defer src="js/primerdesign.js"></script>
 <script defer src="js/nexus.js"></script>
 <script defer src="js/paperhub.js"></script>
-<script defer src="js/research-workspace.js"></script>
 <script defer src="js/auth.js"></script>
 <script defer src="js/auth-clerk.js"></script>
 <script defer src="js/entitlements.js"></script>
@@ -2420,25 +2411,7 @@
 <script defer src="js/locales/en.js"></script>
 <script defer src="js/router.js"></script>
 <script defer src="js/app.js"></script>
-<style>
-  /* ── Hero "how it works" 3-step strip ── */
-  .hero-steps{display:flex;flex-direction:column;gap:.55rem;margin:.9rem 0 1.25rem}
-  .hero-step{display:flex;align-items:flex-start;gap:.65rem;font-size:.82rem;color:var(--text-secondary,#A8A098);line-height:1.5}
-  .hero-step strong{color:var(--text-primary,#E4DDD2)}
-  .hero-step-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(0,196,160,.15);border:1px solid rgba(0,196,160,.35);color:var(--accent,#00C4A0);font-size:.7rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:.05rem}
-  /* ── Trust bar icons ── */
-  .hero-trust-item{display:inline-flex;align-items:center;gap:.3rem}
-  .hero-trust-item svg{opacity:.65;flex-shrink:0}
-
-  @keyframes shakeField {
-    0%,100%{transform:translateX(0)}
-    20%{transform:translateX(-6px)}
-    40%{transform:translateX(6px)}
-    60%{transform:translateX(-4px)}
-    80%{transform:translateX(4px)}
-  }
-
-  </style>
+<style>.hero-steps{flex-direction:column;gap:.55rem;margin:.9rem 0 1.25rem;display:flex}.hero-step{color:var(--text-secondary,#a8a098);align-items:flex-start;gap:.65rem;font-size:.82rem;line-height:1.5;display:flex}.hero-step strong{color:var(--text-primary,#e4ddd2)}.hero-step-num{width:20px;height:20px;color:var(--accent,#00c4a0);background:#00c4a026;border:1px solid #00c4a059;border-radius:50%;flex-shrink:0;justify-content:center;align-items:center;margin-top:.05rem;font-size:.7rem;font-weight:800;display:flex}.hero-trust-item{align-items:center;gap:.3rem;display:inline-flex}.hero-trust-item svg{opacity:.65;flex-shrink:0}@keyframes shakeField{0%,to{transform:translate(0)}20%{transform:translate(-6px)}40%{transform:translate(6px)}60%{transform:translate(-4px)}80%{transform:translate(4px)}}</style>
 <script>
   /* ── OmicsLab.Nav — mobile overlay + user pill ── */
   window.OmicsLab = window.OmicsLab || {};
