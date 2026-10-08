@@ -20,6 +20,44 @@ OmicsLab.ResearchWorkspace = (function () {
   ];
   const WRITING_SECTIONS = [['abstract', 'Abstract'], ...SECTIONS, ['references', 'References']];
 
+  const WRITING_GUIDANCE = {
+    abstract: {
+      title: 'Abstract',
+      focus: 'A strong abstract gives the reader the core story in 150–250 words.',
+      checklist: ['State the problem or knowledge gap.', 'Name the study aim or question.', 'Summarise the methods briefly.', 'Highlight the main results with key numbers.', 'End with why the findings matter.'],
+    },
+    introduction: {
+      title: 'Introduction',
+      focus: 'Set the scene, explain the gap, and guide the reader toward your study question.',
+      checklist: ['Start with the disease, population, or biological problem.', 'Summarise what is already known.', 'Identify the gap or unanswered question.', 'State the aim, hypothesis, and why the work matters.', 'Link the study to African health or omics context.'],
+    },
+    methods: {
+      title: 'Methods',
+      focus: 'Tell another researcher exactly how the study was done.',
+      checklist: ['Describe the cohort, samples, or organisms.', 'List the tools, platforms, and versions used.', 'Explain quality control and analysis steps.', 'State statistical tests, thresholds, and reproducibility details.', 'Include data/code availability and environment details.'],
+    },
+    results: {
+      title: 'Results',
+      focus: 'Report the actual findings without over-interpreting them.',
+      checklist: ['Lead with the main finding.', 'Use clear, evidence-based statements and key numbers.', 'Reference figures, tables, or QC summaries.', 'Show patterns, variation, and significance where relevant.', 'Keep the text distinct from the discussion.'],
+    },
+    discussion: {
+      title: 'Discussion',
+      focus: 'Interpret the results in context and explain their meaning, strengths, and limits.',
+      checklist: ['Compare your findings with prior literature.', 'Explain what the results mean biologically or clinically.', 'Discuss limitations and biases honestly.', 'Consider implications for policy, practice, or future work.', 'Give a balanced, evidence-based conclusion.'],
+    },
+    conclusion: {
+      title: 'Conclusion',
+      focus: 'Finish with a short, confident message that answers the study question.',
+      checklist: ['Restate the main answer in one paragraph.', 'State why the finding matters.', 'Mention the next step or implication.', 'Keep it clear and concise.'],
+    },
+    references: {
+      title: 'References',
+      focus: 'Use reliable, traceable sources that support your arguments and methods.',
+      checklist: ['Prefer peer-reviewed literature and trusted repositories.', 'Include study accession IDs, datasets, and protocols where relevant.', 'Make sure citations match the text.', 'Track versions of software, workflows, and references.'],
+    },
+  };
+
   const TEMPLATES = {
     'RNA-seq study': {
       title: 'Differential gene expression in an African disease cohort',
@@ -269,6 +307,7 @@ OmicsLab.ResearchWorkspace = (function () {
       ? paper[current[0]]
       : paper.sections?.[current[0]];
     const currentLabel = current[1];
+    const guidance = WRITING_GUIDANCE[current[0]] || WRITING_GUIDANCE.introduction;
     const completedCount = WRITING_SECTIONS.filter(([id]) => {
       const value = id === 'abstract' || id === 'references' ? paper[id] : paper.sections?.[id];
       return value?.trim();
@@ -300,6 +339,14 @@ OmicsLab.ResearchWorkspace = (function () {
           </div>
           <label class="rw-label">Code and workflow availability<input data-rw-field="codeAvailability" value="${escapeHtml(paper.codeAvailability)}" placeholder="GitHub, workflow version, container or notebook"></label>
         </details>
+      </div>
+      <div class="rw-guidance-panel" aria-live="polite">
+        <div class="rw-guidance-header">
+          <span class="rw-eyebrow">Writing coach</span>
+          <strong>${guidance.title}</strong>
+        </div>
+        <p>${escapeHtml(guidance.focus)}</p>
+        <ul>${guidance.checklist.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>
       </div>
       <div class="rw-format-toolbar" role="toolbar" aria-label="Document formatting">
         <button type="button" class="rw-tool-icon" data-rw-command="undo" title="Undo">↶</button>
@@ -523,7 +570,16 @@ OmicsLab.ResearchWorkspace = (function () {
     section.querySelector('#rw-new-side').addEventListener('click', () => openPaper());
     section.querySelector('#rw-guide-toggle').addEventListener('click', () => {
       const panel = section.querySelector('#rw-resource-panel');
-      panel.innerHTML = '<strong>Publication guide</strong><p><b>Original research:</b> Introduction, Methods, Results, Discussion.</p><p><b>Systematic review:</b> protocol, search strategy, screening, PRISMA flow, synthesis.</p><p><b>Methods paper:</b> rationale, protocol, validation, limitations, reproducibility.</p><p>Keep a versioned dataset, analysis script, environment, accession IDs, and a clear data/code availability statement.</p>';
+      panel.innerHTML = `
+        <strong>Research writing guide</strong>
+        <p><b>Abstract:</b> State the problem, aim, key methods, main result, and why it matters in 150–250 words.</p>
+        <p><b>Introduction:</b> Explain the context, what is known, what is missing, and your hypothesis or objective.</p>
+        <p><b>Methods:</b> Describe the design, samples, platforms, tools, versions, analysis settings, and reproducibility steps.</p>
+        <p><b>Results:</b> Present the data clearly, with key numbers, patterns, and figures or tables.</p>
+        <p><b>Discussion:</b> Interpret the findings, compare to prior work, address limitations, and explain the impact.</p>
+        <p><b>Conclusion:</b> End with the main takeaway and the next research step.</p>
+        <p><b>Best practice:</b> keep a versioned dataset, workflow script, environment details, accession IDs, and a clear data/code availability statement.</p>
+      `;
     });
     section.querySelector('#rw-shared-toggle').addEventListener('click', () => {
       const panel = section.querySelector('#rw-resource-panel');
