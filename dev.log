@@ -1,0 +1,30 @@
+
+> omicslab-simulator@1.0.0 dev
+> vite
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vite.config.js:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+  [32m[1mVITE[22m v8.3.0[39m  [2mready in [0m[1m2500[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m12:02:06[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m12:02:08[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '+'
+[39m
+[2m12:02:08[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m12:02:08[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31m[Unhandled error] [1mSyntaxError[22m: Unexpected token '<'
+[39m
+[2m12:02:12[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [2m[console.error] [22m[AuthClerk] Boot failed: e: Clerk: Production Keys are only allowed for domain "omicsdatalab.tech". 
+API Error: The Request HTTP Origin header must be equal to or a subdomain of the requesting URL.
+    at https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:7306
+    at u._baseFetch (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:38)
+    at async d.execute (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:2:5350)
+    at async s._baseGet (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:3:567)
+    at async Promise.all (index 1)
+    at async #ee (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:81943)
+    at async tP.load (https://cdn.jsdelivr.net/npm/@clerk/clerk-js@5/dist/clerk.browser.js:5:44353)
+    at async _boot (http://localhost:3000/js/auth-clerk.js:125:7)

@@ -1,360 +1,583 @@
-/* ═══════════════════════════════════════════════════════════════
-   OmicsLab Protein Viewer — AlphaFold EBI API (Prompt 44)
-   ─ Fetch prediction metadata + PDB file
-   ─ pLDDT confidence chart (SVG bar chart)
-   ─ AlphaFold 3D iframe embed
-   ─ Pre-loaded African disease proteins
-   ═══════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════
+   OmicsLab — Protein Structure Viewer
+   Mol* integration for loading and visualizing PDB structures
+   ═════════════════════════════════════════════════════════════════ */
 window.OmicsLab = window.OmicsLab || {};
 
 OmicsLab.ProteinViewer = (function () {
-  const AF_API = 'https://alphafold.ebi.ac.uk/api';
-  const UNIPROT = 'https://rest.uniprot.org/uniprotkb';
+  'use strict';
 
-  /* Pre-loaded proteins (gene → UniProt accession) */
-  const AFRICA_PROTEINS = [
-    {
-      gene: 'HBB',
-      acc: 'P68871',
-      name: 'Haemoglobin subunit beta',
-      disease: 'Sickle cell disease',
-    },
-    {
-      gene: 'G6PD',
-      acc: 'P11413',
-      name: 'Glucose-6-phosphate dehydrogenase',
-      disease: 'G6PD deficiency / malaria',
-    },
-    { gene: 'APOL1', acc: 'O14791', name: 'Apolipoprotein L1', disease: 'Chronic kidney disease' },
-    {
-      gene: 'HBA1',
-      acc: 'P69905',
-      name: 'Haemoglobin subunit alpha-1',
-      disease: 'Alpha-thalassemia',
-    },
-    {
-      gene: 'BRCA1',
-      acc: 'P38398',
-      name: 'Breast cancer type 1 susceptibility',
-      disease: 'Breast cancer',
-    },
-    {
-      gene: 'TP53',
-      acc: 'P04637',
-      name: 'Cellular tumour antigen p53',
-      disease: 'Multiple cancers',
-    },
-    { gene: 'CYP2D6', acc: 'P10635', name: 'Cytochrome P450 2D6', disease: 'Drug metabolism' },
-    { gene: 'LMNA', acc: 'P02545', name: 'Prelamin-A/C', disease: 'Dilated cardiomyopathy' },
-  ];
+  // Configuration constants
+  const CONFIG = {
+    // Mol* specific
+    MOL_STAR_URL: 'https://unpkg.com/molstar@latest/build/molstar.js',
+    MOL_STAR_CSS_URL: 'https://unpkg.com/molstar@latest/build/molstar.css',
 
-  /* pLDDT colour tiers */
-  const TIERS = [
-    { min: 90, label: 'Very high (>90)', color: '#1d4ed8' },
-    { min: 70, label: 'High (70–90)', color: '#22d3ee' },
-    { min: 50, label: 'Low (50–70)', color: '#fbbf24' },
-    { min: 0, label: 'Very low (<50)', color: '#f97316' },
-  ];
+    // Default representations
+    DEFAULT_REPRESENTATIONS: [
+      { type: 'cartoon', params: { color: 'chainid' } },
+      { type: 'surface', params: { color: 'chainid', opacity: 0.8 } }
+    ],
 
-  let _currentAcc = null;
+    // Available representations for switcher
+    REPRESENTATIONS: {
+      cartoon: { label: 'Cartoon', type: 'cartoon' },
+      surface: { label: 'Surface', type: 'surface' },
+      'ball-and-stick': { label: 'Ball & Stick', type: 'ball+stick' },
+      licorice: { label: 'Licorice', type: 'licorice' },
+      'spacefill': { label: 'Spacefill', type: 'spacefill' }
+    },
 
-  /* ─── Fetch AlphaFold prediction metadata ─── */
-  async function _fetchPrediction(acc) {
-    const url = `${AF_API}/prediction/${acc}`;
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`No AlphaFold structure for ${acc} (${res.status})`);
-    const data = await res.json();
-    return Array.isArray(data) ? data[0] : data;
+    // Color schemes
+    COLOR_SCHEMES: {
+      chainid: 'chainid',
+      amino: 'amino',
+      sstruc: 'sstruc',
+      hetatm: 'hetatm',
+      uniform: 'uniform'
+    },
+
+    // Quality settings for mobile/performance
+    QUALITY: {
+      low: { viewportWidth: 300, viewportHeight: 200, antialias: false },
+      medium: { viewportWidth: 500, viewportHeight: 400, antialias: true },
+      high: { viewportWidth: 800, viewportHeight: 600, antialias: true }
+    }
+  };
+
+  // State
+  let state = {
+    container: null,
+    viewer: null,
+    molstarPlugin: null,
+    structureData: null,
+    pdbId: '',
+    isInitialized: false,
+    isLoading: false,
+    quality: 'medium',
+    currentRepresentation: 'cartoon',
+    colorScheme: 'chainid',
+    highlightedResidues: [],
+    showLoading: true,
+    supportsWebGL: false
+  };
+
+  /* ─── INITIALIZATION & LIFECYCLE ─────────────────────────────────────── */
+
+  function init(containerEl, options = {}) {
+    if (state.isInitialized) return false;
+
+    state.container = containerEl;
+    state.pdbId = options.pdbId || '';
+    state.quality = options.quality || 'medium';
+    state.currentRepresentation = options.representation || 'cartoon';
+    state.colorScheme = options.colorScheme || 'chainid';
+    state.highlightedResidues = options.highlightedResidues || [];
+
+    // Check WebGL support
+    state.supportsWebGL = _checkWebGLSupport();
+    if (!state.supportsWebGL) {
+      console.warn('WebGL not supported, falling back to 2D placeholder');
+      _createFallbackUI();
+      return true; // Still "initialized" but with fallback
+    }
+
+    // Create container structure
+    _createContainerUI();
+
+    // Load Mol* if needed
+    if (state.pdbId) {
+      _loadMolStarAndStructure();
+    } else {
+      _showLoadingState(true);
+    }
+
+    state.isInitialized = true;
+    return true;
   }
 
-  /* ─── Fetch UniProt basic info ─── */
-  async function _fetchUniProtInfo(acc) {
+  function dispose() {
+    if (!state.isInitialized) return;
+
+    // Clean up Mol* viewer
+    if (state.viewer) {
+      try {
+        state.viewer.dispose();
+      } catch (e) {
+        console.error('Error disposing Mol* viewer:', e);
+      }
+      state.viewer = null;
+    }
+
+    if (state.molstarPlugin) {
+      state.molstarPlugin = null;
+    }
+
+    // Remove event listeners and clean DOM
+    state.container.innerHTML = '';
+    state.isInitialized = false;
+  }
+
+  /* ─── CORE SETUP ────────────────────────────────────────────────────── */
+
+  function _checkWebGLSupport() {
     try {
-      const url = `${UNIPROT}/${acc}.json`;
-      const res = await fetch(url);
-      if (!res.ok) return {};
-      const d = await res.json();
-      return {
-        name: d.proteinDescription?.recommendedName?.fullName?.value || '',
-        gene: (d.genes || [])[0]?.geneName?.value || '',
-        org: d.organism?.scientificName || '',
-        length: d.sequence?.length || 0,
-        function:
-          (d.comments || []).find((c) => c.commentType === 'FUNCTION')?.texts?.[0]?.value || '',
-      };
-    } catch {
-      return {};
+      const canvas = document.createElement('canvas');
+      return !!window.WebGLRenderingContext &&
+             (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+    } catch (e) {
+      return false;
     }
   }
 
-  /* ─── Fetch and parse PDB for pLDDT scores ─── */
-  async function _fetchPLDDT(pdbUrl) {
+  function _createContainerUI() {
+    // Clear container
+    state.container.innerHTML = '';
+
+    // Create main viewer container
+    const viewerContainer = document.createElement('div');
+    viewerContainer.id = 'protein-viewer-container';
+    viewerContainer.style.width = '100%';
+    viewerContainer.style.height = '100%';
+    viewerContainer.style.position = 'relative';
+    state.container.appendChild(viewerContainer);
+
+    // Create loading overlay
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'protein-viewer-loading';
+    loadingOverlay.style.position = 'absolute';
+    loadingOverlay.style.top = '0';
+    loadingOverlay.style.left = '0';
+    loadingOverlay.style.width = '100%';
+    loadingOverlay.style.height = '100%';
+    loadingOverlay.style.backgroundColor = 'rgba(6, 10, 20, 0.8)';
+    loadingOverlay.style.color = '#00C4A0';
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.style.flexDirection = 'column';
+    loadingOverlay.style.alignItems = 'center';
+    loadingOverlay.style.justifyContent = 'center';
+    loadingOverlay.style.zIndex = '1000';
+    loadingOverlay.innerHTML = `
+      <div class="mol-spinner"></div>
+      <div style="margin-top: 1rem; font-size: 1.1rem;">Loading structure...</div>
+    `;
+    viewerContainer.appendChild(loadingOverlay);
+    state.loadingOverlay = loadingOverlay;
+
+    // Create error overlay
+    const errorOverlay = document.createElement('div');
+    errorOverlay.id = 'protein-viewer-error';
+    errorOverlay.style.position = 'absolute';
+    errorOverlay.style.top = '0';
+    errorOverlay.style.left = '0';
+    errorOverlay.style.width = '100%';
+    errorOverlay.style.height = '100%';
+    errorOverlay.style.backgroundColor = 'rgba(6, 10, 20, 0.8)';
+    errorOverlay.style.color = '#ff6b6b';
+    errorOverlay.style.display = 'none';
+    errorOverlay.style.flexDirection = 'column';
+    errorOverlay.style.alignItems = 'center';
+    errorOverlay.style.justifyContent = 'center';
+    errorOverlay.style.zIndex = '1000';
+    errorOverlay.innerHTML = `
+      <div style="margin-bottom: 1rem;">⚠️</div>
+      <div style="margin-bottom: 0.5rem; font-size: 1.2rem;">Error loading structure</div>
+      <div id="protein-error-message" style="text-align: center; max-width: 80%;"></div>
+      <button id="protein-retry-btn" style="margin-top: 1rem; padding: 0.5rem 1rem; background: rgba(0, 196, 160, 0.2); border: 1px solid rgba(0, 196, 160, 0.4); color: #e0e0e0; border-radius: 4px; cursor: pointer;">Retry</button>
+    `;
+    viewerContainer.appendChild(errorOverlay);
+    state.errorOverlay = errorOverlay;
+    state.errorMessageDiv = errorOverlay.querySelector('#protein-error-message');
+    state.retryBtn = errorOverlay.querySelector('#protein-retry-btn');
+
+    // Create controls container (will be populated later)
+    const controlsContainer = document.createElement('div');
+    controlsContainer.id = 'protein-viewer-controls';
+    controlsContainer.style.position = 'absolute';
+    controlsContainer.style.top = '1rem';
+    controlsContainer.style.left = '1rem';
+    controlsContainer.style.zIndex = '1000';
+    controlsContainer.style.display = 'flex';
+    controlsContainer.style.gap = '0.5rem';
+    controlsContainer.style.flexWrap = 'wrap';
+    viewerContainer.appendChild(controlsContainer);
+    state.controlsContainer = controlsContainer;
+
+    // Create info container
+    const infoContainer = document.createElement('div');
+    infoContainer.id = 'protein-viewer-info';
+    infoContainer.style.position = 'absolute';
+    infoContainer.style.bottom = '1rem';
+    infoContainer.style.left = '1rem';
+    infoContainer.style.zIndex = '1000';
+    infoContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    infoContainer.style.color = '#e0e0e0';
+    infoContainer.style.padding = '0.5rem 1rem';
+    infoContainer.style.borderRadius = '4px';
+    infoContainer.style.fontSize = '0.875rem';
+    viewerContainer.appendChild(infoContainer);
+    state.infoContainer = infoContainer;
+  }
+
+  function _showLoadingState(show) {
+    if (state.loadingOverlay) {
+      state.loadingOverlay.style.display = show ? 'flex' : 'none';
+    }
+    if (state.errorOverlay) {
+      state.errorOverlay.style.display = 'none';
+    }
+    state.isLoading = show;
+  }
+
+  function _showErrorState(message) {
+    _showLoadingState(false);
+    if (state.errorOverlay) {
+      state.errorOverlay.style.display = 'flex';
+    }
+    if (state.errorMessageDiv) {
+      state.errorMessageDiv.textContent = message;
+    }
+  }
+
+  function _createFallbackUI() {
+    state.container.innerHTML = `
+      <div style="padding: 2rem; text-align: center; color: #888;">
+        <h3>Protein Structure Viewer</h3>
+        <p>WebGL is not supported in this browser.</p>
+        <p>For full 3D visualization, please use a browser with WebGL support:</p>
+        <ul style="text-align: left; display: inline-block;">
+          <li>Chrome 29+</li>
+          <li>Firefox 27+</li>
+          <li>Safari 8+</li>
+          <li>Edge 12+</li>
+        </ul>
+        <p style="margin-top: 1.5rem;">Enter a PDB ID above to see structure details.</p>
+      </div>
+    `;
+  }
+
+  /* ─── MOL* LOADING ──────────────────────────────────────────────────── */
+
+  function _loadMolStarAndStructure() {
+    _showLoadingState(true);
+
+    // Load Mol* CSS first
+    const cssLink = document.createElement('link');
+    cssLink.rel = 'stylesheet';
+    cssLink.href = CONFIG.MOL_STAR_CSS_URL;
+    cssLink.onload = () => {
+      // Then load Mol* JS
+      const script = document.createElement('script');
+      script.src = CONFIG.MOL_STAR_URL;
+      script.onload = () => {
+        // Initialize Mol* after script loads
+        _initializeMolStar();
+      };
+      script.onerror = () => _showErrorState('Failed to load Mol* library');
+      document.head.appendChild(script);
+    };
+    cssLink.onerror = () => _showErrorState('Failed to load Mol* stylesheet');
+    document.head.appendChild(cssLink);
+  }
+
+  function _initializeMolStar() {
     try {
-      const res = await fetch(pdbUrl);
-      if (!res.ok) return [];
-      const text = await res.text();
-      const scores = [];
-      text.split('\n').forEach((line) => {
-        if (line.startsWith('ATOM') || line.startsWith('HETATM')) {
-          const bfactor = parseFloat(line.slice(60, 66).trim());
-          const resNum = parseInt(line.slice(22, 26).trim(), 10);
-          const ca = line.slice(12, 16).trim() === 'CA';
-          if (ca && !isNaN(bfactor) && !isNaN(resNum)) {
-            scores.push({ res: resNum, plddt: bfactor });
+      // Create Mol* plugin
+      state.molstarPlugin = new window.MolScriptPlugin.StatePlugin(
+        state.container.querySelector('#protein-viewer-container'),
+        {
+          layout: {
+            isExpanded: true,
+            showHeader: false,
+            showFooter: false,
+            showLog: false
           }
         }
+      );
+
+      // Get the viewer
+      state.viewer = state.molstarPlugin.viewer;
+
+      // Load structure if PDB ID provided
+      if (state.pdbId) {
+        _loadStructure(state.pdbId);
+      } else {
+        _showLoadingState(false);
+        _showInfoMessage('Enter a PDB ID to load a structure');
+      }
+
+    } catch (e) {
+      console.error('Failed to initialize Mol*:', e);
+      _showErrorState('Failed to initialize 3D viewer');
+    }
+  }
+
+  function _loadStructure(pdbId) {
+    if (!state.viewer) {
+      _showErrorState('Viewer not initialized');
+      return;
+    }
+
+    state.pdbId = pdbId.toUpperCase().trim();
+    _showLoadingState(true);
+    _showInfoMessage(`Loading ${state.pdbId}...`);
+
+    try {
+      // Load from RCSB PDB
+      state.molstarPlugin.loadRemoteData(
+        `https://files.rcsb.org/download/${state.pdbId}.pdb`,
+        'pdb'
+      ).then(() => {
+        _applyInitialRepresentations();
+        _setupEventListeners();
+        _showLoadingState(false);
+        _showStructureInfo();
+      }).catch(error => {
+        console.error('Failed to load structure:', error);
+        _showErrorState(`Failed to load ${state.pdbId}. Please check the PDB ID and try again.`);
       });
-      return scores;
-    } catch {
-      return [];
+    } catch (error) {
+      console.error('Error loading structure:', error);
+      _showErrorState(`Failed to load ${state.pdbId}`);
     }
   }
 
-  /* ─── Build pLDDT SVG chart ─── */
-  function _buildChart(scores) {
-    if (!scores.length) return '<div class="pv-no-chart">pLDDT data unavailable</div>';
-
-    const W = 760;
-    const H = 120;
-    const PADDING = { top: 10, right: 12, bottom: 24, left: 36 };
-    const cW = W - PADDING.left - PADDING.right;
-    const cH = H - PADDING.top - PADDING.bottom;
-
-    const maxRes = scores[scores.length - 1].res;
-    const barWidth = Math.max(1, Math.floor(cW / scores.length));
-
-    const bars = scores
-      .map((s, i) => {
-        const tier = TIERS.find((t) => s.plddt >= t.min) || TIERS[TIERS.length - 1];
-        const x = PADDING.left + (i / scores.length) * cW;
-        const barH = (s.plddt / 100) * cH;
-        const y = PADDING.top + cH - barH;
-        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth}" height="${barH.toFixed(1)}" fill="${tier.color}" opacity="0.85"/>`;
-      })
-      .join('');
-
-    const yLabels = [0, 25, 50, 70, 90, 100]
-      .map((v) => {
-        const y = PADDING.top + cH - (v / 100) * cH;
-        return `<text x="${PADDING.left - 4}" y="${(y + 3).toFixed(1)}" fill="#A8A098" font-size="8" text-anchor="end">${v}</text>
-              <line x1="${PADDING.left}" y1="${y.toFixed(1)}" x2="${W - PADDING.right}" y2="${y.toFixed(1)}" stroke="#182236" stroke-width="0.5"/>`;
-      })
-      .join('');
-
-    const avgScore = (scores.reduce((a, b) => a + b.plddt, 0) / scores.length).toFixed(1);
-
-    const legend = TIERS.map(
-      (t) =>
-        `<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.72rem;color:#A8A098">
-        <span style="width:10px;height:10px;border-radius:2px;background:${t.color};display:inline-block;flex-shrink:0"></span>${t.label}</span>`
-    ).join('');
-
-    return `
-      <div class="pv-chart-wrap">
-        <div class="pv-chart-header">
-          <span>pLDDT per-residue confidence</span>
-          <span class="pv-avg-score">Mean: <strong>${avgScore}</strong> / 100 · ${scores.length} residues</span>
-        </div>
-        <svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="pv-chart-svg" aria-label="pLDDT confidence chart">
-          <rect x="${PADDING.left}" y="${PADDING.top}" width="${cW}" height="${cH}" fill="#111B2E"/>
-          ${yLabels}
-          ${bars}
-          <text x="${W / 2}" y="${H - 4}" fill="#354060" font-size="8" text-anchor="middle">Residue (1–${maxRes})</text>
-        </svg>
-        <div class="pv-legend">${legend}</div>
-      </div>`;
-  }
-
-  /* ─── Main lookup by UniProt accession ─── */
-  async function _doLookup(acc) {
-    if (!acc || !acc.trim()) return;
-    acc = acc.trim().toUpperCase();
-    _currentAcc = acc;
-    _renderLoading(acc);
+  function _applyInitialRepresentations() {
+    if (!state.viewer) return;
 
     try {
-      const [pred, upInfo] = await Promise.all([_fetchPrediction(acc), _fetchUniProtInfo(acc)]);
+      // Clear existing representations
+      state.viewer.tools.representationManager.clear();
 
-      const scores = pred.pdbUrl ? await _fetchPLDDT(pred.pdbUrl) : [];
-      _renderProtein(pred, upInfo, scores);
-    } catch (err) {
-      _renderError(err.message);
+      // Apply default representations based on selection
+      const rep = CONFIG.REPRESENTATIONS[state.currentRepresentation];
+      if (rep) {
+        state.viewer.tools.representationManager.addRepresentation(
+          rep.type,
+          {
+            ...(rep.params || {}),
+            color: state.colorScheme === 'uniform' ? '#00C4A0' : state.colorScheme
+          }
+        );
+      }
+
+      // Apply highlights if any
+      if (state.highlightedResidues.length > 0) {
+        _applyHighlightResidues(state.highlightedResidues);
+      }
+
+      // Zoom to fit
+      state.viewer.camera.zoomTo(state.viewer.scene, true);
+
+    } catch (e) {
+      console.error('Error applying representations:', e);
     }
   }
 
-  /* ─── Lookup by gene symbol (called from GeneLookup) ─── */
-  async function lookupByGene(symbol) {
-    symbol = symbol.toUpperCase();
-    const known = AFRICA_PROTEINS.find((p) => p.gene === symbol);
-    if (known) {
-      const inp = document.getElementById('pv-acc-input');
-      if (inp) inp.value = known.acc;
-      await _doLookup(known.acc);
-      return;
-    }
-    /* Try UniProt search as fallback */
-    _renderLoading(symbol);
+  function _applyHighlightResidues(residueSpecs) {
+    if (!state.viewer) return;
+
     try {
-      const url = `${UNIPROT}/search?query=gene:${encodeURIComponent(symbol)}+AND+organism_id:9606+AND+reviewed:true&format=json&size=1`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('UniProt lookup failed');
-      const data = await res.json();
-      const hit = data.results?.[0];
-      if (!hit) throw new Error(`No reviewed UniProt entry for gene ${symbol}`);
-      const foundAcc = hit.primaryAccession;
-      const inp = document.getElementById('pv-acc-input');
-      if (inp) inp.value = foundAcc;
-      await _doLookup(foundAcc);
-    } catch (err) {
-      _renderError(err.message);
+      // Clear previous highlights
+      _clearHighlightResidues();
+
+      // Parse residue specs (format: "CHAIN:RESNUM" or just "RESNUM" for all chains)
+      const selections = residueSpecs.map(spec => {
+        const [chain, resnum] = spec.split(':');
+        if (chain && resnum) {
+          return `:${chain} and ${resnum}`;
+        } else if (resnum) {
+          return `${resnum}`; // Will match any chain
+        }
+        return spec;
+      }).filter(Boolean);
+
+      if (selections.length > 0) {
+        const selection = selections.join(' or ');
+        state.viewer.tools.representationManager.addRepresentation(
+          'ball+stick',
+          {
+            selection,
+            color: '#ffd700', // Gold for highlights
+            radius: 0.8
+          }
+        );
+
+        state.highlightedResidues = residueSpecs;
+      }
+    } catch (e) {
+      console.error('Error applying highlights:', e);
     }
   }
 
-  /* ─── Render states ─── */
-  function _el() {
-    return document.getElementById('pv-result');
-  }
+  function _clearHighlightResidues() {
+    if (!state.viewer) return;
 
-  function _renderLoading(id) {
-    const el = _el();
-    if (el)
-      el.innerHTML = `<div class="pv-loading"><div class="pv-spinner"></div> Fetching AlphaFold prediction for ${_esc(id)}…</div>`;
-  }
-
-  function _renderError(msg) {
-    const el = _el();
-    if (el)
-      el.innerHTML = `<div class="pv-error"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ${_esc(msg)}</div>`;
-  }
-
-  function _renderProtein(pred, upInfo, scores) {
-    const el = _el();
-    if (!el) return;
-
-    const name = upInfo.name || pred.uniprotDescription || 'Unknown protein';
-    const gene = upInfo.gene || '';
-    const length = upInfo.length || '';
-    const org = upInfo.org || 'Homo sapiens';
-    const avgPLDDT = scores.length
-      ? (scores.reduce((a, b) => a + b.plddt, 0) / scores.length).toFixed(1)
-      : 'N/A';
-
-    const version = pred.latestVersion || 1;
-    const modelUrl = pred.cifUrl || pred.pdbUrl || '';
-    const afPage = `https://alphafold.ebi.ac.uk/entry/${_currentAcc}`;
-
-    el.innerHTML = `
-      <div class="pv-protein-card">
-        <div class="pv-protein-header">
-          <div>
-            <div class="pv-protein-name">${_esc(name)}</div>
-            ${gene ? `<div class="pv-protein-gene">Gene: <strong>${_esc(gene)}</strong></div>` : ''}
-            <div class="pv-protein-meta">
-              <span>${_esc(org)}</span>
-              ${length ? `<span>· ${length} aa</span>` : ''}
-              <span>· AlphaFold v${version}</span>
-              <span>· Mean pLDDT ${avgPLDDT}</span>
-            </div>
-          </div>
-          <a class="pv-af-link" href="${afPage}" target="_blank" rel="noopener">View on AlphaFold DB</a>
-        </div>
-
-        ${upInfo.function ? `<div class="pv-function">${_esc(upInfo.function.slice(0, 300))}${upInfo.function.length > 300 ? '…' : ''}</div>` : ''}
-
-        ${_buildChart(scores)}
-
-        <div class="pv-3d-section">
-          <div class="pv-3d-label">3D Structure Viewer</div>
-          <div class="pv-3d-frame-wrap">
-            <iframe
-              class="pv-3d-frame"
-              src="https://alphafold.ebi.ac.uk/entry/${_esc(_currentAcc)}"
-              title="AlphaFold 3D viewer for ${_esc(_currentAcc)}"
-              loading="lazy"
-              sandbox="allow-scripts allow-same-origin allow-forms allow-popups">
-            </iframe>
-          </div>
-          <div class="pv-3d-note">Interactive 3D viewer powered by AlphaFold EBI. Requires internet connection.</div>
-        </div>
-
-        <div class="pv-download-row">
-          ${pred.pdbUrl ? `<a class="pv-dl-btn" href="${pred.pdbUrl}" download="${_currentAcc}.pdb">Download PDB</a>` : ''}
-          ${pred.cifUrl ? `<a class="pv-dl-btn" href="${pred.cifUrl}" download="${_currentAcc}.cif">Download mmCIF</a>` : ''}
-          <a class="pv-dl-btn pv-dl-secondary" href="${afPage}" target="_blank" rel="noopener">AlphaFold entry</a>
-          <a class="pv-dl-btn pv-dl-secondary" href="https://www.uniprot.org/uniprot/${_esc(_currentAcc)}" target="_blank" rel="noopener">UniProt entry</a>
-        </div>
-      </div>`;
-  }
-
-  /* ─── Init ─── */
-  function init() {
-    const section = document.getElementById('protein-section');
-    if (!section || section.dataset.pvReady) return;
-    section.dataset.pvReady = '1';
-
-    section.innerHTML = `
-      <div class="pv-wrap">
-        <div class="pv-header">
-          <div class="pv-header-title">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg>
-            Protein Structure Viewer
-          </div>
-          <div class="pv-header-sub">AlphaFold AI structure predictions — pLDDT confidence visualisation</div>
-        </div>
-
-        <div class="pv-search-row">
-          <input type="text" class="pv-search-input" id="pv-acc-input"
-            placeholder="UniProt accession — e.g. P68871, O14791, P11413…"
-            onkeydown="if(event.key==='Enter') OmicsLab.ProteinViewer._lookupAcc()"/>
-          <input type="text" class="pv-search-input pv-gene-input" id="pv-gene-input"
-            placeholder="or gene symbol — e.g. HBB, APOL1…"
-            onkeydown="if(event.key==='Enter') OmicsLab.ProteinViewer.lookupByGene(this.value)"/>
-          <button class="pv-search-btn" onclick="OmicsLab.ProteinViewer._lookupAcc()">View structure</button>
-        </div>
-
-        <div class="pv-preloaded">
-          <div class="pv-preloaded-label">African disease proteins:</div>
-          <div class="pv-preloaded-grid">
-            ${AFRICA_PROTEINS.map(
-              (p) => `
-              <button class="pv-protein-chip" onclick="OmicsLab.ProteinViewer._quickLoad('${p.acc}','${p.gene}')" title="${_esc(p.disease)}">
-                <span class="pv-chip-gene">${p.gene}</span>
-                <span class="pv-chip-acc">${p.acc}</span>
-              </button>`
-            ).join('')}
-          </div>
-        </div>
-
-        <div id="pv-result" class="pv-result">
-          <div class="pv-empty">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#354060" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10-4.48 10-10 10S2 17.52 2 12z"/><path d="M12 8v4l3 3"/></svg>
-            <div>Enter a UniProt accession or gene symbol, or select an African disease protein above</div>
-          </div>
-        </div>
-      </div>`;
-  }
-
-  function _lookupAcc() {
-    const inp = document.getElementById('pv-acc-input');
-    if (inp && inp.value.trim()) {
-      _doLookup(inp.value);
-      return;
+    try {
+      // This is tricky with Mol* as we need to track what we added
+      // For simplicity, we'll rebuild representations when clearing
+      // In a production version, we'd track the representation IDs
+      if (state.highlightedResidues.length > 0) {
+        state.highlightedResidues = [];
+        // Reapply current representation without highlights
+        _applyInitialRepresentations();
+      }
+    } catch (e) {
+      console.error('Error clearing highlights:', e);
     }
-    const gInp = document.getElementById('pv-gene-input');
-    if (gInp && gInp.value.trim()) lookupByGene(gInp.value);
   }
 
-  function _quickLoad(acc, gene) {
-    const aInp = document.getElementById('pv-acc-input');
-    const gInp = document.getElementById('pv-gene-input');
-    if (aInp) aInp.value = acc;
-    if (gInp) gInp.value = gene;
-    _doLookup(acc);
+  /* ─── UI & EVENTS ──────────────────────────────────────────────────── */
+
+  function _setupEventListeners() {
+    // Retry button
+    if (state.retryBtn) {
+      state.retryBtn.addEventListener('click', () => {
+        if (state.pdbId) {
+          _loadStructure(state.pdbId);
+        }
+      });
+    }
+
+    // Window resize
+    window.addEventListener('resize', _onWindowResize);
   }
 
-  function _esc(s) {
-    return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  function _onWindowResize() {
+    if (state.viewer) {
+      state.viewer.resize();
+    }
   }
 
-  return { init, lookupByGene, _lookupAcc, _quickLoad };
+  function _showInfoMessage(message) {
+    if (state.infoContainer) {
+      state.infoContainer.textContent = message;
+    }
+  }
+
+  function _showStructureInfo() {
+    if (!state.infoContainer || !state.viewer) return;
+
+    try {
+      const data = state.viewer.structureData;
+      if (data) {
+        const info = [
+          `PDB: ${state.pdbId}`,
+          `Chains: ${data.models[0]?.chains?.length || 0}`,
+          `Residues: ${data.models[0]?.polymerResidueCount || 0}`,
+          `Atoms: ${data.atomCount || 0}`
+        ].filter(Boolean).join(' • ');
+
+        state.infoContainer.innerHTML = `<div>${info}</div>`;
+      }
+    } catch (e) {
+      console.error('Error showing structure info:', e);
+      state.infoContainer.textContent = `PDB: ${state.pdbId}`;
+    }
+  }
+
+  /* ─── PUBLIC API ───────────────────────────────────────────────────── */
+
+  function setPdbId(pdbId) {
+    if (!/^[a-zA-Z0-9]{4}$/.test(pdbId)) {
+      console.warn('Invalid PDB ID format. Should be 4 alphanumeric characters.');
+      return false;
+    }
+
+    if (state.isInitialized && state.pdbId !== pdbId.toUpperCase()) {
+      state.pdbId = pdbId.toUpperCase();
+      if (state.viewer && state.supportsWebGL) {
+        _loadStructure(pdbId);
+      } else if (!state.supportsWebGL) {
+        // In fallback mode, just update the ID displayed
+        _showInfoMessage(`PDB ID: ${state.pdbId} (WebGL not available)`);
+      }
+    }
+    return true;
+  }
+
+  function setRepresentation(type) {
+    if (!CONFIG.REPRESENTATIONS[type]) {
+      console.warn(`Unknown representation type: ${type}`);
+      return false;
+    }
+
+    state.currentRepresentation = type;
+    if (state.viewer && state.supportsWebGL) {
+      _applyInitialRepresentations();
+    }
+    return true;
+  }
+
+  function setColorScheme(scheme) {
+    if (!Object.values(CONFIG.COLOR_SCHEMES).includes(scheme) && scheme !== 'uniform') {
+      console.warn(`Unknown color scheme: ${scheme}`);
+      return false;
+    }
+
+    state.colorScheme = scheme;
+    if (state.viewer && state.supportsWebGL) {
+      _applyInitialRepresentations();
+    }
+    return true;
+  }
+
+  function setHighlightedResidues(residues) {
+    if (!Array.isArray(residues)) {
+      console.warn('Highlighted residues must be an array');
+      return false;
+    }
+
+    state.highlightedResidues = residues;
+    if (state.viewer && state.supportsWebGL) {
+      _applyHighlightResidues(residues);
+    }
+    return true;
+  }
+
+  function setQuality(level) {
+    if (!['low', 'medium', 'high'].includes(level)) {
+      console.warn('Quality must be low, medium, or high');
+      return false;
+    }
+
+    state.quality = level;
+    // Quality affects initial sizing, but for simplicity we'll note it
+    // In a full implementation, we'd recreate the viewer with new dimensions
+    return true;
+  }
+
+  function resetView() {
+    if (state.viewer && state.supportsWebGL) {
+      state.viewer.camera.zoomTo(state.viewer.scene, true);
+    }
+    return true;
+  }
+
+  function getState() {
+    return {
+      pdbId: state.pdbId,
+      isInitialized: state.isInitialized,
+      isLoading: state.isLoading,
+      supportsWebGL: state.supportsWebGL,
+      representation: state.currentRepresentation,
+      colorScheme: state.colorScheme,
+      highlightedResidues: [...state.highlightedResidues],
+      quality: state.quality
+    };
+  }
+
+  /* ─── RETURN PUBLIC API ─────────────────────────────────────────────── */
+
+  return {
+    init,
+    dispose,
+    setPdbId,
+    setRepresentation,
+    setColorScheme,
+    setHighlightedResidues,
+    setQuality,
+    resetView,
+    getState
+  };
 })();

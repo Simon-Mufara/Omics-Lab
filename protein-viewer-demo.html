@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protein Viewer Demo - OmicsLab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #060a14;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: rgba(0, 196, 160, 0.1);
+            border-bottom: 1px solid rgba(0, 196, 160, 0.3);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #00C4A0;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(0, 196, 160, 0.3);
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .control-group label {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: #aaa;
+        }
+
+        .control-group button,
+        .control-group select,
+        .control-group input {
+            background-color: rgba(0, 196, 160, 0.2);
+            border: 1px solid rgba(0, 196, 160, 0.4);
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .control-group button:hover,
+        .control-group select:hover,
+        .control-group input:hover {
+            background-color: rgba(0, 196, 160, 0.3);
+        }
+
+        #protein-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            min-height: 300px;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 196, 160, 0.3);
+            border-radius: 4px;
+            padding: 1rem;
+            max-width: 280px;
+            font-size: 0.875rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .info-panel h3 {
+            color: #00C4A0;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+
+            .info-panel {
+                position: static;
+                max-width: 100%;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Protein Structure Viewer</h1>
+        <p>Loading real structures by PDB ID with Mol*</p>
+    </div>
+
+    <div id="protein-container"></div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="pdb-id">PDB ID:</label>
+            <input type="text" id="pdb-id" value="1HHB" maxlength="4" placeholder="e.g., 1HHB">
+        </div>
+
+        <div class="control-group">
+            <label for="representation">Representation:</label>
+            <select id="representation">
+                <option value="cartoon" selected>Cartoon</option>
+                <option value="surface">Surface</option>
+                <option value="ball-and-stick">Ball &amp; Stick</option>
+                <option value="licorice">Licorice</option>
+                <option value="spacefill">Spacefill</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="color-scheme">Color Scheme:</label>
+            <select id="color-scheme">
+                <option value="chainid" selected>Chain ID</option>
+                <option value="amino">Amino Acid</option>
+                <option value="sstruc">Secondary Structure</option>
+                <option value="hetatm">Hetero Atoms</option>
+                <option value="uniform">Uniform</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Quality:</label>
+            <select id="quality">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Controls:</label>
+            <div>
+                <button id="load-btn">Load Structure</button>
+                <button id="reset-view-btn">Reset View</button>
+                <button id="clear-btn">Clear</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Highlight:</label>
+            <div>
+                <input type="text" id="highlight-input" placeholder="e.g., A:20 or 20" size="8">
+                <button id="highlight-btn">Highlight</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <h3>Structure Info</h3>
+        <div id="structure-info">Loading...</div>
+    </div>
+
+    <!-- Three.js and dependencies for Mol* -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Mol* -->
+    <script src="https://unpkg.com/molstar@latest/build/molstar.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/molstar@latest/build/molstar.css">
+
+    <!-- Our Protein Viewer component -->
+    <script src="js/protein-viewer.js"></script>
+
+    <script>
+        // Wait for dependencies to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('protein-container');
+            const pdbIdInput = document.getElementById('pdb-id');
+            const representationSelect = document.getElementById('representation');
+            const colorSchemeSelect = document.getElementById('color-scheme');
+            const qualitySelect = document.getElementById('quality');
+            const loadBtn = document.getElementById('load-btn');
+            const resetViewBtn = document.getElementById('reset-view-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const highlightInput = document.getElementById('highlight-input');
+            const highlightBtn = document.getElementById('highlight-btn');
+            const structureInfoDiv = document.getElementById('structure-info');
+
+            // Initialize protein viewer
+            const proteinViewer = window.OmicsLab.ProteinViewer;
+
+            function initProteinViewer() {
+                const pdbId = pdbIdInput.value.trim().toUpperCase();
+                const representation = representationSelect.value;
+                const colorScheme = colorSchemeSelect.value;
+                const quality = qualitySelect.value;
+
+                // Validate PDB ID
+                if (!/^[a-zA-Z0-9]{4}$/.test(pdbId)) {
+                    alert('Please enter a valid PDB ID (4 alphanumeric characters)');
+                    return false;
+                }
+
+                // Initialize the component
+                if (proteinViewer.init(container, {
+                    pdbId: pdbId,
+                    representation: representation,
+                    colorScheme: colorScheme,
+                    quality: quality
+                })) {
+                    updateInfo();
+                    return true;
+                }
+
+                return false;
+            }
+
+            function updateInfo() {
+                const state = proteinViewer.getState();
+                structureInfoDiv.innerHTML = `
+                    <div><strong>PDB ID:</strong> ${state.pdbId}</div>
+                    <div><strong>Status:</strong> ${state.isLoading ? 'Loading...' : state.isInitialized ? 'Ready' : 'Not initialized'}</div>
+                    <div><strong>WebGL Support:</strong> ? ${state.supportsWebGL ? 'Yes' : 'No'}</div>
+                    <div><strong>Representation:</strong> ? ${state.representation}</div>
+                    <div><strong>Color Scheme:</strong> ? ${state.colorScheme}</div>
+                    <div><strong>Quality:</strong> ? ${state.quality}</div>
+                    <div><strong>Highlighted Residues:</strong> ? ${state.highlightedResidues.length > 0 ? state.highlightedResidues.join(', ') : 'None'}</div>
+                `;
+            }
+
+            // Event listeners
+            loadBtn.addEventListener('click', function() {
+                structureInfoDiv.textContent = 'Loading...';
+                if (proteinViewer.init(container, {
+                    pdbId: pdbIdInput.value.trim().toUpperCase(),
+                    representation: representationSelect.value,
+                    colorScheme: colorSchemeSelect.value,
+                    quality: qualitySelect.value
+                })) {
+                    updateInfo();
+                }
+            });
+
+            representationSelect.addEventListener('change', function() {
+                if (proteinViewer.isInitialized) {
+                    proteinViewer.setRepresentation(this.value);
+                    updateInfo();
+                }
+            });
+
+            colorSchemeSelect.addEventListener('change', function() {
+                if (proteinViewer.isInitialized) {
+                    proteinViewer.setColorScheme(this.value);
+                    updateInfo();
+                }
+            });
+
+            qualitySelect.addEventListener('change', function() {
+                if (proteinViewer.isInitialized) {
+                    proteinViewer.setQuality(this.value);
+                    updateInfo();
+                }
+            });
+
+            resetViewBtn.addEventListener('click', function() {
+                if (proteinViewer.isInitialized) {
+                    proteinViewer.resetView();
+                }
+            });
+
+            clearBtn.addEventListener('click', function() {
+                if (proteinViewer.isInitialized) {
+                    proteinViewer.dispose();
+                    container.innerHTML = '';
+                    structureInfoDiv.textContent = 'Cleared';
+                    pdbIdInput.value = '';
+                }
+            });
+
+            highlightBtn.addEventListener('click', function() {
+                if (proteinViewer.isInitialized) {
+                    const highlightText = highlightInput.value.trim();
+                    if (highlightText) {
+                        // Parse format like "A:20" or just "20"
+                        const residues = [highlightText];
+                        proteinViewer.setHighlightedResidues(residues);
+                        updateInfo();
+                    }
+                }
+            });
+
+            // Allow Enter key in inputs
+            pdbIdInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') loadBtn.click();
+            });
+
+            highlightInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') highlightBtn.click();
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                // The protein viewer handles resize internally
+            });
+
+            // Initialize with default PDB ID
+            initProteinViewer();
+        });
+    </script>
+</body>
+</html>

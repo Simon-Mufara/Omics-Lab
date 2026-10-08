@@ -1,0 +1,185 @@
+
+> omicslab-simulator@1.0.0 build
+> vite build
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - ESM syntax in a file loaded as CommonJS (vite.config.js:1:1). Use a `.mjs` extension or set `"type": "module"` in the closest package.json
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+[36mvite v8.3.0 [32mbuilding client environment for production...[36m[39m
+transforming...
+<script src="js/config.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/utils.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/db.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/notify.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/icons.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/qa.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/data-loader.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/workflows.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/diseases.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/disease-learning.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/gallery.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/equipment.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/engine.ts"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/bench.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/compare.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/quiz.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/africa-geo.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/africa-map.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/troubleshoot.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/sandbox.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/research-mode.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/hpc-training.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/repro-hub.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/curriculum.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/badges.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/africa-hub.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/workshop.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/i18n.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/progress.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/search.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/changelog.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/analysis.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/virtual-lab.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/gwas.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pharmacogenomics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/network-hub.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/rna-atlas.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/terminal.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/profile.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/tour.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/testimonials.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/sound.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/voice.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/outbreak.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/datasets.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/career.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/mentor.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/protocols.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/collab.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/grant.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/leaderboard.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/debugger.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/alerts.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/phylo.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/peerreview.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/heatmap.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/journalclub.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/citations.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/quizbattle.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/qualitypredictor.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/variantinterp.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/primerdesign.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/nexus.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/paperhub.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/auth.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/auth-clerk.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/entitlements.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/teams.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pubmed.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/gene-lookup.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/protein-viewer.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/uniprot.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/open-targets.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/string-net.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/preprints.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pathways.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/sra-browser.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/assistant.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/thesis-coach.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/bionlp.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/codon.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/nanopore.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/amr.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/gatk.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/kraken.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/popstruct.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/genomebrowser.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/directory.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/hackathon.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/mentorship.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/h3africa.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pathogen-tracker.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/glossary.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/offline-data.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/labnotebook.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pipeline-gen.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/metaanalysis.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/idb-manager.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/api-docs.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/certification.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/impact.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/partners.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/fastqc.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/single-cell.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/assembly.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/bioethics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/enrichment.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pipeline-visual.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/case-files.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/ai-ml-bio.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/stats-genomics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/seq-align.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/epigenomics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/crispr.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/proteomics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/research-wizard.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/alignment-viewer.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/recombination.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/social.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/community.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/embedded-apps.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pricing.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/home-hero.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/explainer.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/user-guide.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/study-pack.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/wasm-tools.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/skill-tree.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/variant-atlas.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/clinical-decision.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/one-health.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/institution.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/error.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/skeleton.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/settings.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/knowledge-graph.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/notifications.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/offline-indicator.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/output-tracker.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/output-viz.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/study-music.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/theme.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/dashboard.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/mobile-nav.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/shortcuts.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/pwa.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/learning-path.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/calendar.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/focus-trap.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/a11y.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/nexus-attachments.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/nexus-realtime.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/whiteboard.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/voice-compose.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/data-import.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/legal.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/analytics.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/locales/en.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/router.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/app.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="js/study-guide-display.js"> in "/index.html" can't be bundled without type="module" attribute
+<script src="/_vercel/insights/script.js"> in "/index.html" can't be bundled without type="module" attribute
+✓ 14 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/assets/manifest-BAOFytkC.json       5.42 kB │ gzip:  1.22 kB
+dist/assets/notify-C4pJsaQO.js           7.22 kB
+dist/assets/icons-CDsf1QTP.js            9.51 kB
+dist/assets/router-KPvJCvKQ.js          81.77 kB
+dist/assets/app-DAxjtzni.js             94.20 kB
+dist/index.html                        207.19 kB │ gzip: 35.03 kB
+dist/assets/simon-mufara-DwrlXS_g.jpg  218.64 kB
+dist/assets/print-h0J7wO6_.css           5.24 kB │ gzip:  1.67 kB
+dist/assets/index-DAQYfYSx.css         226.22 kB │ gzip: 39.16 kB
+
+[32m✓ built in 823ms[39m

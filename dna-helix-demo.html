@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Helix Demo - OmicsLab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #060a14;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: rgba(0, 196, 160, 0.1);
+            border-bottom: 1px solid rgba(0, 196, 160, 0.3);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #00C4A0;
+            margin-bottom: 0.5rem;
+        }
+
+        .controls {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(0, 196, 160, 0.3);
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .control-group label {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: #aaa;
+        }
+
+        .control-group button,
+        .control-group select,
+        .control-group input {
+            background-color: rgba(0, 196, 160, 0.2);
+            border: 1px solid rgba(0, 196, 160, 0.4);
+            color: #e0e0e0;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .control-group button:hover,
+        .control-group select:hover,
+        .control-group input:hover {
+            background-color: rgba(0, 196, 160, 0.3);
+        }
+
+        .control-group input[type="range"] {
+            width: 100px;
+            padding: 0;
+            height: 4px;
+            background: rgba(0, 196, 160, 0.3);
+            border: none;
+            border-radius: 2px;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00C4A0;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #dna-container {
+            flex: 1;
+            position: relative;
+            width: 100%;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 196, 160, 0.3);
+            border-radius: 4px;
+            padding: 1rem;
+            max-width: 280px;
+            font-size: 0.875rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .info-panel h3 {
+            color: #00C4A0;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        .sequence-info {
+            background-color: rgba(0, 196, 160, 0.1);
+            border: 1px solid rgba(0, 196, 160, 0.3);
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            overflow-x: auto;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .sequence-info pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #aaa;
+        }
+
+        .loading-spinner {
+            border: 3px solid rgba(0, 196, 160, 0.3);
+            border-top: 3px solid #00C4A0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-playing { background-color: #4CAF50; }
+        .status-paused { background-color: #FF9800; }
+        .status-stopped { background-color: #F44336; }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                max-height: none;
+            }
+
+            .info-panel {
+                position: static;
+                max-width: 100%;
+                margin-top: 1rem;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>DNA Helix Visualization</h1>
+        <p>Interactive B-DNA structure with transcription and translation animations</p>
+    </div>
+
+    <div id="dna-container"></div>
+
+    <div class="controls">
+        <div class="control-group">
+            <label for="sequence">DNA Sequence:</label>
+            <input type="text" id="sequence" value="ATGCGTACGTAGCTAGCTAGCTAGCTATGCGTACGT" maxlength="60">
+        </div>
+
+        <div class="control-group">
+            <label for="mode">Mode:</label>
+            <select id="mode">
+                <option value="off">Off</option>
+                <option value="transcription">Transcription</option>
+                <option value="translation">Translation</option>
+                <option value="both" selected>Both</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>Controls:</label>
+            <div>
+                <button id="playBtn">Play</button>
+                <button id="pauseBtn">Pause</button>
+                <button id="stepBtn">Step</button>
+                <button id="resetBtn">Reset</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Speed:</label>
+            <div>
+                <input type="range" id="speedSlider" min="1" max="500" value="100">
+                <span id="speedValue">1.0x</span>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Views:</label>
+            <div>
+                <button id="toggleTranscription">Hide Transcription</button>
+                <button id="toggleTranslation">Hide Translation</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Actions:</label>
+            <div>
+                <button id="zoomToBase5">Zoom to Base 5</button>
+                <button id="zoomToBase10">Zoom to Base 10</button>
+                <button id="resetViewBtn">Reset View</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-panel">
+        <h3>Animation Status</h3>
+        <div id="statusInfo">
+            <div>Mode: <span id="modeValue">Both</span></div>
+            <div>State: <span id="stateValue"><span class="status-indicator status-stopped"></span>Stopped</span></div>
+            <div>Progress:</div>
+            <div>Transcription: <span id="transcriptionProgress">0%</span></div>
+            <div>Translation: <span id="translationProgress">0%</span></div>
+        </div>
+        <div id="sequenceInfo"></div>
+    </div>
+
+    <div class="loading" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p>Loading DNA visualization...</p>
+    </div>
+
+    <!-- Three.js and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/@tweenjs/tween.js@18.6.4"></script>
+
+    <!-- Our DNA Helix component -->
+    <script src="js/dna-helix.js"></script>
+
+    <script>
+        // Wait for Three.js to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('dna-container');
+            const loadingScreen = document.getElementById('loadingScreen');
+            const sequenceInput = document.getElementById('sequence');
+            const modeSelect = document.getElementById('mode');
+            const playBtn = document.getElementById('playBtn');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const stepBtn = document.getElementById('stepBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const speedSlider = document.getElementById('speedSlider');
+            const speedValue = document.getElementById('speedValue');
+            const toggleTranscriptionBtn = document.getElementById('toggleTranscription');
+            const toggleTranslationBtn = document.getElementById('toggleTranslation');
+            const zoomToBase5Btn = document.getElementById('zoomToBase5');
+            const zoomToBase10Btn = document.getElementById('zoomToBase10');
+            const resetViewBtn = document.getElementById('resetViewBtn');
+            const modeValue = document.getElementById('modeValue');
+            const stateValue = document.getElementById('stateValue');
+            const transcriptionProgress = document.getElementById('transcriptionProgress');
+            const translationProgress = document.getElementById('translationProgress');
+            const sequenceInfoDiv = document.getElementById('sequenceInfo');
+
+            // Initialize DNA helix
+            const dnaHelix = window.OmicsLab.DNAHelix;
+
+            // Show loading screen initially
+            loadingScreen.style.display = 'flex';
+
+            // Initialize with default sequence
+            let isInitialized = false;
+
+            function initDNAHelix() {
+                const sequence = sequenceInput.value.toUpperCase();
+                const mode = modeSelect.value;
+
+                // Validate sequence
+                if (!/^[ACGT]*$/.test(sequence)) {
+                    alert('Please enter a valid DNA sequence (only A, C, G, T allowed)');
+                    return false;
+                }
+
+                // Initialize the component
+                if (dnaHelix.init(container, {
+                    sequence: sequence,
+                    mode: mode,
+                    quality: 'medium',
+                    autoRotate: true,
+                    showHBonds: true
+                })) {
+                    isInitialized = true;
+                    loadingScreen.style.display = 'none';
+                    updateDisplays();
+                    return true;
+                }
+
+                return false;
+            }
+
+            function updateDisplays() {
+                if (!isInitialized) return;
+
+                const state = dnaHelix.getState();
+
+                // Update mode display
+                modeValue.textContent = state.mode.charAt(0).toUpperCase() + state.mode.slice(1);
+
+                // Update state display
+                const stateText = state.animationState.charAt(0).toUpperCase() + state.animationState.slice(1);
+                stateValue.innerHTML = `<span class="status-indicator status-${state.animationState === 'playing' ? 'playing' :
+                                       state.animationState === 'paused' ? 'paused' : 'stopped'}"></span> ${stateText}`;
+
+                // Update progress
+                const txProgress = Math.min(100, state.progress.transcription * 100).toFixed(1);
+                const tlProgress = Math.min(100, state.progress.translation * 100).toFixed(1);
+                transcriptionProgress.textContent = txProgress + '%';
+                translationProgress.textContent = tlProgress + '%';
+
+                // Update sequence info
+                sequenceInfoDiv.innerHTML = `
+                    <strong>DNA:</strong> ${state.sequences.dna}<br>
+                    <strong>mRNA:</strong> ${state.sequences.mRNA}<br>
+                    <strong>Amino Acids:</strong> ${state.sequences.aminoAcids}
+                `;
+            }
+
+            // Event listeners
+            sequenceInput.addEventListener('change', function() {
+                if (isInitialized) {
+                    loadingScreen.style.display = 'flex';
+                    dnaHelix.dispose();
+                    setTimeout(() => {
+                        if (initDNAHelix()) {
+                            loadingScreen.style.display = 'none';
+                        }
+                    }, 100);
+                }
+            });
+
+            modeSelect.addEventListener('change', function() {
+                if (isInitialized) {
+                    dnaHelix.setMode(this.value);
+                    updateDisplays();
+                }
+            });
+
+            playBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    if (dnaHelix.play()) {
+                        playBtn.textContent = 'Playing...';
+                        pauseBtn.textContent = 'Pause';
+                        updateDisplays();
+                    }
+                }
+            });
+
+            pauseBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    if (dnaHelix.pause()) {
+                        playBtn.textContent = 'Play';
+                        pauseBtn.textContent = 'Paused';
+                        updateDisplays();
+                    }
+                }
+            });
+
+            stepBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    if (dnaHelix.step()) {
+                        updateDisplays();
+                    }
+                }
+            });
+
+            resetBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    if (dnaHelix.reset()) {
+                        playBtn.textContent = 'Play';
+                        pauseBtn.textContent = 'Pause';
+                        updateDisplays();
+                    }
+                }
+            });
+
+            speedSlider.addEventListener('input', function() {
+                const speed = parseInt(this.value) / 100;
+                speedValue.textContent = speed + 'x';
+                if (isInitialized) {
+                    dnaHelix.setSpeed(speed);
+                }
+            });
+
+            toggleTranscriptionBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    const show = dnaHelix.setShowTranscription(!dnaHelix.getState().showTranscription /* approximate */);
+                    // Actually, we need to get the current state to toggle properly
+                    const state = dnaHelix.getState();
+                    dnaHelix.setShowTranscription(!state.showTranscription);
+                    this.textContent = state.showTranscription ? 'Hide Transcription' : 'Show Transcription';
+                }
+            });
+
+            toggleTranslationBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    const state = dnaHelix.getState();
+                    dnaHelix.setShowTranslation(!state.showTranslation);
+                    this.textContent = state.showTranslation ? 'Hide Translation' : 'Show Translation';
+                }
+            });
+
+            zoomToBase5Btn.addEventListener('click', function() {
+                if (isInitialized) {
+                    dnaHelix.zoomToBase(4); // 0-indexed, so 4 is the 5th base
+                }
+            });
+
+            zoomToBase10Btn.addEventListener('click', function() {
+                if (isInitialized) {
+                    dnaHelix.zoomToBase(9); // 0-indexed, so 9 is the 10th base
+                }
+            });
+
+            resetViewBtn.addEventListener('click', function() {
+                if (isInitialized) {
+                    dnaHelix.resetView();
+                }
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                // The DNAHelix component handles resize internally via its event listener
+            });
+
+            // Initialize on load
+            initDNAHelix();
+        });
+    </script>
+</body>
+</html>

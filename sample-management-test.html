@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>OmicsLab Sample Management System Test</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body, html { overflow:hidden; height:100%; background:#060a14; color:#e0e0e0; font-family:sans-serif; }
+        #loading {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            text-align:center; color:#00C4A0;
+        }
+        #loading.spinner {
+            width:40px; height:40px; border:4px solid rgba(0,196,160,0.3);
+            border-top:4px solid #00C4A0; border-radius:50%; animation:spin 1s linear infinite;
+            margin:0 auto 20px;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        .info {
+            position:absolute; top:10px; left:10px; background:rgba(0,0,0,0.5);
+            padding:10px; border-radius:4px; font-size:14px;
+            max-width:300px;
+        }
+        #procedure-prompt {
+            position:absolute; top:60px; left:10px; background:rgba(0,0,0,0.7);
+            padding:10px; border-radius:4px; font-size:16px; font-weight:bold;
+            color:#00C4A0; max-width:400px;
+            text-align:center;
+        }
+        #lab-notebook {
+            position:absolute; top:10px; right:10px; background:rgba(0,0,0,0.5);
+            padding:10px; border-radius:4px; font-size:12px;
+            max-height:200px; overflowY:auto; font-family:monospace;
+            max-width:300px;
+        }
+        #chain-of-custody {
+            position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.5);
+            padding:10px; border-radius:4px; font-size:12px;
+            max-height:150px; overflowY:auto; font-family:monospace;
+            max-width:300px;
+        }
+        a { color:#00C4A0; }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Loading sample management system...</p>
+    </div>
+    <div class="info" id="info">
+        <p>Click on samples to interact</p>
+        <p>In Reception: Click blank samples to assign barcodes</p>
+        <p>In Phlebotomy: Click samples to prepare for scanning</p>
+        <p>WASD / Arrow keys to move<br>Mouse to look<br>Space to jump</p>
+    </div>
+    <div id="procedure-prompt">Initializing...</div>
+    <div id="lab-notebook"></div>
+    <div id="chain-of-custody"></div>
+
+    <!-- Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Our facility module -->
+    <script src="js/facility.js"></script>
+    <!-- Our sample management module -->
+    <script src="js/sample-management.js"></script>
+    <!-- Our interaction module for general controls -->
+    <script src="js/interaction.js"></script>
+
+    <script>
+        // Wait for DOM content
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('container');
+            const loadingEl = document.getElementById('loading');
+            const infoEl = document.getElementById('info');
+            const procedurePromptEl = document.getElementById('procedure-prompt');
+            const labNotebookEl = document.getElementById('lab-notebook');
+            const chainOfCustodyEl = document.getElementById('chain-of-custody');
+
+            // Initialize facility
+            const facility = window.OmicsLab.Facility;
+            const facilitySuccess = facility.init(container, {
+                // options could go here
+            });
+
+            if (!facilitySuccess) {
+                loadingEl.innerHTML = '<p style="color:#ff6b6b;">Failed to initialize facility. Check console.</p>';
+                return;
+            }
+
+            // Initialize sample management system
+            const sampleManagement = window.OmicsLab.SampleManagement;
+            const sampleManagementSuccess = sampleManagement.init(container, {
+                scene: facility.getScene(),
+                camera: facility.getCamera(),
+                renderer: facility.getRenderer()
+            });
+
+            if (!sampleManagementSuccess) {
+                loadingEl.innerHTML = '<p style="color:#ff6b6b;">Failed to initialize sample management system. Check console.</p>';
+                return;
+            }
+
+            // Initialize interaction system (for basic controls)
+            const interaction = window.OmicsLab.Interaction;
+            const interactionSuccess = interaction.init(container, {
+                scene: facility.getScene(),
+                camera: facility.getCamera(),
+                renderer: facility.getRenderer()
+            });
+
+            if (!interactionSuccess) {
+                loadingEl.innerHTML = '<p style="color:#ff6b6b;">Failed to initialize interaction system. Check console.</p>';
+                return;
+            }
+
+            // Hide loading after a short delay
+            setTimeout(() => {
+                loadingEl.style.display = 'none';
+                infoEl.style.display = 'block';
+            }, 500);
+
+            // Replace the facility's animate loop with one that also updates other systems
+            const originalAnimate = facility._animate;
+            facility._animate = function() {
+                // Call original facility animation
+                originalAnimate.call(facility);
+
+                // Update sample management system
+                // Note: sample management doesn't need per-frame updates for this demo
+
+                // Update interaction system using facility's getDelta method
+                const delta = facility.getDelta();
+                interaction.update(delta);
+
+                // Request next frame
+                facility.state.animationFrame = requestAnimationFrame(facility._animate.bind(facility));
+            };
+
+            // Restart animation with the new loop
+            facility.state.animationFrame = requestAnimationFrame(facility._animate);
+        });
+    </script>
+</body>
+</html>

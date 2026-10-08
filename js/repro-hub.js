@@ -260,8 +260,9 @@ OmicsLab.ReproHub = (function () {
         </div>
         <div class="rh-field-row">
           <div class="rh-field">
-            <label>Disease</label>
-            <select id="rh-disease"><option value="">-- select --</option>${diseases.map((d) => `<option>${d}</option>`).join('')}</select>
+            <label for="rh-disease">Disease or research area</label>
+            <select id="rh-disease"><option value="">-- select --</option>${diseases.map((d) => `<option>${_esc(d)}</option>`).join('')}<option value="__custom__">Other / custom research area…</option></select>
+            <input id="rh-custom-disease" type="text" placeholder="Type any disease, organism, phenotype, or research area" aria-label="Custom disease or research area" hidden />
           </div>
           <div class="rh-field">
             <label>Workflow Type</label>
@@ -673,6 +674,7 @@ OmicsLab.ReproHub = (function () {
       const el = document.getElementById('rh-' + id);
       out[id] = el ? el.value : '';
     });
+    if (out.disease === '__custom__') out.disease = document.getElementById('rh-custom-disease')?.value.trim() || '';
     return out;
   }
 
@@ -702,6 +704,15 @@ OmicsLab.ReproHub = (function () {
       if (el) el.addEventListener('input', _updateLiveScores);
       if (el && el.tagName === 'SELECT') el.addEventListener('change', _updateLiveScores);
     });
+    const disease = document.getElementById('rh-disease');
+    const custom = document.getElementById('rh-custom-disease');
+    disease?.addEventListener('change', () => {
+      if (!custom) return;
+      custom.hidden = disease.value !== '__custom__';
+      if (!custom.hidden) custom.focus();
+      _updateLiveScores();
+    });
+    custom?.addEventListener('input', _updateLiveScores);
   }
 
   /* ─── Public actions ─── */
@@ -764,6 +775,8 @@ OmicsLab.ReproHub = (function () {
       const el = document.getElementById(id);
       if (el) el.selectedIndex = 0;
     });
+    const custom = document.getElementById('rh-custom-disease');
+    if (custom) { custom.value = ''; custom.hidden = true; }
     _updateLiveScores();
   }
 
