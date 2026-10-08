@@ -70,8 +70,22 @@
 .rw-format-toolbar button:hover, .rw-format-toolbar button:focus-visible {
   border-color: #00c4a0; color: #00c4a0; outline: none;
 }
+.rw-style-select {
+  min-height: 30px; padding: .2rem .45rem; border: 1px solid #30405d;
+  border-radius: 5px; background: #111b2e; color: #e4ddd2; font: inherit; font-size: .72rem;
+}
+.rw-font-select { width: 92px; }
+.rw-size-select { width: 58px; }
+.rw-tool-icon { font-size: 1rem !important; line-height: 1; }
 .rw-toolbar-divider { width: 1px; height: 20px; background: #30405d; margin: 0 .2rem; }
 .rw-page-mode { margin-left: auto; }
+.rw-ruler {
+  max-width: 820px; height: 18px; margin: 0 auto .25rem;
+  border-top: 1px solid #8c8a82; border-bottom: 1px solid #d7d2c8;
+  background: repeating-linear-gradient(90deg, transparent 0, transparent 39px, #bbb7ad 40px);
+  opacity: .65;
+}
+.rw-ruler span { display: inline-block; width: 20%; height: 7px; border-left: 1px solid #8c8a82; }
 .rw-writing-heading { margin-bottom: .65rem; }
 .rw-focus-field { max-width: 820px; margin: 0 auto; color: #6b7280; }
 .rw-focus-field textarea {
@@ -83,8 +97,21 @@
 }
 .rw-focus-field textarea::selection { background: rgba(0,196,160,.25); }
 .rw-focus-field textarea:focus { outline: 3px solid rgba(0,196,160,.28); border-color: #00a98a; }
+.rw-focus-field textarea.rw-text-heading { font-size: 1.65rem; font-weight: 700; line-height: 1.35; }
+.rw-focus-field textarea.rw-text-subheading { font-size: 1.3rem; font-weight: 600; line-height: 1.45; }
 .rw-section-actions { max-width: 820px; margin: .75rem auto 0; }
 .rw-data-attachment { display: block; margin-top: .5rem; color: #58a6ff; font-size: .68rem; white-space: normal; }
+.rw-editor-focus-mode {
+  position: fixed; inset: 0; z-index: 200; overflow: auto; max-width: none;
+  padding: 2rem clamp(1rem, 8vw, 8rem); background: #0b1220;
+}
+.rw-editor-focus-mode .rw-focus-field textarea { min-height: calc(100vh - 280px); }
+@media print {
+  body * { visibility: hidden; }
+  .rw-focus-field, .rw-focus-field * { visibility: visible; }
+  .rw-focus-field { position: absolute; inset: 0; max-width: none; }
+  .rw-focus-field textarea { min-height: 100vh; box-shadow: none; border: 0; }
+}
 @media (max-width: 760px) {
   .rw-layout { min-height: 0; }
   .rw-page-mode { width: 100%; margin-left: 0; }

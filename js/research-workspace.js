@@ -257,6 +257,7 @@ OmicsLab.ResearchWorkspace = (function () {
         <div class="rw-actions">
           <select class="rw-template" id="rw-template" aria-label="Start from an example"><option value="">Start from example…</option>${Object.keys(TEMPLATES).map((name) => `<option>${escapeHtml(name)}</option>`).join('')}</select>
           <button type="button" class="rw-secondary" id="rw-export">Export Markdown</button>
+          <button type="button" class="rw-secondary" id="rw-print">Print / PDF</button>
           <button type="button" class="rw-primary" id="rw-new">New paper</button>
         </div>
       </div>
@@ -268,15 +269,33 @@ OmicsLab.ResearchWorkspace = (function () {
         </div>
       </div>
       <div class="rw-format-toolbar" role="toolbar" aria-label="Document formatting">
-        <span class="rw-toolbar-label">Document</span>
+        <button type="button" class="rw-tool-icon" data-rw-command="undo" title="Undo">↶</button>
+        <button type="button" class="rw-tool-icon" data-rw-command="redo" title="Redo">↷</button>
+        <span class="rw-toolbar-divider"></span>
+        <select class="rw-style-select" data-rw-style aria-label="Text style">
+          <option value="normal">Normal text</option><option value="heading">Heading</option><option value="subheading">Subheading</option>
+        </select>
+        <select class="rw-style-select rw-font-select" data-rw-font aria-label="Font">
+          <option value="Georgia">Georgia</option><option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="monospace">Monospace</option>
+        </select>
+        <select class="rw-style-select rw-size-select" data-rw-size aria-label="Font size">
+          <option value="1rem">11</option><option value="1.1rem" selected>12</option><option value="1.25rem">14</option><option value="1.45rem">16</option><option value="1.8rem">20</option>
+        </select>
+        <span class="rw-toolbar-divider"></span>
         <button type="button" data-rw-format="heading" title="Insert heading">H</button>
         <button type="button" data-rw-format="bold" title="Bold text"><strong>B</strong></button>
         <button type="button" data-rw-format="italic" title="Italic text"><em>I</em></button>
         <button type="button" data-rw-format="bullet" title="Bullet list">• List</button>
+        <button type="button" data-rw-format="checklist" title="Checklist">☑ List</button>
         <button type="button" data-rw-format="quote" title="Quote">“ Quote</button>
         <span class="rw-toolbar-divider"></span>
+        <button type="button" class="rw-tool-icon" data-rw-align="left" title="Align left">≡</button>
+        <button type="button" class="rw-tool-icon" data-rw-align="center" title="Center">≡</button>
+        <button type="button" class="rw-tool-icon" data-rw-align="right" title="Align right">≡</button>
+        <button type="button" class="rw-tool-icon" data-rw-command="fullscreen" title="Focus mode">⛶</button>
         <span class="rw-page-mode">Academic document · autosaved locally</span>
       </div>
+      <div class="rw-ruler" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <div class="rw-writing-heading"><div><span class="rw-eyebrow">Write in any order</span><h3>${currentLabel}</h3></div><span class="rw-progress">${completedCount}/${WRITING_SECTIONS.length} sections drafted</span></div>
       <label class="rw-label rw-focus-field">${currentLabel}<textarea data-rw-field="${current[0] === 'abstract' || current[0] === 'references' ? current[0] : `section.${current[0]}`}" rows="18" autofocus placeholder="Write your ${currentLabel.toLowerCase()} here...">${escapeHtml(currentValue)}</textarea></label>
       <div class="rw-section-actions">
@@ -287,6 +306,7 @@ OmicsLab.ResearchWorkspace = (function () {
     editor.querySelectorAll('[data-rw-field]').forEach((field) => field.addEventListener('input', updateWritingStats));
     editor.querySelector('#rw-new').addEventListener('click', () => openPaper());
     editor.querySelector('#rw-export').addEventListener('click', exportMarkdown);
+    editor.querySelector('#rw-print').addEventListener('click', () => window.print());
     editor.querySelector('#rw-template').addEventListener('change', (event) => {
       if (event.target.value) fromTemplate(event.target.value);
     });
@@ -295,11 +315,43 @@ OmicsLab.ResearchWorkspace = (function () {
     editor.querySelectorAll('[data-rw-format]').forEach((button) => {
       button.addEventListener('click', () => formatSelection(button.dataset.rwFormat));
     });
+    editor.querySelector('[data-rw-style]').addEventListener('change', (event) => applyTextStyle(event.target.value));
+    editor.querySelector('[data-rw-font]').addEventListener('change', (event) => applyEditorStyle('fontFamily', event.target.value));
+    editor.querySelector('[data-rw-size]').addEventListener('change', (event) => applyEditorStyle('fontSize', event.target.value));
+    editor.querySelectorAll('[data-rw-align]').forEach((button) => button.addEventListener('click', () => applyEditorStyle('textAlign', button.dataset.rwAlign)));
+    editor.querySelectorAll('[data-rw-command]').forEach((button) => button.addEventListener('click', () => runEditorCommand(button.dataset.rwCommand)));
     updateWritingStats();
   }
 
+  function getEditorField() {
+    return document.querySelector('.rw-focus-field textarea');
+  }
+
+  function applyEditorStyle(property, value) {
+    const field = getEditorField();
+    if (!field) return;
+    field.style[property] = value;
+    field.focus();
+  }
+
+  function applyTextStyle(style) {
+    const field = getEditorField();
+    if (!field) return;
+    field.classList.toggle('rw-text-heading', style === 'heading');
+    field.classList.toggle('rw-text-subheading', style === 'subheading');
+    field.focus();
+  }
+
+  function runEditorCommand(command) {
+    const field = getEditorField();
+    if (command === 'undo') document.execCommand('undo');
+    if (command === 'redo') document.execCommand('redo');
+    if (command === 'fullscreen') document.getElementById('rw-editor')?.classList.toggle('rw-editor-focus-mode');
+    field?.focus();
+  }
+
   function formatSelection(format) {
-    const field = document.querySelector('.rw-focus-field textarea');
+    const field = getEditorField();
     if (!field) return;
     const start = field.selectionStart;
     const end = field.selectionEnd;
@@ -309,6 +361,7 @@ OmicsLab.ResearchWorkspace = (function () {
       bold: `**${selected}**`,
       italic: `*${selected}*`,
       bullet: selected.split('\n').map((line) => `- ${line}`).join('\n'),
+      checklist: selected.split('\n').map((line) => `- [ ] ${line}`).join('\n'),
       quote: selected.split('\n').map((line) => `> ${line}`).join('\n'),
     };
     const replacement = wrappers[format];
