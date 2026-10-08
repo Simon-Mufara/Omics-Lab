@@ -5,6 +5,23 @@
 .gb-header-sub { font-size: .78rem; color: #A8A098; margin-top: .2rem; }
 .gb-controls { display: flex; gap: .6rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .gb-locus-select { flex: 1; min-width: 260px; padding: .42rem .7rem; background: #111B2E; border: 1px solid #243048; border-radius: 7px; color: #A8A098; font-size: .85rem; font-family: inherit; outline: none; }
+.gb-import-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: #A8A098;
+  font-size: .76rem;
+}
+.gb-import-label input { max-width: 13rem; font-size: .72rem; }
+.gb-data-status {
+  margin: .75rem 0;
+  padding: .55rem .7rem;
+  border: 1px solid #182236;
+  border-radius: 7px;
+  color: #A8A098;
+  font-size: .74rem;
+  line-height: 1.5;
+}
 .gb-view-btn { padding: .42rem .9rem; background: #007A6A; color: #fff; border: none; border-radius: 7px; font-size: .84rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .gb-view-btn:hover { background: #007A6A; }
 .gb-canvas { background: #111B2E; border: 1px solid #182236; border-radius: 10px; padding: 1rem; min-height: 200px; }

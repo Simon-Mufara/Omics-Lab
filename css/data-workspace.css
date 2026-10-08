@@ -1,0 +1,23 @@
+.data-workspace-tools { position: relative; margin-top: .75rem; }
+.data-workspace-toggle {
+  border: 1px solid rgba(88,166,255,.4); border-radius: 7px;
+  background: rgba(88,166,255,.08); color: #58a6ff; cursor: pointer;
+  font: inherit; font-size: .76rem; font-weight: 700; padding: .45rem .75rem;
+}
+.data-workspace-toggle:hover, .data-workspace-toggle:focus-visible {
+  background: rgba(88,166,255,.16); outline: 2px solid rgba(88,166,255,.35); outline-offset: 2px;
+}
+.data-workspace-panel {
+  position: absolute; right: 0; top: calc(100% + .5rem); z-index: 31;
+  width: min(420px, calc(100vw - 2rem)); display: flex; flex-direction: column; gap: .55rem;
+  padding: 1rem; border: 1px solid #243048; border-radius: 12px; background: #111B2E;
+  box-shadow: 0 14px 40px rgba(0,0,0,.35); color: #E4DDD2;
+}
+.data-workspace-panel[hidden] { display: none; }
+.data-workspace-help, .data-workspace-panel small, .data-workspace-status {
+  color: #A8A098; font-size: .72rem; line-height: 1.5;
+}
+.data-workspace-file { color: #58a6ff; font-size: .76rem; font-weight: 700; }
+.data-workspace-file input { display: block; max-width: 100%; margin-top: .35rem; font-size: .72rem; }
+.data-workspace-status { padding: .55rem .65rem; border: 1px solid #182236; border-radius: 7px; }
+@media (max-width: 620px) { .data-workspace-panel { left: 0; right: auto; } }

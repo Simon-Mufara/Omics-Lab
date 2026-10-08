@@ -186,15 +186,16 @@ OmicsLab.GenomeBrowser = (function () {
   };
 
   let _currentLocus = null;
+  let _importedVariants = [];
 
   function _view(key) {
     const locus = LOCI[key];
     if (!locus) return;
     _currentLocus = locus;
-    _render(locus);
+    _render(locus, _importedVariants.filter((variant) => variant.chrom === locus.chrom && variant.pos >= locus.start && variant.pos <= locus.end));
   }
 
-  function _render(locus) {
+  function _render(locus, importedVariants = []) {
     const out = document.getElementById('gb-canvas');
     if (!out) return;
 
@@ -207,7 +208,8 @@ OmicsLab.GenomeBrowser = (function () {
     /* Gene track */
     const geneSVG = _renderGene(locus, W, toX);
     /* Variant track */
-    const varSVG = _renderVariants(locus, W, toX);
+    const displayLocus = importedVariants.length ? { ...locus, variants: importedVariants } : locus;
+    const varSVG = _renderVariants(displayLocus, W, toX);
     /* Ruler */
     const rulerSVG = _renderRuler(locus, W, toX);
 
@@ -233,7 +235,7 @@ OmicsLab.GenomeBrowser = (function () {
         </div>
       </div>
       <div class="gb-variant-legend">
-        ${locus.variants.map((v) => `<div class="gb-var-row"><span class="gb-var-dot" style="background:${v.color}"></span><span class="gb-var-id">${v.id}</span><span class="gb-var-label">${v.label}</span></div>`).join('')}
+        ${displayLocus.variants.map((v) => `<div class="gb-var-row"><span class="gb-var-dot" style="background:${v.color}"></span><span class="gb-var-id">${v.id}</span><span class="gb-var-label">${v.label}</span></div>`).join('')}
       </div>`;
   }
 
@@ -258,7 +260,7 @@ OmicsLab.GenomeBrowser = (function () {
     const base = locus.depth_profile === 'cnv_dip' ? 22 : 28;
     const vals = [];
     for (let i = 0; i < pts; i++) {
-      let d = base + Math.sin(i * 0.3) * 4 + (Math.random() * 6 - 3);
+      let d = base + Math.sin(i * 0.3) * 4 + Math.sin(i * 1.7) * 2;
       if (locus.depth_profile === 'cnv_dip' && i > 80 && i < 120) d *= 0.5;
       vals.push(Math.max(0, d));
     }
@@ -315,18 +317,55 @@ OmicsLab.GenomeBrowser = (function () {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
             Genome Browser
           </div>
-          <div class="gb-header-sub">IGV-style locus viewer — African disease genes, variant tracks, simulated read depth</div>
+          <div class="gb-header-sub">IGV-style locus viewer — teaching loci, deterministic demo depth, and VCF import</div>
         </div>
         <div class="gb-controls">
           <select class="gb-locus-select" id="gb-locus-sel">
             <option value="">Select a gene locus...</option>${lociOpts}
           </select>
           <button class="gb-view-btn" onclick="OmicsLab.GenomeBrowser._view(document.getElementById('gb-locus-sel').value)">View Locus</button>
+          <label class="gb-import-label">Import VCF
+            <input id="gb-vcf-input" type="file" accept=".vcf,.vcf.gz,text/plain" />
+          </label>
         </div>
+        <div class="gb-data-status" id="gb-data-status" role="status">Demo annotations are shown until you import a VCF file.</div>
         <div id="gb-canvas" class="gb-canvas">
           <div class="gb-empty">Select a locus to view the genome browser</div>
         </div>
       </div>`;
+    const input = document.getElementById('gb-vcf-input');
+    input?.addEventListener('change', async (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (file.name.toLowerCase().endsWith('.gz')) {
+        document.getElementById('gb-data-status').textContent = 'Compressed VCF files are not supported in-browser yet. Please choose an uncompressed .vcf file.';
+        return;
+      }
+      try {
+        const text = await file.text();
+        const variants = text.split(/\r?\n/)
+          .filter((line) => line && !line.startsWith('#'))
+          .map((line) => line.split('\t'))
+          .filter((columns) => columns.length >= 5 && Number.isFinite(Number(columns[1])))
+          .map((columns) => ({
+            chrom: columns[0].startsWith('chr') ? columns[0] : `chr${columns[0]}`,
+            pos: Number(columns[1]),
+            ref: columns[3],
+            alt: columns[4].split(',')[0],
+            id: columns[2] && columns[2] !== '.' ? columns[2] : `VCF:${columns[0]}:${columns[1]}`,
+            type: 'imported',
+            label: `${columns[3]}>${columns[4].split(',')[0]} (imported)`,
+            color: '#58a6ff',
+          }));
+        _importedVariants = variants;
+        const status = document.getElementById('gb-data-status');
+        status.textContent = `Imported ${variants.length.toLocaleString()} variant${variants.length === 1 ? '' : 's'} from ${file.name}. Select a locus to view matching positions.`;
+        if (_currentLocus) _view(Object.keys(LOCI).find((key) => LOCI[key] === _currentLocus) || '');
+      } catch (error) {
+        console.error('[GenomeBrowser] VCF import failed', error);
+        document.getElementById('gb-data-status').textContent = 'The VCF could not be read. Check that it is a tab-delimited VCF with CHROM, POS, REF, and ALT columns.';
+      }
+    });
   }
 
   return { init, _view };

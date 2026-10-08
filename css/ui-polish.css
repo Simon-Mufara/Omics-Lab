@@ -1,0 +1,31 @@
+/* Shared page-shell polish: consistent rhythm, balanced tabs, and decorative surfaces. */
+body { background: #070d18; }
+.landing-nav { min-height: 66px; background: rgba(7,13,24,.94); border-bottom: 1px solid rgba(88,166,255,.16); box-shadow: 0 8px 30px rgba(0,0,0,.16); backdrop-filter: blur(16px); }
+#page-route-header { padding: .5rem clamp(1rem, 3vw, 2.4rem); background: rgba(13,21,36,.92); border-bottom-color: rgba(88,166,255,.16); }
+#home-page-content { max-width: 1440px; margin: 0 auto; }
+.hero-new { min-height: 62vh; padding-top: 4rem; padding-bottom: 3rem; }
+.hero-new-inner { max-width: 1280px; }
+.hero-new-left { max-width: 650px; }
+.hero-headline { text-wrap: balance; }
+.hero-new-right { filter: drop-shadow(0 18px 40px rgba(0,0,0,.25)); }
+.stats-strip-new { max-width: 1280px; margin: 0 auto; border: 1px solid rgba(88,166,255,.14); border-radius: 14px; background: rgba(13,21,36,.72); }
+.home-page-grid-wrap { padding: 1.75rem clamp(1rem, 3vw, 2.4rem) 2.5rem; }
+.home-page-section-label { margin-bottom: .8rem; color: #58a6ff; }
+.home-page-grid { gap: .8rem; margin-bottom: 1.4rem; }
+.home-page-card { min-height: 150px; padding: 1rem; border-radius: 12px; background: linear-gradient(145deg, rgba(17,27,46,.98), rgba(13,21,36,.98)); border-color: rgba(88,166,255,.15); }
+.home-page-card:hover { transform: translateY(-2px); border-color: rgba(0,196,160,.55); box-shadow: 0 12px 26px rgba(0,0,0,.2); }
+#screen-landing section { scroll-margin-top: 4.5rem; }
+.domain-section, .how-it-works-section, .curriculum-section, .badges-section, .africa-hub-section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+.landing-footer { max-width: 1280px; margin: 1rem auto 0; padding: 2rem clamp(1rem, 3vw, 2.4rem); border-radius: 18px 18px 0 0; background: linear-gradient(145deg, rgba(17,27,46,.86), rgba(9,15,27,.96)); }
+.footer-links { gap: .7rem 1.25rem; flex-wrap: wrap; }
+.footer-feedback-card { border: 1px solid rgba(0,196,160,.2); border-radius: 14px; box-shadow: 0 14px 30px rgba(0,0,0,.16); }
+.site-footer-compact { background: #09111f; }
+@media (max-width: 760px) {
+  .hero-new { padding-top: 2.75rem; }
+  .home-page-grid-wrap { padding-top: 1.25rem; }
+  .home-page-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+  .home-page-card { min-height: 130px; }
+}
+@media (max-width: 460px) {
+  .home-page-grid { grid-template-columns: 1fr; }
+}

@@ -87,8 +87,8 @@ OmicsLab.Pricing = (function () {
     {
       id: 'campus',
       name: 'Campus License',
-      price: 'From $1,200',
-      priceSub: 'per year · 60% off for Africa',
+      price: 'Custom quote in ZAR',
+      priceSub: 'annual institutional pricing · Africa discounts available',
       color: '#58a6ff',
       badge: 'Most Popular',
       desc: 'Universities, research institutes, and training programmes delivering structured bioinformatics cohorts.',
@@ -375,7 +375,7 @@ OmicsLab.Pricing = (function () {
     },
     {
       q: 'Is there a discount for African universities and NGOs?',
-      a: 'Yes — academic institutions and NGOs based in Africa receive a 60% discount on all Campus License tiers. Pricing starts from $480/year after the Africa discount. We also offer free 3-month pilot programmes for institutions applying for bioinformatics training grants.',
+      a: 'Yes — academic institutions and NGOs based in Africa receive a 60% discount on all Campus License tiers. Institutional pricing is quoted in South African rand (ZAR) after confirming learner numbers and support needs. We also offer free 3-month pilot programmes for institutions applying for bioinformatics training grants.',
     },
     {
       q: 'Can we run OmicsLab on our own servers?',
@@ -636,7 +636,7 @@ OmicsLab.Pricing = (function () {
         </div>
         <div class="prc2-impact-div"></div>
         <div class="prc2-impact-stat">
-          <div class="prc2-impact-num">$0</div>
+          <div class="prc2-impact-num">R0</div>
           <div class="prc2-impact-label">Per-student cost — Community tier</div>
         </div>
         <div class="prc2-impact-div"></div>

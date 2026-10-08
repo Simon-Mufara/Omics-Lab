@@ -47,8 +47,8 @@ OmicsLab.HomeHero = (function () {
       const θ = (y / pitch) * Math.PI * 2 + t;
       const offsetX = Math.sin(t * 0.4 + y * 0.02) * 0.2;
       const offsetY = Math.cos(t * 0.5 + y * 0.02) * 0.2;
-      s1.push({ x: cx + r * Math.cos(θ) + offsetX, y + offsetY, z: Math.sin(θ) });
-      s2.push({ x: cx + r * Math.cos(θ + Math.PI) + offsetX, y + offsetY, z: Math.sin(θ + Math.PI) });
+      s1.push({ x: cx + r * Math.cos(θ) + offsetX, y: y + offsetY, z: Math.sin(θ) });
+      s2.push({ x: cx + r * Math.cos(θ + Math.PI) + offsetX, y: y + offsetY, z: Math.sin(θ + Math.PI) });
     }
 
     /* ── Build base pair descriptors ── */
