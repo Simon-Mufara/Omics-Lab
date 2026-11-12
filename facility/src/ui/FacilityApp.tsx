@@ -1,7 +1,7 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { PointerLockControls, Text } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Text } from '@react-three/drei';
 import { Physics, RigidBody } from '@react-three/rapier';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Group } from 'three';
 import { ROOMS } from '../config/rooms';
 import { EQUIPMENT } from '../config/equipment';
@@ -123,80 +123,6 @@ function RoomContents({
   </group>;
 }
 
-function useKeyboard() {
-  const keys = useRef(new Set<string>());
-  useEffect(() => {
-    const down = (event: KeyboardEvent) => keys.current.add(event.code);
-    const up = (event: KeyboardEvent) => keys.current.delete(event.code);
-    window.addEventListener('keydown', down);
-    window.addEventListener('keyup', up);
-    return () => {
-      window.removeEventListener('keydown', down);
-      window.removeEventListener('keyup', up);
-    };
-  }, []);
-  return keys;
-}
-
-function FirstPersonNavigator({ onBlocked }: { onBlocked: (message: string) => void }) {
-  const { camera } = useThree();
-  const keys = useKeyboard();
-  const roomId = useFacilityStore((state) => state.roomId);
-  const ppe = useFacilityStore((state) => state.ppe);
-  const setRoom = useFacilityStore((state) => state.setRoom);
-  const updateSample = useFacilityStore((state) => state.updateSample);
-  const blockedAt = useRef(0);
-  const roomsById = useMemo(() => new Map(ROOMS.map((room) => [room.id, room])), []);
-
-  useEffect(() => {
-    const room = roomsById.get(roomId) ?? ROOMS[0];
-    camera.position.set(room.position[0], 1.7, room.position[2]);
-  }, [camera, roomId, roomsById]);
-
-  useFrame((_, rawDelta) => {
-    const delta = Math.min(rawDelta, 0.05);
-    const direction = Number(keys.current.has('KeyD') || keys.current.has('ArrowRight'))
-      - Number(keys.current.has('KeyA') || keys.current.has('ArrowLeft'));
-    const depthDirection = Number(keys.current.has('KeyS') || keys.current.has('ArrowDown'))
-      - Number(keys.current.has('KeyW') || keys.current.has('ArrowUp'));
-    const speed = keys.current.has('ShiftLeft') ? 5.5 : 3.2;
-    const nextX = camera.position.x + direction * speed * delta;
-    const nextZ = camera.position.z + depthDirection * speed * delta;
-    const current = roomsById.get(roomId) ?? ROOMS[0];
-    const clampedZ = Math.max(-current.size[2] / 2 + 0.65, Math.min(current.size[2] / 2 - 0.65, nextZ));
-    let permittedX = nextX;
-    const roomIndex = ROOMS.findIndex((room) => room.id === roomId);
-    const neighbour = direction > 0 ? ROOMS[roomIndex + 1] : direction < 0 ? ROOMS[roomIndex - 1] : undefined;
-    if (neighbour) {
-      const boundary = direction > 0
-        ? current.position[0] + current.size[0] / 2 + (neighbour.position[0] - neighbour.size[0] / 2 - (current.position[0] + current.size[0] / 2)) / 2
-        : current.position[0] - current.size[0] / 2 - (current.position[0] - current.size[0] / 2 - (neighbour.position[0] + neighbour.size[0] / 2)) / 2;
-      const inDoorway = Math.abs(nextZ) < 1.65;
-      const crossing = direction > 0 ? nextX > boundary : nextX < boundary;
-      if (crossing) {
-        const missing = (neighbour.requiredPpe ?? []).filter((item) => !ppe.includes(item));
-        if (!inDoorway) {
-          permittedX = direction > 0 ? current.position[0] + current.size[0] / 2 - 0.12 : current.position[0] - current.size[0] / 2 + 0.12;
-        } else if (missing.length > 0) {
-          permittedX = boundary + (direction > 0 ? -0.12 : 0.12);
-          if (Date.now() - blockedAt.current > 1200) {
-            onBlocked(`Door locked: ${neighbour.label} requires ${missing.join(', ')}.`);
-            blockedAt.current = Date.now();
-          }
-        } else {
-          setRoom(neighbour.id);
-          updateSample({ location: neighbour.id });
-        }
-      }
-    } else {
-      permittedX = Math.max(current.position[0] - current.size[0] / 2 + 0.7, Math.min(current.position[0] + current.size[0] / 2 - 0.7, nextX));
-    }
-    camera.position.x = permittedX;
-    camera.position.z = clampedZ;
-  });
-  return null;
-}
-
 function DoorIndicators() {
   const ppe = useFacilityStore((state) => state.ppe);
   return <>{ROOMS.slice(0, -1).map((room, index) => {
@@ -213,13 +139,11 @@ function DoorIndicators() {
 function FacilityScene({
   paused,
   roomId,
-  onBlocked,
   onInteract,
   onStaffInteract,
 }: {
   paused: boolean;
   roomId: RoomId;
-  onBlocked: (message: string) => void;
   onInteract: (equipment: EquipmentDefinition) => void;
   onStaffInteract: (staff: StaffDefinition) => void;
 }) {
@@ -241,8 +165,6 @@ function FacilityScene({
         </RigidBody>
       </Physics>
       <DoorIndicators />
-      <FirstPersonNavigator onBlocked={onBlocked} />
-      <PointerLockControls />
     </Canvas>
   );
 }
@@ -268,9 +190,8 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
   const completedSteps = sample.status === 'received' ? 0 : Math.max(0, statusIndex + 1);
   const nextStep = workflowSteps[completedSteps]?.label ?? 'Run complete';
   const rank = score >= 100 ? 'Lead scientist' : score >= 50 ? 'Senior analyst' : score >= 20 ? 'Lab scientist' : 'Trainee';
-  const [notice, setNotice] = useState('Click the facility, then use WASD or arrow keys to walk.');
+  const [notice, setNotice] = useState('Select a room, inspect its equipment, then complete the next enabled action.');
   const [interaction, setInteraction] = useState<{ title: string; prompt: string } | null>(null);
-  const [locked, setLocked] = useState(false);
   const canEnter = (room: (typeof ROOMS)[number]) => (room.requiredPpe ?? []).every((item) => ppe.includes(item));
   const selectRoom = (roomIdToSelect: RoomId) => {
     const room = ROOMS.find((candidate) => candidate.id === roomIdToSelect);
@@ -299,10 +220,10 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
         <div>
           <span className="facility-kicker">OMICS LAB / GENOMICS FACILITY</span>
           <h1>Sequencing operations floor</h1>
-          <p>Run a sample from intake to report with controlled access, chain of custody, and auditable actions.</p>
+          <p>Use the room map to inspect equipment, prepare a sample, and record each controlled workflow step.</p>
         </div>
         <div className="facility-header-status">
-          <span className="status-dot" /> LIVE SIMULATION
+          <span className="status-dot" /> INTERACTIVE MODEL
           <strong>{currentRoom.label}</strong>
         </div>
       </header>
@@ -333,7 +254,7 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
           <section className="facility-card facility-help">
             <div className="card-label">OPERATOR NOTE</div>
             <p role="status">{notice}</p>
-            <small>{locked ? 'WASD / arrows move · Shift runs' : 'Click the scene to enter first-person mode.'}</small>
+            <small>Select a room, inspect its equipment, then complete the next enabled action.</small>
           </section>
         </aside>
         <section className="facility-workspace">
@@ -349,7 +270,6 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
             <FacilityScene
               paused={paused}
               roomId={roomId}
-              onBlocked={setNotice}
               onInteract={(equipment) => {
                 setInteraction({ title: equipment.label, prompt: equipment.prompt });
                 setNotice(`${equipment.label}: ${equipment.prompt}`);
@@ -362,7 +282,7 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
                 addNotebookEntry({ message: `Asked ${staff.name} for a workflow hint`, severity: 'info' });
               }}
             />
-            <div className="scene-overlay"><span>ROOM {String(ROOMS.findIndex((room) => room.id === roomId) + 1).padStart(2, '0')}</span><strong>{currentRoom.label}</strong><small>Interactive 3D view</small></div>
+            <div className="scene-overlay"><span>ROOM {String(ROOMS.findIndex((room) => room.id === roomId) + 1).padStart(2, '0')}</span><strong>{currentRoom.label}</strong><small>Select equipment to inspect</small></div>
           </div>
         </section>
         <aside className="facility-right-rail">
@@ -391,19 +311,6 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
           <button type="button" onClick={() => setInteraction(null)}>Dismiss</button>
         </section>
       )}
-      <button type="button" className="facility-lock-prompt" onClick={() => document.querySelector('canvas')?.requestPointerLock()} onFocus={() => setNotice('Press Enter or click to capture the mouse. Press Escape to release it.')}>
-        {locked ? 'Pointer locked' : 'Enter first-person mode'}
-      </button>
-      <PointerLockState onChange={setLocked} />
     </div>
   );
-}
-
-function PointerLockState({ onChange }: { onChange: (locked: boolean) => void }) {
-  useEffect(() => {
-    const update = () => onChange(document.pointerLockElement !== null);
-    document.addEventListener('pointerlockchange', update);
-    return () => document.removeEventListener('pointerlockchange', update);
-  }, [onChange]);
-  return null;
 }

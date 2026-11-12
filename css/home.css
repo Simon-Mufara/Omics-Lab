@@ -68,15 +68,14 @@ h1, h2, h3, .section-title, .hero-title-new {
   padding: 5rem 2rem 4rem;
 }
 
-/* Mesh gradient background — teal at visible opacity */
+/* Quiet, technical backdrop keeps the learning content in focus. */
 .hero-new::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 10% 30%, rgba(0,196,160,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 20%, rgba(88,166,255,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 70% at 50% 90%, rgba(155,126,212,0.06) 0%, transparent 60%);
+    linear-gradient(90deg, rgba(0,196,160,0.04), transparent 42%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), transparent 45%);
   pointer-events: none;
   z-index: 0;
 }
@@ -154,7 +153,7 @@ h1, h2, h3, .section-title, .hero-title-new {
   font-weight: 800;
   font-family: inherit;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   transition: background 0.15s, transform 0.12s;
   letter-spacing: -0.01em;
@@ -171,7 +170,7 @@ h1, h2, h3, .section-title, .hero-title-new {
   font-weight: 700;
   font-family: inherit;
   border: 1.5px solid var(--border-muted);
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s;
 }
