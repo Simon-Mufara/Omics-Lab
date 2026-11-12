@@ -212,23 +212,27 @@ function DoorIndicators() {
 
 function FacilityScene({
   paused,
+  roomId,
   onBlocked,
   onInteract,
   onStaffInteract,
 }: {
   paused: boolean;
+  roomId: RoomId;
   onBlocked: (message: string) => void;
   onInteract: (equipment: EquipmentDefinition) => void;
   onStaffInteract: (staff: StaffDefinition) => void;
 }) {
   return (
-    <Canvas camera={{ position: [0, 1.7, 0], fov: 70 }} shadows frameloop={paused ? 'never' : 'always'}>
+    <Canvas camera={{ position: [0, 1.7, 0], fov: 70 }} dpr={[1, 1.5]} frameloop={paused ? 'never' : 'always'}>
       <color attach="background" args={['#07101d']} />
       <ambientLight intensity={1.3} />
       <directionalLight position={[5, 10, 5]} intensity={2} castShadow />
       <Physics gravity={[0, -9.81, 0]}>
         {ROOMS.map((room) => <RoomShell key={room.id} room={room} />)}
-        {ROOMS.map((room) => <RoomContents key={`contents-${room.id}`} roomId={room.id} onInteract={onInteract} onStaffInteract={onStaffInteract} />)}
+        {ROOMS.filter((room) => room.id === roomId || room.neighbours.includes(roomId)).map((room) => (
+          <RoomContents key={`contents-${room.id}`} roomId={room.id} onInteract={onInteract} onStaffInteract={onStaffInteract} />
+        ))}
         <RigidBody type="fixed" colliders="cuboid">
           <mesh position={[50, -0.3, 0]} receiveShadow>
             <boxGeometry args={[120, 0.2, 14]} />
@@ -254,6 +258,16 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
   const addNotebookEntry = useFacilityStore((state) => state.addNotebookEntry);
   const addScore = useFacilityStore((state) => state.addScore);
   const currentRoom = ROOMS.find((room) => room.id === roomId) ?? ROOMS[0];
+  const workflowSteps = [
+    { label: 'Intake', status: 'collected' as const },
+    { label: 'Process', status: 'processing' as const },
+    { label: 'Sequence', status: 'sequencing' as const },
+    { label: 'Report', status: 'complete' as const },
+  ];
+  const statusIndex = workflowSteps.findIndex((step) => step.status === sample.status);
+  const completedSteps = sample.status === 'received' ? 0 : Math.max(0, statusIndex + 1);
+  const nextStep = workflowSteps[completedSteps]?.label ?? 'Run complete';
+  const rank = score >= 100 ? 'Lead scientist' : score >= 50 ? 'Senior analyst' : score >= 20 ? 'Lab scientist' : 'Trainee';
   const [notice, setNotice] = useState('Click the facility, then use WASD or arrow keys to walk.');
   const [interaction, setInteraction] = useState<{ title: string; prompt: string } | null>(null);
   const [locked, setLocked] = useState(false);
@@ -268,7 +282,11 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
     useFacilityStore.getState().setRoom(room.id);
     setNotice(`Accessible fallback selected ${room.label}.`);
   };
-  const recordAction = (action: string, nextStatus: typeof sample.status, points: number) => {
+  const recordAction = (action: string, nextStatus: typeof sample.status, points: number, requiredStatus: typeof sample.status) => {
+    if (sample.status !== requiredStatus) {
+      setNotice(`Complete “${workflowSteps[completedSteps - 1]?.label ?? 'Intake'}” before starting this step.`);
+      return;
+    }
     updateSample({ status: nextStatus });
     addNotebookEntry({ message: `${action} · ${sample.id}`, severity: 'info' });
     addScore(points);
@@ -277,45 +295,95 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
 
   return (
     <div className="facility-app">
-      <div className="facility-hud">
-        <strong>OmicsLab Facility Preview</strong>
-        <span>{currentRoom.label}</span>
-        <span>{locked ? 'Pointer locked · WASD / arrows to move · Shift to run' : notice}</span>
-        {notice && <small role="status">{notice}</small>}
-        <span>Score: {score} · Sample: {sample.id} · {sample.status}</span>
-      </div>
-      <div className="facility-ppe">
-        {(['lab-coat', 'gloves', 'hairnet'] as const).map((item) => (
-          <button type="button" key={item} className={ppe.includes(item) ? 'active' : ''} onClick={() => togglePpe(item)} aria-pressed={ppe.includes(item)}>
-            {item.replace('-', ' ')}
-          </button>
-        ))}
-      </div>
-      <div className="facility-minimap" aria-label="Facility minimap">
-        <strong>Map</strong>
-        <div className="facility-map-rooms">
-          {ROOMS.map((room) => (
-            <button type="button" key={room.id} className={room.id === roomId ? 'current' : ''} disabled={!canEnter(room)} onClick={() => selectRoom(room.id)} title={room.requiredPpe?.length ? `Requires ${room.requiredPpe.join(', ')}` : 'Open'}>
-              <span>{room.label}</span>
-            </button>
-          ))}
+      <header className="facility-header">
+        <div>
+          <span className="facility-kicker">OMICS LAB / GENOMICS FACILITY</span>
+          <h1>Sequencing operations floor</h1>
+          <p>Run a sample from intake to report with controlled access, chain of custody, and auditable actions.</p>
         </div>
-      </div>
-      <FacilityScene
-        paused={paused}
-        onBlocked={setNotice}
-        onInteract={(equipment) => {
-          setInteraction({ title: equipment.label, prompt: equipment.prompt });
-          setNotice(`${equipment.label}: ${equipment.prompt}`);
-          addNotebookEntry({ message: `Inspected ${equipment.label}`, severity: 'info' });
-          addScore(2);
-        }}
-        onStaffInteract={(staff) => {
-          setInteraction({ title: `${staff.name} · ${staff.role}`, prompt: 'Ask a colleague for a hint about the current sample step.' });
-          setNotice(`${staff.name} is available to help in ${currentRoom.label}.`);
-          addNotebookEntry({ message: `Asked ${staff.name} for a workflow hint`, severity: 'info' });
-        }}
-      />
+        <div className="facility-header-status">
+          <span className="status-dot" /> LIVE SIMULATION
+          <strong>{currentRoom.label}</strong>
+        </div>
+      </header>
+      <main className="facility-command-center">
+        <aside className="facility-sidebar">
+          <section className="facility-card facility-score-card">
+            <div className="card-label">RUN SCORE</div>
+            <strong className="facility-score">{score}<span> pts</span></strong>
+            <div className="score-meta"><span>{rank}</span><span>{completedSteps}/4 stages</span></div>
+            <div className="score-track"><i style={{ width: `${Math.min(100, (score / 100) * 100)}%` }} /></div>
+          </section>
+          <section className="facility-card">
+            <div className="card-heading"><span>ACTIVE SAMPLE</span><b className={`sample-status status-${sample.status}`}>{sample.status}</b></div>
+            <strong className="sample-id">{sample.id}</strong>
+            <div className="sample-details"><span>{sample.type.replace('-', ' ')}</span><span>{sample.volumeMl} mL</span><span>{sample.temperatureC}°C</span></div>
+          </section>
+          <section className="facility-card facility-ppe-card">
+            <div className="card-heading"><span>ACCESS KIT</span><span>{ppe.length}/3 ready</span></div>
+            <p>Required for controlled rooms.</p>
+            <div className="ppe-list">
+              {(['lab-coat', 'gloves', 'hairnet'] as const).map((item) => (
+                <button type="button" key={item} className={ppe.includes(item) ? 'active' : ''} onClick={() => togglePpe(item)} aria-pressed={ppe.includes(item)}>
+                  <span>{ppe.includes(item) ? '✓' : '○'}</span>{item.replace('-', ' ')}
+                </button>
+              ))}
+            </div>
+          </section>
+          <section className="facility-card facility-help">
+            <div className="card-label">OPERATOR NOTE</div>
+            <p role="status">{notice}</p>
+            <small>{locked ? 'WASD / arrows move · Shift runs' : 'Click the scene to enter first-person mode.'}</small>
+          </section>
+        </aside>
+        <section className="facility-workspace">
+          <nav className="facility-room-rail" aria-label="Facility rooms">
+            {ROOMS.map((room, index) => {
+              const accessible = canEnter(room);
+              return <button type="button" key={room.id} className={`${room.id === roomId ? 'current' : ''} ${accessible ? '' : 'locked'}`} disabled={!accessible} onClick={() => selectRoom(room.id)} title={accessible ? room.label : `Requires ${(room.requiredPpe ?? []).join(', ')}`}>
+                <span className="room-number">{String(index + 1).padStart(2, '0')}</span><span>{room.label}</span>{!accessible && <b>LOCKED</b>}
+              </button>;
+            })}
+          </nav>
+          <div className="facility-scene-frame">
+            <FacilityScene
+              paused={paused}
+              roomId={roomId}
+              onBlocked={setNotice}
+              onInteract={(equipment) => {
+                setInteraction({ title: equipment.label, prompt: equipment.prompt });
+                setNotice(`${equipment.label}: ${equipment.prompt}`);
+                addNotebookEntry({ message: `Inspected ${equipment.label}`, severity: 'info' });
+                addScore(2);
+              }}
+              onStaffInteract={(staff) => {
+                setInteraction({ title: `${staff.name} · ${staff.role}`, prompt: 'Ask a colleague for a hint about the current sample step.' });
+                setNotice(`${staff.name} is available to help in ${currentRoom.label}.`);
+                addNotebookEntry({ message: `Asked ${staff.name} for a workflow hint`, severity: 'info' });
+              }}
+            />
+            <div className="scene-overlay"><span>ROOM {String(ROOMS.findIndex((room) => room.id === roomId) + 1).padStart(2, '0')}</span><strong>{currentRoom.label}</strong><small>Interactive 3D view</small></div>
+          </div>
+        </section>
+        <aside className="facility-right-rail">
+          <section className="facility-card workflow-card">
+            <div className="card-heading"><span>RUN PROTOCOL</span><span>Next: {nextStep}</span></div>
+            <ol className="workflow-list">
+              {workflowSteps.map((step, index) => <li key={step.status} className={index < completedSteps ? 'done' : index === completedSteps ? 'active' : ''}><span>{index < completedSteps ? '✓' : index + 1}</span><div><strong>{step.label}</strong><small>{index < completedSteps ? 'Verified' : index === completedSteps ? 'Ready for action' : 'Awaiting previous stage'}</small></div></li>)}
+            </ol>
+          </section>
+          <section className="facility-card procedure-card">
+            <div className="card-heading"><span>CONTROL ACTIONS</span><span>Audit logged</span></div>
+            <div className="procedure-actions">
+              <button type="button" disabled={sample.status !== 'received'} onClick={() => recordAction('Sample checked in', 'collected', 10, 'received')}>Check in sample <b>+10</b></button>
+              <button type="button" disabled={sample.status !== 'collected'} onClick={() => recordAction('Sample prepared', 'processing', 20, 'collected')}>Prepare sample <b>+20</b></button>
+              <button type="button" disabled={sample.status !== 'processing'} onClick={() => recordAction('Sequencing started', 'sequencing', 30, 'processing')}>Start sequencing <b>+30</b></button>
+              <button type="button" disabled={sample.status !== 'sequencing'} onClick={() => recordAction('Run reported', 'complete', 40, 'sequencing')}>Release report <b>+40</b></button>
+            </div>
+            <small>{notebook.at(-1)?.message ?? 'Each action is recorded in the lab notebook.'}</small>
+          </section>
+        </aside>
+      </main>
       {interaction && (
         <section className="facility-interaction" role="status" aria-label="Equipment interaction">
           <strong>{interaction.title}</strong>
@@ -323,21 +391,6 @@ export function FacilityApp({ paused = false }: { paused?: boolean }) {
           <button type="button" onClick={() => setInteraction(null)}>Dismiss</button>
         </section>
       )}
-      <section className="facility-procedure" aria-label="Sample procedure">
-        <strong>Sample workflow</strong>
-        <span>{sample.type.replace('-', ' ')} · {sample.volumeMl} mL · {sample.temperatureC}°C</span>
-        <div>
-          <button type="button" onClick={() => recordAction('Sample checked in', 'collected', 10)}>Check in</button>
-          <button type="button" onClick={() => recordAction('Sample prepared', 'processing', 20)}>Prepare</button>
-          <button type="button" onClick={() => recordAction('Sequencing started', 'sequencing', 30)}>Sequence</button>
-        </div>
-        <small>{notebook.at(-1)?.message ?? 'Actions are recorded in the lab notebook.'}</small>
-      </section>
-      <aside className="facility-fallback">
-        <strong>Accessible facility view</strong>
-        <p>Use the map or these buttons when 3D controls are unavailable. Locked rooms explain their PPE requirement.</p>
-        <ol>{ROOMS.map((room) => <li key={room.id}><button type="button" disabled={!canEnter(room)} onClick={() => selectRoom(room.id)}>{room.label}{room.requiredPpe?.length ? ` · PPE: ${room.requiredPpe.join(', ')}` : ''}</button></li>)}</ol>
-      </aside>
       <button type="button" className="facility-lock-prompt" onClick={() => document.querySelector('canvas')?.requestPointerLock()} onFocus={() => setNotice('Press Enter or click to capture the mouse. Press Escape to release it.')}>
         {locked ? 'Pointer locked' : 'Enter first-person mode'}
       </button>

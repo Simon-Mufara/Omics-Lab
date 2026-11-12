@@ -34,3 +34,49 @@ body { min-height: 100vh; }
 .facility-interaction span { color: #d8e2ef; font-size: .82rem; line-height: 1.4; }
 .facility-interaction button { justify-self: start; margin-top: .3rem; border: 1px solid #40526e; border-radius: 999px; background: #111d2e; color: #cbd5e1; padding: .3rem .65rem; cursor: pointer; }
 @media (max-width: 700px) { .facility-fallback { right: .5rem; left: .5rem; bottom: 4.6rem; max-width: none; max-height: 30vh; overflow: auto; } .facility-minimap { left: .5rem; right: .5rem; top: 5.6rem; width: auto; } .facility-ppe { right: .5rem; left: .5rem; top: auto; bottom: .5rem; } .facility-lock-prompt { display: none; } }
+
+/* Operations console layout */
+.facility-app { overflow: auto; background: #07101d; color: #e8edf4; }
+.facility-header { position: relative; z-index: 4; display: flex; justify-content: space-between; gap: 2rem; padding: 1.25rem clamp(1rem, 3vw, 2.5rem); border-bottom: 1px solid #20304a; background: #0a1626; }
+.facility-header h1 { margin: .25rem 0 .35rem; font-size: clamp(1.25rem, 2vw, 1.8rem); letter-spacing: -.02em; }
+.facility-header p { margin: 0; max-width: 42rem; color: #93a4ba; font-size: .82rem; }
+.facility-kicker, .card-label { color: #00c4a0; font-size: .65rem; font-weight: 800; letter-spacing: .12em; }
+.facility-header-status { align-self: center; display: grid; gap: .3rem; min-width: 13rem; color: #00c4a0; font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
+.facility-header-status strong { color: #dce5ef; font-size: .78rem; letter-spacing: 0; }
+.status-dot { display: inline-block; width: .45rem; height: .45rem; margin-right: .25rem; border-radius: 50%; background: #00c4a0; box-shadow: 0 0 0 .2rem rgba(0,196,160,.12); }
+.facility-command-center { position: relative; z-index: 3; display: grid; grid-template-columns: minmax(13rem, 16rem) minmax(20rem, 1fr) minmax(16rem, 20rem); gap: 1rem; min-height: calc(100vh - 7rem); padding: 1rem clamp(1rem, 3vw, 2.5rem) 2rem; }
+.facility-sidebar, .facility-right-rail { display: grid; align-content: start; gap: 1rem; }
+.facility-card { padding: 1rem; border: 1px solid #243752; border-radius: .65rem; background: rgba(10, 22, 38, .96); box-shadow: 0 12px 30px rgba(0,0,0,.18); }
+.facility-score-card { background: linear-gradient(145deg, #102b3b, #0a1626); }
+.facility-score { display: block; margin: .3rem 0; color: #f4c95d; font-size: 2.35rem; line-height: 1; }
+.facility-score span { color: #93a4ba; font-size: .75rem; font-weight: 500; }
+.score-meta, .sample-details { display: flex; justify-content: space-between; gap: .5rem; color: #93a4ba; font-size: .7rem; text-transform: capitalize; }
+.score-meta span:first-child { color: #dce5ef; }
+.score-track { height: .25rem; margin-top: .75rem; overflow: hidden; border-radius: 1rem; background: #20304a; }
+.score-track i { display: block; height: 100%; border-radius: inherit; background: #f4c95d; transition: width .3s ease; }
+.card-heading { display: flex; justify-content: space-between; gap: .5rem; color: #00c4a0; font-size: .65rem; font-weight: 800; letter-spacing: .08em; }
+.sample-status { padding: .2rem .4rem; border-radius: 999px; font-size: .58rem; letter-spacing: .04em; }
+.status-received { background: #20304a; color: #93a4ba; }.status-collected { background: #173b4a; color: #55d6be; }.status-processing, .status-sequencing { background: #4a3b1a; color: #f4c95d; }.status-complete { background: #1d4536; color: #7de2a8; }
+.sample-id { display: block; margin: .8rem 0 .45rem; color: #f1f5f9; font-size: 1rem; letter-spacing: .04em; }
+.sample-details { justify-content: flex-start; text-transform: none; }
+.facility-ppe-card p, .facility-help p { margin: .55rem 0; color: #93a4ba; font-size: .75rem; line-height: 1.45; }
+.ppe-list { display: grid; gap: .35rem; }
+.ppe-list button { display: flex; align-items: center; gap: .45rem; padding: .4rem .5rem; border: 1px solid #243752; border-radius: .35rem; background: #0d1d30; color: #b6c3d2; cursor: pointer; font-size: .72rem; text-align: left; text-transform: capitalize; }
+.ppe-list button span { color: #64758c; font-size: .9rem; }.ppe-list button.active { border-color: #00c4a0; color: #e8edf4; }.ppe-list button.active span { color: #00c4a0; }
+.facility-help small { color: #64758c; font-size: .68rem; }
+.facility-workspace { display: grid; grid-template-rows: auto minmax(24rem, 1fr); gap: .75rem; min-width: 0; }
+.facility-room-rail { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .15rem; }
+.facility-room-rail button { display: grid; grid-template-columns: auto minmax(7rem, 1fr); gap: .15rem .45rem; min-width: 8.5rem; padding: .5rem .6rem; border: 1px solid #243752; border-radius: .4rem; background: #0a1626; color: #93a4ba; cursor: pointer; font-size: .68rem; text-align: left; }
+.facility-room-rail button.current { border-color: #00c4a0; background: #102b3b; color: #e8edf4; }.facility-room-rail button.locked { opacity: .58; }.facility-room-rail button:disabled { cursor: not-allowed; }
+.room-number { color: #00c4a0; font-size: .6rem; font-weight: 800; }.facility-room-rail button b { grid-column: 2; color: #d98585; font-size: .55rem; }
+.facility-scene-frame { position: relative; min-height: 28rem; overflow: hidden; border: 1px solid #243752; border-radius: .65rem; background: #07101d; }
+.facility-scene-frame canvas { width: 100% !important; height: 100% !important; min-height: 28rem; }
+.scene-overlay { position: absolute; left: 1rem; bottom: 1rem; display: grid; gap: .15rem; padding: .6rem .75rem; border-left: 2px solid #00c4a0; background: rgba(7,16,29,.82); pointer-events: none; }.scene-overlay span, .scene-overlay small { color: #93a4ba; font-size: .62rem; }.scene-overlay strong { color: #f1f5f9; font-size: .85rem; }
+.workflow-card { min-height: 15rem; }.workflow-list { display: grid; gap: .7rem; margin: 1rem 0 0; padding: 0; list-style: none; }.workflow-list li { display: flex; gap: .65rem; align-items: center; color: #64758c; }.workflow-list li > span { display: grid; place-items: center; width: 1.45rem; height: 1.45rem; border: 1px solid #30445f; border-radius: 50%; font-size: .65rem; }.workflow-list li div { display: grid; gap: .1rem; }.workflow-list strong { font-size: .75rem; }.workflow-list small { font-size: .64rem; }.workflow-list li.active { color: #f4c95d; }.workflow-list li.active > span { border-color: #f4c95d; }.workflow-list li.done { color: #7de2a8; }.workflow-list li.done > span { border-color: #7de2a8; background: #173b2d; }
+.procedure-card { align-self: start; }.procedure-actions { display: grid; gap: .45rem; margin: 1rem 0 .7rem; }.procedure-actions button { display: flex; justify-content: space-between; gap: .5rem; padding: .6rem .65rem; border: 1px solid #30445f; border-radius: .35rem; background: #0d1d30; color: #dce5ef; cursor: pointer; font-size: .72rem; text-align: left; }.procedure-actions button:hover:not(:disabled), .procedure-actions button:focus-visible:not(:disabled) { border-color: #00c4a0; color: #00c4a0; }.procedure-actions button:disabled { cursor: not-allowed; opacity: .4; }.procedure-actions b { color: #f4c95d; font-size: .65rem; }.procedure-card > small { color: #64758c; font-size: .65rem; line-height: 1.35; }
+.facility-interaction { z-index: 8; }
+.facility-lock-prompt { z-index: 7; right: 1rem; left: auto; bottom: 1rem; transform: none; }
+.facility-hud, .facility-ppe, .facility-minimap, .facility-fallback, .facility-procedure { display: none; }
+@media (max-width: 1100px) { .facility-command-center { grid-template-columns: 14rem minmax(20rem, 1fr); }.facility-right-rail { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }.workflow-card { min-height: 0; } }
+@media (max-width: 760px) { .facility-header { display: block; }.facility-header-status { margin-top: .85rem; }.facility-command-center { display: flex; flex-direction: column; padding: .75rem; }.facility-sidebar, .facility-right-rail { display: grid; grid-template-columns: 1fr 1fr; }.facility-workspace { order: -1; }.facility-room-rail button { min-width: 8rem; }.facility-scene-frame, .facility-scene-frame canvas { min-height: 22rem; }.facility-lock-prompt { display: block; bottom: .75rem; }.facility-sidebar .facility-help { grid-column: 1 / -1; } }
+@media (max-width: 480px) { .facility-sidebar, .facility-right-rail { grid-template-columns: 1fr; }.facility-header { padding: 1rem .75rem; }.facility-header h1 { font-size: 1.2rem; }.facility-command-center { min-height: 0; }.facility-scene-frame, .facility-scene-frame canvas { min-height: 18rem; } }
